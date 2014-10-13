@@ -1,0 +1,150 @@
+\documentclass{report}
+
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{amsthm}
+
+\DeclareMathOperator{\lcm}{lcm}
+
+\title{Group Theory}
+\author{Jacob Denson}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\chapter{Basic Definitions and Properties}
+
+\section{What is a group?}
+
+A group is a set of objects which can operate with each other. One can find them almost anywhere in mathematics from number theory to geometric symmetry. The goal of this course is to learn and understand the properties that all groups have.
+
+We begin with a definition of how objects operate with each other. A law of composition or assignment on a set $S$ is a function from $S \times S$ to $S$. If $a$ and $b$ are arguments to this function, the value mapped from $a$ and $b$ is denoted $a \circ b$, $ab$, $a + b$, and pretty much any other symbol you can think of. Given a positive integer $n$, we write $a^n$ for $a \circ a \circ \dots \circ a$ $n$ times.
+
+An assignment is associative if for any three elements $a$, $b$, and $c$, $a(bc) = (ab)c$. All in all, this means that any brackets are redundant in an equation. Formally, there is a unique way of defining a sequence $[a_1 a_2 \dots a_n]$, such that for any $a$, $[a] = a$, for any $b$, $[ab] = a \circ b$, and for any integer $i$ from $2$ to $n$, $[a_1\ \dots\ a_n] = [a_1\ \dots\ a_{i-1}] \circ [a_i\ \dots\ a_n]$:
+\begin{proof}
+    We prove by induction that for any set of $n$ elements, $[a_1\ a_2\ \dots\ a_n]$ is uniquely determined. With only one element, the uniqueness is obvious, as is the case for two elements. Now suppose any product of $n-1$ elements is uniquely defined. Note by splitting up the sequence, we know the sequence is unique, so we need only find one that works. Define $[a_1\ a_2\ \dots\ a_n] = [a_1\ a_2\ \dots\ a_{n-1}] \circ a_n$. Let $i$ be an arbitrary integer from $2$ to $n-1$. The following calculation shows we can split up our sequence in that way.
+
+    \begin{align*}
+    [a_1\ a_2\ \dots\ a_n] &= [a_1\ a_2\ \dots\ a_{n-1}] \circ a_n\\
+    &= ([a_1 \dots a_{i-1}] \circ [a_i \dots a_n]) \circ a_n\\
+    &= \underbrace{[a_1 \dots a_{i-1}] \circ ([a_i \dots a_n] \circ a_n)}_\text{Associativity is used here}\\
+    &= [a_1 \dots a_{i-1}] \circ [a_i \dots a_n]
+    \end{align*}
+
+    The transition from $1.2$ to $1.3$ is where the associative property of the assignment is required.
+\end{proof}
+
+An example of an associative operation on a set is, for any two element $a$ and $b$, $a \circ b = a$. Then $a \circ (b \circ c) = a \circ b = a$, and $(a \circ b) \circ c = a \circ c$. Thus the operation is associative.
+
+Another property of an assignment is commutivity: that for any elements $a$ and $b$, $a \circ b = b \circ a$. Given associativity, a sequence is equal to any permutation of its elements. That is, if $a_1, a_2, \dots, a_n$ are a sequence of elements, and $\pi$ is a permutation of $1$ to $n$, then $a_1\circ a_2 \circ \dots \circ a_n = a_{\pi(1)} \circ a_{\pi(2)} \circ \dots \circ a_{\pi(n)}$.
+\begin{proof}
+    We prove by induction. This is obvious for one element. Suppose this is true of permutations of $n-1$ elements. Let $i$ be the integer such that $\pi(i) = n$. Then the following calculation shows we can move $a_i$ to the end of the sequence.
+
+    \begin{align*}
+    a_1 \circ a_2 \circ \dots a_i \dots \circ a_n &= (a_1 \circ a_2 \circ \dots a_i) \circ \dots \circ a_n\\
+    &= \underbrace{a_{i+1} \circ \dots \circ (a_1 \circ a_2 \circ \dots a_i)}_\text{Commutivity is used here}
+    \end{align*}
+
+    Now renumber each element from $1$ to $n-1$. Then our original permutation is a permutation of $n-1$ elements when restricted to the first $n-1$ numbers, so we may by induction permute these remaining numbers to get the correct ordering required by the permutation $\pi$.
+\end{proof}
+
+Note that it is assumed that an operation is commutative if the symbol $+$ is used for the operation.
+
+An identity of a set and assignment is an element $e$ that is idempotent, that is, that $a \circ e = e \circ a = a$ for any element $a$. There can only be one such $e$ for if we have another idempotent element $e'$, we have that $e = e' \circ e = e'$. If $\cdotp$ is used for the operation, we may write $e$ as $1$, and if $+$ is used, we may write it as $0$, even though the element is not always a number. If a set has an identity, we define, for any element $a$, $a^0 = e$.
+
+Given a set with an identity $e$, we say an element $a$ is invertible if there is another element $b$ such that $a \circ b = b \circ a = e$. b is normally denoted $a^{-1}$, or if $+$ is used for the operation, $-a$.
+
+Here are some common properties of inverses. We assume associativity, but not commutivity in our operation. Let $a$, $l$, and $r$ be arbitrary elements, and $e$ the identity:
+\begin{itemize}
+    \item If $la = e$ and $ar = e$, then $l = r$, and $a$ is invertible:
+    \begin{proof} Then $l = le = lar = er = r$ \end{proof}
+    \item $a^{-1}$ is unique:
+    \begin{proof} The above property shows any two inverses are the same, behaving as $l$ and $r$ in the above proof. \end{proof}
+\end{itemize}
+
+A monoid is a set with an associative operation that contains a unit element (so the monoid is also non-empty). We say a monoid is commutative or abelian if its operation is commutative. Inverses are not required. The order of the monoid is the number of elements it contains.
+
+Some examples of monoids are the following. You should be able to come up with infinitely more (One could probably write the ``Encyclop\ae dia of Monoids''):
+\begin{itemize}
+    \item The set of non-negative integers under addition
+    \item The set of positive integers under multiplication.
+\end{itemize}
+
+The main topic of this class is the concept of a group: a monoid where every element has an inverse. We can use this to extend exponentiation. If $n < 0$, define $a^n = (a^{-1})^{-1}$.
+
+We require inverses for a group, but we can weaken this claim only requiring left inverses. It turns out that if for every element in a monoid $G$ has a right inverse, every element also has a left inverse, and thus $G$ is a group:
+\begin{proof}
+    Let $a \in G$. Then there is $b \in G$ such that $ba = e$. $b$ also has a left inverse $c$ such that $cb = e$, and $cba = c$. But $cba = ea = a$, so $a = c$, and as $cb = e$, $a$ has a right inverse as well.
+\end{proof}
+
+There are also many examples of groups (which expand our encyclop\ae dia of monoids). Here are some interesting ones:
+\begin{itemize}
+    \item The set of integers, rational, real, and complex numbers under addition form the groups $\mathbf{Z}^+$, $\mathbf{Q}^+$, $\mathbf{R}^+$, and $\mathbf{C}^+$.
+    \item The set of non-zero integers, rationals, \dots under multiplications form the group $\mathbf{Z}^\times$, $\mathbf{Q}^\times$, $\mathbf{R}^\times$, and $\mathbf{C}^\times$.
+    \item The set of bijective functions on a set $X$ under composition form the symmetric group $S_{|X|}$. Note that the order of $S_{|X|}$ is $|X|!$.
+    \item For a vector space V, the set of automorphisms under compositions form the general linear group $GL(V)$. An equivilent definition, if the vector space is dimension $n$ in a field $\mathbf{F}$, is the set of invertible $n$ by $n$ matrices with entries in $\mathbf{F}$, which we denote $GL_n(\mathbf{F})$.
+    \item Let $S$ be a set, and $G$ a group. Then the set of functions from $S$ to $G$ form a group with operations $\circ$ defined by $(f \circ g)(x) = f(x)g(x)$.
+\end{itemize}
+
+\section{Subgroups in a group}
+
+A submonoid is a subset of a monoid that contains the identity and is closed under the operation which defines that monoid. That is, if $a$ and $b$ are any elements in the submonoid, $a \circ b$ is in the submonoid as well. A subgroup of a group is a submonoid with the additional property that $a^{-1}$ is in the submonoid whenever $a$ is. Note that submonoids are monoids in themselves, and subgroups are groups. A subgroup is maximal if no other subgroup contains it other than the whole group.
+
+Examples of subgroups are below:
+\begin{itemize}
+    \item Given the general linear group $GL_n(\mathbf{F})$, define the special linear group $SL_n(\mathbf{F})$ to be the set of matrices in the general linear group with determinant one. This follows as the determinant operation has the multiplicative property.
+    \item Let $M$ be a set, and $N$ a subset. Then the set of bijective functions on $M$ that leave elements in $N$ fixed is a subgroup of $S_{|M|}$, and is isomorphic to $S_{|M| - |N|}$.
+    \item Given a group $G$, $G$ and the set containing the identity are both subgroups. Obviously, anwe call these trivial subgroups for self evident reasons, and say that any other group is non-trivial.
+    \item The intersection of a family of subgroups of some group is also a subgroup.
+\end{itemize}
+
+It may be unexpected, but we can verify subgroups based on a single statement. A non-empty subset $H$ of a group $G$ is a subgroup if and only if, for any elements $a$ and $b$ in $H$, $ab^{-1}$ is in $H$. The proof is self-evident as soon as the statement is read.
+
+\subsection{Subgroups of $\mathbf{Z}^+$}
+
+We have built a complicated tower of definitions for the reader to comprehend so far. Hopefully this aside will show the power of the concepts developed when we turn our heads to the additive integer group $\mathbf{Z}^+$. Before we begin, we define one more bit of notation. For a group, with two subset $S$ and $M$, define $S \circ M = \{ s \circ m | s \in S, m \in M \}$.
+
+Now for any integer $a$, $a\mathbf{Z}^+$ forms a subgroup of the integers. What is surprising is that any subset of the integers is of this form:
+\begin{proof}
+    Let $G$ be a subgroup of $\mathbf{Z}^+$. If $G = \{ 0 \}$, then $G = 0\mathbf{Z}^+$. If $G$ has some other element $a$, it contains a positive element, as $a > 0$ or $a < 0$, and if $a < 0$, $-a > 0$ and $-a \in G$ as $G$ is a subgroup. Thus $G$ contains a smallest positive element $b$ by the well ordering principle. By euclidean division, every element $c$ is of the form $mb + n$, where $0 < n < b$. Now $n \in G$, so we must conclude $n = 0$, as it cannot be a smaller positive integer than $b$. Thus every integer in $G$ is divisible by $b$, and we conclude $G = b\mathbf{Z}^+$.
+\end{proof}
+
+Some common uses in number theory of this are the following:
+\begin{itemize}
+    \item For $a, b \in \mathbf{Z}^+$, $a\mathbf{Z}^+ + b\mathbf{Z}^+$ is a group. so it is equal to $c\mathbf{Z}^+$ for some integer $c$. It turns out $c$ is the greatest common denominator of $a$ and $b$, denoted $\gcd(a,b)$
+    \item Given $a,b \in \mathbf{Z}^+$, $a\mathbf{Z}^+ \cap b\mathbf{Z}^+$ is a subgroup of $\mathbf{Z}^+$, so it too is $c\mathbf{Z}^+$, and $c$ is the lowest common multiple $\lcm(a,b)$
+\end{itemize}
+
+\section{Generators}
+
+Let $G$ be a group, and $S$ a subset. Let $M$ be the set of all subgroups of $G$ which contain $S$. Then the intersection of all these groups is a subgroup which we call the subgroup generated by $S$. Equivalently, the generated subgroup is the set of all elements of the form $x_1 x_2 \dots x_n$ where $x_i$ or $x_i^{-1}$ is in $S$. We write this subgroup as $\langle S \rangle$, and if $S$ is a finite group of the form $\{ x_1, x_2, \dots, x_n \}$, we also write the subgroup as $\langle x_1, x_2, \dots, x_n \rangle$. We say that $\langle S \rangle$ is generated by $S$.
+
+If a group is generated by a single element, then the group is called cyclic. One example is $\mathbb{Z}^+$. Let $g$ be an element of a group $G$, and suppose that $\langle g \rangle$ is order $c$ for some natural number $c$. Then the following properties hold for $g$:
+\begin{itemize}
+    \item $e$, $g$, \dots, $g^{c-1}$ are all distinct
+    \begin{proof} If $g^i = g^j$ for $i > j$, then $g^{i - j} = e$, so that $i - j = 0$, and such that $i = j$. Thus if $i \neq j$, the two are distinct. \end{proof}
+
+    \item $g^c = e$.
+    \begin{proof} We know that $g^c = g^i$ for some $0 \leq i < c$, as the group can only have $c$ distinct elements. Then $g^{c - i} = e$, so $i = 0$, as no other $i$ lets $g^{c - i}$ be $e$. \end{proof}
+
+    \item If $g^m = e$, $c | m$
+    \begin{proof} This is a simple application of euclidean division. \end{proof}
+\end{itemize}
+
+From the above properties, one can show that if $\langle g \rangle$ is infinite, then $g^i \neq g^j$ if $i \neq j$. We have shown in $\mathbb{Z}^+$ that every subgroup is cyclic, but this proof can be easily extended to the following: every subgroup of a cyclic group is cyclic.
+
+\section{Cosets}
+
+Given a subgroup $H$ of a gorup $G$, define an equivalence relation $\sim$ by $x \sim y$ if $a \in bH$. The equivalence classes thus formed by the relation are denoted $G/H$ are pronounced `$G$ mod $H$'. Each class is called a left coset. Right cosets can be defined equivalently in the obvious way. Left cosets are of the form $gH$ for some $g$, and right cosets of the form $Hg$.
+
+Consider the map $g \mapsto g^{-1}$. The map is invertible (it is its own inverse) so bijective. Then the set $gH$ is mapped to the set $Hg^{-1}$, which tells us that the number of left cosets is equal to the number of right cosets. We call the number of cosets in $G/H$ to be the index of $H$ in $G$, and denote it $[G:H]$.
+
+Define a mapping from $gH \to g'H$ by $a \mapsto g'g^{-1}a$ This map is bijective, which tells us $|gH| = |g'H|$. $H = eH$, which tells us $|G| = |H|[G:H]$. This tells us that the order of a subgroup divides the order of the group. This is a theorem known as Lagrange's theorem after the mathematician Joseph-Louis Lagrange, one of the pioneers of group theory.
+
+If $M$ is a subgroup of $H$, $|H| = |M|[H:M]$. Also $|G| = |M|[G:M]$. Thus $|G| = |H|[G:H] = |M|[G:H][H:M]$. By dividing by $|M|$ (which is non-zero as $M$ is non-empty), we obtain $[G:M] = [G:H][H:M]$. We call this the multiplicative property of cosets.
+
+
+
+\end{document}
