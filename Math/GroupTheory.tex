@@ -3,8 +3,14 @@
 \usepackage{amssymb}
 \usepackage{amsmath}
 \usepackage{amsthm}
+\usepackage{kpfonts}
+\usepackage{tikz}
+\usepackage{wrapfig}
+
+\usetikzlibrary{matrix, arrows}
 
 \DeclareMathOperator{\lcm}{lcm}
+\DeclareMathOperator{\im}{im}
 
 \title{Group Theory}
 \author{Jacob Denson}
@@ -18,7 +24,7 @@
 
 \section{What is a group?}
 
-A group is a set of objects which can operate with each other. One can find them almost anywhere in mathematics from number theory to geometric symmetry. The goal of this course is to learn and understand the properties that all groups have.
+A group is a set of objects which can operate with each other. One can find them almost anywhere in mathematics, from number theory to geometric symmetry. The goal of this course is to learn and understand the properties that all groups have.
 
 We begin with a definition of how objects operate with each other. A law of composition or assignment on a set $S$ is a function from $S \times S$ to $S$. If $a$ and $b$ are arguments to this function, the value mapped from $a$ and $b$ is denoted $a \circ b$, $ab$, $a + b$, and pretty much any other symbol you can think of. Given a positive integer $n$, we write $a^n$ for $a \circ a \circ \dots \circ a$ $n$ times.
 
@@ -145,6 +151,171 @@ Define a mapping from $gH \to g'H$ by $a \mapsto g'g^{-1}a$ This map is bijectiv
 
 If $M$ is a subgroup of $H$, $|H| = |M|[H:M]$. Also $|G| = |M|[G:M]$. Thus $|G| = |H|[G:H] = |M|[G:H][H:M]$. By dividing by $|M|$ (which is non-zero as $M$ is non-empty), we obtain $[G:M] = [G:H][H:M]$. We call this the multiplicative property of cosets.
 
+\subsection{Normal Subgroups}
 
+Let $H$ be a subgroup of $G$. The following statements are equivalent, and if any hold, we say $H$ is normal in $G$ and write $H \lhd G$:
+\begin{enumerate}
+    \item $gHg^{-1} \subseteq H$ for all $g$
+    \item $ghg^{-1} = H$ for all $g$
+    \item $gH = Hg$ for all $g$
+    \item For all $g$, there is $g'$ such that $gH = Hg'$
+\end{enumerate}
+\begin{proof}
+    First we show 1.\ implies 2. Suppose $ghg^{-1} \subseteq H$ for all $g$. Then $gH \subseteq Hg$. But also $g^{-1}Hg \subseteq H$, such that $Hg \subseteq gH$, so that $Hg = gH$, which means $g^{-1}Hg = H$ which shows 2.\ is equivalent to 3.\ also. The implication from 3.\ to 4.\ is obvious. From 4., note if $gH = Hg'$, $ge = g \in Hg'$, so that $Hg' = Hg$ as cosets are equal or disjoint. Thus $gHg^{-1} \subseteq H$.
+\end{proof}
+
+A group is simple if it contains no non-trivial normal subgroups.
+
+Some examples of normal subgroups are the following:
+\begin{itemize}
+    \item If $G$ is abelian, and $H$ is a subgroup, $H \lhd G$.
+    \item $SL_n(\mathbf{F}) \lhd GL_n(\mathbf{F})$
+    \item If $H$ is a subgroup of $G$ of index two, $H \lhd G$
+    \item If a group $G$ is normal, and $H$ is a cyclic subgroup, for any subgroup $I$ in $H$, $I \lhd G$.
+\end{itemize}
+
+\section{Homomorphisms}
+
+Let $G$ and $H$ be monoids. A homomorphism between $G$ and $H$ is a function $f$ such that for any elements $x$ and $y$. $f(xy) = f(x)f(y)$. We say that $G$ and $H$ are homomorphic. If a homomorphism is bijective, we call it an isomorphism. If $G = H$, we call a homomorphism an endomorphism, and an isomorphism an automorphism.
+
+The following properties hold for arbitrary homomorphisms $f$:
+\begin{itemize}
+    \item $f(e) = e$
+    \begin{proof} $f(e) = f(ee) = f(e)f(e)$ \end{proof}
+    \item $f(a^{-1}) = f(a)^{-1}$
+    \begin{proof} $e = f(e) = f(aa^{-1}) = f(a)f(a^{-1})$ \end{proof}
+    \item The kernel of a homomorphism is a subgroup:
+    \begin{proof} If $f(a) = e$ and $f(b) = e$, then $f(ab^{-1}) = f(a)f(b)^{-1} = ee = e$ \end{proof}
+    \item The image of a homomorphism is a subgroup:
+    \begin{proof} If $f(a) = m$, and $f(b) = n$, then $f(ab^{-1}) = mn^{-1}$ \end{proof}
+    \item A homomorphism is injective if and only if $f(a) = e$ implies $a = e$
+    \begin{proof} $f(a) = f(b)$ if and only if $f(ab^{-1}) = e$ \end{proof}
+    \item The kernel is a normal subgroup:
+    \begin{proof} If $h$ is in the kernel, $f(ghg^{-1}) = f(g)f(h)f(g)^{-1} = f(g)f(g)^{-1} = e$. \end{proof}
+\end{itemize}
+
+Some examples of homomorphisms are the following:
+\begin{itemize}
+    \item The determinant function from $GL_n(\mathbb{F}) \to \mathbb{F}^\times$
+    \item The exponentiation map $x \mapsto e^x$
+    \item For any element $a$ in $G$, the map from $\mathbb{Z}^+$ defined by $x \mapsto a^x$.
+    \item The absolute value map from $\mathbb{C}^\times$ to $\mathbb{R}^\times$
+\end{itemize}
+
+For a group, the set of automorphisms of a group under composition form a group. Given an element $g$ in $G$, the set of automorphisms $h \mapsto ghg^{-1}$ defines the set of inner automorphisms, a subgroup of the set of automorphisms. The map that sends $g$ to its inner automorphism is a homomorphism. The kernel of this homomorphism is the center group $Z(G) = \{ g \in G |\ \forall h: gh = hg \}$.
+
+\chapter{The Symmetric Group}
+
+We now begin to focus on the symmetric group. One reason why the group is generally interesting is Cayley's theorem -- Every group is isomorphic to a subgroup of a symmetric group:
+\begin{proof}
+    Let $G$ be a group For each $g \in G$, define a permutation $\pi_g$ defined by the map $h \mapsto gh$. The function is bijective as there is an inverse $h \mapsto g^{-1}h$. The permutation map is a homomorphism as $\pi_g \circ \pi_g' = \pi_{gg'}$. This is injective, as if $gh = h$ for all $h$, $g = e$. Thus $G$ is isomorphic to the image of the permutation map.
+\end{proof}
+
+Given a set $M$ and a permutation $\pi$ on $M$, the support of $\pi$, denoted $\sup(\pi)$, is equal to $\{ m \in M | \pi(m) \neq m \}$. If $\sigma$ and $\tau$ are two permutations, such that $\sup(\sigma) \cap \sup(\tau) = \emptyset$, $\sigma \circ \tau = \tau \circ \sigma$.
+
+A cycle of length $k$ is a permutation $\pi$ such that $|\sup(\pi)| = k$, and such that we can order $\sup(\pi)$ to be $(x_1, x_2, \dots, x_n)$ in a way that $\pi(x_n) = x_{n+1 \mod k+1}$. A cycle of length two is called a transposition. We write $\pi$ as $(x_1, \dots, x_k)$.
+
+Every permutation $\pi$ on a finite set such that $\pi \neq \mathbf{1}$ can be written as the product of cycles with disjoint support. This is unique up to reordering:
+\begin{proof}
+    Consider $\langle \pi \rangle$ -- for $m,n$ in the set of the permutation, define an equivalence relations $m \sim n$ if $m = \pi^k(m) = n$ for some integer $k$. Thus we form disjoint equivalence classes: from each we will create a cycle that is disjoint from the others. For each class $C$ in the equivalence classes $X$, define an ordering $(x, \pi(x), \dots, \pi^n(x))$ for some element $x \in C$, and such that $\pi^{n+1} = \pi$ where $n+1$ is the smallest number with that property. Then the whole of $C$ is ordered. Define a function $\pi_C$ by this ordering, a cycle of lenght $n$. Then $\pi = \prod_{C \in X}\pi_C$.
+\end{proof}
+
+Let $\pi \in S_X$ and $\delta = (x_1, x_2, \dots, x_n)$. Then $\pi \sigma \pi^{-1}$ is $(\pi(x_1)\ \pi(x_2)\ \dots\ \pi(x_n))$. This follows as $\pi \sigma \pi^{-1} (\pi(x_i)) = \pi \sigma(x_i) = \pi(x_{i+1 \mod n})$.
+
+Each cycle can be decomposed into transpositions -- if $\sigma = (x_1\ \dots\ x_n)$, then $\sigma$ is simply $(x_1\ x_n) \dots (x_1\ x_2)$.
+
+The parity or signum of a permutation $\pi$ is one if the number of transpositions that is is composed of is even, else it is $-1$. This defines a homomorphism from $S_n$ into $\mathbf{Z}^\times$. The kernel of this is $A_n$, the alternating group, a normal subgroup of $S_n$.
+
+Here are some properties of $A_n$:
+\begin{itemize}
+    \item If $\tau$ is a transposition, $S_n = A_n \cup \tau A_n$. Thus $A_n = n!/2$.
+    \item $A_n$ is generated by the set of all three cycles:
+    \begin{proof}
+        We need only prove that the product of two arbitrary transpositions $(a\ b)$ and $(c\ d)$ is generated by three cycles. If $\sup(a\ b) \cap \sup(c\ d) = \emptyset$, $(a\ b)(c\ d) = (a\ c\ b)(a\ c\ d)$. Otherwise without loss of generality, we may consider $a = c$. If $b = d$, then $(a\ b)(c\ d) = \mathbf{1}$. If $b \neq d$, $(a\ b)(c\ d) = (a\ b)(c\ d) = (c\ b\ a)$.
+    \end{proof}
+    \item $A_n$ is simple when $n \neq 4$
+    \begin{proof}
+        This proof is about a page long. I will write it later.
+    \end{proof}
+\end{itemize}
+
+The fact that $A_4$ is not simple results in far reaching ramifications in Galois theory, where it implies that there is no formula for finding the roots of quintic polynomial roots.
+
+\chapter{Isomorphism Theorems}
+
+Let $G$ be a group and $H$ a normal subgroup. For two cosets $M$ and $N$ in $G/H$, define an operation $M \circ N = MN$. As $M = gH$ and $N = g'H$ for some $g,g' \in H$, $MN = gHg'H = gg'HH = gg'H$. Thus the operation is closed, and $G/H$ forms another group: the product or factor group. $H$ is the identity in this group. The map $g \mapsto gH$ is the canonical map or projection from $G$ to $G/H$, and is a surjective homomorphism.
+
+The projection of $G$ onto $G/H$ has a property that we prove in a more general form, the first isomorphism theorem. Let $\phi$ be a homomorphism between two groups $G$ and $H$, and let $N$ be a normal subgroup of the kernel of $\phi$. Then there is a homomorphism $\overline{\phi}$ from $G/H$ to $H$ such that $\overline{\phi} \circ \pi = \phi$, where $\pi$ is the canonical map:
+\begin{proof}
+    For every $n \in N$, we have $f(n) = e$ as $N$ is a subgroup of the kernel. Thus if $gN = hN$ for $g,h \in G$, $\phi(g) = \phi(h)$. The map $gN \mapsto \phi(g)$ is thus well defined. It is a homomorphism as $gHhH = ghH$, so $ghH$ is mapped to $\phi(gh) = \phi(g)\phi(h)$. This map also satisfies the conditions of the theorem. As $\pi$ is surjective, the map is unique.
+\end{proof}
+
+What's more, if $N$ is the kernel, the homomorphism is an isomorphism. Then $\phi(a) = \phi(b)$ implies $\phi(ab^{-1}) = e$, so $aN = bN$, so $\overline{\phi}$ is injective.
+
+\begin{wrapfigure}{1}{2.5cm}
+\begin{tikzpicture}[description/.style={fill=white,inner sep=2pt}]
+\matrix (m) [matrix of math nodes, row sep=3em,
+column sep=2.5em, text height=1.5ex, text depth=0.25ex]
+{ G & H \\
+& G/N & \\ };
+\path[->,font=\scriptsize]
+(m-1-1) edge[thick] node[auto] {$ \phi $} (m-1-2)
+edge[thick] node[description] {$ \pi $} (m-2-2)
+(m-2-2)[thick] edge node[auto] {$ \overline{\phi} $} (m-1-2);
+\end{tikzpicture}
+\end{wrapfigure}
+
+It is convenient here to introduce the concept of a commutative diagram. A commutative diagram is a directed graph where vertices are sets and edges are functions between the sets it connects, with the following property. If there are two paths $S \xrightarrow{f_1} A_1 \xrightarrow{f_2} \dots \xrightarrow{f_{n-1}} A_n \xrightarrow{f_n} E$, and $S \xrightarrow{g_1} B_1 \xrightarrow{g_2} \dots \xrightarrow{f_{m-1}} B_m \xrightarrow{g_m} E$ from $S$ to $E$, then $f_n \circ \dots \circ f_1 = g_m \circ \dots \circ f_1$. An example diagram is to the left, representing the functions in the first isomorphism theorem.
+
+Let $\langle g \rangle$ be a cyclic group. Define a surjective homomorphism from $\mathbf{Z}^+$ $r \mapsto g^r$. If $\langle g \rangle$ is order $n$, $n\mathbf{Z}^+$ is the kernel of the map. Then $\langle g \rangle \cong \mathbb{Z}^+/n\mathbb{Z}^+$. If $\langle g \rangle$ is infinite, the kernel of the map is $\{ 0 \}$, and $\mathbb{Z}^+/0\mathbb{Z}^+ \cong \mathbb{Z}^+$, so $\langle g \rangle \cong \mathbb{Z}^+$.
+
+Another useful theorem is the second isomorphism theorem. Let $G$ be a group, and $N$ and $H$ subgroups such that $N$ is normal in $G$. The $NH$ is a subgroup of $G$, and $N \cap H$ is normal in $G$. The assignment map $h(N \cap H) \mapsto hN$ is an isomorphism, and so $H/N \cap H$ is isomorphic to $NH/H$:
+\begin{proof}
+    First we prove $NH$ is a subgroup. If $n_1h_1$ and $n_2h_2$ are in $NH$, then $n_1h_1(n_2h_2)^{-1}$ is in $NH$ by the following calculation:
+
+    \begin{align*}
+    n_1h_1(n_2h_2)^{-1} &= n_1h_2h_2^{-1}n_2^{-1}\\
+    &= n_1(h_1h_2^{-1}n_2^{-1}(h_1h_2^{-1})^{-1})h_1h_2^{-1}
+    \end{align*}
+
+    The equation above is in $NH$ as $N$ is normal. The map $h \mapsto hN$ is a surjective homomorphism from $H$ to $NH/N$, and the kernel is $N \cap H$, so $H/N \cap H \cong NH/N$.
+\end{proof}
+
+The final isomorphism is the third isomorphism theorem. If $M$ and $N$ are normal subgroups of a group $G$, where $N$ is also a normal subgroup of $M$. Then $M/N$ is a subgroup of $G/N$, and $(G/N)/(M/N) \cong G/M$:
+\begin{proof}
+    The assignment $gN \mapsto gM$ is a surjective homomorphism, well defined as $N$ is a subgroup of $M$. The kernel of this map are all cosets of $M$ that are cosets of $M/N$. By the first isomorphism theorem, $(G/N)/(M/N) \cong G/M$.
+\end{proof}
+
+\section{Product Groups}
+
+Let $I$ be an index set, and $\{ G_i \}_{i \in I}$ a family of groups. Then the direct product of $\{ G_i \}$, denoted $\varprod_{i \in I} G_i$, is a group with operation $\varprod_{i \in I} g_i \circ \varprod_{i \in I} h_i = \varprod_{i \in I} g_ih_i$. The group is called the product group.
+
+Let $r$ and $s$ be two relatively prime integers. Suppose $G$ is a cyclic group of order $rs$. Then $G$ is isomorphic to the direct product of cyclic groups $R$ and $S$, where $R$ is order $r$ and $S$ is order $s$.
+\begin{proof}
+    $R \times S$ is a cyclic group generated by $(x,y)$, where $x^r = e$, and $y^s = e$. This follows as $(x,y)^{rs} = (x^{rs},y^{rs}) = (e,e)$. If $(x,y)^m = (x^m,y^m) = (e,e)$, $r|m$ and $s|m$, so $rs|m$.
+\end{proof}
+
+Let $H$ and $K$ be normal subgroups of a group $G$, such that $H \cap K = \{ e \}$, and $HK = G$. Then $H \times K \cong G$:
+\begin{proof}
+    Define a map $(h,k) \mapsto hk$. The map is bijective, as $HK = G$, and if $hk = e$, $h = k^{-1}$, so $k^{-1} \in H$, so $k = h = e$. $hkh^{-1} \in K$, as $K$ is normal, but it is also in $N$ as $N$ is normal, hence $hkh^{-1}k^{-1} = e$, so $hk = kh$, and thus the map is a homomorphism as $h_1k_1h_2k_2 = h_1h_2k_1k_2$.
+\end{proof}
+
+\chapter{Group Actions}
+
+Automorphisms are symmetries form groups over a set. These are specific notions of a more general structure, a group action. A group action or operation on a set $G$ and set $X$ is a homomorphism from $G$ to $S_X$. As each $g \in G$ has an associated permutation, we write for $s \in S$, $gs$ for the permutation associated with $g$ action on $s$. We call $S$ a $G$-set. It is simple to show $g(hx) = (gh)x$ and $ex = x$.
+
+Given a group $G$, and a $G$-set $S$, for $s \in S$, let the orbit of $s$ be $Gs$, the set of all $gs$ for $g \in G$. The relation $x \sim y$ if $Gx = Gy$ is an equivalence relation and partitions the set into orbits of $S$. Note that this means the group acts independently on each of a $G$-set's orbits. A $G$-set is transitive if it has just one orbit. An action is faithful if it is injective. A map $\phi$ froma  $G$-set $X$ to a $G$-set $Y$ is a $G$-morphism if $\phi(gx) = g\alpha(x)$ for all $g \in G$ and $x \in X$. $\phi$ is an isomorphism if it is bijective.
+
+An element $x$ in a $G$-set $X$ is a fixed point if $gx = x$ for every $g \in G$. The set of all fixed points is denoted $X^G$. Given any $x \in X$, $G_x = \{ g \in G | gx = x \}$ is a subgroup called the isotropy subgroup of $x$ in $G$.
+
+As an example, let $G$ act on itself by conjugation $g(h) = ghg^{-1}$. The isotopy subgroups are called centralizers $C_G(h) = \{ g \in G | gh = hg \}$. A fixed point is a center, and the set of all centers is denoted $Z(G)$.
+
+Consider conjugation from $G$ on its subgroups. Then the isotropy group of a subgroup $H$ is the normalizer $N_G(H)$, which is the set $\{ g \in G | gHg^{-1} = H \}$. The fixed points are the normal subgroups.
+
+Consider the group $SL_n(\mathbf{R})$ acting on the upper half of the complex plane $H = \{ z \in \mathbf{C} | \im(z) > 0 \}$ by the mobius transform below:
+
+\[\begin{pmatrix} a & b \\ c & d \end{pmatrix} z = \frac{az + b}{cz + d}\]
+
+The isotropy subgroup of $i$ is the special orthogonal group $SO(2)$, the set of matrices with orthonormal columns. The mobius transform is transitive. A meromorphic function on $H$ invariant under $SO(2)$ is called a modular function, and is essential to the study of number theory, string theory, and the study of monstrous moonshine.
 
 \end{document}
