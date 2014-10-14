@@ -6,6 +6,68 @@
 \usepackage{kpfonts}
 \usepackage{tikz}
 \usepackage{wrapfig}
+\usepackage{amsmath}
+\usepackage{tikz}
+\usepackage{epigraph}
+\usepackage{lipsum}
+
+\renewcommand\epigraphflush{flushright}
+\renewcommand\epigraphsize{\normalsize}
+\setlength\epigraphwidth{0.7\textwidth}
+
+\definecolor{titlepagecolor}{cmyk}{1,.60,0,.40}
+
+\DeclareFixedFont{\titlefont}{T1}{ppl}{b}{it}{0.5in}
+
+\makeatletter                       
+\def\printauthor{%                  
+    {\large \@author}}              
+\makeatother
+
+% The following code is borrowed from: http://tex.stackexchange.com/a/86310/10898
+
+\newcommand\titlepagedecoration{%
+\begin{tikzpicture}[remember picture,overlay,shorten >= -10pt]
+
+\coordinate (aux1) at ([yshift=-15pt]current page.north east);
+\coordinate (aux2) at ([yshift=-410pt]current page.north east);
+\coordinate (aux3) at ([xshift=-4.5cm]current page.north east);
+\coordinate (aux4) at ([yshift=-150pt]current page.north east);
+
+\begin{scope}[titlepagecolor!40,line width=12pt,rounded corners=12pt]
+\draw
+  (aux1) -- coordinate (a)
+  ++(225:5) --
+  ++(-45:5.1) coordinate (b);
+\draw[shorten <= -10pt]
+  (aux3) --
+  (a) --
+  (aux1);
+\draw[opacity=0.6,titlepagecolor,shorten <= -10pt]
+  (b) --
+  ++(225:2.2) --
+  ++(-45:2.2);
+\end{scope}
+\draw[titlepagecolor,line width=8pt,rounded corners=8pt,shorten <= -10pt]
+  (aux4) --
+  ++(225:0.8) --
+  ++(-45:0.8);
+\begin{scope}[titlepagecolor!70,line width=6pt,rounded corners=8pt]
+\draw[shorten <= -10pt]
+  (aux2) --
+  ++(225:3) coordinate[pos=0.45] (c) --
+  ++(-45:3.1);
+\draw
+  (aux2) --
+  (c) --
+  ++(135:2.5) --
+  ++(45:2.5) --
+  ++(-45:2.5) coordinate[pos=0.3] (d);   
+\draw 
+  (d) -- +(45:1);
+\end{scope}
+\end{tikzpicture}%
+}
 
 \usetikzlibrary{matrix, arrows}
 
@@ -17,57 +79,81 @@
 \date{\today}
 
 \begin{document}
-
-\maketitle
+\begin{titlepage}
+\noindent
+\titlefont Group Theory\par
+\epigraph{A group is a set of objects which can operate with each other. One can find them almost anywhere in mathematics, from number theory to geometric symmetry. The goal of this course is to learn and understand what properties result from the relationships inside a group.}
+\null\vfill
+\vspace*{1cm}
+\noindent
+\hfill
+\begin{minipage}{0.35\linewidth}
+    \begin{flushright}
+        \printauthor
+    \end{flushright}
+\end{minipage}
+%
+\begin{minipage}{0.02\linewidth}
+    \rule{1pt}{125pt}
+\end{minipage}
+\titlepagedecoration
+\end{titlepage}
 
 \chapter{Basic Definitions and Properties}
 
 \section{What is a group?}
 
-A group is a set of objects which can operate with each other. One can find them almost anywhere in mathematics, from number theory to geometric symmetry. The goal of this course is to learn and understand the properties that all groups have.
+\subsection{Operations}
 
-We begin with a definition of how objects operate with each other. A law of composition or assignment on a set $S$ is a function from $S \times S$ to $S$. If $a$ and $b$ are arguments to this function, the value mapped from $a$ and $b$ is denoted $a \circ b$, $ab$, $a + b$, and pretty much any other symbol you can think of. Given a positive integer $n$, we write $a^n$ for $a \circ a \circ \dots \circ a$ $n$ times.
+Groups are intimately connected to the operations that define them. Thus, before we define a group, we must rigorously define what an operation is. Operations are mathematical structures that we use almost everyday via addition and multiplication of numbers -- thus it is not surprising that generalizing the properties of everyday operations quite difficult to generalize. The formal definition is actually quite simple, however. A law of composition or assignment on a set $S$ is a function from $S \times S$ to $S$. Think of an operation as a way of combining two elements of $S$ into a new element $S$. If $a$ and $b$ are arguments to this function, the value mapped from $a$ and $b$ is commonly denoted $a \circ b$, $ab$, or $a + b$, rather than $f(a,b)$ or some other common symbol for a function. This makes the notation less chunky, and keeps the intuitive definition of an operation in our head while we work. A good notation like this can make working with the ideas of groups much simpler. While the symbols above are the most common for groups, any other symbol may be used for the operation. A final bit of notation suffices our definition of operation harkening back to our friends the integers. Given a positive integer $n$, we write $a^n$ for $a \circ a \circ \dots \circ a$, repeated $n$ times.
 
-An assignment is associative if for any three elements $a$, $b$, and $c$, $a(bc) = (ab)c$. All in all, this means that any brackets are redundant in an equation. Formally, there is a unique way of defining a sequence $[a_1 a_2 \dots a_n]$, such that for any $a$, $[a] = a$, for any $b$, $[ab] = a \circ b$, and for any integer $i$ from $2$ to $n$, $[a_1\ \dots\ a_n] = [a_1\ \dots\ a_{i-1}] \circ [a_i\ \dots\ a_n]$:
+The assignment property, though useful, is too general for the way we want to define groups, so we specify some additional properties that groups may have:
+\begin{itemize}
+    \item An assignment is associative if for any three elements $a$, $b$, and $c$, $a(bc) = (ab)c$. All in all, this means brackets are irrelevent in any equation with an associative assignment. Order however, is still important!
+    \item Another property of an assignment is commutivity: that for any elements $a$ and $b$, $a \circ b = b \circ a$. Given an associative and commmutative operation, a sequence is equal to any permutation of its elements. If $+$ is used as an operation symbol, it is assumed the operation is commutative. No other operation has presumptions like this, however.
+\end{itemize}
+
+We have conjectured that brackets can be removed from an equation using an associative operation. This must be rigorously proven. A formal specification of this conjecture is that there is a unique way of defining a sequence $[a_1 a_2 \dots a_n]$, such that the following properties hold:
+\begin{itemize}
+    \item For any element $a$, $[a] = a$
+    \item For any element $a$ and $b$, $[a\ b] = a \circ b$
+    \item For any sequence of elements $a_1$, $a_2$, \dots, $a_n$, and for any integer $i$ from $2$ to $n$, $[a_1\ \dots\ a_n] = [a_1\ \dots\ a_{i-1}] \circ [a_i\ \dots\ a_n]$
+\end{itemize}
 \begin{proof}
-    We prove by induction that for any set of $n$ elements, $[a_1\ a_2\ \dots\ a_n]$ is uniquely determined. With only one element, the uniqueness is obvious, as is the case for two elements. Now suppose any product of $n-1$ elements is uniquely defined. Note by splitting up the sequence, we know the sequence is unique, so we need only find one that works. Define $[a_1\ a_2\ \dots\ a_n] = [a_1\ a_2\ \dots\ a_{n-1}] \circ a_n$. Let $i$ be an arbitrary integer from $2$ to $n-1$. The following calculation shows we can split up our sequence in that way.
+    We prove by induction that for any set of $n$ elements, $[a_1\ a_2\ \dots\ a_n]$ exists and is uniquely determined. With only one element, the uniqueness is obvious, as is the case for two elements. Now suppose any product of $n-1$ elements is uniquely defined. Note by splitting up the sequence, we know the sequence is unique, so we need only find one that works. Define $[a_1\ a_2\ \dots\ a_n]$ recursively as $[a_1\ a_2\ \dots\ a_{n-1}] \circ a_n$. Let $i$ be an arbitrary integer from $2$ to $n-1$. The following calculation shows that the third property of our function holds, and thus a definition with the properties above exists:
 
     \begin{align*}
     [a_1\ a_2\ \dots\ a_n] &= [a_1\ a_2\ \dots\ a_{n-1}] \circ a_n\\
     &= ([a_1 \dots a_{i-1}] \circ [a_i \dots a_n]) \circ a_n\\
-    &= \underbrace{[a_1 \dots a_{i-1}] \circ ([a_i \dots a_n] \circ a_n)}_\text{Associativity is used here}\\
+    &= \underbrace{[a_1 \dots a_{i-1}] \circ ([a_i \dots a_{n-1}] \circ a_n)}_\text{Associativity is used here}\\
     &= [a_1 \dots a_{i-1}] \circ [a_i \dots a_n]
     \end{align*}
-
-    The transition from $1.2$ to $1.3$ is where the associative property of the assignment is required.
 \end{proof}
 
-An example of an associative operation on a set is, for any two element $a$ and $b$, $a \circ b = a$. Then $a \circ (b \circ c) = a \circ b = a$, and $(a \circ b) \circ c = a \circ c$. Thus the operation is associative.
-
-Another property of an assignment is commutivity: that for any elements $a$ and $b$, $a \circ b = b \circ a$. Given associativity, a sequence is equal to any permutation of its elements. That is, if $a_1, a_2, \dots, a_n$ are a sequence of elements, and $\pi$ is a permutation of $1$ to $n$, then $a_1\circ a_2 \circ \dots \circ a_n = a_{\pi(1)} \circ a_{\pi(2)} \circ \dots \circ a_{\pi(n)}$.
+Another conjecture was that we reorder elements however we want when an associative, commutative operation is used. Rigorously, this means that if $a_1, a_2, \dots, a_n$ is a sequence of elements, and $\pi$ is a permutation of $1$ to $n$, then $a_1\circ a_2 \circ \dots \circ a_n = a_{\pi(1)} \circ a_{\pi(2)} \circ \dots \circ a_{\pi(n)}$.
 \begin{proof}
     We prove by induction. This is obvious for one element. Suppose this is true of permutations of $n-1$ elements. Let $i$ be the integer such that $\pi(i) = n$. Then the following calculation shows we can move $a_i$ to the end of the sequence.
 
     \begin{align*}
     a_1 \circ a_2 \circ \dots a_i \dots \circ a_n &= (a_1 \circ a_2 \circ \dots a_i) \circ \dots \circ a_n\\
-    &= \underbrace{a_{i+1} \circ \dots \circ (a_1 \circ a_2 \circ \dots a_i)}_\text{Commutivity is used here}
+    &= \underbrace{a_{i+1} \circ \dots \circ a_n \circ (a_1 \circ a_2 \circ \dots a_i)}_\text{Commutivity is used here}
     \end{align*}
 
-    Now renumber each element from $1$ to $n-1$. Then our original permutation is a permutation of $n-1$ elements when restricted to the first $n-1$ numbers, so we may by induction permute these remaining numbers to get the correct ordering required by the permutation $\pi$.
+    Now renumber each element in the beginning of the equation from $1$ to $n-1$. Then our original permutation is a permutation of $n-1$ elements when restricted to the first $n-1$ numbers, so we may by induction permute these remaining numbers to get the correct ordering required by the permutation $\pi$.
 \end{proof}
 
-Note that it is assumed that an operation is commutative if the symbol $+$ is used for the operation.
+You may assume that since addition and multiplication are commutative, most operations we work with will be commutative. This is far from the case as we will soon see. An example that may satiate you before then is the multiplication of matrices.
 
-An identity of a set and assignment is an element $e$ that is idempotent, that is, that $a \circ e = e \circ a = a$ for any element $a$. There can only be one such $e$ for if we have another idempotent element $e'$, we have that $e = e' \circ e = e'$. If $\cdotp$ is used for the operation, we may write $e$ as $1$, and if $+$ is used, we may write it as $0$, even though the element is not always a number. If a set has an identity, we define, for any element $a$, $a^0 = e$.
+Addition and multiplication also have an additional property that is more subtle than the general way their operations can be moved around. For each, there is a number ($0$ and $1$) such that when we add or multiply this number to any other number, nothing happens. We can generalize this in the following way. An identity of a set and assignment is an element $e$ that is idempotent, that is, that $a \circ e = e \circ a = a$ for all elements $a$. There can only be one such $e$, for if we have another idempotent element $e'$, some calculation shows $e = e' \circ e = e'$. If $\cdotp$ is used as the operation's symbol, we may write $e$ as $1$, and if $+$ is used, we may write the identity as $0$, even though the element is not always a number -- it is a just a metaphor to help with thinking about more abstract operations. If a set has an identity, we define, for any element $a$, $a^0 = e$.
 
-Given a set with an identity $e$, we say an element $a$ is invertible if there is another element $b$ such that $a \circ b = b \circ a = e$. b is normally denoted $a^{-1}$, or if $+$ is used for the operation, $-a$.
+Another quality of addition and multiplication is that there is a way of going backwards in some sense from the operation that took place. That is, for every element $a$, there is an element $c$ such that $(b \circ a) \circ c$ is $b$ for all elements $b$. With addition, this is the negative of the number, and with multiplication, the inverse. Given a set with an identity $e$, we say an element $a$ is invertible if there is another element $b$ such that $a \circ b = b \circ a = e$. b is normally denoted $a^{-1}$, or if $+$ is used for the operation, $-a$.
 
-Here are some common properties of inverses. We assume associativity, but not commutivity in our operation. Let $a$, $l$, and $r$ be arbitrary elements, and $e$ the identity:
+Here are some properties common to all inverses. We assume associativity, but not commutivity in the operation used. Let $a$, $l$, and $r$ be arbitrary elements, and $e$ the identity:
 \begin{itemize}
     \item If $la = e$ and $ar = e$, then $l = r$, and $a$ is invertible:
-    \begin{proof} Then $l = le = lar = er = r$ \end{proof}
+    \begin{proof} For then it follows that $l = le = lar = er = r$. \end{proof}
     \item $a^{-1}$ is unique:
-    \begin{proof} The above property shows any two inverses are the same, behaving as $l$ and $r$ in the above proof. \end{proof}
+    \begin{proof} The above property shows any two inverses are the same. \end{proof}
 \end{itemize}
 
 A monoid is a set with an associative operation that contains a unit element (so the monoid is also non-empty). We say a monoid is commutative or abelian if its operation is commutative. Inverses are not required. The order of the monoid is the number of elements it contains.
