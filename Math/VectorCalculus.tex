@@ -1,11 +1,17 @@
 \documentclass{report}
 
+\setlength{\parskip}{5pt}%
+
 \usepackage{amssymb}
 \usepackage{amsmath}
 \usepackage{amsthm}
 \usepackage{tikz}
 \usepackage{wrapfig}
 \usepackage{amsmath}
+\usepackage{epigraph}
+\usepackage{mathtools}
+\usepackage{etoolbox}
+\usepackage{needspace}
 
 \newtheorem{theorem}{Theorem}[chapter]
 \newtheorem{lemma}[theorem]{Lemma}
@@ -17,11 +23,14 @@
 
 \usetikzlibrary{matrix, arrows, calc}
 
+\AtBeginEnvironment{definition}{\Needspace{5\baselineskip}}
+
 \DeclareMathOperator{\lcm}{lcm}
 \DeclareMathOperator{\im}{im}
 \DeclareMathOperator{\real}{\mathbf{R}}
 \DeclareMathOperator{\spn}{span}
 \DeclareMathOperator{\dom}{dom}
+\DeclarePairedDelimiter{\inner}{\langle}{\rangle}
 
 \tikzset{
     right angle quadrant/.code={
@@ -59,21 +68,27 @@
 
 \chapter{Prelude}
 
-On a map, we identify a unique position by a set of coordinates, a lattitude and longitude. Together, the set of all these coordinates form a two dimensional vector space of coordinates which can describe the surface of the earth. These coordinates allow us to make precise quantitative notions of the geometry of space. Rene Descartes ingenious discovery of this method, known today as analytic geometry, revolutionized the fields of physics and mathematics when it was discovered in 1637. It cannot be argued that the fields of the Infinitismal Calculus and Linear algebra were directly influenced by analytic geometries ideas. The subject of this book is an attempt to reconnect these fields that share a common origin.
+\epigraph{Any problem in geometry can easily be reduced to such terms that a knowledge of the lengths of certain straight lines is sufficient for its construction.}{Rene Descartes - 1637}
 
-Human intuition suggest that the spatial properties of the real numbers have obvious analogues in three dimensional space. The aim of the subject of vector calculus is to make the intuition rigorous -- that is, to generalize the notions of calculus on the number line to finite dimensional vector spaces over the real numbers. We establish vector calculus based on a prerequisite knowledge of this calculus, as well as an elementary knowledge of linear algebra.
+On a map, we identify a unique position by a pair of coordinates, a lattitude and a longitude. Via this method, description of the earth's surface is made precise by a simple pair of numbers. We can easily extend this coordinate method to three dimensions, allowing precise, quantitative statements about the geometry of space to be made. Rene Descartes' ingenious discovery of this concise description, known today as analytic geometry, revolutionized the fields of physics and mathematics when it was discovered in 1637. Inspired by Descartes' ideas, the two mathematicians Sir Isaac Newton and Gottfried Leibnitz went on to discover the infinitismal calculus. Meanwhile, the study of analytic geometry was extended to arbitrary dimensions, with the new name of linear algebra. As calculus of a single variable focuses on the infinitismal properties of the analytic geometry of two dimensions, vector calculus realizes these properties in the arbitrary dimensional vector spaces of linear algebra.
 
-We begin with a familiar definition, that is one of the most important definition of the book.
+Human intuition suggests that the spatial properties of the real numbers have obvious analogues in three dimensional space. The aim of this report is to create rigour to fill in gaps of reasoning that intuition often results in. Assuming the properties of differential and integral calculus in `one dimensional space', we show how results from $\real$ naturally extend to arbitrary finite dimensional vector spaces with scalars in the real numbers.
+
+We begin with what should be a familiar definition:
 
 \begin{definition}
-  For any positive interger $n$, the n-dimensional vector space $\real^n$ is defined to be the set of all $n$ tuples where each element of the tuple is a real number. In the language of set theory, a concise description is
+  For any positive integer $n$, the n-dimensional real vector space $\real^n$ is defined to be the set of all $n$ tuples where each element of the tuple is a real number. In the language of set theory, $\real^n$ is equal to
   %
-  \[ \real^n = \{ (v_1, v_2, \dots, v_n) : \forall i : v_i \in \real \} \]
+  \[ \{ (v_1, v_2, \dots, v_n) : v_1,v_2,\dots,v_n \in \real \} \]
   %
-  We also call $\real^n$ the cartesian space, and in this context we call a vector in $\real^n$ a point. In general, for a vector $v \in \real^n$ we denote by $v_i$ the $i$'th coordinate of the tuple. Think of a vector as a collection of various magnitudes, and a point as the specific location in a space.
+  Each element in the tuple is called a coordinate.
+
+  We also call $\real^n$ the Cartesian or Euclidean space, and in this context we call a vector in $\real^n$ a point.
 \end{definition}
 
-In physics, vectors in cartesian space are used to identify relative differences between various quantities describing objects. Given two vectors $v$ and $w$, we can then identify a third vector $v + w$, which is identified as the object whose relative differences to the object which $v$ describes is $w$, and vice versa for $w$ to $v$. Of course, if $v$ and $w$ are identified with their cartesian coordinates, $v + w$'s coordinates are just the sum of each corresponding coordinate in $v$ and $w$. This leads to the definition of the summand operation in a vector space $\real^n$.
+When we call an element of $\real^n$ a vector, think of it as a collection of various magnitudes that an object posses, whereas think of a point as a geometric location in space: the tip of the corresponding vector.
+
+In physics, vectors are used to identify relative differences between various quantities describing objects. Given two vectors $v$ and $w$, we can then identify a third vector $v + w$, which is identified as the object whose relative differences to the object which $v$ describes is $w$, and whose relative difference to $w$ is $v$. Of course, if $v$ and $w$ are identified with a vector of coordinates, $v + w$'s coordinates are just the sum of each corresponding coordinate in $v$ and $w$. This leads to the definition of the summand operation in the vector space $\real^n$.
 
 \begin{definition}
   For two vectors $v$ and $w$, we define the sum of the two vectors,
@@ -93,18 +108,18 @@ In physics, vectors in cartesian space are used to identify relative differences
 \end{tikzpicture}
 \end{center}
 
-In addition to summing vectors of relative magnitudes, a physicist `scales' a vector by a number $\lambda$ by identifying a new object whose relative magnitude is scaled propertionally by that number $\lambda$.
+In addition to summing vectors of relative magnitudes, a physicist `scales' a vector by a number $\lambda$ by identifying a new object where each magnitude of that object is scaled proportionally by $\lambda$. We describe this mathematically as follows.
 
 \begin{definition}
   Given a vector $v$ and scalar $\lambda$, define by $\lambda v$ the equation
   \[ \lambda v = (\lambda v_1, \lambda v_2, \dots, \lambda v_n) \]
 \end{definition}
 
-Given these definitions, the set $\real^n$ becomes an $n$ dimensional vector space over the real number field, hence the defined name. The canonical algebraic basis is the set of vectors $e_1, e_2, \dots, e_n$, defined in the following form:
+Given the operations of addition and scalar multiplication, the set $\real^n$ becomes an $n$ dimensional vector space over the field of real numbers. The canonical algebraic basis is the set of vectors $e_1, e_2, \dots, e_n$, defined in the following form:
 %
-\[ e_i = \underbrace{(0, \dots, 0, 1, 0, \dots, 0)}_\text{Where 1 is in the i'th coordinate} \]
+\[ e_i = \underbrace{(0, \dots, 0, 1, 0, \dots, 0)}_\text{1 is in the i'th coordinate} \]
 %
-In this text we shall assume algebraic knowledge of finite dimensional vector spaces. Assuming this elementary understanding, we will extend our understanding to obtain the analytical properties which have an affinity with the methods of the infinitismal calculus.
+In this text, algebraic knowledge of $\real^n$ is assumed. We focus our efforts on discovering analytical properties which have an affinity with the methods of the infinitismal calculus. To be facecious, you should know vectors in $\real^n$ by associated equalities, and we shall now learn the interactions of inequalities.
 
 
 
@@ -117,19 +132,21 @@ In this text we shall assume algebraic knowledge of finite dimensional vector sp
 
 \chapter{Analytical properties of $\real^n$}
 
-The most basic analytic property is distance, with which we can define almost every other property in the book. In general, arbitrary vector spaces have no notion of distance, thus we must make use of the specific properties of $\real^n$ to define distance on the space. What is the property that allows us to add distance to $\real^n$? The key observation is the following non-rigorous argument, which motivates the definition which preludes the argument:
+\epigraph{The introduction of numbers as coordinates is an act of violence.}{Hermann Weyl - 1927}
+
+Perhaps the most basic geometric property is distance. With it, we can define almost every other property in the book. What is important about distance? It gives a number to quantize a relationship between a pair of objects. In general, arbitrary vector spaces have no notion of distance, thus we must make use of the specific properties of $\real^n$ to define distance on the space. What is the property that allows us to add distance to $\real^n$? The key observation is a geometric argument which follows the definition below.
 
 \begin{definition}
-  The {\bf length}, or {\bf euclidean norm} (shortened to just the norm), of a point $v$ in a cartesian space $\real^n$, is denoted $\|v\|$, and defined by
+  The {\bf length}, or {\bf euclidean norm} of a vector $v$ in $\real^n$, denoted $\|v\|$, is defined as
   %
-  \[ \| v \| = \sqrt{v_1^2 + v_2^2 + \dots + v_n^2} \]
+  \[ \sqrt{v_1^2 + v_2^2 + \dots + v_n^2} \]
   %
-  where the square root is the positive root of the sum of squares. The {\bf distance} between two vectors $v$ and $w$ is $\| v - w \|$. Thus the length of a vector $v$ is precisely its distance from the zero vector.
+  where the square root is the positive root of the sum of squares. The {\bf distance} between two points $x$ and $y$ in $\real^n$ is $\| x - y \|$. Thus the length of a vector $v$ is precisely its distance from the zero vector.
 \end{definition}
 \begin{proof}
-  Let $v$ be an arbitrary point in euclidean space. Suppose the space is one dimensional, which is precisely the real numbers. Then we have that the definition of $\|v\|$ is exactly $|v|$. This intuitively is the `length' of a number in $\real$. If $v$ is defined in $\real^2$, $\|v\|$ follows from pythagoras' theorem. That is, the length of a the hypotenuse of a triangle is the square root of the sum of the squares of the two sides. Here the hypotenuse is the vector $v$, and the sides are the components of the vector: $v_1$ and $v_2$.
+  Let $v$ be an arbitrary point in euclidean space. Suppose the space is one dimensional, which is precisely the real numbers. Then we have that the definition of $\|v\|$ is exactly $|v|$. This intuitively is the `length' of a number in $\real$. If $v$ is defined in $\real^2$, $\|v\|$ follows from pythagoras' theorem. That is, the length of the hypotenuse of a triangle is the square root of the sum of the squares of the two sides. To establish this, let $v$ be the hypotenuse of a triangle, and let the sides be the components of the vector: $v_1$ and $v_2$.
 
-  Now suppose by induction that this makes sense in $n-1$ dimensions. Then we can extend the distance to $n$ dimensions in the following manner. Take an arbitrary vector $v$. Then we can consider this vector as the hypotenuse of a triangle in two dimensions. where the first side is $(v_1,v_2,\dots,v_{n-1},0)$ and the second is $(0,0,\dots,v_n)$. We can consider the first side of the triangle to be in $n-1$ dimensional space, and the second to be in one dimension. The length of the first side of the triangle in $n-1$ dimensional space is, by induction,
+  Now suppose that the definition of length has been established in $n-1$ dimensions. Then we can extend the distance to $n$ dimensions in the following manner. Take an arbitrary vector $v$. Then we can consider this vector as the hypotenuse of a triangle in two dimensions. where the first side is $(v_1,v_2,\dots,v_{n-1},0)$ and the second is $(0,0,\dots,v_n)$. We can consider the first side of the triangle to be in $n-1$ dimensional space, and the second to be in one dimension. The length of the first side of the triangle in $n-1$ dimensional space is, by induction,
   %
   \[ \sqrt{v_1^2 + v_2^2 + \dots + v_{n-1}^2} \]
   %
@@ -138,24 +155,24 @@ The most basic analytic property is distance, with which we can define almost ev
   \[ \sqrt{\bigg(\sqrt{v_1^2 + v_2^2 + \dots + v_{n-1}^2}\bigg)^2 + \bigg(\sqrt{v_n^2}\bigg)^2}
         = \sqrt{v_1^2 + v_2^2 + \dots + v_{n-1}^2 + v_n^2} \]
   %
-  Thus the notion of a norm makes sense in $n$ dimensions. By induction, we obtain the definition in all dimensions.
+  Thus the notion of a norm makes sense in $n$ dimensions. By induction, the definition makes sense in an arbitrary cartesian space $\real^n$.
 \end{proof}
 
-The proof above is inrigorous, relying on ideas that rely on knowledge of the real world. In mathematics this strategy is imprecise and considered unreliable, hence the proof makes little sense. It is included only to provide a reason why we define axiomatically the length of a point in this way. Though it is possible to connect plane geometry to the algebra of vector spaces precisely, the ideas used are quite involved, hence it is left for another time.
+The proof above is not rigorous, relying on the ideas of plane geometry which are only connected to $\real^2$ by an intuitive study of analytic geometry. In mathematics, intuition is considered imprecise, and has resulted in unreliable proofs in the long run. Back when Calculus was invented, this style of proof was the norm, but in the 1800s, when the study of the calculus of vectors became mainstream, it was found that some ideas, thought intuitively right, resulted in deep errors in the foundations of calculus. It was only when Karl Weierstra{\ss} formalized the concepts of limits, and Bernhard Riemann created his formal definition of the integral, that these problems were sorted out. Because of the problems that result from the intuitive method, all proofs in modern mathematics must be based on a solid axiomatic footing. The proof above is included only as motivational reason why we axiomatically define the length of a vector as the root of a sum of squares as above.
 
-We require the length of a vector to be real valued as we need to be able to compare the length of two numbers. If we were to use the complex numbers, we would lose this property of order. Fortunately, our definition of length, defined via the sum of squares, is non-negative, and thus has a square root in the real numbers, so our operation is well-defined.
+It is easy to see that the length of an arbitrary vector is defined in $\real$. A sum of squares is always non-negative, and a non-negative number has a unique positive root in $\real$. We obviously need this in any definition of distance. Imagine the havoc that would be caused by a vector which has `no distance' in comparison to other vectors, or multiple distances!
 
-Some immediate and geometrically obvious properties now result from the definition, showing our definition connects well to the notion of length in the real world.
+Some immediate geometrical properties arise from the definition of the euclidean norm above. The statements are obvious to intuitive statements in the real world. This just provides more evidence that our definition fits the intuitive sense of distance.
 
 \begin{lemma}
-  For every vector $v \in \real^n$, the length of a vector is greater than or equal to zero, and is length zero only when the vector itself is the zero vector.
+  For every vector $v \in \real^n$, $\|v\| \geq 0$. The length of $v$ is 0 only when the vector itself is the zero vector.
 \end{lemma}
 \begin{proof}
-  Our definition takes the square root that is non-negative in $\real$, hence our norm must be non-negative. If, for some vector $v \in \real^n$, $\| v \| = 0$, then $v_1^2 + \dots + v_n^2 = 0$, and as this is the sum of squares, which all have non-negative values, we must have, for all $v_i$, $v_i^2 = 0$. This is true if and only if for all $v_i = 0$, hence $v = 0$. The converse is trivial.
+  Since our definition takes the unique non-negative square root of a number in $\real$, our norm must be non-negative. If, for some vector $v \in \real^n$, $\| v \| = 0$, then $v_1^2 + \dots + v_n^2 = 0$. As this is the sum of squares, which all have non-negative values, we must have for all coordinates $v_i$, $v_i^2 = 0$. This is true if and only if $v_i = 0$ for all coordinates $v_i$, hence $v = 0$.
 \end{proof}
 
 \begin{lemma}
-  For every vector $v \in \real^n$, and every scalar $\lambda \in \real$, $\| \lambda v \| = | \lambda |\ \| v \|$
+  For every vector $v \in \real^n$, and every scalar $\lambda \in \real$, $\| \lambda v \| = | \lambda |\ \| v \|$.
 \end{lemma}
 \begin{proof}
   Because then $\lambda v = (\lambda v_1, \lambda v_2, \dots, \lambda v_n)$, and thus it follows that
@@ -168,7 +185,7 @@ Some immediate and geometrically obvious properties now result from the definiti
   \end{align*}
 \end{proof}
 
-Intuitively, if we scale a vector by the number, we should scale the length by the same value proportionally.
+Intuitively, if we scale a vector by the number, we should scale the length by the same proportional value.
 
 \begin{center}
 \begin{tikzpicture}
@@ -182,11 +199,8 @@ Intuitively, if we scale a vector by the number, we should scale the length by t
 \end{center}
 
 \begin{corollary}
-  For every vector $v$, $\| v \| = \| -v \|$
+  For every vector $v$, $\| v \| = \| -v \|$.
 \end{corollary}
-\begin{proof}
-  The proof is trivial, and left as an exercise.
-\end{proof}
 
 The corollary means that, if we mirror a vector about the x and y axis, the size of a vector stays the same.
 
@@ -208,63 +222,76 @@ The corollary means that, if we mirror a vector about the x and y axis, the size
 \end{center}
 
 \begin{definition}
-Given two vectors $v$ and $w$ in the same vector space $\real^n$, we define the {\bf inner product} of the two vectors $v$ and $w$ to be $\langle v, w \rangle$, to be defined
+Given two vectors $v$ and $w$ in the vector space $\real^n$, we define the {\bf inner product} of the two vectors $v$ and $w$, denoted $\inner{v, w}$, as
 %
-\[ \langle v, w \rangle = v_1w_1 + v_2w_2 + \dots v_nw_n = \sum_{k = 1}^n v_k w_k \]
+\[ v_1w_1 + v_2w_2 + \dots + v_nw_n = \sum_{k = 1}^n v_k w_k \]
 \end{definition}
 
-What is the inner product? We need to develop the definition of inner products in order to provide a satisfying answer.
+What is the inner product? In order to provide a satisfying answer, we must discover some resultant properties of the definition. For a little motivation of its use, see that for any vector $v$, $\|v\|^2 = \inner{v, v}$.
 
 \begin{lemma}[Symmetry]
   For two vectors $v$ and $w$,
   %
-  \[ \langle v, w \rangle = \langle w, v \rangle \]
+  \[ \inner{v, w} = \inner{w, v} \]
 \end{lemma}
 \begin{proof}
-  The main idea of the proof involves a simple use of commutativity of real numbers.
+  The idea of the proof rests on the commutativity of real numbers.
   \begin{align*}
-    \langle v, w \rangle &= \sum_{k=1}^n v_k w_k\\
-                         &= \sum_{k=1}^n w_k v_k\\
-                         &= \langle w, v \rangle
+    \inner{v, w} &= \sum_{k=1}^n v_k w_k\\
+                 &= \sum_{k=1}^n w_k v_k\\
+                 &= \inner{w, v}
   \end{align*}
 \end{proof}
 
 \begin{lemma}[Linearity]
   For two vectors $v$ and $w$, and a scalar $\lambda$,
   %
-  \[ \langle \lambda v, w \rangle = \langle v, \lambda w \rangle = \lambda \langle v, w \rangle \]
+  \[ \inner{\lambda v, w} = \inner{v, \lambda w} = \lambda \inner{v, w} \]
 \end{lemma}
 \begin{proof}
-  We get the proof by simply factoring out the scalar $\lambda$ from the equation.
+  This proof rests on the distributive property of $\real$.
   \begin{align*}
-    \langle \lambda v, w \rangle &= \sum_{k = 1}^n v_k (\lambda w_k)\\
-                                 &= \lambda \sum_{k = 1}^n v_k w_k`'\\
-                                 &= \lambda \langle v, w \rangle
+    \inner{\lambda v, w} &= \sum_{k = 1}^n v_k (\lambda w_k)\\
+                         &= \lambda \sum_{k = 1}^n v_k w_k`'\\
+                         &= \lambda \inner{v, w}
   \end{align*}
 
-  We obtain another case by noting $\langle v, \lambda w \rangle = \langle \lambda w, v \rangle = \lambda \langle w, v \rangle = \lambda \langle v, w \rangle$.
+  We obtain the reverse case by noting that $\inner{v, \lambda w} = \inner{\lambda w, v} = \lambda \inner{w, v} = \lambda \inner{v, w}$.
 \end{proof}
 
-First we define another geometric property, angles. The definition results because of the correspondence with the definition of angles $\real^2$: plane geometry.
+\begin{lemma}[Additivity]
+  For three vectors $v$, $w$, and $u$,
+  %
+  \[ \inner{v + u, w} = \inner{w, v + u} = \inner{v,w} + \inner{u,w}  \]
+\end{lemma}
+\begin{proof}
+  \begin{align*}
+    \inner{v + u, w} &= \sum_{k = 1}^n (v_k + u_k)(w_k)\\
+                     &= \sum_{k = 1}^n v_kw_k + \sum_{k = 1}^n u_kw_k\\
+                     &= \inner{v,w} + \inner{u,w}
+  \end{align*}
+\end{proof}
+
+To see intuitively what the dot product is, we rigourously define another geometric property, angles. Like with distance, the definition results because of the correspondence with the definition of angles $\real^2$: plane geometry.
 
 \begin{definition}
   The {\bf angle} $\theta$ between two vectors $v$ and $w$ is the unique angle between 0 and $\pi$ such that
   %
-  \[ \cos(\theta) = \frac{\langle v, w \rangle}{\| v \| \| w \|} \]
+  \[ \cos(\theta) = \frac{\inner{v, w}}{\| v \| \| w \|} \]
   %
   This definition corresponds to the usual definition in plane geometry.
 \end{definition}
 \begin{proof}
-  Take two arbitrary vectors $v$ and $w$. If we identify $v$ with a line $OA$, and $w$ with a line $OB$, each line with a length equal to the magnitude of each vector, then we obtain the triangle $OAB$ has sides corresponding to $v$, $w$, and $v-w$. The angle $\theta$ between $v$ and $w$ is thus the angle between $OA$ and $OB$. The law of cosines applied to the vectors tells us that
+  Take two arbitrary vectors $v$ and $w$. If we identify $v$ with a line $OA$, and $w$ with a line $OB$, each line with a length equal to the magnitude of each vector, then we obtain the triangle $OAB$. $OAB$ has sides corresponding to $v$, $w$, and $v-w$. The angle $\theta$ between $v$ and $w$ is thus the angle between $OA$ and $OB$. The law of cosines applied to the vectors tells us that
   %
   \[ \| v - w \|^2 = \|v\|^2 + \|w\|^2 - 2\|v\|\|w\| \cos(\theta) \]
   %
   Noting that for any vector $u$, $\|u\|^2 = \langle u, u \rangle$, we obtain that
   %
   \begin{align*}
-    \|v - w\|^2 &= \langle v - w, v - w \rangle\\
-                &= \langle v, v \rangle - 2 \langle v, w \rangle + \langle w, w \rangle\\
-                &= \|v\|^2 - 2 \langle v, w \rangle + \|w\|^2
+    \|v - w\|^2 &= \inner{v - w, v - w}\\
+                &= \inner{v, v} - 2 \inner{v, w} + \inner{w, w}\\
+                &= \|v\|^2 - 2 \inner{v, w} + \|w\|^2
   \end{align*}
   %
   Rearranging the previous equation and substituting our new value of $\|v - w\|^2$, we conclude that $\theta$ is the angle defined by the equation
@@ -276,14 +303,30 @@ First we define another geometric property, angles. The definition results becau
   \end{align*}
 \end{proof}
 
-Is this angle well defined for all vectors? For any angle $\theta$ that we consider,
+Are angles well defined for all vectors? If either of the vectors are zero, then there magnitude is zero, hence the angle is not well defined (a zero vector has no `point' to define an angle on). For any angle $\theta$,
 %
 \[ -1 \leq \cos(\theta) \leq 1 \]
 %
-Thus the angle between two vectors in $\real^n$ is only well defined if $|\langle v, w \rangle|/\|v\|\|w\|| \leq 1$. The following theorem shows this holds for any vectors in $\real{R}^n$.
+Thus the angle between two vectors in $\real^n$ is only well defined if
+%
+\[ \frac{|\langle v, w \rangle|}{\|v\|\|w\|} \leq 1\]
+%
+The following theorem shows this holds for any pair of non-zero vectors in $\real^n$.
 
 \begin{theorem}[The Cauchy-Schwarz-Bunyakovsky-H\"{o}lder Inequality]
-  For any two vectors $v,w \in \real^n$, $|\langle v, w \rangle| \leq \|v\|\|w\|$, hence $|\langle v, w \rangle|/\|v\|\|w\| \leq 1$, and the angle between the two vectors is well defined. In addition, $\langle v, w \rangle = \|v\|\|w\|$ if and only if $v$ and $w$ are linearly dependent.
+  For any two vectors $v,w \in \real^n$,
+  %
+  \[ |\inner{v, w}| \leq \|v\|\|w\| \]
+  %
+  hence
+  %
+  \[ \frac{|\inner{v, w}|}{\|v\|\|w\|} \leq 1 \]
+  %
+  and thus the angle between the two vectors is well defined. In addition,
+  %
+  \[ \inner{v, w} = \|v\|\|w\| \]
+  %
+  if and only if $v$ and $w$ are linearly dependent.
 \end{theorem}
 \begin{proof}
   If $v$ and $w$ are linearly dependent, equality holds by the following calculation. Let $\lambda$ be the scalar such that $w = \lambda v$.
@@ -292,17 +335,17 @@ Thus the angle between two vectors in $\real^n$ is only well defined if $|\langl
     \langle v, w \rangle &= \langle v, \lambda v \rangle\\
                          &= \lambda \langle v, v \rangle\\
                          &= \lambda \| v \|^2\\
-                         &= \| v \| \| \lambda v \|
+                         &= \| v \| \| w \|
   \end{align*}
   %
-  If $v$ and $w$ are not linearly dependent, $v - \lambda w \neq 0$ for any scalar $\lambda$ (this is precisely the converse of linear dependence). It then follows that $\| v - \lambda w \|^2 > 0$ for all $\lambda$. Expand what this value means, by algebraic manipulations, obtaining that
+  If $v$ and $w$ are not linearly dependent, $v - \lambda w \neq 0$ for any scalar $\lambda$ (this is precisely the converse of linear dependence). It then follows that $\| v - \lambda w \|^2 > 0$ for all $\lambda$. Expanding what this value means, by algebraic manipulations, we obtain that
   %
   \begin{align*}
     \| v - \lambda w \|^2 &= \langle v - \lambda w, v - \lambda w \rangle\\
                           &= \|v\|^2 - 2 \lambda \langle v, w \rangle + \lambda^2 \| w \|^2
   \end{align*}
   %
-  This can be considered a quadratic function of $\lambda$ with no real solutions. Hence the discriminant is negative. That is,
+  This can be considered a quadratic function of $\lambda$ with no solutions in $\real$. Hence the discriminant is negative. That is,
   %
   \[ (2 \langle v, w \rangle)^2 - 4 \|v\|^2 \|w\|^2 < 0 \]
   %
@@ -312,16 +355,16 @@ Thus the angle between two vectors in $\real^n$ is only well defined if $|\langl
   %
   Hence
   %
-  \[ |\langle v, w \rangle| < \underbrace{|\|v\|\|w\|| = \|v\|\|w\|}_\text{As both are positive} \]
+  \[ |\langle v, w \rangle| <|\|v\|\|w\|| = \|v\|\|w\| \]
 \end{proof}
 
 \begin{corollary}
   The angle between two linearly independant vectors is of magnitude 0.
 \end{corollary}
 \begin{proof}
-  When two vectors $v$ and $w$ are linearly independant, from the above inequality, we know for the angle $\theta$ between them,
+  When two vectors $v$ and $w$ are linearly independant, from the above equality, we know for the angle $\theta$ between them,
   %
-  \[\cos(\theta) = \langle v, w \rangle/\|v\|\|w\| = \|v\|\|w\|/\|v\|\|w\| = 1\]
+  \[\cos(\theta) = \frac{\inner{v, w}}{\|v\|\|w\|} = \frac{\|v\|\|w\|}{\|v\|\|w\|} = 1\]
   %
   hence $\theta = 0$.
 \end{proof}
@@ -330,7 +373,11 @@ Thus the angle between two vectors in $\real^n$ is only well defined if $|\langl
   Two vectors are at right angles or orthogonal to one another, if and only if the inner product between them is 0.
 \end{corollary}
 \begin{proof}
-  Let $v$ and $w$ be two vectors such that the angle $\theta$ between them is a right angle. It follows that $\cos(\theta) = 0$. By definition of the angle, we then know that $\langle v, w \rangle/\|v\|\|w\| = 0$, hence $\langle v, w \rangle = 0$. Conversely, if $\langle v, w \rangle = 0$, we know that $\cos(\theta) = 0$, which happens if and only if $\theta$ is a right angle.
+  Let $v$ and $w$ be two vectors such that the angle $\theta$ between them is a right angle. It follows that $\cos(\theta) = 0$. By definition of the angle, we then know that
+  %
+  \[ \frac{\inner{v, w}}{\|v\|\|w\|} = 0 \]
+  %
+  hence $\langle v, w \rangle = 0$. Conversely, if $\langle v, w \rangle = 0$, we know that $\cos(\theta) = 0$, which happens if and only if $\theta$ is a right angle.
 \end{proof}
 
 Now we can intuitively explain the inner product. Take two vectors $v$ and $w$. Project vector $v$ onto vector $w$. What is projection? Precisely, take the vector $u \in \spn(w)$ such that $v - u$ is orthogonal to $w$. Scale $w$ by the length of the projection $u$, letting $w' = \|u\| w$. Then $\langle v, w \rangle = \| w' \| = \| u \| \| w \|$. This follows as if $v - u$ is at a right angle to $w$, $\langle v - u, w \rangle = 0$. As $u \in \spn(w)$, $u = \lambda w$ for some scalar $\lambda \in \real$. Then by calculation,
@@ -341,7 +388,11 @@ Now we can intuitively explain the inner product. Take two vectors $v$ and $w$. 
                            &= \langle v, w \rangle - \lambda \|w\|^2
 \end{align*}
 %
-Hence $\lambda = \langle v, w \rangle/\|w\|^2$. It follows that $\|u\| = \lambda \| w \| = \langle v, w \rangle/\|w\|$, so $\|u\|\|w\| = \langle v, w \rangle$.
+Hence $\lambda = \langle v, w \rangle/\|w\|^2$. It follows that
+%
+\[ \|u\| = \lambda \| w \| = \frac{\langle v, w \rangle}{\|w\|} \]
+%
+so $\|u\|\|w\| = \langle v, w \rangle$.
 
 \begin{center}
 \begin{tikzpicture}
@@ -358,7 +409,7 @@ Hence $\lambda = \langle v, w \rangle/\|w\|^2$. It follows that $\|u\| = \lambda
 \end{tikzpicture}
 \end{center}
 
-If you understood the above paragraph, you should see that the Cauchy Schwarz inequality is then intuitively true. The length of the projection of one vector is always less than or equal to the vector itself. Since the inner product is the multiplication of the length of this projection by another vector, it is obvious that this is less than the original vector's length multiplied by the other vector.
+If you understood the above paragraph, you should see that the Cauchy Schwarz inequality is then intuitively true. The length of the projection of a vector is always less than or equal to the length of the vector itself. Since the inner product is the multiplication of the length of this projection by another vector, it is obvious that this is less than the original vector's length multiplied by the other vector.
 
 The most important vector inequality results naturally from the Cauchy-Scharz-Inequality. We know it as the Triangle-Inequality, as should become clear once the statement of the proof is understood.
 
@@ -409,7 +460,7 @@ The Triangle inequality states that, if we want to go from a point $a$ to a poin
   \[ \|v\| \leq \sum_{k = 1}^n |v_k| \]
 \end{corollary}
 \begin{proof}
-  $\| v \| = \| \sum_{k = 1}^n v_k e_k \| \leq \sum_{k = 1}^n \| v_k e_k \| = \sum_{k = 1}^n | v_k |$
+  \[ \| v \| = \| \sum_{k = 1}^n v_k e_k \| \leq \sum_{k = 1}^n \| v_k e_k \| = \sum_{k = 1}^n | v_k | \]
 \end{proof}
 
 \begin{lemma}
@@ -425,7 +476,7 @@ The Triangle inequality states that, if we want to go from a point $a$ to a poin
   and hence $|v_i| \leq \| v \|$.
 \end{proof}
 
-These definitions justify the geometric properties of vector spaces $\real^n$. Withit, we can analyse almost all of Euclid analytically. However, we are severely limited by specifying only equalities and inequalities, with which we can only analyze finite sets of points in detail. To extend our notions to the precedence that calculus requires, we require precise notions of geometry to infinite sets. We call these properties developed topological properties.
+These definitions justify the geometric properties of vector spaces $\real^n$. With it, we can analyse almost all of the arguments of Euclid analytically. However, we are severely limited by specifying only equalities and inequalities, with which we can only analyze finite sets of points in detail. To extend our notions to the precedence that calculus requires, we require precise notions of geometry in infinite sets. We call these properties developed topological properties.
 
 
 
@@ -436,24 +487,24 @@ These definitions justify the geometric properties of vector spaces $\real^n$. W
 
 
 
-\chapter{Topology \& Sequences in $\real^n$}
+\chapter{Topology in $\real^n$}
 
 In order to justify the analytical properties in the last chapter, we used our intuition of polyhedra such as triangles to justify definition. It thus makes sense that we can define infinite properties in turns of shapes which cannot be defined by finitely many staight lines, the most basic of which is a circle.
 
 \begin{definition}
   Given a point $x$ in $\real^n$, and a positive real number $r$, define the {\bf open ball} centred at $x$ with radius $r$, denoted $B(x,r)$, as the set
   %
-  \[ B(x,r) = \{ y \in \real^n : \| x - y \| < r \} \]
+  \[ \{ y \in \real^n : \| x - y \| < r \} \]
   %
   The {\bf closed ball}, denoted by $\overline{B}(x,r)$ is defined by
   %
-  \[ \overline{B}(x,r) = \{ y \in \real^n : \| x - y \| \leq r \} \]
+  \[ \{ y \in \real^n : \| x - y \| \leq r \} \]
   %
-  The {\bf circle}, denoted by $S(x,r)$, is defined by
+  The {\bf circle}, denoted by $S(x,r)$, is
   %
-  \[ S(x,r) = \{ y \in \real^n : \| x - y \| = r \} \]
+  \[ \{ y \in \real^n : \| x - y \| = r \} \]
   %
-  The {\bf punctured ball}, denoted by $\mathring{B}(x,r)$, is the set $B(x,r) - \{x\}$
+  The {\bf punctured ball}, denoted by $\mathring{B}(x,r)$, is just $B(x,r) - \{x\}$
 \end{definition}
 
 Calculus in $\real$ starts with defining properties of sequences. In $\real^n$, this is no different.
@@ -486,14 +537,25 @@ Calculus in $\real$ starts with defining properties of sequences. In $\real^n$, 
   \end{itemize}
 \end{proof}
 
-Some elementary results from real-valued calculus result from the fact that the coordinates must converge.
+We obtain some elementary results from facts from real-valued calculus result from the correspondence of definition (2) of coordinates with convergence of real numbers. We state the facts in $\real$ without proof, and assume the reader can prove the corresponding theorem in $\real^n$ using definition (2).
 
-\begin{lemma}
-  If $(v_i)$ and $(w_i)$ are two sequences in $\real^n$ such that $v_i \to v$, $w_i \to w$, then the sequence $(v_i + w_i)$ converges to $v + w$, the sequence $(\lambda v_i)$ converges to $\lambda v$, $(\langle v_i, w_i \rangle) \to \langle v, w \rangle$, and $(\|v_i\|) \to \|v\|$.
-\end{lemma}
-\begin{proof}
-  For then the addition and scalar multiplication of every coordinate sequence converges to the coorresponding coordinate needed by application of the calculus of $\real$.
-\end{proof}
+\begin{theorem}
+  If $(a_i)$ and $(b_i)$ are two sequences in $\real$, and $c$ is some fixed constant in $\real$, such that $a_i \to a$ and $ b_i \to b$, then
+  %
+  \[ a_i + b_i \to a + b \]
+  %
+  \[ \lambda a_i \to \lambda a \]
+\end{theorem}
+
+\begin{corollary}
+  If $(v_i)$ and $(w_i)$ are two sequences in $\real^n$ such that $v_i \to v$, $w_i \to w$, then
+  %
+  \[v_i + w_i \to v + w\]
+  %
+  \[ \lambda v_i \to \lambda v \]
+  %
+  \[ \| v_i \| = \| v \| \]
+\end{corollary}
 
 Now we have stated the meaning of sequences, we can define one of the first relatively deep theorems of vector calculus, an extension of the Bolzano Weirstra\ss\ theorem for $\real$. We assume the result in $\real$ to prove our theorem.
 
@@ -501,11 +563,13 @@ Now we have stated the meaning of sequences, we can define one of the first rela
   Every sequence in $R^n$ contains a convergent subsequence.
 \end{theorem}
 \begin{proof}
-  Consider a sequence $(a_i)$ in $R_n$. Define a new sequence in $\real$ $((a_i)_1)$ by taking the first coordinate of every point in the sequence. By the Bolzano Weirstra\ss\ theorem in $\real$, we know that there is a convergent subsequence $((a_{n_i})_k)$, a sequence such that $|(a_{n_i})| \to a_1$ for some real value $a_1$, thus we have a sequence $(a_{n_i})$ that converges in the first coordinate. Now, suppose we have a sequence $(a_i)$ that converges in the first through $n-1$'th coordinate. Consider the sequence $|(a_i)_n|$. We then have a subseqence that converges also in the $n$'th coordinate. It follows that we can define a subsequence that converges in every coordinate and thus converges in $\real^n$.
+  Consider a sequence $(a_i)$ in $R_n$. Define a new sequence in $\real$ $([a_i]_1)$ by taking the first coordinate of every point in the sequence. By the Bolzano Weirstra\ss\ theorem in $\real$, we know that there is a convergent subsequence $([a_{n_i}]_1)$, a sequence such that $[a_{n_i}]_1 \to a_1$ for some real value $a_1$. Now, suppose we have a sequence $(a_i)$ that converges in the first through $n-1$'th coordinate. Consider the sequence $([a_i]_n)$. By another application of Bolzano Weirstra\ss\ in $\real$, we obtain a subseqence that converges in the $n$'th coordinate. It follows that we can define a subsequence that converges in every coordinate and thus converges in $\real^n$.
 \end{proof}
 
+Like with Bolzano Weirtstra\ss, it is not too difficult to extend Cauchy's theorem to $\real^k$ as well.
+
 \begin{theorem}[Cauchy's Theorem in $\real^k$]
-  If a sequence $(a_i)$ satisfies `Cauchy's Criterion', then it converges. Cauchy Criterion is that, for any $\varepsilon$, there exists a positive integer $N$ such that for all elements $a$ and $b$ in the tail $(a_i)_{i \geq N}$,
+  If a sequence $(a_i)$ satisfies `Cauchy's Criterion', then it converges. Cauchy's Criterion is that, for any $\varepsilon$, there exists a positive integer $N$ such that for all elements $a$ and $b$ in the tail $(a_i)_{i \geq N}$,
   %
   \[ \| a - b \| < \varepsilon \]
 \end{theorem}
@@ -514,7 +578,7 @@ Now we have stated the meaning of sequences, we can define one of the first rela
 \end{proof}
 
 \begin{definition}
-  A point $x$ is a limit or accumulation point of a set $A$ if there exists a sequence $(a_i)$ such that every element is in the set $A$, and $a_i \to x$. Equivalently, a point $x$ is a limit point if every ball around $x$ contains some point in $A$.
+  A point $x$ is a limit or accumulation point of a set $A$ if there exists a sequence $(a_i)$ such that every element in the sequence is in the set $A$, and $a_i \to x$. Equivalently, a point $x$ is a limit point if every ball around $x$ contains some point in $A$.
 \end{definition}
 
 \begin{definition}
@@ -529,7 +593,7 @@ Now we have stated the meaning of sequences, we can define one of the first rela
   For any set $A$, $\overline{A}$ is closed
 \end{lemma}
 \begin{proof}
-  Proving $\overline{\overline{A}} = \overline{A}$ is equivilent to showing every accumulation point of $\overline{A}$ is an accumulation point of $A$. Let $a$ be an accumulation point of $\overline{A}$, so that there exists a sequence $(a_i)$ with every element $a_i$ in $\overline{A}$ such that $a_i \to a$. Define a new sequence $(a'_i)$ in $A$ as follows. Let $a'_k$ be an arbitrary element such that $\| a_k - a'_k \| < 1/k$. This is always possible as $a_k$ is a limit point of $A$, and thus every ball around $a_k$ contains some point in $A$. We claim $a'_i \to a$. Let $\varepsilon > 0$ be arbitrary. Let $M$ be the integer such that $(a_i)_{i \geq M}$ is contained in $B(a,\varepsilon/2)$. Consider the tail $(a'_i)_{i \geq \max(M,1/2\varepsilon)}$. Then, for any $a'_i$ in the tail, $\| a'_i - a_i \| \leq \varepsilon/2$, and since $a_i$ is in the specified by $M$, $\| a_i - a \| < \varepsilon/2$ we use the triangle inequality to conclude that
+  Proving $\overline{\overline{A}} = \overline{A}$ is equivalent to showing every accumulation point of $\overline{A}$ is an accumulation point of $A$. Let $a$ be an accumulation point of $\overline{A}$, so that there exists a sequence $(a_i)$ with every element $a_i$ in $\overline{A}$ such that $a_i \to a$. Define a new sequence $(a'_i)$ in $A$ as follows. Let $a'_k$ be an arbitrary element such that $\| a_k - a'_k \| < 1/k$. This is always possible as $a_k$ is a limit point of $A$, and thus every ball around $a_k$ contains some point in $A$. We claim $a'_i \to a$. Let $\varepsilon > 0$ be arbitrary. Let $M$ be the integer such that $(a_i)_{i \geq M}$ is contained in $B(a,\varepsilon/2)$. Consider the tail $(a'_i)_{i \geq \max(M,2/\varepsilon)}$. Then, for any $a'_i$ in the tail, $\| a'_i - a_i \| \leq \varepsilon/2$, and since $a_i$ is in the specified by $M$, $\| a_i - a \| < \varepsilon/2$ we use the triangle inequality to conclude that
   %
   \[ \| a'_i - a \| \leq \| a'_i - a_i \| + \| a_i - a \| \leq \varepsilon/2 + \varepsilon/2 = \varepsilon \]
   %
@@ -545,7 +609,7 @@ Now we have stated the meaning of sequences, we can define one of the first rela
 \end{exercise}
 
 \begin{definition}
-  A point $x$ is on the {\bf boundary} of a set $A$ if $x$ is a limit point of $A$ and $A^c$. The set of all boundary points of a set $A$ is denoted $\partial A$. The interior of $A$ is $A^\circ = A - \delta A$.
+  A point $x$ is on the {\bf boundary} of a set $A$ if $x$ is a limit point of $A$ and $A^c$. The set of all boundary points of a set $A$ is denoted $\partial A$. The {\bf interior} of $A$ is $A^\circ = A - \delta A$.
 \end{definition}
 
 \begin{exercise}
@@ -561,24 +625,24 @@ Now we have stated the meaning of sequences, we can define one of the first rela
 \end{exercise}
 
 \begin{definition}
-  A set $A$ is {\bf open} if $\partial A$ is disjoint from $A$, which is exactly that $A^\circ = A$.
+  A set $A$ is {\bf open} if $\partial A$ is disjoint from $A$, so $A^\circ = A$.
 \end{definition}
-
-\begin{lemma}[The Open Set Test]
-  A set $A$ is open if and only if for every point $a \in A$, there is a ball $B(a,r)$ which is a subset of $A$.
-\end{lemma}
-\begin{proof}
-  We prove by contraposition. Let $A$ be an arbitrary set. Suppose there is a point $a \in A$ such that every ball $B(a,r)$ contains points in $A^c$. Then $a \in \partial A$, as it is a limit point of $A^c$. We conclude that $A$ is not open, as it contains parts of its boundary. The converse is just the proof in reverse.
-\end{proof}
 
 \begin{theorem}
   A set $A$ is open if and only if $A^c$ is closed
 \end{theorem}
 \begin{proof}
-  If $A^c$ is closed, $\partial A^c \subset A^c$. In exercise (4), it was proved that $\partial A^c = \partial A$, thus $\partial A \subset A^c$, and hence $\partial A \cap A = \emptyset$. If $A$ is open, $\partial A \cap A = \emptyset$, hence $\partial A \cap A^c = \partial A$ so that $\partial A \subset A^c$. Using exercise (4) again, it follows that $\partial A^c \subset A^c$, so that $A^c$ is closed by exercise (5). 
+  If $A^c$ is closed, $\partial A^c \subset A^c$. In exercise (4), it was proved that $\partial A^c = \partial A$, thus $\partial A \subset A^c$, and hence $\partial A \cap A = \emptyset$, so $A$ is open. If $A$ is open, $\partial A \cap A = \emptyset$, hence $\partial A \cap A^c = \partial A$ so that $\partial A \subset A^c$. Using exercise (4) again, it follows that $\partial A^c \subset A^c$, so that $A^c$ is closed by exercise (5). 
 \end{proof}
 
 In Mathematics, many groups of objects also have something called a `dual' set, a group such that almost every theorem of the first group has a corresponding theorem with the second. The dual of a closed set is an open set, and thus we will see many theorems about closed sets have immediate corollaries about open sets, and vice versa.
+
+\begin{lemma}[The Open Set Test]
+  A set $A$ is open if and only if for every point $a \in A$, there is a ball $B(a,r)$ which is a subset of $A$.
+\end{lemma}
+\begin{proof}
+  We prove by contraposition. Let $A$ be an arbitrary set. Suppose there is a point $a \in A$ such that every ball $B(a,r)$ contains points in $A^c$. Then $a \in \partial A$, as it is a limit point of $A^c$. We conclude that $A$ is not open, as it contains parts of its boundary. Thus by contraposition, a set is open if there is a ball $B(a,r)$ for every point $a$ in the set which is contained in the set. The converse follows the same argument strategy, and is left to the reader.
+\end{proof}
 
 \begin{theorem}
   Let $\mathcal{J}$ be an arbitrary index set, and $(A_j)_{j \in \mathcal{J}}$ a set of open sets. Then $\bigcup_{j \in \mathcal{J}} A_j$ is open.
@@ -600,7 +664,7 @@ In Mathematics, many groups of objects also have something called a `dual' set, 
   If $(A_1, A_2, \dots, A_n)$ is a finite collection of open sets, then $\bigcap_{k = 1}^n A_k$ is open.
 \end{theorem}
 \begin{proof}
-  Let $a$ be in $\bigcap_{k = 1}^n A_k$. Then $a$ is in every set $A_k$, and for each $A_k$ there is a ball $B(a,r_k)$ contained in $A_k$ as $A_k$ is open. Then, since $B(a,\min(r_1,r_2, \dots, r_k))$ is a subset of every ball in $A_k$, it is contained in the intersection. Thus the intersection is open.
+  Let $a$ be in $\bigcap_{k = 1}^n A_k$. Then $a$ is in every set $A_k$, and for each $A_k$ there is a ball $B(a,r_k)$ contained in $A_k$, as $A_k$ is open. Then, since $B(a,\min(r_1,r_2, \dots, r_k))$ is a subset of every ball in $A_k$, it is contained in the intersection. Thus the intersection is open.
 \end{proof}
 
 \begin{corollary}
@@ -630,7 +694,7 @@ We should specify that $A$ is bounded at the point $x$, but the point is arbitra
   A set is compact if and only if it is closed and bounded
 \end{theorem}
 \begin{proof}
-  Let $A$ be a set that is compact. It is closed because any sequence in $A$ must converge in $A$ (the subsequence contains a convergent subsequence that must converge in $A$). Suppose a set $B$ is unbounded. Then we form a sequence $(b_i)$ that has no convergent subsequence as follows. Let $b_1$ be arbitrary. Given $(b_1, \dots, b_{n-1})$, define $b_n$ to be a point such that $\| b_n - b_i \| > n$ for all $i$. This must be possible, as otherwise the set is bounded. No subsequence of $(b_i)$ can possibly converge by construction. Thus $B$ cannot be compact, showing this for all sets as $B$ was arbitrary, and then by contraposition, $A$ must be bounded.
+  Let $A$ be a set that is compact. It is closed because any sequence in $A$ must converge in $A$ (the sequence contains a convergent subsequence that must converge in $A$). Suppose a set $B$ is unbounded. Then we form a sequence $(b_i)$ that has no convergent subsequence as follows. Let $b_1$ be arbitrary. Given $(b_1, \dots, b_{n-1})$, define $b_n$ to be a point such that $\| b_n - b_i \| > n$ for all $i$. This must be possible, as otherwise the set is bounded. No subsequence of $(b_i)$ can possibly converge by construction. Thus $B$ cannot be compact, showing this for all sets as $B$ was arbitrary. By contraposition, $A$ must be bounded.
 \end{proof}
 
 \begin{definition}
@@ -643,33 +707,53 @@ An open cover does not need to be finite or even countable. However, some famili
   A set $A$ is compact if and only if every open cover of $A$ contains a finite subcover.
 \end{theorem}
 \begin{proof}
-  Suppose $A$ is a set such that every open cover contains a finite subcover. Then $A$ is bounded, as the collection $\{B(0,r)\}_{r \in \real}$ forms an open cover of $A$, and thus must contain a finite subcover, in other words a minimum ball that contains $A$. We prove that $A^c$ is open by a similar strategy to above. Let $a$ be an arbitrary element in $A^c$. Consider the set of closed ball complements $\{(\overline{B}(a,r))^c\}_{r \in \real}$. The set of all these forms an open cover of $A$, and thus must contain a finite subcover. We can then take a ball that is the complement of the smallest radius complement in that set, and this ball centered at $a$ becomes a subset of $A^c$. Thus $A^c$ is open, so $A$ is closed. As $A$ is closed and bounded, $A$ is compact, by the first part of the Heine-Borel theorem.
+  Suppose $A$ is a set such that every open cover contains a finite subcover. Then $A$ is bounded, as the collection $\{B(0,r)\}_{r \in \real}$ forms an open cover of $A$, and thus must contain a finite subcover, in other words a minimum ball that contains $A$. We prove that $A^c$ is open, and hence $A$ is closed, by a similar strategy to above. Let $a$ be an arbitrary element in $A^c$. Consider the set of closed ball complements $\{(\overline{B}(a,r))^c\}_{r \in \real}$. The set of all these forms an open cover of $A$, and thus must contain a finite subcover. We can then take a ball that is the complement of the smallest radius complement in that set, and this ball centered at $a$ becomes a subset of $A^c$. Thus $A^c$ is open, so $A$ is closed. As $A$ is closed and bounded, $A$ is compact, by the first part of the Heine-Borel theorem.
 
   Suppose $A$ is a compact subset of $\real^n$, and hence closed and bounded. As it is bounded, $A$ is contained in a ball. Every ball is contained in a cube, denoted $Q_0$. Let $l_0$ be the length of the diagonal of the cube. Suppose that there is a cover $\mathcal{C}$ of $A$ with no finite subcover. Divide $Q_0$ into $2^n$ subcubes. One of these must not have a finite subcover. Denote this cube $Q_1$. Continue defining these cubes by this method to form a chain $Q_0 \subset Q_1 \subset \dots$. The diagonal of cube $Q_k$ is $l_k = l_1/2^k$. Each cube $Q_k$ is non-empty, hence we may pick some $q_k$ from the cube to form a sequence $(q_k)$. We claim $q_k$ converges to some point $q$, proving the claim by Cauchy's criterion. Given $\varepsilon > 0$, pick an integer $M$ such that $M \geq \lg(l_1/\varepsilon)$. Then the tail $(q_k)_{k \geq M}$ is contained in the cube $Q_M$, whose diagonal $l_M = l_1/2_M$. As $M \geq \lg(l_1/\varepsilon)$, $2^M \geq l_1/\varepsilon$, hence $l_M = l_1/2^M \leq l_1 \varepsilon/l_1 = \varepsilon$. It follows that for any points $q'$ and $q''$ in the sequence, $\| q' - q' \| \leq \varepsilon$, as the diagonal is the longest distance between any two points in the square. Thus the sequence converges to some point $q$. There is some open set $C$ in $\mathcal{C}$ such that $q \subset C$. Take the ball $B(q,r)$ such that this ball is contained in $C$. Then there is some square $Q_n$ which is contained in this ball, yet it contains no finite subcover. By contradiction, this cover $\mathcal{C}$ could not have existed.
 \end{proof}
 
 The statement of a compact set in terms of open covers is often taken to be the definition of a compact set in most textbooks. We chose our original definition as it is most intuitive.
 
-An example of a non-compact set is $(-1,1)$. Take the cover $(-r,r)_{r \in (0,1)}$. Then there is no finite subcover that covers $(-1,1)$.
+\begin{exercise}
+  $(-1,1)$ is a non-compact set. Find an open cover of $(-1,1)$ that has no finite subcover.
+\end{exercise}
 
-We have defined almost too many sets to remember. We need two more types to finish off the topological properties of $\real^n$.
-
-Connectedness is an easy thing to see. A circle is connected, two separate circles are not. Like many intuitive concepts, connectedness becomes a very difficult concept to formalize.
+We need two more types of sets to finish off the topology of $\real^n$, the first being the quality of connectedness. Connectedness is an easy thing to see. A circle is connected, two separate circles are not. Like many intuitive concepts, connectedness becomes a very difficult concept to formalize.
 
 \begin{definition}
-  A set $A$ is {\bf disconnected} if it can be partitioned into two sets $A_1$ and $A_2$, and there are two disjoint open sets $U_1$ and $U_2$ such that $A_1$ is contained in $U_1$ and $A_2$ is contained in $U_2$. A set is {\bf connected} if it is not possible to disconnect it.
+  A set $A$ is {\bf disconnected} if it can be partitioned into two sets $A_1$ and $A_2$, in a way that there are two disjoint open sets $U_1$ and $U_2$ such that $A_1$ is contained in $U_1$ and $A_2$ is contained in $U_2$. A set is {\bf connected} if it is not possible to disconnect it.
 \end{definition}
 
-Intuitively, a set is convex if, for any two points, the line between those two points remains in the set. How do we formalize this? Well, for any point $c$ between two points $a$ and $b$, $c = \lambda a + (1 - \lambda)b$ for some value $\lambda \in [0,1]$. This motivates the following definition.
+\begin{exercise}
+  A set $A$ is disconnected if and only if it can be partitioned into two sets $A_1$ and $A_2$ such that $\overline{A_1} \cap A_2 = \emptyset$, and $A_1 \cap \overline{A_2} = \emptyset$.
+\end{exercise}
+
+Our final property is convexity. Intuitively, a set is convex if, for any two points, the line between those two points remains in the set. How do we formalize this? Well, for any point $c$ between two points $a$ and $b$, $c = \lambda a + (1 - \lambda)b$ for some value $\lambda \in [0,1]$. This motivates the following definition.
 
 \begin{definition}
-  A set $A$ is convex, if, for any two points $a$ and $b$ in the set, and for any scalar $\lambda \in [0,1]$ $\lambda a + (1 - \lambda) b \in A$.
+  A set $A$ is convex, if, for any two points $a$ and $b$ in the set, and for any scalar $\lambda \in [0,1]$, $\lambda a + (1 - \lambda) b \in A$.
 \end{definition}
 
 What is nice about this definition is it involves no notion of distance. We can consider this for all vector spaces over the real numbers.
 
 \begin{exercise}
-  Any ball is convex
+  Any ball is convex.
+\end{exercise}
+
+\begin{exercise}
+  A point $v$ in a convex set $A$ is an extreme point if there does not exist points $u$ and $w$ and some scalar $\lambda \in [0,1]$ such that $v = \lambda u + (1 - \lambda) w$. Prove or disprove that this only occurs when $v$ is a limit point of the set.
+\end{exercise}
+
+\begin{definition}
+        Let $v_1, v_2, \dots, v_n$ be vectors in $\real^n$, and let $\lambda_1, \dots, \lambda_n$ be non-negative real numbers which sum to 1. The vector
+        %
+        \[ \lambda_1 v_1 + \lambda_2 v_2 + \dots + \lambda_n v_n \]
+        %
+        is said to be a convex combination of the set of vectors $v_1$ through $v_n$. The convex hull of these vectors is the set of all convex combinations of the vectors.
+\end{definition}
+
+\begin{exercise}
+  Prove that the convex hull of a finite set of vectors is convex.
 \end{exercise}
 
 \begin{theorem}
@@ -686,13 +770,6 @@ What is nice about this definition is it involves no notion of distance. We can 
   \end{align*}
   %
   Thus $\lambda'$ is not the supremum, and by contradiction. It cannot be in $A_1$. For similar reasons, it also cannot be in $A_2$, hence it is not in $A$ and thus the set is not convex.
-\end{proof}
-
-\begin{corollary}
-  Balls are connected
-\end{corollary}
-\begin{proof}
-  We leave a proof as an exercise
 \end{proof}
 
 We introduce a final topological notion before we can start studying the familiar notions of calculus.
@@ -712,17 +789,17 @@ We introduce a final topological notion before we can start studying the familia
 
 \chapter{Functions and Continuity}
 
-You should have enough experience in mathematics to know the formal definition of a function. In this book, we deal with functions between real valued vector spaces,that is, functions $f:D \to \real^m$, such that $D \subset \real^n$. We can consider this function to be a function of $n$ variables, mapped to $m$ variables. This is really just the composition of $m$ functions $f_i:\real^n \to \real$, defined by the equation
+After enough mathematics to understand this report, you should know the formal definition of a function. In this book, we deal with functions from a subset of $\real^n$ to $\real^m$. We can consider this function to be a function of $n$ variables, mapped to $m$ variables. Really, this is just the composition of $m$ functions $f_i:\dom(f) \to \real$, defined by the equation
 %
 \[ f(v) = (f_1(v), f_2(v), \dots, f_m(v)) \]
 
 \begin{definition}
-  Consider a function $f:D \to \real^m$, where $D \subset \real^n$ and $c$ be an accumulation point of $D$. We say that $f$ approaches a vector $w \in \real^m$, and we write $\lim_{v \to c} = w$, if any one of the equivalent notions is defined.
+  Consider a function $f$, mapping a subset of $\real^n$to $\real^m$ and suppose $u$ is an accumulation point of $\dom(f)$. We say that $f$ approaches a vector $w \in \real^m$ as its domain approaches $u$, and we write $\lim_{v \to u} = w$, if any one of the equivalent notions is defined.
 
   \begin{enumerate}
-    \item For every $\varepsilon > 0$, there exists a number $\delta > 0$ such that, for any vector $v \in D$, $0 < \|v - c\| < \delta$, $\|w - f(v)\| < \varepsilon$.
+    \item For every $\varepsilon > 0$, there exists a number $\delta > 0$ such that, for any vector $v \in \dom(f)$ such that $0 < \|v - u \| < \delta$, $\|w - f(v)\| < \varepsilon$.
     \item For every open ball $B(w,\varepsilon)$, there exists a punctured ball $\mathring{B}(c,\delta)$ such that $f(\mathring{B}(c,\delta)) \subset B(w,\varepsilon)$.
-    \item For every sequence $(v_i)$ in $D - \{ c \}$ such that $v_i \to c$, $f(v_i) \to w$.
+    \item For every sequence $(v_i)$ with elements in $\dom(f) - \{ c \}$ such that $v_i \to c$, $f(v_i) \to w$.
   \end{enumerate}
 \end{definition}
 \begin{proof}
@@ -733,81 +810,121 @@ You should have enough experience in mathematics to know the formal definition o
   $(3) \implies (1)$. We prove by contraposition. Suppose $\lim_{v \to c} f(x) \neq w$. Then there is $\varepsilon > 0$ such that, for any $\delta$, there is $v$ such that $0 < \|v - c\| < \delta$ but $\| f(v) - w \| \geq \varepsilon$. Define a sequence $(v_i)$ such that $\| v_i - c \| < 1/i$, but $\| f(v_i) - w \| \geq \varepsilon$. Then $v_i \to c$, but $f(v_i) \not \to w$. By contraposition, we obtain that $(3)$ implies $(1)$.
 \end{proof}
 
+As the equivalence of sequences of vectors to sequences of real numbers allowed us to prove theorems, the equivalence of limits of functions to sequences implies many theorems on par with ones you have already seen.
+
 \begin{corollary}
   The limit of a function is unique.
 \end{corollary}
 \begin{proof}
-  Let $f$ be a function that converges at an accumulation point $c$ to $v$ and $w$. Then for every sequence $(a_i)$ such that $a_i \to c$, $a_i \to v$ and $a_i \to w$, hence $v = w$. But this only happens if there is a sequence with this property. This follows as $c$ is an accumulation point.
+  Let $f$ be a function that converges at an accumulation point $u$ to $v$ and $w$. Then for every sequence $(a_i)$ such that $a_i \to c$, $a_i \to v$ and $a_i \to w$, hence $v = w$. But this only happens if there is a sequence with this property. This follows as $u$ is an accumulation point, so there must be a sequence with this property.
 \end{proof}
+
+We leave the rest of these arguments to the reader.
 
 \begin{corollary}
-  If $\lim_{v \to c} f(v) \to l$ and $\lim_{v \to c} f(v) \to m$, then
+  If $\lim_{v \to u} f(v) \to l$ and $\lim_{v \to u} f(v) \to m$, then
   %
-  \[ \lim_{v \to c} (f \pm g)(x) = l \pm w \]
+  \[ \lim_{v \to u} (f \pm g)(x) = l \pm w \]
   %
-  \[ \lim_{v \to c} \langle f, g \rangle = \langle l, w \rangle \]
+  \[ \lim_{v \to u} \langle f, g \rangle = \langle l, w \rangle \]
   %
-  \[ \lim_{v \to c} \| f \| = \| l \| \]
+  \[ \lim_{v \to u} \| f \| = \| l \| \]
 \end{corollary}
-\begin{proof}
-  The proof follows by connection of a function to sequences; the argument is left to the reader.
-\end{proof}
+
+\begin{corollary}
+  If $f$ maps from a subset of $\real^n$ to $\real^m$, such that
+  %
+  \[ \lim_{v \to u} f(v) = l \]
+  %
+  and $g$ maps from a subset of $\real^m$ to $\real^l$ such that
+  %
+  \[ \lim_{w \to l} g(w) = m \]
+  %
+  Then
+  %
+  \[ \lim_{v \to u} (g \circ f)(v) = m \]
+\end{corollary}
 
 \begin{definition}
-  Suppose $D \subset \real^n$, and we have a function $f:D \to \real^m$. Then, for a point $c \in D$, we say that $f$ is continuous at $c$ if
+  Suppose we have a function $f$ from a subset of $\real^n$ to $\real^m$. Then, for a point $u \in \dom(f)$, we say that $f$ is continuous at $u$ if, for any $\varepsilon > 0$, there is a $\delta$ such that, for any vector $v$ such that $\| v - u \| < \delta$, $\| f(v) - f(u) \| < \varepsilon$. If $u$ is an accumulation point, this is equivalent to the fact that
   %
-  \[ \lim_{v \to c} f(v) = f(c) \]
+  \[ \lim_{v \to u} f(v) = f(u) \]
   %
-  We say that, for a subset $C \subset D$, $f$ is continuous on $C$ if $f$ is continuous at every point $c \in C$.
+  We say that, for a subset $C \subset \dom(f)$, $f$ is continuous on $C$ if $f$ is continuous at every point $c \in C$.
 \end{definition}
 
-Intuitively, continuity means we can draw the function without taking pen off paper. The limit of a function is precisely the point that make the function continuous. They also have many more interesting properties.
+Intuitively, continuity means we can draw the function without taking pen off paper. The limit of a function is precisely the point that make the function continuous. If $u$ is not an accumulation point, then the function is continuous at that point, since we may pick a $\delta$ such that $u$ is the only element in the ball. Continuous functions have many useful properties. We leave the proofs to the reader as they follow immediately from statements about limits of functions.
 
 \begin{lemma}
   For any sequence $(v_i)$, such that $v_i \to v$ and any function $f$ continuous at $v$
   %
   \[ \lim_{i \to \infty} f(v_i) = f(\lim_{i \to \infty} v_i) \]
 \end{lemma}
-\begin{proof}
-  The proof follows from the definition of limits established previously.
-\end{proof}
 
 \begin{lemma}
-  If $f:D \to \real^m$ and $g:E \to \real^m$ are continuous at a point $c$, where $D$ and $E$ are subsets of $\real^n$ and $h:F \to \real^t$, where $F$ is a subset of $\real^m$ that is continuous at $g(c)$:
+  Let $f$ and $g$ be functions from subsets of $\real^m$ both continuous at a point $u$, and $h$ maps from a subset of $\real^n$, that is continuous at $f(c)$:
 
   \begin{enumerate}
     \item $f \pm g$ is continuous at $c$.
     \item $\langle f, g \rangle$ is continuous at $c$.
     \item $\|f\|$ is continuous at $c$.
     \item Every component function of $f$ is continuous at $c$.
-    \item $g \circ f$ is continuous at $c$.
+    \item $h \circ f$ is continuous at $c$.
   \end{enumerate}
 \end{lemma}
 
+The following theorem is very important in the field of topology
+
 \begin{theorem}
-  A function $f:D \to \real^m$ where $D \subset R^n$ is continuous on $D$ if and only if, for every open set $C$ in $\real^m$, $f^{-1}(C)$ is open.
+  A function $f$ from a subset of $\real^n$ to $\real^m$ is continuous on its domain if and only if, for every open set $C$ in $\real^m$, there exists an open set $U$ such that $U \cap \dom(f) = f^{-1}(C)$.
 \end{theorem}
 \begin{proof}
-  Let $f$ be as above. We prove the statement for open balls, from which the entire theorem follows. Take a ball $B(x,r)$ for some point $x$ and some radius $r$. Then $f^{-1}(B(x,r))$ is defined to be the set
+  Let $f$ be as above, continuous on its domain. We prove the statement for open balls, from which the entire theorem follows as an arbitrary open set is the union of open balls. Take a ball $B(x,r)$ for some point $x$ and some radius $r$. Then $f^{-1}(B(x,r))$ is defined to be the set
   %
-  \[ \{ a \in D : \| f(a) - x \| < r \} \]
+  \[ \{ a \in \dom(f) : \| f(a) - x \| < r \} \]
   %
-  Since $f$ is continuous, there is $\delta$ such that $B(a,\delta) \subset f^{-1}(B(f(a),r - \|f(a) - x \|))$. This set is a subset of $B(x,r)$, as if $\| y - f(a) \| < r - \| f(a) - x \|$, $\| y - x\| \leq \| y - f(a) \| + \| x - f(a) \| < r - \| f(a) - x \| + \| f(a) - x \| = r$. It follows that the set $f^{-1}(B(x,r))$ is open.
+  Since $f$ is continuous, there is $\delta$ such that $B(a,\delta) \cap \dom(f) \subset f^{-1}(B(f(a),r - \|f(a) - x \|))$. This set is a subset of $B(x,r)$, as if $\| y - f(a) \| < r - \| f(a) - x \|$, $\| y - x\| \leq \| y - f(a) \| + \| x - f(a) \| < r - \| f(a) - x \| + \| f(a) - x \| = r$. It follows that the set $B(a,\delta)$ is the set we require.
 
-  Suppose for any open set $C$ in $\real^m$, $f^{-1}(C)$ is open. Then for any $\varepsilon > 0$, and for any point $x$, $B(f(x), \varepsilon)$ is open, hence $f^{-1}(B(f(x), \varepsilon))$ is open. As $x \in f^{-1}(B(f(x), \varepsilon))$, we know there is a ball $B(x, \delta)$ such that $f(B(x, \delta)) \subset B(f(x), \varepsilon)$. Thus we get continuity.
+  Suppose for any open set $C$ in $\real^m$, there is an open set $U$ such that $U \cap \dom(f) = f^{-1}(C)$. Then for any $\varepsilon > 0$, and for any point $x$, $B(f(x), \varepsilon)$ is open, hence there is an open set $U$ such that $U \cap \dom(f) = f^{-1}(B(f(x), \varepsilon))$. As $x \in f^{-1}(B(f(x), \varepsilon))$, we know there is a ball $B(x, \delta)$ such that $f(B(x, \delta) \cap \dom(f)) \subset B(f(x), \varepsilon)$. Thus we get continuity.
 \end{proof}
 
 \begin{corollary}
-  A function is continuous if and only if, for every closed set $C$ in $\real^m$, $f^{-1}(C)$ is closed.
+  A function is continuous if and only if, for every closed set $C$ in $\real^m$, there exists a closed set $D$ such that $D \cap \dom(f) = f^{-1}(C)$.
 \end{corollary}
 
-We obtain some simple practical applications from this theorem.
+Some simple practical applications result from this theorem.
 
 \begin{lemma}
   The set of solutions to the equation $\cos(x^2 + y^2) > 1/2$ is open.
 \end{lemma}
 \begin{proof}
   Let $f(x,y) = \cos(x^2 + y^2)$. This function is continuous as it is the composition of continuous functions. If $(x,y)$ is a solution to the inequality, this means exactly that $f(x,y) > 1/2$, which is true if and only if $f(x,y) \in f^{-1}((1/2, \infty))$. As this set is open, the inverse of that set is open.
- \end{proof}
+\end{proof}
+
+The interests of continuous functions in Topology rely in the fact that the functions preserve the topological properties of a space in some way. We list some important applications here.
+
+\begin{theorem}
+  Let $f$ be a continuous function, and $A \subset \dom(f)$ a compact set. Then $f(A)$ is compact.
+\end{theorem}
+\begin{proof}
+  Let $U$ be an open cover on $f(A)$. For each open set $u$ in $U$, there is an open set $M$ such that $f^{-1}(u) = M \cap \dom(f)$. Form the set of $M$'s for each $u$. This is an open cover of $A$, and hence contains a finite subcover $U'$. For each $u \in U'$, take the corresponding open set in $f(A)$. This forms a finite subcover, hence $f(A)$ is compact.
+\end{proof}
+
+\begin{corollary}
+  If $f$ is a mapping and $\dom(f)$ is compact, then $f(\dom(f))$ is bounded.
+\end{corollary}
+
+Another topological notions is maintained by a continuous map.
+
+\begin{theorem}
+  If $f$ is a contiuous mapping, and $A$ is a separable subset of the range of $f$, then $f^{-1}(A)$ is separable. Hence by contraposition, if $B$ is a connected subset of $\dom(f)$, $f(B)$ is also connected.
+\end{theorem}
+\begin{proof}
+  Assume $A$ is a non-empty separable subset of the range of $f$, so $A = A_1 \cup A_2$, for non-empty subsets $A_1$ and $A_2$ such that $A_1 \cap \overline{A_2} = \overline{A_1} \cap A_2 = \emptyset$. Consider the two sets $f^{-1}(A_1)$, and $f^{-1}(A_2)$. Then $f^{-1}(A_1 \cup A_2) = f^{-1}(A_1) \cup f^{-1}(A_2)$, and each is non-empty. Since $A_1 \subset \overline{A_1}$, $f^{-1}(A_1) \subset f^{-1}(\overline{A_1})$, and the same for $A_2$. These sets are closed as their image is closed. It follows that the closure of $f^{-1}(A_1)$ is a subset of $f^{-1}(\overline{A_1})$, as for $A_2$, and
+  %
+  \[ f^{-1}(\overline{A_1}) \cap f^{-1}(A_2) = f^{-1}(\overline{A_1} \cap A_2) = f^{-1}(\emptyset) = \emptyset \]
+  %
+  The proof is similar for $A_2$, showing that $f^{-1}(A)$ is separable.
+\end{proof}
 
 \end{document}
