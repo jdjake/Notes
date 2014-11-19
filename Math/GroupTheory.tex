@@ -1,20 +1,60 @@
-\documentclass[12pt]{report}
+\documentclass[12pt]{amsbook}
+\makeindex
 
+\setlength{\parskip}{4pt}%
+\setlength{\parindent}{0pt}%
+
+\usepackage{kpfonts}
 \usepackage{amssymb}
 \usepackage{amsmath}
-\usepackage{amsthm}
-\usepackage{tikz}
 \usepackage{wrapfig}
-\usepackage{amsmath}
 \usepackage{mathabx}
-\usepackage{tkz-berge}
 
-\newtheorem{theorem}{Theorem}[section]
+\usepackage{enumitem}
+\setlist[enumerate,1]{leftmargin=20pt}
+\setlist[itemize,1]{leftmargin=10pt}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[chapter]
 \newtheorem{lemma}[theorem]{Lemma}
-\newtheorem{corallary}[theorem]{Corallary}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{exercise}{Exercise}
+
+\theoremstyle{definition}
 \newtheorem{definition}{Definition}
 
+\makeatletter
+\renewenvironment{proof}[1][\proofname]{\par
+  \pushQED{\qed}%
+  \normalfont \topsep6\p@\@plus6\p@\relax
+  \list{}{\leftmargin=0em
+          \rightmargin=\leftmargin
+          \settowidth{\itemindent}{\itshape#1}%
+          \labelwidth=\itemindent}
+
+  \item[\hskip\labelsep
+        \itshape
+    #1\@addpunct{.}]\ignorespaces
+}{%
+  \popQED\endlist\@endpefalse
+}
+\makeatother
+
+
+\usepackage[a4paper]{geometry}
+
+\usepackage{tikz}
+\usepackage{tkz-berge}
 \usetikzlibrary{arrows,chains,matrix,positioning,scopes}
+
+\usepackage{hyperref} 
+\hypersetup{
+    colorlinks,
+    citecolor=black,
+    filecolor=black,
+    linkcolor=black,
+    urlcolor=black
+}
 
 \DeclareMathOperator{\lcm}{lcm}
 \DeclareMathOperator{\im}{im}
@@ -27,65 +67,105 @@
 
 \maketitle
 
-\chapter{What is a group?}
+\tableofcontents
 
-In 1761, Leonard Euler proved the following theorem. Take the totient function, a mapping that takes a positive integer, and returns the total number of integers less than the integer which are relative prime to that integer. A few examples are shown below.
+\chapter{Introduction: What is a group?}
+
+In 1761, Leonard Euler proved the following theorem. Take the totient function $\phi:\mathbf{N} \to \mathbf{N}$, which maps a positive integer $n$ to the number of positive integers less than or equal to $n$ which are relatively prime to $n$ \footnote{A number is relatively prime to another number if the greatest common denominator of the two numbers is 1.}. A few examples are below, with the set of relatively prime integers included.
 %
-\[ \varphi(1) = 0 \]
+\begin{align*}
+    \varphi(1) &= 1\ &\{1\}\\
+    \varphi(10) &= 4\ &\{1,3,7,9\}
+\end{align*}
 %
-\[ \varphi(10) = 3 \]
+Euler showed that, for any two relatively prime integers $a$ and $b$,
 %
-Euler showed that, for any two relatively prime integers $a$ and $b$, it always follows that
+\[ a^{\varphi(b)} \equiv 1 \pmod{b} \]
 %
-\[ a^{\varphi(b)} \equiv 1 \mod{b} \]
+The idea of Euler's proof involves mapping the set of numbers relatively prime to $b$ to integer multiples of $a$, showing that, modulo $b$, the arithmetical operations on the two sets behave the same way. The uncovered symmetry between the two sets then reveals the theorem as a byproduct.
+
+Another problem which we have dealt with since high school is finding roots of polynomials; that is, finding real numbers $x$ such that, for some specific specific sequence of other real numbers $(a_n,a_{n-1},\dots,a_1)$, the equation below holds.
 %
-Euler's proof involved mapping the set of numbers relatively prime to $b$ to integer multiples of $a$ and showing that, modulo $b$, these sets are the same. Since the ancient Greeks, mathematicians have been attempting to find integer solutions to Diophantine equations, integer values that result in zeroes to polynomial functions. In recent years this have given rise to the study of elliptic curves, an equation in the real plane of the form
+\[ a_nx^n + a_{n-1}x^{n-1} + \dots a_1x + a_0 = 0 \]
 %
-\[ y^2 = x^3 + Ax + B \]
+Of course, for a polynomial of the form
 %
-Solutions to these equations interact in interesting ways which mean that the field is still going strong today. The most famous proof in recent history, Fermat's last theorem by Andrew Wiles, showed that these curves have correspondences to modular functions: shapes in the complex plane that have an inherent symmetrical property. Felix Klein in the 19th century attempted to answer questions about geometry by considering the inherent geometric properties of shapes. Everiste Galois had already used these techniques, but to explore the inherent symmetries in algebraic equations and determine the insolvability of the quintic equation. Though from separate fields, all of these problems are addressed by relating the objects to one another through different operations - whether they are symmetries or addition and multiplication of numbers. Though it was not known at the time of these discoveries, we know today the reason why these problems are connected is the objects studied follow the abstract concept of a group. This book attempts to introduce the reader to the concept of a group in order to explain the phenomena expressed above, as well as to show the reader the beauty of the abstract concepts developed.
+\[ a_2x^2 + a_1x + a_0 \]
+%
+there is a simple strategy of finding a root. Simply plug the values of $a_2$, $a_1$, and $a_0$ into the formula
+%
+\[ x = \frac{-a_1 \pm \sqrt{a_1^2 - 4a_2a_0}}{2a_2} \]
+%
+and, if there will be exactly two solutions, or no solutions at all, for the polynomial. A natural question is whether there is a general `quartic' formula to solve polynomials of the form
+%
+\[ a_3x^3 + a_2x^2 + a_1x + a_0 \]
+%
+or even formulas for polynomials of higher degree. The answer to the first question is yes, but the formula is far too complicated to be memorized. The answer to the second is no. Everiste Galois in the 1800s explored these polynomial equations to determine the impossibility of a general formula to a polynomial of the form
+%
+\[ x^4 + ax^3 + bx^2 + cx + d \]
+%
+via a consideration of symmetries between polynomial roots.
+
+How do these problems connect? One way to see it is that these problems were solved via considering the interconnections between objects in a specific collection. The generalized consideration of this technique is known today as group theory. In this report we introduce the theory of groups, focusing mainly on the finite case. We assume the reader has at least had some experience with algebra before, especially of the linear variety, as well as general mathematical background that is covered in most introduction math subjects. The main reason these subjects are needed is because they are a guarentee that the reader possesses the mathematical rigour to appreciate the subject.
+
+
+
+
+
+
+
+
 
 \chapter{Operations and Groups}
 
-Groups are a way to generalize the notion of a set with a well behaved operation which creates a mechanism to combine objects in that set to form another. Operations on numbers are inherent, as are geometric symmetries. Since groups were defined in 1882 by Walter Dyck, the theory has arisen to become one of the largest fields in modern mathematics: abstract algera. The power obtained from the simple definition of a group is that any proof about an abstract group instantly applies to the large number of concrete objects that fit the mold of a group's definition. The longstanding questions shown above all lead to the group's definition. One of the tricks in every Mathematician's device is to solve a problem, and then to attempt to generalize the method used to solve the problem to apply to other techniques. It is only natural then that Group theory was to be generalized by these problems. It has proved to be one of the most useful ones to be created in the past two centuries.
+Groups are a way to generalize the notion of a set with a well behaved operation. This operation  mechanizes the ability to combine objects within that set. Examples include numbers, whose operations are inherent, and geometric symmetries of a shape. Since groups were defined in 1882 by Walter Dyck, the algebraic theory has arisen to become one of the largest fields in modern mathematics: abstract algebra. The power obtained from the simple definition of a group is that any proof about an abstract group instantly applies to the large number of concrete objects that fit the mold of a group's definition. Both problems in the prelude can be answered in the framework of group theory, and one can even say that group theory was created from a generalization of these specific problems. A mathematical trick to solving problems is to take many practical examples and attempt to abstract a minimal structure followed by all of them. It is then only natural then that Group theory resulted from a generalization of these problems.
 
-Groups are intimately connected to the operations that define them. Thus, before we define a group, we must rigorously define what an operation is. Operations are mathematical structures that we use almost everyday -- for example, addition and multiplication of numbers. Thus, it is not surprising that generalizing the properties of everyday operations is quite difficult to see. The formal definition is simple.
+Groups are intimately connected to the operations that define them. Thus, before we define a group, we must rigorously define what an operation is. Operations like addition and subtraction are mathematical structures that we use in everyday life. Thus, abstracting the general properties of operations is quite difficult for us to think of, as we are blinded by the everyday experience of using the operations. The formal definition is simple.
 
-\begin{definition}
-    A {\bf law of composition} or {\bf assignment} on a set $S$ is a function from $S \times S$ to $S$.
-\end{definition}
+\begin{definition} A {\bf law of composition}\index{Law of Composition} or {\bf assignment}\index{Assignment} on a set $S$ is a function from $S \times S$ to $S$. \end{definition}
 
-Think of an operation as a way of combining two elements of $S$ into a new element $S$. Note that in our definition we have inherently incorporated the property of {\bf closure} -- that the composition of any two objects in the set $S$ lies inside the set $S$. If $a$ and $b$ are arguments to this function, the value mapped from $a$ and $b$ is most commonly denoted as $ab$, but also as $a \circ b$, or $a + b$, rather than $f(a,b)$, or some other common symbol commonly used for a function. This makes the notation less chunky, and keeps the intuitive definition of an operation as combinations of elements in our head while we work. A good notation like this can make working with the ideas of groups much simpler. While these symbols above are the most common for groups, any other symbol may be used for the operation. 
+Think of an operation as a way of combining two elements of $S$ into a new element in $S$. In our definition we have inherently incorporated the property of {\bf closure}\index{Closure}; the composition of any objects from the set $S$ lies inside the set $S$.
 
-We introduce a useful bit of notation to write down associative operations. Consider a finite sequence of elements
-%
-\[ (x_1,x_2, \dots, x_n) \]
-%
-Then another notation convenience arises, the aptly named `Pi' notation.
+If $a$ and $b$ are arguments to an assignment, we avoid using conventional symbols such as $f$ or $g$ for the assignment; formulas such as $f(a,b)$ and $g(a,b)$ are too clunky compared to the more elegant and suggestive notation of $(ab)$, $(a \circ b)$, or $(a + b)$. We put the symbol in the middle rather than at the front to maintain our intuititive view of operations. A good notation can make working with complex ideas much simpler.
+
+Some further shorthand suffices to write down formulas. Consider a given finite sequence of elements $(x_1,x_2, \dots, x_n)$. Then another notation convenience arises, the aptly named `Pi' notation, recursively defined as\index{Pi notation}
 %
 \[ \prod_{j = i}^n x_j = \big( \prod_{j = 1}^{n-1} x_j \big) x_i \]
 \[ \prod_{j = i}^i x_j = x_j \]
 %
-Make sure to note the similarity to the $\Sigma$ notation used in sums of numbers.
+The similarity to $\Sigma$ notation used in arithmetical sums is intensional.
 
-Calculus is studied by narrowing down the functions it studies to narrower subsets with specific properties, the continuous and differentiable functions. The set of all functions is too general to be studied in totality. This is the same about studying human beings. We have vast differences, so very little can be said about the human race about the whole, but quite a lot can be said about certain groups of humans. As in these cases, the assignment property is too general for our study of groups, and thus we must specify subclasses of assignments which we will begin to study. The following characterizes how a group operates on the set. We will also show properties that elements of the set identify with the assignment.
+The problem with the above definition of assignment in our future studies is that it is too general. Mathematically, it is normally true that the more general a theory is, the less we can say about it. The set of all functions is too general to be studied in totality. Even when we narrow down functions to assignments, our study is too general. Thus we must specify subclasses of assignments which may prove more interesting. We take properties of common operations as inspiration.
+
+The first problem with our definition of assignment is that it only considers combinations of pairs. Thus given a set of three elements $abc$, it is ambiguous whether to combine $b$ and $c$ first, then $a$, or to first form $a$ and $b$ together. For an arbitrary operation, this choice is integral as each choice may result in a different outcome. We refine the operations we focus on so this is not so.
 
 \begin{definition}
-    An assignment on a set is {\bf associative} if for any three elements $a$, $b$, and $c$ in that set, $a(bc) = (ab)c$.
+    An assignment on a set $S$ is {\bf associative}\index{Associativity} if, for any three elements $a$, $b$, and $c$ in the set $S$,
+    %
+    \[ a(bc) = (ab)c \]
+    %
+    so that we may formulate them in any order we choose.
 \end{definition}
 
-Altogether, this means any number of brackets written in an equation are irrelevant. The order in which elements are put together, however, is still important! In order to say this however, we must rigorously prove this. A formal specification of this conjecture is the following.
+Our first algebraic structure is a preliminary algebraic structure to a group. The aim of its introduction is to make statements of further theorems more elegant. Think of it as a warmup structure to get used to the objects we will study later on.
 
-\begin{theorem}[Bracket Equivalence]
-Given an associative operation on a set, and a finite sequence $(x_1, x_2, \dots, x_n)$ of elements in that set a sequence of elements in that set, for any positive integers $l$ and $m$ such that $l + m = n$,
+\begin{definition}
+    A {\bf semigroup}\index{Semigroup} is a set possessing an associative operation.
+\end{definition}
+
+Ultimately, the property of associativity means brackets in an equation are irrelevant. We prove this rigorously, and then avoid using brackets for the rest of the report, unless for reasons of emphasis.
+
+\begin{theorem}
+Let there be given a semigroup $S$, and a finite sequence $(x_1, x_2, \dots, x_n)$ of elements in $S$. Then, for any positive integers $l$ and $m$ such that $l + m = n$, it can be shown that
+%
 \[ \big( \prod_{k=1}^l x_k \big) \big( \prod_{k=1}^m x_{l + k} \big) = \prod_{k=1}^n x_k \]
 \end{theorem}
 \begin{proof}
-    We prove by induction on the number of elements in the sequence $(x_1, \dots, x_n)$. When we have only one element in our sequence, the statement is vacously true; there are no positive integers $l$ and $m$ such that $l + m = 1$. When we have two elements $x_1$ and $x_2$, it of course follows that $l = 1$, $m = 1$, and
+    We prove by induction on $n$, the number of elements in the sequence $(x_1, \dots, x_n)$. When $n = 1$, the statement is vacously true; there are no positive integers $l$ and $m$ such that $l + m = 1$. When $n = 2$, we have two elements $x_1$ and $x_2$. It of course follows that $l = 1$, $m = 1$, and
     %
     \[ \big( \prod_{k=1}^1 x_k \big) \big( \prod_{k=1}^1 x_{k+1} \big) = x_1 x_2 = \prod_{k=1}^2 x_k \]
     %
-    Now suppose for our inductive argument that for any sequence of $n-1$ elements, the statement to be proved holds, where $n-1 \geq 2$. Consider a sequence of $n$ elements $(x_1, x_2, \dots, x_n)$ and two positive numbers $l$ and $m$ such that $l + m = n$. The following calculation below proves the statement needed, where $m \geq 2$, as we need to be able to extract an element from the secon product. The case where $m = 1$ is similar (just remove the product that ranges from 1 to $n-1$ in the equation).
+    Now suppose for our inductive argument that for any sequence of $n-1$ elements, the statement to be proved holds, where $n-1 \geq 2$. Consider a sequence of $n$ elements $(x_1, x_2, \dots, x_n)$ and two positive numbers $l$ and $m$ such that $l + m = n$. The following calculation below proves the statement needed, where $m \geq 2$. The case where $m = 1$ follows the same strategy, but is left for the reader to fill in.
 
     \begin{align}
         \big( \prod_{k=1}^l x_k \big) \big( \prod_{k=1}^m x_{l + k} \big) &= \big( \prod_{k=1}^l x_k \big) \big( \big( \prod_{k=1}^{m-1} x_{l + k} \big)\ x_m \big)\\
@@ -94,175 +174,228 @@ Given an associative operation on a set, and a finite sequence $(x_1, x_2, \dots
         &= \prod_{k=1}^n x_k
     \end{align}
 
-    Here (2.1) follows by definition of Pi notation, (2.2) follows from the associativity law, (2.3) results from the inductive hypothesis, and (2.4) follows by definition. Thus by induction our conjecture in proven.
+    Here (1) follows by definition of Pi notation, (2) follows from the associativity law, (3) results from the inductive hypothesis, and (4) from the definition of the notation again.
 \end{proof}
 
-From now on, whenever an associative operation is used, brackets will not be used in the equation under the understanding that any insertation of brackets results in the same outcome. We will substitute brackets to emphasize parts of an equation, but this is only to aid the reader, and not for any reasons of rigour.
-
-We introduce some notation to ensure the elegance and conciseness of our writing. Given a positive integer $n$, we can describe the exponential of the assignment in the following way:
+Additional symbology aids in the elegance of our writing. Given a positive integer $n$, we can describe the exponential of the assignment on an element $a$ in the following way:
 %
 \[ a^n = \underbrace{aa \dots aa}_\text{n times} \]
 %
-One can easily create a recursive definition to be more rigorous, defined by
+A recursive definition, more mathematically elaborate, is that
 %
 \[ a^1 = a \]
 \[ a^n = (a^{n-1}a) \]
 %
-Two useful lemmas, though obvious, will be used inherently in the proofs that follow later on in the book.
+The following two lemmas related to the exponential are obvious results of the exponential, though they will be used inherently in the sequel, and thus must be explicity stated.
 
 \begin{lemma} For any two integers $n$ and $m$, and any element $a$ in an associative assignment,
 \[ a^{n+m} = a^n a^m \]
 \end{lemma}
 \begin{proof}
-    Let $n$ be arbitrary. We prove by induction on $m$. For $m = 1$,
+    Let $n$ be an arbitrary number. We prove by induction on the other number $m$. For $m = 1$,
     %
     \[ a^{n + 1} = a^n a = a^n a^1 \]
     %
     This follows directly from the definition. Now suppose this is true for $m = r - 1$. We will show it must hold for $m = r$.
-
-    \[ a^{n + r} = a^{n + r - 1} a = (a^n a^{r-1}) a = a^n a^r \]
+    %
+    \[ a^{n + r} = a^{n + r - 1} a = (a^n a^{r-1}) a = a^n(a^{r-1}a) = a^n a^r \]
+    %
+    It is important for our understanding to verify where each hypothesis and assumption was used in the calculation above.
 \end{proof}
 
 \begin{lemma}
-    For any two integers $n$ and $m$, and for any element $a$,
+    For any two positive integers $n$ and $m$, and for any element $a$,
     \[ (a^n)^m = a^{nm} \]
 \end{lemma}
 \begin{proof}
-    As in the last proof, we use induction on $m$ for a fixed $n$. For $m = 1$,
+    As in the last proof, we use induction on $m$ for a fixed number $n$. For $m = 1$,
     \[ (a^n)^1 = a^n = a^{n \cdotp 1} \]
     %
     And by supposing that the lemma holds for $m = r-1$
-    \[ (a^n)^r = (a^n)^{r-1} a^n = \underbrace{\ a^{n(r-1)} a^n = a^{n(r-1) + n}\ }_\text{Following from Lemma 2.0.2} = a^{nr} \]
+    %
+    \[ (a^n)^r = (a^n)^{r-1} a^n = a^{n(r-1)} a^n = a^{n(r-1) + n} = a^{nr} \]
+    %
+    Note that here lemma (2.2) is used implicitly.
 \end{proof}
 
-\begin{definition} Another property of an assignment on a set is {\bf commutivity}: that for any elements $a$ and $b$ in the set, $ab = ba$.
+Another property of assignments is a very powerful characteristic.
+
+\begin{definition} An assignment on a set is {\bf commutative}\index{Commutativity} if, for any elements $a$ and $b$ in the set,
+%
+\[ ab = ba \]
+%
+thus allowing pairs of elements to permute between one another.
 \end{definition}
 
-The power of commutativity is that, given an associative and commmutative operation, we can permute any elements in an equation. Rigorously, we are talking about the following theorem.
+The power of commutativity is that, given an associative and commmutative operation, we can permute any elements in an equation. Let us rigorously prove this.
 
-\begin{theorem}[Commutative Permutation Equivalence]
-    For any finite sequence of elements $(x_1, x_2, \dots, x_n)$ from a set upon which an assignment is defined, and for any permutation $\pi$ on the numbers $1$ to $n$,
+\begin{theorem}
+    For any finite sequence of elements $(x_1, x_2, \dots, x_n)$ from a set upon which an associative and commutative assignment is defined, and for any permutation $\pi$ on the numbers $1$ to $n$,
     %
     \[ \prod_{k=1}^n x_k = \prod_{k=1}^n x_{\pi(k)} \]
 \end{theorem}
 \begin{proof}
-    We again prove by induction on the number of elements in the sequence. When the number of elements in one, the statement is obvious; the only permutation of one element is the identity permutation. Now suppose for induction that this is true for any permutation of $n-1$ elements. Let $(x_1, \dots, x_n)$ be a sequence of elements, and $\pi$ a permutation of $1$ to $n$. Let $m$ be the number such that $\pi(n) = m$. The following calculation shows we can move $x_m$ to the end of the product.
+    We again prove by induction on the number of elements in the sequence. When the number of elements is one, the statement is obvious; the only permutation of one element is the identity permutation. Now suppose for induction that this is true for any permutation of $n-1$ elements. Let
+    %
+    \[ (x_1, \dots, x_n) \]
+    %
+    be a sequence of elements, and $\pi$ a permutation of the numbers in the range $1$ to $n$. Let $m$ be the number such that $\pi(n) = m$. The following calculation shows we can move $x_m$ to the end of the product.
     %
     \begin{align}
     \prod_{k=1}^n x_k &= \big( \prod_{k=1}^{m-1} x_k \big) \big( x_m \prod_{k=m+1}^n x_k \big)\\
     &= \Big( \big( \prod_{k=1}^{m-1} x_k \big) \big( \prod_{k=m+1}^n x_k \big) \Big)\ x_m
     \end{align}
     %
-    We transition from (1.5) to (1.6) by use of both the associativity and commutativity property of the assignment. Now define a new permutation $\varphi$ on the numbers from 1 to n by
+    We transition from (2.5) to (2.6) by use of both the associativity and commutativity property of the assignment. Now define a new permutation $\varphi$ on the numbers between 1 and $n$ by the piecewise formula
     %
-    \[ \varphi(x) = \begin{cases} x   & x \leq m - 1\\
-                               x-1 & x \geq m + 1\\
+    \[ \varphi(x) = \begin{cases} x   & x < m\\
+                               x-1 & x > m\\
                                n   & x = m \end{cases} \]
     %
-    What follows is that
+    What follows is that, via a change of notation,
     %
-    \[ \big( \prod_{k=1}^{m-1} x_k \prod_{k=m+1}^n x_k \big)\ x_m = \big( \prod_{k=1}^{n-1} x_{\varphi(k)} \big)\ x_{m} \]
+    \[ \big( \prod_{k=1}^{m-1} x_k \prod_{k=m+1}^n x_k \big)\ x_m = \big( \prod_{k=1}^{n-1} x_{\varphi(k)} \big)\ x_{\pi(n)} \]
     %
-    As $\varphi$ and $\pi$ are permutations, so is $\pi \circ \varphi^{-1}$. Now if we restrict $\pi \circ \varphi^{-1}$ to only the elements 1 to $n-1$, we still have a permutation, because $n$ is fixed in the permutation.
+    As $\varphi$ and $\pi$ are permutations, so is $\pi \circ \varphi^{-1}$. If we restrict $\pi \circ \varphi^{-1}$ to only the numbers between 1 and $n-1$, we still have a permutation, because $n$ is fixed in the permutation.
     %
     \[(\pi \circ \varphi^{-1})(n) = \pi(\varphi^{-1}(n)) = \pi(m) = n \]
     %
-    By induction and the fact that $(\pi \circ \varphi^{-1})(n) = m$, it follows that
+    Hence we can consider $\pi \circ \varphi^{-1}$ as a permutation of the numbers between 1 and $n-1$. By induction and the fact that $(\pi \circ \varphi^{-1})(n) = m$, it follows that
     %
-    \begin{align}
-        \big( \prod_{k=1}^{n-1} x_{\varphi(k)} \big)\ x_m &= \big( \prod_{k=1}^{n-1} x_{(\pi \circ \varphi^{-1} \circ \varphi)(k)} \big)\ x_{\pi(n)}\\
+    \begin{align*}
+        \big( \prod_{k=1}^{n-1} x_{\varphi(k)} \big)\ x_{\pi(n)} &= \big( \prod_{k=1}^{n-1} x_{(\pi \circ \varphi^{-1} \circ \varphi)(k)} \big)\ x_{\pi(n)}\\
         &= \big( \prod_{k=1}^{n-1} x_{\pi(k)} \big)\ x_{\pi(n)}\\
         &= \prod_{k=1}^n x_{\pi(k)}
-    \end{align}
-
-    We have shown that arbitrary permutations of elements are equal.
+    \end{align*}
+    %
+    Hence we can reorder elements arbitrarily.
 \end{proof}
 
-Commutivity does not always hold in all assignments we work with in this book. It is only if $+$ is used as an operation symbol, it is assumed the operation is commutative. All other assignments will not have this property unless specifically stated.
+Commutativity is a rare quality of the operations encountered in group theory. It will never characterize an assignment unless it is explicitly stated, or if we use $+$ as the symbol for our assignment. It will still occur however, and thus we must mention it. Via commutatitity, an elementary theorem about the exponential arises. The same strategy to the previous proofs suffices, hence we leave the proof to the reader.
 
-A subtle property of addition and multiplication has not yet been mentioned. With addition, there is a number 0 such that, for any number $x$,
+\begin{lemma}
+    If $a$ and $b$ are elements such that $ab = ba$, then
+    %
+    \[ (ab)^n = a^nb^n \]
+\end{lemma}
+
+We have specified all of the `global' properties of operations we will study in this report. The more subtle `local' properties have not been mentioned. In particular, one property of addition and multiplication has not yet been mentioned. With addition, there is a number 0 such that, for any number $x$,
 %
 \[x + 0 = 0 + x = 0\]
 %
-Multiplication has a similar number, the number 1. Both numbers are idempotent; that is, when we combine this number with any other number, the composition of the numbers stays the same. We can generalize this concept to arbitrary elements in the following way.
+Multiplication has a similar number with these properties, 1. Both numbers are {\bf idempotent}\index{Idempotency}; that is, when we combine this number with any other number, the composition of the numbers stays the same. We generalize this concept to arbitrary operations in the following way.
 
 \begin{definition}
-    An {\bf identity} of a set with an assignment is an element that is idempotent with all other elements in the group. We commonly call this element $e$, and its properties can be written by the statement that $ae = ea = a$ for all elements $a$.
+    An {\bf identity}\index{Identity} of a set $S$ is an element that is idempotent with all other elements in $S$. We commonly call this element $e$, and its properties can be written by the statement that for all elements $a$,
+    %
+    \[ ae = ea = a \]
 \end{definition}
 
-\begin{lemma} If an assignment has an identity, it is unique \end{lemma}
+\begin{definition}
+    A {\bf monoid}\index{Monoid} is a set with an associative operation that contains an inverse. We say a monoid is {\bf commutative}\index{Commutative Monoid} or {\bf abelian}\index{Abelian Monoid} if the operation defined on the monoid is commutative in addition to being associative.
+\end{definition}
+
+Some easy examples are the positive integers under addition, the negative integers under addition, and so on. Extensive examples are not provided as the importance of the monoid structure is only to aid in the statement of theorems which relate monoids to groups.
+
+A monoid can only have one such identity element, as we show below.
+
+\begin{lemma} A monoid has a unique identity \end{lemma}
 \begin{proof}
-    Suppose an assignment has two identites, denoted $e$ and $e'$. Then $ee' = e$ by definition of the identity on $e$, but also $ee' = e'$ by the definition of identity on $e'$. By transitivity of equality, $e = e'$.
+    Suppose a monoid has two identites, denoted $e$ and $e'$. Then it is true that, because $e$ is an identity,
+    %
+    \[ ee' = e \]
+    %
+    Because $e'$ is an identity, we obtain that
+    %
+    \[ ee' = e' \]
+    %
+    and by transitivity, we get the equality required.
 \end{proof}
 
-If $\cdotp$ is used as the operation's symbol, we may write $e$ as $1$, and if $+$ is used, we may write the identity as $0$, even though the element is not always a number -- the symbol 1 and 0 just becomes a metaphor to help us think about the identity with more abstract operations.
+If $\cdotp$ is used as an operation's symbol, we write $e$ as $1$. If $+$ is used, we write the identity as $0$. Though not used as numbers, The symbols 1 and 0 then become metaphors to help us think about the identity with more abstract operations.
 
-If a set has an identity, we define, for any element $a$, $a^0 = e$, extending the definition of the exponential. The properties previously proved still hold. this is because $0$ is idempotent in addition,
+For a monoid, we define, for any element $a$
+%
+\[ a^0 = e \]
+%
+extending the definition of the exponential. The properties previously proved for exponentiation still hold. This follows as $0$ is idempotent in addition,
 %
 \[a^0 a^n = e a^n = a^n = a^{n+0}\]
 %
-And zeroes out multiplication,
+and zeroes out multiplication,
 %
 \begin{align*} (a^0)^n &= e^n = e = a^0 = a^{0n} & (a^n)^0 &= e = a^0 = a^{0n} \end{align*}
 
-Another subtle quality of addition and multiplication involves the interconnection between elements of the set. Given a number $a$, there is a number $b$ such that $a + b = 0$. We typically use the symbol $-a$ for $b$, and write the operation more concisely as $a - a$. With multiplication, every non-zero element $a$ has an number $b$ such that $a \cdotp b = 1$. We denote $b$ as $a^{-1}$ or $1/a$, and write the operation as $a/a$. Let us extend this notion to an arbitrary operation.
+A further quality of addition and multiplication involves the interconnection between elements of the set. Given a number $a$, there is a number $b$ such that $a + b = 0$. We typically use the symbol $-a$ for $b$, and write the operation more concisely as $a - a$. With multiplication, every non-zero element $a$ has an number $b$ such that $a \cdotp b = 1$. We denote $b$ as $a^{-1}$ or $1/a$, and write the operation as $a/a$.
 
 \begin{definition}
-    Given a set with an identity $e$, we say an element $a$ is {\bf invertible} if there is another element $b$ such that $ab = ba = e$. b is normally denoted $a^{-1}$ and called the {\bf inverse} of $a$.
+    Given a monoid, we say an element $a$ is {\bf invertible}\index{Invertibility} if there is another element $b$ such that
+    %
+    \[ ab = ba = e \]
+    %
+    the element b is normally denoted $a^{-1}$ and called the {\bf inverse} of $a$.
 \end{definition}
 
-If $+$ is used for the operation, $-a$ is used for the inverse of the element $a$, and if $\cdotp$ is used, $1/a$ might be used. This continues the metaphor established for identity elements.
+Intuitively, invertibility means that the action of operating with any element of the group is reversible. If $+$ is used for the operation, $-a$ is used for the inverse of the element $a$, and if $\cdotp$ is used, $1/a$ might be used. This continues the metaphor established for identity elements. For an arbitrary assignment, the multiplicative notation  $a^{-1}$ is preferred.
 
-Here are some properties common to all inverses. We assume associativity, but not commutivity in the operation used.
+Here are some properties common to all inverses in a monoid. Because of the monoid structure, we assume associativity, but not commutivity in the invertible operation. Proofs are abbreviated; we assume the reader can now handle the abstration presented and hence can `fill in the blanks' of the arguments.
 
-\begin{lemma}[Length Inverse Equivalency Lemma] Let $l$ and $r$ and $a$ be arbitrary elements of a set. If $la = e$ and $ar = e$, then $l = r$, and $a$ is invertible \end{lemma}
+\begin{lemma} Let $l$ and $r$ and $a$ be arbitrary elements of a monoid. If $la = e$ and $ar = e$, then $l = r$, and thus $a$ is invertible. \end{lemma}
 \begin{proof} For then it follows that $l = le = lar = er = r$. \end{proof}
 
-\begin{lemma}[Uniqueness of inverses] $a^{-1}$ is unique \end{lemma}
-\begin{proof} The above property shows any two inverses are the same, for if $x$ and $y$ are two inverses, substitute $x$ for $l$ and $y$ for $r$ in Lemma (1.1.3). \end{proof}
+\begin{lemma} For any element $a$ in a monoid, $a^{-1}$ is unique. \end{lemma}
+\begin{proof} Lemma (2.6) shows any two inverses are the same, for if $x$ and $y$ are two inverses, substitute $x$ for $l$ and $y$ for $r$ in the statement above. \end{proof}
 
-We now understand operations enough to describe the class of objects we will study for the rest of the book, a group.
-
-\begin{definition}
-    A {\bf group} is a set with an associative operation that contains a unit element (such that the group is non-empty), and such that every element has an inverse. We say the group is abelian if its operation is commutative as well as associative.
-\end{definition}
+We are now ready to state the fundamental description which will concern us for the rest of this report.
 
 \begin{definition}
-    The {\bf order} of a group is the cardinality of the set that the operation operates on.
+    A {\bf group}\index{Group} is a monoid such that every element has an inverse.
 \end{definition}
 
-If $n < 0$, define $a^n = (a^{-1})^{n}$. Again, the properties proved hold, but we can now extend exponentiation to any integer. Some easy properties result fairly easily from the definition. They all follow from the fact that the inverse of every element is unique. Let $a$ and $b$ be arbitrary elements of a group:
+The simplicity of a group's definition is deceiving. We are still discovering new things about groups over one hundred years after the theory's conception.
 
-\begin{lemma} The inverse of an inverse of an element $a$ is $a$. That is, $(a^{-1})^{-1} = a$. \end{lemma}
+If $n < 0$, define $a^n = (a^{-1})^{n}$. Again, the previous exponential properties proved hold, but we can now extend exponentiation to any integer.
+
+Our first group theoretic properties result fairly easily from the definition. They all follow from the fact that the inverse of every element is unique. Let $a$ and $b$ be arbitrary elements of a group:
+
+\begin{lemma} The inverse of an inverse of an element $a$ is $a$. That is,
+    %
+    \[ (a^{-1})^{-1} = a \]
+\end{lemma}
 \begin{proof}
-    The proof follows as $a a^{-1} = a^{-1} a = e$ and (2.0.7).
+    The proof follows because of the calculation
+    %
+    \[a a^{-1} = a^{-1} a = e\]
+    %
+    hence $a$ is an inverse of $a^{-1}$, and is unique by Lemma (2.7).
 \end{proof}
 
 \begin{lemma} $(ab)^{-1} = b^{-1}a^{-1}$. \end{lemma}
-\begin{proof} $(ab)(b^{-1}a^{-1}) = aa^{-1} = e$. \end{proof}
+\begin{proof} $(ab)(b^{-1}a^{-1}) = a(bb^{-1})a = aea^{-1} = aa^{-1} = e$. \end{proof}
 
 \begin{lemma} Every equation $ax = b$ has a unique solution $x$. \end{lemma}
 \begin{proof} $x = ba^{-1}$ is a trivial solution, and is the only solution, as if $x'$ is any other solution such that $ax = ax'$, then $a^{-1}ax = a^{-1}ax'$, which when evaluated gives us $x = x'$.
 \end{proof}
 
-We require inverses for a group, but we can weaken this claim only requiring left inverses, that is, for an element $a$, an element $b$ where it is true $ba = e$, but it is not necessarily true that $ab = e$.
+A reader may attempt to generalize a group, weakening the claim that elements only require left inverses or right inverses. A left inverse for an element $a$ is an element $b$ where it is true $ba = e$, but where it is not necessarily true that $ab = e$. We show that the theory of this new structure is no different to that of a group.
 
 \begin{theorem}
-    Any set with an associative operation and an identity such that every element has a left inverse contains arbitrary inverses for an elemenent, such that the set is a group.
+    Any monoid where every element has a left inverse contains arbitrary inverses for an element, so that the monoid is a group.
 \end{theorem}
 \begin{proof}
-    Let $G$ be a set with the properties above, and suppose $a$ is an arbitrary element of $G$. Then there is $b \in G$ such that $ba = e$. $b$ also has a left inverse $c$ such that $cb = e$. But then $b$ has both a left and right inverse, so $a = c$ from Lemma $1.1.3$. But that also means $a$ has a right inverse when substituted for $c$, so $b$ is the inverse of $a$, and since $a$ was arbitrary, all elements are invertible and thus $G$ is a group.
+    Let $G$ be a monoid with the properties above, and suppose $a$ is an arbitrary element of $G$. Then there is $b \in G$ such that $ba = e$. $b$ also has a left inverse $c$ such that $cb = e$. But then $b$ has both a left and right inverse, so $a = c$ from Lemma (2.6). But that also means $a$ has a right inverse when substituted for $c$, so $b$ is the inverse of $a$. Since $a$ was arbitrary, all elements are invertible, so $G$ is shown to be a group.
 \end{proof}
 
-There are also many examples of groups. We list some interesting ones below. Note you do not need to understand all of these examples until they are mentioned later on in the book. You can just use this page as a reference for the groups we mention. Right now just have a look at a choice few to get a feeling for groups:
+There are also many examples of groups. We list some interesting ones below.Do not attempt to understand all of these examples until they are mentioned later on in the book. There are far too many to think of. Use this page as a reference for the groups we mention in later chapters. Right now just have a look at a choice few to get a feeling for groups:
+%
 \begin{itemize}
     \item The set of integers, rational, real, and complex numbers under addition form the groups $\mathbf{Z}^+$, $\mathbf{Q}^+$, $\mathbf{R}^+$, and $\mathbf{C}^+$.
     \item The same sets with zero removed under the operation of multiplication form the groups $\mathbf{Z}^\times$, $\mathbf{Q}^\times$, $\mathbf{R}^\times$, and $\mathbf{C}^\times$.
-    \item The set of bijective functions on a set $X$ under composition form the symmetric group $S_{|X|}$. Note that the order of $S_{|X|}$ is $|X|!$ as this is precisely the number of bijective functions on the set.
-    \item For a vector space V, the set of automorphisms under compositions form the general linear group $GL(V)$. An equivalent definition, if the vector space is dimension $n$ in a field $\mathbf{F}$, is the set of invertible $n$ by $n$ matrices with entries in $\mathbf{F}$, which we denote $GL_n(\mathbf{F})$.
-    \item Let $S$ be a set, and $G$ a group with operation $\cdotp$. Then the set of functions from $S$ to $G$ form a group with operations $\circ$ defined by $(f \circ g)(x) = f(x) \cdotp g(x)$. If $f$ is in the group, $f^{-1}$ is the set defined by $f^{-1}(x) = f(x)^{-1}$
-    \item Consider an $n$-sided regular polyhedron (where regular means each side is equal). Each symmetry on the polyhedron, can be considered a rotational symmmetry or a reflection symmetry. We have $n$ of each kinds of these symmetries, so the group formed by taking compositions of symmetries to form more symmetries forms the Dihedral group $D_n$ of order $2n$. Dihedral groups were what Felix Klein was studying in transformational geometry.
-    \item The quaternion group $Q$ is equal to the set $\{ \pm 1, \pm i, \pm j, \pm k \}$. One can work out all operations from the following sequence of equations.
+    \item The set of bijective functions on a set $X$ under composition form the symmetric group $S_{|X|}$ \index{Symmetric Group}. $S_{|X|}$ has a cardinality of $|X|!$, as this is precisely the number of bijective functions on the set.
+    \item For a vector space V, the set of automorphisms under compositions form the general linear group $GL(V)$ \index{General Linear Group}. An equivalent definition, if the vector space is dimension $n$ in a field $\mathbf{F}$, is the set of invertible $n$ by $n$ matrices with entries in $\mathbf{F}$, which we denote $GL_n(\mathbf{F})$.
+    \item Let $S$ be a set, and $G$ a group with operation $\cdotp$. Then the set of functions from $S$ to $G$ form a group with operation $\circ$ defined by $(f \circ g)(x) = f(x) \cdotp g(x)$. If $f$ is in the group, $f^{-1}$ is the set defined by $f^{-1}(x) = f(x)^{-1}$
+    \item Consider an $n$-sided regular polyhedron (where regular means each side is equal). A symmetry on an $n$ sided regular polyhedron is a distance preserving mapping between the edges of the shape. From this fact, each and every symmetry on the polyhedron can be considered a rotational symmmetry or a reflection symmetry. We have $n$ of each kind of these symmetries, so the group formed by taking compositions of symmetries to form more symmetries forms the Dihedral group \index{Dihedral Group} $D_n$ of order $2n$. The transformational approach to geometry attempts to understand shapes in this group theoretic way.
+    \item The quaternion group $Q$ \index{Quaternions} is equal to the set $\{ \pm 1, \pm i, \pm j, \pm k \}$. One can work out all operations between eleemnts from the following sequence of equations.
     %
     \begin{align*}
                    ij &= k & ji &= -k\\
@@ -271,49 +404,115 @@ There are also many examples of groups. We list some interesting ones below. Not
     \end{align*}
     %
     \[ii = jj = kk = -1\]
-
-    Quaternions are commonly used to represent three dimensional space in computer graphics.
-    \item The Klein-4 Group or Viergruppe is a group of order 4 (denote elements $1,a,b,c$ and $d$) with the multiplication table:
-
-    \begin{tabular}{l|c c c c}
-      & 1 & a & b & c\\
-      \hline
-    1 & 1 & a & b & c\\
-    a & a & 1 & c & b\\
-    b & b & c & 1 & a\\
-    c & c & b & a & 1
-    \end{tabular}
+    %
+    In a way, we have concisely presented the entire group to you. Presentations are a concept we will look at later in group theory. The presented group here is commonly used to represent three dimensional space in computer graphics.
+    \item The Klein-4 Group \index{Klein-4 Group} or Viergruppe \index{Viergruppe} is a group with elements $\{ a,b,c,e \}$, where for every element $k$ in the group, $k^2 = e$, and such that $xy = z$, for any permutation $(x,y,z)$ of $(a,b,c)$.
 \end{itemize}
 
-Here is an interesting group that may help with understanding the definitions we have created.
+Now we have introduced the basics of group theory, we can attempt to delve into some tools developed in the last two centuries, through which we can understand various groups.
 
-\begin{theorem}
-    The homophonic group is defined as the group consisting of sequences of characters, where two sequences are equal if they are pronounced the same. What does the homophonic group look like? For instance, since $\text{sea} = \text{see}$, we can multiply on the left by $(\text{se})^{-1}$ to obtain that $a = e$.
-\end{theorem}
+\begin{exercise}
+    If $G$ is a group such that, $x^2 = e$ for every element $x$, then $G$ is abelian.
+\end{exercise}
+\begin{proof}
+    Let $a$ and $b$ be arbitrary elements in $G$. Then $(ab)^2 = e$, hence $(ab)(ab) = e$, hence $(ab)^{-1} = ab$. But $(ab)(ba) = e$ also, hence we obtain by Lemma (2.8) that $ab = ba$.
+\end{proof}
 
-\chapter{Subgroups}
+\begin{exercise}
+    Let $G$ be a finite abelian group written additively, with elements
+    %
+    \[ \{ x_1, x_2, \dots, x_n \} \]
+    %
+    such that, for all elements $x \neq e$, $2x \neq e$. What is the value of
+    %
+    \[ \bigg( \sum_{k = 1}^n x_k \bigg) \]
+\end{exercise}
+\begin{proof}
+    Consider the collection of sets $A$ defined by
+    %
+    \[ \{ \{ x_i, x_j \} \in G^2 : x_i + x_j = 0 \} \]
+    %
+    No set in $A$ is a singleton, as if $\{ x \}$ is in $A$, we know that $2x = 0$. Furthermore, these sets partition $G$ because inverses are unique (which shows in addition that there are an even number of elements in the group). Since $A$ is finite, we may order the
+    sets in $A$ in the form
+    %
+    \[ (x_{a_1}, x_{a_2}, x_{a_3}, x_{a_4}, \dots, x_{a_{m-1}}, x_{a_m}) \]
+    %
+    such that for any odd number $k$ between 1 and $m$, $\{ x_k, x_{k+1} \} \in A$. Now this sequence is just a permutation of the sequence which we sum above, hence by Theorem (2.4),
+    %
+    \[ \bigg( \sum_{k = 1}^n x_k \bigg) = \bigg( \sum_{k = 1}^n x_{a_k} \bigg) \]
+    %
+    and by Theorem (2.1),
+    %
+    \[ \bigg( \sum_{k = 1}^n x_{a_k} \bigg) = \bigg( \sum_{k = 1}^{n/2 - 1} \big(x_{2k - 1} + x_{2k}\big) \bigg) = \sum_{k = 1}^{n/2 - 1} (0) = 0 \]
+    %
+    Hence the sum above must be zero.
+\end{proof}
 
-We can understand a machine by the various components in contains, thus understand the whole from the parts that make up the whole. Likewise, we can understand a group by the various components that it contains. Most of this book will be attempting to define these components -- they are no so evident as the gears of a car or the wheel that makes it turn.
+\begin{exercise}[Wilson's Theorem] \index{Wilson's Theorem}
+    If $p$ is a prime number, prove that
+    %
+    \[ (p - 1)! \equiv -1 \mod{p} \]
+\end{exercise}
+\begin{proof}
+    As $p$ is prime, all non-zero numbers modulo $p$ form a group under multiplication. Suppose that, for some integer $x$,
+    %
+    \[ x^2 \equiv 1 \mod{p} \]
+    %
+    then we know that
+    %
+    \[ x^2 - 1 \equiv (x + 1)(x - 1) \equiv 0 \mod{p} \]
+    %
+    Hence either $(x + 1) \equiv p$ or $x-1 \equiv p$. We conclude that $x - 1 \equiv 0$, or $x + 1 \equiv p$, hence $x \equiv 1$, or $x \equiv p - 1$ modulo $p$. By using the technique of the exercise above, pairing elements that are not of order 2 (of which $p - 1$ and $1$ are the only exception), we conclude that
+    %
+    \[ (p - 1)! = \prod_{k = 1}^n k \equiv (p - 1) \equiv - 1 \mod{p}\]
+\end{proof}
+
+One can prove the converse of Wilson's theorem, but we leave this for the aspiring number theorist.
+
+\begin{exercise}
+    A Latin Square \index{Latin Square} is an $n \times n$ array such that any row and column is a permutation of a fixed set of $n$ elements
+    %
+    \[ \{ x_1, x_2, \dots, x_n \} \]
+    %
+    Given a finite group $G$ of cardinality $n$, order elements of $G$ by $(g_1, g_2, \dots, g_n)$ and define an $n \times n$ array $M$ by $M_{ij} = g_i g_j$. Prove that this is a latin square, and conversely, show that any latin square defines a finite group.
+\end{exercise}
+
+
+
+
+
+\chapter{Subgroups, Generators, Cosets, and Normality}
+
+We can understand a machine by the various components from which it is constructed. Likewise, we can understand a group by the various components that it contains. Most of this book will be attempting to define a group's components -- they are not so evident as the gears of a car or the wheel that makes it turn as they are formed inherently in the process of defining a group. The first such component of a group is a subgroup.
 
 \begin{definition}
-A {\bf subgroup} is a subset of a group that contains the identity, is closed under the operation which defines that group, and contains inverses for any element in the subgroup -- in other words, a subgroup is a group that is a subset of a bigger group. If $a$ and $b$ are any elements in the subgroup, $ab$ is in the subgroup as well. as well as $a^{-1}$ and $b^{-1}$.
+A {\bf subgroup} \index{Subgroup} is a subset of a group that contains the identity, is closed under the operation which defines the group, and contains inverses for any element in the subgroup. Consisely, a subgroup is a set such that, if $a$ and $b$ are any elements in the subgroup, then so are the elements $(ab)$, $(a^{-1})$, and $(b^{-1})$.
 \end{definition}
 
-Examples of subgroups are below:
+A subgroup is basically a group that is a subset of a bigger group. Examples of subgroups are below:
 \begin{itemize}
-    \item Given the general linear group $GL_n(\mathbf{F})$, define the special linear group $SL_n(\mathbf{F})$ to be the set of matrices in the general linear group with determinant one. This follows as the determinant operation has the multiplicative property, so that if $\det(X) = \det(Y) = 1$, it follows that $\det(XY) = \det(X)\det(Y) = 1$
-    \item Let $M$ be a set, and $N$ a subset. Then the set of bijective functions on $M$ that leave elements in $N$ fixed is a subgroup of $S_{|M|}$, and is equivalent to $S_{|M| - |N|}$.
-    \item Given a group $G$, $G$ and the set containing the identity are both subgroups. We call these trivial subgroups for self evident reasons, and say that any other group is non-trivial.
-    \item The intersection of a family of subgroups of some group is also a subgroup.
+    \item Given the general linear group $GL_n(\mathbf{F})$, define the special linear group $SL_n(\mathbf{F})$ \index{Special Linear Group} to be the set of matrices in the general linear group with determinant one. The subgroup property follows as the determinant operation has the multiplicative property, so that if
+    %
+    \[ \det(X) = \det(Y) = 1 \]
+    %
+    it follows that
+    %
+    \[ \det(XY) = \det(X)\det(Y) = 1 \]
+    %
+    as well as
+    %
+    \[ \det(X^{-1}) = \det(X)^{-1} = 1 \]
+    \item Let $M$ be a set, and $N$ a subset. Then the set of bijective functions on $M$ that leave elements in $N$ fixed is a subgroup of $S_{|M|}$. In some sense, this set of functions is equivalent to $S_{|M| - |N|}$.
+    \item Any group is a subgroup of itself, as is the set containing the identity. We call these trivial subgroups \index{Trivial Subgroups} for self evident reasons.
 \end{itemize}
 
-It may be unexpected, but we can verify subgroups based on a single statement, specified in the following lemma. We leave it to the reader to verify the statement.
+Unexpectedly, we can verify subgroups based on a single statement, specified in the following lemma. We leave it to the reader to verify -- the proof is just an unravelling of definitions.
 
 \begin{lemma}
     A non-empty subset $H$ of a group $G$ is a subgroup if and only if, for any elements $a$ and $b$ in $H$, $ab^{-1}$ is in $H$.
 \end{lemma}
 
-In our definition of a subgroup $H$ of a group $G$ we also assume that the identity is in a subgroup. However, it could be true that there is a different element $e'$ such that $e'$ acts idempotently on all elements in $H$, but not necessarily on all of $G$, and thus becomes a second identity. We show this cannot occur.
+In our definition of a subgroup $H$ of a group $G$ we also assume that the identity is in a subgroup. However, it could be true that there is a different element $e'$ such that $e'$ acts idempotently on all elements in $H$, but not necessarily on all of $G$, and thus becomes a second identity! We show this cannot occur.
 
 \begin{theorem}
     Any group whose elements are a subset of another group must have equal identity elements.
@@ -322,7 +521,7 @@ In our definition of a subgroup $H$ of a group $G$ we also assume that the ident
     Let $H$ be a group with identity $e'$, and suppose $H$ is a subset of $G$ with identity $e$. Let $h$ be an arbitrary element in $H$. Then, since $H$ is a subset of $G$, $eh = h$, but also $e'h = h$, so $e'h = eh$. By multiplying both sides on the right by $h^{-1}$, we obtain that $e = e'$.
 \end{proof}
 
-An interesting view of subgroups results from the following mechanic. Given a group, take the set of all its subgroups ordered by the subset relation. Then the set of subgroups form a lattice; every two subgroups has a least subgroup that contains the two subgroups. This becomes very important in the context of Galois theory. We draw the lattices for $S_3$ and $Q$ below.
+An interesting view of subgroups results from the following mechanic. Given a group, take the set of all its subgroups ordered by the subset relation. Then the set of subgroups form a lattice \index{Lattices}: every two subgroups has a smallest subgroup that contains the two subgroups. This becomes very important in the context of Galois theory. We draw the lattices for the symmetric group $S_3$ and quaternion group $Q$ below.
 
 \begin{center}
 \begin{tikzpicture}[>=triangle 60]
@@ -358,7 +557,11 @@ An interesting view of subgroups results from the following mechanic. Given a gr
     \draw (6,1) node {$\langle (1\ 2\ 3) \rangle$};
 
     \draw (3, -1) node {$\{ e \}$};
+\end{tikzpicture}
+\end{center}
 
+\begin{center}
+\begin{tikzpicture}
     \coordinate (Z) at (10,2.75);
 
     \coordinate (J) at (10,1.5);
@@ -394,137 +597,129 @@ An interesting view of subgroups results from the following mechanic. Given a gr
 \end{tikzpicture}
 \end{center}
 
-\chapter{An Excursion: Subgroups of $\mathbf{Z}^+$}
-
-We have built a complicated tower of definitions for us to comprehend without extensive use of examples. This aside is intended show the power of the concepts developed and to provide concrete usage of the abstractions developed. We will consider the additive integer group $\mathbf{Z}^+$. Before we begin, some more notation is useful. For a group with an operation $\circ$, with two subsets $S$ and $M$, define $S \circ M = \{ s \circ m : s \in S, m \in M \}$. For a single element $a$, define $a \circ M = \{ a \} \circ M$.
-
-Now for any integer $a$, one can verify that $a\mathbf{Z}^+$ forms a subgroup of the integers. What is suprising is the following.
-
-\begin{theorem}
-    $G$ is a subgroup of $\mathbf{Z}^+$ if and only if $G$ is of the form $a\mathbf{Z}^+$ for some integer $a$.
-\end{theorem}
-\begin{proof}
-    Let $G$ be a subgroup of $\mathbf{Z}^+$. If $G = \{ 0 \}$, then $G = 0\mathbf{Z}^+$. Otherwise, $G$ has some other non-zero element $a$. Thus $G$ contains a positive element, for $a$ is negative or positive, and if it is negative, then its inverse must be positive and contained in the subgroup by the closure property of a subgroup. By the well-ordering principle, $G$ contains a smallest positive element $b$. Using euclidean division, every element $c \in G$ is of the form $mb + n$, where $0 < n < b$. Now $n \in G$,  as $n = c - mb$, so we must conclude $n = 0$, as it cannot be a smaller positive integer than $b$. Thus every integer in $G$ is divisible by $b$, and every number divisible by $b$ is in $G$, so we conclude $G = b\mathbf{Z}^+$.
-\end{proof}
-
-Here are some common uses of these results in number theory:
-\begin{itemize}
-    \item For any numbers $a, b \in \mathbf{Z}^+$, $a\mathbf{Z}^+ + b\mathbf{Z}^+$ is a group. so it is equal to $c\mathbf{Z}^+$ for some integer $c$. It turns out $c$ is the greatest common denominator of $a$ and $b$, denoted $\gcd(a,b)$.
-    \item Given $a,b \in \mathbf{Z}^+$, $a\mathbf{Z}^+ \cap b\mathbf{Z}^+$ is a subgroup of $\mathbf{Z}^+$, so it too is $c\mathbf{Z}^+$, and $c$ is the lowest common multiple of the two elements, denoted $\lcm(a,b)$.
-\end{itemize}
-
-Though we have focused only on $\mathbf{Z}^+$ in this aside, we note that the proofs can be applied to all cyclic groups, a concept we will define in the next chapter.
-
-\chapter{Generators}
-
-We begin with an interesting discovery on collections of subgroups.
+Here is an interesting discovery on collections of subgroups.
 
 \begin{lemma}
     Let $G$ be a group, and $(H_j)_{j \in \mathcal{J}}$ a family of subgroups. Then it follows that
     %
     \[ \bigcap_{j \in \mathcal{J}} H_j \]
     %
-    is also a subgroup of $G$
+    is also a subgroup of $G$.
 \end{lemma}
+\begin{proof}
+    If $a$ and $b$ are in $\bigcap_{j \in \mathcal{J}} H_j$, then they are in every group $H_j$, which means that $(ab^{-1})$ is in $H_j$ for every $H_j$, hence $(ab^{-1})$ must be in the intersection of these groups, so the intersection is a subgroup.
+\end{proof}
 
-Now let $G$ be a group, and $S$ a subset of that group. Take the set $\mathcal{M}$ to be the set of all subgroups of $G$ which contain $S$. Of course, $\mathcal{M}$ is non-empty as $G$ is a subgroup which contains $S$. Suppose we can index $\mathcal{M}$ completely by an index set $\mathcal{J}$. We make the following definition.
+Now let $G$ be a group, and $S$ a subset of that group. Take the set $\mathcal{M}$ to be the set of all subgroups of $G$ which contain $S$. Of course, $\mathcal{M}$ is non-empty, as $G$ is a subgroup which contains $S$. Suppose we can index $\mathcal{M}$ completely by an index set $\mathcal{J}$. We make the following definition.
 
 \begin{definition}
-    Given a subset $S$ of a group $G$, we define the subgroup generated by $S$ to be the smallest subgroup that contains $S$, and we denote the subgroup $\langle S \rangle$. We call $S$ the {\bf generator} of the group $\langle S \rangle$. In the notation defined above this definition,
-    %
-    \[ \langle S \rangle = \bigcap_{j \in \mathcal{J}} \mathcal{M} \]
+    Given a subset $S$ of a group $G$, we define the subgroup generated \index{Generators} by $S$ to be the smallest subgroup that contains $S$, alternatively the intersection of all subgroups that contain $S$. We denote the subgroup $\langle S \rangle$. We call $S$ the {\bf generator} of the group $\langle S \rangle$. If $S$ is a finite group $\{ s_1, s_2, \dots, s_n \}$, we also write $\langle S \rangle$ as $\langle s_1\ s_2\ \dots\ s_n \rangle$.
 \end{definition}
 
-Equivalently, the generated subgroup is the set of all elements of the form $x_1 x_2 \dots x_n$ where $x_i$ or $x_i^{-1}$ is in $S$. Any subgroup which contains $S$ must contain these elements, and these elements themselves from a subgroup of $G$. We write this subgroup as $\langle S \rangle$, and if $S$ is a finite group ordered by the sequence $\{ x_1, x_2, \dots, x_n \}$, we also write the subgroup as $\langle x_1, x_2, \dots, x_n \rangle$.
+Equivalently, the generated subgroup is the set of all elements of the form $x_1 x_2 \dots x_n$ where either $x_i$ or $x_i^{-1}$ is in $S$. This is beacuse this forms a subgroup of $G$, and also every subgroup that contains $S$ must contain these elements. In this way, generators work for groups analogously to how bases work in vector spaces.
 
-A simple example is taken from linear algebra. One standard theorem proven is that every invertible matrix is the product of elementary matrices. This means that $GL_n(\mathbf{F})$ is generated by the set of all elementary $n$ by $n$ matrices. It can be shown that this can be reduced to the set of all elementary matrices of the first and third kind.
+A simple example is taken from linear algebra. One standard theorem proven is that every invertible matrix is the product of elementary matrices. This means that $GL_n(\mathbf{F})$ is generated by the set of all elementary $n$ by $n$ matrices in $\mathbf{F}$.
 
-If a group is generated by a single element, then the group is called cyclic. One example is $\mathbf{Z}^+$. Let $g$ be an element of a group $G$, and suppose that $\langle g \rangle$ is order $c$ for some natural number $c$. Then the following properties hold for $g$:
+\begin{definition}
+    If a group is generated by a single element, then the group is called {\bf cyclic} \index{Cyclicity}. Of course, this means every element is a power of that element.
+\end{definition}
+
+One example is $\mathbf{Z}^+$, which is generated by both 1 and $-1$.
+
+Let $g$ be an element of a group $G$, and suppose that the cardinality of $\langle g \rangle$ is a non-negative integer $c$. Then the following properties hold for $g$:
 
 \begin{lemma} $\{ g, g^2, \dots, g^c \}$ are all distinct elements of $g$. \end{lemma}
 \begin{proof}
-    If $g^i = g^j$, for $0 < i < j \leq c$, then $g^{j-i} = e$. Then the smallest subgroup that contains $g$ is $\{ g, g^2, \dots g^{i-j} \}$,  hence the order of $g$ is $j-i < c$. By contradiction, $g^i \neq g^j$.
+    Suppose $g^i = g^j$, for $i \neq j$, and such that $0 \leq j < i < c$. Then $g^{i - j} = e$, for $i - j \neq 0$. Take any element $g^m$ in $\langle g \rangle$. Then, by the euclidean division algorithm,
+    %
+    \[ m = (i - j)q + r \]
+    %
+    for some integers $q$ and $r$, where $0 < r < i - j$. Then
+    %
+    \[ g^m = (g^{i - j})^q g^r = g^r \]
+    %
+    hence the size of $\langle g \rangle$, which we have denoted $c$, is less than or equal to $i - j$, for every element in the set is $g^r$ for some $r$ between 0 and $n-1$. But $i - j < c$, which leads us to our contradiction. Hence $g^i \neq g^j$ for numbers $i$ and $j$ in the range $0 < i < j < c$.
 \end{proof}
 
-\begin{corallary} For $k < c$, $g^k \neq e$ \end{corallary}
-\begin{proof} For then $g^{k+1} = g$. \end{proof}
+\begin{corollary} For $0 < k < c$, $g^k \neq e$. \end{corollary}
 
-\begin{corallary} $g^c = e$. \end{corallary}
-\begin{proof} $g^c$ is not any number from $g$ to $g^{c-1}$, so it must be the element of the group generated by $g$ that is different from the other elements before it. Thus $g^c = e$ by corallary (2.2.3), as no other element before $g^c$ is $e$. \end{proof}
-
-\begin{lemma} $g^k = e$ if, and only if, $c|k$ \end{lemma}
-\begin{proof} This is left to the reader. It is a simple application of euclidean division used previously in our discussion of $\mathbf{Z}^+$.
-\end{proof}
-
-\begin{lemma} If $\langle g \rangle$ is infinite, then $g^i \neq g^j$ if $i \neq j$. \end{lemma}
+\begin{corollary} If $\langle g \rangle$ is infinite, then $g^i \neq g^j$ if $i \neq j$. \end{corollary}
 \begin{proof}
     If $g^i = g^j$ for some $i > j$, then $g^{i-j} = e$, showing the cyclic group is at most order $i - j$.
 \end{proof}
 
-We have also shown that in $\mathbf{Z}^+$ that every subgroup is cyclic, but this proof can be easily extended to the following: every subgroup of a cyclic group is cyclic. We leave it to the reader to use the techniques of the excursion to establish this.
+\begin{corollary} $g^c = e$. \end{corollary}
+\begin{proof} $g^c$ cannot be equal to any element between $g$ and $g^{c-1}$, so it must be the element of the group that is different from the other elements before it. Thus $g^c = e$, as no other element before $g^c$ is $e$, and this is the only such element. \end{proof}
 
-Given an element $g$ in an arbitrary group $G$, we define the order of $g$ to be the order of the group $\langle g \rangle$. Of course, if $\langle g \rangle$ is finite, this is exactly the least positive integer $a$ such that $g^a = e$.
+\begin{lemma} $g^k = e$ if and only if $c \divides k$ \end{lemma}
+\begin{proof} We leave this our argument to the reader. It is a simple application of euclidean division.
+\end{proof}
 
-\begin{lemma} The order of an element $ab$ is the same as the order of an element $ba$. \end{lemma}
+Given an element $g$ in an arbitrary group $G$, we define the order of $g$ to be the cardinality of the group $\langle g \rangle$. Of course, if $\langle g \rangle$ is finite, this is exactly the least positive integer $a$ such that $g^a = e$.
+
+\begin{lemma} The order of an element $(ab)$ is the same as the order of an element $(ba)$. \end{lemma}
 \begin{proof}
-    Consider the group $\langle ab \rangle$.
-    $(ba)^{-1} = a^{-1}b^{-1}$.
-    Suppose the order of $ab$ is finite, of order $k$. Then $(ab)^k = e$, which means that $b(ab)^k = b$, and $b(ab)^k = (ba)^k b$, so that $(ba)^k b = b$, and thus $(ba)^k = e$. Thus the order of $(ba)$ is less than or equal to the order of $(ab)$. This process can be done backwards to determine that the order of $(ab)$ is less than or equal to the order of $(ba)$, so the two are equal.
+    Consider the group $\langle ab \rangle$. We know that $(ba)^{-1} = a^{-1}b^{-1}$. Suppose the order of $(ab)$ is finite, of order $k$. Then
+    %
+    \[ (ab)^k = e \]
+    %
+    which means
+    %
+    \[ b(ab)^k = b \]
+    %
+    and as $b(ab)^k = (ba)^k b$,
+    %
+    \[ (ba)^k b = b \]
+    %
+    We conclude $(ba)^k = e$. Thus the order of $(ba)$ is less than or equal to the order of $(ab)$. This process can be done backwards to determine that the order of $(ab)$ is less than or equal to the order of $(ba)$, so the two must be equal.
 \end{proof}
 
-\chapter{Homomorphisms}
+Now for any cyclic group $\langle g \rangle$, and for any integer $a$, one can verify $\langle g^a \rangle$ is a subgroup of $\langle g \rangle$. What is surprising is that any subgroup is of this form.
 
-Another way we can understand objects that we don't understand is by connecting metaphors between those objects that we do. We can formalize this in a group with the concept of a homomorphism
-
-\begin{definition}
-Let $G$ be a group with operation $\circ$ and $H$ a group with operation $*$. A {\bf homomorphism} between $G$ and $H$ is a function $f$ such that for any elements $x$ and $y$. $f(x \circ y) = f(x) * f(y)$. We say that $G$ and $H$ are homomorphic. If a homomorphism is bijective, we call it an isomorphism. If $G = H$, we call a homomorphism an endomorphism, and an isomorphism an automorphism.
-\end{definition}
-
-What a homomorphism means intuitively is that information about the group $G$ can be implanted into a subgroup of $H$. Some elements may become one element, but the information is still there. An isomorphism states that all algebraic information about $G$ holds in $H$ -- effectively, they are the same group with different names for the operations and elements of the group.
-
-\begin{definition}
-    The {\bf kernel} of a homomorphism $\varphi$, denoted $\ker(\varphi)$ is the set of elements in the domain that are mapped to the identity element in the range.
-\end{definition}
-
-The following properties hold for any homomorphism $\varphi$:
-
-\begin{lemma} $\varphi(e) = e$ \end{lemma}
-\begin{proof} $\varphi(e) = \varphi(ee) = \varphi(e)\varphi(e)$, hence $\varphi(e)$ is idempotent. \end{proof}
-
-\begin{lemma} $\varphi(a^{-1}) = \varphi(a)^{-1}$. \end{lemma}
-\begin{proof} $\varphi(a^{-1})\varphi(a) = \varphi(aa^{-1}) = \varphi(e) = e$. \end{proof}
-
-\begin{lemma} The kernel of a homomorphism is a subgroup \end{lemma}
-\begin{proof} If $\varphi(a) = e$ and $\varphi(b) = e$, $\varphi(a^{-1}) = \varphi(a)^{-1} = e^{-1} = e$ so that $\varphi(a^{-1}b) = e$. \end{proof}
-
-\begin{lemma} The image of a homomorphism is a subgroup \end{lemma}
-\begin{proof} If $a$ is a group element such that $\varphi(x) = a$ for some elements $a$ and $x$, then $\varphi(x^{-1}) = a^{-1}$, and if $b$ is an element such that $\varphi(y) = b$ for some element $y$, then $\varphi(x^{-1}y) = a^{-1}b$. \end{proof}
-
-\begin{lemma} A homomorphism is injective if and only if $\varphi(a) = e$ implies $a = e$. \end{lemma}
-\begin{proof} We prove both implications.\\
-$(\Rightarrow)$ If a homomorphism is injective, and if $\varphi(a) = e$, then $a = e$ as $\varphi(e) = e$.\\
-$(\Leftarrow)$ If $\varphi(a) = e$ implies $a = e$, then if $\varphi(a) = \varphi(b)$, then $\varphi(ab^{-1}) = e$, so that $ab^{-1} = e$ and thus $a = b$.
+\begin{theorem}
+    $G$ is a subgroup of a cyclic group $\langle g \rangle$ if and only if $G$ is of the form $\langle g^a \rangle$ for some integer $a$. In short, the only subgroups of a cyclic group are cyclic.
+\end{theorem}
+\begin{proof}
+    Let $G$ be a subgroup of $\langle g \rangle$. If $G = \{ e \}$, then $G = \langle g^0 \rangle$. In any other case, $G$ has some non-zero element $g^a$. Thus $G$ contains an element with positive exponent, as if $a$ is negative, $-a$ is positive, and $g^{-a}$ must be an element of the group by the closure property of a subgroup. By the well-ordering principle, $G$ contains an element with smallest positive exponent $g^b$. Using euclidean division, every element $g^c \in G$ is of the form $g^{mb + n}$, where $0 < n < b$. Now $g^n \in G$, as $g^n = g^cg^{-mb}$, so we must conclude $n = 0$, as it cannot be a smaller positive exponent than $b$. Thus every exponent in $G$ is divisible by $b$, and every number divisible by $b$ is in $G$, so we conclude $G = \langle g^b \rangle$.
 \end{proof}
 
-Some examples of homomorphisms are the following:
+We have built a complicated tower of definitions for us to comprehend without extensive use of examples. We will consider the additive integer group $\mathbf{Z}^+$ as a concrete example, the most basic cyclic group. Before we begin, some more notation is useful. For a group with an operation $\circ$ with two subsets $S$ and $M$, define $S \circ M = \{ s \circ m : s \in S, m \in M \}$. For a single element $a$, define $a \circ M = \{ a \} \circ M$. The theorem above has some interesting repercussions in number theory:
 \begin{itemize}
-    \item The determinant function from $GL_n(\mathbf{F}) \to \mathbf{F}^\times$
-    \item The exponentiation map $x \mapsto e^x$
-    \item For any element $a$ in $G$, the map from $\mathbf{Z}^+$ defined by $x \mapsto a^x$.
-    \item The absolute value map from $\mathbf{C}^\times$ to $\mathbf{R}^\times$
+    \item For any numbers $a, b \in \mathbf{Z}^+$, $a\mathbf{Z}^+ + b\mathbf{Z}^+$ is a group. so it is equal to some cyclic group $c\mathbf{Z}^+$ for an integer $c$. It turns out $c$ is the greatest common denominator \index{Greatest Common Denominator} of $a$ and $b$, denoted $\gcd(a,b)$.
+    \item Given $a,b \in \mathbf{Z}^+$, $a\mathbf{Z}^+ \cap b\mathbf{Z}^+$ is a subgroup of $\mathbf{Z}^+$, so it too is $c\mathbf{Z}^+$, and $c$ is the lowest common multiple \index{Lowest Common Multiple} of the two elements, denoted $\lcm(a,b)$.
 \end{itemize}
- 
-For a group, the set of automorphisms on the group, taken with the operation of composition of functions, form a group. Given an element $g$ in $G$, the set of automorphisms $h \mapsto ghg^{-1}$ defines the set of inner automorphisms, a subgroup of the set of automorphisms. The map that sends $g$ to its inner automorphism is a homomorphism. The kernel of this homomorphism is the center group
 
-\[Z(G) = \{ g \in G : \forall h: gh = hg \}\]
+\begin{theorem}
+    Consider a group $G$, with two elements $g$ and $h$ such that $g$ is of order $n$ and $h$ is of order $m$. Then, if $g$ and $h$ commute (if $gh = hg$), and there order is relatively prime, then the order of $(gh)$ is $mn$.
+\end{theorem}
+\begin{proof}
+    Consider elements described above, and let the order of $(gh)$ be $p$. $(gh)^{mn} = g^mh^n = e$, hence $p \divides mn$. We know that
+    %
+    \[ (gh)^p = g^ph^p = e \]
+    %
+    hence, by multiplying both sides by $n$,
+    %
+    \[ g^{mp}h^{mp} = g^{mp} = e \]
+    %
+    so that $n | mp$. As $\gcd(m,n) = 1$, $n | p$.
+\end{proof}
 
-\chapter{Cosets}
+We have another interesting number theoretic theorem before we finish our talk of cyclic groups. The proof is not trivial.
 
-We were previously introduced to subgroups as an attempt to understand the group as a sum of its parts. Cosets are another way to do this.
+\begin{theorem}
+    For any prime $p$, $(\mathbf{Z}/p\mathbf{Z})^\times$ (consisting of all numbers that are invertible modulo $p$) is a cyclic group.
+\end{theorem}
+\begin{proof}
+    We will use the fact that for any $r \geq 1$, $a^r \equiv 1 \mod{p}$ has no more than $r$ solutions for $a$ in $(\mathbf{Z}/p\mathbf{Z})^\times$. This follows that fact that the group is also a field, and thus its polynomials decompose into linear factors. Let $n$ be the maximal order of elements in $(\mathbf{Z}/p\mathbf{Z})^\times$. Of course, we know $n \leq p - 1$. We know by our initial claim that the equation $x^n = 1$ has at most $n$ solutions. But for every $g \in (\mathbf{Z}/p\mathbf{Z})^\times$, $g^n = 1$, hence we have $p-1$ solutions. Thus $p - 1 \leq n$, and by combining the two inequalities, $p-1 = n$. Thus there is an element $g$ such that $\langle g \rangle$ has the same order as $(\mathbf{Z}/p\mathbf{Z})^\times$, so the two must be equal.
+\end{proof}
+
+Now we have specified the concept of a subgroup, we can attempt to gain a deeper understanding of the group via the subgroups it contains. We do this through the tool of cosets. We were previously introduced to subgroups as an attempt to understand the group as a sum of its parts. Cosets expand upon this method to understand the group properties.
 
 \begin{definition}
-    Let $H$ be a subgroup of a group $G$. Define an equivalence relation $\sim$ by $x \sim y$ if $x \in yH$. The equivalence classes formed by the relation are denoted $G/H$ and pronounced as `$G$ modulo (mod) $H$'. Each equivalence class is called a {\bf left coset}.
+    Let $H$ be a subgroup of a group $G$. Define an equivalence relation $\sim$ by $x \sim y$ if $x \in yH$. The equivalence classes formed by the relation are denoted $G/H$ and pronounced as `$G$ modulo (mod) $H$'. Each equivalence class is called a {\bf left coset}. \index{Cosets}
 \end{definition}
+
+Think of cosets are subgroups that are translated around by an element in a group.
 
 \begin{lemma}
     Every left coset is of the form $gH$ for some element $g$ that is in the equivalence class.
@@ -533,48 +728,107 @@ We were previously introduced to subgroups as an attempt to understand the group
     Let $C$ be an arbitrary equivalence class in $G/H$. Then $C$ is non-empty; there is some element $g$ in the class. We know $gH \subseteq C$, as for any element $h \in H$, $g \sim gh$. But also $C \subseteq gH$, as if $g \sim c$ for some $c \in C$, $c \in gH$.
 \end{proof}
 
-Right cosets are defined equivalently in the obvious way, by the equivalence relation $g ~ k$ if $g \in Hk$. Like left cosets, all right cosets can be written $Hg$ for some $g$. Whether we use left cosets or right coses does not matter, theorems can be proved in equal power for each. The theorem below shows that there is actually a close connection between the two coset types.
+Right cosets are defined equivalently, by the equivalence relation $g \sim k$ if $g \in Hk$. Like left cosets, all right cosets can be written $Hg$ for some $g$. Like left cosets, we define the set of right cosets by $H \setminus G$. Whether we use left cosets or right coses does not matter, theorems can be proved in equal power for each. The theorem below shows that there is actually a close connection between the two coset types.
 
-\begin{lemma} There is a one to one correspondence between left cosets and right cosets of any group \end{lemma}
+\begin{lemma} There is a one to one correspondence between left cosets and right cosets of any group. \end{lemma}
 \begin{proof}
 Let $G$ be a group, and $H$ a subgroup that generates $G/H$. Consider the mapping from left cosets to right cosets defined by $gH \mapsto Hg^{-1}$. We claim this mapping is a function. Suppose for two elements $g$ and $g'$ in $G$, $gH = g'H$. Then $gh = g'h'$ for some elements $h$ and $h'$ in $H$. But then, it follows that $(gh)^{-1} = (g'h')^{-1}$, which when evaluated gives us the equation $h^{-1}g^{-1} = h'^{-1}g'^{-1}$. We rearrange to get that $g^{-1} = hh'^{-1}g'^{-1}$. By the property of closure in a group, $hh'^{-1} \in H$, so that $g^{-1} = h''g'^{-1}$ for $h'' = hh'$. This means precisely that $g^{-1} \in Hg'^{-1}$, but also $g^{-1} \in Hg^{-1}$ (simply take $e \in H$). As cosets partition the group, we must conclude that $Hg^{-1} = Hg'^{-1}$. The two are equal, as was desired. In addition to this, the map is a bijection, with an inverse function defined by $Hg \mapsto g^{-1}H$. Thus we have a one-to-one correspondence, as was required.
 \end{proof}
 
-The number of cosets (whether left or right) in $G/H$ is denoted $(G:H)$, and is called the index of $H$ in $G$.
+\begin{definition}
+    The number of cosets (whether left or right) in $G/H$ is denoted $(G:H)$, and is called the {\bf index} \index{Subgroup Indices} of $H$ in $G$.
+\end{definition}
 
-We now come to one of the most important theorems in basic group theory, named after one of the pioneers of group theory, the french mathematician Joseph-Louis-Lagrange. It gives a useful characteristic of all subgroups of a finite group. Though the statement is formidible, the mechanics we have built up make the proof relatively simple -- our definitions were the hard part to understand.
+We now come to one of the most important theorems in basic group theory, named after one of the pioneers of group theory, the french mathematician Joseph-Louis-Lagrange. It gives a useful characteristic of all subgroups of a finite group. Though the statement is formidable, the mechanics we have built up make the proof relatively simple -- our definitions were the hard part to understand.
 
-\begin{theorem}[Lagrange's Theorem]
+\begin{theorem}[Lagrange's Theorem] \index{Lagrange's Theorem}
     The order of a subgroup of a finite group divides the order of the entire group.
 \end{theorem}
 \begin{proof}
-Let $G$ be a finite group, and $H$ a subgroup. Let $g$ and $g'$ be arbitrary elements of $G$. Define a function from $gH$ to $g'H$ defined by $a \mapsto g'g^{-1}a$. This mapping is bijective, as it has an inverse function defined by the mapping $b \mapsto gg'^{-1}b$. Thus the order of one coset is equal to the other coset. We obtain the following correspondence: for any coset $gH$, $|G| = |gH|(G:H)$. What this means that if any two of the three elements is finite, so is the third, and the equation holds. By noting that $H$ is a coset (simply take the coset of $e$), we obtain Lagrange's theorem as a corallary, $|G| = |H|(G:H)$, so $|H| \divides |G|$.
+Let $G$ be a finite group, and $H$ a subgroup. Let $g$ and $g'$ be arbitrary elements of $G$. Define a function from elements of $gH$ to elements of $g'H$ defined by the mapping $a \mapsto g'g^{-1}a$. This mapping is bijective, as it has an inverse function defined by the mapping $b \mapsto gg'^{-1}b$. Thus the order of one coset is equal to the other coset. We know that the cardinality of $G$ is the sum of its partitions. That is, if $G$ is partitioned into $\{ g_1H, g_2H, \dots, g_nH \}$, then
+%
+\[ |G| = \sum_{k = 1}^n |g_kH| \]
+%
+But we have proved that the order of any two of these cosets are equal, hence, for any coset $gH$
+%
+\[ |G| = \sum_{k = 1}^n |gH| = n|gH| \]
+%
+and as $n$ is the index of the subgroup $H$, we obtain the following correspondence: for any coset $gH$, $|G| = |gH|(G:H)$. What this means that if any two of the three elements is finite, so is the third, and the equation holds. By noting that $H$ is a coset (simply take the coset of $e$), we obtain Lagrange's magnificant theorem as a corollary,
+%
+\[ |G| = |H|(G:H) \]
+%
+hence $|H| \divides |G|$.
 \end{proof}
 
-Lagrange did not completely prove the theorem, showing it only for subgroups of the symmetric groups. The first complete theorem was published by Gauss in 1801.
+Lagrange did not completely prove the theorem, showing it only for subgroups of the symmetric groups. The first complete theorem was published by Gauss in 1801. The following shows the power of Lagrange's theorem.
 
-\begin{corallary}[The Multiplicative Property]
-    Let $G$ be a group, $H$ a subgroup of $G$, and $M$ a subgroup of $H$. Then $(G:M) = (G:H)(H:M)$.
-\end{corallary}
+\begin{corollary} Any group of prime order is cyclic. \end{corollary}
 \begin{proof}
-    If $M$ is a subgroup of $H$, Lagrange's theorem tells us that $|H| = |M|(H:M)$. By further application of (1.4.2), It then follows that $|G| = |H|(G:H) = |M|(G:H)(H:M)$. Noticing that $M$ is also a subgroup of $G$, $|G| = |M|(G:M)$. We conclude $|M|(G:M) = |M|(G:H)(H:M)$ By dividing by $|M|$ (which is non-zero as $M$ is non-empty), we obtain the fact that $(G:M) = (G:H)(H:M)$.
+    Let $G$ be a group of prime order. Take a non-zero element $g \in G$ (which is possible since $|G| > 1$), and consider $\langle g \rangle$. This is a subgroup, and thus the order of the group must divide $G$. But the only numbers that divide $G$ are 1 and the order of $G$, as the number is prime, and $\langle g \rangle$ definitely contains more than one element. Thus the order of $\langle g \rangle$ is the same as the order of $G$, so $G = \langle g \rangle$.
 \end{proof}
 
-We now harken back to the beginning of the book. We said that Euler used the ideas of Lagrange to prove his theorem of the totient function (Look back to the first chapter if you don't remember). We now have the power to prove this as a corallary.
+\begin{corollary}[The Multiplicative Property] \index{Multiplicative Property of Group Indices}
+    Let $G$ be a group, $H$ a subgroup of $G$, and $M$ a subgroup of $H$. Then $(G:M) = (G:H)(H:M)$.
+\end{corollary}
+\begin{proof}
+    If $M$ is a subgroup of $H$, Lagrange's theorem tells us that
+    %
+    \[ |H| = |M|(H:M) \]
+    %
+    By further application of (1.4.2), It then follows that
+    %
+    \[ |G| = |H|(G:H) = |M|(G:H)(H:M) \]
+    %
+    Noticing that $M$ is also a subgroup of $G$,
+    %
+    \[ |G| = |M|(G:M) \]
+    %
+    Thus we conclude
+    %
+    \[ |M|(G:M) = |M|(G:H)(H:M) \]
+    %
+    By dividing by $|M|$ (which is non-zero as $M$ is non-empty), we obtain the fact that $(G:M) = (G:H)(H:M)$.
+\end{proof}
 
-\begin{corallary}[Euler's Theorem]
+We now have the power to prove one of the theorems that introduced group theory at the beginning of the book. Euler used the methods of Lagrange to prove his totient function theorem. To show the power of group theory, we know prove his theorem. Let us be reminded of the theorem's statement.
+
+\begin{corollary}[Euler's Theorem] \index{Euler's Theorem}
     For any two relatively prime integers $a$ and $b$,
     %
-    \[ a^{\varphi(b)} \equiv 1 \mod{b} \]
-\end{corallary}
+    \[ a^{\varphi(b)} \equiv 1 \pmod{b} \]
+    %
+    where $\varphi(b)$ counts the number of integers less than $b$ which are relatively prime.
+\end{corollary}
 \begin{proof}
-    Consider the set $P$ of relatively prime integers to $b$, with the operation of multiplication. We show that, modulo $b$, this set forms a group. Let $x$ be a number relatively prime to $b$. Then there exists integers $m$ and $n$ such that $mb + nx = 1$, so that $mb \equiv 1 \mod{b}$. Furthermore, if for some number $x$ there exists a number $y$ such that $xy \equiv 1 \mod{b}$, then $xy + mb = 1$ for some number $m$. It follows that the greatest common denominator of $x$ and $b$ must be 1, so the two are relatively prime. Finally, if $x$ and $y$ are relatively prime to $b$, so is $xy$, because the two numbers share no prime factors. Thus we conclude that the elements in $P$ modulo $b$, denoted $P/b\mathbf{Z}^\times$ (cosets of the multiplicative group $b\mathbf{Z}^\times$) form a group under multiplication. $a$ modulo $b$ is a member of this group. Take the subgroup $\langle a \rangle$, which must be a finite order, which we denote by $k$. Since the set contains $\varphi(b)$ elements, we have that $k \divides \varphi(b)$ by Lagrange's theorem. But then $a^{\varphi(b)} \equiv 1 \mod{b}$ by (5.0.20).
+    Consider the group $\mathbf{N}^\times/b\mathbf{N}$, which consists of all invertible elements of $\mathbf{N}$ modulo $b$. We claim the size of this group is $\varphi(b)$, by showing that a necessary and sufficient property for inclusion in the group is being a relatively prime number of $b$ less than $b$. Let $x$ be an element of $\mathbf{N}^\times/b\mathbf{N}^\times$. Then there is some number $y$ such that
+    %
+    \[ xy \equiv 1 \pmod{b} \]
+    %
+    which means exactly that $xy + mb = 1$, for some integer $m$. Then it obviously follows that $\gcd(x,b) = 1$, hence $x$ is relatively prime to $b$. Now suppose for some integer $x$, $\gcd(x,b) = 1$. Then there are two integers $m$ and $n$ such that
+    %
+    \[ xm + bn = 1 \]
+    %
+    so that $xm \equiv 1 \pmod{b}$, and thus $x$ is an element of the group. Now let $x$ be an arbitrary positive integer relatively prime to $b$. Then $\langle x \bmod b \rangle$ forms a subgroup of $\mathbf{N}^\times/\mathbf{N}$. Since this group is order $\varphi(b)$, we have by Lagrange's theorem that the order of $x \bmod b$ divides $\varphi(b)$. But then
+    %
+    \[ (x \bmod b)^{\varphi(b)} \equiv 1 \pmod{b} \]
+    %
+    leading us to the final conclusion that
+    %
+    \[ x^{\varphi(b)} \equiv 1 \pmod{b} \]
+    %
+    we obtain Euler's theorem simply from the theory of groups.
 \end{proof}
 
-\chapter{Normal Subgroups}
+\begin{corollary}[Fermat's Little Theorem] \index{Fermat's Little Theorem}
+    If $p$ is a prime, and $a$ is a number that does not divide $p$, Then
+    %
+    \[ a^{p-1} \equiv 1 \mod{p} \]
+\end{corollary}
 
-\begin{theorem}[Characterization of Normal Subgroups]
-Let $H$ be a subgroup of a group $G$. The following statements are equivalent, and if any hold, we say $H$ is normal in $G$ and write $H \lhd G$:
+There are some very special subgroups that have interesting properties.
+
+\begin{theorem}
+Let $H$ be a subgroup of a group $G$. The following statements are equivalent, and if any hold, we say $H$ is normal in $G$ \index{Normal Subgroups} and write $H \lhd G$:
 \begin{enumerate}
     \item $gHg^{-1} \subseteq H$ for all $g$
     \item $gHg^{-1} = H$ for all $g$
@@ -586,11 +840,15 @@ Let $H$ be a subgroup of a group $G$. The following statements are equivalent, a
     First we show (1) is equivalent to (2). Suppose $ghg^{-1} \subseteq H$ for all $g$. Then $gH \subseteq Hg$ (multiply both sides of the relation on the right by $g$. But also $g^{-1}Hg \subseteq H$, such that $Hg \subseteq gH$, so that $Hg = gH$. The reverse is obvious. We obtain (3) from (2) by multiplying both sides of the equation on the right by $g$, and the reverse by multiplying on the right by $g^{-1}$. The implication from (3) to (4) is obvious. From (4), note if $gH = Hg'$, $ge = g \in Hg'$, so that $Hg' = Hg$ as cosets are equal or disjoint. Thus all statements are shown to be equivalent.
 \end{proof}
 
-We use normal subgroups along with homomorphisms to connect groups. To tease this, we show the following theorem.
-\begin{theorem} The kernel of a homomorphism is a normal subgroup \end{theorem}
-\begin{proof} Let $G$ and $H$ be groups, and $\varphi$ a homomorphism between $G$ and $H$. If $\varphi(j)=e$, $\varphi(gjg^{-1}) = \varphi(g)\varphi(j)\varphi(g)^{-1} = \varphi(g)\varphi(g)^{-1} = e$. Thus $gjg^{-1}$ is in the kernel for any element $g$ in $G$, and we have shown (1) in the definition. \end{proof}
+The trivial group is always normal in any group is lies in, because given any element $g$,
+%
+\[ g^{-1}eg = g^{-1}g = e \in \{e\} \]
+%
+Furthermore, for any group $G$, $G \lhd G$. Thus no group posesses the characteristic that no subgroup is normal. We must take this into account in defining the property of sparcity of normal subgroups.
 
-The trivial group is always normal, because given any element $g$, $g^{-1}eg = g^{-1}g = e$. Furthermore, for any group $G$, $G \lhd G$ (we leave this to the reader to verify). Thus no group posesses that characteristic that it contains no normal subgroups. Thus we must define a property along these lines in a slightly more precise way. A group is simple if it contains no non-trivial normal subgroups, that is, if the only normal subgroups are $\{ 0 \}$ and the group itself.
+\begin{definition}
+    A group is {\bf simple} \index{Simplicity} if it contains no non-trivial normal subgroups, that is, if the only normal subgroups are $\{ 0 \}$ and the group itself.
+\end{definition}
 
 Some examples of normal subgroups are the following. Verification of normality is left as an exercise:
 \begin{itemize}
@@ -598,13 +856,126 @@ Some examples of normal subgroups are the following. Verification of normality i
     \item $SL_n(\mathbf{F}) \lhd GL_n(\mathbf{F})$
     \item If $H$ is a subgroup of $G$ of index two, $H \lhd G$
     \item If a group $G$ is normal, and $H$ is a cyclic subgroup, for any subgroup $I$ in $H$, $I \lhd G$.
+    \item Given a group $G$ and a subset $S$, consider the subgroup
+    %
+    \[ N_G(S) = \{ x \in G : xSx^{-1} = S \} \]
+    %
+    This is the normalizer of $S$ \index{Normalizer Subgroup}, and if $S$ is a group, $N_G(S)$ is the largest group that $S$ is normal in. That is, if $K$ is a group containing $S$, and $S \lhd K$, then $K \subset N_G(S)$. We leave this as an exercise.
+    \item Given the last normal group, consider a group $G$ and subset $S$, and a resultant subgroup
+    %
+    \[ C_G(S) = \{ x \in G : (\forall s \in S)(xsx^{-1} = s) \} \]
+    %
+    called the centralizer subgroup of $S$ \index{Centralizer Subgroup}, which is obviously normal in $G$.
 \end{itemize}
 
-\chapter{Isomorphism Theorems}
+The following propositions are an easy test of knowledge about normality.
 
-We can finally use coset constructions to prove something meaningful. Let $G$ be a group and $H$ a normal subgroup. For two cosets $M$ and $N$ in $G/H$, define an operation $M \circ N = MN$. As $M = gH$ and $N = g'H$ for some $g,g' \in H$, $MN = gHg'H = gg'HH = gg'H$. Thus the operation is closed in $G/H$, and $G/H$ forms another group: the product or factor group. $H$ is the identity in this group. The map $g \mapsto gH$ is the canonical map or projection $\pi$ from $G$ to $G/H$, and is a surjective homomorphism (note this shows that any normal subgroup is the kernel of some homomorphism). The projection of $G$ onto $G/H$ has a property that we prove in a more general form.
+\begin{theorem}
+    If $K$ is a subgroup of $N_G(H)$, then $KH$ is a group, and $H \lhd KH$.
+\end{theorem}
+\begin{proof}
+    First we prove $KH$ is a subgroup. If $k_1h_1$ and $k_2h_2$ are in $KH$, then $k_1h_1(k_2h_2)^{-1}$ is in $KH$ by the following calculation, which shows that $KH$ is a subgroup by Lemma (3.1):
+    %
+    \begin{align*}
+    k_1h_1(k_2h_2)^{-1} &= k_1h_1h_2^{-1}k_2^{-1}\\
+                        &= k_1(k_2^{-1}k_2)h_1h_2^{-1}k_2^{-1}\\
+                        &= (k_1k_2^{-1})\big[ k_2(h_1h_2^{-1})k_2^{-1} \big]
+    \end{align*}
+    %
+    As $k_2 \in K$, $k_2 \in N_G(H)$, hence the value enclosed in square brackets above is an element of $H$. $k_1k_2^{-1}$ is in $K$ as $K$ is a subgroup, hence the entire equation is in $KH$. Thus we obtain that $KH$ is a group. Now Consider an arbitrary element $h \in H$, and the equation $h^{-1}kh'h$ for some other arbitrary elements $k \in K$ and $h' \in H$. Using the same tricks as above,
+    %
+    \[ h^{-1}kh'h = k \big[ k^{-1}h^{-1}kh'h \big] \]
+    %
+    and the square brackets are contained in $H$. Thus $H \lhd KH$
+\end{proof}
 
-\begin{theorem}[The First Isomorphism Theorem]
+We leave the proof of the next proposition to the reader.
+
+\begin{theorem}
+    Let $G$ be a group, and $H$ and $K$ subgroups of $G$ such that $K \subset N_G(H)$. Then $H \cap K \lhd H$.
+\end{theorem}
+
+
+
+
+
+
+
+\chapter{Homomorphisms and Isomorphism Theorems}
+
+Another way we attempt to dissect objects that we don't understand is by connecting metaphors to those objects that we do understand. We can formalize this in a group with the concept of a homomorphism.
+
+\begin{definition}
+Let $G$ be a group with operation $\circ$ and $H$ a group with operation $ \cdotp $. A {\bf homomorphism} \index{Homomorphism} between $G$ and $H$ is a function $f$ such that for any elements $x$ and $y$. $f(x \circ y) = f(x) \cdotp f(y)$. We say that $G$ and $H$ are homomorphic. If a homomorphism is injective, we say that $G$ can be embedded in $H$ \index{Embedding}. If $G = H$, we call a homomorphism an endomorphism \index{Endomorphism}.
+\end{definition}
+
+What a homomorphism means intuitively is that information about the group $G$ can be implanted into a subgroup of $H$. Some elements may become one element, but the information is still there. The following outlines the specific elements that are merged into one by a homomorphic transformation.
+
+\begin{definition}
+    The {\bf kernel} \index{Kernel of a Homomorphism} of a homomorphism $\varphi$, denoted $\ker(\varphi)$ is the set of elements in the domain that are mapped to the identity element in the range.
+\end{definition}
+
+The following properties hold for any homomorphism $\varphi$:
+
+\begin{lemma} $\varphi(e) = e$ \end{lemma}
+\begin{proof} $\varphi(e) = \varphi(ee) = \varphi(e)\varphi(e)$, hence $\varphi(e)$ is idempotent. \end{proof}
+
+\begin{lemma} $\varphi(a^{-1}) = \varphi(a)^{-1}$. \end{lemma}
+\begin{proof} $\varphi(a^{-1})\varphi(a) = \varphi(aa^{-1}) = \varphi(e) = e$. \end{proof}
+
+We use normal subgroups along with homomorphisms to connect groups. To tease this fact, we show the following theorem.
+
+\begin{lemma} The kernel of a homomorphism is a normal subgroup of the domain of the homomorphism. \end{lemma}
+\begin{proof} Let $G$ and $H$ be groups, and $\varphi$ a homomorphism between $G$ and $H$. If $\varphi(j)=e$, $\varphi(gjg^{-1}) = \varphi(g)\varphi(j)\varphi(g)^{-1} = \varphi(g)\varphi(g)^{-1} = e$. Thus $gjg^{-1}$ is in the kernel for any element $g$ in $G$, and we have shown normality. \end{proof}
+
+\begin{lemma} The image of a homomorphism is a subgroup \end{lemma}
+\begin{proof} If $a$ is a group element such that $\varphi(x) = a$ for some elements $a$ and $x$, then $\varphi(x^{-1}) = a^{-1}$, and if $b$ is an element such that $\varphi(y) = b$ for some element $y$, then $\varphi(x^{-1}y) = a^{-1}b$.by Lemma (3.1). \end{proof}
+
+\begin{lemma} A homomorphism is injective if and only if $\varphi(a) = e$ implies $a = e$. \end{lemma}
+\begin{proof} We prove both implications. Suppose a homomorphism is injective, and if $\varphi(a) = e$. Then $a = e$ as $\varphi(e) = e$. Instead, to prove the converse, if $\varphi(a) = e$ implies $a = e$, then if $\varphi(a) = \varphi(b)$, then $\varphi(ab^{-1}) = e$, so that $ab^{-1} = e$ and thus $a = b$.
+\end{proof}
+
+Some examples of homomorphisms are the following:
+\begin{itemize}
+    \item The determinant function from $GL_n(\mathbf{F}) \to \mathbf{F}^\times$
+    \item The exponentiation map $x \mapsto e^x$
+    \item For any element $a$ in $G$, the map from $\mathbf{Z}^+$ defined by $x \mapsto a^x$.
+    \item The absolute value map from $\mathbf{C}^\times$ to $\mathbf{R}^\times$
+\end{itemize}
+
+\begin{definition}
+    An {\bf isomorphism} \index{Isomorphism} is a bijective homomorphism. In this case the inverse of the homomorphism is also a homomorphism. A bijective endomorphism is also called an automorphism \index{Endomorphism}. If $G$ is isomorphic to $H$, we write $G \cong H$.
+\end{definition}
+
+An isomorphism states that all algebraic information about $G$ holds in $H$ -- effectively, they are the same group with different names for the operations and elements of the group. An automorphism basically states that various objects in the same group behave in the same way when permuted according to the function.
+
+Let us consider an automorphism on $\mathbf{C}^\times$. Take the map
+%
+\[ a + bi \mapsto a - bi \]
+%
+that swaps every complex number with it's complex conjugate. When $i$ was introduced to the real number system, what this automorphism means is we could have introduced $-i$ as the basic element and the complex number system would behave exactly the same.
+
+For a group, the set of automorphisms on the group, taken with the operation of composition of functions, form a group \index{Automorphism Group}. Given an element $g$ in $G$, the set of automorphisms $h \mapsto ghg^{-1}$ defines the set of inner automorphisms, a subgroup of the set of automorphisms. The map that sends $g$ to its inner automorphism is a homomorphism. The kernel of this homomorphism is the center group
+%
+\[Z(G) = \{ g \in G : \forall h: gh = hg \}\]
+%
+it is obviously normal, which can be proved either by the fact it is a kernel of the mapping from $G$ to $S_{|X|}$ by conjugation, or by direct analysis.
+
+A useful theorem, though obvious, is very useful. We state it without proof.
+
+\begin{theorem}
+    Let $G$ be a group, and $S$ a subset such that $G = \langle S \rangle$. Suppose $f:S \to H$ is a map to another group $H$. If there is a homomorphism from $G$ to $H$ whose restriction to $S$ is $f$, then this is the only homomorphism with this property.
+\end{theorem}
+
+The theorem is no different from the fact that two linear transformations which are equal when restricted to the basis elements of a vector space are equal in full.
+
+We can finally use coset constructions to prove something meaningful. Let $G$ be a group and $H$ a normal subgroup. For two cosets $M$ and $N$ in $G/H$, define an operation on the cosets by $M \circ N = MN$. As $M = gH$ and $N = g'H$ for some $g,g' \in H$,
+%
+\[ MN = gHg'H = gg'HH = gg'H \]
+%
+This follows by the normality of $H$. Thus the operation we have constructed is closed in $G/H$, and $G/H$ forms another group: the factor or quotient group \index{Factor Group} \index{Quotient Group}. $H$ is the identity in this group. The map $g \mapsto gH$ is the canonical map or projection $\pi$ from $G$ to $G/H$, and is a surjective homomorphism. The kernel is the normal subgroup, hence every normal subgroup is the kernel of some homomorphism; some people take this as the primary definition of a normal subgroup. The projection of $G$ onto $G/H$ has a property that we prove in a more general form.
+
+\begin{theorem}[The First Isomorphism Theorem] \index{First Isomorphism Theorem}
 Let $\varphi$ be a homomorphism between two groups $G$ and $H$, and let $N$ be a normal subgroup of the kernel of $\varphi$. Then there is a homomorphism $\overline{\varphi}$ from $G/H$ to $H$ such that $\overline{\varphi} \circ \pi = \varphi$, where $\pi$ is the canonical map. If $N$ is the kernel, the map $\overline{\varphi}$ is an isomorphism to $\im(\varphi)$.
 \end{theorem}
 \begin{proof}
@@ -639,24 +1010,56 @@ It is convenient here to introduce the concept of a commutative diagram. A commu
     S \xrightarrow{f_1} A_1 \xrightarrow{f_2} \dots \xrightarrow{f_{n-1}} A_n \xrightarrow{f_n} E\\
     S \xrightarrow{g_1} B_1 \xrightarrow{g_2} \dots \xrightarrow{g_{m-1}} B_m \xrightarrow{g_m} E
 \end{align*}
+%
 from $S$ to $E$, then $f_n \circ \dots \circ f_1 = g_m \circ \dots \circ f_1$. An example diagram is to the upper right, representing the functions in the first isomorphism theorem.
 
-A simple application of the first isomorphism theorem is a way to completely understand the cyclic groups, a classification. The relation on groups $x \sim y$ if $x \equiv y$. In algebra, we refer to a classification of groups as a set of isomorphism classes for those groups. It is the ultimate achievement as it allows us to show that these are the only way the operations can perform.
+Another notation that is more lateral is to consider sequences of groups
+%
+\[ G_1 \xrightarrow{f_1} G_2 \xrightarrow{f_2} \dots \xrightarrow{f_{n}}G_{n+1} \]
+%
+with arrows representing homomorphisms. This sequence is {\bf exact} whenever $\im(f_i) = \ker(f_{i+1})$ for any $i$ from 1 to $n-1$. To test your knowledge of this, note that the sequence
+%
+\[ \{ e \} \xrightarrow{} G \xrightarrow{f} H \]
+%
+being exact states exactly that $f$ is an injective homomorphism, as there is only one homomorphism from $\{ e \}$ to any group. Likewise,
+%
+\[ G \xrightarrow{f} H \xrightarrow{} \{ e \} \]
+%
+states that $f$ is surjective.
+
+A simple application of the first isomorphism theorem is a way classify the cyclic groups. Specifically, a classification \index{Classification} is a set of equivalence classes defined by the relation on groups $x \sim y$ if $x \cong y$. In algebra, we refer to these as the isomorphism classes, and finding a classification of some segment of groups is a primary goal of group theory. One can only really say they `know' a group if, given another group, one can intuitively say whether the two groups are isomorphic or not.
 
 \begin{theorem}[The Classification of Cyclic Groups]
-    Every cyclic group is isomorphic to either $\mathbf{Z}$ or $\mathbf{Z}/n\mathbf{Z}$ for some integer $n$.
+    Every cyclic group is isomorphic to either $\mathbf{Z}^+$ or $\mathbf{Z}^+/n\mathbf{Z}$ for some integer $n$.
 \end{theorem}
 \begin{proof}
-Let $\langle g \rangle$ be a cyclic group. Define a surjective homomorphism from $\mathbf{Z}^+$ to $\langle g \rangle$ by the mapping $r \mapsto g^r$. If $\langle g \rangle$ is order $n$, $n\mathbf{Z}^+$ is the kernel of the map. Then $\langle g \rangle \cong \mathbf{Z}^+/n\mathbf{Z}^+$ by the first isomorphism theorem. If $\langle g \rangle$ is infinite, the kernel of the map is $\{ 0 \}$, and $\mathbf{Z}^+/0\mathbf{Z}^+ \cong \mathbf{Z}^+$, so $\langle g \rangle \cong \mathbf{Z}^+$.
+Let $\langle g \rangle$ be a cyclic group. Define a surjective homomorphism from $\mathbf{Z}^+$ to $\langle g \rangle$ by the mapping $r \mapsto g^r$. If $\langle g \rangle$ is order $n$, $n\mathbf{Z}^+$ is the kernel of the map. Then $\langle g \rangle \cong \mathbf{Z}^+/n\mathbf{Z}^+$ by the first isomorphism theorem. If $\langle g \rangle$ is infinite, the kernel of the map is $\{ e \}$, and $\mathbf{Z}^+/0\mathbf{Z}^+ \cong \mathbf{Z}^+$, so $\langle g \rangle \cong \mathbf{Z}^+$.
 \end{proof}
 
-We have a trilogy of isomorphism theorems to show. Here is the second.
+The first isomorphism is the catalyst to many important isomorphism theorems.
 
+\begin{theorem}[The Second Isomorphism Theorem] \index{Second Isomorphism Theorem} \index{Diamond Isomorphism Theorem}
+    Let $G$ be a group, and $K$ and $H$ subgroups such that $K \subset N_G(H)$. Then we have that
+    %
+    \[ H/(K \cap H) \cong HK/K \]
+\end{theorem}
+\begin{proof}
+We have already justified in our discussion of cosets that $K \cap H$ will be normal in $H$, and $K$ normal in $HK$. Define an assignment map from $H$ to $HK/K$ by
+%
+\[ h \mapsto hK \]
+%
+This is a surjective homomorphism, as any coset $hkK$ can be written as a coset $hK$. If, for some element $h \in H$, $hK = K$, then it is sufficient and necessary for $h \in K$ as well. Thus the kernel of the mapping defined above is $H \cap K$, and by the first isomorphism theorem, we obtain that
+%
+\[ H/(H \cap K) \cong HK/K \]
+\end{proof}
+
+The second isomorphism theorem is known as the diamond isomorphism theorem because of the lattice of subgroups below.
 
 \begin{center}
 \begin{tikzpicture}
     \coordinate (Z) at (1.9,-2.75);
     \coordinate (Z') at (2.1,-2.75);
+    \coordinate (Z'') at (2,-3.25);
 
     \coordinate (J) at (2,-1.5);
     \coordinate (K) at (4,-1.5);
@@ -666,55 +1069,91 @@ We have a trilogy of isomorphism theorems to show. Here is the second.
     \coordinate (K') at (4,-0.6);
     \coordinate (I') at (0,-0.6);
 
-    \coordinate (Q) at (2,0.7);
+    \coordinate (Q) at (2.2,0.7);
     \coordinate (Q') at (2,2.1);
     \coordinate (Q'') at (2,1.3);
+    \coordinate (Q''') at (1.8,0.7);
 
-    \draw[thick,->] (K)--(Z') node[midway,sloped,below] {};
-    \draw[thick,->] (I)--(Z) node[midway,sloped,below] {};
+    \coordinate (L) at (2,-4);
 
-    \draw[thick,->] (Q)--(K') node[midway,sloped,below] {};
-    \draw[thick,->] (Q)--(I') node[midway,sloped,below] {};
+    \draw[thick] (L)--(Z'') node[midway,sloped,below] {};
 
-    \draw[thick,->] (Q')--(Q'') node[midway,sloped,below] {};
+    \draw[thick] (K)--(Z') node[midway,sloped,below] {};
+    \draw[thick] (I)--(Z) node[midway,sloped,below] {};
 
-    \draw (2,-3) node {$H \cap N$};
+    \draw[thick] (Q)--(K') node[midway,sloped,below] {};
+    \draw[thick] (Q''')--(I') node[midway,sloped,below] {};
+
+    \draw[thick] (Q')--(Q'') node[midway,sloped,below] {};
+
+    \draw (2,-3) node {$H \cap K$};
 
     \draw (0,-1) node {$H$};
-    \draw (4,-1) node {$N$};
-    \draw (2,1) node {$HN$};
+    \draw (4,-1) node {$K$};
+    \draw (2,1) node {$HK$};
 
     \draw (2, 2.5) node {$G$};
+    \draw (2,-4.5) node {$\{e\}$};
 \end{tikzpicture}
 \end{center}
 
-\begin{theorem}[The Second Isomorphism Theorem]
-    Let $G$ be a group, and $N$ and $H$ subgroups such that $N \lhd G$. The $NH$ is a subgroup of $G$, and $N \cap H \lhd G$. The assignment map $h(N \cap H) \mapsto hN$ is an isomorphism, and so $H/N \cap H \cong NH/H$:
-\end{theorem}
-\begin{proof}
-    First we prove $NH$ is a subgroup. If $n_1h_1$ and $n_2h_2$ are in $NH$, then $n_1h_1(n_2h_2)^{-1}$ is in $NH$ by the following calculation:
+The final isomorphism theorem is the following, with commutative diagram inlaid.
 
-    \begin{align*}
-    n_1h_1(n_2h_2)^{-1} &= n_1h_1h_2^{-1}n_2^{-1}\\
-    &= n_1((h_1h_2^{-1})n_2^{-1}(h_1h_2^{-1})^{-1})h_1h_2^{-1}
-    \end{align*}
+FINISH THIS DIAGRAM.
 
-    The equation above is in $NH$ as $N$ is normal, so that $(h_1h_2^{-1})n_2^{-1}(h_1h_2^{-1})^{-1}$ is in $N$. The map $h \mapsto hN$ is a surjective homomorphism from $H$ to $NH/N$, and the kernel is $N \cap H$ (so $N \cap H$ is normal), and $H/N \cap H \cong NH/N$ by the first isomorphism theorem.
-\end{proof}
+\begin{center}
+\begin{tikzpicture}
+    \coordinate (zero_row_one) at (0.7,0);
+    \coordinate (H) at (1.2,0);
+    \coordinate (H') at (2.7,0);
+    \coordinate (G) at (3.2,0);
+    \coordinate (G') at (4.7,0);
+    \coordinate (G/H) at (5.2,0);
+    \coordinate (G/H') at (6.7,0);
+    \coordinate (zero_row_one_two) at (7.2,0);
 
-The final isomorphism theorem is the following.
+    \coordinate (zero_row_two) at (0.7,-1.5);
+    \coordinate (H/K) at (1.2,-1.5);
+    \coordinate (H/K') at (2.7,-1.5);
+    \coordinate (G/K) at (3.2,-1.5);
+    \coordinate (G/K') at (4.7,-1.5);
+    \coordinate (G/H_two) at (5.2,-1.5);
+    \coordinate (G/H_two') at (6.7,-1.5);
+    \coordinate (zero_row_two_two) at (7.2,-1.5);
 
-\begin{theorem}[The Third Isomorphism Theorem]
+    \draw[thick,->] (zero_row_one)--(H) node[midway,sloped,below] {};
+    \draw[thick,->] (H')--(G) node[midway,sloped,below] {};
+    \draw[thick,->] (G')--(G/H) node[midway,sloped,below] {};
+    \draw[thick,->] (G/H')--(zero_row_one_two) node[midway,sloped,below] {};
+
+    \draw[thick,->] (zero_row_two)--(H/K) node[midway,sloped,below] {};
+    \draw[thick,->] (H/K')--(G/K) node[midway,sloped,below] {};
+    \draw[thick,->] (G/K')--(G/H_two) node[midway,sloped,below] {};
+    \draw[thick,->] (G/H_two')--(zero_row_two_two) node[midway,sloped,below] {};
+
+    \draw (0,0) node {$\{e\}$};
+    \draw (2,0) node {$M$};
+    \draw (4,0) node {$G$};
+    \draw (6,0) node {$G/M$};
+    \draw (8,0) node {$\{e\}$};
+
+    \draw (0,-1.5) node {$\{e\}$};
+    \draw (2,-1.5) node {$M/N$};
+    \draw (4,-1.5) node {$G/N$};
+    \draw (6,-1.5) node {$G/M$};
+    \draw (8,-1.5) node {$\{e\}$};
+\end{tikzpicture}
+\end{center}
+
+\begin{theorem}[The Third Isomorphism Theorem] \index{Third Isomorphism Theorem}
     Let $M$ and $N$ are normal subgroups of a group $G$, where $N$ is also a normal subgroup of $M$. Then $M/N$ is a normal subgroup of $G/N$, and $(G/N)/(M/N) \cong G/M$.
 \end{theorem}
 \begin{proof}
     Define an assignment from $G/N$ to $G/M$ by $gN \mapsto gM$. It is a surjective homomorphism, well defined as $N$ is a subgroup of $M$, so that $gN \subseteq gM$ for any $g$. The kernel of this map are all sets of elements $gN$ such that $gM = M$, which is precisely the elements $g$ that are elements of $M$. Then the kernel is $M/N$ (a normal subgroup), so by the first isomorphism theorem, we obtain that $(G/N)/(M/N) \cong G/M$.
 \end{proof}
 
-Surprise, turns out we have another isomorphism theorem.
-
-\begin{theorem}[The Lattice/Fourth Isomorphism Theorem]
-Let $G$ be a group, and $N$ a normal subgroup. Then there is a bijection $f$ from subgroups of $G$ which contain $N$ to subgroups of $G/N$ such that $f(H)$ is denoted $\overline{H}$. The bijection has the following properties for any two subgroups $H$ and $K$:
+\begin{theorem}[The Lattice/Fourth Isomorphism Theorem] \index{Fourth Isomorphism Theorem} \index{Lattice Isomorphism Theorem}
+Let $G$ be a group, and $N$ a normal subgroup. Then there is a bijection $f$ from subgroups of $G$ which contain $N$ to subgroups of $G/N$. The expression $f(H)$ will be denoted $\overline{H}$. The bijection has the following properties for any two subgroups $H$ and $K$:
 
 \begin{itemize}
     \item $H \subset K$ if and only if $\overline{H} \subset \overline{K}$.
@@ -725,35 +1164,396 @@ Let $G$ be a group, and $N$ a normal subgroup. Then there is a bijection $f$ fro
 \end{itemize}
 \end{theorem}
 \begin{proof}
-    Given a subgroup $H$ of $G$ which contains $N$, define a mapping by $H \mapsto H/N$. The properties above can (and should be) be checked by the reader.
+    Given a subgroup $H$ of $G$ which contains $N$, define a mapping by $h \mapsto hN$. The properties above can (and should be) be checked by the reader.
 \end{proof}
 
-\chapter{The Symmetric Group}
+We prove a tricky theorem now which will become very important when we investigate the theory of solvable groups. It is called the butterfly lemma because of the diagram below.
 
-The symmetric group was previously defined as the set of permutations on a set. In the context of an example, this group seems just a trivial example. This is not so. One reason why the group is generally interesting is Cayley's theorem, which relates the set of groups to all other groups.
+INSERT PRETTY BUTTERFLY DIAGRAM (OH NO THIS IS GOING TO TAKE A WHILE TO GET RIGHT)
 
-\begin{theorem}[Cayley's Theorem]
+\begin{theorem}[The Butterfly Lemma: Zassenhaus' Lemma] \index{Butterfly Lemma} \index{Zassenhaus' Lemma}
+    Let $U$ and $V$ be subgroups of a group $G$, and let $U'$, $V'$ be two other subgroups such that $U' \lhd U$, $V' \lhd V$. Then
+    %
+    \[ U'(U \cap V') \lhd U(U \cap V) \]
+    %
+    \[ (U \cap V)V' \lhd (U \cap V)V' \]
+    %
+    and the factor groups are isomorphic:
+    %
+    \[ \frac{U'(U \cap V)}{U'(U \cap V')} \cong \frac{(U \cap V)}{(U' \cap V)(U \cap V')} \cong \frac{V'(V \cap U)}{V'(V \cap U')} \]
+\end{theorem}
+\begin{proof}
+    Since the problem is symmetric in $U$ and $V$, we need only prove the isomorphism from first to second, as then by swapping $V$ to $U$ we get third to second for free. Since $U \cap V$ is a subgroup of $U$, and $U'$ is a normal subgroup of $U$, $U'(U \cap V)$ is a subgroup of $U$. Since $U'$ is normal in $U$, $U'$ is normal in all subgroups of $U$. For this proof specifically, it is needed that $U'$ is normal in $U'(U \cap V)$. Thus we obtain a factor group $U'(U \cap V)/U'$. The second isomorphism tells us that, if $K$ is a group, $S$ and $N$ are subgroups, and $N \lhd K$, then
+    %
+    \[ \frac{S}{S \cap N} \cong \frac{SN}{N} \]
+    %
+    Setting $S = U \cap V$, and $N = U'$, $K = G$ we obtain that
+    %
+    \[ \frac{U \cap V}{(U \cap V) \cap U'} \cong \frac{U'(U \cap V)}{U'} \]
+    %
+    Of course, $(U \cap V)/(U \cap V \cap U') = (U \cap V)/(U' \cap V)$, hence
+    %
+    \[ \frac{U \cap V}{U' \cap V} \cong \frac{U'(U \cap V)}{U'} \]
+    %
+    The group $(U \cap V)/((U' \cap V)(U \cap V'))$ is a factor group of $(U \cap V)/(U' \cap V)$; that is,
+    %
+    \[ \frac{U \cap V}{(U' \cap V)(U \cap V')} = \frac{(U \cap V)/(U' \cap V)}{U \cap V'} \]
+    %
+    This follows as, in general, for any groups $S$, $T$, and $K$ for which this statement makes sense,
+    %
+    \[ \frac{G}{HK} = \frac{G/H}{K} \]
+    %
+    Because of this factor group, and the isomorphism obtained from the second theorem, we obtain a surjective homomorphism from $U'(U \cap V)/U'$ to $(U \cap V)/((U' \cap V)(U \cap V'))$,
+    %
+    \[ sU' \mapsto s(U' \cap V)(U \cap V') \]
+    %
+    The kernel of this homomorphism is exactly $(U'(U \cap V'))/U'$. From the first isomorphism theorem,
+    %
+    \[ \frac{U'(U \cap V)/U'}{U'(U \cap V')/U'} \cong \frac{U \cap V}{(U' \cap V)(U \cap V')}  \]
+    %
+    And from the third isomorphism theorem, we can replace the left hand side to obtain the needed isomorphism.
+    %
+    \[ \frac{U'(U \cap V)}{U'(U \cap V')} \cong \frac{U \cap V}{(U' \cap V)(U \cap V')} \]
+    %
+    Now, swapping $U$ and $V$,
+    %
+    \[ \frac{V'(V \cap U)}{V'(V \cap U')} \cong \frac{V \cap U}{(V' \cap U)(V \cap U')} \]
+
+    Note that both hand sides of the equations above are the same, hence we obtain the butterfly isomorphism.
+\end{proof}
+
+The proof of this theorem shows that isomorphism theorems are powerful, but because of this power, the proof is very obtuse. If you aren't able to understand the proof, just try and understand the isomorphism formed.
+
+\begin{exercise}
+    Let $a$ be an element of a group of finite order, and $f$ a homomorphism. Show that the order of $f(a)$ divides the order of $a$.
+\end{exercise}
+\begin{proof}
+    By the first isomorphism theorem,
+    %
+    \[ \langle a \rangle / \ker(f) \cong f(\langle a \rangle) \]
+    %
+    And we know the order of $\langle a \rangle / \ker(f)$ divides the order of $\langle a \rangle$.
+\end{proof}
+
+\begin{exercise}
+    This exercise has two parts.
+
+    \begin{enumerate}
+        \item If $S$ and $T$ are subgroups of a group $G$, then a $(S - T)$ double coset is a subset of $G$ of the form $SgT$, where $g \in G$. Prove that the set of all $(S - T)$ double cosets partitions the group.
+        \item Let $S$ and $T$ be subgroups of a finite group $G$, and suppose for some sequence $(g_1, g_2, \dots, g_n)$ such that the double cosets $Sg_kT$ are disjoint, we have that
+        %
+        \[ G = \bigcup Sg_kT \]
+        %
+        Prove that
+        %
+        \[ G = \sum_{k = 0}^n (S:S \cap g_kTg_k^{-1}) \]
+        %
+        Note this is a generalization of Lagrange's theorem, which results when $T = \{ e \}$
+    \end{enumerate}
+\end{exercise}
+
+\begin{exercise}
+    A normal subgroup $N$ of $G$ is maximal if there is no normal subgroup that contains $N$ properly. Show that $N$ is maximal if and only if $G/N$ is simple.
+\end{exercise}
+\begin{proof}
+    The lattice isomorphism theorem shows that a group is normal in $G/N$ if and only if there is a corresponding normal subgroup of $G$ containing $N$.
+\end{proof}
+
+This exercise has important properties in the theory of solvable groups, a theory which we will study later.
+
+
+
+
+
+
+
+\chapter{Group Actions and The Symmetric Group}
+
+The symmetric group was previously defined as the set of permutations on a set. In the context of an example, this group seems trivial, but this is not so. One reason why the group is generally interesting is Cayley's theorem, which relates the set of groups to all other groups.
+
+\begin{theorem}[Cayley's Theorem] \index{Cayley's Theorem}
     Every group is isomorphic to a subgroup of a symmetric group:
 \end{theorem}
 \begin{proof}
     Let $G$ be a group. For each $g \in G$, define a permutation $\pi_g$ on the group defined by the map $h \mapsto gh$. The function is a permutation as it is bijective -- there is an inverse function $h \mapsto g^{-1}h$. The map from the group to its permutation is a homomorphism as for any two elements $g$ and $g'$ $\pi_g \circ \pi_{g'} = \pi_{gg'}$. Furthermore, the homomorphism is injective, as if $\pi_g = \text{id}$, then $gh = h$ for all elements $h$, and for any specific one, we obtain that $g = e$. Thus $G$ is isomorphic to the image of the permutation map, which is a subgroup of $S_{|G|}$.
 \end{proof}
 
+Intuitively, what Cayley's theorem states is that every every element of a group can be considered a symmetry of some set of objects. For instance $\mathbf{Z}$, the number $n$ can really be considered the symmetry of adding $n$ to every number in $\mathbf{Z}$, shifting all numbers to the right by $n$ such that the resultant object is symmetric to the original. In general, a homomorphism onto a familiar group is known as a representation.
+
 From Cayley's theorem, it follows that anything algebraically we prove about the subgroups of symmetric groups follows for all groups by the isomorphism property. Thus we will spend the rest of this chapter focusing on the components that form the symmetric group.
 
+Through Cayley's theorem, all groups can be considered subgroups of the symmetric group, hence all groups can be considered a symmetric action on some set. These actions provide another way to understand the structure of a group. We now describe these actions in detail.
+
 \begin{definition}
-    Given a set $M$ and a permutation $\pi$ on $M$, the {\bf support} of $\pi$, denoted $\sup(\pi)$, is equal to $\{ m \in M : \pi(m) \neq m \}$. A cycle of length $k$ is a permutation $\pi$ such that $|\sup(\pi)| = k$, and such that we can order $\sup(\pi)$ to be $(x_1, x_2, \dots, x_k)$ in a way that $\pi(x_n) = x_{n+1 \mod k+1}$. A cycle of length two is called a transposition.
+A {\bf group action} \index{Actions (Group)} on a set $G$ and set $X$ is a homomorphism $\pi$ from $G$ to the symmetry group on $|X|$ characters. To be concise, we write $gs$ for the permutation $(\pi(g))(s)$ associated with $g$ acting on $s$. We call $X$ a {\bf G-set} \index{G-set}.
 \end{definition}
 
-We write the function $\pi$ as $(x_1, \dots, x_k)$. If $\sigma$ and $\tau$ are two permutations, such that $\sup(\sigma) \cap \sup(\tau) = \emptyset$, $\sigma \circ \tau = \tau \circ \sigma$. This is because the two act independently on the set they permute.
+It is simple to show that, for any group action $G$ on a $G$-set $X$, we have that,
+for all $g$ and $h$ in $G$ and $x$ in $X$, $g(hx) = (gh)x$, and $ex = x$. These properties follow directly from the definition of a homomorphism; another way of saying the first statement is that, if $\varphi$ is the homomorphism defining the action,%
+%
+\[\varphi(g) \circ \varphi(h) = \varphi(gh) \]
+%
+The second statement says
+%
+\[ \varphi(e) = \mathbf{1} \]
+%
+where $\mathbf{1}$ is the identity transformation. This is just a definition of a homomorphism from a group to the symmetric group, hence any map satisfying these properties is a group action.
+
+A basic example of a group action is to consider $G$ a $G$-set on itself by conjugation. That is, our group action is defined by
+%
+\[ g(x) \mapsto g^{-1}xg \]
+%
+It is trivial to verify the properties above. What's more, the permutation associated with any $g$ in $G$ is an automorphism of $G$. This does not always hold when the $G$-set is a group. We call any automorphism of this form an {\bf inner} automorphism.
+
+\begin{definition}
+Given a group $G$, and a $G$-set $S$, for $s \in S$, let the {\bf orbit} \index{Orbits} of $s$ be $Gs$, the set of all $gs$ for $g \in G$. Let the set of all orbits be denoted $X/G$.
+\end{definition}
+
+The relation on a $G$-set defined by $x \sim y$ if $Gx = Gy$ is an equivalence relation and partitions the set into orbits of $S$. What this means is that the group acts independently on each of a $G$-set's orbits.
+
+\begin{definition}
+    A $G$-set $X$ is {\bf transitive} \index{Transitive} if it has just one orbit. This just means that for any two elements $x$ and $y$ in $X$, there is some $g$ in $G$ such that $gx = y$.
+\end{definition}
+
+\begin{definition}
+    An action is {\bf faithful} \index{Faithful} if the homomorphism defining it is injective, which means that no group element other than the identity acts idempotently to the $G$-set associated with the group action.
+\end{definition}
+
+\begin{definition}
+    A map $\alpha$ from a  $G$-set $X$ to a $G$-set $Y$ is a $G$-morphism \index{G-morphism} if $\alpha(gx) = g\alpha(x)$ for all $g \in G$ and $x \in X$. $\alpha$ is a $G$-isomorphism if it is bijective.
+\end{definition}
+
+Like homomorphisms between groups, $G$-morphisms and isomorphisms embed the algebraic structure of one set into another. The only algebraic structured assumed on a $G$-sets is its relation to $G$, so we must use the group action to define the isomorphism.
+
+\begin{definition}
+    An element $x$ in a $G$-set $X$ is a {\bf fixed point} \index{Fixed Point} if $gx = x$ for every $g \in G$. This means exactly that the permutation associated with $g$ is $\mathbf{1}$ in the symmetric group; $g$ is in the kernel of the group action. The set of all fixed points is denoted $X^G$.
+\end{definition}
+
+\begin{definition}
+    Given any $x \in X$, the set $G_x$ defined as
+    %
+    \[ \{ g \in G : gx = x \} \]
+    %
+    is a subgroup called the {\bf isotropy subgroup} \index{Isotropy Subgroup} or {\bf stabilizer} \index{Stabilizer} of $x$ in $G$, and is normal in $G$.
+\end{definition}
+
+As an example, let $G$ act on itself by conjugation. The isotopy subgroups are called centralizers $C_G(h) = \{ g \in G : gh = hg \}$. A fixed point is called a center, and the set of all centers is denoted $Z(G)$, which we have previously shown as the center group. In general, for any group $G$ and $G$-set $X$,
+%
+\[ X^G = \bigcap_{x \in X} G_x \]
+
+As another example, consider conjugation from $G$ on its subgroups defined by the mapping
+%
+\[ gH \mapsto gHg^{-1} \]
+%
+Then the isotropy group of a subgroup $H$ is the normalizer $N_G(H)$. The fixed points of this transformation are precisely the normal subgroups.
+
+As a final more complicated example, consider the group $SL_n(\mathbf{R})$ acting on the upper half of the complex plane, the set
+%
+\[ \{ z \in \mathbf{C} : \im(z) > 0 \} \]
+%
+by the mobius transform
+%
+\[\begin{pmatrix} a & b \\ c & d \end{pmatrix} z = \frac{az + b}{cz + d}\]
+%
+This defines a transitive action. The isotropy subgroup of the imaginary number $i$ is the special orthogonal group $SO(2)$, the set of matrices with orthonormal columns. A meromorphic function on $H$ invariant under $SO(2)$ is called a modular function, and is essential to the study of number theory, string theory, and the study of monstrous moonshine.
+
+We now give a theorem which establishes an intricate connection between $G$ and its $G$-sets.
+
+\begin{theorem} [Orbit Stabilizer Lemma]
+    Let $X$ be a $G$-set. Then, for every $x$ in $X$, there exists a $G$-isomorphism from $G/G_x$ to $Gx$. It follows that
+    %
+    \[ |Gx| = (G:G_x) \]
+\end{theorem}
+\begin{proof}
+    Define a mapping by
+    %
+    \[ gG_x \mapsto gx \]
+    %
+    We leave the reader to verify this is a well defined function. The reasoning is similar to the verification of the function created in the first isomorphism theorem. This mapping is surjective by construction, and furthermore, the map is injective. If $gx = hx$, then $(h^{-1}g)x = x$, hence $(h^{-1}g) \in G_x$, so $gG_x = hG_x$. The mapping is also a $G$-isomorphism, hence we have constructed the required isomorphism.
+\end{proof}
+
+\begin{corollary}[The Orbit Decomposition Formula] \index{Orbit Decomposition Formula}
+    Given a $G$-set $X$, with a finite number of orbits $(X_1, X_2, \dots, X_n)$. From each orbit, pick a representative $x_i$. Then we have
+    %
+    \[ |X| = \sum_{k=1}^n (G:G_{x_i}) \]
+    %
+    which we call the orbit decomposition formula. In particular, if we let $X_n = |X^G|$
+    %
+    \[ |X| = |X^G| + \sum_{k=1}^{n-1} (G:G_{x_i}) \]
+\end{corollary}
+\begin{proof}
+    $X$ is the disjoint union of its orbits. Hence
+    %
+    \[ |X| = \sum_{k=1}^n |Gx_i| \]
+    %
+    But we have contructed an isomorphism from $Gx_i$ to $G/G_{x_i}$ above, hence
+    %
+    \[ |Gx_i| = |G/G_{x_i}| \]
+    %
+    and we obtain the final formula by Lagrange's theorem.
+\end{proof}
+
+The next theorem is just a restatement of the previous.
+
+\begin{corollary}[The Class Equation] \index{Class Equation}
+    Consider the group action of conjugation from a group $G$ onto itself. Then
+    %
+    \[ |G| = |Z(G)| + \sum_{i = 1}^{n-1} (G:C_G(x_i)) \]
+\end{corollary}
+
+This theorem will be very useful for our next topic of study, Sylow theory. Before we get into this theory, let us consider an example to show the power of the class equation. Consider a group of order 55 acting on a set of order 39. We claim there is at least one fixed point in the group action. The orbit decomposition formula entails that we have
+%
+\[ |X| = 39 = |X^G| + \sum_{k=1}^n (G:G_{x_i}) \]
+%
+Each $G_{x_i}$ forms a subgroup of $G$, hence by Lagrange's theorem, $|G_{x_i}| \divides 55$, so $|G_{x_i}|$ is either $1$, $5$, $11$, or $55$. If $|G_{x_i}| = k$, then $(G:G_{x_i}) = 55/k$, so if we let $m_j$ denote the number of orbits whose isotropy subgroups are order $j$. Then
+%
+\[ 39 = 55m_1 + 11m_5 + 5m_{11} + m_{55} \]
+%
+Showing that there is at least one fixed point is the same as showing there is an isotropy group of order $55$, for this means that some element in $X$ is fixed by every point in $G$, and hence a fixed point. By considering all possible solutions to the equations above, we obtain that $m_{55} \geq 1$ and hence the theorem.
+
+\begin{lemma}[Burnside's Lemma] \index{Burnside's Lemma}
+    If $X$ is a finite $G$-set, then
+    %
+    \[ |X/G||G| = \sum_{g \in G} |X^g| \]
+\end{lemma}
+\begin{proof}
+    By a simple calculation,
+    %
+    \[ \sum_{g \in G} |X^g| = |\{(g,x): gx = x\}| = \sum_{x \in X} |G_x| \]
+    %
+    Combining this calculation with the orbit stabilizer lemma, we obtain that
+    %
+    \[ \sum_{x \in X} |G_x| = \sum_{x \in X} |G|(G:G_x)^{-1} = |G| \sum_{x \in X} (G:G_x)^{-1} \]
+    %
+    Now $(G:G_x) = |Gx|$, hence
+    %
+    \[ |G| \sum_{x \in X} (G:G_x)^{-1} = |G| \sum_{x \in X} |Gx|^{-1} \]
+    %
+    Now partion $X$ into its orbit $X/G$. For each $x$ and $y$ in a particular orbit, it is obvious that $|Gx| = |Gy|$. Hence, if we have a partition $(X_1, X_2, \dots, X_{|X/G|})$, and we pick representatives from each $x_i$ from each $X_i$, we have that
+    %
+    \[ |G| \sum_{x \in X} |Gx|^{-1} = |G| \sum_{k = 1}^{|X/G|} |X_k||Gx_k|^{-1} \]
+    %
+    Now for each $|X_k|$, we have that $|Gx_i| = |X_k|$ by definition, so finally, we obtain that
+    %
+    \[ |G| \sum_{k = 1}^{|X/G|} |X_k||Gx_k|^{-1} = |G| \sum_{k = 1}^{|X/G|} |Gx_i|/|Gx_i| = |G| \sum_{k = 1}^{|X/G|} 1 = |G||X/G| \]
+    %
+    and by transitivity, our proof is complete.
+\end{proof}
+
+Before we get into Sylow theory, let us establish some interesting facts about the symmetric group. First, of course, we must define some facts.
+
+\begin{definition}
+    Given a set $M$ and a permutation $\pi$ on $M$, the {\bf support} \index{Support} of $\pi$, denoted $\sup(\pi)$, is defined as the set
+    %
+    \[ \{ m \in M : \pi(m) \neq m \} \]
+    %
+    A {\bf cycle} \index{Cycles} of length $k$ is a permutation $\pi$ such that $|\sup(\pi)| = k$, and we can order $\sup(\pi)$ to be $(x_0, x_1, \dots, x_{k-1})$ in a way that $\pi(x_n) = x_{n+1 \bmod k}$. A cycle of length two is called a transposition \index{Transposition}.
+\end{definition}
+
+We denote a cycle like $\pi$ as $(x_1, x_2, \dots, x_k)$.
+
+If $\sigma$ and $\tau$ are two permutations, such that $\sup(\sigma) \cap \sup(\tau) = \emptyset$, $\sigma \circ \tau = \tau \circ \sigma$. This is because the two act independently on the set they permute.
 
 \begin{theorem}
 Every permutation on a finite non-empty set which is not the identity can be written as the product of cycles with disjoint support. This is unique up to reordering:
 \end{theorem}
 \begin{proof}
-    We prove this theorem by induction. For a one element set, the proof is vacously true. Now suppose that permutations on sets of less than $n$ elements can be written as disjoint cycles. Consider a set $X$ of $n$ elements. Take an arbitrary element $x_1$. Then form a sequence $(x_1, \pi(x_1), \pi^2(x_1), \dots, \pi^n(x_1)$. Such that $\pi^{n+1}$ is the least function for which $\pi^{n+1}(x_1) = x_1$. This is always possible in a finite set by an easy application of the pidgeonhole principle. Denote these elements as the sequence $(x_1, x_2, \dots, x_n)$. Then $\pi|_{\{ x_1, \dots, x_n\}}$ is a cycle of length $n$. Now $X - \{ x_1, \dots, x_n \}$ is a set of less than $n$ elements, so that we can decompose it $\pi|{\{ x_1, \dots, x_n\}}$ into a product of disjoint cycles. Then, since the support of each is disjoint,
-    $\pi|_{\{ x_1, \dots, x_n\}} \circ \pi|{\{ x_1, \dots, x_n\}} = \pi$, and $\pi$ is a product of disjoint cycles.
+    Let $\sigma$ be an arbitrary element of the symmetric group $S_n$, and consider the cyclic group generated by $\sigma$. Consider the set $\{ 1, 2, \dots, n \}$, with $\langle \sigma \rangle$ acting on the set by the mapping
+    %
+    \[ \pi k = \pi(k) \]
+    %
+    in the obvious manner. We obtain disjoint partitions of orbits from this action. We claim that $\pi$ when restricted to this orbit is a cycle, and thus $\pi$ consists of products of cycles from each orbit. Consider an orbit $(\langle \pi \rangle k)$ for some number $k$ between one and $n$. Every integer in $k$'s orbit can be written $\pi^m(k)$ for some integer $m$. For each integer $l$ in the range, associate it with the smallest positive integer $m$ such that $\pi^m(k) = l$. We obtain an ordering
+    %
+    \[ (\pi^0(k), \pi^1(k), \pi^2(k), \dots, \pi^n(k)) \]
+    %
+    such that $\pi^{n+1}(k) = k$. This generates a cycle, and we have shown what was needed.
 \end{proof}
+
+If a permutation $\pi$ is equal to the disjoint composition of cycles $\sigma_1, \sigma_2, \dots, \sigma_n$, then we write $\pi = \sigma_1\sigma_2\dots\sigma_n$. Every permutation on a finite set can be written in this way.
+
+We would like to specify a specific set of permutations having the property of `evenness', like the integers. Specifically, we would like the following properties:
+%
+\begin{enumerate}
+    \item The composition of two even permutations is even.
+    \item The composition of two odd (not even) permutations is even.
+    \item The composition of an odd and even permutation is odd.
+\end{enumerate}
+%
+With the properties above, we can consider the property of `evenness' to be a homomorphism from $S_n$ to the multiplicative group consisting of $\pm 1$. If $f(\pi) = 1$, then $\pi$ is even. Thus our task is to characterize a homomorphism with this property. From elementary properties of homomorphisms, we know that $\mathbf{1}$ must be even (it is in the kernel). In addition,
+%
+\begin{enumerate}
+    \item The inverse of an even permutation is even.
+    \item The inverse of an odd permutation is odd.
+\end{enumerate}
+%
+Let us add the additional characteristic that any transposition must be odd. Then it follows that there is only one homomorphism with the properties above. The next few lemmas will establish this claim.
+
+\begin{lemma}
+    $S_n$ is generated by transpositions.
+\end{lemma}
+\begin{proof}
+    We have proved that $S_n$ is generated by cycles, hence we need only prove that each cycle can be decomposed into transpositions. The calculation below shows that this is true.
+    %
+    \[ (x_1, x_2, \dots, x_n) = (x_1\ x_n) (x_1\ x_{n-1}) \dots (x_1\ x_2) \]
+\end{proof}
+
+Now of course, by Theorem (4.6) we may conclude that if there exists a homomorphism with the properties above, then it must be unique. Thus we need only establish that there exists a homomorphism with the properties above. We state the theorem in full.
+
+\begin{theorem}
+    There is a unique homomorphism from $S_n$ to $\{ \pm 1 \}$ such that the mapping from any transposition is $-1$.
+\end{theorem}
+\begin{proof}
+    Consider a polynomial $P$ defined for any tuple of natural numbers by
+    %
+    \[ P(x_1, x_2, \dots, x_n) = \prod_{1 \leq i < j \leq n} (x_j - x_i) \]
+    %
+    Define the map $sgn$ from $S_n$ to $\{ \pm 1 \}$ by
+    %
+    \[ sgn(\pi) = \frac{P(\pi(1), \pi(2), \dots, \pi(n))}{P(1,2, \dots, n)} \]
+    %
+    For any factor $(x_i - x_j)$ in $P(1, 2, \dots, n)$, we either have the factor $(x_j - x_i)$ or the factor $(x_i - x_j)$ in $P(\pi(1), \pi(2), \dots, n)$ ($\pi$ just permutes the orders of the elements, hence the numerator and denominator only differ by sign, and the value of $sgn$ is always positive or negative one. We have that
+    %
+    \[ \frac{\pi(i) - \pi(j)}{i - j} = \frac{\pi(j) - \pi(i)}{j - i} \]
+    %
+    Therefore it does not matter whether $i < j$ as much as we do not add the same fraction twice. We conclude, for two permutations $\pi$ and $\sigma$, that
+    %
+    \begin{align*}
+        sgn(\pi \circ \sigma) &= \prod_{1 \leq i < j \leq n} \frac{\pi(\sigma(i)) - \pi(\sigma(j))}{i - j}\\
+        &= \prod_{1 \leq i < j \leq n} \frac{\pi(\sigma(i)) - \pi(\sigma(j))}{\sigma(i) - \sigma(j)} \prod_{1 \leq i < j \leq n} \frac{\sigma(i) - \sigma(j)}{i - j}\\
+        &= \prod_{1 \leq \sigma(i) < \sigma(j) \leq n} \frac{\pi(\sigma(i)) - \pi(\sigma(j))}{\sigma(i) - \sigma(j)} sgn(\sigma)\\
+        &= \prod_{1 \leq i < j \keq n} \frac{\pi(i) - \pi(j)}{i - j} sgn(\sigma)\\
+        &= sgn(\pi) \cdotp sgn(\sigma)
+    \end{align*}
+    %
+    Here the third and fourth equality works because $\sigma$ is a permutation of the numbers from 1 to $n$. From this calculation, we conclude $sgn$ is a homomorphism; all that is left to prove is that for any transposition $(x_1, x_2)$, $sgm((x_1, x_2)) = -1$.
+    %
+    \begin{align*}
+        sgn((x_1, x_2)) &= \Bigg( \prod_{\substack{1 \leq i < j \leq n\\(i,j) \neq (x_1, x_2)}} \frac{i - j}{i - j} \Bigg) \frac{x_2 - x_1}{x_1 - x_2}\\
+        &= - \frac{x_2 - x_1}{x_2 - x_1}\\
+        &= -1
+    \end{align*}
+    %
+    Thus we have constructed the isomorphism that we wanted.
+\end{proof}
+
+The $sgn$ map was constructed only to satisfy the proof. Here is a simpler way to think of the map. We know that any permutation $\pi$ in $S_n$ can be decomposed into the product of a finite number of transpositions. If we let $k$ denote the number of transpositions, then we have that
+%
+\[ sgn(\pi) = (-1)^k \]
+%
+which follows exactly from the homomorphic properties of the sign function.
+
+\begin{exercise}
+    If $X$ is a $G$ set that is not a singleton, then there is an element $x$ in $X$ with no fixed points.
+\end{exercise}
+
+
+
+
+
+
+
+
+
 
 \begin{lemma}
     Let $\pi \in S_X$ and $\sigma = (x_1\ x_2\ \dots\ x_n)$. Then it follows that
@@ -763,31 +1563,7 @@ Every permutation on a finite non-empty set which is not the identity can be wri
     This follows as $\pi \sigma \pi^{-1} (\pi(x_i)) = \pi \sigma(x_i) = \pi(x_{i+1})$. If $x \notin \sup(\sigma)$, then $\pi \sigma \pi^{-1} (\pi (x)) = (\pi \sigma) (x) = \pi(x)$, so that $\pi(x) \notin \sup(\pi \sigma \pi^{-1})$.
 \end{proof}
 
-\begin{lemma}
-    Any symmetric group is generated by the set of transpositions in that group.
-\end{lemma}
-\begin{proof}
-Each cycle can be decomposed into transpositions. Concretely, this is the fact that
-%
-\[ (x_1\ \dots\ x_n) = (x_1\ x_n) (x_1\ x_{n-1}) \dots (x_1\ x_2) \]
-%
-We have shown that $S_X$ is generated by the set of cycles, hence $S_X$ is generated by the set of transpositions.
-\end{proof}
-
-The parity or signum of a permutation $\pi$ is based on the number of transpositions that is is composed of. If the number is even the value is $1$, else it is $-1$. We show that it this definition is well defined.
-
-\begin{lemma}
-    Any two compositions of transpositions that are equal either both have an even number of transpositions or both have an odd number.
-\end{lemma}
-\begin{proof}
-    Let $(\sigma_1\ \sigma_2\dots\sigma_n) = (\pi_1\ \pi_2\dots\pi_m)$, where each composition is a sequence of transpositions. Every transposition can be written as a product of odd number of transpositions of adjacent elements, i.e
-    %
-    \[ (n\ m) = (n\ n+1)(n+1\ n+2)\dots(m-1\ m)(m-1\ m-2)\dots(n+1\ n) \]
-    %
-    Now decompose each transposition into a product of adjacent elements like above. We get a new sequence, that $(\sigma'_1\ \sigma'_2\dots\sigma'_{n'}) = (\pi'_1\ \pi'_2\dots\pi'_{m'})$. Now if we multiply from left to right the new sequence of the left with the old sequence, we obtain the fact that $n - n'$ and $m - m'$ are even. If we do this on the left of the right sequence with the left, we get that $m' - n'$ is even. Hence $m' - n$ is even, and so $m - m'$ is even, which is what we wanted to show.
-\end{proof}
-
-The parity operation defines a homomorphism from $S_n$ into $\mathbf{Z}^\times$. The kernel of this is $A_n$, the alternating group, a normal subgroup of $S_n$. Here are some properties of $A_n$.
+The kernel of this is $A_n$, the alternating group \index{Alternating Group}, a normal subgroup of $S_n$. Here are some properties of $A_n$.
 
 \begin{lemma} If $\tau$ is a transposition, $S_n = A_n \cup \tau A_n$. Thus $A_n = n!/2$. \end{lemma}
 
@@ -805,68 +1581,300 @@ Saving the hardest for last:
 
 The fact that $A_4$ is not simple results in far reaching ramifications in Galois theory, where it implies that there is no formula for finding the roots of quintic polynomial roots.
 
-\chapter{Group Actions}
 
-Automorphisms are symmetries on a group, which, when taken together, form a group as a whole. The symmetry group acts as a more general notion of symmetries of a set. Through these actions, we obtain large amounts of information about both the group and the set. These are specific notions of a more general structure that we now describe, a group action.
+
+
+
+
+
+
+
+
+
+
+\chapter{Sylow Theorems}
+
+In 1872, Norwegian Ludwig Sylow proved a collection of theorems, called the Sylow theorems \index{Sylow Theorems}, which give detailed information about the number of subgroups of a certain size that a group contains. Unlike the majority of chapters in this book, we begin with a theorem, rather than a definition.
+
+\begin{theorem}
+    For every finite abelian group, and every prime number which divides the order of the group, there is an element whose order is that prime number.
+\end{theorem}
+\begin{proof}
+    Let $G$ be an abelian group, and $p$ a prime number such that $p \divides |G|$. We prove this statement by induction on $|G|$. When $|G| = 1$, the statement holds vacously. Now suppose this theorem holds for all group sizes less than the order of another group $G$. Take $g \neq e$ in $G$. If the order of $g$ is divisible by that prime number, that is, if there is some integer $m$ such that $g^{mp} = e$, then $g^m$ is order $p$, and we are done. Thus we may assume without any loss of generality that $g$ is not divisible by that prime number. Since $G$ is abelian, $\langle g \rangle$ is normal, hence we can form the group $G/\langle g \rangle$. We have the fact that $|G| = |G/\langle g \rangle| |\langle g \rangle|$, and since $\langle g \rangle$ has an order greater than one, since $g \neq e$, then the order of $G/\langle g \rangle$ is less than the order of $G$, and since $p \not \divides \langle g \rangle$, we know $p \divides G/\langle g \rangle$. We conclude there is some element $h\langle g \rangle$ that is order $p$. Thus $(h \langle g \rangle)^p = h^p \langle g \rangle = \langle g \rangle$. Then we conclude that $h^p = e$, and thus $p$ divides the order of $h$. Using the case proved earlier, we must have that some power of $h$ is order $p$.
+\end{proof}
+
+A theorem of Cauchy generalizes this to arbitrary groups.
+
+\begin{theorem}[Cauchy's theorem] \index{Cauchy's Theorem}
+    Given any group whose order divides a prime, there is an element whose order is that prime.
+\end{theorem}
+\begin{proof}
+    We prove this theorem by induction again. We prove no base case as a group of any size less than 6 is abelian and thus we can apply theorem (12.1). Now suppose the theorem holds for all groups of order less than a group $G$. Let $p$ be a prime, and suppose $p \divides |G|$. If $G$ contains a proper subgroup whose order is divisible by $p$, then we can apply induction rather easily to show that this theorem holds for $G$. The hard part is when $G$ contains no proper subgroup whose order is divisible by $p$. Consider $G$ acting on itself by conjugation. For every element $g$, the centralizer $C_G(g)$ is a subgroup of $G$. By Lagrange's theorem,
+    %
+    \[ |G| = |C_G(g)|(G:C_G(g)) \]
+    %
+    The class equation also gives us that
+    %
+    \[ |G| = |Z(g)| + \sum_{k = 1}^{n-1} (G:C_G(x_i)) \]
+    %
+    If $g$ is not in $Z(g)$, $C_G(g)$ is a proper subgroup of $G$, so by our assumption $p \not \divides |C_G(g)|$, so by the equation created by Lagrange's theorem, we obtain that $p \divides (G:C_G(g))$. But then by rearranging the class equation, we obtain that $p \divides |Z(g)|$, hence $Z(g)$ cannot be a proper subgroup, and so $G = Z(g)$. Thus $G$ is abelian, and we can apply (12.1) again.
+\end{proof}
 
 \begin{definition}
-A {\bf group action} on a set $G$ and set $X$ is a homomorphism from $G$ to $S_{|X|}$. As each $g \in G$ has an associated permutation, for $x \in X$ we write $gs$ for the permutation associated with $g$ acting on $s$. We call $X$ a {\bf G-set}.
+    Let $p$ be a prime number. A group $G$ is called a {\bf p-group} \index{p-group} if the groups order is a power of $p$.
 \end{definition}
 
-It is simple to show $g(hx) = (gh)x$ and $ex = x$, for $g,h,e \in G$ and $x \in X$. Another way of saying the first part of the statement is that, if $\varphi$ is the homomorphism defining the action, $\varphi(g) \circ \varphi(h) = \varphi(gh)$, and the section is saying that $\varphi(e) = \mathbf{1}$. This is just a definition of a homomorphism from a group to the symmetric group, so is van equivalent way of defining a group action.
+By Cauchy's theorem, a group is a $p$-group if and only if every element has order a power of a prime.
+
+\begin{lemma}
+    Let $G$ be a $p$-group. If $G$ acts on a finite set $X$, then the fixed points $X^G$ satisfies
+    %
+    \[ |X^G| \equiv |X| \pmod{p} \]
+\end{lemma}
+\begin{proof}
+    It was previously proven that $|X| = |X^G| + \sum_{k=1}^{n-1} (G:G_{x_i})$, the class equation. For each $G_{x_i}$, we have that $p \divides (G:G_{x_i})$ by an easy application of Lagrange's theorem. This shows exactly the equation we were attempting to prove.
+\end{proof}
+
+\begin{lemma}
+    Let $G \neq \{e\}$ be a $p$-group. Then the center $Z(G) \neq \{e\}$.
+\end{lemma}
+\begin{proof}
+    Let $G$ act on itself by conjugation. Then by Lemma (12.3), we have the $|Z(G)| \equiv |G| \pmod{p}$, so $|Z(G)| \equiv 0 \pmod{p}$ since $p \divides G$. We obtain that there are at least $p$ elements that are fixed points, since we cannot have $0$ elements.
+\end{proof}
+
+\begin{corollary}
+    Let $p$ be a prime. Every group of order $p^2$ is abelian.
+\end{corollary}
+\begin{proof}
+    Let $G$ be a group of order $p^2$. According to Lemma (12.4), the center $Z(G)$ of $G$ is non-trivial. Since $Z(G)$ is a subgroup, it thus must be order $p$ or $p^2$ by Lagrange's theorem. Suppose that $Z(G)$ is order $p$, and let $h$ be an element such that $h \notin Z(G)$. Also consider conjugation acting from $G$ to itself. Then $G_x$ is a group larger than $Z(G)$ since $x \in G_x$ and $x \in Z(G)$, so we conclude that $G_x$ must be order $p^2$. But then, of course, $x$ commutes with every element, so $x \in Z(G)$, a contradiction. Hence $Z(G)$ is order $p^2$, and it follows that $G$ is abelian.
+\end{proof}
+
+Now, to the real meat of the chapter!
 
 \begin{definition}
-Given a group $G$, and a $G$-set $S$, for $s \in S$, let the {\bf orbit} of $s$ be $Gs$, the set of all $gs$ for $g \in G$.
+    Let $G$ be a group of order $p^mq$, where $p$ is a prime and $q$ and $p$ are relatively prime. Then a subgroup is called a {\bf p-Sylow Subgroup} \index{Sylow Subgroup} if the order of the subgroup is a power of $p^m$.
 \end{definition}
 
-The relation $x \sim y$ if $Gx = Gy$ is an equivalence relation and partitions the set into orbits of $S$. Note that this means the group acts independently on each of a $G$-set's orbits.
+In the next few proofs, let $G$ be a group with the same notation of the definition of a Sylow subgroup.
+
+\begin{lemma}
+    For every $k$ such that $1 \leq k \leq m$, there is a subgroup of $G$ of order $p^k$.
+\end{lemma}
+\begin{proof}
+    We prove by induction on the size of $m$. Observe if $m = 0$, the theorem holds vacously. Consider the conjugation of $G$ acting on itself. We know that
+    %
+    \[ |G| = |Z(G)| + \sum_{i = 1}^{n-1} (G:C_G(x_i)) \]
+    %
+    We consider two cases to our proof. One where $p$ divides the center group, and one where it does not.
+
+    Suppose that $p \not\divides |Z(G)|$. This implies that there is at least one $x_i$ such that $p \not \divides (G:C_G(x_i))$, as otherwise we could move the indexes to the left hand side of the equation and conclude that $p \divides|Z(G)|$. By Lagrange's theorem, $|G| = (G:C_G(x_i))|C_G(x_i)|$, and hence $p \divides |C_G(x_i)|$. We know that $|C_G(x_i)| = p^{m}q'$, as the index takes no powers of $p$ away, and $q' < q$, as the index cannot be 1. Hence we can use induction to show there is a subgroup of order $p^k$ in the $C_G(x_i)$ and hence in $G$.
+
+    On the other size, suppose $p \divides |Z(G)|$. By Cauchy's theorem, we conclude there is some element $g$ of order $p$. Since $Z(G)$ commutes with elements of $G$, every subgroup of $Z(G)$ is normal in $G$. Thus $\langle g \rangle \lhd G$. $G/\langle g \rangle$ is thus a group of order $p^{m-1}q$, so by induction there is a subgroup $H$ of $G/\langle g\rangle$ such that $|H| = p^{k-1}$. $H$ can be written as $V/\langle g \rangle$ for some subgroup $V$ of $G$, and by Lagrange's theorem, $|V| = |H||\langle g \rangle| = p^{k-1}p = p^k$.
+\end{proof}
+
+\begin{lemma}
+    If $H$ is a $p$-subgroup of $G$, and $S$ is a $p$-Sylow Subgroup of $G$, then there is an element $g \in G$ such that $H \subset gSg^{-1}$.
+\end{lemma}
+\begin{proof}
+    $H$ acts of $G/S$ by the mapping $h(gS) \mapsto hgS$. By lemma (12.3),
+    %
+    \[ |X^H| \equiv |X| \pmod{p} = q \bmod{p} \]
+    %
+    $q$ is relatively prime to $p$, and thus in particular, $q \not \equiv 0 \pmod{p}$. Thus the set of fixed point $|X^H|$ contains at least one element $g$ such that $hgS = gS$ for all elements $h \in H$, but this means precisely that for some elements $s,s' \in S$, $hgs = gs'$, and thus $h = gs's^{-1}g^{-1}$, so that $h \in gSg^{-1}$. We conclude $H \subseteq gSg^{-1}$
+\end{proof}
+
+\begin{theorem}
+    Let $s$ be the number of $p$-Sylow Subgroups of $G$. Then $s | q$.
+\end{theorem}
+\begin{proof}
+    Let $S$ be a $p$-Sylow subgroup of $G$ of order $p^k$, and let $X$ be the set of all $p$-sylow subgroups of $G$. Since all $p$-Sylow subgroups are conjugate to each other, the action of conjugation from $G$ on $X$ is transitive. Consider the normalizer $N_G(S)$. We obtain the class equation
+    %
+    \[ |X| = (G:N_G(S)) \]
+    %
+    hence $(G:N_G(S)) = s$. By the multiplicative property of indices,
+    %
+    \[ (G:S) = (G:N_G(S))(N_G(S):S) \]
+    %
+    By Lagrange's Theorem, we get that $(G:S) = |G|/|S| = p^mq/p^m = q$, hence $s \divides q$.
+\end{proof}
+
+\begin{theorem}
+Keeping the notation the same as in the last theorem, $s \equiv 1 \pmod{p}$
+\end{theorem}
+\begin{proof}
+    $S$ acts on $X$ via conjugation. We claim that $S$ is the only fixed point in this action. To prove this, we first require a second claim; if a $p$-group $H$ is contained in $N_G(S')$, then $H$ is contained in $S'$. This follows as $S'$ is a subgroup (that is also normal) of $N_G(S')$, hence $HS'$ is a subgroup of $N_G(S')$. By the third isomorphism theorem, $HS'/S' \cong H/H \cap S'$. $H/H \cap S'$ is a $p$-group, as it is the factor group of a $p$-group.  By Lagrange's theorem, we have that $|HS'| \divides |G|$, and thus $|HS'|/|S'| \divides |G|/|S'|$, which states precisely that $(HS':S') \divides (G:S')$. As there is a bijection from $HS'/S'$ to $H/H \cap S'$, resulting from the third isomorphism theorem, it follows that $(H:H \cap S')$, which is equal to $(HS':S')$, divides $(G:S')$. However, $(G:S') = q$, and $q$ is coprime to $p$, so we must have that $|H|/|H \cap S'| \divides q$. But $|H|$ and $|H \cap S'|$ cannot possibly divide $q$, as they are both $p$-subgroups, so we must have that $|H| = |H \cap S'|$, and thus $H = H \cap S' = S'$. Hence $H \subset S'$, as we wanted.
+
+    Now we prove a final claim, that if $S'$ is a fixed point, then $sS's^{-1} = S'$. Take $H=S$ above. Then $S \subset S'$, but both have the same cardinality as both are $p$-Sylow subgroups, hence $S = S'$, and we have proved our theorem, as then $|X| \equiv |X^S| \pmod{p}$, by lemma (12.3), and $|X^S| = |\{S\}| = 1$.
+\end{proof}
+
+\begin{theorem}
+    Let $p$ and $q$ be prime numbers such that $q < p$, and $p \not \divides q$. Then every group of order $pq$ is cyclic.
+\end{theorem}
+\begin{proof}
+    Let $S$ be a $p$-Sylow subgroup of $G$, and $U$ a $q$-Sylow subgroup of $G$. Then the order of $S$ is $p$ and the order of $U$ is $q$, and the groups are cylic. As the two are not equal, $S \cap U = \{ e \}$, as this is a subgroup and thus must divide both primes. Let $s$ be the number of $p$-Sylow subgroups, and $r$ the number of $q$-Sylow subgroups. Then we know from theorem (12.9) that
+    %
+    \begin{align*} r &\equiv 1 \pmod{q} & s &\equiv 1 \pmod{p} & s &\divides q \end{align*}
+    %
+    As $s \divides q$, we know that $s = 1$ or $s = q$. If $s = q$, the $q \equiv 1 \pmod{p}$, hence $q-1 \equiv 0 \pmod{p}$, and thus $p \divides q-1$, a contradiction. Hence $s = 1$, and thus $S$ is normal. It follows that $SU$ is a subgroup of $G$ 
+\end{proof}
+
+
+
+
+
+
+
+
+
+
+\chapter{Solvability}
 
 \begin{definition}
-    A $G$-set is transitive if it has just one orbit.
+    Let $G$ be a group. A {\bf series} \index{Series} or {\bf tower} \index{Tower} is a finite sequence of groups
+    %
+    \[ G = G_0 \supset G_1 \supset G_2 \supset \dots \supset G_m \]
 \end{definition}
 
-This just means that for any two elements $x$ and $y$ in a $G$-set $X$, there is some $g \in G$ such that $gx = y$.
+In this chapter we will focus on a very specific type of tower.
 
 \begin{definition}
-    An action is faithful if the homomorphism defining it is injective.
+    A tower of a group is called a {\bf normal series} \index{Normal Series} if for any group $G_i$ that is not $G_m$, $G_{i+1} \lhd G_{i}$. A normal series is {\bf abelian} \index{Abelian Normal Series} if $G_{i}/G_{i+1}$ is abelian for all groups $G_{i+1}$, and cyclic \index{Cyclic Normal Series} if every one of these quotient groups are cyclic.
+\end{definition}
+
+The following theorem follows as, for a homomorphism $f:G \to H$, with another group $H'$ such that $H' \lhd H$, then $f^{-1}(H') \lhd f^{-1}(H)$.
+
+\begin{theorem}
+    Consider a normal tower
+    %
+    \[ H_m \lhd H_{m-1} \lhd \dots \lhd H_0 = H \]
+    %
+    and a homomorphism $f:G \to H$. Define a tower on $G$ by $G_i = f^{-1}(H_i)$. Then this tower is normal.
+\end{theorem}
+
+This theorem, along with the following theorem, are left to be filled in by the reader. To prove the next one, note that the mapping $gG_{i+1} \mapsto f(g)H_{i+1}$ is an injective homomorphism.
+
+\begin{theorem}
+    Consider the same towers are in the previous theorem. If the tower based from $H$ is abelian, then so is the tower on $G$. Furthermore, if $H$'s tower is cyclic, so is $G$'s.
+\end{theorem}
+
+Every group has a normal tower. For any group $G$, simply take the tower
+%
+\[ G \supset \{e\} \]
+%
+we want to take a tower which is maximalized in some way, to strain out some properties from the groups formed.
+
+\begin{definition}
+    A {\bf refinement} \index{Refinement (Series)} of a tower is a new tower obtained by inserting finitely more subgroups into the original tower.
 \end{definition}
 
 \begin{definition}
-    A map $\alpha$ from a  $G$-set $X$ to a $G$-set $Y$ is a $G$-morphism if $\alpha(gx) = g\alpha(x)$ for all $g \in G$ and $x \in X$. $\alpha$ is an isomorphism if it is bijective.
+    We say two normal series $S$ and $T$ are {\bf equivalent} \index{Equivalency (Series)} if they have the same length and such that there is a permutation $\varphi$ such that, for any group $S_i$ in $S$ but the terminating element,
+    %
+    \[ S_i/S_{i+1} \cong T_{\varphi(i)}/T_{\varphi(i) + 1} \]
 \end{definition}
 
-To relate this concept back to concepts previously talked about, a $G$-morphism is sort of like an isomorphism between $G$-sets. $G$-sets have no operation defined to compose them, however, so we must use the group action to define the isomorphism.
+\begin{theorem}
+    Two normal series in a group $G$ ending with the trivial group have refinements that are equivalent.
+\end{theorem}
+\begin{proof}
+    Consider two normal towers
+    %
+    \[ G = G_0 \supset G_1 \supset \dots \supset G_n = \{ e \} \]
+    %
+    \[ G = H_0 \supset H_1 \supset \dots \supset H_m = \{ e \} \]
+    %
+    Define $G_{i,j} = G_{i+1}(H_j \cap G_i)$ for $i$ between 0 and $n-1$ and $j$ between 0 and $m$. Then we have the tower
+    %
+    \begin{alignat*}{2}
+    G = G_1(G) &= G_1(H_0 \cap G_0) &\\
+               &= G_{0,0} \supset G_{0,1} \supset \dots \supset G_{0,m} \supset G_{1,0} \supset \dots &&\supset G_{n-1,m}\\
+                &           &&= G_n(H_m \cap G_{n-1}) = \{ e \}
+    \end{alignat*}
+    %
+    Similarily, if we define $H_{ij} = H_{i+1}(G_j \cap H_i)$, with a tower of $H_j$ generated in a similar fashion. By the butterfly lemma, with $U = G_{i+1}$, $U' = G_i$, $V = H_{j+1}$, and $V' = H_j$, we obtain that the above towers are normal, and equivalent, as
+    %
+    \[ G_{i,j}/G_{i,j+1} \cong H_{i,j}/H_{i,j+1} \]
+    %
+    and each tower is a refinement of the original towers, as
+    %
+    \[ G_{k,1} = G_k(H_1 \cap G_{k-1}) = G_k(G \cap G_{k-1}) = G_kG_{k-1} = G_k \]
+    %
+    and similarily for $H_{k,1}$.
+\end{proof}
+
+\begin{theorem}
+    From any abelian tower we can construct a cyclic tower.
+\end{theorem}
+\begin{proof}
+    We prove this theorem by induction on the order of the group. Consider a group $G$ of order $n$ where an abelian tower of any smaller group can be constructed into a cyclic tower. Suppose we have an abelian tower
+    %
+    \[ G = G_0 \supset G_1 \supset \dots \supset G_m \]
+    %
+    Consider a non-zero group element $g$ in $G$, and the quotient group $G/\langle g \rangle$. We still have an abelian tower
+    %
+    \[ G_0/\langle g \rangle \supset G_1/\langle g \rangle \supset \dots \supset G_m/\langle g \rangle \]
+    %
+    Because by the third isomorphism theorem, the quotient groups are isomorphic to the original abelian tower's quotient groups. By induction, we can construct refine this tower into a cyclic tower. We have the canonical homomorphism from $G$ to $G/\langle g \rangle$, hence the inverse image is a cyclic tower in $G$.
+\end{proof}
 
 \begin{definition}
-    An element $x$ in a $G$-set $X$ is a {\bf fixed point} if $gx = x$ for every $g \in G$. The set of all fixed points is denoted $X^G$.
+    A group is {\bf solvable} \index{Solvable} if it has an abelian tower whose last element is the trivial subgroup $\{e\}$.
 \end{definition}
 
-\begin{definition}
-    Given any $x \in X$, $G_x = \{ g \in G : gx = x \}$ is a subgroup called the isotropy subgroup of $x$ in $G$.
-\end{definition}
+\begin{theorem}
+    A group $G$ is solvable if and only if, for any normal subgroup $H$, $H$ and $G/H$ are solvable.
+\end{theorem}
+\begin{proof}
+    Consider the tower that makes $G$ solvable.
+    %
+    \[ G = G_0 \supset G_1 \supset \dots \supset G_n = \{ e \} \]
+    %
+    From this tower, construct a new tower
+    %
+    \[ H = H \cap G_0 \supset G_1 \cap H \supset \dots \supset G_n \cap H = \{ e \} \]
+    %
+    Now $H_i/H_{i+1}$
+\end{proof}
 
-As an example, let $G$ act on itself by conjugation, that is, $g(h) = ghg^{-1}$. The isotopy subgroups are called centralizers $C_G(h) = \{ g \in G : gh = hg \}$. A fixed point is called a center, and the set of all centers is denoted $Z(G)$, which we have previously shown as the center group.
 
-As another example, consider conjugation from $G$ on its subgroups. Then the isotropy group of a subgroup $H$ is the normalizer $N_G(H)$, which is the set $\{ g \in G : gHg^{-1} = H \}$. The fixed points of this transformation are precisely the normal subgroups.
 
-Consider the group $SL_n(\mathbf{R})$ acting on the upper half of the complex plane, that is, the set $\{ z \in \mathbf{C} : \im(z) > 0 \}$ by the mobius transform below:
 
-\[\begin{pmatrix} a & b \\ c & d \end{pmatrix} z = \frac{az + b}{cz + d}\]
 
-The isotropy subgroup of $i$ is the special orthogonal group $SO(2)$, the set of matrices with orthonormal columns. The mobius transform is transitive. A meromorphic function on $H$ invariant under $SO(2)$ is called a modular function, and is essential to the study of number theory, string theory, and the study of monstrous moonshine.
+
 
 \chapter{Direct Products, Semiproducts, and Abelian Groups}
 
-Let $I$ be an index set, and $\{ G_i \}_{i \in I}$ a family of groups. Then the direct product of $\{ G_i \}$, denoted $\bigtimes_{i \in I} G_i$, is a group with operation $\bigtimes_{i \in I} g_i \circ \bigtimes_{i \in I} h_i = \bigtimes_{i \in I} g_ih_i$. The group is called the product group.
+\begin{definition}
+Let $I$ be an index set, and $\{ G_i \}_{i \in I}$ a family of groups. Then the direct product of $\{ G_i \}$ \index{Direct Product}, denoted $\bigtimes_{i \in I} G_i$, is a group with an operation defined by
+%
+\[ \bigtimes_{i \in I} g_i \circ \bigtimes_{i \in I} h_i = \bigtimes_{i \in I} g_ih_i \]
+%
+The group is called the product group.
+\end{definition}
 
+\begin{theorem}
 Let $r$ and $s$ be two relatively prime integers. Suppose $G$ is a cyclic group of order $rs$. Then $G$ is isomorphic to the direct product of cyclic groups $R$ and $S$, where $R$ is order $r$ and $S$ is order $s$.
+\end{theorem}
 \begin{proof}
-    $R \times S$ is a cyclic group generated by $(x,y)$, where $x^r = e$, and $y^s = e$. This follows as $(x,y)^{rs} = (x^{rs},y^{rs}) = (e,e)$. If $(x,y)^m = (x^m,y^m) = (e,e)$, $r|m$ and $s|m$, so $rs|m$.
+    $R \times S$ is a cyclic group generated by $(x,y)$, where $x^r = e$, and $y^s = e$, and the order of this cyclic group is $rs$. Since the cyclic groups are of the same order, they must be isomorphic.
 \end{proof}
 
-Let $H$ and $K$ be normal subgroups of a group $G$, such that $H \cap K = \{ e \}$, and $HK = G$. Then $H \times K \cong G$:
+\begin{theorem}
+Let $H$ and $K$ be normal subgroups of a group $G$, such that $H \cap K = \{ e \}$, and $HK = G$. Then $H \times K \cong G$.
+\end{theorem}
 \begin{proof}
-    Define a map $(h,k) \mapsto hk$. The map is bijective, as $HK = G$, and if $hk = e$, $h = k^{-1}$, so $k^{-1} \in H$, so $k = h = e$. $hkh^{-1} \in K$, as $K$ is normal, but it is also in $N$ as $N$ is normal, hence $hkh^{-1}k^{-1} = e$, so $hk = kh$, and thus the map is a homomorphism as $h_1k_1h_2k_2 = h_1h_2k_1k_2$.
+    Define a map from $H \times K$ to $G$ by $(h,k) \mapsto hk$. The map is bijective, as $HK = G$, and if $hk = e$, $h = k^{-1}$, so $k^{-1}$ is in $H$, so $k = h = e$. We know that $hkh^{-1}$ is contained in $K$, as $K$ is normal, but it is also contained in $N$ as $N$ is normal, hence $hkh^{-1}k^{-1} = e$, so $hk = kh$, and thus the map is a homomorphism as $h_1k_1h_2k_2 = h_1h_2k_1k_2$, and we have shown the map is an isomorphism.
 \end{proof}
+
+
+
+
+
+
+
+
+
+
+\printindex
 
 \end{document}
