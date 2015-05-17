@@ -1,0 +1,235 @@
+\documentclass{report}
+
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{mathtools}
+
+\DeclareMathOperator{\real}{\mathbf{R}}
+\DeclareMathOperator{\nat}{\mathbf{N}}
+\DeclarePairedDelimiter\ceil{\lceil}{\rceil}
+\DeclarePairedDelimiter\floor{\lfloor}{\rfloor}
+
+\newtheorem{definition}{Definition}
+
+\newtheorem{theorem}{Theorem}[chapter]
+\newtheorem{lemma}{Lemma}[theorem]
+\newtheorem{corollary}{Corollary}[theorem]
+
+\newtheorem{exercise}{Exercise}
+
+\title{Linear Programming}
+\author{Jacob Denson}
+
+\begin{document}
+    \maketitle
+
+    \chapter{Introduction}
+
+    Most problems in computing science can be described in a specific format. The problem, given an input, has a certain set of feasible outputs. On this output we can place a partial ordering. The problem is then phrased as an optimization -- find the maximum or minimum feasible solution according to the ordering placed on the solutions. Examples of these problems are finding the `shortest' path, the `longest' common subsequence. Since we only have a finite set of solutions, the maximum can always be obtained in these problems.
+
+    Linear Programming attempts to provide a general solution to problems where solutions can be mapped to real numbers in a linear fashion, with an ordering defined on this, and such that feasible solutions are specified by linear constraints. We give an example to show this idea in action.
+
+    Suppose we are a store attempting to stock items. Each item needs to be created from a specific number of ingredients we need to buy, each with a specific stock. For simplicity, suppose we can only stock two items, apple pie, and chocolate bars. Let $a$ be the number of apple pies we make, and $c$ the number of chocolate bars.
+
+    For each apple pie we make, we must buy $3$ apples, and use $1/2$ bags of sugar, and for every three chocolate bars, $1$ bag of sugar must be used. Each apple is $\$1$, and each bag of sugar is $\$3$. Then we can model the cost in dollars of the process by the equation
+    %
+    \[ 4.5a + 1/3c \]
+    %
+    However, we are not only buying items, but selling them as well. Each apple pie is sold for $\$6$, and each chocolate bar for $\$1$. The problem is to find the optimal number of applie pies and chocolate bars to make, maximizing the equation
+    %
+    \[ (6 - 4.5)a + (1 - 1/3)c \]
+
+    The problem with the current description is that theoretically we could make as many apple pies and chocolate bars as we wanted, making theoretically an unbounded amount of money. Thus we add additional constraints. There is only a limited supply of sugar: we can only buy 50 bags. This means that, if we let $s = 1/2a + 1/3c$ be the number of bags of sugar we buy
+    %
+    \[ 1.2a + 1.3c \leq 50 \]
+    %
+    We can additionally only buy 100 apples
+    %
+    \[ a/3 \leq 100 \]
+    %
+    What's more, it takes time to produce these items. In the time alloted, we can only produce 40 items.
+    %
+    \[ a + c \leq 40 \]
+    %
+    With these constraints, the problem of maximizing revenue becomes much more involved. This is an example of a linear program. If we require the number of apple pies and chocolate bars we make to be integers, then this is an integer linear programming.
+
+    \begin{definition}
+        A linear program is a tuple $(r,\mathcal{A}, \mathcal{B})$, where $r$ is a vector called the objective function, and $\mathcal{F} = (a_1, a_2, \dots, a_m)$ is a finite set of vectors in $\real^n$ called the constraints, each with an associated $b_i$ in the finite set of values $\mathcal{B}$.
+    \end{definition}
+
+    It is customary to specify a linear programming in the following way:
+
+    \begin{alignat*}{3}
+        &\text{maximize }   & r_1x_1 + r_2x_2 + \dots r_nx_n &\\
+        &\text{subject to } & a_{11}x_1 + a_{12}x_2 + \dots a_{1n}x_n &\leq b_2\\
+        &                   & a_{21}x_1 + a_{22}x_2 + \dots a_{2n}x_n &\leq b_2\\
+        &                   & \vdots &\\
+        &                   & a_{m1}x_1 + a_{m2}x_2 + \dots a_{mn}x_n &\leq b_m
+    \end{alignat*}
+
+    Without loss of generality, we may consider the problem of linear program as a maximization of $\langle r, x \rangle$. If our real objective is to minimize $\langle r, x \rangle$, this is equivalent to maximizing $\langle -r, x \rangle$. Furthermore, we may also assume each constraint is a less than or equal to relationship, as if we want the constraint $\langle a_i, v \rangle \geq b_i$, this is equivalent to saying $\langle -a_i, v \rangle \leq -b_i$.
+
+    \begin{definition}
+        The set of {\bf feasible solutions} to a linear program is the subset of $\real^n$ such that, if $v$ is a feasible solution, for each $a_i \in \mathcal{A}$, $\langle a_i, v \rangle \leq b_i$. A problem is infeasible if there are no feasible solutions. The optimal solution is the solution $v$ such that $\langle v, r \rangle$ is maximized.
+    \end{definition}
+
+    It is notationally simple to introduce an ordering on $\real^n$. Say a vector $a$ is less than or equal to a vector $b$ if this is true for all corresponding components. Then a linear program is really just $(M,b)$, where $M$ is an $m \times n$ matrix, and $b$ is a vector in $\real^m$. Then the feasible solutions are just the vectors $v \in \real^n$ such that $Mv \leq b$.
+
+    It is not clear that an optimal solution to a problem will always exists. We could have infinitely many vectors and thus there is no guarenteed optimum.
+
+    \begin{definition}
+        A linear program is unbounded, if, for any $M \in \real$, there exists a feasible solution $v$ such that $\langle v,r \rangle > M$. It then follows that there is no optimal solution to the program.
+    \end{definition}
+
+    The main goal of this report is to find ways of optimizing linear programs in an algorithmically simple way. We introduce another way of formulating a linear program.
+
+    \begin{definition}
+        A linear program is in slack form if, instead of the feasible solutions being solutions to inequalities, the feasible solutions are equalities. More specifically, a linear program is in slack form if it is of the form.
+
+        \begin{alignat*}{3}
+        &\text{maximize }  & \zeta(v) &\\
+        &\text{subject to} & f_1(v) &= b_1\\
+        &                  & f_2(v) &= b_2\\
+        &                  & \vdots &\\
+        &                  & f_n(v) &= b_n\\
+        &                  & v_1,v_2,\dots,v_n &\geq 0
+        \end{alignat*}
+    \end{definition}
+
+    Every linear program can be put into slack form. Given an inequality, $f_i(v) \leq b_i$, introduce a slack variable $w_i$, and replace the inequality with the equality $f_i(v) + w_i = b_i$, and append the equality $w_i \geq 0$. Then every solution of the original linear program is a solution to the new linear program for some values of $w_i$, and has the same reward. If $v_i \geq 0$ is not already a constraint, introduce two new variables $v_i' v_i''$, enforce that $v_i',v_i'' \geq 0$, and replace every occurence of $v_i$ with $v_i' - v_i''$.
+
+
+
+
+
+
+
+
+
+    \chapter{Polyhedra}
+
+    Ideas developed in this chapter result from the idea that geometric properties of $\real^n$ can be used to explore solutions to linear programs. Note that every linear programming can be specified as a shape in $\real^n$.
+
+    \begin{definition}
+        A polyhedra is a set in $\real^n$ defined by a matrix $M$ and a real number $b$ by
+        %
+        \[ \{ v \in \real^n : Mv \leq b \} \]
+    \end{definition}
+
+    The constraints of every linear program form a polyhedra, and every polyhedra can be seen as the constraints of a linear program.
+
+    \begin{theorem}
+        Every polyhedra is convex.
+    \end{theorem}
+    \begin{proof}
+        Let $v$ and $w$ be vectors such that $Mv \leq b$ and $Mw \leq b$. Then, for any $\lambda \in [0,1]$, $M(\lambda v + (1 - \lambda) w)) = \lambda Mv + (1 - \lambda)Mw \leq \lambda b + (1 - \lambda) b = b$. Thus $\lambda v + (1 - \lambda) w$ is a feasible solution, and thus the set is convex.
+    \end{proof}
+
+    \begin{definition}
+        If a vector $v$ in a polyhedra satisfies, for some row $M_i$ in $M$ with corresponding $b_i$,
+        %
+        \[ M_iv = b_i \]
+        %
+        We say the constraint $(M_i,b_i)$ is binding or active at $v$.
+    \end{definition}
+
+    \begin{definition}
+        A vector $v$ is a basic solution of a polyhedra in $\real^n$ if the binding rows of the constraint matrix $M$ spans $\real^n$. A vector is a basic feasible solution if the vector is also a vector such that $Mv \leq b$.
+    \end{definition}
+
+    \begin{theorem}
+        For a vector $v$, the following are equivalent:
+
+        \begin{enumerate}
+            \item There exists some vector $w$ such that for any other point $u$ in the polyhedra,
+            $\langle v, w \rangle > \langle v, u \rangle$.
+            \item $v$ is an extreme point of the polyhedra.
+            \item $v$ is a basic feasible solution.
+        \end{enumerate}
+    \end{theorem}
+    \begin{proof}
+        We prove the implications in the order given.
+
+        \begin{itemize}
+            \item $(1) \implies (2)$: We prove by contraposition. Suppose $v$ is not an extreme point, so that there exists two points $w$ and $u$ in the polyhedra such that for some number $\lambda$, $\lambda w + (1 - \lambda)u = v$. Let $z$ be an arbitrary vector. Without loss of generality, suppose $\langle w, z \rangle \leq \langle u, z \rangle$. Then
+            %
+            \begin{align*}
+                \langle z, v \rangle &= \langle z, \lambda w + (1 - \lambda) u \rangle\\
+                                     &= \lambda \langle w, z \rangle + (1 - \lambda) \langle u, z \rangle\\
+                                     &\leq \langle w , z \rangle
+            \end{align*}
+
+            Hence the point is not a vertex.
+
+            \item $(2) \implies (3)$: Suppose $v$ is not a basic feasible solution. Then the set of rows $I$ that are binding span a proper subspace in $\real^n$, so we can pick some vector $d$ such that $\langle a_i, d \rangle = 0$ for all $a_i$. Consider equations of the form
+            %
+            \[ v + \varepsilon d \]
+            %
+            Note for all $a_i \in I$, $\langle v + \varepsilon d, a_i \rangle = \langle v, a_i \rangle = b_i$. For $a_i \notin I$, we know that $\langle a_i, v \rangle < b_i$, and thus for a small enough $\varepsilon$, $\langle a_i, v + \varepsilon d \rangle < b_i$ for all $a_i$. The $v + \varepsilon d$ is in the set, and by the same argument, $v - \varepsilon d$ is also. We note that $v$ is between these two points, and hence is not an extreme point.
+
+            \item $(3) \implies (1)$: Let $v$ be a basic feasible solution. Consider the vectors $a_i$ that span $\real^n$. We then know $\langle \sum_{i \in I} a_i, v \rangle = \sum_{i \in I} b_i$. For any other value $w$ in the polyhedra, $\langle a_i, w \rangle \leq b_i$. Hence $\langle \sum_{i \in I} a_i, w \rangle \leq \langle \sum_{i \in I} a_i , v \rangle$, and equality only holds if $\langle a_i, w \rangle = b_i$ for all $b_i$ needed. Since $v$ is basic, and we have $n$ linearly independant $a_i$, $v$ is the only solution to the system of linear equations above, hence equality only holds for $v$.
+        \end{itemize}
+    \end{proof}
+
+    \begin{corollary}
+        Given a finite number of linear inequalities, there are only a finite number of basic solutions.
+    \end{corollary}
+    \begin{proof}
+        Consider a system of $m$ linear inequality contraints. At any basic solution, there are $n$ linearly independant action constraints. These system determines a unique point in $n$; there can only be one solution to system of equalities $\langle a_i, x \rangle = b_i$. Hence there is at maximum $\binom{m}{n}$ basic solutions.
+    \end{proof}
+
+    \begin{definition}
+        Let $v$ and $w$ be two basic solutions in a polyhedra. We say the two vertices are adjacent if we can find $n-1$ linearly independent constraints that are active at both of them. The line segment joining the two vertices is called an edge.
+    \end{definition}
+
+    We now focus on polyhedra in slack form, that is, vectors such that $Mv = b$. How do we find basic solutions in this polyhedra? Choose $n$ linearly independant rows in $M$. Find solutions to the vector $Mv = b$, where $v_i = 0$ for a row $i$ not in the $n$ linearly independant columns. The elements forced to be zero are non-basic, whereas the others are basic. Any vector solution is a basic solution.
+
+    \begin{definition}
+        A polyhedron contains a line if there is a vector $v$ and a non-zero vector $w$ such that the polyhedra contains $v + \lambda w$ for all scalar values $\lambda$.
+    \end{definition}
+
+    \begin{theorem}
+        The following are equivalent:
+
+        \begin{enumerate}
+            \item The polyhedron does not contain a line
+            \item The polyhedron has at least one extreme point.
+            \item There are $n$ rows in the matrix defining the polyhedron that are linearly independant.
+        \end{enumerate}
+    \end{theorem}
+
+    \begin{proof}
+        We prove the implications in the order they appear:
+
+        \begin{itemize}
+            \item $(1) \implies (2)$: We prove that if a polyhedron does not contain a line, it has a basic feasible solution, and therefore must have an extreme point. Let $x$ be a point in the polyhedron...
+        \end{itemize}
+    \end{proof}
+
+    \begin{theorem}
+        Suppose a linear programming problem has an optimal solution and an extreme point. Then there is an optimal solution that is an extreme point.
+    \end{theorem}
+
+    \begin{theorem}
+        If a linear programming problem has an extreme point, there is an optimal solution or the problem is unbounded.
+    \end{theorem}
+
+    \chapter{Duality}
+
+    Consider the linear programming problem below:
+
+    \begin{alignat*}{3}
+        &\text{maximize } & cx\\
+        &\text{subject to } & Ax &\leq b\\
+        &                  & x &\geq 0
+    \end{alignat*}
+
+    Let us call this the primal problem. The dual problem is
+
+    \begin{alignat*}{3}
+        &\text{minimize }   & \langle x, b \rangle &\\
+        &\text{subject to}  & xA &\geq c\\
+        &                   & x  &\geq 0
+    \end{alignat*}
+
+\end{document}
