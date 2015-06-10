@@ -25,6 +25,14 @@
     linkcolor = black,
 }
 
+\usepackage{mathtools}
+\makeatletter
+\renewcommand*\env@matrix[1][*\c@MaxMatrixCols c]{%
+  \hskip -\arraycolsep
+  \let\@ifnextchar\new@ifnextchar
+  \array{#1}}
+\makeatother
+
 \renewcommand*\contentsname{\hfill Table Of Contents \hfill}
 
 \title{Differential Geometry}
@@ -50,64 +58,76 @@ Topology attempts to describe the properties of space invariant under actions wh
     A {\bf manifold} is a Hausdorff space which is {\it locally euclidean}. In detail, every point $p$ on the manifold satisfies (1):
     %
     \begin{enumerate}
-        \item[(1)] There exists a neighbourhood $U$ of $p$, and an integer $n \geq 0$ such that $U$ is homeomorphic to $\mathbf{R}^n$ (We take $\mathbf{R}^0 = \{0\}$).
+        \item[(1)] There exists a neighbourhood $U$ of $p$, and a non-negative integer $n$ such that $U$ is homeomorphic to $\mathbf{R}^n$. We take $\mathbf{R}^0 = \{0\}$.
     \end{enumerate}
     %
     A {\bf manifold with boundary} is a space also containing points that are {\it locally bounded}. Points in such a space must satisfy either (1) or (2):
     %
     \begin{enumerate}
-        \item[(2)] The point $p$ in the manifold has a neighbourhood homeomorphic to a `halfspace' $\mathbf{H}^n = \{ (x_1, \dots, x_n) \in \mathbf{R}^n: x_1 \geq 0 \}$.
+        \item[(2)] $p$ has a neighbourhood homeomorphic to a `halfspace':
+        %
+        \[ \mathbf{H}^n = \{ (x_1, \dots, x_n) \in \mathbf{R}^n: x_1 \geq 0 \} \]
     \end{enumerate}
     %
-    If $M$ is a manifold, the closed subset $\partial M$ is called the boundary of the manifold, and consists of all points satisfying (2), but not (1).
+    The {\bf boundary} of a manifold with boundary consists of those points satisfying (2), but never (1). If $M$ is a manifold with boundary, then we denote its boundary by $\partial M$.
 \end{definition}
 
-The Hausdorff assumption is completely necessary to avoid controversy, for there are even spaces which are locally one-dimensional, yet not Hausdorff. Let $\mathbf{R}_0 = \mathbf{R} \times \{0\}$ and $\mathbf{R}_1 = \mathbf{R} \times \{1\}$ be two copies of the real line, and consider their disjoint union. Denote $(x,0)$ by $x_0$, and $(x,1)$ by $x_1$. Glue corresponding points $x_0$ and $x_1$ together, unless $x = 0$. The quotient space formed is not Hausdorff (try and separate $0_0$ and $0_1$). Nonetheless, all points in the space satisfy (1).
+The Hausdorff assumption is completely necessary, for there are spaces which satisfy (1) at every point, yet are not Hausdorff. Consider two copies of the real line, $\mathbf{R}_0 = \mathbf{R} \times \{0\}$ and $\mathbf{R}_1 = \mathbf{R} \times \{1\}$. Denote $(x,0)$ by $x_0$ and $(x, 1)$ by $x_1$. Take the disjoint union of $\mathbf{R}_0$ and $\mathbf{R}_1$, and attach $x_0$ to $x_1$ for $x \neq 0$. In the quotient, we obtain a non-Hausdorff space ($0_0$ and $0_1$ are indistinguishable), yet all points in the space satisfy (1).
 
 % Put picture of non-Hausdorff `manifold' here
 
 \begin{example}
-    $\mathbf{R}^n$ itself is a manifold. Any ball around a point $p$ in euclidean space is also a manifold; in these examples, we may simply take the entire space as the neighbourhood $U$ in (1).
+    $\mathbf{R}^n$ is a manifold. Any ball in Euclidean space is also a manifold; in these examples, we may simply take the entire space as the neighbourhood $U$ in (1), since a ball in $\mathbf{R}^n$ is homeomorphic to $\mathbf{R}^n$.
 \end{example}
 
-From the above example, it is easy to see that any topological space homeomorphic to a manifold is also a manifold! In contrast to our introductory manifesto, which advocates differentiable invariance, the property of being a manifold is purely topological. Therefore, we cannot expect to gain any differentiable properties from a pure manifold. We will fix this problem in the next chapter.
+The above example is easily extended to show that any topological space homeomorphic to a manifold is also a manifold! In contrast to our introduction, which advocates differentiable invariance, the property of being a manifold is purely topological. Differentiably exclusive invariant properties cannot be gained without additional structure. We will fix this problem in the next chapter.
 
 \begin{example}[The Circle]
-    Consider the set $S^1 = \{ x \in \mathbf{R}^2 : \|x\| = 1 \}$. The one-to-one continuous map $f: (0, \pi) \to S^1$ defined by
+    Consider the set $S^1 = \{ x \in \mathbf{R}^2 : \|x\| = 1 \}$. The continuous map $f: (0, 2\pi) \to [S^1 - \{ (1,0)] \}$ defined by
     %
-    \[ x \mapsto e^{ix} = (\cos (x), \sin (x)) \]
+    \[ x \mapsto [\cos(x), \sin(x)] \]
     %
-    maps onto the circle. The inverse $(x,y) \mapsto \cos^{-1}(x) = \sin^{-1}(y)$ is also continuous on the range considered, so $f$ is a homeomorphism onto its image. Taking the map on other intervals of length $\pi$, we obtain a set of homeomorphisms that cover the circle.
+    is open and injective, so $f$ is homeomorphic onto its image. Taking the map on other intervals of length $2\pi$, we obtain a set of homeomorphisms that cover the circle, and hence the shape is a manifold.
 \end{example}
 
 \begin{example}[$n$-Spheres]
-    There is a less obvious map which permits an easy generalization to higher dimensional space. Consider $S^n - \{(1,0,\dots,0)\}$: we will project this shape onto the line $\{-1\} \times \mathbf{R}^{n-1}$ by taking the intersection of this line with the line that passes through $(1,0,\dots,0)$. Some calculation will show that this projection $f$ is defined by
+    There is a less obvious map on the circle which permits an easy generalization to higher dimensional space. We will project the open subset $[S^n - \{(1,0,\dots,0)\}]$ onto the hyperplane $\{-1\} \times \mathbf{R}^{n-1}$ by taking the intersection of this line with the line that passes through the point $x = (1,0, \dots, 0)$. If $y$ is a point on the sphere, then the set of points that lie on the line between $x$ and $y$ is defined by
     %
-    \[ f(x_1, \dots, x_n) = \frac{2}{1 - x_1}(x_2, \dots, x_n) \]
+    \[ \{ x + [\lambda y + (1 - \lambda) x] : \lambda \in \mathbf{R} \} = \{ [(2 - \lambda)x + \lambda y_1, \lambda y_2, \dots, \lambda y_n] : \lambda \in \mathbf{R} \} \]
     %
-    And we may explicitly constructure the inverse function, again by a compuation, as
+    A simple calculation will verify that the intersection of this line with the hyperplane considered is designated by the mapping $f: S^1 - \{ (1,0,\dots,0) \} \to \mathbf{R}^{n-1}$,
+    %
+    \[ f(y_1, \dots, y_n) = \frac{2}{1 - y_1}(y_2, \dots, y_n) \]
+    %
+    In the same way, by computing intersections of points on the hyperlane with the sphere, we obtain the inverse function $f^{-1}$,
     %
     \begin{align*}
         f^{-1}(y_2, \dots, y_n) &= \left(1 - \frac{8}{4 + \sum_{k = 2}^n y_k^2}, \frac{4y_2}{4 + \sum_{k = 2}^n y_k^2}, \dots, \frac{4y_n}{4 + \sum_{k = 2}^n y_k^2} \right)\\
         &= \frac{1}{4 + \sum_{k = 2}^n y_k^2} \left( \sum_{k = 2}^n y_k^2 - 4, 4y_2, \dots, 4y_n \right)
     \end{align*}
-%
-An easy computation will verify that this truly is the inverse, and a brief glance at the formula that the inverse is continuous. If we project from $(-1,0,\dots,0)$ instead, then the homeomorphism $g$ is
-%
-\[ g(x_1, \dots, x_n) = \frac{1}{1 + x_1}(x_2, \dots, x_n) \]
-%
-\[ g^{-1}(y_2, \dots, y_n) = \frac{1}{4 + \sum_{k = 2}^n y_k^2} \left( 4 - \left(\sum_{k = 2}^n y_k^2 \right), 4y_2, \dots, 4y_n \right) \]
-%
-And we have covered $S^n$ with homeomorphisms -- the space is a manifold.
+    %
+    An easy computation will verify that this function truly is the inverse, and a brief glance at the formula shows it is continuous. If we project from the point $(-1,0,\dots,0)$ to $\{ 1 \} \times \mathbf{R}^{n-1}$, then the homeomorphism $g:[S^1 - \{ (-1, 0, \dots, 0) \}] \to \mathbf{R}^{n-1}$ obtained is
+    %
+    \[ g(x_1, \dots, x_n) = \frac{1}{1 + x_1}(x_2, \dots, x_n) \]
+    %
+    \[ g^{-1}(y_2, \dots, y_n) = \frac{1}{4 + \sum_{k = 2}^n y_k^2} \left( 4 - \left(\sum_{k = 2}^n y_k^2 \right), 4y_2, \dots, 4y_n \right) \]
+    %
+    And we have covered $S^n$ with homeomorphisms -- the space is a manifold.
 \end{example}
 
-Any open subset of $\mathbf{R}^n$ is a manifold -- around any point, we may take $U$ to be an open ball contained in the subspace. A simple extension of this is that any open subset of a manifold, with the subspace topology, also satisfies the properties of being a manifold. Proofs of these kinds of statements rely on a certain trick. First, we conjure forth a homeomorphism to $\mathbf{R}^n$. Then we transport nice properties of $\mathbf{R}^n$ across the homeomorphism to the manifold itself. Here are some executions of this strategy.
+Any open subset of $\mathbf{R}^n$ is a manifold -- around any point, we may take $U$ to be an open ball contained in the subspace. In fact, any open subset of a manifold, with the subspace topology, also satisfies the properties of being a manifold, and we call this space an {\bf open submanifold}.
+
+\begin{example}
+    Consider the set $M_n(\mathbf{R})$ of $n \times n$ matrices with entries in the real numbers. We can identify this with the space $\mathbf{R}^{n \times n}$, and therefore $M_n(\mathbf{R})$ is a topological space -- specifically, a topological manifold. Consider the subspace $GL_n(\mathbf{R})$ consisting of all invertible matrices. This set is an open submanifold, since the determinant map $\det$ from $M_n(\mathbf{R})$ to $\mathbf{R}$ is continuous (it can be expressed as a polynomial function of the matrix entries), and $GL_n(\mathbf{R}) = \det^{-1}(\mathbf{R} - \{0\})$. Therefore, $GL_n(\mathbf{R})$ is an open submanifold of $M_n(\mathbf{R})$.
+\end{example}
+
+Quite a few proofs about manifolds rely on a certain trick. First, we conjure forth a homeomorphism to $\mathbf{R}^n$. Then we transport nice properties of $\mathbf{R}^n$ across the homeomorphism to the manifold itself.
 
 \begin{theorem}
     Every manifold is locally compact.
 \end{theorem}
 \begin{proof}
-    Let $x$ be a point in an arbitrary manifold. Then there is an open neighbourhood $U$ of $x$ homeomorphic to $\mathbf{R}^n$ by a map $f:U \to \mathbf{R}^n$. Take any ball $B$ around $f(x)$, whose closure $\overline{B}$ is compact. Since compactness is purely topological, $f^{-1}(\overline{B})$ is a compact neighbourhood of $x$.
+    Let $x$ be an arbitrary point in a manifold. Then there is an open neighbourhood $U$ of $x$ homeomorphic to $\mathbf{R}^n$ by a map $f:U \to \mathbf{R}^n$. Take any ball $B$ around $f(x)$, whose closure $\overline{B}$ is compact. Since compactness is topologically invariant, $f^{-1}(\overline{B})$ is a compact neighbourhood of $x$.
 \end{proof}
 
 The next problem requires more foresight on the reader, though the basic technique used is exactly the same.
@@ -116,15 +136,7 @@ The next problem requires more foresight on the reader, though the basic techniq
     Every manifold is locally path-connected. A connected manifold is path-connected.
 \end{theorem}
 \begin{proof}
-    We shall prove a stronger statement than was given in the theorem, since it reveals the power of local euclidean structure on a manifold. In fact, we will show that every manifold is locally arc-connected\footnote{An arc is a path that is not only continuous, but one-to-one as well.}, and a connected manifold is globally arc-connected.
-
-    Local arc-connectedness should be obvious, and parts of an argument of this statement will be found in the following argument. Consider any connected manifold $M$, and let $x$ be an arbitrary point. Let $P$ be the set of all points in $M$ arcwise connected to $x$. Obviously, we must show that this set is open and closed, as done in any proof about connected spaces. Consider a point $y$ connected to $x$ by an arc $p:[0,1] \to M$ beginning at $x$. Take a neighbourhood $V$ of $y$, which does not contain $x$, and which is homeomorphic to the closed unit ball $\overline{B}$ around the origin. Since $\overline{B}$ is compact, $V$ is compact, hence it is closed. We may therefore consider the first number $z \in \mathbf{R}$ such that $p(z)$ lies in $V$. Then, taking an arc $p':[0,1] \to \overline{B}$ between $(f \circ p)(z)$ and any point in $\overline{B}$, and appending $f^{-1} \circ p'$ onto $p$ in the interval $[z,1]$, we obtain a new continuous path (by the pasting lemma), and this path is still an arc by construction.
-
-    % Show Picture of Technique.
-
-    We use the same trick to show $P$ is closed. Let $y$ be a limit point of $P$, and consider some neighbourhood $V$ of $y$ homeomorphic to the closed ball in $\mathbf{R}^n$. Then $V$ contains a point $z$ arcwise connected to $x$. Using the technique of the above paragraph, we may modify the arc from $x$ to $z$, and then extend it so it connects to $y$.
-
-    Since our manifold is connected, and $P$ is non-empty (it contains all points in a neighbourhood of $x$ homeomorphic to $\mathbf{R}^n$), $P = M$.
+    Local path-connectedness follows easily from the fact that each space $\mathbf{R}^n$ is connected. Consider a connected manifold $M$, and let $x$ be an arbitrary point. Let $P$ be the set of all points in $M$ path connected to $x$. Local path-connectedness shows $P$ is open. Suppose $y$ is a limit point of $P$. Take some neighbourhood $U$ of $y$ homeomorphic to $\mathbf{R}^n$. Then $U$ contains a point $p \in P$, which is path connected to $x$. $f(y)$ can be path connected to $f(p)$, since both points lie in Euclidean space. Then, taking the inverse image of the path, we obtain a path between  $y$ and $p$, which can be extended to connect $y$ to $x$. Since $P$ is non-empty (it obviously contains $x$), $P = M$, so all points in the manifold are connected to $x$.
 \end{proof}
 
 \begin{corollary}
@@ -133,9 +145,35 @@ The next problem requires more foresight on the reader, though the basic techniq
 
 Corollary (1.3) tells us that any manifold can be split up into the disjoint sum of its connected components. It is therefore interesting to prove theorems about connected manifolds, since any manifold can be build up as a bundle of manifolds of this variety.
 
+\begin{example}
+    $GL(n)$ is a disconnected manifold, since otherwise the image of $\det$ would be connected. By Corollary (1.3) we should expect to be able to identify the connected components. In order to identify components of the manifold, we shall construct paths between matrices in a manner which should be very familiar.
+
+    Via row operations, we are able to reduce any matrix to echelon form. Each row operation can be considered as an invertible matrix. Fortunately for us, most of these operations can also be considered as paths in $GL(n)$. Consider adding a row to another row,
+    %
+    \[ \begin{pmatrix} v_1 & \dots & v_p & \dots & v_q & \dots & v_n \end{pmatrix}^t \mapsto \begin{pmatrix} v_1 & \dots & v_p + v_q & \dots & v_q & \dots & v_n \end{pmatrix}^t \]
+    %
+    Every matrix is path connected in $GL_n(\mathbf{R})$ to its image above by the path
+    %
+    \[ \lambda \mapsto \begin{pmatrix} v_1 & \dots & v_p + \lambda v_q & \dots & v_q & \dots & v_n \end{pmatrix}^t \]
+    %
+    Subtracting rows is also a path, similarily. Next, consider multiplying a row by a scalar $\gamma \neq 0$,
+    %
+    \[ \begin{pmatrix} v_1 & \dots & v_p & \dots & v_n \end{pmatrix}^t \mapsto \begin{pmatrix} v_1 & \dots & \gamma v_p & \dots & v_n \end{pmatrix}^t \]
+    %
+    A path that connects the two matrices is defined by
+    %
+    \[ \lambda \mapsto \begin{pmatrix} v_1 & \dots & [1 + \lambda(\gamma - 1)]v_p & \dots & v_n \end{pmatrix}^t \]
+    %
+    Unfortunately, the path does not stay within $GL(n)$ unless $\gamma \geq 0$. We shouldn't expect it to, since multiplying by a negative number reverses the determinant, and we know the sign of the determinant separates components. The same reason shows we can't necessesarily swap two rows. Fortunately, the connection-preserving operations are all we need -- we may use the path-connected elementary matrices to reduce any matrices to a canonical form. A modification of the Gauss Jordan elimination algorithm (left to the reader as a simple exercise) shows all matrices can be reduced to a form
+    %
+    \[ \begin{pmatrix} 1 & 0 & \dots & 0 & 0 \\ 0 & 1 & & 0 & 0 \\ 0 & 0 & \ddots & 0 & 0 \\ 0 & 0 &  & \pm 1 & 0 \\ 0 & 0 & \dots & 0 & 1 \end{pmatrix} \]
+    %
+    One matrix has determinant greater than zero, the other has determinant less than zero. Thus $GL_n(\mathbf{R})$ consists of two homeomorphic path-connected components, the matrices with determinant greater than zero, and the component with determinant less than zero. Both are $n^2$-dimensional manifolds.
+\end{example}
+
 \section{Euclidean Neighbourhoods are Open}
 
-In these notes, we consider a neighbourhood in the French sense, as any subset containing an open set, regardless of whether it is open or not. Nonetheless, let $M$ be a manifold, and take a point $p$ with neighbourhood $U$ homeomorphic to $\mathbf{R}^n$, lets say, by some continuous function $f$. Then $U$ contains an open set $V$, and $f(V)$ is open in $\mathbf{R}^n$, so that $f(V)$ contains an open ball $W$ around $f(x)$. But then $W$ is homeomorphic to $\mathbf{R}^n$, and $f^{-1}(W)$ is a neighbourhood of $x$ open in $V$ (and therefore open in $M$) homeomorphic to $\mathbf{R}^n$. This complicated discussion stipulates that we may always choose open neighbourhoods in the definition in a manifold. Remarkably, it turns out that all neighbourhoods homeomorphic to $\mathbf{R}^n$ {\it must} be open; to prove this, we require an advanced theorem.
+In these notes, we consider a neighbourhood in the French sense, as any subset containing an open set, regardless of whether it is open or not. Nonetheless, let $M$ be a manifold, and take a point $p$ with neighbourhood $U$ homeomorphic to $\mathbf{R}^n$, lets say, by some continuous function $f: U \to \mathbf{R}^n$. Then $U$ contains an open set $V$, and $f(V)$ is open in $\mathbf{R}^n$, so that $f(V)$ contains an open ball $W$ around $f(x)$. But then $W$ is homeomorphic to $\mathbf{R}^n$, and $f^{-1}(W)$ is a neighbourhood of $x$ open in $V$ (and therefore open in $M$) homeomorphic to $\mathbf{R}^n$. This complicated discussion stipulates that we may always choose open neighbourhoods in the definition in a manifold. Remarkably, it turns out that all neighbourhoods homeomorphic to $\mathbf{R}^n$ {\it must} be open; to prove this, we require an advanced theorem.
 
 % Draw construction above
 
@@ -143,7 +181,7 @@ In these notes, we consider a neighbourhood in the French sense, as any subset c
     If $f:U \to \mathbf{R}^n$ is a continuous, injective function, where $U$ is an open subset of $\mathbf{R}^n$, then $f(U)$ is open, so that $f$ is a homeomorphism.
 \end{theorem}
 
-The theorem can be proven after a brief excursion in some basic algebraic topology (homology theory, to be {\it exact}). In an appendix to this chapter, we shall prove the theorem based on the weaker assumption of the Jordan curve theorem. A domain is a connected open set, and this theorem shows that the property of being a domain is invariant under continuous, injective maps from $\mathbf{R}^n$ to itself. In multivariate calculus, the inverse function theorem shows this for differentiable mappings with non-trivial Jacobian matrices across its domain; invariance of domain stipulates that the theorem in fact holds for any such continuous map $f$ on an open domain.
+A domain is a connected open set, and this theorem shows that the property of being a domain is invariant under continuous, injective maps from $\mathbf{R}^n$ to itself. In multivariate calculus, the inverse function theorem shows this for differentiable mappings with non-trivial Jacobian matrices across its domain; invariance of domain stipulates that the theorem in fact holds for any such continuous map $f$ on an open domain. The theorem can be proven after a brief excursion in some basic algebraic topology (homology theory, to be {\it exact}). In an appendix to this chapter, we shall prove the theorem based on the weaker assumption of the Jordan curve theorem, which should be more intuitive theorem to assume.
 
 \begin{lemma}
     If a point has two neighbourhoods homeomorphic to Euclidean space, the dimensions of those spaces must be the same.
@@ -162,16 +200,16 @@ The theorem can be proven after a brief excursion in some basic algebraic topolo
 
 Because of Lemma 1.5, any point $x$ on a manifold has a unique dimension of euclidean space to which a neighbourhood is mapped. We shall speak of this unique number as the {\bf dimension of the manifold at x}. When a manifold is connected, one can show simply that the dimension across the entire space is invariant, and we may call this the {\bf dimension of the manifold}. An $n$-dimensional manifold $M$ is often denoted $M^n$.
 
-A subtlety that often goes unnoticed is that not a disconnected manifolds might not have a well defined dimension. Logically, the definition of a topological manifold holds just as well, and the following construction becomes clear. If $M$ and $N$ are two different manifolds, then their disjoint union is also a manifold, even if $M$ contains points with dimension 5, and $N$ points with dimension 2364. Unavoidably, any construction of this sort results in a disconnected manifold, and we may break this construction up into its individual connected components, each of which will have a unique dimension.
-
-After some practice, we are now able to prove what we set out to achieve.
+A subtlety that often goes unspoken of is that not a disconnected manifolds might not have a well defined dimension in its entirety. If $M$ and $N$ are two different manifolds, then their disjoint union is also a manifold, even if $M$ contains points with dimension 5, and $N$ points with dimension 2364. Unavoidably, any construction of this sort results in a disconnected manifold, and we may break this construction up into its individual connected components, each of which will have a unique dimension, but in general, manifolds are not connected.
 
 \begin{theorem}
     Any subset of a manifold locally homeomorphic to Euclidean space is open in the original topology.
 \end{theorem}
 \begin{proof}
-    Let $M$ be a manifold, and $U$ a subset homeomorphic to $\mathbf{R}^n$ by a function $f$. Let $x \in U$ be arbitrary. We have already established that there is an open neighbourhood $V$ of $x$ that is homeomorphic into $\mathbf{R}^n$ by a function $g$ (the dimension of the space must be the same by the corollary above). Since $V$ is open in $M$, $U \cap V$ is open in $U$, so $f(U \cap V)$ is open in $\mathbf{R}^n$. We obtain a one-to-one continuous function from $f(U \cap V)$ to $g(U \cap V)$ by the function $g \circ f^{-1}$. It follows by invariance of domain that $g(U \cap V)$ is open in $\mathbf{R}^n$, so $U \cap V$ is open in $V$, and, because $V$ is open in $M$, $U \cap V$ is open in $M$. In a complicated manner, we have shown that around every point in $U$ there is an open neighbourhood contained in $U$, so $U$ itself must be open.
+    Let $M$ be a manifold, and $U$ a subset homeomorphic to $\mathbf{R}^n$ by a function $f$. Let $x \in U$ be arbitrary. We have already established that there is an open neighbourhood $V$ of $x$ that is homeomorphic into $\mathbf{R}^n$ by a function $g$ (the dimension of the space must be the same by the last corollary). Since $V$ is open in $M$, $U \cap V$ is open in $U$, so $f(U \cap V)$ is open in $\mathbf{R}^n$. We obtain a one-to-one continuous function from $f(U \cap V)$ to $g(U \cap V)$ by the function $g \circ f^{-1}$. It follows by invariance of domain that $g(U \cap V)$ is open in $\mathbf{R}^n$, so $U \cap V$ is open in $V$, and, because $V$ is open in $M$, $U \cap V$ is open in $M$. In a complicated manner, we have shown that around every point in $U$ there is an open neighbourhood contained in $U$, so $U$ itself must be open.
 \end{proof}
+
+This theorem is really just a generalized invariance of domain for arbitrary manifolds -- since the concept of a manifold is so intertwined with Euclidean space, it is no surprise we need the theorem for $\mathbf{R}^n$ before we can prove the theorem here.
 
 \section{And Now Briefly, Some Boundaries}
 
@@ -188,7 +226,11 @@ As we've introduced manifolds with boundary, we might as well mention a useful t
     We contend that $P = U \cap \partial M$. Surely this is a subset, since if a point $x \in U$ does not lie on this line, we can select a subneighbourhood which is open in $\mathbf{R}^n$. If a point $x$ lies on this subplane, we cannot find a neighbourhood homeomorphic to $\mathbf{R}^n$, since any neighbourhood of this point in $\mathbf{H}^n$ is not open in $\mathbf{R}^n$, and invariance of domain applies. It is simple to show $U \cap \partial M$, as we have now described it, contains a subneighbourhood homeomorphic to $\mathbf{R}^{n-1}$, and thus we have shown that all points of $\partial M$ have neighbourhoods homeomorphic to $\mathbf{R}^{n-1}$.
 \end{proof}
 
-\begin{corollary} A zero dimensional manifold cannot have boundary. \end{corollary}
+\begin{example}
+    $\mathbf{H}^n$ is the easiest example of a manifold with boundary. It's boundary consists of $\{ 0 \} \times \mathbf{R}^{n-1}$, which is an $n - 1$ manifold. Another manifold with boundary is the unit disc $D^n = \{ x \in \mathbf{R}^n : \|x\| \leq 1 \}$. We have already shown that the discs boundary, $\partial D^n = S^{n-1}$, is an $n - 1$ manifold. In general, if $M$ is an open submanifold of $\mathbf{R}^n$, then its topological boundary $\overline{M} = M \cup \partial M$ is a manifold with boundary.
+\end{example}
+
+We will see later that considering a manifold boundary as a disjoint structure is very useful. Stoke's theorem provides a direct application.
 
 \section{The Property of `Niceness'}
 
@@ -204,8 +246,6 @@ Many important results in differentiable geometry require more stringent spaces 
         \item The manifold is paracompact (so every compact manifold is metrizable).
     \end{enumerate}
 \end{theorem}
-
-We shall break this theorem up into some smaller chunks, since each is a sizable portion to digest, revealing important properties of the manifolds in question.
 
 \begin{lemma}[$1) \to (2$]
     Every $\sigma$-compact, locally second countable space is globally second countable.
@@ -272,48 +312,99 @@ We shall break this theorem up into some smaller chunks, since each is a sizable
     be a collection of refined open sets which cover $V_1$. Do the same for each $V_k$, obtaining $\mathcal{V}_2, \mathcal{V}_3, \dots$, and consider $\mathcal{V} = \bigcup \mathcal{V}_i$. Surely this is a cover of $X$, and each point is contained only in $\mathcal{V}_k$ and $\mathcal{V}_{k+1}$ for some $k$, and so this cover is locally finite.
 \end{proof}
 
-\section{Nice Manifolds, and a Not so Nice Manifold}
+Not all manifolds have the properties above. Nonetheless, we will often specialize our discussion to manifolds with these special properties to obtain deeper theorems.
 
-After that arduous proof, lets move onto actually meeting some concrete manifolds. To celebrate our verification of nice manifolds, lets first design a manifold that isn't so nice.
+\section{Constructable Manifolds}
 
-\begin{example}[The Long Line]
-    Take the set $\Omega$ of all countable ordinals. Then $\Omega$ is itself an ordinal, and we may consider the space $\Omega \times [0,1)$ together with the dictionary order. The order topology establishes forms a space, the long ray. Now take two copies of the long ray, and attach them at the smallest elements. This create a one-manifold -- the long line. Obviously, the space isn't metrizable -- it contains an uncountable discrete subset, so none of the other nice properties that we considered above hold.
+The set of Manifolds form a category. We may therefore expect to find some general constructions which can be applied to the manifolds in question. We have already encountered the Coproduct in the form of the disjoint union. Here are some more constructions.
+
+If $M$ and $N$ are manifolds, then the product $M \times N$ is also a manifold. If $M$ is dimension $m$ at a point $x$ via a map $f$, and $N$ is dimension $n$ at a point $y$ via a map $g$, then $M \times N$ is dimension $m + n$ at the point $(x,y)$ via the map $f \times g$. We therefore obtain another two-manifold (which, if we haven't already mentioned, is known classically as a surface), the shape $S^1 \times S^1$, the torus. More generally, the $n$-torus $S^1 \times S^1 \times \dots \times S^1$ is an $n$-manifold. We could also glue two torii together, to obtain a two holed torus. A classical theorem of topology says that almost all surfaces are of this kind, aside from a few exceptions, which shall be introduced now.
+
+Most quotient spaces of manifolds will not be manifolds. Fortunately, a few quotient spaces do turn out to be manifolds, and they are very important.
+
+\begin{example}[The M\"{o}bius Strip]
+    Consider the quotient space obtained from the product space $[0,1] \times (-1,1)$ by identifying $(0,x)$ with $(1,-x)$, for each $x \in (0,1)$. Any point in the interior of a square has a neighbourhood homeomorphic to $\mathbf{R}^2$. At $[(0,x)] = [(1,x)]$, we may choose two semicircles on each side of the product space, and in the projection, we will have a neighbourhood homeomorphic to $\mathbf{R}^2$. The twisted surface we have created is known as the M\"{o}bius strip, and is the first of many manifolds with strange properties. It only has one edge even though it exists in three dimensional space, and if you have a paper copy at hand, do try cutting it down the middle!
 \end{example}
 
-If $M$ and $N$ are manifolds, then $M \times N$ is also a manifold. If $M$ is dimension $m$ at a point $x$, and $N$ is dimension $n$ at a point $y$, then $M \times N$ is dimension $m + n$ at the point $(x,y)$. We therefore obtain another two-manifold (which, if we haven't already mentioned, is known classically as a surface), the shape $S^1 \times S^1$, the torus. More generally, the $n$-torus $S^1 \times S^1 \times \dots \times S^1$ is an $n$-manifold. We could also glue two torii together, to obtain a two holed torus. A classical theorem of topology says that almost all surfaces are of this kind, aside from a few exceptions, which shall be introduced now.
+\begin{example}[Projective Space]
+    Consider the sphere $S^2$, and consider the quotient space obtained by identifying opposite sides of the sphere: glue each point $x$ to $-x$. Any neighbourhood small enough in $S^2$ projects homeomorphically onto the space created, so the space is a 2-manifold, denoted $\mathbf{P}^2$ and known as projective space. In general $\mathbf{P}^n$ is created by identifying opposite points on $\mathbf{S}^n$. The projection map is open, since if $U$ is open, then $-U$ is open (negation is a homeomorphism), so $\pi^{-1}(\pi(U)) = U \cup -U$ is open. To obtain explicit homeomorphisms on $\mathbf{P}^n$, define a map from $S^n$ to $\mathbf{R}^{n-1}$ by
+    %
+    \[ f(x_1, \dots, x_n) = \frac{1}{x_i}(x_1, x_2, \dots, x_{i-1}, x_{i + 1}, \dots, x_n) \]
+    %
+    This map is continuous everywhere but at $x_i = 0$. For all points $p$, $f(p) = f(-p)$, so we may define the map on $\mathbf{P}^n$ instead, and this map will be continuous since the projection map is open. It even has a continuous inverse, defined by
+    %
+    \[ f^{-1}(x_1, \dots, x_{n-1}) = \left[ \frac{1}{\sqrt{\sum x_i^2 + 1}} \left(x_1, x_2, \dots, 1, \dots, x_n \right) \right] \]
+    %
+    Since our maps cover the space, $\mathbf{P}^n$ is a manifold.
+\end{example}
 
-Consider the quotient space obtained by first taking $[0,1] \times (-1,1)$, and then identifying the points $(0,x)$ with $(1,-x)$. The surface created by this twist is known as the M\"{o}bius strip, and has some very strange properties (it only has one edge, even though it exists in three-dimensional space, and if you can make a paper copy, do try cutting it down the middle!).
+Even though $\mathbf{P}^2$ is locally trivial, the space is very strange globally, and cannot be embedded in $\mathbf{R}^3$. Nonetheless, we see it every day -- the topology of how the eye projects space down to our two dimensional vision is modelled very accurately by the spherical construction of projective space. Of course, we don't see the really weird part of $\mathbf{P}^2$ -- that occurs when we take the entire projective sphere, which we cannot see since part of our eye is obscured.
 
-% The Mobius Strip
+Now that we have discussed the topological parts of geometry, we can move on to describing the differentiable structure that lie within manifolds.
 
-These manifolds are still effable to our three-dimensional minds, but we can conjure up surfaces that do not exist in a low dimensional space (but not curves -- all of the nice ones can be represented in $\mathbf{R}^3$). Take the sphere $S^2$, and identify $x$ with $-x$. This is projective space $\mathbf{P}^2$. It is a 2-manifold because locally it behaves exactly like $S^2$; no points infinitely close to each other identified. Even though it is locally trivial, the space is very strange globally, and cannot be embedded in $\mathbf{R}^3$. Nonetheless, we see it every day -- the topology of how the eye projects space down to our two dimensional vision is modelled very accurately by the spherical construction of projective space. Of course, we don't see the really weird part of $\mathbf{P}^2$ -- that occurs when we take the entire projective sphere, which we cannot see since part of our eye is obscured.
+\newpage
 
-More generally, we can take $\mathbf{P}^n$ as the quotient space of $S^{n}$ identifying opposite points. If you give the construction a bit of a fiddle, you will see that $\mathbf{P}^2$ is just a M\"{o}bius strip with a disc attached -- these strange shapes are intrically connected together.
+\section{Appendix: A Non Metrizable Manifold}
 
-To obtain explicit homeomorphisms from $\mathbf{P}^2$ to $\mathbf{R}^2$, define a map $f$ from $S^n$ to $\mathbf{R}^n$ by
-%
-\[ (x_1, \dots, x_n) \mapsto (\frac{x_1}{x_i}, \frac{x_2}{x_i}, \dots, \frac{x_{i-1}}{x_i}, \frac{x_{i + 1}}{x_i}, \dots, \frac{x_n}{x_i}) \]
-%
-Clearly the function is a continuous map from $S^n$ to $\{ (0,,\dots,1,\dots,0) \}$, and $f(x) = -f(x)$. We therefore obtain an induced map $f':\mathbf{P}^n \to \mathbf{R}^n$, which is continuous since the projection map from $S^n$ to $\mathbf{P}^n$ is open. What's more, this map has an inverse, since if
-%
-\[ \frac{1}{x_i}(x_1, \dots, x_{i-1}, x_{i+1}, \dots, x_n) = \frac{1}{y_i} (y_1, \dots, y_{i-1}, y_{i+1}, \dots y_n) \]
-%
-Then, for each $j \neq i$, $y_i x_j = x_i y_j$. Thus
-%
-\[ y_i^2 = y_i^2(\sum_j x_j^2) = \sum_j (y_ix_j)^2 = \sum_{j \neq i} (x_iy_j)^2 + (y_ix_i)^2 = x_i^2(\sum y_j^2) = x_i^2 \]
-%
-So $y_i = \pm x_i$, and from this, $x = \pm y$. Thus the map from $\mathbf{P}^2$ is injective, and has a continuous inverse given by
-%
-\[ (x_1, \dots, x_{n-1}) \mapsto \left[\frac{1}{\|x\| + 1} (x_1, \dots, 1, \dots, x_{n-1})\right] \]
-%
-Thus $\mathbf{P}^n$ is a manifold.
+Recall that a {\bf well-ordered set} is a set $X$ together with a linear ordering such that every subset has a least element. A subset $Y$ of a well-ordered segment is an {\bf initial segment} if $y \in Y$ and $x < y$ imply $x \in Y$.
 
+\begin{definition}
+    An {\bf order morphism} between two well-ordered sets $X$ and $Y$ is a map $f:X \to Y$ such that if $x < y$, $f(x) < f(y)$. A bijective order morphism is called an {\bf order isomorphism}, and all order morphisms are order isomorphisms onto their codomains. An {\bf ordinal} is an equivalence class of order isomorphic well ordered sets.
+\end{definition}
 
-Our final shape is obtained by taking two M\"{o}bius strips, and zipping them up together along their boundary. The shape formed is well-known to many a hobbyist mathematician -- the famous Klein bottle.
+It is helpful to visualize ordinals as the well-ordered set they represent, since we need no further properties of well ordered sets other than the ordering they possess. We will often confuse the two. One key feature of ordinals is that they allow us to measure the size of infinite sets. It should come as no surprise then, that ordinals will allow us to construct a manifold too large to be metrizable.
 
-% Draw the Klein Bottle
+The most well known ordinals are the natural numbers. 0 can be considered the equivalence class containing the empty set. 1 can be considered the equivalence class of well ordered sets consisting of a single element (which obviously must be order isomorphic). In general, the number $n$ can be considered the equivalence class of well ordered sets consisting of $n$ elements (which, less obviously, must be order isomorphic). It doesn't stop here though, for we can consider the equivalence class containing $\mathbf{N}$ of all natural numbers, which is also a well ordered set. By custom, this ordinal is denoted $\omega$. Then we may consider $\omega + 1$, the equivalence class of the well ordered set obtained by taking $\mathbf{N}$ and popping a greatest element on the end, and so on and so forth. There's many more ordinals in this magnificant menagerie, and they are all beautiful.
 
-We've talked enough about topology for now -- we need to get to some differentiation.
+\[ 0, 1, 2, 3, \dots, \omega, \omega + 1, \dots, \omega 2, \omega 2 + 1, \dots, \omega 3, \dots, \omega^2, \dots \omega^\omega, \dots  \]
+
+\begin{lemma}
+    If $X$ and $Y$ are well ordered sets, and if for $A \subset B \subset X$ there are two order morphisms $f:A \to Y$ and $g:B \to Y$ whose ranges are initial segments of $Y$, then $g|_A = f$.
+\end{lemma}
+\begin{proof}
+    Consider the set of all elements in $B$ that do not agree on $f$ and $g$. If this set is non-empty, there must be a least such element $b$, so either $f(b) < g(b)$, or $g(b) < f(a)$. In the first case, there must be $b'$ such that $g(b') = f(b)$ (since $g$ maps onto an initial segment). We also must have $b' < b$, and so $f(b') = g(b') = f(b)$. All order isomorphisms are injective, so we reach a contradiction. The latter case is similar, and shows by contradiction that there can be no elements that disagree on the domains of the functions.
+\end{proof}
+
+\begin{corollary}
+    There is at most one map $f:X \to Y$ which maps onto an initial segment of $Y$.
+\end{corollary}
+
+\begin{lemma}
+    If $X$ and $Y$ are well ordered sets, there either exists a unique order morphism from $X$ to an initial segment of $Y$, or a unique order morphism from $Y$ to an initial segment of $X$. What's more, this map is unique.
+\end{lemma}
+\begin{proof}
+    Consider the set $A$ of all initial segments of $X$ which have order morphisms $f_A$ (which are necessarily unique) onto initial segments of $Y$. If we have a linear chain $\{A_k\}$ of such sets, we may by the last corollary take the union $\bigcup f_A$ of order morphisms to form an order morphism on $\bigcup A_k$. By Zorn's lemma, we must have a maximal initial segment $A$. If $A = X$, we are done. If $A \neq X$, and $f_A(A) = Y$, then we may invert the domain of $f_A$ to obtain an order morphism from $Y$ to $A$, and initial segment of $X$. These are all of the possibilities, since if $f_A(A) \neq Y$, we may consider the least element $y$ in $f_A(A)^c$ and $x$ in $A^c$, and extend the map $f_A$ by defining $f_A(x) = y$, contradicting the fact that $A$ is maximal.
+\end{proof}
+
+We say $X \leq Y$ if there is an order morphism from $X$ to an initial segment of $Y$. Because of the above theorem, we can visualize any ordinal as an initial segment of an ordinal of a larger size. In fact, with the above ordering, any ordinal is the equivalence class of the set of ordinals less than itself. From this, we can also see than any set of ordinals is well ordered, and that any set of ordinals is contained within an ordinal.
+
+\begin{lemma}
+    If $A$ is an initial segment which is a proper subset of a well ordered set $B$, there is no order isomorphism from $B$ to $A$.
+\end{lemma}
+\begin{proof}
+    Let $f:A \to B$ be an order isomorphism from $A$ to $B$. Consider the smallest element $a \in A$ such that $f(a) \neq a$. There must be one such $a$, since $f$ is surjective, and there are some $b \in B$ which are not in $A$. We cannot have $f(a) < a$, since $f$ is injective, and this would imply $f(f(a)) \neq f(a)$, and $f(a)$ an element of $A$ since $A$ is an initial segment. We also cannot have $f(a) > a$, since there is $a' \in A$ such that $f(a') = a$, and since $f(a') < f(a)$, we have $a' < a$. By contradiction, there cannot be an order isomorphism $f$.
+\end{proof}
+
+If two well-ordered sets are order isomorpic, they have the same cardinality, and therefore it makes sense to discuss the cardinality of an ordinal. The well ordering theorem stipulates that any set can be well ordered. Therefore, taking the equivalence class of a well-ordering of $\mathbf{R}$, we obtain an uncountable ordinal. All countable ordinals can be considered initial segments of $X$, and we may therefore consider the set $\Omega$ of all countable ordinals.
+
+\begin{theorem}
+    $\Omega$ is uncountable.
+\end{theorem}
+\begin{proof}
+    Suppose $\Omega$ is countable, Then $\Omega$ itself represents a countable ordinal $\alpha \in \Omega$. But $\alpha$ is order isomorphic to the set of ordinals less than $\alpha$, and so $\Omega$ is order isomorphic to a proper initial segment of itself, contradicting the above lemma.
+\end{proof}
+
+After this development, we can now release our non-metrizable manifolds.
+
+\begin{example}[The Long Line]
+    Take the set $\Omega$ of all countable ordinals. Then $\Omega$ is itself an ordinal, and we may consider the space $L = \Omega \times [0,1)$ together with the dictionary order. The order topology established forms a space, the long ray. Now take two copies of the long ray, and attach them at the smallest elements. This create a one-manifold -- the long line. Obviously, the space isn't metrizable -- it contains an uncountable discrete subset, so none of the other nice properties that we considered above hold.
+\end{example}
+
+\begin{example}[Long 2-Manifolds]
+    The two-manifold $L \times S^1$ is called the long cylinder, and is also non-metrizable, and the long plane $L \times L$ is the same. A 2-manifold that is long only in one direction is the long strip $L \times \mathbf{R}$.
+\end{example}
+
+We'll encounter more unmetrizable manifolds in later chapters.
 
 \newpage
 
@@ -356,7 +447,10 @@ We'll put on the finishing touches to Invariance of Domain now. Hopefully this w
     Since $\partial B$ is closed in $\mathbf{R}^n$, the inside is open, hence $f(B)$ is open. By an extension of this argument, we have shown the the image of any open set is open, so invariance of domain is proved.
 \end{proof}
 
-The Jordan Curve theorem still remains to be proven, as is the theorem following it. Both require quite advanced techniques in algebraic topology. Hopefully, the results seem intuitive enough that the theorem now should be `correct' in your mind, so we can leave the algebra for another time. Do check it out some time though, since the techniques are quite beautiful!
+The Jordan Curve theorem still remains to be proven, as is the theorem following it. Both require quite advanced techniques in algebraic topology. Hopefully, the results seem intuitive enough that the theorem now should be `correct' in your mind, so we'll leave the algebra for now.
+
+
+
 
 
 
@@ -366,95 +460,260 @@ The Jordan Curve theorem still remains to be proven, as is the theorem following
 
 \chapter{Differentiable Structures}
 
-We know when a map $f:M \to N$ between manifolds is continuous, but how do we decide when the map is differentiable? Given a correspondence $y = f(x)$, a viable notion would be to consider local homeomorphisms (hereafter called charts) $\Phi:U \to \mathbf{R}^n$ and $\Psi:V \to \mathbf{R}^m$ into open subsets of $\mathbf{R}^m$ from local neighbourhoods $U$ of $x$ and $V$ of $y$. We can consider $f$ differentiable at $x$ if $\Phi \circ f \circ \Psi^{-1}$ is differentiable at $\Psi(x)$. Unfortunately, this idea is doomed to fail, for we can hardly expect any such homeomorphism is differentiable if some such differentiable is. For instance, if $\Phi \circ f \circ \Psi$ is differentiable, then for any chart $\Delta$ whose domain contains $f(x)$,
+We know when a map $f:M^n \to N^m$ between manifolds is continuous, but how do we decide when such a map is differentiable? Given a correspondence $y = f(x)$, a reasonable idea would be to consider local homeomorphisms (hereafter called charts) $g:U \to \mathbf{R}^n$, where $U$ is a neighbourhood of $x$, and $h:V \to \mathbf{R}^m$, where $V$ is a neighbourhood of $y$. We obtain a map $h \circ f \circ g^{-1}$ from open sets in Euclidean space, and we may therefore consider $f$ differentiable at $x$ if $h \circ f \circ g^{-1}$ is differentiable at $g(x)$.
+
+Unfortunately, this idea is doomed to fail, since we can hardly expect that this statement holds for all such sets of charts if it holds for one pair. For instance, if $h \circ f \circ g^{-1}$ is differentiable, then for any chart $k:W \to \mathbf{R}^m$ whose domain contains $f(x)$, on the domain $f^{-1}(W \cap V)  \cap U$, we have
 %
-\[ \Delta \circ f \circ \Psi = (\Delta \circ \Phi^{-1}) \circ \Phi \circ f \circ \Psi \]
+\[ k \circ f \circ g^{-1} = (k \circ h^{-1}) \circ h \circ f \circ g^{-1} \]
 %
-is differentiable if and only if $\Delta \circ \Phi^{-1}$ is differentiable also. Clearly we can choose some non-differentiable homeomorphism $g$ of $\mathbf{R}^n$, and then $\Delta = g \circ \Phi^{-1}$ will prevent our naive definition of differentiability from being realized. As was alluded before, and now affirmed, the only way out of this dilemma is to identify additional structure to our manifolds. We shall say that there are some charts, such as $\Phi$ and $\Psi$, which are `correct' in some sense, and that we should not consider strange and unnatural charts like $\Delta$, which are not differentiably invariant.
+This function is differentiable if and only if $k \circ g^{-1}$ is also differentiable. Clearly we can choose some non-differentiable homeomorphism $l$ of $\mathbf{R}^n$, and then $k = l \circ g$ will result in a non-differentiable function.
+
+If we are to stick with this definition, we either need to define differentiability in terms of the charts $g$ and $h$ used, or identify additional structure to manifolds. The latter option is clearly more elegant. Our method will be to identify charts which are `correct', and ignore unnatural constructions like $k$.
 
 \begin{definition}
-    Two maps $x:U \to \mathbf{R}^n$ and $y:V \to \mathbf{R}^m$ whose domains are open are {\bf C$^k$ related}, for $1 < k < \infty$,s if $U$ and $V$ are disjoint, or
+    Two homeomorphisms $x:U \to \mathbf{R}^n$ and $y:V \to \mathbf{R}^m$ are {\bf $\mathbf{C^\infty}$ related}, if either $U$ and $V$ are disjoint, or
     %
     \[ y \circ x^{-1} : x(U \cap V) \to y(U \cap V) \]
     %
     \[ x \circ y^{-1} : y(U \cap V) \to x(U \cap V) \]
     %
-    are $C^k$ functions.
+    are $C^\infty$ functions.
 \end{definition}
+
+Charts can be visualized as a way of assigning coordinates to some subset of a manifold, hence we use characters such as $x$ and $y$ to confuse the term with classical coordinates. The fact that manifolds do not have a particular preference for coordinates is both a help and a hindrance. It forces us to come up with elegant, coordinate free approaches to problems in differentiable geometry. On the other end, coming up with these coordinate free approaches can also be incredibly unnatural. One can see a chart as laying a blanket down onto a manifold. Two charts are $C^\infty$ related if, when we lay them down, they contain no creases!
 
 \begin{definition}
-    A $C^k$ {\bf atlas} for a manifold is a non-empty family of $C^k$ charts whose domains cover the manifold. A manifold together with a maximal atlas is called a {\bf differentiable manifold}.
+    A {\bf smooth} or {\bf $\mathbf{C^\infty}$ atlas} for a manifold is a family of $C^\infty$ charts whose domains cover the entire manifold. A maximal atlas is called a {\bf smooth structure} on a manifold, and a manifold together with a smooth structure is called a {\bf smooth} or {\bf differentiable manifold}. In the literature, each map $y \circ x^{-1}$ is known as a {\bf transition map}, and an atlas for a manifold has $C^\infty$ transition maps.
 \end{definition}
 
-Charts are meant to be identified as ways to assign coordinates to some subset of a manifold. As such, we use notation such as $x$ and $y$ to make concrete the metaphor between the manifold and cartesian space. Think of a chart as laying down a blanket down onto your manifold. An atlas is a collection of charts that have been flattened out - make sure that when you lie them down, you watch that they don't contain any creases!
+From now on, when we mention a chart on a differentiable manifold, we implicitly assume the chart is the member of the smooth structure of the manifold. Using this, we may define the concept of differentiability on manifolds.
 
-It is uncomfortable to construct a maximal atlas explicitly. Fortunately, we do not need to specify every single valid chart in our manifold.
+\begin{definition}
+    Let $f:M \to N$ be a map between two manifolds.
+    %
+    \begin{enumerate}
+        \item $f$ is {\bf differentiable} at a point $p \in M$ if it is continuous at $p$, and if for some chart $x:U \to \mathbf{R}^n$ whose domain contains $p$, and for some chart $y:V \to \mathbf{R}^m$ whose domain contains $f(p)$, the map $y \circ f \circ x^{-1}:x(f^{-1}(V) \cap U) \to \mathbf{R}^m$ is differentiable at $x(p)$.
+        \item $f$ itself is {\bf differentiable} if it is differentiable at every point on its domain, or correspondingly, if $y \circ f \circ x^{-1}$ is differentiable for any two charts $x$ and $y$.
+        \item More stringently, $f$ is $\mathbf{C^k}$ if each map $y \circ f \circ x^{-1}$ is $C^k$.
+        \item $f$ is a {\bf diffeomorphism} if it is bijective, differentiable, and if $f^{-1}$ is differentiable.
+        \item A {\bf $\mathbf{C^k}$ diffeomorphism} requires $f$ and $f^{-1}$ to be $C^k$ functions.
+    \end{enumerate}
+\end{definition}
+
+It is uncomfortable to construct a maximal atlas explicitly on a manifold. Fortunately, we do not need to specify every single valid chart in our manifold.
 
 \begin{lemma}
-    Every atlas is contained in a unique maximal atlas.
+    Every atlas is contained within a unique smooth structure.
 \end{lemma}
 \begin{proof}
 Let $\mathcal{A}$ be an atlas for a manifold $M$, and consider the set $\mathcal{A}'$, which is the union of all atlases containing $\mathcal{A}$. We shall show that $\mathcal{A}'$ is also an atlas, and therefore necessarily the unique maximal one. Let $x:U \to \mathbf{R}^n$ and $y:V \to \mathbf{R}^n$ be two charts in $\mathcal{A}'$ with non-disjoint domain, containing a point $p$. Let $z:W \to \mathbf{R}^n$ be a chart in $\mathcal{A}$ containing $p$. Then, on $U \cap V \cap W$, an open set containing $p$, we have
 %
 \[ x \circ y^{-1} = (x \circ z^{-1}) \circ (z \circ y^{-1}) \]
 %
-and by assumption, each component map is $C^k$ on this domain, so $x \circ y^{-1}$ is differentiable at $p$. The proof for $y \circ x^{-1}$ is exactly the same. Since the point $p$ was arbitrary, we conclude that $x$ and $y$ are $C^k$ related across their domains, and therefore $C^k$ in full. $\mathcal{A}'$ is therefore an atlas.
+and by assumption, each component map is $C^\infty$ on this domain, so $x \circ y^{-1}$ is smooth in a neighbourhood of $p$. The proof for $y \circ x^{-1}$ is exactly the same. Since the point $p$ was arbitrary, we conclude that $x$ and $y$ are $C^\infty$ related across their domains. $\mathcal{A}'$ is therefore an atlas, and necessarily a maximal such one.
 \end{proof}
 
-Because of our argument above, we may consider some sub-maximal atlas to be a generating basis set for a maximal atlas of a differential manifold. A manifold will normally be given with such a minute set, not unlike the basis of a topological space or vector space. Furthermore, in consequence of lemma (2.1), in order to verify that $x$ is a chart on some manifold $M$ with generating set $\mathcal{A}$, we need only verify that $x$ is $C^\infty$ related to each map in $\mathcal{A}$. Unsurprisingly, the differentiable manifold $\mathbf{R}^n$ is defined by a minute atlas, consisting only of the identity function $\mathbf{1}:\mathbf{R}^n \to \mathbf{R}^n$. charts on $\mathbf{R}^n$ are injective functions $x:U \to \mathbf{R}^n$ such that $x$ and $x^{-1}$ is $C^\infty$. Nothing can stop us, however, from considering a differentiable structure (maximal atlas) on $\mathbf{R}$ by a different generating set $\mathcal{A} = \{ x \}$, where $x$ is the homeomorphism $t \mapsto t^3$. The inverse of this function is not differentiable in the normal sense, but in our new manifold, which we denote by $\mathbf{R}_1$, can be considered so. Unless otherwise, the identity map provides the canonical structure for $\mathbf{R}^n$.
+We have basically argued the following.
 
-With a differentiable structure in hands, we may now consider differentiable morphisms in our category of objects.
+\begin{corollary}
+    If $x$ is a chart defined on a differentiable manifold $M$, and is $C^\infty$ related to each map in a generating atlas $\mathcal{A}$, then $x$ is in the maximal atlas generated by $\mathcal{A}$.
+\end{corollary}
 
-\begin{definition}
-    A map $f:M \to N$ between two differentiable manifolds is {\bf $\mathbf{C^k}$ differentiable} if, for every chart $(x,U)$ on $M$ and $(y,V)$ on $N$, where $(f \circ x)(U) \cap V$ is non-disjoint, the map $y \circ f \circ x^{-1}: x(U \cap f^{-1}(V)) \to \mathbf{R}^n$ is $C^k$. A differentiable bijective function whose inverse is differentiable is known as a {\bf diffeomorphism}.
-\end{definition}
+\begin{example}
+    Let $M$ be a manifold, and $U$ an open submanifold. Define a differentiable structure on $U$ consisting of all charts defined on $M$ whose domain is a subset of $U$. This is a maximal atlas, and satisfies the following:
+    %
+    \begin{enumerate}
+        \item If $f: M \to N$ is differentiable, then $f|_U: U \to M$ is differentiable.
+        \item The inclusion map $i:U \to M$ is differentiable.
+    \end{enumerate}
+\end{example}
 
-Most of the next few theorems can be justified by the fact that $C^\infty$ related charts are related to each other in a differentiable manner. Use the next few arguments to gain intuition about this fact. We say a map $f:M \to N$ is {\bf differentiable at a point $p \in M$} if there is a chart $x$ containing $p$ and a chart $y$ containing $f(p)$, such that $y \circ f \circ x^{-1}$ is differentiable at $x(p)$.
+The next few theorems are justified by the fact that $C^\infty$ related charts are related to each other in a $C^\infty$ manner.
 
-\begin{theorem}
-    If a map $f$ is differentiable at a point $p$ in charts $x$ and $y$, it is differentiable at $p$ for any other charts containing $p$ and $f(p)$.
-\end{theorem}
+\begin{lemma}
+    If a map $f$ is differentiable at a point $p$ in charts $x$ and $y$, it is differentiable at $p$ for any other charts containing $p$ and $q$.
+\end{lemma}
 \begin{proof}
     Suppose $y \circ f \circ x^{-1}$ is differentiable at a point $x(p)$, and consider any other charts $y'$ and $x'$. Then
     %
     \[ y' \circ f \circ x'^{-1} = (y' \circ y^{-1}) \circ (y \circ f \circ x^{-1}) \circ (x \circ x'^{-1}) \]
     %
-    On a smaller neighbourhood than was considered, though still open. Nonetheless, since differentiability is a local concept, we need only prove the theorem for this map on a reduced domain. The end components are $C^k$ related and therefore differentiable, and by assumption, the middle map is differentiable, so the full map is $C^k$ on a neighbourhood containing $x'(p)$.
+    On a smaller open neighbourhood than was considered. Nonetheless, since differentiability is a local concept, we need only prove the theorem for this map on a reduced domain. This follows since the component maps are differentiable.
+\end{proof}
+
+\begin{example}
+    Consider the manifold $\mathbf{R}^n$, and define a generating atlas on $\mathbf{R}^n$ containing only the identity map $id_{\mathbf{R}^n}$. This defines a smooth structure on $\mathbf{R}^n$, which satisfies the following familiar properties:
+    %
+    \begin{enumerate}
+        \item $x$ is a chart on $\mathbf{R}^n$ if and only if $x$ and $x^{-1}$ are $C^\infty$.
+        \item A map $f:\mathbf{R}^n \to \mathbf{R}^m$ is differentiable in the sense of a manifold if and only if it is differentiable in the usual sense.
+        \item A map $f:M \to \mathbf{R}^n$ is differentiable if and only if each $f_i:M \to \mathbf{R}$ is differentiable.
+        \item A chart $x:U \to \mathbf{R}^n$ on an arbitrary manifold is a diffeomorphism from $U$ to $x(U)$.
+    \end{enumerate}
+    %
+    Our definition naturally extends multivariate calculus to arbitrary manifolds.
+\end{example}
+
+\begin{theorem}
+    A map $f:M \to N$ between manifolds is a $C^\infty$ diffeomorphism iff the map from charts on $N$ to charts on $M$ defined by $x \mapsto x \circ f$ is a bijection of the atlas' of the two manifolds.
+\end{theorem}
+\begin{proof}
+    Suppose $f$ is a diffeomorphism, and let $x$ be a chart on $N$. To verify that $x \circ f$ is a chart on $N$, we need only check it is $C^\infty$ related to any other chart in the atlas of $M$. But this is just the definition of a diffeomorphism. Conversely, if $x \circ f$ is a chart on $M$, for some map $x$, then the previous argument shows, since $f^{-1}$ is also a diffeomorphism, that $x = x \circ f \circ f^{-1}$ is a chart on $N$. The converse is trivial.
+\end{proof}
+
+\begin{example}
+    Let $\mathbf{R}_1$ be the canonical smooth manifold on $\mathbf{R}$. Let $\mathbf{R}_2$ be the smooth structure on $\mathbf{R}$ generated by the map $x$, such that $x(t) = t^3$. Then $\mathbf{R}_1$ and $\mathbf{R}_2$ are diffeomorphic. Let $x:\mathbf{R}_2 \to \mathbf{R}_1$ be our diffeomorphism. It is surely bijective. Let $y$ be a chart on $\mathbf{R}_2$. We must verify that $y = z \circ x$, where $z$ is a chart on $\mathbf{R}_1$. We may show this by verifying that $y \circ x^{-1} = z$, and $x \circ y^{-1} = z^{-1}$ is $C^\infty$ on $\mathbf{R}_1$. But this was exactly why $y$ was a chart on $\mathbf{R}_2$ in the first place, hence the map is a diffeomorphism.
+\end{example}
+
+Many categorical structures carry across to the category of differentiable manifolds. If $M$ and $N$ are differentiable manifolds, we may consider the product $M \times N$, we consists of the topological product of $M$ and $N$, with the differentiable structure is generated by all maps $x_1 \times x_2$, where $x_1$ is a chart on $M$ and $x_2$ is a chart on $N$. It is simple to verify that the projection maps from $M \times N$ to $M$, and $N$, are differentiable.
+
+Similarily, if $N$ is a quotient space of a differentiable manifold $M$ that is open and locally injective by a projection $\pi:M \to N$, then we may ascribe a differentiable structure to it. We take all charts $x:U \to \mathbf{R}^n$ on $M$ such that $U$ is homeomorphic to $\pi(U)$ by $\pi$. We may then push the chart onto $N$, and all the charts placed down on $N$ will be $C^\infty$ related. This can be extended to a maximal atlas. In fact, this is the unique structure on $N$ which causes $\pi$ to be differentiable. It allows us to consider $\mathbf{P}^n$ a differentiable manifold, taking the differentiable structure on $S^n$.
+
+\section{Partial Derivatives and Differentiable Rank}
+
+Now we have defined when a function is differentiable, lets talk about calculating the derivative. First we need partial derivatives. Consider a differentiable map $f$ from a manifold $M$ to the real numbers. We have no conventional coordinates to consider partial derivatives on, but take any chart $x:U \to \mathbf{R}^n$ on $M$. We obtain a $C^\infty$ map $f \circ x^{-1}$, which therefore has continuous partial derivatives of all orders. We define, for a point $p \in U$,
+%
+\[ \frac{\partial f}{\partial x_k} (p) = D_k(f \circ x^{-1})(x(p)) \]
+%
+We are tracing the coordinates lines placed on $U$ by the map $x^{-1}$; literally, if $c$ is the curve defined by $c(t) = (f \circ x^{-1})(x(p) + tx_k)$, then
+%
+\[ c'(0) = \frac{\partial f}{\partial x_k}(p) \]
+%
+Our new definition of the partial derivative also satisfies the chain rule in a very useful way.
+
+\begin{theorem}
+    If $x$ and $y$ are coordinate systems at a point $p$, and $f:M \to \mathbf{R}$ is differentiable, then
+    %
+    \[ \frac{\partial f}{\partial x_i} = \sum \frac{\partial y_j}{\partial x_i} \frac{\partial f}{\partial y_j} \]
+\end{theorem}
+\begin{proof}
+    We just apply the chain rule in euclidean space.
+    %
+    \begin{align*}
+        \frac{\partial f}{\partial x_i}(p) = D_i(f \circ x^{-1})(x(p)) &= D_i((f \circ y^{-1}) \circ (y \circ x^{-1}))(x(p))\\
+        &= \sum D_j(f \circ y^{-1})(y(p)) D_i(y_j \circ x^{-1})(x(p))\\
+        &= \sum \frac{\partial f}{\partial y_j}(p) \frac{\partial y_j}{\partial x_i}(p)
+    \end{align*}
+\end{proof}
+
+Now we could define the full derivative of a function $f:M \to N$ at a point $p$ to be $D(y \circ f \circ x^{-1})(x(p))$, for coordinate systems $x$ and $y$. The trouble is that in this way we can only talk of properties of the derivative that are invariant under the coordinate systems chosen.
+
+\begin{theorem}
+    The rank of the matrix $D(y \circ f \circ x^{-1})(x(p))$ is invariant of coordinate system.
+\end{theorem}
+\begin{proof}
+    Let $y'$ and $x'$ be two more coordinate systems around $p$ and $f(p)$.
+    %
+    \begin{align*}
+        D(y' \circ f \circ x'^{-1})(x'(p)) &= D(y' \circ y^{-1} \circ y \circ f \circ x^{-1} \circ x \circ x'^{-1})(x'(p))\\
+        &= D(y' \circ y^{-1})(y(f(p))) \circ D(y \circ f \circ x^{-1})(x(p)) 
+        \\ &\ \ \ \ \circ D(x \circ x'^{-1})(x'(p))
+    \end{align*}
+    %
+    The beginning and end derivatives are invertible linear operators, so the rank is invariant.
+\end{proof}
+
+The rank of this matrix tells us the freedom of movement of the mapping around the point $p$. Using the rank will allow us to extend the inverse function theorem to arbitrary manifolds.
+
+\begin{theorem}
+    If $f:M^n \to N^m$ is rank $k$ at a point $p$, there is a coordinate system $x$ at $p$ and $y$ at $f(p)$ such that for $1 \leq i \leq k$,
+    %
+    \[ y_i \circ f \circ x^{-1}(a_1, \dots, a_n) = a_i \]
+\end{theorem}
+\begin{proof}
+    Let $x$ and $y$ be arbitrary coordinate systems around $p$ and $f(p)$. By a permutation of the coordinates, we may arrange that the matrix
+    %
+    \[ \left( \frac{\partial y_i \circ f}{\partial x_j}(p) \right)_{i,j = 1}^k \]
+    %
+    is invertible. Define a coordinate system $z$ around $p$ by $z_k = y_k \circ f$, for $1 \leq k \leq n$, and $z_k = x_k$ otherwise. The matrix
+    %
+    \[ D(z \circ x^{-1})(p) = \begin{pmatrix} \left( \frac{\partial y_i \circ f}{\partial x_j}(p) \right) & X \\ 0 & I \end{pmatrix} \]
+    %
+    is invertible, hence, by the inverse function theorem, $x \circ z^{-1}$ is a diffeomorphism in a neighbourhood of $z(p)$. It follows that $z$ is a coordinate system at $p$, and
+    %
+    \[ y \circ f \circ z^{-1}(a_1, \dots, a_n) = (a_1, \dots, a_k, *, \dots, *) \]
 \end{proof}
 
 \begin{corollary}
-    If a map is differentiable at all points on its domain, it is differentiable in the original sense.
+    If $f$ is rank $k$ in a neighbourhood of a point $p$, then we may choose coordinate systems $x$ and $y$ such that
+    %
+    \[ y \circ f \circ x^{-1}(a_1, \dots, a_n) = (a_1, \dots, a_k, 0, \dots, 0) \]
 \end{corollary}
 \begin{proof}
-    Consider a map $f:M \to N$, and let $x$ be a chart on $M$, and $y$ a chart on $N$. Suppose $f$ is differentiable at any point on its domain. By the antecendent theorem, $x \circ f \circ y^{-1}$ is differentiable at any point $p$, and therefore across its whole domain domain. This means the map is differentiable as defined previously.
+    Choose $x$ and $y$ from the theorem above. Then
+    %
+    \[ D(y \circ f \circ x^{-1})(p) = \begin{pmatrix} I & 0 \\ X & \left( \frac{\partial y_i \circ f}{\partial x_j} \right) \end{pmatrix} \]
+    %
+    Since $f$ is rank $k$, the matrix in the bottom right corner must vanish in a neighbourhood of $p$. Since $p$ was arbitrary, the function is smooth across its entire domain. Therefore, $y_i \circ f \circ x^{-1}$, for $i > k$ can be viewed only as a function of the first $k$ coordinates. Define $z_i = y_i$, for $i < k$, and
+    %
+    \[ z_i = y_i - (y_i \circ f)(y_1 \dots y_k) \]
+    %
+    We have an invertible change of coordinate matrix,
+    %
+    \[ D(z \circ y^{-1}) = \begin{pmatrix} I & 0 \\ X & I \end{pmatrix} \]
+    %
+    So $z$ is a coordinate system, and
+    %
+    \[ z \circ f \circ x^{-1}(a_1, \dots, a_n) = (a_1, \dots, a_k, 0, \dots, 0) \]
+    %
+    we have constructed a coordinate system as needed.
 \end{proof}
+
+\begin{corollary}
+    If $f: M^n \to N^m$ is rank $m$ at $p$, then for any coordinate system $y$, there exists a coordinate system $x$ such that
+    %
+    \[ y \circ f \circ x^{-1} (a_1, \dots, a_n) = (a_1, \dots, a_m) \]
+\end{corollary}
+\begin{proof}
+    In the proof of the theorem, we need not rearrange coordinates of $y$ in the case that the matrix is rank $m$.
+\end{proof}
+
+\begin{corollary}
+    If $f: M^n \to N^m$ is rank $n$ at $p$, then for any coordinate system $x$, there exists a coordinate system $y$ such that
+    %
+    \[ y \circ f \circ x^{-1} (a_1, \dots, a_n) = (a_1, \dots, a_n, 0, \dots, 0) \]
+\end{corollary}
+\begin{proof}
+    If $f$ is rank $n$ at a point, it is clearly rank $n$ on a neighbourhood by the continuity of the determinant. Choose coordinate systems $u$ and $v$ such that $u \circ f \circ v^{-1}(a_1, \dots, a_n) = (a_1, \dots, a_n, 0, \dots, 0)$. Define a map $\lambda$ on $\mathbf{R}^m$ by $\lambda(a_1, \dots, a_m) = (x \circ v^{-1}(a_1, \dots, a_n), a_{n+1}, \dots, a_m)$. Then $\lambda$ is a diffeomorphism, hence $\lambda \circ y$ is a coordinate system, and
+    %
+    \begin{align*}
+        (\lambda \circ y) \circ f \circ x^{-1} (a_1, \dots, a_n) &= \lambda \circ (y \circ f \circ v^{-1}) \circ (v \circ x^{-1}) (a_1, \dots, a_n)\\
+        &= \lambda (v \circ x^{-1} (a_1 \dots a_n), 0 \dots 0)\\
+        &= (a_1 \dots a_n, 0 \dots 0)
+    \end{align*}
+\end{proof}
+
+\section{Immersions and Imbeddings}
+
+A function $f:M^n \to N^m$ which has rank $n$ across its domain is called a {\bf $\mathbf{C^k}$ immersion} of $M$. The map need not be one-to-one, but by choosing maps above we may definitely conclude $f$ is locally one-to-one. At any point $f(p) \in N$, we may choose a coordinate system $(y,U)$ around $f(p)$ such that, for some open set $V$, $((y_1, \dots, y_n),V)$ is a coordinate system around $p$, and
+%
+\[ f(V) = \{ q \in U : y_{n+1}(q) = y_{n+2}(q) = \dots = y_m(q) = 0 \} \]
+%
+This follows from theorems in the previous section. Immersions are mostly well behaved, apart from the odd inconsistency. Let $g:P \to N$ be a differentiable function with $g(P) \subset f(M)$. If $f$ is globally one-to-one, we may define $g:P \to M$. A suitable question to ask is whether this function is differentiable. In most cases, the answer is yes.
+
+\begin{example}
+    Immerse the non-negative real numbers in $S^2$ via the map $f$ defined by
+    %
+    \[ f(x) = (\cos(2\pi(1 - e^{-x})), \sin(2\pi(1 - e^{-x}))) \]
+    %
+    whose image is all of $S^2$. Define $g:(-1,1) \to S^2$ by $g(x) = (\cos(-x), \sin(-x))$. Then $g$ is $C^\infty$ onto $S^2$, yet is not even continuous when considered a map into the real numbers via the immersion defined above.
+\end{example}
+
+Continuity is all that can go wrong in this situation.
 
 \begin{theorem}
-    A map $f:M \to N$ between manifolds is a diffeomorphism iff the map from charts on $N$ to charts on $M$ defined by $x \mapsto x \circ f$ is a bijection of the atlas' of the two manifolds.
+    Let $f:M^n \to N^m$ be an injective immersion of $M$ in $N$, and suppose $g: P \to N$ is differentiable, and $g(P) \subset N$. If $g$ is continuous considered as a map into $M$, then $g$ is differentiable considered as a map into $M$.
 \end{theorem}
 \begin{proof}
-    Suppose $f$ is a diffeomorphism, and let $x$ be a chart on $N$. To verify that $x \circ f$ is a chart on $N$, we need only check it is $C^k$ related to any other chart in the atlas of $M$. But this is just the definition of a diffeomorphism. Conversely, if $x \circ f$ is a chart on $M$, for some map $x$, then the previous argument shows, since $f^{-1}$ is also a diffeomorphism, that $x = x \circ f \circ f^{-1}$ is a chart on $N$. The converse is trivial.
+    Consider an arbitrary point $p \in P$. There is a coordinate system $(y,U)$ around $g(p)$ such that $(y_1, \dots, y_n)$ is a coordinate system around $f^{-1}(g(p))$. Since $g$ is continuous into $M$, there is a coordinate system $x$ around $p$ which maps into $U \cap f(M)$. $y \circ g \circ x^{-1}$ is differentiable, so each $y_i \circ g \circ x^{-1}$, which we have constructed a coordinate system at $f^{-1}(g(p))$ at, is differentiable. Thus $g$ is differentiable mapping into $M$.
 \end{proof}
 
-\begin{theorem}
-    The manifold $\mathbf{R}_1$ with atlas generated by $\{ \mathbf{1} \}$ is diffeomorphic to $\mathbf{R}_2$ with the atlas specified by $\{ x:t \mapsto t^3 \}$.
-\end{theorem}
-\begin{proof}
-    We will let $x:\mathbf{R}_2 \to \mathbf{R}_1$ itself be our diffeomorphism. It is surely bijective. Let $y$ be a chart on $\mathbf{R}_2$. We must verify that $y = z \circ x$, where $z$ is a chart on $\mathbf{R}_1$. We may show this by verifying that $y \circ x^{-1} = z$ is $C^k$ on $\mathbf{R}_1$. But this was exactly why $y$ was a chart on $\mathbf{R}_2$ in the first place.
-\end{proof}
+None of this can happen if $M$ is just a subspace of $N$. In this case, we say that $M$ is embedded in $N$, and call $M$ a {\bf submanifold}. If $M$ is closed in $N$, $M$ is called a {\bf closed submanifold}.
 
-Many categorical structures carry across to the category of differentiable manifolds. If $M$ and $N$ are differentiable manifolds, we may consider the product $M \times N$, we consists of the topological product of $M$ and $N$, with the differentiable structure consisting of all maps $x_1 \times x_2$, where $x_1$ is a chart on $M$ and $x_2$ is a chart on $N$. It is simple to verify that the projection maps from $M \times N$ to $M$, and $N$, are differentiable.
 
-Similarily, if $U$ is an open subset of a manifold $M$, then we may assign a differentiable structure to $U$. It consists of all charts $x$ on $M$, whose domain is a subset of $U$. This gives $U$ a maximal atlas, and if any map $f:M \to N$ is differentiable, then the restriction map $f|U:U \to N$ is also differentiable. We call $U$ an {\bf open submanifold} of $M$.
 
-Before we continue, some clarifications should be made on behalf of several years of training in ordinary calculus, which should be verified to enable an understanding of the abstract concepts developed. Based on previous discussion, verifying these statements should be trivial.
 
-\begin{enumerate}
-    \item A function $f: \mathbf{R}^n \to \mathbf{R}^m$ is differentiable in the context of manifolds if and only if it is differentiable in the usual sense.
-    \item A chart on $\mathbf{R}^n$ is just a differentiable map $x: \mathbf{R}^n \to \mathbf{R}^n$ with a differentiable inverse on its range.
-    \item A function $f: M \to \mathbf{R}^n$ is differentiable if and only if each component function $f_i$ is differentiable.
-    \item Every coordinate system $x:U \to \mathbf{R}^n$ is a diffeomorphism from $U$ to $x(U)$, viewed as an open submanifold of $\mathbf{R}^n$.
-\end{enumerate}
+\section{Defining $C^\infty$ functions}
 
 The use of $C^\infty$ functions relies on the fact that manifolds possess them in plenty. The following theorem gives us our first plethora to use. First, we detail some $C^\infty$ functions on $\mathbf{R}^n$.
 
@@ -492,34 +751,89 @@ With these nice functions in hand, we may form them on arbitrary manifolds.
     For each point $p$ in $C$, consider a chart $(x,V)$ around $p$, with $\overline{V} \subset U$, and $x(V)$ containing the open unit square $(-1,1)^n$ in $\mathbf{R}^n$. We may clearly select a finite subset of these charts $(x_k,V_k)$ such that the $x_k^{-1}((-1,1)^n)$ cover $C$. We may define a map $f_k:V_k \to \mathbf{R}$ equal to $h \circ x_k$, where $h$ is defined above. It clearly remains $C^\infty$ if we extend it to be zero outside of $V_k$. Then $\sum f_k$ is positive on $C$, and whose closure is contained within $\bigcup \overline{V_k} \subset U$. Since $C$ is compact, and the function is continuous, $\sum f_k$ is bounded below by $\varepsilon$ on $C$. Taking $f = l \circ (\sum f_k)$, where $l$ is defined above, we obtain the map needed.
 \end{proof}
 
-Lets work backwards on manifolds. We have derivatives, but how do we define partial derivative? Consider a differentiable map from a manifold to the real numbers $f:M \to \mathbf{R}$. We have no conventional coordinates to consider partial derivatives on, but take any chart $x:U \to \mathbf{R}^n$ on $M$. We obtain a $C^\infty$ map $f \circ x^{-1}$, which therefore has continuous partial derivatives of all orders. We define, for a point $p \in U$,
-%
-\[ \frac{\partial f}{\partial x_k} (p) = D_k(f \circ x^{-1})(x(p)) \]
-%
-We are tracing the coordinates lines placed on $U$ by the map $x^{-1}$; literally, if $c$ is a curve defined by $c(t) = (f \circ x^{-1})(x(p) + tx_k)$, then $c'(0) = \frac{\partial f}{\partial x_k}(p)$. In this sense, the chain rule holds as well.
+To enable us to define $C^\infty$ functions whose supports lie outside of this range, we need to consider a technique to extend $C^\infty$ functions defined locally to manifolds across the entire domain.
+
+\begin{definition}
+    A partition of unity on a manifold $M$ is a family of $C^\infty$ functions $\{ \phi_i : i \in I \}$, and such that the following two properties hold:
+    %
+    \begin{enumerate}
+        \item The family of closures of the functions forms a locally finite set.
+        \item For each point $p \in M$, the finite sum $\sum_{i \in I} \phi_i(p)$ is equal to 1.
+    \end{enumerate}
+    %
+    If $\{ U_i \}$ is an open cover of $M$, then a partition of unity is subordinate to this cover if it also satisfies (3):
+    %
+    \begin{enumerate}
+        \item[3.] The closure of each function is contained in some element of the cover.
+    \end{enumerate}
+\end{definition}
+
+It is finally our chance to use the topological `niceness' established in the previous chapter.
+
+\begin{lemma}[The Shrinking Lemma]
+    If $M$ is a paracompact manifold, and $\{ U_i \}$ is an open cover, then there exists a refined cover $\{ V_i \}$ such that for each $i \in I$ there exists $i'$ such that $\overline{V_i} \subset U_{i'}$.
+\end{lemma}
+\begin{proof}
+    Without loss of generality, we may assume $\{ U_i \}$ is locally finite, and $M$ is connected. Then $M$ is also $\sigma$-compact, $M = \bigcup C_i$. Since $C_i$ is compact, and each $p \in C_i$ intersects only finitely many $U_i$, then $C_i$ intersects only finitely many $U_i$. Therefore $\bigcup C_i$ intersects only countably many $U_i$, and thus our locally finite cover is countable.
+
+    Let $\{ U_i \} = \{ U_1, U_2, \dots \}$. Let $C_1$ be the closed set $U_1 - (U_2 \cup U_3 \cup \dots)$. Let $V_1$ be an open set with $C_1 \subset V_1 \subset \overline{V_1} \subset U_1$. Inductively, let $C_k$ be the closed set $U_k - (V_1 \cup \dots \cup V_{k-1} \cup U_{k+1} \cup \dots)$, and define $V_k$ to be an open set with $C_k \subset V_k \subset \overline{V_k} \subset U_k$. Then $\{ V_1, V_2 \dots \}$ is the desired refinement.
+\end{proof}
 
 \begin{theorem}
-    If $x$ and $y$ are coordinate systems at a point $p$, and $f:M \to \mathbf{R}$ is differentiable, then
-    %
-    \[ \frac{\partial f}{\partial x_i} = \sum \frac{\partial y_j}{\partial x_i} \frac{\partial f}{\partial y_j} \]
-    %
-    As in convention with Einstein notation, if an index is repeated twice, the sum is over that index.
+    Any cover on a paracompact manifold induces a subordinate partition of unity.
 \end{theorem}
 \begin{proof}
-    We just apply the chain rule in euclidean space.
+    Let $\{ U_i \}$ be an open cover of a paracompact manifold $M$. Without loss of generality, we may consider $\{ U_i \}$ locally finite. Suppose that each $U_i$ has compact closure. Choose $\{ V_i \}$ satisfying the shrinking lemma. Apply Theorem (2.13) to $\overline{V_i}$ to obtain functions $\psi_i$ that are 1 on $\overline{V_i}$ and zero outside of $U_i$. These functions are locally finite, and thus we may define $\phi_i$ by
     %
-    \begin{align*}
-        \frac{\partial f}{\partial x_i}(p) = D_i(f \circ x^{-1})(x(p)) &= D_i((f \circ y^{-1}) \circ (y \circ x^{-1}))(x(p))\\
-        &= \sum D_j(f \circ y^{-1})(y(p)) D_i(y_j \circ x^{-1})(x(p))\\
-        &= \sum \frac{\partial f}{\partial y_j}(p) \frac{\partial y_j}{\partial x_i}(p)
-    \end{align*}
+    \[ \phi_i(p) = \frac{\psi_i(p)}{\sum_j \psi_j(p)} \]
+    %
+    Then $\phi_i$ is the partition of unity we desire.
+
+    This theorem holds for any $\{ U_i \}$ provided Theorem (2.13) holds on any closed set, rather than just a compact one. Let $C$ be a closed subset of a manifold, contained in an open subset $U$, and for each $p \in C$, choose an open set $U_p$ with compact closure contained in $U$. For each $p \in C^c$, choose an open subset $V_p$ contained in $C^c$ with compact closure. Then our previous compact case applies to this cover, and we obtain a subordinate partition of unity $\{ \zeta_i \}$. Define $f$ on $M$ by
+    %
+    \[ f(p) = \sum_{\overline{\zeta_i} \subset U_p} \zeta_i(p) \]
+    %
+    Then the support of $f$ is contained within $U$, and $f = 1$ on $C$.
 \end{proof}
 
 
 
+
+\chapter{The Tangent Bundle}
+
+$\mathbf{R}^n$ can be seen in many ways. Geometrically, the set is just a system of points in space. We identify these points with a tuple of numbers, which gives us numerical facts about the space we live in. Algebraically, $\mathbf{R}^n$ is a system of arrows about an origin point, which can be added, subtracted, and scaled. But why do these arrows have to start at the origin? A differentiable curve $c:(a,b) \to \mathbf{R}^n$ has a tangent vector $c'(x)$, canonically pictured as eminating from the point $c(x)$. The idea of a vector space eminating from each point on a manifold will pave our way to all future endeavors. We call such a space a vector bundle.
+
+\begin{definition}
+    A {\bf vector bundle} is a pair of topological spaces $E$ and $B$, called the `total' and `base' space respectively, together with a continuous function $\pi$ mapping $E$ onto $B$, such that
+    %
+    \begin{enumerate}
+        \item[(1)] For each point $p \in B$, the `fibre space' $\pi^{-1}(p)$ forms a real vector space. We denote this vector space by $B_p$.
+        \item[(2)] The vector bundle is locally trivial. For every point $p \in B$, there is a neighbourhood $U$ of $p$, a space $\mathbf{R}^k$, and a homeomorphism $\phi$ mapping $\pi^{-1}(U)$ onto $U \times \mathbf{R}^k$.
+    \end{enumerate}
+    %
+    Every connected component of $B$ has a unique dimension $k$ for which (2) holds on $\mathbf{R}^k$. A vector bundle is {\bf k-dimensional} if the dimension $k$ is invariant across space. If $E$ and $B$ are manifolds, and the mappings $\phi$ and $E$ differentiable, we call the vector bundle {\bf differentiable}. Collectively, we shall denote a vector bundle by $(E,B,\pi)$.
+\end{definition}
+
+\begin{example}
+    Consider any topological space $U$, and let $\varepsilon^n(U) = U \times \mathbf{R}^n$. Denote $(p,v) \in \varepsilon^n(U)$ by $v_p$, and define $\pi$ by $v_p \mapsto p$. If we define $v_p + w_p = (v + w)_p$, and $c(v_p) = (cv)_p$, we form a vector bundle on $U$, known as the {\bf trivial bundle}. We may picture $\varepsilon^1(\mathbf{R})$ as the plane, and looking at $\mathbf{R}_p$ will tell you why we call such a space a fibre.
+\end{example}
+
+\begin{definition}
+    If $(E,A,\pi)$ and $(F,B,\phi)$ are two vector bundles, a {\bf bundle map} between the two is a pair of continuous functions $(f,f_\sharp)$ where $f:A \to B$ and $f_\sharp:E \to F$, where $f_\sharp$ maps $A_p$ linearly into $B_{f(p)}$, for any $p \in A$. An isomorphism in the category of bundle maps is known as an equivalence.
+\end{definition}
+
+Bundle maps are defined pretty solely for the purpose of introducing a more complete differentiable function on space.
+
+\begin{example}
+    The derivative of a map at a point is a linear approximation. We can collect these maps together to form a bundle map: if $f:\mathbf{R}^n \to \mathbf{R}^m$ is differentiable, then we may construct the map $f_*:\varepsilon^n(\mathbf{R}^n) \to \varepsilon^m(\mathbf{R}^m)$, defined by $f^*(v_p) = [Df(p)(v)]_{f(p)}$.
+\end{example}
+
 \begin{thebibliography}{10}
     \bibitem{intro} Michael Spivak,
-    \emph{A Concise Introduction to Differential Geometry: Volume One}
+    \emph{A Concise Introduction to Differential Geometry: Vol. One}
+
+    \bibitem{halm} Paul Halmos,
+    \emph{Naive Set Theory}
 
     \bibitem{wiki} Wikipedia,
     \emph{Lie Groups}
