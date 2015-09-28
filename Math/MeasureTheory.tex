@@ -1,0 +1,394 @@
+\input{../style.tex}
+
+\title{Measure Theory}
+\author{Jacob Denson}
+
+\begin{document}
+
+\pagenumbering{gobble}
+
+\maketitle
+
+\tableofcontents
+
+\pagenumbering{arabic}
+
+\chapter{The Lebesgue Measure}
+
+Everyone knows that the area of a circle is proportional to the square of its radius. Similarily, the area of a rectangle is equal to the product of two sides. But it suddenly becomes very difficult to determine the area of shapes when we consider creations outside of the common realm of elementary school mathematics. For instance, take the set of all points in the unit circle whose coordinates are irrational numbers. What, say, is the area of this `shape'. Is there anything special about the shapes aforementioned that enables us to describe their area? One of the main goals of measure theory is to investigate the notion of `area', `volume', and `size' generalized from the restrictive values from planar geometry, and combatting the paradoxes that result.
+
+In the early 1900s, the mathematicians Banach and Tarski proved a theorem defying physical law: by rotating segments of a sphere, we can orient the pieces in such a way that every point on the sphere is duplicated. By performing actions corresponding to natural motions in reality, we have seemingly managed to produce two equal things from nothing -- a feat not far from biblical miracle (though we may have to use oranges, instead of loaves and fishes). In duplicating the sphere, the mathematical duo defied seemingly obvious properties of surface area and volume. Most glaringly, the volume of an object should be the sum of its component parts.
+
+The key idea of measure theory is that only certain `nice' subsets of space actually obey our intuitions about size. Stefan Banach and Alfred Tarski engineered the first partition which does not obey these principles -- it manifests as what we call an {\bf unmeasurable set}. We will normally try and restrict our discussion to {\bf measurable} subsets of space, and determining their properties.
+
+The defining principles of size will be discovered by constructing length on $\mathbf{R}$: a function $m$ defined on subsets of $\mathbf{R}$, with values in $\mathbf{R}^\infty$. This will be technical, but once done abstract properties may be studied in a much more elegant manner. First, we should agree that the length of an interval is the difference between the intervals ends. Thus $m((a,b)) = b - a$. More generally, we should be able to approximate the size of any other set by open segments of the form $(a,b)$.
+%
+\begin{definition}
+    If $A$ is a set of real numbers, then it's Lebesgue measure is
+    %
+    \[ m(A) = \inf \left \{ \sum_{k = 1}^\infty m(I_k) : \bigcup_{k = 1}^\infty I_k \supset A \right \} \]
+\end{definition}
+
+The end goal of this passage is to find out what it takes to prove that if $\{A_i\}$ is a disjoint collection of sets, then $m(\bigcup A_i) = \sum m(A_i)$. This will give us intuition in the abstract case. In this case, one side of the equality is fairly easy to show.
+
+\begin{theorem}
+    If $\{A_i\}$ is a countable collection of sets, then $m(\bigcup A_i) \leq \sum m(A_i)$.
+\end{theorem}
+\begin{proof}
+    If any $A_i$ has infinite length, then the theorem is trivial. Thus assume all $A_i$ have finite measure. Fix some $\varepsilon > 0$. For each $A_i$, pick a countable set $\mathcal{I}_i$ of open intervals such that $\sum_{I \in \mathcal{I}_i} I \leq m(A_i) + \varepsilon/2^k$. Then $\bigcup \mathcal{I}_i$ is a countable collection of open intervals covering $\bigcup A_i$, and so
+    %
+    \[ m(\bigcup A_i) \leq \sum_{i = 1}^\infty \sum_{I \in \mathcal{I}} m(I) \leq \sum_{i = 1}^\infty [m(A_i) + \varepsilon/2^k] = \sum_{i = 1}^\infty m(A_i) + \varepsilon \]
+    %
+    The proof is completed since $\varepsilon$ was arbitrary.
+\end{proof}
+
+\begin{lemma}
+    If $A \subset B$, $m(A) \leq m(B)$.
+\end{lemma}
+\begin{proof}
+    Any cover of $B$ is a cover of $A$.
+\end{proof}
+
+Let us check the $m$ is well defined, when passing from lengths of intervals to approximations of arbitrary sets.
+
+\begin{lemma}
+    For any interval $I = (a,b)$, $m(I) = b - a$
+\end{lemma}
+\begin{proof}
+    First, we will verify that $m([a,b]) = b - a$. Let $\mathcal{I}$ be a collection of open intervals such that $\bigcup \mathcal{I} \supset [a,b]$. Without loss of generality, we may choose a finite subcover, since $[a,b]$ is compact. Using this finiteness, construct a sequence $(a_1, b_1), \dots, (a_n, b_n)$ from $\mathcal{I}$ such that $b_i \geq a_{i+1}$ for each $i$, $a_1 \leq a$, and $b_n \geq b$. Then
+    %
+    \begin{align*}
+        \sum_{I \in \mathcal{I}} m(I) &\geq \sum_{i = 1}^n m((a_i, b_i)) = \sum_{i = 1}^n b_i - a_i\\
+        &\geq (b_n - a_n) + \sum_{i = 1}^{n-1} (a_{i+1} - a_i)\\
+        &= (b_n - a_n) + (a_n - a_1) = b_n - a_1 \geq b - a
+    \end{align*}
+    %
+    Thus $m([a,b]) \geq b - a$. Now, fix $\varepsilon > 0$. Choose the cover
+    %
+    \[ \mathcal{I} = \{ (a-\varepsilon,a+\varepsilon), (a,b), (b-\varepsilon, b+\varepsilon) \} \]
+    %
+    Now $\bigcup \mathcal{I} = (a-\varepsilon, b+\varepsilon) \supset [a,b]$, so
+    %
+    \[ m([a,b]) \leq m((a,b)) + m((a-\varepsilon, a+\varepsilon)) + m((b-\varepsilon,b+\varepsilon)) = b - a + 4\varepsilon \]
+    %
+    Since $\varepsilon$ was arbitrary, $m([a,b]) \leq b - a$, and so $m([a,b]) = b - a$.
+
+    Surely, $m((a,b)) \leq m([a,b]) = b - a$. But also, by Lemma (1.1),
+    %
+    \[ m([a,b]) \leq m((a,b)) + m(\{a\}) + m(\{b\}) = m((a,b)) \]
+    %
+    since the length of a single point is zero.
+\end{proof}
+
+Now we want to know that measuring the union is the same as measuring the component parts, as our intuition would tell us. However, Banach and Tarski have warned us that this won't be true of all sets. One side of the inequality can be shown for all sets, but we must specialize to obtain equality -- defining exactly what it means for a set to be measurable, as we were discussing above.
+
+\begin{definition}
+    A set $A$ is {\bf measurable} (in the manner of Lebesgue), if for any other set $B$, $m(B) = m(A \cap B) + m(A^c \cap B)$.
+\end{definition}
+
+It is simple to verify that $\mathbf{R}$ is a measurable set, and if $A$ is measurable, then so is $A^c$. More complicated is the fact that open intervals are measurable.
+
+\begin{lemma}
+    For any real number $a$, $(a,\infty)$ is measurable.
+\end{lemma}
+\begin{proof}
+    Let $A$ be an arbitrary set. Let $\mathcal{I}$ be a countable collection of intervals such that $\sum_{I \in \mathcal{I}} m(I) \leq m(A) + \varepsilon$. Then, for each $I$, either $I \cap (a, \infty)$ is empty or an interval, as is $I \cap (-\infty,a]$, and the measure of $I$ is equal to the measure of the sum. Thus
+    %
+    \[ m(A \cap (a, \infty)) + m(A \cap (-\infty,a]) \leq \sum m(I_k \cap (a, \infty)) + \sum m(I_k \cap (-\infty,a]) = \sum m(I_k) \leq m(A) + \varepsilon  \]
+    %
+    So $m(A \cap (a, \infty)) + m(A \cap (-\infty,a]) \leq m(A)$, and we have already proved the inequality the other way.
+\end{proof}
+
+\begin{lemma}
+    If $A$ and $B$ are measurable, then so is $A \cup B$.
+\end{lemma}
+\begin{proof}
+    Let $S$ be an arbitrary subset of the reals. Then
+    %
+    \begin{align*}
+        m(S) &= m(S \cap A) + m(S \cap A^c)\\
+        &= m(S \cap A) + m(S \cap A^c \cap B) + m(S \cap A^c \cap B^c)\\
+        &= m(S \cap A) + m(S \cap B \cap A^c) + m(S \cap [A \cup B]^c)\\
+        &= m([S \cap A] \cup [S \cap B \cap A^c]) + m(S \cap [A \cup B]^c)\\
+        &= m(S \cap [A \cup B]) + m(S \cap (A \cup B)^c)
+    \end{align*}
+    %
+    One may get from the second last equation to the third last equation by applying the measurability of $A$ to the first measured set.
+\end{proof}
+
+\begin{corollary}
+    If $A$ and $B$ are measurable, then $A \cap B$ and $A - B$ are measurable.
+\end{corollary}
+\begin{proof}
+    $A \cap B = (A^c \cup B^c)^c$, and $A - B = A \cap B^c$.
+\end{proof}
+
+\begin{corollary}
+    All open intervals are measurable.
+\end{corollary}
+
+\begin{corollary}
+    If $A$ is any set, and $E_1, \dots, E_n$ is a finite collection of disjoint measurable sets, then
+    %
+    \[ m(A \cap (\bigcup_{k = 1}^n E_k)) = \sum_{k = 1}^n m(A \cap E_k) \]
+\end{corollary}
+
+What we have shown here is that the set of measurable sets is a Boolean algebra. We can go one further.
+
+\begin{lemma}
+    If $E_1, E_2, \dots$ is a countable collection of disjoint measurable sets, then $E = E_1 \cup E_2 \cup \dots$ is measurable.
+\end{lemma}
+\begin{proof}
+    Define $F_n = \bigcup_{k = 1}^n E_n$. Then $F_n$ is measurable, and $F_n^c \supset E^c$. Hence
+    %
+    \begin{align*}
+        m(A) &= m(A \cap F_n) + m(A \cap F_n^c) \geq m(A \cap F_n) + m(A \cap E^c)\\
+        &= \sum_{k = 1}^n m(A \cap E_k) + m(A \cap E^c)
+    \end{align*}
+    %
+    Since $n$ was arbitrary,
+    %
+    \[ m(A) \geq \sum_{k = 1}^\infty m(A \cap E_k) + m(A \cap E^c) \geq m(A \cap E) + m(A \cap E^c) \]
+    %
+    But $m(A) \leq m(A \cap E) + m(A \cap E^k)$, so $E$ is measurable.
+\end{proof}
+
+\begin{corollary}
+    The countable union of measurable sets are measurable.
+\end{corollary}
+\begin{proof}
+    Simply modify measurable sets by elementary set operations so they are disjoint, and then take their union.
+\end{proof}
+
+From this theorem, we can determine that every open set in $\mathbf{R}$ is open, as every open set is the countable union of open intervals.
+
+We can know show what we originally set out to solve.
+
+\begin{theorem}
+    If $\{ A_i \}$ is a countable collection of pairwise disjoint measurable sets, then
+    %
+    \[ m(\bigcup A_i) = \sum m(A_i) \]
+\end{theorem}
+\begin{proof}
+    The calculations in the above theorem show that, letting $A = \bigcup A_i$,
+    %
+    \[ m(A) \geq \sum_{k = 1}^\infty m(A \cap A_i) + m(A \cap A^c) = \sum_{k = 1}^\infty m(A_i) \]
+    %
+    but this shows equality, since the other direction of inequality always holds.
+\end{proof}
+
+The function $m$, restricted to measurable sets, will now be known as the Lebesgue measure on $\mathbf{R}$. It is the first in a line of a general class of functions known as measures, defined on subsets of a space and measuring these subset's size. The notions of measurable set will be abstracted to the properties proved above. That is, we can measure the union, intersection, and complement of all measurable sets. Most theorems in measure theory are actually be proved in general just as easily as on the Lebesgue measure we have just described.
+
+
+
+
+
+\section{Appendix: Banach Tarski}
+
+Let us consider the sphere. A nice property of this object is that it is invariant under any rotation - that is, if you take a point, and rotate it around the origin, you will never end up at a point off the unit sphere. Mathematically, we say that the orthogonal group $O(3)$ acts on the sphere $S^1$.
+
+The core technique of this proof can be executed in a simpler form on free groups. Consider the free group $F_{\{a,b\}}$ on two characters. Let $S(a)$ be the set of all sequences whose simplest form begins with $a$, and define $S(b)$, $S(a^{-1})$, and $S(b^{-1})$ similarily. We have the following equalities:
+%
+\[ F_{\{a,b\}} = S(a) \cup S(b) \cup S(a^{-1}) \cup S(b^{-1}) \]
+\[ F_{\{a,b\}} = S(a) \cup aS(a^{-1}) \]
+\[ F_{\{a,b\}} = S(b) \cup bS(b^{-1}) \]
+%
+Thus we have partitions $F_{\{a,b\}}$ into four sets. By `rotating' two of these partitions, we obtain two copies of the group.
+
+The trick to the Banach-Tarski paradox on the sphere is to find subsets of the orthogonal group that behave like $F_{\{a,b\}}$. We will say a subset $X$ of euclidean space can be {\bf paradoxically decomposed}, if it can be expressed as the disjoint union of subsets, $X_1 \cup \dots \cup X_n$, and, under group actions $g_1, \dots, g_n \in O(3)$, we may express $X = g_1X_1 \cup \dots \cup g_iX_i$, and $X = g_{i+1}X_{i+1} \cup \dots \cup g_nX_n$, for some $i$.
+
+\begin{lemma}
+    There is a subgroup of $O(3)$ isomorphic to $F_{\{a,b\}}$.
+\end{lemma}
+\begin{proof}
+    Map $a$ to a rotation horizontally by $\sqrt{2}\pi$ radians, and map $b$ to a rotation vertically by $\sqrt{2}\pi$ radians. This induces a homomorphism from $F_{\{a,b\}}$ to $O(3)$. We claim this homomorphism is injective.
+\end{proof}
+
+\begin{theorem}[Banach Tarski]
+    The sphere may be paradoxically decomposed.
+\end{theorem}
+
+
+
+
+\chapter{Abstract Measures}
+
+Let us now begin to describe measures in their abstract generality.
+
+\begin{definition}
+    Let $X$ be an arbitrary set. A $\sigma$-algebra on $X$ is a family of subsets of $X$, called measurable sets, such that
+    %
+    \begin{enumerate}
+        \item[(1)] $X$ is measurable.
+        \item[(2)] If $A$ is measurable, $A^c$ is measurable.
+        \item[(3)] If $\mathcal{C}$ is a countable family of measurable sets, then $\bigcup \mathcal{C}$ is measurable.
+    \end{enumerate}
+\end{definition}
+
+What we have shown is that there is a set function defined on a $\sigma$ algebra of $\mathbf{R}$ containing all borel sets, and agreeing with the notion of length on all open intervals.
+
+\chapter{Extending measures}
+
+To construct the Lebesgue measure, we began with an intuitive notion of area over the set of intervals on the real line, and then extended the notion of length to a bigger class of sets, the measurable sets. This chapter attempts to purify this strategy to work on arbitrary measure spaces.
+
+\begin{definition}
+    Let $\Omega$ be a set. $\mathcal{A} \subset \mathcal{P}(X)$ is a {\bf semi-algebra} over $X$ if
+    %
+    \begin{enumerate}
+        \item $\emptyset, \Omega \in \mathcal{A}$.
+        \item If $A,B \in \mathcal{A}$, then $A \cap B \in \mathcal{A}$.
+        \item If $A,B \in \mathcal{A}$, then there exists a finite, disjoint collection $\mathcal{C} \subset \mathcal{A}$ such that $B - A = \bigcup \mathcal{C}$.
+    \end{enumerate}
+\end{definition}
+
+\begin{definition}
+    Fix some semi-algebra $\mathcal{A}$. A {\bf pre-measure} is a function $\mu:\mathcal{A} \to \mathbf{R}^+$, such that
+    %
+    \begin{enumerate}
+        \item If $\mathcal{B} \subset \mathcal{A}$ is a finite, disjoint collection of sets, then
+        %
+        \[ \mu \left(\bigcup \mathcal{B} \right) \geq \sum_{B \in \mathcal{B}} \mu(B) \]
+        \item If $\mathcal{B} \subset \mathcal{A}$, is at most countable, and if $A \in \mathcal{A}$ satisfies $A \subset \bigcup \mathcal{B}$, then
+        %
+        \[ \mu(A) \leq \sum_{B \in \mathcal{B}} \mu(B) \]
+    \end{enumerate}
+\end{definition}
+
+The definition of a pre-measure can be phrased in different ways. The proofs of the following are just an exercise in notation.
+
+\begin{lemma}
+    The following are alternate ways to specifc a pre-measure. Fix some semi-algebra $\mathcal{A}$, and set function $\mu:\mathcal{A} \to \mathbf{R}^+$:
+    %
+    \begin{enumerate}
+        \item If $\mu$ is monotone and countably subadditive, where defined, then $\mu$ is a pre-measure.
+        \item If $\mu$ is countable additive, where defined, then $\mu$ is a pre-measure.
+    \end{enumerate}
+\end{lemma}
+
+It turns out that all pre-measures are essentially measures, thanks to a theorem by Caratheodory.
+
+\begin{theorem}[Caratheodory's Extension Theorem]
+    Every pre-measure can be extended to a measure.
+\end{theorem}
+\begin{proof}
+    Let $\mu:\mathcal{A} \to \mathbf{R}^+$ be a pre-measure, where $\mathcal{A}$ is a semi-algebra on a set $\Omega$. We shall define a measure $\mu':\mathcal{A}' \to \mathbf{R}^+$ such that $\mu'|_{\mathcal{A}} = \mu$. Let $\mu^*:\mathcal{P}(\Omega) \to \mathbf{R}^+$ be defined by
+    %
+    \[ \mu^*(X) = \sup \left\{ \sum_{B \in \mathcal{B}} \mu(B) : \mathcal{B} \subset \mathcal{A}\ \text{is at most countable},\ A \subset \bigcup \mathcal{B} \right\} \]
+    %
+    We will begin by studying some properties of $\mu^*$.
+    %
+    \begin{enumerate}
+        \item $\mu^*|_{\mathcal{A}} = \mu$.
+        \begin{proof*}
+            Consider any $A \in \mathcal{A}$. If $A \subset \bigcup \mathcal{B}$, then property (2) of being a pre-measure shows that $\mu(A) \leq \sum_{B \in \mathcal{B}} \mu(B)$. Thus $\mu^*(A) \geq \mu(A)$. But by setting $\mathcal{B} = \{ A \}$, we see that $\mu^*(A) \leq \mu(A)$.
+        \end{proof*}
+
+        \item $\mu^*$ is monotone.
+        \begin{proof*}
+            Let $A \subset B$ be a pair of arbitrary sets. Then if $\mathcal{B}$ is such that $\bigcup \mathcal{B} \supset B$, then $\bigcup \mathcal{B} \supset A$. To obtain $\mu^*(B)$, we are thus taking the supremum of a smaller set than when we obtain $\mu^*(A)$. Thus $\mu^*(A) \leq \mu^*(B)$.
+        \end{proof*}
+
+        \item $\mu^*$ is countably subadditive.
+        \begin{proof*}
+            Consider a countable subset $\mathcal{B} \subset \mathcal{P}(\Omega)$, fix some ordering $\{ B_i \}$ on $\mathcal{B}$, and consider any $\varepsilon > 0$. For each $B_n \in \mathcal{B}$, we can find a countable set $\mathcal{C}(B) \subset \mathcal{A}$ such $B \subset \bigcup \mathcal{C}(B)$, and $\sum_{C \in \mathcal{C}(B)}\mu(C) \leq \mu^*(B) + \varepsilon/2^n$. But then $\bigcup \mathcal{B} \subset \bigcup \{ C \in \mathcal{C}(B) : B \in \mathcal{B} \}$, which is a countable subcollection of $\mathcal{A}$, so
+            %
+            \[ \mu^*(\bigcup \mathcal{B}) \leq \sum_{B \in \mathcal{B}} \sum_{C \in \mathcal{C}(B)} \mu(C) \leq \sum_{n = 1}^\infty \mu^*(B_n) + \frac{\varepsilon}{2^n} \leq \sum_{B \in \mathcal{B}} \mu^*(B) + \varepsilon \]
+            %
+            Letting $\varepsilon \to 0$, we obtain the inequality.
+        \end{proof*}
+    \end{enumerate}
+
+    Now let $\mathcal{A}' = \{ A \in \mathcal{P}(\Omega) : \forall B \subset \Omega, \mu^*(B) = \mu^*(A \cap B) + \mu^*(A^c \cap B) \}$, and let $\mu' = \mu^*|_{\mathcal{A}'}$. We shall verify that this is the measure we are needing to construct. First, notice that is is obvious that $\mathcal{A}'$ is closed under complement.
+
+    \begin{enumerate}
+        \item[4.] If $A,B \in \mathcal{A}$, then $A \cap B$, $A \cup B \in \mathcal{A}'$.
+        \begin{proof*}
+            For any $E \subset \Omega$,
+            \begin{align*}
+                &\mu^*(A \cap B \cap C) + \mu^*((A \cap B)^c \cap C)\\
+                &= \mu^*(A \cap B \cap C) + \mu^*((A^c \cap B \cap C) \cup (A \cap B^c \cap C) \cup (A^c \cap B^c \cap C))\\
+                &\leq \mu^*(A \cap B \cap C) + \mu^*(A^c \cap B \cap C) + \mu^*(A \cap B^c \cap C) + \mu^*(A^c \cap B^c \cap C)\\
+                &= \mu^*(C)
+            \end{align*}
+            %
+            By (2), we obtain equality, so $A \cap B \in \mathcal{A}'$.
+        \end{proof*}
+
+        \item[5.] $\mu'$ satisfies the countable additivity property of a measure.
+        \begin{proof*}
+            Let $\mathcal{B} \subset \mathcal{A}'$ be an at most countable collection of disjoint sets. If $\mathcal{B} = \{ A, B \}$, then
+            %
+            \[ \mu'(A \cup B) = \mu'(A \cap (A \cup B)) + \mu'(A^c \cap (A \cup B)) = \mu^*(A) + \mu^*(B) \]
+            %
+            By induction, the lemma holds if $\mathcal{B}$ is finite. Fix an enumeration $\{ B_i \}$ to $\mathcal{B}$. Then we have that, for any $n \in \mathcal{B}$,
+            %
+            \[ \sum_{k = 1}^n \mu'(B_k) = \mu \left( \bigcup_{i = 1}^n B_i \right) \]
+            %
+            Letting $n \to \infty$, we see that $\sum_{k = 1}^\infty \mu'(B_k) \leq \mu \left( \bigcup \mathcal{B} \right)$. But then by part (3) of this proof, we obtain equality.
+        \end{proof*}
+    \end{enumerate}
+
+    Because of (5), $\mathcal{A}'$ is a boolean algebra.
+
+    \begin{enumerate}
+        \item[6.]  $\mathcal{A}'$ is closed under countable union [This shows $\mathcal{A}'$ is a $\sigma$-algebra, and completes the proof that $\mu'$ is a measure].
+        \begin{proof*}
+            Let $\mathcal{B} \subset \mathcal{A}'$ be a countable collection. Without loss of generality, we may assume this collection is disjoint, by modifying $\mathcal{B}$ using the operations of intersection and complement. Let $C \subset \Omega$ be arbitrary. Fix some enumeration $\{ B_i \}$ of $\mathcal{B}$, and let $\mathbf{B}_m = \bigcup_{i = 1}^n B_i$. Then
+            %
+            \begin{align*}
+                \mu^*(C) &= \mu^*(C \cap \mathbf{B}_m) + \mu^*(C \cap \mathbf{B}_m^c)\\
+                &= \sum_{k = 1}^m \mu^*(C \cap B_k) + \mu^*\left(C \cap \bigcup_{k = 1}^m B^k \right)\\
+                &\geq \sum_{k = 1}^\infty \mu^*(C \cap B_k) + \mu^*\left(C \cap \left(\bigcup \mathcal{B}\right)^c\right)\\
+                &\geq \mu^*\left(C \cap \bigcup \mathcal{B}\right) + \mu^*\left(C \cap \left(\bigcup \mathcal{B}\right)^c\right)
+            \end{align*}
+            %
+            By (3), $\bigcup \mathcal{B} \in \mathcal{A}'$.
+        \end{proof*}
+
+        \item[7.] $\mathcal{A} \subset \mathcal{A}'$.
+        \begin{proof*}
+            Let $A \in \mathcal{A}$, and let $D \subset \Omega$. Then, since $\mathcal{A}$ is a semi-algebra, we can write $A^c = \bigcup \mathcal{B}$, where $\mathcal{B} \subset \mathcal{A}$ is finite. Fix $\varepsilon > 0$. We can find $\mathcal{C} \subset \mathcal{A}$ with $D \subset \bigcup \mathcal{C}$, and $\sum_{C \in \mathcal{C}} \mu(C) \leq \mu(D) + \varepsilon$. Then
+            %
+            \begin{align*}
+                &\mu^*(A \cap D) + \mu^*(A^c \cap D)\\
+                &\leq \mu^*\left(A \cap \left(\bigcup \mathcal{C}\right)\right) + \mu^*\left(\left(\bigcup \mathcal{B}\right) \cap \left(\bigcup \mathcal{C}\right)\right) && \text{(monotonicity)}\\
+                &= \mu\left(\bigcup_{C \in \mathcal{C}} A \cap C\right) + \mu\left( \bigcup_{B \in \mathcal{B}, C \in \mathcal{C}} B \cap C \right)\\
+                &\leq \sum_{B \in \mathcal{B}, C \in \mathcal{C}} \mu(A \cap C) + \mu(B \cap C) && \text{(Property 2)}\\
+                &\leq \sum_{B \in \mathcal{B}} \mu(C) \leq \mu(A) + \varepsilon && \text{(Property 2 of a pre-measure)}
+            \end{align*}
+            %
+            Letting $\varepsilon \to 0$, we obtain an inequality, which together with (2) gives us an equality.
+        \end{proof*}
+    \end{enumerate}
+    %
+    This concludes the proof.
+\end{proof}
+
+\begin{corollary}
+    If $\mu$ is $\sigma$-finite, then the extension is unique on $\mathcal{A}'$.
+\end{corollary}
+\begin{proof}
+    Let $\nu: \mathcal{A}' \to \mathbf{R}$ be another extension of $\mu$, other than $\mu'$ constructed above. Let $A \in \mathcal{A}'$. Fix $\varepsilon > 0$. For any countable covering $\mathcal{B} \subset \mathcal{A}$ of $A$,
+    %
+    \[ \nu(A) \leq \sum_{B \in \mathcal{B}} \nu(B) = \sum_{B \in \mathcal{B}} \mu(B) \]
+    %
+    Thus $\nu(A) \leq \mu^*(A)$. By symmetry, $\nu(A^c) \leq \mu^*(A^c)$. But then $\nu(A) + \nu(A^c) = \nu(\Omega) = \mu^*(\Omega)$, and assuming $\nu(\Omega) = \mu^*(\Omega) < \infty$,
+    %
+    \[ \nu(A) = \nu(\Omega) - \nu(A^c) \geq \mu^*(\Omega) - \mu^*(A^c) = \mu^*(A) \]
+    %
+    Now assume $\Omega$ is $\sigma$-finite, partitioned into a countable disjoint collection $\mathcal{B} \subset \mathcal{A}$ with $\mu(B) < \infty$ for each $B \in \mathcal{B}$. Fix some enumeration $\{ B_i \}$ of $\mathcal{B}$. Then, for any $A \in \mathcal{A}'$,
+    %
+    \[ \mu^*(A) = \sum_{k = 1}^\infty \mu^*(A \cap B_i) = \sum_{k = 1}^\infty \nu(A \cap B_i) = \nu(A) \]
+    %
+    And so the two measures are equal.
+\end{proof}
+
+\begin{example}
+    Consider the set of intervals of the form $(a,b)$ in $\mathbf{R}$, where $a,b \in \mathbf{R}^\infty$. This is quite easily verified to be a semi-algebra. Define
+    %
+    \[ \mu([a,b]) = \mu((a,b]) = \dots = \mu((a,b)) = b - a \]
+    %
+    $\mu$ is countably additive, as we have shown in chapter 1, so it extends to a measure which contains all borel subsets of $\mathbf{R}$. This is just the Lebesgue measure of $\mathbf{R}$.
+\end{example}
+
+\end{document}

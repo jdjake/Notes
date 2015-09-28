@@ -1,0 +1,162 @@
+\input{../style.tex}
+
+\DeclareMathOperator{\Prob}{\mathbf{P}}
+\DeclareMathOperator{\Ber}{Ber}
+\DeclareMathOperator{\Bin}{Bin}
+\DeclareMathOperator{\Geo}{Geo}
+\DeclareMathOperator{\Poisson}{Poisson}
+\DeclareMathOperator{\Uni}{Uni}
+\DeclareMathOperator{\Multi}{mult}
+\DeclareMathOperator{\expect}{\mathbf{E}}
+
+\title{Probability Theory}
+\author{Jacob Denson}
+
+\begin{document}
+
+\pagenumbering{gobble}
+\maketitle
+\tableofcontents
+\pagenumbering{arabic}
+
+\chapter{Foundations}
+
+What is probability? What do we mean when we say that you are 80\% more likely to develop lung disease if you are a smoker rather than the average man. To a mathematician, probability theory is just a subfield of measure theory, in which we study the properties of abstract functions on a measure theory. To a natural scientist, probability theory is viewed in a different vein. In this chapter, we will explore the two major interpretations of probability theory in real life, each of which use the same underlying mathematical theory to make judgements about the world. After exploring these interpretations, we will make axiomatic definitions of probability, and explore basic consequences.
+
+\section{Frequentist Probability}
+
+Classical probability theory was developed according to the intuitions of what is now known as the frequentist school of probability theory, and is the simplest type of probability to understand. Suppose you are repeatedly performing some experiment. Even under rigorously controlled conditions, the experiment will not always result in the same outcome -- we will instead have a range of outcomes which we may observe from a single result in an experiment. Nonetheless, some outcomes will occur more frequently than others. Let us perform an experiment as often as desired, obtaining an infinite sequence of outcomes
+%
+\[ \omega_1, \omega_2, \omega_3, \dots \]
+%
+Let $D$ be a proposition decidable from the outcome of the experiment (e.g. $D$ may represent whether a flipped coin lands heads up or heads down). Mathematically, this is a subset of the set of all outcomes in an experiment -- the elements for which the proposition is true. We may then define the relative frequency of this proposition being true to be
+%
+\[ P_n(D) := \frac{\# \{ k \leq n : \omega_k \in D \}}{n} \]
+%
+It is the claim (and key assumption) of the frequentist school that, if our experiments are suitably controlled, then regardless of the specific sequence of outcomes measured, our relative frequencies will always converge to a well defined, invariant number, which we define to be the probability of a certain event:
+%
+\[ \Prob(D) := \lim_{n \to \infty} P_n(D) \]
+%
+Let's explore some consequences of this doctrine. First, we note $0 \leq P_n(D) \leq 1$ for any event $D$, so that $0 \leq \Prob(D) \leq 1$. If we let $\Omega$ denote the set of all possible outcomes to the experiment (a proposition that is true for all outcomes), then
+%
+\[ P_n(D) = \frac{\# \{ k \leq n : \omega_k \in \Omega\}}{n} = \frac{\# \{ 1, 2, \dots, n \}}{n} = 1 \]
+%
+Thus we must define $\Prob(\Omega) = 1$. If $A_1, A_2, \dots$ is a sequence of disjoint events, representing prepositions of which only at most one can occur at any one time, then
+%
+\[ P_n \left( \bigcup_i A_i \right) = \frac{\# \{ k \leq n : \omega_k \in \bigcup A_i \}}{n} = \frac{\sum_i \# \{ k \leq n : \omega_k \in A_i \}}{n} = \sum_i P_n(A_i) \]
+%
+Hence, in the limit, $\Prob(\bigcup_i A_i) = \sum_i \Prob(A_i)$.
+
+
+
+\section{Bayesian Probability}
+
+The frequentist school is sufficient to use probability theory to model experiments of science, but our own use of probability is much more general. For instance, a common utterance on the news is that ``there is an 80\% chance of downpour this evening''. It is difficult to interpret this as a frequentist. Even if we see each night's temperament as an experimental trial, it is hard to convince yourself that these experiments are controlled enough to converge to a probabilistic result. The Bayesian school of probability defines a probability to be a person's individual belief in some proposition being true.
+
+Now if a person has free rein over choosing these beliefs, we will never be able to make emperical decisions on probability theory. Thus we require that beliefs are chosen in a logical manner, which is known as a consistant choice of beliefs. Consistancy can be formulated in various ways, but my favourite is the Dutch book method, developed by the Italian probabilist Bruno de Finetti; if you assign an event $D$ a probability $\Prob(D)$, then you are agreeing to make bets of the following character. Suppose I bet a dollar. Either I can bet against $D$ occuring, and I stand to gain $\Prob(D)$ if I am correct, or lose $1 - \Prob(D)$ if I am wrong, or I can bet that $D$ will occur, and lose $\Prob(D)$ if I am wrong, and gain $(1 - \Prob(D))$ if I am right. A person's probability function is inconsistant if it possible to make bets against them that will guarantee a profit: a Dutch book.
+
+\begin{figure}
+\centering
+
+\parbox{2.2in}{
+    \begin{tabular}{ | l | l |}
+    \hline
+    & Payoff\\
+    \hline
+    $D$ occurs & $\Prob(D) - 1$\\
+    \hline
+    $D$ does not occur & $\Prob(D)$\\
+    \hline
+    \end{tabular}
+    \caption{Payoff for betting against an event $D$}
+}
+\qquad
+\parbox{2.2in}{
+    \begin{tabular}{ | l | l |}
+    \hline
+    & Payoff\\
+    \hline
+    $D$ occurs & $(1 - \Prob(D))$\\
+    \hline
+    $D$ does not occur & $-\Prob(D)$\\
+    \hline
+    \end{tabular}
+    \caption{Payoff for betting for an event $D$}
+}
+
+\end{figure}
+
+Here's an example of how the Dutch book method can be employed to obtain general rules of probability. We claim that for any event $D$, $0 \leq \Prob(D) \leq 1$. Suppose $\Prob(D) > 1$. Lets bet against $D$ happening. If $D$ occurs, I lose $1 - \Prob(D)$, an amount less than zero, so that I gain money. If $D$ does not occur, I gain $\Prob(D) > 0$. In both circumstances, I come out on top. Similarily, if $\Prob(D) < 0$, then I can make a dutch book by betting that $D$ will not occur. Therefore, if a probability function is consistant, it lies between $0$ and $1$ at any event.
+
+It can be shown, via similar arguments, that the following pair of propositions hold:
+%
+\begin{enumerate}
+    \item $\Prob(\Omega) = 1$.
+    \item If $\{ A_i \}$ is a countable collection of disjoint events, then $\Prob(\bigcup_i A_i) = \sum_i \Prob(A_i)$\footnote{Definetti would have only accepted this statement for finite collections of events. Here, we allow one to make a countable number of bets at once, rather than only finitely many at any point.}.
+\end{enumerate}
+%
+What we have shown is that consistant degrees of belief in the Bayesian system have similar properties of experimental frequencies to a frequentist. Regardless of which philosophy you agree with, you will eventually have to agree on the same fundamental principles of probability theory. Neither of these systems rest of mathematical foundations, so we need to make a rigorous model, from which we can avoid the philosophical controversies that arise. Just as the game of chess does not have to be about knights and castles, the game of probability theory does not have to be about frequencies nor degrees of belief.
+
+\section{Axioms of Probability}
+
+Mathematically rigorous probability theory is specified under the banner of measure theory, with a few more hypothesis. This enables us to avoid some paradoxes when performing probability theory over an infinite sample space. To the uninitiated, I apologize for the abstraction -- you will have to take some propositions for granted, and trust that the terseness is necessary.
+
+\begin{definition}
+    A $\sigma$-algebra over a set $\Omega$ is a collection of subsets $\mathcal{X}$ such that $\Omega \in \mathcal{X}$, and the collection is closed under union and complement operations:
+    %
+    \begin{enumerate}
+        \item if $A_1, A_2, \dots \in \mathcal{X}$, then $\bigcup_i A_i \in \mathcal{X}$.
+        \item If $A \in \mathcal{X}$, $A^c \in \mathcal{X}$.
+    \end{enumerate}
+    %
+    If it is understood that we are talking about a specific $\sigma$-algebra $\mathcal{X}$, we will say a set is measurable if it is contained in $\mathcal{X}$.
+\end{definition}
+
+\begin{definition}
+    A {\bf Probability Space} is a tuple $(\Omega, \Prob)$, where $\Omega$ is an arbitrary set, known as the {\bf Sample Space} and $\Prob$, known as the probability distribution, is a function from a $\sigma$-algebra of subsets on $\Omega$ to the non-negative real numbers, such that $\Prob(\Omega) = 1$, and if $A_1, A_2, \dots$ is a sequence of disjoint events, then $\Prob(\bigcup_i A_i) = \sum_i \Prob(A_i)$\footnote{Note that this definition only makes sense if $\Prob$ is defined over a $\sigma$ algebra.}. To the measure theorist, a sample space is just a normalized measure space.
+\end{definition}
+
+Note that this is not a mathematic definition of probability, but instead an instead an interpretation of the axiomatic foundations. Another, more complicated interpretation is the bayesian, which will come later. It is also important to see that just because the probability of some event is $0$ does not imply that $A$ is impossible, just that is almost certainly will not happen (Just because a sequence converges to $0$ does not imply the sequence is $0$ everywhere). Similarily, just because the probability of some event is $1$ does not imply that the measurement will always occur in an experiment. The only certain event is $\Omega$, and the only impossible event is $\emptyset$.
+
+Using the basic axioms of probability theory, some easy properties of probabilities occur:
+\begin{itemize}
+    \item For any event $A$, $\Prob(A^c) = 1 - \Prob(A)$:
+    \begin{proof} $A$ and $A^c$ are disjoint, and the union of the two is $X$ \end{proof}
+
+    \item $\Prob(A^c) = 1 - \Prob(A)$
+    \begin{proof} $\Omega = A \cup A^c$ \end{proof}
+
+    \item $\Prob(\emptyset) = 0$
+    \begin{proof} $\emptyset = \Omega^c$ \end{proof}
+
+    \item If $A$ is a subset of $B$, $\Prob(A) \leq \Prob(B)$
+    \begin{proof} The property follows as $\Prob(B) = \Prob(A) + \Prob(B - A)$, and $\Prob(B - A) \geq 0$ \end{proof}
+
+    \item For any events $A$ and $B$, $\Prob(A \cup B) = \Prob(A) + \Prob(B) - \Prob(A \cap B)$:
+    \begin{proof} $A \cup B$ is the union of three disjoint events $A \cap B^c$, $B \cap A^c$, and $A \cap B$. The following calculation results in the equation:
+
+    \begin{align*}
+    \Prob(A \cup B) &= \Prob(A \cap B^c) + \Prob(A \cap B) + \Prob(A^c \cap B)\\
+                    &= \Prob(A \cap B^c) + \Prob(A \cap B) + \Prob(A^c \cap B) + \Prob(A \cap B) - \Prob(A \cap B)\\
+                    &= \Prob((A \cap B^c) \cup (A \cap B)) + \Prob((A^c \cap B) \cup (A \cap B)) - \Prob(A \cap B)\\
+                    &= \Prob(A) + \Prob(B) - \Prob(A \cap B)
+    \end{align*}
+    \end{proof}
+\end{itemize}
+
+Less obvious is the following theorem, called `the continuity of probabilities'. Let $(A_i)$ be a sequence of events such that $A_i \subseteq A_j$ for all $j \geq i$. Then $\Prob(\cup_{i=1}^\infty A_i) = \lim_{n \to \infty} A_n$:
+\begin{proof}
+    Give the sequence $(A_i)$, define a new sequence $(B_i)$ recursively by $B_1 = A_1$, and $B_n = A_n - \cup_{i=1}^{n-1} B_i$. These are disjoint and there is union is the same as the union of $A_i$, so $\Prob(\cup_{i=1}^\infty A_i) = \sum_{i=1}^\infty \Prob(B_i) = \lim_{n \to \infty} A_n$.
+\end{proof}
+
+It is easy to dualize the continuity of probabilities. If the set sequence is decreasing, the same property holds for intersections.
+
+\begin{thebibliography}{10}
+    \bibitem{intro} Larry Wasserman,
+    \emph{All of Statistics}
+
+    \bibitem{papa} Walter Rudin,
+    \emph{Real and Complex Analysis}
+\end{thebibliography}
+
+\end{document}
