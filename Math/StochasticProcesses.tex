@@ -1,39 +1,4 @@
-\documentclass[12pt]{report}
-
-\usepackage{amsmath}
-\usepackage{kpfonts}
-
-\usepackage{amsthm}
-\usepackage{framed}
-
-\theoremstyle{plain}
-\newtheorem{theorem}{Theorem}[chapter]
-\newtheorem{lemma}[theorem]{Lemma}
-\newtheorem{corollary}[theorem]{Corollary}
-\newtheorem{exercise}{Exercise}[chapter]
-\newtheorem*{example}{Example}
-
-\theoremstyle{definition}
-\newtheorem*{defi}{Definition}
-\newenvironment{definition}
-    {\begin{samepage}\begin{framed}\begin{defi}}
-    {\end{defi}\end{framed}\end{samepage}}
-
-\usepackage{hyperref} 
-\hypersetup{
-    colorlinks = true,
-    linkcolor = black,
-}
-
-\usepackage{mathtools}
-\makeatletter
-\renewcommand*\env@matrix[1][*\c@MaxMatrixCols c]{%
-  \hskip -\arraycolsep
-  \let\@ifnextchar\new@ifnextchar
-  \array{#1}}
-\makeatother
-
-\renewcommand*\contentsname{\hfill Table Of Contents \hfill}
+\input{../style.tex}
 
 \title{Stochastic Processes}
 \author{Jacob Denson}
@@ -41,247 +6,234 @@
 \begin{document}
 
 \pagenumbering{gobble}
-
 \maketitle
-
 \tableofcontents
-
 \pagenumbering{arabic}
 
-\chapter{Evolution}
+\chapter{Stochastic Processes}
 
-The theory of dynamic systems allows us to determine the motions of objects under deterministic actions. From Newton's development of Calculus, one could show that past and future are predicted exactly from the positions and velocities of particles at any one point. It is here that the theory of Differential equations takes over. Nonetheless, in reality one can never measure the data required to determine the state of a system in precision. Inexactness thus shrouds the determinism of a system, which invalidates Newton's model when applied to experiments. The theory of stochastic processes allows us to model the evolution of a system subject to uncertainty. They can be seen as the evolution of the concept of evolution in a deterministic system.
+The theory of dynamic systems allows us to determine the motions of objects under deterministic actions. Newton's theory of analytical mechanics shows that past and future can be predicted exactly from the infinitisimal information of a system at any specific time. It is here that the theory of Differential equations takes over, enabling one to describe these motions via the infinitisimal changes.
 
-\begin{definition}
-    A {\bf} Dynamical system is a tuple $(S,M,\varphi)$, where
-    %
-    \begin{enumerate}
-        \item $S$ is an arbitrary set, the state space of the system.
-        \item $M$ is a monoid, a fixed time system. (e.g. $\mathbf{N}$, $\mathbf{R}$, $[0,\infty)$, etc.)
-        \item $\varphi: S \times M \to S$ is a function, the evolution of the system. such that $\varphi(\varphi(t',s),t) = \varphi(s, t + t')$, and $\varphi(s, 0) = s$. If, in our model, we are at a point $s \in S$, then $t$ seconds later we should arrive at $\varphi(s,t)$.
-        \item An initial state $s \in S$ determines a path $\varphi(s, \cdot)$ through $S$.
-    \end{enumerate}
-\end{definition}
+In reality, one can never measure the data required to determine the state of a system in precision. Inexactnessshrouds the determinism of a system, which invalidates the application of Newton's model. Stochastic processes adds uncertainty to the mix. At each time epoch, we have a distribution over possible states rather than an evolutionary process, which we model as a random variable.
 
 \begin{definition}
-    A {\bf Random Dynamical System} is a tuple $(S, M, \Omega, \mathbf{P},\varphi)$, where
-    %
-    \begin{enumerate}
-        \item $S$ is a state space, $M$ a time system, and $(\Omega, \mathbf{P})$ a probability space.
-        \item $\varphi$ is the `probabilistic flow', a function $\varphi:S \times M \times \Omega \to S$, where for a fixed $s \in S$ and $t \in \Omega$, $\varphi(s,t,\cdot)$ is a random variable. We require that $\varphi(s,0,\omega) = s$, for any $\omega \in \Omega$, and that for almost all $\omega$, $\varphi(\varphi(s,t',\omega),t,\omega) = \varphi(s,t + t', \omega)$.
-        \item An initial state $s$ determines a family of random variables $X_t = \varphi(s,t,\cdot)$. For any specific $\omega \in \Omega$, $\varphi(s,\cdot,\omega)$ is a path is state space.
-    \end{enumerate}
+    A {\bf stochastic process} is a collection $\{ X_t \}_{t \in T}$ of random variables defined over the same probability space $\Omega$, with range in the same {\bf state space $S$}, indexed over a linearly ordered set $T$.
 \end{definition}
-
-Like in the theory of differential equations, we shall focus on studying what is formed out of a system of this type, namely, a family of random variables from a space.
-
-\begin{definition}
-    Let $T$ be a linearly ordered set. A {\bf stochastic process} is a collection $\{ X_t \}_{t \in T}$ of random variables defined over the same probability space $\Omega$, with range in the same measurable space $S$.
-\end{definition}
-
-Almost every problem in probability theory can be formulated as a statement about stochastic processes. This isn't a good thing -- we can't say much about stochastic processses in their general form. The fun of stochastic processes results when we add additional relationships between the random variables, and study the resulting properties.
 
 \begin{example}
-    Every random vector $(X_1, X_2, \dots, X_n)$ is a stochastic process. In fact, any stochastic process over a finite $T$ is effectively a random vector. Interesting examples of stochastic processes occur for infinite $T$, but random vectors can be useful for intuition.
+    To model the uncertainty of weather, we may take a stochastic process with state space $\mathcal{S} = \{ \textbf{sunny}, \textbf{rainy} \}$. For $i \in \mathbf{Z}$, we may model the weather by a random variable $X_i : \Omega \to \mathcal{S}$, modelling the weather of a certain day $i$. Then $\{ X_i : i \in \mathbf{Z} \}$ is a stochastic process.
 \end{example}
 
-Given a stochastic process $\{X_t\}_{t \in T}$, and a finite subset $T' \subset T$, the subcollection $\{X_t\}_{t \in T'}$ is a random vector, known as a {\bf finite dimensional distribution} of the process. It turns out that if we understand all finite distributions given by the finite subsets $T'$, we can build up a stochastic process $\{X_t\}_{t \in T}$, and any such choice has the same distribution. This lifesaver is known as the Kolmogorov extension theorem, and it makes it a deal more easy to define a random process. Some useful notation will simplify things. Let $A$ is an index set, and $B \subset A$. Given a family of sets $\{ C_i \}_{a \in A}$, we define $\pi_{A \to B}(\{x_i\}_{i \in A}) = \{x_i\}_{i \in B}$. If a fixed total index set $T$ is given, we will let $\pi_A = \pi_{T \to A}$.
+\begin{example}
+    To model stocks, we take $\mathcal{S} = \mathbf{R}$, and let $X_i$ be the value of a certain stock at time $i$, for $i \in \mathbf{R}$. This is a continuous time random process, into a continuous state space. We will study a generalization of this process, Brownian motion, in the sequel.
+\end{example}
+
+\begin{example}
+    To estimate the CDF of an independant and identically distributed sample $X_1, \dots, X_n \sim F$. we take the estimate
+    %
+    \[ \hat{F}(t) = \frac{\sum \mathbf{I}[X_i \leq t]}{n} \]
+    %
+    Then, for a fixed $t$, $\hat{F}(t)$ is a random variable, determining a stochastic process. ordered over $t$ as $t$ ranges in $\mathbf{R}$.
+\end{example}
+
+Every problem in probability theory involving collections of random variables can be formulated as a statement about stochastic processes. The right application of the theory of stochastic processes may shed a different light to a problem, giving an intuitive perspective to the problem. On the other hand, we can't say much about stochastic processses in general, because of how widely they can be applied. The fun of stochastic processes results when we add additional relationships between the random variables, and study the resultant properties.
+
+\begin{example}
+    The simplest example of a stochastic process is a random vector $(X_1, \dots, X_n)$. Any stochastic process over a finite index set can be considered a random vector.
+\end{example}
+
+Any stochastic process can be visualized by its finite dimensional marginal distribution. Stochastic processes will often be specified by these finite dimensional marginal distributions, which will then be built up to the full process. The Kolmogorov theorem tells us that this a valid method of constructing a process.
+
+To introduce this theorem, we require some temporary notation. Fix some state space $\mathcal{X} \subset \mathbf{R}$, and index set $T$. Suppose that each finite subset $S \subset T$ determines a probability distribution $\mathbf{P}_S$ on the borel $\sigma$-algebra of $\mathcal{X}^S$. If $R \subset S \subset T$, then we have an embedding $\pi_{R \to S} : \mathcal{B}(\mathcal{X}^R) \to \mathcal{B}(\mathcal{X}^S)$, defined by
+%
+\[ \pi_{R \to S}(A) = \{ x \in \mathcal{X}^S : \{ x_i : i \in R \} \in A\ \text{and}\ x_j = \mathcal{X}\ \text{for}\ j \not \in R \} \]
+%
+A family of finite dimensional distributions $\{ \mathbf{P}_S : S \subset T, S\ \text{finite} \}$ is {\bf consistant} if $\mathbf{P}_S \circ \pi_{R \to S} = \mathbf{P}_R$ for any $R \subset S \subset T$.
 
 \begin{theorem}[Kolmogorov's extension theorem]
-    Suppose that $T$ is a linearly ordered set, $\Sigma$ is a fixed $\sigma$-algebra on a hausdorff, locally compact topological space $S$, and for each finite subcollection $A \subset T$, there is a probability function $\mathbf{P}_{A}$ defined on $\Sigma^{A}$, such that if $A \subset B$, $\mathbf{P}_B = \mathbf{P} \circ \pi_{B \to A}$. Then there exists a probability space $\Omega$, and a process $\{X_t: \Omega \to \Sigma \}_{t \in T}$, where $\{ X_{t_i} \}_{i = 1}^n \sim \mathbf{P}_{\{ t_1, \dots, t_n \}}$.
+    A consistant family of distributions on an index set $T$ determines a stochastic process $\{ X_i : i \in T \}$ for which $\{X_i : i \in S \} \sim \mathbf{P}_{S}$ for any finite $S \subset T$.
 \end{theorem}
-\begin{proof}
-    A stochastic process is pretty much just a probability distribution over $\Sigma^T$, so we are really just defining a distribution $\mathbf{P}$ on $S^T$. We must define
-    %
-    \[ \mathbf{P}(\pi_B^{-1}(U)) = \mathbf{P}_{B}(U) \]
-    %
-    Suppose
-    %
-    \[ W = \pi_B^{-1}(U) = \pi_A^{-1}(V) \]
-    %
-    Then it follows that
-    %
-    \[ \pi^{-1}_{A \cup B}(\pi_{A \cup B}(W)) = W \]
-    %
-    so by the consistency condition above,
-    %
-    \[ \mathbf{P}_B(\pi_B(W)) = \mathbf{P}_{A \cup B}(\pi_{A \cup B}(W)) = \mathbf{P}_A(\pi_A(W)) \]
-    %
-    Thus $\mathbf{P}$ is well defined.
 
-    It is easy to see that $\mathbf{P}$ is defined on an algebra, and is finitely additive. It is also countably additive. Let $E_1, E_2, \dots, E_n$ be disjoint measurable by $\mathbf{P}$. If we define
-    %
-    \[ F_n := \bigcup_{i = 1}^\infty E_i - \bigcup_{i = 1}^n E_i \]
-    %
-    we must show $\mathbf{P}(F_n) \to 0$. Let each $F_n = \pi^{-1}_{A_n}(G_n)$, for some indices $A_n$ and event $G_n$. Each $\mathbf{P}_{A_n}$ is inner regular, and so we may find a compact $K_n \subset G_n$ in each $\Sigma^{A_n}$ for which $0 < \mathbf{P}_{A_n}(G_n - K_n) < \varepsilon/2^n$. Since $\pi_{A_n \to A_m}(G_n) \subset G_m$. Defining $H_n = \bigcup_{i = 1}^n \pi_{A_i \to A_n}^{-1}(K_n)$, we see that each $H_n$ is compact, that $\pi_{A \to B}^{-1}(H_B) \subset H_A$, and that
-    %
-    \[ \mathbf{P}(G_n - H_n) \leq \mathbf{P}(G_n - K_n) < \varepsilon \]
-    %
-    But also $\pi_n^{-1}(H_n) \to \emptyset$. Assigning the product measure to $S^T$, each $\pi_n^{-1}(H_n)$ is compact. But this implies that some $H_N$ is empty. Thus $\mathbf{P}(F_N - H_N) = \mathbf{P}(F_N) < \varepsilon$. So $\mathbf{P}(F_n) \to 0$.
+The proof uses the Hahn-Kolmogorov / Carath\"{e}odory extension theorem to construct a probability measure on $\mathcal{S}^T$, which can then be taken as the sample space of our random variables $X_i = \pi_i$. We leave the technical details to the reader. The proof should extend to any Polish (separable and completely metrizable) space, but this is not needed here. The random variables specified are not unique. We call any other solution a {\bf version} of the same stochastic process.
 
-    $0 < \mathbf{P}(F_n - K'_n) < \varepsilon$. We have $\bigcap K'_n = \emptyset$, since each $K'_n \subset F_n$. But then some finite intersection is empty, so there is some empty $K'_M$. This implies that $\mathbf{P}(K'_M) = 0$, so $\mathbf{P}(F_M - K'_M) = \mathbf{P}(F_M) < \varepsilon$. This implies that $\mathbf{P}(F_n) \to 0$. Thus $\mathbf{P}$ defines a pre-measure. By the Hahn-Kolmogorov theorem, $\mathbf{P}$ can be extended to a unique measure on all of $\Sigma^T$. If we let $X_t = \pi_{\{t\}}$, then $\{ X_t \}_{t \in T}$ is the distribution needed.
-\end{proof}
+The Kolmogorov theorem is used to construct measures, most importantly when $T$ is uncountable. To gain intition, we will begin studying discrete time processes, for which most paradoxes is unavoidable. When $T = \mathbf{N}$, we need only specify consistant distributions on initial segments $\{ 0, 1, \dots, K \}$.
 
-The Kolmogorov theorem is used to construct measures, most importantly when $T$ is uncountable. To begin if, we will study processes with countable $T$, for which most paradoxex are avoidable.
+\chapter{Finite Markov Chains}
 
-\chapter{Discrete Markov Processes}
+\section{Finite Markov Processes}
 
-In this chapter, we assume all probability and state spaces are countable or finite, and probabilities defined on every subset of event space.
+By the beginning of the 20th century, the work of the Poisson, Chebyshev, and the Bernoulli brothers had cemented the law of large numbers in mathematical culture. Given a number of independent and identically distributed random variables, well behaved asymptotic behaviour of the mean is guaranteed. It took the genius of Markov to realize that one can derive similar results for random variables which are not independent, nor distributed identically, but follow well behaved rules that exhibit asymptotic behaviour in the long run.
+
+Markov had a stong and abrasive relationship with his colleagues. This extended beyond his professional life to the revolutionary atmosphere of 20th century Russia. When Leo Tolstoy was excommunicated from the Orthodox church, Markov requested that he too be excommunicated in solidarity. Markov's acrimony was most strongly directed towards his mathematical rival, Pavel Nekrasov, who had attempted to apply probability theory (rather loosely) to philosophical arguments. Nekrasov compared acts of free will to independent events. Since crime statistics obey the law of large numbers, this data should imply that human decisions are independent events -- ergo, human free-will exists. What Nekrasov had assumed was that the law of large numbers only applies to independant events. Nekrasov had not commited an isolated mistake in applying this principle -- mathematicians back to the Bernoullis had made the mistake. Markov's vitriol towards Nekrasov gave him the motivation to disprove this principle, and introduce the Markov chain.
 
 \begin{definition}
-    Let $\{ X_t \}_{t \in T}$ be a stochastic process. We say this process satisfies the {\bf Markov property} if, for any $x_{t_1}, x_{t_2}, \dots, x_{t_n}, x_{t_{n+1}} \in S$, and $t_1 < t_2 < \dots < t_n < t_{n+1}$, we have
+    Let $\{ X_t \}_{t \in T}$ be a discrete stochastic process (defined on a discrete state space and discrete time interval). This process satisfies the {\bf discrete Markov property} if, for any $t_1 < t_2 < \dots < t_n < t_{n+1} \in T$ and any $x_1, x_2, \dots, x_n, y \in S$, we have
     %
-    \[ \mathbf{P}(X_{t_{n+1}} = x_{t_{n+1}} | X_{t_n} = x_{t_n}, \dots, X_{t_1} = x_{t_1}) = \mathbf{P}(X_{t_{n+1}} = x_{t_{n+1}} | X_{t_n} = x_{t_n}) \]
+    \[ \mathbf{P}(X_{t_{n+1}} = y | X_{t_n} = x_n, \dots, X_{t_1} = x_1) = \mathbf{P}(X_{t_{n+1}} = y | X_{t_n} = x_{n}) \]
     %
-    For any choice for which this equation is not inadmissable. A {\bf Markov chain} is a stochastic process $\{ X_n \}_{n \in \mathbf{N}}$ satisfying the Markov property.
+    A {\bf Markov chain} is a discrete stochastic process $\{ X_n \}_{n \in \mathbf{N}}$ satisfying the Markov property.
 \end{definition}
 
-Intutively, the markov property tells us we cannot gain information about the future of our process except from the most recent information.
+In the theory of Newtonian mechanics, if we know the position and velocity of a particle at any single point in time, we can predict all past and future motion. The Markov property is a stochastic equivalent to this. We might not predict the future from the present, but we can gain as much information as possible from the present about the future, and do not need to worry about the past.
 
 \begin{example}
-    All independent random variables $\{ X_t \}_{t \in T}$ satisfy the Markov property,
+    All independent families of random variables $\{ X_t \}$ satisfy the Markov property, since we cannot learn anything from previous results,
     %
-    \[ \mathbf{P}(X_{t_{n+1}} = x_{t_{n+1}} | X_{t_n} = x_{t_n}, \dots, X_{t_1} = x_{t_1}) = \mathbf{P}(X_{t_{n+1}} = x_{t_{n+1}}) = \mathbf{P}(X_{t_{n+1}} = x_{t_{n+1}} | X_{t_n} = x_{t_n}) \]
+    \begin{align*}
+        \mathbf{P}(X_{t_{n+1}} &= y | X_{t_n} = x_n, \dots, X_{t_1} = x_1) = \mathbf{P}(X_{t_{n+1}} = y)\\
+        &= \mathbf{P}(X_{t_{n+1}} = y | X_{t_n} = x_n)
+    \end{align*}
     %
-    Of course, independant processes are some of the least interesting examples.
+    Independant processes are the least interesting example of a markov process.
 \end{example}
 
-We will begin by focusing on `time homogenous' Markov chains.
+\begin{example}
+    If $\{X_i\}_{i \in \mathbf{Z}}$ is any stochastic process, we can create a Markov chain by `memorizing' previous states of the system. We define $Y_k = (X_0, \dots, X_k)$. Then one may verify that
+    %
+    \begin{align*} &\mathbf{P}(Y_{n+1} = (x_{n+1}, \dots, x_0) | Y_n = (x_0, \dots, x_n), Y_{n-1} = (x_0, \dots, x_{n-1}), \dots, Y_0 = x_0)\\
+    &\ \ \ \ \ \ \ = \mathbf{P}(Y_{n+1} = (x_{n+1}, \dots, x_0) | Y_n = (x_0, \dots, x_n)) \end{align*}
+    %
+    This shows that $\{ Y_k \}$ satisfies the Markov property, excusing of course the obvious problems of what exactly the state space of the process is.
+\end{example}
+
+For any three random variables $X,Y,Z$ mapping into a discrete state space $\mathcal{S}$, we have the equation
+%
+\[ \mathbf{P}(X = x | Z = z) = \sum_{s,s' \in \mathcal{S}} \mathbf{P}(X = x | Y = s, Z = s') \mathbf{P}(Y = s | Z = s') \]
+%
+If $i < j < k$, we may simplify the equation in the case of a Markov chain where $X = X_k$, $Y = X_j$, $Z = X_i$,
+%
+\[ \mathbf{P}(X_k = x | X_i = z) = \sum_{y \in \mathcal{S}} \mathbf{P}(X_k = x | X_j = y) \mathbf{P}(X_j = y | X_i = z) \]
+%
+This is the {\bf Chapman-Kolmogorov equation}, relating various transition probabilities of a markov chain. By the Kolmogorov extension theorem, a Markov chain on $\mathbf{N}$ can be defined by the initial probability distribution $\mathbf{P}(X_0 = x)$, and the transition probabilities $\mathbf{P}(X_k = x | X_{k - 1} = y)$. We will begin by focusing on `time homogenous' Markov chains, which have the nicest theory.
 
 \begin{definition}
-    A Markov chain can be defined in the following manner. First, we specify two functions $P(\cdotp,\cdotp):S^2 \to [0,1]$ and $I: S \to [0,1]$ such that, for a fixed $s \in S$, $P(s,\cdot)$ is a probability distribution, and $I$ specifies an `initial probability' distribution. Then we may define
+    A Markov chain can be defined in the following manner. First, we specify two functions $P(\cdotp,\cdotp):\mathcal S^2 \to [0,1]$ and $\mu_0: \mathcal S \to [0,1]$ such that, for a fixed $s \in S$, $P(s,\cdot)$ is a probability distribution, and $\mu_0$ specifies an `initial' probability distribution. Then we may define
     %
-    \[ \mathbf{P}_{\{1, 2, \dots, n\}}(x_1, \dots, x_n) = I(x_1) \prod_{k = 1}^{n-1} P(x_k,x_{k+1}) \]
+    \[ \mathbf{P}_{\{0, 1, 2, \dots, n\}}(x_0, x_1, \dots, x_n) = I(x_0) \prod_{k = 0}^{n-1} P(x_k,x_{k+1}) \]
     %
-    and extend this to a probability density on $S^n$. These distributions are sufficient for Kolmogorov's theorem to apply, and the stochastic processes which form are called {\bf time-homogenous markov chains}.
+    and extend this to a probability density on $\mathcal S^n$. These distributions are sufficient for Kolmogorov's theorem to apply, and the stochastic processes formed by the construction are called {\bf time-homogenous markov chains}.
 \end{definition}
 
-Now suppose $S$ is finite. Without loss of generality, we may assume $S = \{ 1, 2, \dots, n \}$, for some natural number $n$. We may then form the {\bf stochastic matrix} $P$, where $P_{ij} = P(i,j)$. The rows of $P$ sum to one, and any such matrix with these rows can specify a time-homogenous markov chain. An initial distribution can be seen as a row vector $v$ whose entries sum to one, and then $\mathbf{P}(X_n = x_i) = (vP^n)_i = \sum_k v_k P_{ik}$. Thus studying finite time-homogenous markov chains reduces to matrix algebra. Determining the long term behaviour of this markov chain is found just by taking matrix limits.
+Our first insight to time-homogenous chains is that $\mu_0$ does not really factor much into the time homogenous process. The main mechanism occurs in the transition probabilities $P$. To analyze time-homogenous chains, it will be convenient to fix $P$, and vary $\mu_0$. We may view $P$ as an operator on the space of all distributions (contained in the Banach space $l_1$). Studying the distribution of time-homogenous chains on a finite state space reduces to operator theory -- in particular for the finite dimensional case, matrix algebra.
+
+What are the specifics of how we view $P$ as an operator? First, we may consider $P$ to take a distribution one step into the future. That is, if $\mu$ is a distribution, then $\mu P$ is the distribution of the Markov chain with initial probabilities $\mu$ and transitions $P$ one step into the future. In general, $\mu P^n$ is the distribution $n$ steps into the future. If we suppose $\mathcal{S}$ is finite, $\mathcal{S} = \{ x_1, \dots, x_n \}$, then we may consider $P$ as a {\bf stochastic matrix}, with $P_{ij} = P(x_i,x_j)$. The rows of $P$ sum to one, and any such matrix with these rows specifies the transition probabilities of a time-homogenous markov chain. The probability mass functions $\mu$ can be seen as row vectors; the Kolmogorov equation, in matrix form, tells us exactly that $\mu P$ corresponds to matrix multiplication.
+
+
+
+We can also see $\mu$ as operating by $P$ on the right. Let $f$ be any column vector. Then
+%
+\[ (P^n f)(x) = \sum_y P^n(x,y) f(y) \]
+%
+We can take $f$ to be any real-valued function on the state space of the process, and then $P^n f (x) = \mathbf{E}(f(X_n) | X_0 = x)$, which we may define for any process, even if the state space is not finite.
+
+\begin{example}
+    It is a useful simplification to assume that the probability of weather is time-homogenous. We might choose a transition matrix like the one below
+    %
+    \[ \kbordermatrix{
+    & {\bf sunny} & {\bf rainy} \\
+    {\bf sunny} & 0.6 & 0.4 \\
+    {\bf rainy} & 0.8 & 0.2 }
+    \]
+    %
+    One may also specify this process with a transition matrix
+    %
+    % INCLUDE TRANSITION MATRIX HERE
+    %
+    Thus there is a 60\% chance of it being rainy the day after it is sunny, and an 80\% change of it being sunny the day after it is rainy. We will find that, in the long run, the days will be sunny about 57\% of the time, and rainy 43\% of the time.
+\end{example}
+
+\begin{example}
+    Consider a queueing system (for a phone-hold system, etc.) which can only hold 2 people at once. Every time epoch, there is a chance $p$ that a new caller will attempt to access the system, and a chance $q$ that we will finish with a person in the queue. Assuming these events are independent, we can model this as a time homogenous markov process with transition matrix
+    %
+    \[ \kbordermatrix{
+    & 0 & 1 & 2 \\
+    0 & 1-p & p & 0\\
+    1 & (1-p)q & (1 - q)(1 - p) + pq & p(1-q)\\
+    2 & 0 & q(1 - p) & (1 - q) + pq}
+    \]
+    %
+    Given a large amount of time, it is of interest to the maker of the queing system to know the average number of people in the queue at a certain time.
+\end{example}
+
+\begin{example}
+    Consider a random walk on a certain graph. At any vertex, we have an equal chance of moving from one vertex to any other vertex connected by an edge. The simplest example of such a process is the random walk on the vertices $\{ 0, 1, \dots, n\}$, where each integer is connected to adjacent integers. The transition probabilities are given by
+    %
+    \[ P(i,i+1) = P(i,i-1) = \frac{1}{2}\ \ \ \ \ i \in \{1, \dots, n-1 \} \]
+    %
+    \[ P(0,1) = P(n,n-1) = 1 \]
+    %
+    These are the transitions for the canonical reflecting random walk. If one connects the end vertices to themselves, then one obtains another form of the random walk.
+\end{example}
 
 \section{Asymptotics of Markov chains}
 
-We want to determine the behaviour of a Markov chain $\{ X_1, X_2, \dots \}$ as the $X_i$ tend to infinity. It is most easy to do this analysis in the case of a finite-state space time-homogenous Markov chain. In some cases, we can determine a limiting probability distribution. We have
-%
-\[ \mathbf{P}(X_n = x_k) = (vP^n)_k \]
-%
-If $m = \lim_{n \to \infty} (vP^n) = v \lim_{n \to \infty} P^n$ exists, then
-%
-\[ \lim_{n \to \infty} \mathbf{P}(X_n = x_k) = \lim_{n \to \infty} (vP^n)_k \to m_k \]
-%
-Thus the Markov chain $\{ X_n \}$ converges in distribution. In most cases, this limit will exist. In extraneous circumstances, this need not hold.
+As was Markov's goal, we want to determine the asymptotic behaviour of a Markov chain $\{X_i\}$ after large lengths of time. In most cases, we will show that probabilities converge in the limit. It is most easy to perform the analysis on finite state space time-homogenous Markov chains. We shall show that in most cases there exists a unique {\bf invariant distribution} $\mu$ such that, for any initial distribution $\mu_0$, $\mu_0 P^n \to \mu$ as $n \to \infty$. Our analysis of these markov chains follows from Eigenvalue decomposition, via the use of the Perron-Frobenius theorem.
 
-\begin{example}[Inverter]
-    Consider the stochastic matrix
+\begin{example}
+    Consider a homogenous process with the transition matrix
+    %
+    \[ P = \begin{pmatrix} 3/4 & 1/4 \\ 1/6 & 5/6 \end{pmatrix} \]
+    %
+    We may write $P = QDQ^{-1}$, where
+    %
+    \[ Q = \frac{1}{2} \begin{pmatrix} 2 & -3 \\ 2 & 2 \end{pmatrix} \ \ \ \ \ D = \begin{pmatrix} 1 & 0 \\ 0 & 7/12 \end{pmatrix} \ \ \ \ \ Q^{-1} = \frac{1}{5} \begin{pmatrix} 2 & 3 \\ -2 & 2 \end{pmatrix} \]
+    %
+    Hence,
+    %
+    \begin{align*}
+        \lim_{n \to \infty} P^n &= \lim_{n \to \infty} (QDQ^{-1})^n = Q (\lim_{n \to \infty} D^n) Q^{-1}\\
+        &= \frac{1}{10} \begin{pmatrix} 2 & -3 \\ 2 & 2 \end{pmatrix} \begin{pmatrix} 1 & 0 \\ 0 & 0 \end{pmatrix} \begin{pmatrix} 2 & 3 \\ -2 & 2 \end{pmatrix} = \begin{pmatrix} 2/5 & 3/5 \\ 2/5 & 3/5 \end{pmatrix}
+    \end{align*}
+    %
+    Regardless of the initial distribution of the markov chain, $\mu_0P^n \to (2/5, 3/5)$.
+\end{example}
+
+Some initial distributions work very nicely when taking limits of the stochastic matrix: Suppose $\mu$ is a left eigenvector of $P$ ($\mu P = \mu$). Then $\mu P^n = \mu$, and so, taking $n \to \infty$, we find $\mu$ is the limiting distribution of the Markov chain it generates. One can check that $(2/5, 3/5)$ is a left eigenvector for the probability matrix in the last example. If all initial distribution converge to the same value, then they must converge to this distribution. Identifying these vectors therefore seems important in order to identify the limiting distribution of the matrix. 
+
+\begin{definition}
+    Fix a stochastic matrix $P$. An {\bf invariant/stationary probability distribution} for $P$ is a distribution $\mu$ such that $\mu P = \mu$. Note that this is simply a left eigenvector of eigenvalue 1.
+\end{definition}
+
+There is an incredibly useful theorem of analytical linear algebra to help prove the existence of invariant distributions on finite markov chains.
+
+\begin{theorem}[The Perron-Frobenius Theorem]
+    Let $M$ be a positive square $n \times n$ matrix. There is a positive eigenvalue $\lambda$ of maximal modulus, called the {\bf Perron root} of $M$, with one dimensional eigenspace which contains a positive vector.
+\end{theorem}
+
+Now suppose $P$ is a stochastic, positive matrix. Then we may apply Perron-Frobenius to $P$, obtaining a Perron root $\lambda$. We must have $|\lambda| \leq 1$, since all entries of the matrix are less than one. Because $(1,1,\dots,1)^t$ is a right eigenvector for $P$ of eigenvalue 1, $\lambda = 1$. Thus $P$ can be modified, under some change of basis matrix $Q$, such that
+%
+\[ D = QPQ^{-1} = \begin{pmatrix} 1 & 0 \\0 & 0 \end{pmatrix} \]
+%
+Where $M$ is a square matrix such that $\lim_{n \to \infty} M^n = 0$ (Use the Jordan Canonical Form, and the fact that 1 is the maximal eigenvalue). But then
+%
+\[ \lim_{n \to \infty} P^n = Q^{-1} (\lim_{n \to \infty} D^n) Q = Q^{-1} \begin{pmatrix} 1 & 0 \\ 0 & 0 \end{pmatrix} Q = \begin{pmatrix} \mu \\ \vdots \\ \mu \end{pmatrix} \]
+%
+where $\mu$ is a row vector which sums to one. $\mu$ is the unique invariant distribution to the process, because $\mu P = (\lim_{n \to \infty} \mu P^n) P = \lim_{n \to \infty} \mu P^{n+1} = \mu$.
+
+This argument can be considerably strengthened. Let $P$ be a stochastic matrix such that $P^n$ is positive, for some $n$. The eigenvalues of $P^n$ are simply the eigenvalues of $P$ taken to the power of $n$. Perron and Frobenius tell us that 1 is the Perron root of $P^n$ (since $P^n$ is stochastic), so that $P$ has a maximal eigenvalue which is an $n$'th root of unity. Since $P^{n+1}$ also has all positive entries, the maximal eigenvalue of $P$ must also be an $n+1$'th root of unity, and this is only true if the eigenvalue is 1. If $v$ is an eigenvector of eigenvalue 1, it must also be an eigenvector of $P^n$, so the eigenvectors of $P$ are the same as the eigenvectors of $P^n$, and we may choose an eigenvector which is also a distribution - an invariant distribution to which the matrix converges.
+
+
+\begin{example}
+    Consider a process with transition matrix
     %
     \[ P = \begin{pmatrix} 0 & 1 \\ 1 & 0 \end{pmatrix} \]
     %
-    Then $P^k = P$, for odd $k$, and $P^k = I$, for even $k$. Thus $P^k$ cannot converge.
+    Then $P^n = I$ for even $n$, and $P^n = P$ for odd $n$. Thus $P^n$ cannot converge. This is because the matrix is periodic -- it oscillates between values. Note that $P^n$ never has all positive entries. The only time $\mu P^n$ converges is when $\mu = (1/2, 1/2)$.
 \end{example}
 
-\begin{example}[Bernoulli Pair]
-    Fix two numbers $0 < p,q < 1$. Consider the stochastic matrix
-    %
-    \[ P = \begin{pmatrix} 1-p & p \\ q & 1-q \end{pmatrix} \]
-    %
-    Defining the matrices
-    %
-    \[ Q := \begin{pmatrix} 1 & -p \\ 1 & q \end{pmatrix}\ \ \ \ \ \ \ \ \ \ Q^{-1} := \frac{1}{p + q} \begin{pmatrix} q & p \\ -1 & 1 \end{pmatrix} \]
-    %
-    we see that
-    %
-    \[ QPQ^{-1} = \begin{pmatrix} 1 & 0 \\ 0 & 1-p-q \end{pmatrix} \]
-    %
-    and so
-    %
-    \[ \lim_{n \to \infty} P^n = Q^{-1} [\lim_{n \to \infty} (QPQ^{-1})^n] Q = Q^{-1} \begin{pmatrix} 1 & 0 \\ 0 & 0 \end{pmatrix} Q = \frac{1}{p + q} \begin{pmatrix} q & p \\ q & p \end{pmatrix} \]
-    %
-    Notice that all rows of the limiting matrix are the same, so that regardless of the initial probability distribution $v$ we choose, the probability values will converge to the same result. Our specific computation works since the eigenvalue with largest modulus is 1, and that the matrix is fully diagonalizable. Because of this, we can multiply the diagonal matrix with itself, and all eigenvalues will vanish except for eigenvalues of value 1. It shall turn out that our general strategy is only a simple extension.
+\begin{example}
+    Consider a process whose transition matrix is the identity matrix $I$. Then $P^n \to I$, so $\mu P^n \to \mu$ for all distributions $\mu$. This is an asymptotic result, but different initial distributions give rise to different asymptotics. This is because the process is reducible -- there is not enough `mixing' to occur to generate a homogenous distribution.
 \end{example}
 
-We shall rely on a theorem which can be proved by the methods of analytical linear algebra.
+\section{Aperiodicity and Irreducibility}
 
-\begin{theorem}[The Perron-Frobenius Theorem]
-    Let $M$ be a positive square $n \times n$ matrix (that is, $M_{ij} > 0$ for all $1 \leq i,j \leq n$). There is a unique positive eigenvalue $\lambda$, called the {\bf Perron root} of $M$, such that
-    %
-    \begin{enumerate}
-        \item If $\gamma$ is an eigenvalue for $M$, then $|\gamma| \leq |\lambda|$
-        \item The eigenspace of $\lambda$ is one-dimensional, and contains some vector $v$, all of whose coordinates are positive, and the only other eigenvectors with positive coordinates is a scalar multiple of $v$.
-    \end{enumerate}
-    %
-    Many more properties hold for $\lambda$, but these properties are the two which we will utilize.
-\end{theorem}
-
-It shall be helpful to fix a stochastic matrix $P$, and vary the initial distributions $v$. Some of these distributions work very nicely when taking limits of the stochastic matrix: Suppose $v$ is a left eigenvector of $v$ ($vP = v$), which also defines an initial distribution ($\sum v_i = 1$, and each $v_i \geq 0$). Then $vP^n = v$, and thus $\lim_{n \to \infty} vP^n = \lim_{n \to \infty} v = v$, and so $v$ is the limiting distribution of the Markov chain it generates. In the matrix in the last example, we see that $v$ must be equal to the row repeated in the limiting matrix. Identifying these vectors therefore seems important in order to identify the limiting distribution of the matrix.
-
-\begin{definition}
-    Fix a stochastic matrix $P$. A {\bf invariant probability distribution} for $P$ is a positive row vector $v$ whose coordinates sum to one, such that $vP = v$. Note that this is simply a left eigenvector of eigenvalue 1.
-\end{definition}
-
-Now suppose $P$ is a stochastic, positive matrix. Then we may apply Perron-Frobenius to $P^t$, obtaining a Perron root $\lambda$. Now every eigenvalue of $P^t$ is an eigenvalue for $P$, so that $\lambda$ must also be the Perron root for $P$ as well. Then $(1,1,\dots,1)^t$ is a right eigenvector for $P$ of eigenvalue 1, which implies that $\lambda = 1$. Thus $P$ can be modified, under some change of basis matrix $Q$, such that
-%
-\[ QPQ^{-1} = \begin{pmatrix} 1 & \mathbf{0} \\ \mathbf{0} & \mathbf{M} \end{pmatrix} \]
-%
-Where $\mathbf{M}$ is a square matrix such that $\lim_{n \to \infty} \mathbf{M}^n = 0$ (Use the Jordan Canonical Form, and the fact that 1 is the maximal eigenvalue). But then
-%
-\[ \lim_{n \to \infty} P^n = Q^{-1} (\lim_{n \to \infty} QPQ^{-1}) Q = Q^{-1} \begin{pmatrix} 1 & \mathbf{0} \\ \mathbf{0} & \mathbf{0} \end{pmatrix} Q = \begin{pmatrix} \pi \\ \vdots \\ \pi \end{pmatrix} \]
-%
-where $\pi$ is a row vector which sums to one -- an invariant probability vector for $P$. Note that since the left eigenvector is an invariant probability, this left eigenvector is exactly $\pi$, so we need only find a positive normalized left eigenvector to eigenvalue 1.
-
-This argument can be considerably strengthened from the fact that the argument above works if $P$ is any stochastic matrix with $P^n$ positive, for some $n$, because the eigenvalue of $P^n$ are simply the eigenvalues of $P$ to the power of $n$, as are the eigenvectors. Since we know 1 is the Perron root of $P^n$ (since $P^n$ is stochastic), 1 is a maximal eigenvalue for $P$ as well, and that if we pick an eigenvector $v$ for $P$ of eigenvalue 1, then $v$ is also an eigenvector for $P^n$, and thus we may multiply $v$ by a scalar such that all entries are positive.
-
-Our problem thus reduces to finding those stochastic matrices $P$ for which $P^n$ is positive, for some $n$. In the terms of a time homogenous markov-chain, for some $n$, and for any states $s,m$, we have
-%
-\[ \mathbf{P}(X_n = s\ | X_0 = m) > 0 \]
-%
-This will reduce to two concepts, that of periodicity and irreducibility.
+Our problem thus reduces to classifying those stochastic matrices $P$ for which $P^n$ is positive, for some $n$. This property will reduce to recognizing two concepts, that of periodicity and irreducibility.
 
 \begin{definition}
     Let $s,m \in \mathcal{S}$ be two states in an arbitrary Markov chain. We say $s$ communicates with $m$ if there is some $n$ with $\mathbf{P}(X_n = s | X_0 = m) > 0$. If we divide $\mathcal{S}$ into classes of states, all of which communicate between one another, then we obtain a set of {\bf communication classes}. A Markov chain with one communication class is {\bf irreducible}.
 \end{definition}
 
-\begin{definition}
-    For any $s \in \mathcal{S}$, let $\mathcal{J}(s) = \{ n \in \mathbf{N} : \mathbf{P}(X_n = s\ | X_0 = s) > 0 \}$. Then $\mathcal{J}(s)$ is closed under addition. The greatest common divisor of $\mathcal{J}(s)$ is known as the {\bf period} of $s$. A Markov chain for which every state has period one is known as {\bf aperiodic}.
-\end{definition}
-
-\begin{theorem}
-    If $s$ and $m$ are in the same communication class, then the period of $s$ is the same as the period of $m$.
-\end{theorem}
-
-\begin{theorem}
-    If the period of a state $s$ is $m$, then for some $M$, if $n > m$, and $n | m$, then $n \in \mathcal{J}(s)$.
-\end{theorem}
-
-\begin{theorem}
-    Let $P$ be a stochastic matrix, which determines an aperiodic, irreducible Markov chain. Then there is a unique vector $\pi$ for which $\pi P = P$, and for any other probability distribution $v$, $\lim_{n \to \infty} vP^n = \pi$.
-\end{theorem}
-\begin{proof}
-    We just need to verify that $P^n$ is positive for some $n$. Since $P$ is aperiodic, there is $m$ for each $i$ such that $P^n_{ii} > 0$ for $n > m$. Taking $M = \max_i(m)$, we get $P^M_{ii} > 0$ for all choices of $i$. If $P^m_{ij} > 0$, for some $m$, and $m > M$, then FINISH PROOF LATER.
-\end{proof}
-
-This effectively completes our understanding of the asymptotic behaviour of these types of Markov chains. We can obtain more general results by further classifying the communication states of a state space. One way this can be done by understanding how often a state returns to itself, or to other states.
-
-\begin{definition}
-    Let $\{ X_i \}$ be a Markov chain. Fix some state $s \in \mathcal{S}$. Define a new random variable $H_s$, on the same probability space as the $X_i$ by the formula
-    %
-    \[ H_s(\omega) := \inf_i(X_i(\omega) = s) \]
-    %
-    This is known as the hitting time of the chain. Fix a state $s \in \mathcal{S}$.
-    %
-    \begin{enumerate}
-        \item We say $s$ is {\bf recurrent} if $\mathbf{P}(H_s = \infty | X_0 = s) = 0$.
-        \item $s$ is {\bf transient} if it is not recurrent: $\mathbf{P}(H_s = \infty | X_0 = s) > 0$.
-    \end{enumerate}
-\end{definition}
-
-\begin{lemma}
-    Let $s,m$ be two states in the same communication class. Then $s$ is recurrent if and only if $m$ is.
-\end{lemma}
-
-This means we may divide the communication classes of a Markov chain up into recurrent classes, and transient classes. $\mathcal{S} = \bigcup \mathcal{R} \cup \bigcup \mathcal{T}$, where each $R \in \mathcal{R}$ is recurrent, and each $T \in \mathcal{T}$ is transient. For any $R \in \mathcal{R}$, and $n$, $\mathbf{P}(X_n \not \in R | X_0 \in R) = 0$, since otherwise
-%
-\[ \mathbf{P}(\{ \omega: \forall k > m: X_k(\omega) \not \in R \} | X_0 \in R ) = \mathbf{P}(\{  \}) \]
-
-then $R_i$ would be transient (there is no way for our process to reenter $R_i$ afterward). Thus if we consider our stochastic matrix $P$, and consider only the entries involving elements of $R_i$, we obtain a submatrix $P_i$ which itself is stochastic. By reordering the entries of $P$, we may assume
+We can further classify the communication classes of a reducible markov chain by looking at one-sided communication. A state $x$ may communicate with a state $y$ without the converse being true. A communication class which only communicates with itself is know as {\bf recurrent} whereas if a communication class communicates with other classes, it is known as {\bf transient}. By reordering the entries of $P$, we may assume
 %
 \[ P = \begin{pmatrix} P_1 & 0 & \dots & 0 \\ 0 & P_2 & \ddots & 0 \\ \vdots & \vdots & \ddots & 0 \\ 0 & \dots & P_n & 0 \\ \dots & S_1 & \dots & Q \end{pmatrix} \]
 %
@@ -289,8 +241,830 @@ And for any $m$,
 %
 \[ P^m = \begin{pmatrix} P_1^m & 0 & \dots & 0 \\ 0 & P_2^m & \ddots & 0 \\ \vdots & \vdots & \ddots & 0 \\ 0 & \dots & P_n^m & 0 \\ \dots & S_m & \dots & Q^m \end{pmatrix} \]
 %
-We can work with each $P_i$ as if it were its own stochastic process, and then put them together to form a stochastic process in full. For instance, assuming each $P_i$ is aperiodic, we can find an invariant probability $\pi_i$ for $P_i$. Swapping $P_i$ out for $\lim_{n \to \infty} P^n$, we obtain the first part of convegence. Secondly, note that if $s$ is a transient state, then any chain that starts at $s$ must end up in a recurrent state (for otherwise it would keep up ending up in different transient states, and then one of these must return to itself with probability 1). Thus if $j$ is any other transient state, then $\lim_{n \to \infty} \mathbf{P}(X_n = j | X_0 = i) = 0$. Let $\alpha_k(i)$ be the probability that a chain starting in state $i$ eventually ends up in recurrence class $R_k$. Once a chain ends up in $R_k$, it will settle down to the equilibrium distribution on $R_k$. If $j \in R_k$, then
+We can work with each $P_i$ as if it were its own stochastic process, and then put them together to form a stochastic process in full. We leave the analysis of the transient classes till later, and from now on assume an irreducible chain.
+
+\begin{definition}
+    For any $s \in \mathcal{S}$, let $\mathcal{J}(s) = \{ n \in \mathbf{N} : \mathbf{P}(X_n = s\ | X_0 = s) > 0 \}$. Then $\mathcal{J}(s)$ is closed under addition. The greatest common divisor of $\mathcal{J}(s)$ is known as the {\bf period} of $s$. A Markov chain for which every state has period one is known as {\bf aperiodic}.
+\end{definition}
+
+Note that two states in the same communication class share a common period. Thus we may talk about the periodicity of a irreducible markov chain.
+
+\begin{theorem}
+    If $p$ is the period of a state $s$, then all but finitely many of $\{ 0, p, 2p, \dots \}$ are contained in $\mathcal{J}(s)$.
+\end{theorem}
+\begin{proof}
+    We note that the set above has the property that if $x,y \in \mathcal{J}(s)$, then $x + y \in \mathcal{J}(s)$, so that $\mathcal{J}(s)$ forms a commutative semigroup. It follows that, if $a,b > 0$, then $ax + by \in \mathcal{J}(s)$. Let $p = \sum a_i d_i$, for $a_i \in \mathbf{Z}$, $d_i \in \mathcal{J}(s)$. Let $M = \sum |a_i| d_i^2$. Then $M \in \mathcal{J}(s)$, and
+    %
+    \[ M + kp = \sum_i (|a_i|d_i + ka_i) d_i \]
+    %
+    Provided $k < \min(d_i)$, then $M + kp \in \mathcal{J}(s)$. Let $d_j = \min(d_i)$. If $k = d_j$, then
+    %
+    \[ M + d_j p = \left( \sum_{i \neq j} |a_i|d_i^2 \right) + (|a_i|d_i + p)d_i \]
+    %
+    All the coefficients of the $d_i$ are positive, so $M + d_j p \in \mathcal{J}(s)$. In general, every integer $m$ can be written as $nd_j + m$, where $m < d_j$. Repeating the argument above, adding $n$ factors to $d_j$, we conclude $M + mp \in \mathcal{J}(s)$.
+\end{proof}
+
+\begin{theorem}
+    Let $P$ be a stochastic matrix, which determines an aperiodic, irreducible Markov chain. Then there is a unique vector $\mu$ for which $\mu P = P$, and for any other probability distribution $\pi$, $\lim_{n \to \infty} \pi P^n = \mu$.
+\end{theorem}
+\begin{proof}
+    We just need to verify that $P^n$ is a positive matrix for a large enough $n$. Since $P$ is aperiodic, for large enough $m$, $P^m_{ii} > 0$ for all $i$. If $j \neq i$, there is some $k$ for which $P^k_{ij} > 0$. Then, for large enough $m$, $P^m_{ij} > 0$, since
+    %
+    \[ P^m_{ij} \geq P^{k}_{ij} P^{m-k}_{ii} > 0 \]
+    %
+    Taking $m$ large enough so that the argument above works for all $i$ and $j$, we find $P^m_{ij} > 0$ for all $i,j$. It follows that we may apply Perron-Frobenius to $P^m$, and we find our invariant distribution.
+\end{proof}
+
+\begin{corollary}
+    On every aperiodic, irreducible Markov chain there exists a unique stationary distribution.
+\end{corollary}
+
+We call an irreducible, aperiodic Markov chain {\bf ergodic}, which is why the theorem is known as the ergodic theorem for Markov chains. An ergodic chain is a chain with enough `mixing' to generate an invariant distribution for the process.
+
+The advantage of the above result is we may proceed brashly in derivations. First, we show that a chain is aperiodic and irreducible. Then we find a stationary distribution, and conclude that this is the limiting distribution.
+
+\begin{example}
+    Let us consider the asymptotics of a two state markov chain. Consider a transition matrix
+    %
+    \[ P = \begin{pmatrix} 1-p & p \\ q & 1-q \end{pmatrix} \]
+    %
+    If $p = 0$ and $q = 0$, the chain is reducible (the two states never change). If $p = 1$ and $q = 1$, then the chain is periodic, swinging back and forth deterministically between the two states. In any other case, the markov chain is ergodic, and we can determine the invariant distribution. If $\mu = (\mu_1, \mu_2)$ is an initial distribution, then
+    %
+    \[ \mu P = ((1-p)\mu_1 + q\mu_2, p\mu_1 + (1-q)\mu_2) \]
+    %
+    To find a stationary distribution, we try and equate $\mu P = \mu$. So
+    %
+    \[ (1-p)\mu_1 + q\mu_2 = \mu_1\ \ \ \ \ p\mu_1 + (1-q)\mu_2 = \mu_2 \]
+    %
+    Since $\mu_2 = 1 - \mu_1$, we may manipulate the equations to show
+    %
+    \[ \mu_1 = \frac{q}{p + q} \ \ \ \ \ \mu_2 = \frac{p}{p+q} \]
+    %
+    And this is the limiting distribution of the chain.
+\end{example}
+
+\section{Potentials: Unique Invariant Probabilities}
+
+There is another way to derive the uniqueness of invariant distributions that is of interest. Recall that an invariant probability is a function $\mu$ for which $\mu P = \mu$, so that $\mu$ is a left eigenvector for $P$. There is a one-to-one correspondence between left eigenvectors of $P$ and right eigenvectors of $P$. We shall determine the uniqueness of invariant probabilities by analyzing the right eigenvectors. Strangely, the proof mimics the analysis of complex differentiable functions.
+
+\begin{definition}
+    A function $\mu$ on states is harmonic with respect to a transition matrix $P$ if $P\mu = \mu$. In other words, the average value of $\mu$ beginning from a certain state is not affected by a transition period.
+\end{definition}
+
+\begin{lemma}
+    A harmonic function on an irreducible markov chain is constant.
+\end{lemma}
+\begin{proof}
+    Let $s_0$ be the state upon which $\mu(s_0)$ attains its maximal value. If $P(s_0, s) > 0$, then it cannot be true that $\mu(s) < \mu(s_0)$, for
+    %
+    \[ P\mu(s_0) = \sum_x P(s_0,x) \mu(x) = \mu(s_0) \]
+    %
+    Yet if $\mu(s) < \mu(s_0)$,
+    %
+    \begin{align*}
+        \sum_x P(s_0,x) \mu(x) &= \sum_{x \neq s} P(s_0, x) \mu(x) + P(s_0,s) \mu(s)\\
+        &\leq (1 - P(s_0,s)) \mu(s_0) + P(s_0, s) \mu(s) < \mu(s)
+    \end{align*}
+    %
+    So on the connected component of $s_0$, the function must be constant. Since an irreducible markov chain consists of one connected component, $\mu$ must be constant.
+\end{proof}
+
+\begin{corollary}
+    The invariant probability vector for a irreducible process is unique.
+\end{corollary}
+\begin{proof}
+    The dimension of the eigenspace of $P$ with eigenvalue 1 is one-dimensional -- and thus the invariant probability is unique if it exists, which we have already verified.
+\end{proof}
+
+The theorem above is an analogy of the maximum modulus principle of complex analysis -- which states that, if a function attains its maximum value on an open set, the function must be constant on the connected component upon which it is defined. Classically, electromagnetics modelled the electrical potential in space by such a harmonic function. In the continuous case, the charge distributes itself across the entire space. I the discrete case, the electric potential must occur at one of the points where the electrical flows, so the flow must be constant throughout -- provided we are working in a connected space; all the wires in the circuit are connected, or the markov chain is irreducible.
+
+\section{Periodicity and Average State Distributions}
+
+If a chain has period greater than one, say of period $n$, then the limiting properties of the process are not so simple. We may divide the states into a partition $K_1, K_2, \dots, K_n$, for which states in $K_i$ can only transition to states in $K_{i+1}$, or from $K_n$ to $K_1$. If we only look at the time epochs $t_1, t_2, \dots$ where the chain is guaranteed to be in a certain partition, then we obtain an aperiodic markov chain, which in the irreducible case reduces to invariant distributions on the states. If our chain has period $m$, our chain converges to $m$ distributions $\mu_{t_1}, \dots, \mu_{t_m}$. The limit $\lim_{n \to \infty} \mu P^n$ may not exist, but the chebyshev limit
 %
-\[ \lim_{n \to \infty} \mathbf{P}(X_n = j | X_0 = i) = \alpha_k(i)\pi_k(j) \]
+\[ \lim_{n \to \infty} \frac{\sum_{k = 0}^n \mu P^n}{n} = \mu \lim_{n \to \infty} \frac{\sum_{k = 0}^n P^n}{n} = \frac{\mu_{t_1} + \dots + \mu_{t_m}}{m} \]
+%
+will always exists. It represents the overall, accumulated average of which states we visit over the whole time period the chain is ran for.
+
+\begin{example}
+    Take a markov chain of period 2, with transition matrix
+    %
+    \[ P = \begin{pmatrix} 0 & 1 & 0 & 0 & 0 \\ 1/2 & 0 & 1/2 & 0 & 0 \\ 0 & 1/2 & 0 & 1/2 & 0 \\ 0 & 0 & 1/2 & 0 & 1/2 \\ 0 & 0 & 0 & 1 & 0 \end{pmatrix} \]
+    %
+    We may diagonalize this matrix, letting $P = QDQ^{-1}$, where
+    %
+    \[ Q = \begin{pmatrix} 1 & 1 & -1 & -1 & 1 \\ -1 & 1 & 1/\sqrt{2} & -1/\sqrt{2} & 0 \\ 1 & 1 & 0 & 0 & -1 \\ -1 & 1 & -1/\sqrt{2} & 1/\sqrt{2} & 0 \\ 1 & 1 & 1 & 1 & 1 \end{pmatrix}\ \ \ \ \ D = \begin{pmatrix} -1 & 0 & 0 & 0 & 0 \\ 0 & 1 & 0 & 0 & 0 \\ 0 & 0 & -1/\sqrt{2} & 0 & 0 \\ 0 & 0 & 0 & 1/\sqrt{2} & 0 \\ 0 & 0 & 0 & 0 & 0 \end{pmatrix} \]
+    %
+    Taking matrix limits, we see that only the first two rows of $D$ become relavant far into the future, so that for large $n$, for any $\mu$,
+    %
+    \[ P^n \approx \begin{pmatrix} 1/8 & 1/4 & 1/4 & 1/4 & 1/8 \\ 1/8 & 1/4 & 1/4 & 1/4 & 1/8 \\ 1/8 & 1/4 & 1/4 & 1/4 & 1/8 \\ 1/8 & 1/4 & 1/4 & 1/4 & 1/8 \\ 1/8 & 1/4 & 1/4 & 1/4 & 1/8 \end{pmatrix} + (-1)^n \begin{pmatrix} 1/8 & -1/4 & 1/4 & -1/4 & 1/8 \\ -1/8 & 1/4 & -1/4 & 1/4 & -1/8 \\ 1/8 & -1/4 & 1/4 & -1/4 & 1/8 \\ -1/8 & 1/4 & -1/4 & 1/4 & -1/8 \\ 1/8 & -1/4 & 1/4 & -1/4 & 1/8 \end{pmatrix} \]
+    %
+    On even states, $P^n$ converges to a different matrix than on odd states. Nonetheless, the Chebyshev limit exists for any distribution $\mu$, and is given by
+    %
+    \[ \frac{1}{2}[(1/4, 0, 1/2, 0, 1/4) + (0, 1/2, 0, 1/2, 0)] = (1/8, 1/4, 1/4, 1/4, 1/8) \]
+    %
+    This is not the distribution at a certain time point, but the distribution of averages over a long time period.
+\end{example}
+
+For instance, if $\{X_i\}$ is a irreducible markov chain, we would like to know the proportional number of times a certain state $x$ is visited. We would like to determine the expected value of
+%
+\[ S_x = \lim_{n \to \infty} \sum_{k = 0}^n \frac{\mathbf{I}(X_k = x)}{n}  \]
+%
+\[ \mathbf{E}(S_x) = \lim_{n \to \infty} \sum_{k = 0}^n \frac{1}{n} \mathbf{E}(\mathbf{I}(X_k = x)) = \lim_{n \to \infty} \sum_{k = 0}^n \frac{\mathbf{P}(X_k = x)}{n} \]
+%
+And this is just the invariant probability of the process -- the Chebyshev limit.
+
+\section{Stopping Times}
+
+We would like to finish our discussion of finite state space Markov chains by analyzing a certain class of random variables -- representing the time at which a certain event happens.
+
+\begin{definition}
+    A {\bf Stopping Time} for a process $\{ X_0, X_1, \dots \}$ is a $\mathbf{Z} \cup \{ \infty \}$ valued random variable $\tau$, such that, if we know the values of $X_0, \dots, X_n$, we can tell if $\tau = n$. Rigorously, $\mathbf{I}(\tau = n)$ is a function of the $X_0, \dots, X_n$.
+\end{definition}
+
+A stopping time basically encapsulates a decision process. After observing the $X_0, \dots, X_n$, we decide whether we want to finish observing the Markov process. We can't look into our future, and must decide at that time point to leave.
+
+\begin{example}
+    Let $\{ X_0, X_1, \dots \}$ be a stochastic process on a state space $\mathcal{S}$. Fix a state $s$, and define the {\bf hitting time} $\tau_s$ to be
+    %
+    \[ \tau_s = \min \{ n : X_n = s \} \]
+    %
+    Since $\mathbf{I}(\tau_s = n) = \mathbf{I}(X_0 \neq s, \dots, X_{n-1} \neq s, X_n = s)$, this is a stopping time.
+\end{example}
+
+\begin{example}
+    Let $\{ X_0, X_1, \dots \}$ be a stochastic process on a state space $\mathcal{S}$. Fix a state $s$, and suppose that $\mathbf{P}(X_0 = s) = 1$. The {\bf return time} $\rho_s$ of the process is defined
+    %
+    \[ \rho_s = \min \{ n \geq 1 : X_n = s \} \]
+    %
+    And is a stopping time.
+\end{example}
+
+Since stopping times are valued on the time epochs upon which a process is defined, we can do interesting things to combine the time with the process. For instance, we may consider a random variable $X_{\tau}$. In the case that $\tau$ is the hitting or return time for a state $s$, then $X_{\tau} = s$. One wonders whether the Markov property behaves nicely with respect to a stopping time. This is the strong Markov property.
+
+\begin{definition}
+    let $\{ X_t \}$ be a markov process, and $\tau$ a stopping time. $X_t$ satisfies the {\bf strong Markov property} with respect to $\tau$, if, for $t_1 < \dots < t_n < \tau$,
+    %
+    \[ \mathbf{P}(X_\tau = y | X_{t_n} = x_n, \dots, X_1 = t_1) = \mathbf{P}(X_\tau = y | X_{t_n} = x_n) \]
+    %
+    In other words, $X_t$ forgets history with respect to the stopping time. By letting $\tau = n$ be a fixed integer, we obtain the normal markov property.
+\end{definition}
+
+\begin{theorem}
+    All discrete markov processes satisfies the strong markov property with respect to any stopping time.
+\end{theorem}
+\begin{proof}
+    Let $\{ X_0, X_1, \dots \}$ be a markov process, and $\tau$ a stopping time. Then, assuming $t_1 < \dots < t_n < \tau$
+    %
+    \begin{align*}
+        \mathbf{P}(X_\tau = y | X_{t_n} = x_n, \dots, X_{t_1} = x_1) &= \sum_{k = t_n + 1}^\infty \mathbf{P}(\tau = k) \mathbf{P}(X_k = y | X_{t_n} = x_n)\\
+        &= \mathbf{P}(X_\tau = y | X_{t_n} = x_n)
+    \end{align*}
+    %
+    So the process is strongly Markov.
+\end{proof}
+
+Let us use our tools to derive the expected return time $\mathbf{E}(\rho_s)$. First, let $\mathcal{J}_0 = 0$, $\mathcal{J}_1 = \rho_s$ and, more generally, define $\mathcal{J}_k$ to be the $k$'th time we return to $s$, $\mathcal{J}_k = \min \{ n > J_{k-1} : X_n = s \}$. Then the strong markov property shows $\mathcal{J}_{k+1} - \mathcal{J}_k$ are independant and identically distributed, by the law of large numbers, as $n \to \infty$,
+%
+\[ \sum_{k = 1}^n \frac{\mathcal{J}_k - \mathcal{J}_{k-1}}{n} = \frac{\mathcal{J}_n}{n} \to \mathbf{E}(\rho_s) \]
+%
+After a large enough $n$, each state will be approximately visited $n \mu_s$ times. Thus $\mathcal{J}_n \approx n/\mu_s$, and $\mathbf{E}(\rho_s) = 1/\mu_s$.
+
+Now we can analyze Markov chains with transient states. Recall that we can write the transition matrix of such a process as
+%
+\[ P = \begin{pmatrix} P_1 & 0 & \dots & 0 \\ 0 & P_2 & \ddots & 0 \\ \vdots & \vdots & \ddots & 0 \\ 0 & \dots & P_n & 0 \\ \dots & S_1 & \dots & Q \end{pmatrix} \]
+%
+We have $Q^n \to 0$ as $n \to \infty$, since we are guarenteed to leave a transient state and never return.
+
+All eigenvalues of $Q$ are less than one in absolute value, so $I - Q$ is invertible. A small computation shows that
+%
+\[ \sum_{k = 0}^\infty Q^k = (I - Q)^{-1} \]
+%
+provided the sum on the right converges, which it must, since the series converges absolutely (and the space is Banach). $Q^k_{ij}$ is the probability that $X_k = x_j$ given $X_0 = x_i$, so $(\sum_{k = 0}^n Q^k)_{ij}$ is the expected number of visits to $x_j$ from time epoch $n$ starting from $x_i$. Taking $n \to \infty$, we find the expected number of visits to the state before hitting a recurrent state is $(I - Q)^{-1}_{ij}$. If we sum up row $i$, we get the expected number of states before hitting a recurrent state starting from $i$.
+
+We can also use this method in an irreducible chain to find the expected time to reach a state $x_j$ starting at $x_i$, for $i \neq j$. We modify the Markov process by making it impossible to leave $x_j$ once it has been entered. This makes all other states transient. Then the expected number of visits before enterring a recurrent state is the expected number of states until we hit $x_j$.
+
+How about determining the probability of entering a specific recurrent class starting from a transient state. To simplify our discussion, let each recurrent class consist of a single vertex, whose probability of return to itself equals 1. First, to simplify the situation, assume each recurrent class consists of a single vertex (we may `shrink' any Markov process so that each class consists of a single vertex for our situation). For each transient $x$ and recurrent $y$, let $\alpha(x,y)$ be the probability of ending up at $y$ starting at $x$. We have
+%
+\[ \alpha(x,y) = \sum_{z\ \text{transient}} P(x, z) \alpha(z,y) + P(x, y) \]
+%
+Let $\{ x_1, \dots, x_n \}$ be the recurrent states of the process, and $\{ y_1, \dots, y_m \}$ the transient states. If we define a matrix $A_{ij} = \alpha(x_i, y_j)$, then the equation above tells us that $A = S + QA$, where we write
+%
+\[ P = \begin{pmatrix} 1 & \dots & 0 & 0 \\ 0 & \ddots & 0 & 0 \\ 0 & 0 & 1 & 0 \\ \dots & S & \dots & Q \end{pmatrix} \]
+%
+Hence $(I - Q)A = S$, and so $A = (I - Q)^{-1}S$. This is the limiting values of $P^n$ on $S$ as $n \to \infty$.
+
+\begin{example}
+    Consider a gambler who's going `all in'. He won't leave without obtaining a certain amount of money $N$, unless he runs out of money and goes bust. We want to find out the probability that he will go home happy rather than broke. The situation of the gambler can be modelled by a random walk on $\{ 0,1, \dots, N \}$. We assume each integer represents how much money the gambler has at a certain time, and that each bet either costs or wins the gambler a single unit of money. If $p > 0$ is the probability of winning the bet, then the transition probabilities of the random walk are
+    %
+    \[ P(i,i+1) = p\ \ \ \ \ P(i,i-1) = (1 - p)\ \ \ \ P(0,0) = P(N,N) = 1 \]
+    %
+    This is a reducible markov chain with transient states. We are trying to determine the probability of entering the different recurrent classes, starting from a certain transient state $M$. Using our newly introduced technique, we write $\alpha(x,0)$ and $\alpha(x,N)$ to be the probabilities of going home rich or poor. The matrix notation is ugly for our purposes, so we just use the linear equations considered,
+    %
+    \[ \alpha(1,1) = p\alpha(2,0) \ \ \ \ \ \alpha(n-1,1) = p + (1-p)\alpha(n-1,1) \]
+    \[ \alpha(k,1) = p\alpha(k+1,1) + (1-p)\alpha(k-1,1) \]
+    %
+    These are a series of linear difference equations. If we assume $\alpha(k,0) = \beta^k$, then $\beta^k = p\beta^{k+1} + (1-p)\beta^{k-1}$. This equation has the solution $\beta = \left\{ 1, \frac{1-p}{p} \right\}$, and thus a general solution is of the form
+    %
+    \[ \alpha(k,1) = c_0 + c_1 \left( \frac{1-p}{p} \right)^k \]
+    %
+    The boundary conditions $\alpha(0,1) = 0$, $\alpha(N,1) = 1$ tells us that
+    %
+    \[ c_0 + c_1 = 0\ \ \ \ \ c_0 + c_1 \left( \frac{1-p}{p} \right)^N = 1 \]
+    %
+    So
+    %
+    \[ c_1 = \frac{1}{\left( \frac{1-p}{p} \right)^N - 1 }\ \ \ \ \ c_0 = \frac{1}{\left( 1 - \frac{1-p}{p} \right)^N} \]
+    %
+    And the general form is
+    %
+    \[ \alpha(k,1) = \frac{1 - \left( \frac{1-p}{p} \right)^k}{1 - \left( \frac{1-p}{p} \right)^N} \]
+    %
+    provided, of course, that $p \neq 1/2$. In this case, $1$ is a double roots of the characteristic equation, so
+    %
+    \[ \alpha(k,1) = c_0 + c_1 k \]
+    %
+    and $c_0 + c_1 = 0$, $c_0 + c_1 N = 1$, so $c_1 = \frac{1}{N-1}$,
+    %
+    \[ \alpha(k,1) = \frac{k-1}{N-1} \]
+\end{example}
+
+Our discussion of the classical theory of ergodic finite state space markov chain has been effectively completed.
+
+
+
+\chapter{Countable-State Markov Chains}
+
+\section{General Properties}
+
+Let us now consider time homogenous Markov chains on a countable state space. For instance, we may consider random walks on $\mathbf{N}, \mathbf{Z}$, and $\mathbf{Z}^2$. Most finite space techniques extend to the countable situation, but not all. We may continue to talk of irreducibility, periodicity, the Chapman Kolmogorov equation, communication, and the like. Recurrence and transcience is a little more cimplicated, since in a single `recurrence class' of infinite size, it may still be very rare for a state to return to itself.
+
+\section{Recurrence and Transience}
+
+We call a state {\bf recurrent} if the markov chain is almost certain to return to itself infinitely many times. If a state in a class is recurrent, all states in a class is recurrent, then all states in the same class are recurrent. A state is {\bf transient} if it is not recurrent. In the finite case, these new definitions agree with previous terminology.
+
+How do we reliably determine if a process is transient? Let $S_x$ be the total number of visits to $x$, assuming we start at $x$
+%
+\[ S_x = \sum \mathbf{I}(X_n = x) \]
+%
+Calculating recurrence reduces to calculating $\mathbf{P}(S_x = \infty)$. Since $S_x$ is a random variable, we can take expectations
+%
+\[ \mathbf{E}(S_x) = \sum_n \mathbf{P}(X_n = x | X_0 = x) = \sum_n P^n(x,x) \]
+%
+If $\mathbf{E}(S_x) < \infty$, then $\mathbf{P}(S_x < \infty) = 0$, so $x$ is transient. Consider the hitting time $\tau_x$. If $\mathbf{P}(\tau_x < \infty) = 1$, then by time homogeneity we conclude that $x$ is hit infinitely many times. Suppose instead that $\mathbf{P}(\tau_x < \infty) = q < 1$. We have $\mathbf{P}(S_x = m) = q^{m-1}(1-q)$. Thus
+%
+\[ \mathbf{E}(S_x) = \sum_{m = 1}^\infty m \mathbf{P}(S_x = m) = \sum_{m = 1}^\infty mq^{m-1}(1 - q) = \frac{1}{1-q} < \infty \]
+%
+Hence a state is transient if and only if the expected number of returns is finite, that is,
+%
+\[ \sum_{n = 0}^\infty P^n(x,x) < \infty \]
+
+\begin{example}
+    Let us find whether symmetric random walk on $\mathbf{Z}$ is recurrent or symmetric. The chain is irreducible, so we only need determine the transience of a single point, say, 0. The number of paths from 0 to itself of length $2n$ is the number of choices of $n$ down movements given $2n$ ups and downs, so
+    %
+    \[ \mathbf{P}(X_{2n} = 0 | X_0 = 0) = \frac{\binom{2n}{n}}{2^{2n}} = \frac{(2n)!}{(n!)^2 4^n} \]
+    %
+    For large $n$, Stirling's formula tells us that $n! \approx \sqrt{2 \pi n} \left( \frac{n}{e} \right)^n$, so
+    %
+    \[ \mathbf{P}(X_{2n} = 0 | X_0 = 0) \approx \sqrt{\frac{1}{\pi n}} \left( \frac{2n}{e} \right)^{2n} \left( \frac{e}{n} \right)^{2n} 4^{-n} = \sqrt{\frac{1}{\pi n}} \]
+    %
+    Since $\sum (\pi n)^{-1/2} \to \infty$, so must our sum, so the process is recurrent.
+
+    Now take a random walk on $\mathbf{Z}^d$. The number of paths from 0 to itself of length $2n$ is
+    %
+    \[ \sum_{2k_1 + \dots + 2k_n = 2n} \binom{2n}{2k_1, \dots, 2k_d} = \sum_{k_1 + \dots + k_d = n} \frac{(2n)!}{(2k_1)! \dots (2k_d)!} \]
+    %
+    FINISH HERE
+    %
+    and the walk is recurrent for $d \leq 2$, and transient for $d > 2$.
+\end{example}
+
+Here's yet another method for determining recurrence. Fix a state $y$ on an irreducible markov chain, and define $\alpha(x) = \mathbf{P}(X_n = y\ \text{for some}\ n \geq 0 | X_0 = x)$. Then $\alpha(y) = 1$, and $\alpha(x) = \sum P(x,z) \alpha(z)$ for $z \neq y$. If the chain is recurrent, then $\alpha(z) = 1$ for all $z$. Less obviously, if $y$ is a transient state, $\inf \{ \alpha(z) \} = 0$. We shall prove later that if $y$ is recurrent, there is no solution $\alpha$ with these properties, and if $y$ is transient, $\alpha$ exists, and is unique.
+
+Even if a chain is recurrent, an invariant distribution may not exist, due to the fact that we have an infinite number of states to work around. Let's specialize again. A chain is {\bf null recurrent} if it is recurrent, but $\lim_{n \to \infty} P^n(x,y) = 0$, and is {\bf positive recurrent} otherwise. An invariant probability is a function $\mu$ for which $\mu P = \mu$. We won't show it, but every irreducible, aperiodic, positive recurrent Markov chain has a distribuition $\mu$. Moreover, such a chain is positive recurrent if and only if its has an invariant distribution $\mu$. The return time $\tau_x$ has $\mathbf{E}(\tau_x | X_0 = x) = 1/\mu(x)$. For null recurrent chains, $\mathbf{E}(\tau_x | X_0 = x) = \infty$.
+
+\begin{example}
+    Let us derive the equations for a random walk on $\mathbf{Z}$. We have $P(x,x-1) = q$, and $P(x,x+1) = 1-q$, for some fixed $0 \leq q \leq 1$. We attempt to solve the equations to determine that the chain is recurrent.
+    %
+    \[ \alpha(x) = q \alpha(x+1) + (1 - q)\alpha(x-1) \]
+    %
+    Using the rules of linear difference equations, if $\alpha$ exists, it satisfies $\alpha(x) = \beta^x$. We have
+    %
+    \[ \beta^x = q\beta^{x+1} + (1-q)\beta^{x-1} \]
+    %
+    \[ q\beta^2 - \beta + (1 - q) = 0 \]
+    %
+    \[ \beta = \frac{1 \pm \sqrt{1 - 4q(1-q)}}{2q} = \frac{1 \pm (2q - 1)}{2q} = \left\{ 1, \frac{1-q}{q} \right\} \]
+    %
+    Thus $\alpha(x) = c_0 + c_1 \left( \frac{1-q}{q} \right)^x$
+    %
+    If $q < 1/2$, $c_1 = 0$ because $\alpha$ must be bounded. But then $\alpha(0) = 1$, so $c_0 = 1$, and this contradicts that $\inf \alpha(x) = 0$. Hence the process is recurrent. For $q > 1/2$, we may pick $c_1 = 1$, so the process is recurrent. For $q = 1/2$, we have $\alpha = c_0 + c_1 t$, which cannot be bounded, so the process is recurrent.
+
+    Let us try and determine if the random walk is positive or null recurrent for $q \leq 1/2$. We need $\mu$ with $\sum \mu(x) = 1$, and $\sum \mu(x) P(x,y) = \mu(y)$. In this example we therefore need
+    %
+    \[ \mu(x-1) q + \mu(x+1)(1 -q) = \mu(x) \]
+    %
+    \[ q\lambda^{x-1} + (1 - q)\lambda^{x+1} = \lambda^x \]
+    %
+    \[ \mu(x) = c_0 + c_1 \left( \frac{q}{1-q} \right)^x \]
+    %
+    We must have $c_0 = 0$, and $c_1 > 0$. If $q = 1/2$, we cannot solve for $\mu$, so the chain must be null recurrent. For $q < 1/2$ we find that
+    %
+    \[ \sum_{x = -\infty}^\infty \left( \frac{q}{1-q} \right)^x = \sum_{x = 0}^\infty \left( \frac{q}{1-q} \right)^x + \sum_{x = 0}^\infty \left( \frac{1-q}{q} \right)^x - 1 \]
+    %
+    This is infinite, so the process is null recurrent.
+\end{example}
+
+\section{Branching Processes}
+
+Victorian upper-class culture strongly valued history and heritage. It was therefore a concern to these people when it was noticed that venerable surnames were dying out. If a male dies without producing a male heir, then a branch disappears from the family tree. If no males produce an heir in a generation, then the name completely dies out. Some believed that the exceeding comfort of upper-class life encouraged sterility, and that soon lower-classes would dominate England. Worried about this problem, the polymath Francis Galton put up a bulletin in ``The Educational Times'', challenging mathematicians to determine the cause of the problem. The reverend Henry William Watson took him up on this offer, and together they attempted a probabilistic analysis of the problem.
+
+Galton and Watson represented the spread of families by a succeeding discrete number of generations $X_0, X_1, \dots$, where the initial generation $X_0$ produces the offspring $X_1$, which produces the offspring $X_2$, and so on, through the ages. Each time epoch will represent a generation of a species, so that at each time interval, offspring are generated, and the current population dies off. Though it may seem a simplification to assume that generations do not overlap, assuming that each offspring reproduces independently, one can just consider the process as a family tree, independent of time. $X_0$ just represents the initial roots of the tree, $X_1$ represents the offspring on the first layer of the tree, and so on and so forth, regardless of which order they came into being.
+
+We now make the assumption that each member of the species, regardless of which generation the species is in, has an equal chance of producing offspring, and that the population produces asexually and independantly -- considering only men as heirs to the family results in asexual reproduction. The first assumption is obviously not true over a long time period, but given that the probabilites do not seem to change too rapidly over direct successions, our results should not alter too much. These assumptions are equivalent to saying that $X_t$ is a Markov chain with a certain probability transition function, which we shall now define.
+
+\begin{definition}
+    Fix some distribution $p$ over $\mathbf{N}$, and initial population distribution $X_0$, also over $\mathbf{N}$. We define a stochastic process $\{ X_i \}$ by defining the transition probabilities
+    %
+    \begin{equation} \label{branch1} \mathbf{P}(X_{t+1} = m | X_t = n) = (p * p * \dots * p)(m) \end{equation}
+    %
+    Where $(p * p * \dots * p)$ is the $n$-fold convolution of $p$. More vicerally, one can define $n$ independant random variables $Y_1, \dots, Y_n \sim p$, and define
+    %
+    \begin{equation} \label{branch2} \mathbf{P}(X_{t+1} = m | X_t = n) = \mathbf{P}\left( \sum_{i = 1}^n Y_i = m \right) \end{equation}
+    %
+    The Markov chain created is known as a {\bf Branching Process}.
+\end{definition}
+
+We shall start by understanding the evolution of the mean size of the population. Let $\mu$ denote the mean offspring a single individual will possess. Then we conclude by $(\ref{branch2})$ that
+%
+\begin{equation} \label{branchcondexp} \mathbf{E}(X_{t+1} | X_t = k) = \mathbf{E}\left(\sum_{i = 1}^k Y_i\right) = \sum_{i = 1}^k \mathbf{E}(Y_i) = k \mu \end{equation}
+%
+\begin{equation} \mathbf{E}(X_{t+1}) = \mathbf{E}[\mathbf{E}(X_{t+1} | X_t)] = \sum_{k = 0}^\infty \mathbf{P}(X_t = k) (k \mu) = \mu \mathbf{E}(X_t) \end{equation}
+%
+And therefore $\mathbf{E}(X_k) = \mu^k \mathbf{E}(X_0)$. We can already conclude from these calculations the intuitive fact that
+%
+\begin{enumerate}
+    \item If $\mu < 1$, then the average population tends to extinction.
+    \item If $\mu = 1$, the average population is maintained.
+    \item If $\mu > 1$, the average population becomes unbounded.
+\end{enumerate}
+%
+It shall turn out that extinction is guarenteed even in the case that $\mu = 1$.
+
+Regardless of your average population growth, provided $p_0 > 0$ there is a chance that the population will eventually become extinct.The problem in this section will be in deriving this probability in terms of the reproduction probabilities. Let $a_n(k)$ denote the probability of extinction after $n$ generations given that we start with $k$ individuals. Then, as we have derived above, the possibility of general extinction from $k$ individuals is $a(k)=\lim_{n \to \infty} a_n(k)$. Since all $k$ branches of the population act independantly, we have $a_n(k) = a_n(1)^k$, and it suffices to determine $a(1)$, which we shall denote by $a$. If we look one generation ahead, then
+%
+\begin{align} a &= \mathbf{P}(\text{extinction}|X_0 = 1)\\
+&= \label{branchgenfunction} \sum_{k = 0}^\infty \mathbf{P}(X_1 = k | X_0 = 1) \mathbf{P}(\text{extinction}| X_1 = k) = \sum_{k = 0}^\infty p_k a^k \end{align}
+%
+Thus $a = \varphi(a)$, where $\varphi$ is the generating function of $X_1$, assuming $X_0 = 1$. Since $z > 0$ implies
+%
+\[ \varphi'(z) = \sum_{k = 0}^\infty k p_k z^{k-1} > 0 \]
+%
+We know that $\varphi$ is monotonically increasing on the positive numbers. If we let $\varphi_n$ be the generating function of $X_n$, then
+%
+\begin{align*} \varphi_n(z) &= \sum_{k = 0}^\infty \mathbf{P}(X_n = k) z^k = \sum_{k = 0}^\infty \sum_{j = 0}^\infty \mathbf{P}(X_1 = j) \mathbf{P}(X_n = k | X_1 = j) z^k\\
+&= \sum_{j = 0}^\infty p_j \sum_{k = 0}^\infty \mathbf{P}(X_n = k | X_1 = j) z^k = \sum_{j = 0}^\infty p_j \sum_{k = 0}^\infty \mathbf{P}(X_{n-1} = k | X_0 = j) z^k \end{align*}
+%
+Now $\mathbf{P}(X_{n-1} | X_0 = j)$ is the distribution of the sum of $j$ independent random variables $Y_1, \dots, Y_j \sim \mathbf{P}(X_{n-1} | X_0 = 1)$, so that each has a generating function $\varphi_{n-1}$, and so, continuing the calculation
+%
+\begin{align}
+    \varphi_n(z) &= \sum_{j = 0}^\infty p_j \mathbf{E}(z^{X_{n-1}} | X_0 = j) = \sum_{j = 0}^\infty p_j \mathbf{E}(z^{X_{n-1}} | X_0 = 1)^j\\
+    &= \label{branchgencalculation} \sum_{j = 0}^\infty p_j \varphi_{n-1}(z)^j = \varphi(\varphi_{n-1}(j))
+\end{align}
+%
+Using (\ref{branchgencalculation}), we can recursively determine $a_n(1) = \mathbf{P}(X_n = 0 | X_0 = 1) = \varphi_n(0)$. We are now ready to show that $a$ is the smallest positive root of the equation $x = \varphi(x)$, assuming $a \neq 0$. Using (\ref{branchgenfunction}), we know $a$ is a root of this equation. Let $\hat{a}$ denote the least such positive root of the equation. We will verify that $a_n(1) \leq \hat{a}$. Certainly $a_0(1) = 0 \leq \hat{a}$. If $a_{n-1}(1) \leq \hat{a}$, then
+%
+\begin{equation} \label{branchinequality} a_n(1) = \varphi(\varphi_{n-1}(0)) = \varphi(a_{n-1}(1)) \leq \varphi(\hat{a}) = \hat{a} \end{equation}
+%
+Taking limits on (\ref{branchinequality}), we find $a \leq \hat{a}$. Thus, assuming $a > 0$, equality is obtained. We have deduced that
+
+\begin{theorem}
+    If $X_1, X_2, \dots$ is a branching process with reproduction probabilities $p$, and if $p_0 > 0$, then the extinction probability is the smallest positive root of $\varphi(z) = z$, where $\varphi(z) = \sum p_k z^k$.
+\end{theorem}
+
+Let's do some examples. Let $p_0 = 1/4$, and $p_2 = 3/4$. The extinction probability is the smallest positive root of $z = 1/4 + 3/4z^2$, which can be calculated by the quadratic formula to be $a = 1/3$. Let $p_0 = 1/2$, $p_1 = 1/4$, and $p_2 = 1/4$. The extinction probability is the smallest root of $z = 1/2 + 1/4 z + 1/4 z^2$. The roots of this equation are $1$ and $2$. Hence $a = 1$. We could have seen this from noticing the mean growth rate $\mu$ is less than one.
+
+When exactly is the population almost surely going to extinction ($a = 1$)? Suppose $\mu = 1$. Then, for any $0 < z < 1$,
+%
+\begin{equation} \label{integralbound} 1 - \varphi(z) = \int_z^1 \varphi'(x) dx < \int_z^1 \varphi'(1) = \mu(1 - z) = 1 - z \end{equation}
+%
+Here we have used the monoticity of $\varphi$. From (\ref{integralbound}), we conclude $z < \varphi(z)$ on $[0,1)$. Assuming extinction is possible, we obtain the surprising result that extinction is guaranteed if the average number of descendents is less than or equal to one! Since the average population remains to be 1 though, we know that, if we are not extinct after a long time, then we will probably have a large population.
+
+Chinese surnames are ancient. Applying our model, we see that the names that have survived over the generations should be very prominant. There are approximately 3,000 Chinese last names in use nowadays, as compared to 12,000 in the past, even though there are far more Chinese people in the world than in the past. This is the reason Gatson and Walton concluded upper class surnames were going extinct in Victorian Britain. The elite few who had these names were in populations that were likely to die out very soon, whereas the common names are names which will last much longer.
+
+\section{Reversibility}
+
+Some Markov chains have a certain symmetry which enables us to easily understand them. If we watch the markov chain as it proceeds from state to state, it forms a kind of `movie'. A Markov chain is reversible if the markov chain has the same probability distribution when we watch the movie backwards. That is, if $X_0, X_1, \dots, X_n$ are the first few frames of the movie, then $(X_0, \dots, X_n)$ is distributed identically to $(X_n, \dots, X_0)$. We have
+%
+\begin{align*}
+    \mu_0(x_0) P(x_0,x_1)&\dots P(x_{n-1},x_n) = \mathbf{P}(X_0 = x_0, \dots, X_n = x_n)\\
+    &= \mathbf{P}(X_0 = x_n, \dots, X_n = x_n) = \mu_0(x_n) P(x_n, x_{n-1}) \dots P(x_1,x_0)
+\end{align*}
+%
+Normally, being pairwise identically distributed is not enough to determine the independence of a larger family of variables. Nonetheless, in a homogenous markov chain, we need only verify the chain for pairs.
+
+\begin{definition}
+    A Markov chain is {\bf reversible} if there is a measure $\mu$ (which need not be a probability distribution) for which, for any two states $x,y \in \mathcal{S}$,
+    %
+    \[ \mu(x) P(x,y) = \mu(y) P(y,x) \]
+    %
+    It follows that, if $\mu$ is a probability distribution, then $(X_0, X_1, \dots,X_n)$ is identically distributed to $(X_n, \dots, X_0)$, given that $\mu$ is the initial distribution of the chain.
+\end{definition}
+
+\begin{example}
+    Any symmetric markov chain (with $P(x,y) = P(y,x)$) is reversible, with $\mu(x) = 1$ for all $x$.
+\end{example}
+
+\begin{example}
+    Consider a random walk on a graph $G = (V,E)$. Let $\mu(x) = \text{deg}(x)$. Then
+    %
+    \[ \mu(x) P(x,y) = 1 = \mu(y) P(y,x) \]
+    %
+    So the walk is reversible with respect to $\mu$.
+\end{example}
+
+Now let $\mu_0$ be a reversible measure  generating a reversible markov chain $\{ X_t \}$. Suppose we watch a markov chain $(X_0, \dots, X_N)$ for a really large $N$. Then, if a limiting distribution exists, it mustn't be too different from $\mu_N$. If we watch the markov chain backwards $(X_N, \dots, X_0)$, then it is equal in distribution by the properties of a markov chain. In particular, this means that the distribution of $\mu_0$ is also the result of watching a Markov chain for a really long time -- so we should expect $\mu_0$ to be really close to the limiting distribution of the markov chain. In fact, since $\mu(x) P(x,y) = \mu(y) P(y,x)$, we have
+%
+\[ \mu(x) = \sum_y \mu(x) P(x,y) = \sum_y \mu(y) P(y,x) = (\mu P)(x) \]
+%
+So $\mu$ is an invariant distribution, and is the convergent probability distribution on an ergodic markov chain.
+
+In the past few chapters, we have thoroughly addressed the problem of finding the limiting distribution of a stochastic process. We now address the converse problem. We are given an invariant measure, and we must construct a markov process which has this invariant measure for an invariant distribution. This is useful for approximating the invariant distribution when it is computationally too difficult to calculate.
+
+For instance, consider the set of all $N \times N$ matrices with entries in $\{0,1\}$. We may assign the uniform distribution to these matrices. There are $2^{N^2}$ different matrices of this form, so the probability of any matrix being picked is $1/2^{N^2}$. What about if we consider the set $\mathcal{T}$ of all matrices such that no two entries of the matrix are one at the same time. At face-value, there is no immediate formula we may use to count these matrices. Nonetheless, if we construct a markov chain whose limiting distribution is the uniform distribution, we can approximate the number of matrices by simulation -- we just count the average number of times a matrix is visited out of a certain number of trials.
+
+Consider a markov chain with the following transition. We start with an initial matrix $X_0$ in $\mathcal{T}$, and we pick a random entry $(i,j)$. Let $Y$ be the matrix resultant from flipping the $X_{ij}$ on or off. If $Y \in \mathcal{T}$, let $X_1 = Y$. Otherwise, let $X_1 = X$. Continue this process indefinitely. This is an irreducible, symmetric markov process in $\mathcal{T}$, with transitions
+%
+\[
+    P(A,B) =
+    \begin{cases}
+        \frac{1}{N^2} & : A\ \text{and}\ B\ \text{differ by one entry}\\
+        1 - \sum_{C \neq A} P(A,C) & : B = A\\
+        0 & : \text{elsewhere}
+    \end{cases}
+\]
+%
+Since the Markov chain is symmetric, the distribution converges to the uniform distribution on all of $\mathcal{T}$ -- and we can use this to attempt to determine the distribution on the set.
+
+How do we simulate a Markov chain? We shall accept that a computer is able to generate psuedorandom numbers distributed uniformly on any finite state space and on an interval $[0,1]$. A {\bf random mapping representation} of a markov chain $\{ X_i \}$ is a function $f:\mathcal{S} \times \Lambda \to \mathcal{S}$ together with a $\Lambda$-valued random variable $Z$ for which
+%
+\[ \mathbf{P}(X_{n+1} = x_{n+1} | X_n = x) = \mathbf{P}(f(x,Z) \in x_{n+1}) \]
+%
+If we generate a sequence $Z_1, \dots, \infty$ of random variables independant and identically distributed to $Z$, Then $X_{n+1} = f(X_n,Z_{n+1})$. Conversely, we can use a random mapping representation to generate a markov chain.
+
+There is a general method by which we can construct a markov chain to converge to a distribution. Suppose we have a distribution $\beta$ defined on a state space $\mathcal{S}$, with $\sum \beta(x) = B < \infty$. In addition, assume that we already have a symmetric state transition set $P$. We shall use this state to generate a new process. Define a Markov chain with probabilities
+%
+\[ P'(x,y) = P(x,y)\ \text{min}(1, \frac{\beta(y)}{\beta(x)})\ \ \ \ \ x \neq y \]
+%
+\[ P'(x,x) = 1 - \sum_{y \neq x} P'(x,y) \]
+%
+We `slow' down the chain at certain points to make it reversible with respect to $\beta$, and hence converges to $\mu = \beta/B$. This is the Metropolis-Hastings algorithm for computing a distribution $\beta$ up to a multiplicative constant. It is important that the algorithm only depends on the ratios of $\beta$. Frequently, $\beta$ is of the form $h(x)/Z$ for some very large normalizing constant $Z$. Because the algorithm only depends on the ratios, we do not needs to calculate $\beta$ at all.
+
+
+
+
+
+\chapter{Martingales}
+
+\section{Modern Conditional Expectation}
+
+Most properties of random processes are understand by the relationship of the process at different times. Once information is known, some component of the `randomness' of the process is reduced. For instance, if we know the current state of the markov chain, we can use the transition coefficients to look into the future. To fully describe processes on a larger variety of state spaces, we need a better definition of conditional expectation.
+
+Normally, the conditional probability of an event $A$ given an event $B$ is defined by
+%
+\[ \mathbf{P}(A | B) = \frac{\mathbf{P}(A,B)}{\mathbf{P}(B)} \]
+%
+If $B$ is an event that will never happen, then the conditional probability is not defined. But now consider a random variable which ranges over $[0,1]$. In most cases, the probability of the variable being at any single point is zero. Nonetheless, in real life we see a particular outcome being observed, and must use it to predict future events. We need to be able to define, for two random variables $X$ and $Y$, $\mathbf{E}(Y | X = x)$, the average value of $Y$ given that we observe $x$ at $X$. To define this, note that $\mathbf{P}(A | B)$ is (in some manner) the best estimate we can give of whether $A$ can happen given that we know $B$ has already happened. A certain rappor with measure theory will be very helpful.
+
+In probability theory, we replace the standard terminology with something more historically convinient. We say a random variable $X$ is {\bf adapted} to a $\sigma$ algebra $\Sigma$ if $X$ is measurable with respect to $\Sigma$. The $\sigma$ algebra generated by $X$ is denoted $\mathcal{B}(X)$. $Y$ is adapted with respect to $X$ if $Y$ is adapted to $\mathcal{B}(X)$. We may write $Y = f(X)$, for some function $f$.
+
+\begin{definition}
+    Let $X$ be a random variable, and $\Sigma$ a $\sigma$-algebra. The expectation of $Y$ with respect to $X$ is another random variable $\mathbf{E}(X|\Sigma)$, adapted to $\Sigma$, such that for any $A \in \Sigma$,
+    %
+    \[ \int_A \mathbf{E}(Y|X) = \int_A X \]
+    %
+    It is the best approximation of $X$ we can do, given the information in $\Sigma$. The expectation of $Y$ with respect to $X$, denoted $\mathbf{E}(Y|X)$, is just $\mathbf{E}(Y|\mathcal{B}(X))$. Any instance of the expectation is almost always equal to another, and the existence of the expectation is guaranteed by the Radon-Nikodym theorem.
+\end{definition}
+
+Easy facts fall right out of the definition. Firstly, the expectation is a linear operator on the random variables. We have $\mathbf{E}(aX + bY | \Sigma) = a \mathbf{E}(X | \Sigma) + b \mathbf{E}(Y | \Sigma)$. Finally, and most well known, is the law of iterated expectations: $\mathbf{E}(\mathbf{E}(X | \Sigma)) = \mathbf{E}(X)$. If $X$ and $Y$ are independant with respect to $\Sigma$, then $\mathbf{E}(XY | \Sigma) = \mathbf{E}(X|\Sigma) \mathbf{E}(Y|\Sigma)$
+
+As a stochastic process evolves, we gain more and more information about the future of the process. This also needs to be modelled in a measure theoretic manner. An evolving system of information is known as a {\bf filtration}.
+
+\begin{definition}
+    Let $T$ be a linearly ordered set. A {\bf filtration} is an increasing family of $\sigma$ algebras. Precisely, a family $\{ \mathcal{F}_t \}$ of $\sigma$ algebras with respect to $T$ is a {\bf filtration} if $\mathcal{F}_t \subset \mathcal{F}_u$ for $t < u$.
+\end{definition}
+
+\section{Martingales}
+
+We wish to discuss a markov chain which represents a `fair bet'. Each point of time in the process represents the amount of money in a gambler's pocket. if we have a certain amount of money at a time, and we watch the process evolve. We should expect us to find the same amount of money with us on average. This is where our new definition of expectation comes into play.
+
+\begin{definition}
+    A {\bf martingale} with respect to a filtration $\{ \mathcal{F}_t \}$ is a process $\{X_t\}$, with each $X_t \in L_1(\mathbf{P})$ such that, for $s < t$, $\mathbf{E}(X_t | \mathcal{F}_s) = X_s$. Normally, we will assume the filtration is $\mathcal{F}_t = \mathcal{B}(X_s : s \leq t)$.
+\end{definition}
+
+\begin{example}
+    Let $\{ X_t \}$ be a sequence of independent, identically distributed random variables in $L_1(\mathbf{P})$ with average 0. Define $S_n = \sum X_k$ to be the average value of $X_t$. Then
+    %
+    \begin{align*}
+        \mathbf{E}(S_n | S_k, \dots, S_0) &= \sum_{i \leq k} \mathbf{E}(X_i | S_0, \dots, S_k) + \sum_{k > i} \mathbf{E}(X_i | S_k, \dots, S_0)\\
+        &= \sum_{i \leq k} \mathbf{E}(S_{i} - S_{i-1} | S_0, \dots, S_k) + \sum_{k > i} \mathbf{E}(X_i | S_k, \dots, S_0)\\
+        &= S_k + \sum_{k > i} \mathbf{E}(X_i) = S_k
+    \end{align*}
+    %
+    Each $S_k$ is in $L_1$, so the sequence $S_k$ is a martingale. In general, if $X_t$ has mean $\mu$, the $S_n - n \mu$ is a martingale -- the fairness of the bet is tipped on one side, so we need the other factor to rebalance it.
+\end{example}
+
+\begin{example}
+    Let us consider an actual betting example. Let us flip a fair coin, determining a sequence of independant and identically distributed Bernoulli random variables $\{ X_n \}$, taking values in $\{ \pm 1 \}$. At each point in time, we make a bet $W_n$, in $L_1$ and adapted to $X_0, \dots, X_{n-1}$. The stochastic process we now observe is the accumlation of our winnings
+    %
+    \[ M_n = \sum_{k = 0}^n W_k X_k \]
+    %
+    Since
+    %
+    \[ \mathbf{E}(M_n | M_s, \dots, M_0) = \sum_{k = 0}^n \mathbf{E}(W_k X_k | M_s, \dots, M_0) = \sum_{k = 0}^s W_k X_k + \sum_{k = s+1}^n W_k \mathbf{E}(X_k) = M_s \]
+    %
+    Thus $M_n$ is a martingale.
+\end{example}
+
+For discrete martingales, we need only verify that $\mathbf{E}(M_n | M_{n-1}) = M_{n-1}$, since then $\mathbf{E}(M_n | M_{n-2}) = \mathbf{E}(\mathbf{E}(M_n | M_{n-1}, M_{n-2}), M_{n-2}) = \mathbf{E}(M_{n-1} | M_{n-2}) = M_{n-2}$, and so on.
+
+\begin{example}
+    Consider the Polya urn model of the process. We start with one white ball and one black ball in an urn. At each time epoch, we draw a random ball from the urn, and put the ball back in addition to another ball of the same colour. Let $X_k$ be the number of white balls after drawing $k$ balls, and let $M_n = X_n / (n+2)$ be the relative proportion of white balls in the urn at a certain time. Then $M_n$ is bounded, hence in $L_1$, and
+    %
+    \[ \mathbf{E}(M_n | M_{n-1}) = \frac{\mathbf{E}(X_n | X_{n-1})}{n+2} = \frac{1}{n+2} [ X_{n-1} + \frac{X_{n-1}}{n+1} ] = \frac{X_{n-1}}{n-1} = M_{n-1} \]
+    %
+    We are therefore observing a Martingale.
+\end{example}
+
+\section{The Optional Sampling Theorem}
+
+Probability was created to analyze gambling games, to calculate the manner in which one may succeed. In the 18th century, a strategy was discovered which could be applied to `beat' certain gambling games. It became known as the martingale. The idea is simple -- consider the martingale $M_n = \sum_{k = 0}^n W_k X_k$ described above. Let $W_k = 2^k$. Let $\tau = \min \{ k : X_k = 1 \}$. Then
+%
+\[ M_\tau = 2^\tau - \sum_{k = 1}^{\tau-1} 2^k = 2^\tau - (2^\tau - 1) = 1 \]
+%
+So we always come out of the bet with a profit on 1 unit of money, if we follow this strategy. The Martingale became all the rage in the 18th century. Casanova was one of many figures known to apply the strategy. The key problem with the strategy is that is that it assumes one is able to bet inevitably over and over again --  we assume we have an infinite amount of money to gamble with. When we have a finite amount of money, we're running a gambler's ruin -- we either bet until we run out of money, or gain a single unit of money. Thus the strategy is somewhat risky.
+
+The martingale is one of the reasons casinos now put limits on the table. You can't bet an unbounded amount of money anymore. Effectively, the casino restricts the martingales you play on to a restricted family, upon which the martingale doesn't work anymore. The optional sampling theorem shows that no stopping time will enable us to gain an average profit. In fact, we will always end up with the same amount of money we started off with on average. First, a rigorous definition of a stopping time.
+
+\begin{definition}
+    A stopping time with respect to a process $\{ X_t \}$ and filtration $\mathcal{F}_t$ is a random variable $\tau$ mapping into time, such that for any time $t$, $\{ \omega : \tau(\omega) \leq t \} \in \mathcal{F}_t$.
+\end{definition}
+
+\begin{lemma}
+    If $\{ M_0, M_1, \dots \}$ is a discrete martingale with respect to $\mathcal{F}_n$, and $\tau$ is a bounded stopping time, then $\mathbf{E}(M_\tau) = \mathbf{E}(M_0)$.
+\end{lemma}
+\begin{proof}
+    Let $\tau \leq K$. Then we may write $M_{\tau} = \sum_{k = 0}^K \mathbf{I}(\tau = k) M_k$. Then $\tau = K$ is measurable with respect ot $\mathcal{F}_{K-1}$, since the event $\tau = K$ is the same as $\tau > K-1$
+    %
+    \[ \mathbf{E}(M_\tau | \mathcal{F}_{K-1}) = \sum_{k = 0}^K \mathbf{E} (\mathbf{I}(\tau = k) M_k | \mathcal{F}_{K-1}) = \sum_{k = 0}^{K-2} \mathbf{I}(\tau = k) M_k + \mathbf{I}(\tau \geq K-1) M_{n-1} \]
+    %
+    Repeating this proof on $\mathcal{F}_{K-2}$, we obtain that $\mathbf{E}(M_\tau | \mathcal{F}_{K-2}) = \sum_{k = 0}^{K-3} M_k + \mathbf{I}(\tau \geq K - 2) M_{n-2}$. By induction, we determine that 
+    %
+    \[ \mathbf{E}(M_\tau | \mathcal{F}_0) = M_0 \]
+    %
+    and therefore, by iterated expectation,
+    %
+    \[ \mathbf{E}(M_\tau) = \mathbf{E}\mathbf{E}(M_\tau | \mathcal{F}_0) = \mathbf{E}(M_0) \]
+\end{proof}
+
+We would like to conclude the same theorem for unbounded stopping times. Our idea is to approximate a proper stopping time by bounded stopping times. Let $\tau$ be a stopping time, and define $\tau_n = \min \{ \tau, n \}$. We may write
+%
+\[ M_\tau = M_{\tau_n} + \mathbf{I}(\tau > n) M_\tau - \mathbf{I}(\tau > n) M_n \]
+%
+We would hope that the middle two factors do not contribute much to the process for large $n$. If $M_{\tau_n} \to M_\tau$ as $n \to \infty$, then $\mathbf{E}(M_0) = \mathbf{E}(M_{\tau_n}) \to \mathbf{E}(M_\tau)$. To obtain this, we require that the extraneous factors on the right vanish in expectation. The first extraneous factor is easy to remove, if $\mathbf{E}(|M_\tau|) < \infty$, then $\mathbf{E}(\mathbf{I}(\tau > n) M_\tau) \to 0$. The second factor dissapears if
+%
+\[ \lim_{n \to \infty} \mathbf{E}(|M_n| \mathbf{I}(\tau > n)) = 0 \]
+%
+and this provides the conditions for our theorem to hold.
+
+\begin{theorem}[Optional Stopping]
+    If $\{ M_n \}$ is a martingale, and $\tau$ a stopping time for which $M_\tau \in L_1(\mathbf{P})$, $\lim_{n \to \infty} \mathbf{E}(|M_n| \mathbf{I}(\tau > n)) = 0$, and $\mathbf{P}(\tau < \infty) = 1$. The $\mathbf{E}(M_\tau) = \mathbf{E}(M_0)$.
+\end{theorem}
+
+\begin{example}
+    Consider the fair Gambler's ruin problem, where we start with $M$ units of money, and play a fair game until we go bust, or we end up with $N$ units of money. Let $\tau = \min \{ X_k : X_k = 0\ \text{or}\ X_k = N \}$. Since $X_n$ is bounded, and $\mathbf{P}(\tau < \infty) = 1$, this process satisfies the optional stopping theorem, so
+    %
+    \[ N \mathbf{P}(X_\tau = N) = \mathbf{E}(M_\tau) = \mathbf{E}(X_0) = M \]
+    %
+    And therefore $\mathbf{P}(X_\tau = N) = M/N$.
+\end{example}
+
+There is a much easier condition, which allows us to conclude the consequences of the optional stopping theorem. Call a family $\mathcal{C}$ of random variables {\bf uniformly integrable} if, for any $\varepsilon$, there is $K$ such that for all $X \in \mathcal{C}$, $\mathbf{E}(|X| \mathbf{I}(X > K)) < \varepsilon$.
+
+\begin{lemma}
+    If $\{ X_n \}$ is a family of random variables for which these is $C$ where $X_n^2 < C$, then the $X_n$ are uniformly integrable.
+\end{lemma}
+
+Now let $\{ M_n \}$ be a uniformly integrable martingale, and $\tau$ a stopping time for which $\mathbf{P}(\tau < \infty) = 1$. Then $\lim_{n \to \infty} \mathbf{E}(|M_n| \mathbf{I}(\tau > n)) = 0$, since $\mathbf{P}(\tau > n) \to 0$. Thus the optional stopping theorem holds for the $M_n$ and $\tau$, provided $\mathbf{E}(|M_\tau|) < \infty$.
+
+\section{Martingale Convergence}
+
+\begin{definition}
+    A {\bf submartingale} $\{ M_0, M_1, \dots \}$ with respect to a filtration $\{ \mathcal{F}_k \}$ is a process such that for $n < m$, $\mathbf{E}(M_m | \mathcal{F}_n) \geq M_n$. A {\bf supermartingale} satisfies $\mathbf{E}(M_m | \mathcal{F}_n) \leq M_n$.
+\end{definition}
+
+\begin{theorem}
+    If $M_n$ is a submartingale, for which there is $C$ such that $\mathbf{E}(\text{max}(M_n, 0)) \leq C < \infty$, then there is $M_\infty \in L_1(\mathbf{P})$ suc that $M_n \to M_\infty$ almost surely,
+\end{theorem}
+
+
+\chapter{Continuous Markov Processes}
+
+In some mathematical circumstances, we may approximate a continuous system by a simpler system, which enables us to derive approximate results more simply. For instance, we often replace a Newtonian system by its linear approximation, which enables us to use the fleshed-out theory of linear differential equations to obtain an analytic formula for how the system develops. Nonetheless, in some mathematical systems it is worthwhile keeping a continuous system, which leads to more precise and concise results.
+
+In the last chapter, we considered a discrete-time queue, with individuals arriving and exiting at each separate time epoch. In this chapter, we will extend this model to a real-time queue, with individuals arriving and exiting at separate moments occuring at any real time-epoch.
+
+\section{Poisson Processes}
+
+Our first trick to modelling a real-time queueing system $\{ Y_t \}$ is to split the queue into two parts, $Y_t = X_t - Z_t$. The first split, $X_t$, is a counter, which tells us how many people in total have ever entered the queue. The second part, $Z_t$, tells us how many people in total have left the queue. By understanding these processes separately, we can understand $Y_t$.
+
+What assumptions do we make about the `counting process' $\{ Y_t \}_{t \in [0,\infty)}$. Firstly, the counter shuold be increasing: the total number of people who have entered the store should not decrease over time. Secondly, to simplify things, we shall assume that the average number of customers arriving is constant, and that the number of customers arriving at disjoint intervals are independant of one another. This is a Poisson process.
+
+\begin{definition}
+    A stochastic process $\{ X_t \}$ valued in $\mathbf{N}$ is Poisson with arrival length $\lambda > 0$ if:
+    %
+    \begin{enumerate}
+        \item $X_0 = 0$, and $i \leq j$ implies $X_i \leq X_j$.
+        \item Disjoint intervals $(i_k, j_k)$ have independant differences $X_{j_k} - X_{i_k}$, and if $i \leq j$, then $X_j - X_i$ is equal in distribution to $X_{j-i}$.
+        \item The Process satisfies the equations
+        \begin{align}
+            &\label{posson1} \mathbf{P}(X_t = 1) = \lambda \Delta t + o(t)\\
+            &\label{poisson2} \mathbf{P}(X_t = 0) = 1 - \lambda \Delta t + o(t)\\
+            &\label{poisson3} \mathbf{P}(X_t > 1) = o(t)
+        \end{align}
+    \end{enumerate}
+\end{definition}
+
+These axioms determine a unique probability distribution. Define $P_k(t) = \mathbf{P}(X_t = k)$. We have $P_0(0) = 1$, and $P_k(0) = 0$ for $k > 0$. Then
+%
+\begin{align*}
+    P_k(t + \Delta t) &= \mathbf{P}(X_{t + \Delta t} = k, X_t = k)\\
+    &\ \ \ \ \ + \mathbf{P}(X_{t + \Delta t} = k, X_t = k - 1)\\
+    &\ \ \ \ \ + \mathbf{P}(X_{t + \Delta t} = k, X_t < k - 1)\\
+    &= \mathbf{P}(X_{t + \Delta t} - X_t = 0, X_t - X_0 = k)\\
+    &\ \ \ \ \ + \mathbf{P}(X_{t + \Delta t} - X_t = 1, X_t - X_0 = k-1)\\
+    &\ \ \ \ \ + \mathbf{P}(X_{t + \Delta t} = k, X_t - X_0 < k - 1)\\
+    &= P_0(\Delta t) P_k(t) + P_1(\Delta t) P_{k-1}(t) + o(\Delta t)\\
+    &= P_k(t) - \lambda \Delta t P_k(t) + \lambda \Delta t P_{k-1}(t) + o(\Delta t)
+\end{align*}
+%
+It therefore follows that $P_k' = \lambda(P_{k-1} - P_k)$. This is just an ordinary differential equation. Altering the derivation above, noting we only need the first term for $k = 0$, we have
+%
+\[ P_0' = - \lambda P_0\ \ \ \ \ P_0(0) = 1 \]
+%
+So $P_0(t) = e^{-\lambda t}$. We shall now show that $P_k(t) = t^k/k! e^{-\lambda t}$. Define $f_k(t) = P_k(t) e^{\lambda t}$ (so that, if our theorem is true $f_k(t) = t^k/k!$). We have
+%
+\[ f_k'(t) = \lambda P_k(t) e^{\lambda t} + \lambda (P_{k - 1}(t) - P_k(t)) e^{\lambda t} = P_{k - 1} e^{\lambda t} = f_{k - 1}'(t) \]
+%
+And it follows that $f_k(t) = t^k/k!$, since $f_k(0) = P_k(0) = 0$.The Poisson distribution $\text{Poisson}(k,\lambda)$ is just the distribution of $P_k$.
+
+Another natural way to understand Poisson processes is by directly studying the discrete timepoints at which the counter of the process increments. Fix a Poisson process $\{ X_t \}$, and define a stopping time $\tau_k = \inf \{ t: X_t \geq k \}$. Since $X_t$ is monotonic, this variable is well-defined. The variables $\tau_{k+1} - \tau_k$ should be independent and identically distributed, and the $\tau_k$ should satisfy the `memory loss' property
+%
+\[ \mathbf{P}(\tau_{k+1} - \tau_k \geq s + t | \tau_{k+1} - \tau_k \geq t) = \mathbf{P}(T_k \geq s) \]
+%
+The only left-continuous non-zero real-valued functions $f$ which satisfies $f(s + t) = f(s) f(t)$ are the family of exponential functions $f(t) = e^{-\lambda t}$. Hence any variables $\{ \tau_k \}$ satisfying the properties above have $\mathbf{P}(\tau_{k+1} - \tau_k \geq t) = \mathbf{P}(\tau_1 \geq t) = e^{-\lambda t}$ for some $\lambda$.
+
+Given any variables $\tau_k$ satisfying the assumptions above, define $X_t = \inf \{ k: \tau_k \geq t \}$. Then $X_0 = 0$, $\{ X_t \}$ is increasing, and
+%
+\[ \mathbf{P}(X_t = 1) = \mathbf{P}(\inf \{ k : \tau_k \geq t \} = 1) = \mathbf{P}(\tau_1 \leq t) = 1 - e^{-\lambda t} = \lambda t + o(t) \]
+%
+\[ \mathbf{P}(X_t = 0) = \mathbf{P}(\tau_1 \geq t) = e^{-\lambda t} = 1 - \lambda t + o(t) \]
+%
+If $(i_k, j_k)$ are disjoint, then $X_{j_k} - X_{i_k} = \inf \{ k : \tau_k - \tau_{k-1} \geq j_k \} - \inf \{ k : \tau_k \geq i_k \}$. Hence $\{ X_t \}$ is a Poisson process.
+
+Consider the following calculation
+%
+\[ \mathbf{E}(\tau_1) = \int_0^\infty \frac{\lambda t}{e^{\lambda t}} dt = \left.\frac{t + \lambda^{-1}}{e^{\lambda t}} \right|_{t = \infty}^0 = \lambda^{-1} - \lim_{t \to \infty} \frac{t + \lambda^{-1}}{e^{\lambda t}} = \lambda^{-1} - \lim_{t \to \infty} \frac{1}{\lambda e^{\lambda t}} = \lambda^{-1} \]
+%
+So that in a Poisson process, we should expect to wait on average $\lambda^{-1}$ for each event.
+
+\section{Continuous Time Markov Process}
+
+Let's now consider an arbitrary Markov process $\{ X_t \}$ in continuous time on a denumerable state space. For each time point $t$ and $u$, we have the transition probabilities $P_{u,t}(x,y) = \mathbf{P}(X_t = y | X_u = x)$. We still have the Kolmogorov equation
+%
+\begin{equation} \label{chapman} P_{u,v}(x,z) = \sum_t P_{u,t}(x,y) P_(t,v)(y,z) \end{equation}
+%
+We shall also assume a continuity requirement that
+%
+\begin{equation} \label{continuity} \lim_{j \to i^+} \mathbf{P}(X_j = x | X_i = y) = \delta_{x,y} \end{equation}
+%
+A process is {\bf time-homogenous} if
+%
+\begin{equation} \label{timehom} P_{u,t}(x,y) = P_{t-u,0}(x,y) \end{equation}
+%
+If we define a transformation $P_t(x,y) = \mathbf{P}(X_t = y | X_0 = x)$, as well as a multiplication rule $(P_t P_s)(x,y) = \sum_z P_t(x,z) P_s(z,y)$, then we obtain from (\ref{chapman}) and (\ref{timehom}) that $P_{t+s} = P_t P_s$, so that $\{ P_t \}$ forms a commutative monoid.
+
+To obtain genuine derivations of probability distributions on homogenous Markov processes, we shall restrict ourselves to probability distributions which are differentiable. Apparently (I haven't seen the proof), any time-homogenous Markov process can be written
+%
+\[ P_t(x,y) = t \alpha(x,y) + o(t) \]
+%
+for some value $\alpha(x,y)$, where $x \neq y$. We call $\alpha(x,y)$ the infinitismal generator of the system -- we think of it as the rate at which a state $x$ changes to a state $y$. We then obtain
+%
+\[ P_t(x,x) = 1 - \sum_{x \neq y} P_t(x,y) = 1 - \sum_{x \neq y} [t \alpha(x,y) + o(t)] \]
+%
+In the finite case, we may conclude $P_t(x,x) = 1 - \sum_{x \neq y} t \alpha(x,y) + o(t)$. It thus makes sense to define $\alpha(x) = \sum_{y \neq x} \alpha(x,y)$ (even if our state space is denumerable) -- it is the rate at which the process leaves $x$. This constitutes the definition of a process.
+
+\begin{definition}
+    The {\bf rates} of a time-homogenous Markov process $\{ X_t \}$ are values $\alpha$ for which
+    %
+    \[ \mathbf{P}(X_t = x | X_0 = x) = 1 - \alpha(x) t + o(t) \]
+    \[ \mathbf{P}(X_t = y | X_0 = x) = \alpha(x,y) t + o(t) \]
+    %
+    The average amount of time for a state to transition out of a state $x$ is $1/\alpha(x)$. The probability that the next state we will end up at is $y$ from $x$ is $\alpha(x,y)/\alpha(x)$. The waiting time is an exponential distribution, with $\mathbf{P}(\tau_x \leq t | X_0 = x) = 1 - e^{-\alpha(x)t}$.
+\end{definition}
+
+Assume our state space is finite, and enumerate the states $x_1, \dots, x_n$. Define a matrix $P$ by $P_{i,j} = \alpha(x_i, x_j)$ for $i \neq j$, and $A_{i,i} = - \alpha(x_i)$. We call $A$ the infinitisimal generator of the chain. If $\mu_t$ denotes the probability mass function at a certain time (seen as a row vector), then via an analogous proof to when we analyzed Poisson processes, we can verify that
+%
+\[ \mu'(t) = \mu_t P \]
+%
+By the theory of linear differential equations, this means
+%
+\[ \mu_t = \mu_0 e^{tA} = P(0) \sum_{k = 0}^\infty \frac{(tA)^k}{k!} \]
+%
+In general, we consider the action $\mu P(y) = \sum \mu(x) P(x,y)$. Then $(\mu P)' = \mu P$ holds for countable state-spaces.
+
+\begin{example}
+    Consider a Markov chain with infinitisimal generator
+    %
+    \[ \begin{pmatrix} -1 & 1 \\ 2 & -2 \end{pmatrix} \]
+    %
+    We may diagonalize this matrix as $Q^{-1}AQ$, where
+    %
+    \[ Q^{-1} = \begin{pmatrix} 2/3 & 1/3 \\ 1/3 & -1/3 \end{pmatrix}\ \ \ \ \ A = \begin{pmatrix} 0 & 0 \\ 0 & -3 \end{pmatrix}\ \ \ \ \ Q = \begin{pmatrix} 1 & 1 \\ 1 & -2 \end{pmatrix} \]
+    %
+    Hence
+    %
+    \[ \mu_t = \mu_0 \begin{pmatrix} 2/3 & 1/3 \\ 1/3 & -1/3 \end{pmatrix} \begin{pmatrix} 1 & 0 \\ 0 & e^{-3t} \end{pmatrix} \begin{pmatrix} 1 & 1 \\ 1 & -2 \end{pmatrix} = \frac{P(0)}{3} \begin{pmatrix} 2 + e^{-3t} & 2 - 2e^{-3t} \\ 1 - e^{-3t} & 1 + 2e^{-3t} \end{pmatrix} \]
+    %
+    As $t \to \infty$, $\mu_t \to (2/3, 1/3)$.
+\end{example}
+
+In general, we shall find that for an irreducible markov chain, there is a single eigenvector with eigenvalue zero, and all other eigenvectors have negative eigenvalue (we need not worry about periodicity for continous chains). The $\mu_t$ will converge to the single eigenvector, invariant of the initial distribution, and this is the unique $\mu$ for which $\mu P = 0$.
+
+Suppose we want to compute the mean passage times $\mathbf{E}(\rho_y)$, where $\rho_y = \min \{ t : X_t = y | X_0 = x \}$. Define $\beta(x)$ be the average time it takes to get to $y$ given we start in $x$. Then
+%
+\[ \beta(y) = 0\ \ \ \ \ \beta(x) = 1/\alpha(x) + \sum_{z \neq y} \frac{\alpha(x,z)}{\alpha(x)} \beta(z) \]
+%
+Then $\alpha(x) \beta(x) = 1 + \sum \alpha(x,z) \beta(z)$. We can write this as $0 = 1 + \tilde{A} \beta$, where $\tilde{A}$ is obtained from $A$ by deleting the row and column representing $y$, which has the solution $\beta = -\tilde{A}^{-1} 1$.
+
+\section{Birth and Death Processes}
+
+\begin{definition}
+    A Birth and Death process is a continuous markov-process taking states in $\mathbf{N}$, with rates $\alpha(n,n+1) = \lambda_n$, and $\alpha(n,n-1) = \mu_n$, with $\mu_0 = 0$ (no-one can die if no-one is alive). Thus
+    %
+    \[ \mathbf{P}(X_{t + \Delta t} = n | X_t = n) = 1 - (\mu_n + \lambda_n) \Delta t + o(\Delta t) \]
+    \[ \mathbf{P}(X_{t + \Delta t} = n + 1 | X_t = n) = \lambda_n \Delta t + o(\Delta t) \]
+    \[ \mathbf{P}(X_{t + \Delta t} = n - 1 | X_t = n) = \mu_n \Delta t + o(\Delta t) \]
+\end{definition}
+
+We have already considered a special case of birth and death processes. We can convert these equations into a system of differential equations, defining $P_n(t) = \mathbf{P}(X_t = n)$.
+%
+\[ P_n'(t) = \mu_{n+1} \mathbf{P}_{n+1}(t) + \lambda_{n-1} P_{n-1}(t) - (\mu_n + \lambda_n) P_n(t) \]
+%
+This has a unique solution given a starting point $n$, so $P_n(0) = 1$, and $P_m(0) = 0$ for $m \neq n$.
+
+\begin{example}
+    A Poisson process with rate $\lambda$ is a birth and death process with $\lambda_n = \lambda$ and $\mu_n = 0$, for all $n$. Our differential equation was
+    %
+    \[ P_n'(t) = \lambda P_{n-1}(t) - \lambda P_n(t)  \]
+    %
+    Which we solved recursively.
+\end{example}
+
+Here we shall address queueing theory, the main application of continuous markov chains. There are many different types of queues, and in the literature there is a standard code for describing a specific type of queue. The basic code uses 3 characters, and is written $A/S/c$, where $A$ $S$ and $C$ are substituted for common letters. Here we will be considering $M/M/c$ queues. A is the type describing the distribution of customers arriving at a queue and $M$ means arrivals are be memoryless, or Markov. $S$ describes the distribution time to serve a customer. Here, $S$ will be $M$, since the distribution will also be markov. Finally, $c$ stands for the number of servers, which can range from $1,2, \dots, \infty$.
+
+An $M/M/1$ queue has only one person being served at each time. Thus, modelling the queue as a birth and death process, $\lambda_i = \lambda$ for some fixed $\lambda$, and $\mu_i = \mu$ for a fixed $\mu$. In an $M/M/c$ queue, for $1 < k < \infty$, up to $c$ people may be served at any time. Thus if $n$ people have arrived in the queue, with $n \leq c$, then the queue `kills' $n$ times faster than if one server was working, so $\lambda_k = \lambda$, and $\mu_k = \min(c,k) \mu$, for some $\mu$. This formula also works if $c = \infty$.
+
+We can understand a birth and death process via our understanding of discrete time markov chains. Let $X_n$ be the discrete process which `follows the chain when it moves'. The transition probabilities are $P(n,n+1) = \frac{\lambda_n}{\mu_n + \lambda_n}$, and $P(n,n-1) = \frac{\mu_n}{\mu_n + \lambda_n}$. The discrete process is recurrent if and only if the continuous process is recurrent. Thus we define $\alpha(x)$ to be the probability of returning to 0 starting at $x$. We have
+%
+\[ (\mu_n + \lambda_n) \alpha(x) = \mu_n \alpha(n-1) + \lambda_n \alpha(n+1) \]
+%
+This can be rewritten
+%
+\[ \alpha(n) - \alpha(n+1) = \frac{\mu_n}{\lambda_n} [\alpha(n-1) - \alpha(n)] \]
+%
+By induction,
+%
+\[ \alpha(n) - \alpha(n+1) = \frac{\mu_n \dots \mu_1}{\lambda_n \dots \lambda_1} [\alpha(0) - \alpha(1)] \]
+%
+Hence
+%
+\[ \alpha(n+1) = \alpha(n+1) - \alpha(0) + \alpha(0) = 1 + [\alpha(1) - 1] \sum_{j = 0}^n \frac{\mu_j \dots \mu_1}{\lambda_j \dots \lambda_1} \]
+%
+And thus the chain is transient if and only if
+%
+\[ \sum_{j = 0}^\infty \frac{\mu_1 \dots \mu_j}{\lambda_1 \dots \lambda_j} < \infty \]
 
 \end{document}
+
+% Bibliography
+% First Links in Markov Chains - Brian Hayes
+% On the Probability of the Extinction of Families - Watson, Galton
+
+Let us readdress the definition of a Markov process with respect to our newfound definitions.
+
+\begin{definition}
+    Let $\{ \mathcal{F}_t \}$ be a filtration. A stochastic process $\{ X_t \}$, with $X_t$ adapted to $\mathcal{F}_t$ is a {\bf markov process} with respect to the filtration if, for $s < t$, $\mathbf{E}(X_t | \mathcal{F}_s) = \mathbf{E}(X_t | X_s)$.
+\end{definition}
+
+The advantage of our new approach is that it works just as well for markov chains over continuous time periods as it does over discrete time periods. We will talk about continuous markov processes in the next chapter.

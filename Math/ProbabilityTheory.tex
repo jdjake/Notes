@@ -21,7 +21,7 @@
 
 \chapter{Foundations}
 
-What is probability? What do we mean when we say that you are 80\% more likely to develop lung disease if you are a smoker rather than the average man. To a mathematician, probability theory is just a subfield of measure theory, in which we study the properties of abstract functions on a measure theory. To a natural scientist, probability theory is viewed in a different vein. In this chapter, we will explore the two major interpretations of probability theory in real life, each of which use the same underlying mathematical theory to make judgements about the world. After exploring these interpretations, we will make axiomatic definitions of probability, and explore basic consequences.
+What is probability? What do we mean when we say that you are 80\% more likely to develop lung disease if you are a smoker rather than an average person. To a mathematician, probability theory is just a subfield of measure theory, in which we study the properties of abstract functions on a measure theory. To a natural scientist, probability theory is viewed in a different vein. In this chapter, we will explore the two major interpretations of probability theory in real life, each of which use the same underlying mathematical theory to make judgements about the world. After exploring these interpretations, we will make axiomatic definitions of probability, and explore basic consequences.
 
 \section{Frequentist Probability}
 
@@ -92,7 +92,7 @@ It can be shown, via similar arguments, that the following pair of propositions 
 %
 \begin{enumerate}
     \item $\Prob(\Omega) = 1$.
-    \item If $\{ A_i \}$ is a countable collection of disjoint events, then $\Prob(\bigcup_i A_i) = \sum_i \Prob(A_i)$\footnote{Definetti would have only accepted this statement for finite collections of events. Here, we allow one to make a countable number of bets at once, rather than only finitely many at any point.}.
+    \item If $\{ A_i \}$ is a countable collection of disjoint events, then $\Prob(\bigcup_i A_i) = \sum_i \Prob(A_i)$\footnote{Definetti would have only accepted this statement for finite collections of events. Here, we allow one to make a countable number of bets at once, rather than only finitely many at any point - Allowing limit operations is very useful!}.
 \end{enumerate}
 %
 What we have shown is that consistant degrees of belief in the Bayesian system have similar properties of experimental frequencies to a frequentist. Regardless of which philosophy you agree with, you will eventually have to agree on the same fundamental principles of probability theory. Neither of these systems rest of mathematical foundations, so we need to make a rigorous model, from which we can avoid the philosophical controversies that arise. Just as the game of chess does not have to be about knights and castles, the game of probability theory does not have to be about frequencies nor degrees of belief.
@@ -102,19 +102,39 @@ What we have shown is that consistant degrees of belief in the Bayesian system h
 Mathematically rigorous probability theory is specified under the banner of measure theory, with a few more hypothesis. This enables us to avoid some paradoxes when performing probability theory over an infinite sample space. To the uninitiated, I apologize for the abstraction -- you will have to take some propositions for granted, and trust that the terseness is necessary.
 
 \begin{definition}
-    A $\sigma$-algebra over a set $\Omega$ is a collection of subsets $\mathcal{X}$ such that $\Omega \in \mathcal{X}$, and the collection is closed under union and complement operations:
-    %
-    \begin{enumerate}
-        \item if $A_1, A_2, \dots \in \mathcal{X}$, then $\bigcup_i A_i \in \mathcal{X}$.
-        \item If $A \in \mathcal{X}$, $A^c \in \mathcal{X}$.
-    \end{enumerate}
-    %
-    If it is understood that we are talking about a specific $\sigma$-algebra $\mathcal{X}$, we will say a set is measurable if it is contained in $\mathcal{X}$.
+    A {\bf Probability Space} is a measure space $(\Omega, \mathcal{F}, \Prob)$ such that $\Prob(\Omega) = 1$. Stylistically,
+    $\Omega$ is known as the {\bf Sample Space} and $\Prob$ is known as the {\bf probability distribution} or {\bf measure}.
 \end{definition}
 
-\begin{definition}
-    A {\bf Probability Space} is a tuple $(\Omega, \Prob)$, where $\Omega$ is an arbitrary set, known as the {\bf Sample Space} and $\Prob$, known as the probability distribution, is a function from a $\sigma$-algebra of subsets on $\Omega$ to the non-negative real numbers, such that $\Prob(\Omega) = 1$, and if $A_1, A_2, \dots$ is a sequence of disjoint events, then $\Prob(\bigcup_i A_i) = \sum_i \Prob(A_i)$\footnote{Note that this definition only makes sense if $\Prob$ is defined over a $\sigma$ algebra.}. To the measure theorist, a sample space is just a normalized measure space.
-\end{definition}
+Finite and countable examples are easy to construct, whereas basic examples involving uncountably many points require deep results in measure theory. Therefore, we assume the measure theory is given, and develop the probability theory as an afterthought.
+
+\begin{example}[Uniform Probability Measure]
+    Let $\Omega$ be a finite, non-empty set, and, for $A \subset \Omega$ define $\Prob(A) = |A| |\Omega|^{-1}$. Then $(\Omega, \mathcal{P}(\Omega), \Prob)$ is a probability space, known as the uniform probability space. Analysis of this distributions just involves combinatorial methods.
+\end{example}
+
+\begin{example}[Defining Probabilities with Integrals]
+    Let $f$ be a positive measurable function from some measure space $(\Omega,\mathcal{F}, \mu)$ to $\mathbf{R}$, with $\int f d\mu = 1$. For any measurable $A \in \mathcal{F}$, define $\Prob(A) = \int_A f d\mu$. Then $(\Omega, \mathcal{F}, \Prob)$ is a probability space.
+\end{example}
+
+\begin{example}[Uniform Probability Measure on the Unit Interval]
+    We wish to construct a uniform measure on $[0,1]$, analogous to the finite case. Since $[0,1]$ has infinitely many points, we cannot assign positive probability to singletons. Let $\mu$ be the Lebesgue measure on $[0,1]$, and $f = 1$ be defined on $[0,1]$. By the last example, we obtain a probability space, known as the uniform probability measure.
+\end{example}
+
+\begin{example}[Normal Distribution]
+    Define a function $f:\mathbf{R} \to \mathbf{R}$ by the formula
+    %
+    \[ f(x) = \frac{1}{\sigma \sqrt{2\pi}} e^{-\frac{(x - \mu)^2}{2\sigma^2}} \]
+    %
+    The probability space generated by $f$ is known as the {\bf normal distribution} with mean $\mu$ and standard deviation $\sigma$.
+\end{example}
+
+\begin{theorem}
+    Let $(\Omega, \mathcal{F}, \Prob)$ be an arbitrary probability space:
+    %
+    \begin{enumerate}
+        \item For $A \in \mathcal{F}$, $\Prob(A^c) = 1 - \Prob(A)$.
+    \end{enumerate}
+\end{theorem}
 
 Note that this is not a mathematic definition of probability, but instead an instead an interpretation of the axiomatic foundations. Another, more complicated interpretation is the bayesian, which will come later. It is also important to see that just because the probability of some event is $0$ does not imply that $A$ is impossible, just that is almost certainly will not happen (Just because a sequence converges to $0$ does not imply the sequence is $0$ everywhere). Similarily, just because the probability of some event is $1$ does not imply that the measurement will always occur in an experiment. The only certain event is $\Omega$, and the only impossible event is $\emptyset$.
 
