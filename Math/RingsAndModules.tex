@@ -1,196 +1,182 @@
-\documentclass[12pt]{amsbook}
+\input{../style.tex}
 
-\usepackage{kpfonts}
-
-\usepackage{amsthm}
-
-% To adjust itemize for better margin fitting.
-\usepackage{enumitem}
-\setlist[enumerate,1]{leftmargin=20pt}
-\setlist[itemize,1]{leftmargin=10pt}
-
-\usepackage{thmtools}
-\makeatletter
-\def\thm@space@setup{%
-  \thm@preskip=-1mm
-  \thm@postskip=0mm % or whatever, if you don't want them to be equal
-}
-\makeatother
-\theoremstyle{definition}
-\newtheorem{theorem}{Theorem}[chapter]
-\newtheorem{lemma}[theorem]{Lemma}
-\newtheorem{corollary}[theorem]{Corollary}
-\newtheorem{exercise}{Exercise}[chapter]
-\newtheorem{definition}{Definition}
-
-\makeatletter  
-\def\@endtheorem{\qed\endtrivlist\@endpefalse } % insert `\qed` macro
-\makeatother
-\newtheorem*{prf}{Proof}
-
-\usepackage[a4paper]{geometry}
-
-\usepackage{tikz}
-\usepackage{tkz-berge}
-\usetikzlibrary{arrows,chains,matrix,positioning,scopes}
-
-\usepackage{hyperref} 
-\hypersetup{
-    colorlinks = true,
-    linkcolor = black,
-}
-
-\renewcommand*\contentsname{\hfill Table Of Contents \hfill}
-
-%\usepackage{makeidx} % Not Needed if using AMSBook class
-\makeindex
-
-\setlength\parindent{0pt} % sets indent to zero
-\setlength{\parskip}{10pt} % changes vertical space between paragraphs
-
-\newcommand{\lcm}{\operatorname{lcm}} % Lowest Common Multiple.
-\newcommand{\im}{\operatorname{im}} % Image of a function.
-\newcommand{\bint}{\mathbf{Z}} % Bold integer Symbol.
-\newcommand{\gen}[1]{\langle #1 \rangle} % Generator of a group.
-\newcommand{\End}{\operatorname{End}}
-\newcommand{\Mor}{\operatorname{Mor}}
-
-\usepackage[compact]{titlesec}
-\titleformat{\chapter}[display]{}
-    {\flushright\fontsize{15}{15}\selectfont{\MakeUppercase{\chaptertitlename}\hspace{2ex}}\fontsize{60}{60}\selectfont{\thechapter}}{-20pt}{\huge\bfseries}
-\titlespacing*{\chapter}{0pt}{0ex}{4ex}
-
-\newcommand*{\plogo}{\fbox{$\mathcal{JD}$}} % Generic publisher logo
-
-%----------------------------------------------------------------------------------------
-%   TITLE PAGE
-%----------------------------------------------------------------------------------------
-
-\newcommand*{\titleGP}{\begingroup % Create the command for including the title page in the document
-\centering % Center all text
-\vspace*{\baselineskip} % White space at the top of the page
-
-\rule{\textwidth}{1.6pt}\vspace*{-\baselineskip}\vspace*{2pt} % Thick horizontal line
-\rule{\textwidth}{0.4pt}\\[\baselineskip] % Thin horizontal line
-
-{\bf \Huge Rings and Modules\\[0.3\baselineskip]} % Title
-
-\rule{\textwidth}{0.4pt}\vspace*{-\baselineskip}\vspace{3.2pt} % Thin horizontal line
-\rule{\textwidth}{1.6pt}\\[\baselineskip] % Thick horizontal line
-
-\large Edmonton, Alberta, Canada\par % Location and year
-
-\vspace*{2\baselineskip} % Whitespace between location/year and editors
-
-{\Huge Jacob Denson\par} % Editor list
-
-\vfill % Whitespace between editor names and publisher logo
-
-\plogo \\[0.3\baselineskip] % Publisher logo
-{\scshape \the\year} \\[0.3\baselineskip] % Year published
-%{\large THE PUBLISHER}\par % Publisher
-
-\endgroup}
+\title{Ring Theory}
+\author{Jacob Denson}
 
 \begin{document}
 
 \pagenumbering{gobble}
-
-\titleGP % This command includes the title page
-
+\maketitle
 \tableofcontents
 
-\pagenumbering{arabic}
-
 \chapter{Basic Definitions}
+
+\pagenumbering{arabic}
 
 Rings are introverted mathematical creatures, perhaps due to their youthful nature (defined only in the 20s). They may seem to have a cold character to begin with, but after a bit of introduction and a time or two, they'll warm up to you. Lets get to know them a little:
 
 \begin{definition}
-    A ring is a set $X$ upon which an additive and multiplicative operation is defined. The additive operation gives the set an abelian group structure, while the multiplicative operation has a monoid structure (not-necessarily commutative). The additive and multiplicative structures play nice with each other, thanks to `the distributive law': for any three elements $a$, $b$, and $c$ in $X$,
+    A {\bf ring} is a set $R$ upon which an additive and multiplicative operation is defined (with respective identities $0$ and $1$). The additive structure forms an abelian group, the multiplicative structure a (not-necessarily commutative) monoid structure. The additive and multiplicative structures play nice with each other thanks to the `distributive law': for any $a, b, c \in R$,
     %
     \begin{align*}
         a(b + c) = ab + ac && (b + c)a = ba + ca
     \end{align*}
     %
-    Note that one equation does not imply the other due to the fact that the multiplicative operation is in general not abelian.
+    Note that one equation does not imply the other due to the fact that the multiplicative operation is in general not abelian. We assume $1 \neq 0$, since if $1 = 0$ the theory is trivial.
 \end{definition}
 
-Now that you know what a ring is, it turns out that you've known quite a few rings for quite a while. Your favourite fields, be they $\mathbf{R}$, $\mathbf{Q}$, or the finite fields, are all rings, and $M_n(\mathbf{F})$ is a ring for any field also, as are polynomials with coefficients in these rings. There are many other examples. Rings naturally arise when we start studying symmetries upon symmetric structures. Matrices are symmetries of vector spaces, which themselves can be seen as shifting symmetries of space. Polynomials are symmetries over a field of numbers, which themselves are also very well behaved symmetries. In fact, though we have axiomatized rings abstractly, we have a concrete representation theorem for them. Every ring is a set of symmetries over some abelian group. To attempt to find something like this, let us consider the set of endomorphisms on an abelian group. If we surplant a ring structure on this set of morphisms by defining $f + g$ as $(f + g)(x) = f(x) + g(x)$, and defining multiplication as composition. In fact, we actually have a representation theorem of rings just like the representations of a group as a symmetry.
+You already know many rings. Your favourite number systems, be they $\mathbf{Z}$, $\mathbf{R}$, $\mathbf{Q}$, or $\mathbf{F}_p$, are rings, as are the set of all matrices $M_n(\mathbf{F})$, and polynomials $\mathbf{F}[X]$ over some field. Rings arise naturally when we start studying symmetries of preexisting algebraic structures. Matrices are symmetries of vector spaces, which themselves can be seen as shifting symmetries of space. Polynomials are symmetries over a field of numbers, which themselves are also very well behaved symmetries. In fact, though we have axiomatized rings abstractly, every ring can be seen as a set of symmetries over some abelian group.
+
+\begin{example}
+    Let $G$ be an abelian group, and consider $\End(G)$, the set of all homomorphisms from $G$ to itself. We define a ring structure on this set. Let $(f + g)$ be defined pointwise, and let composition $f \circ g$ be the multiplicative structure. The fact that $\End(G)$ satisfies the laws of a ring are trivial, with the identity endomorphism behaving as $1$, and the trivial homomorphism acting as $0$.
+\end{example}
 
 \begin{theorem}
     All rings naturally arise as endomorphism of an abelian group.
 \end{theorem}
-\begin{prf}
-    Let $R$ be a ring, and consider the set $A$ of group homomorphisms on the abelian additive structure of $R$. We will show that $R$ can be embedded in $A$ in a natural way. Consider the map $\varphi: R \to R^R$ defined by $\varphi(y) = f_y$, where $f_y:R \to R$ is a map defined by $x \mapsto yx$. Since the distributive law in $R$ holds, we have that
+\begin{proof}
+    Let $R$ be a ring, and consider the set $\End(R^+)$ of group homomorphisms on the abelian additive structure of $R$. We will show that $R$ can be embedded in $\End(R^+)$ in a natural way. Consider the map $\varphi: R \to R^R$ defined by $\varphi(y) = f_y$, where $f_y:R \to R$ is a map defined by $x \mapsto yx$. Since the distributive law in $R$ holds, we have that
     %
-    \[ f_y(x + z) = y(x + z) yx + yz = f_y(x) + f_y(z) \]
+    \[ f_y(x + z) = y(x + z) = yx + yz = f_y(x) + f_y(z) \]
     %
-    which means exactly that $f_y$ is a morphism, so that $\varphi(R)$ is contained in $A$. What's more, $\varphi$ is a morphism, since
+    which means exactly that $f_y$ is a morphism, so that $\varphi(R)$ is contained in $\End(R^+)$. What's more, $\varphi$ is a ring morphism (which by now, you should be able to provide a definition for), since
     %
     \[ f_{y + z}(x) = (y + z)x = yx + zx = (f_y + f_z)(x) \]
     %
     \[ f_{yz}(x) = (yz)x = y(zx) = (f_y \circ f_z)(x) \]
     %
-    \begin{align*}
-        f_1 = \mathbf{1} && f_0(x) = 0x = 0
-    \end{align*}
+    \[ f_1 = \Id_R\ \ \ \ \ \ \ \ \ \  f_0(x) = 0x = 0 \]
     %
     And what's more, $\varphi$ is injective, since if $f_x = f_y$, then
     %
     \[ f_x(1) = x = f_y(1) = y \]
     %
-    Thus $A$ naturally contains $R$.
-\end{prf}
+    Thus $\End(R^+)$ naturally contains $R$.
+\end{proof}
 
-This theorem doesn't really give you a nice answer to what a ring `really is', unlike Cayley's argument. Alas, most general theories in mathematics do not have natural correspondences with a single object of study, unlike the niceities of group theory. Nonetheless, just like Cayley's theorem gives us group actions on sets, the study of modules will show how we can apply this idea to modules on abelian groups.
+The problem with this proof is that the theorem doesn't really give a `nice' answer to what a ring really is. Groups are already abstract, so we may not necessarily be able to visualize what a symmetry of an arbitrary abstract object is. Alas, most general theories in mathematics do not have natural correspondences with a single object of study, unlike the niceities of group theory. This is to be expected, since ring theory arose from many fields of study, like number theory, geometry, and logic. We will just have to accept this theorem as a little tidbit of intuition, and move on. We will return to this idea in the theory of modules, where one studies a ring `acting' on an abelian group, just like Cayley's theorem gives us group actions on sets.
 
-There are many nicknames for a ring. When $1 \neq 0$, and every non-zero element has a multiplicative inverse, we say the algebraic object formed is a division ring, or skew field. Commutative division rings are called fields. Not all division rings need be commutative (look up the quaternions if you don't believe me). The basic idea of quaternions results in the following equations
-%
-\[ i^2 = j^2 = k^2 = ijk = -1 \]
-%
-extended to general combinations of $i,j$ and $k$. Invented by the irishman lord Hamilton, quaternions were one of the first truly abstract structures which had operations placed on them, and therefore have a special place in an algebraist's heart.
+\begin{definition}
+    The {\bf units} of a ring $R$ are the elements $x$ which possess a multiplicative inverse $x^{-1}$, a number such that $xx^{-1} = 1 = x^{-1}x$ (both ends of the equation need to be satisfied since $ab$ may not equal $ba$). We shall denote the set of units by $R^\times$ or $U(R)$. This set always forms a group. though not necessarily a subring. Every non-zero element of a {\bf division ring} (also called a {\bf skew field}) is a unit. Commutative division rings are called {\bf fields}.
+\end{definition}
 
-The other historic structure which gave rise to modern abstract algebra was considered by George Boole, an english logician, when analysing logic abstractly through boolean equations. In his honour, we call a ring $R$ boolean if $x^2 = x$ for all $x$ (and also because of the rings connection to the equations he studied). Any boolean ring is commutative, since $1 = xyxy$, which implies, by multiplying by $yx$ on the right $yx = xy$. These are essentially the same as boolean algebras studied in logic.
+\begin{example}
+    The group of units in $M_n(\mathbf{F})$ is the general linear group $GL_n(\mathbf{F})$.
+\end{example}
 
-Subrings are the counterpart of subgroups in ring theory. The most fundamental chain of subrings are
+Left invertible elements need not be right invertible.
+
+\begin{example}
+    Consider the set $\mathbf{R}^\mathbf{N}$ of real-valued sequences, which form an abelian group under pointwise addition. Take the set of morphisms on this set. This consists of two maps -- the left shift $L$ and the right shift $R$:
+    %
+    \[ L(x_0, x_1, x_2, \dots) = (x_1, x_2, \dots)\ \ \ \ \ R(x_0, x_1, \dots) = (0, x_0, x_1, \dots) \]
+    %
+    Then $L \circ R = \Id_{\mathbf{R}^\mathbf{N}}$, yet $R \circ L(x_0, x_1, \dots) = (0, x_1, \dots)$, and $L$ could never have an inverse, since it is not bijective.
+\end{example}
+
+Not all division rings need be commutative.
+
+\begin{example}
+    Let $G$ be a group, and $K$ a field. The group ring $K[G]$ is the set of all finite sums $\sum k_i g_i$, with $k_i \in K$ and $g_i \in G$, where the additive structure is obvious, and
+    %
+    \[ \left( \sum_i k_i g_i \right) \left( \sum_j k_j' h_i \right) = \sum_{i,j} k_i k_j' g_i h_j \]
+    %
+    The quaternion group is $Q = \{ 1, i, j, k \}$, where
+    %
+    \[ i^2 = j^2 = k^2 = ijk = -1 \]
+    %
+    The general quaternions are the group ring $\mathbf{R}[Q]$. Every non-zero quaternion is invertible, since
+    %
+    \begin{align*}
+        (a + bi + cj + dk)(a - bi - cj - dk) &= a^2 + b^2 + c^2 + d^2\\
+        &= (a - bi - cj - dk)(a + bi + cj + dk)
+    \end{align*}
+    %
+    Quaternions are not commutative, since $ij = k$, $ji = -k$. Invented by the Irishman, lord Hamilton, quaternions were one of the first truly abstract algebraic structures, and therefore have a special place in an algebraist's heart.
+\end{example}
+
+\begin{example}
+    George Boole began the modern study of logic by studying truth. He saw that the logical operations of conjunction and disjunction behaved very similarily to the algebraic operations of multiplication and addition. If we consider conjunction as the multiplicative structure in a set of statements, and exclusive disjunction as an additive structure (where two statements are equivalent if they both imply each other), then we obtain a ring, satisfying $x^2 = x$ for all statements $x$ (where 0 is a statement which is always false, and 1 a statement which is always true). In his honour, we call a ring {\bf boolean} if this equation is satisfied. Any boolean ring is commutative, since $1 = xyxy$, which implies, by multiplying by $yx$ on the right $yx = xy$. These are essentially the same as boolean algebras studied in logic.
+\end{example}
+
+As with groups, one may consider subrings of a ring, and homomorphisms between rings. By now, you should be able to figure out the definitions yourself, but for completeness, they are included below.
+
+\begin{definition}
+    A {\bf subring} of a ring is a subset of a ring which also possesses a ring structure. That is, a subring is closed under addition and multiplication.
+\end{definition}
+
+The most fundamental chain of subrings are
 %
 \[ \mathbf{Z} < \mathbf{Q} < \mathbf{R} < \mathbf{C} \]
 %
-Diagonal matrices in $M_n(\mathbf{F})$ form a subring, as do continuous functions in $\Mor(\mathbf{R}, \mathbf{R})$.
+Diagonal matrices in $M_n(\mathbf{F})$ form a subring, as do the continuous functions in $\Mor(\mathbf{R}, \mathbf{R})$.
 
-If $R$ is a ring, we can pick and choose the elements that can be paired with a nice inverse (both left and right) to form the multiplicative group of units $R^*$. We require that elements have both a left and right inverse since it may be true that $ab = e$, but $ba \neq e$. Examples of the groups of a units of a ring include the set $GL_n(\mathbf{F})$ (the units in the ring $M_n(\mathbf{F})$) and, in the set $\Mor(X, \mathbf{R})$, the set of functions that vanish nowhere.
+\begin{definition}
+    A ring homomorphism from a ring $A$ to a ring $B$ is a function $f:A \to B$ such that
+    %
+    \begin{align*}
+        f(a + b) &= f(a) + f(b) && f(ab) = f(a)f(b)\\
+        f(1) &= 1 && \ \ f(0) = 0
+    \end{align*}
+\end{definition}
 
-A ring homomorphism from a ring $A$ to a ring $B$ is a function $f:A \to B$ such that
+
+
+
+
+\section{Ideals}
+
+We wish to establish a quotient structure on rings, to obtain analogies to the isomorphism theorems for groups. Let $\mathfrak{a}$ be a subset of a ring $A$. In order to obtain a well defined addition operation, we first need $\mathfrak{a}$ to be an additive subgroup of the additive group structure on $\mathfrak{a}$. We also require that the act of multiplication is well defined:
 %
-\begin{align*}
-    f(a + b) &= f(a) + f(b) && f(ab) = f(a)f(b)\\
-    f(1) &= 1 && \ \ f(0) = 0
-\end{align*}
+\[ (a + \mathfrak{a})(b + \mathfrak{a}) = (ab + \mathfrak{a}) \]
 %
-Interestingly, there is a homomorphism from the integers to any ring. They are in some sense the fundamental ring object.
+So, in terms of sets,
+%
+\[ \{ (a + x)(b + y) = ab + xb + ay + xy : x,y \in \mathfrak{a} \} = \{ ab + x : x \in \mathfrak{a} \} \]
+%
+Thus we require $xb + ax' + xx' \in \mathfrak{a}$. Clearly, not only do we need $\mathfrak{a}$ to be closed under multiplication, but also closed under multiplication by any element of $A$. This is the definition of an ideal.
 
-\chapter{Ideals}
+\begin{definition}
+    A {\bf left ideal} $\mathfrak{a}$ is an additive subgroup of a ring $A$, with $A\mathfrak{a} = \mathfrak{a}$. A {\bf right ideal} satisfies $\mathfrak{a}A = \mathfrak{a}$. A {\bf double-sided ideal} (shortened to {\bf ideal}) is a left and right ideal, and is the structure we use to form a quotient ring $A/\mathfrak{a}$.
+\end{definition}
 
-The kernel of a ring homomorphism is the kernel of the homomorphism seen as a homomorphism between abelian groups. A ring homomorphism is an isomorphism if and only if the kernel is trivial. Things to notice about any kernel $K$ is that it is a abelian subgroup of the domain of the homomorphism $A$ such that $AK \subset K$ (and hence $AK = K$). More generally, we define any subset of a ring to be a (left) ideal if it satisfies these properties. This is ala the definition of a normal subgroup in group theory.
+We shall focus mostly on double sided ideals (which are the same as single sided ideals in the commutative case). One sided ideals come into play most importantly when we analyze modules.
 
-The ideal of a ring, like the normal subgroup of a group, allows us to form the quotient of the algebraic structure of the ring. Given a abelian subgroup $I$ of a ring $R$, we may form the quotient subgroup $R/I$. If $I$ is an ideal, we may define $(a + I)(b + I) = ab + I$. This gives us a ring structure on the quotient group. Just like groups, we obtain important isomorphism theorems.
+The kernel of a ring homomomorphism is a double sided ideal. A ring homomorphism is an isomorphism if and only if the kernel is trivial. Just as in the group-theoretic case, we obtain the first isomorphism theorem.
 
-\begin{theorem}
-    If $f:A \to B$ is a surjective ring homomorphism, then $A/\ker f \cong B$.
+\begin{theorem}[First Isomorphism Theorem]
+    Let $f:A \to B$ be a homomorphism of rings. If $\mathfrak{a}$ is a double-sided ideal contained in the kernel of $f$, then we have an induced homomorphism $\overline{f}: A/\mathfrak{a} \to B$ satisfying the commutative diagram
+    %
+    \begin{diagram}
+        A & \rTo^{f} & B\\
+        \dTo & \ruTo_{\overline{f}}\\
+        A/\mathfrak{a}
+    \end{diagram}
+    %
+    If $\mathfrak{a}$ is the kernel, then the map is injective.
 \end{theorem}
 
-\begin{theorem}
+\begin{theorem}[Second Isomorphism Theorem]
+    Let $B < A$ be a subring, and $\mathfrak{a}$ an ideal of $A$. Then $B + \mathfrak{a}$ is a subring, $\mathfrak{a}$ is an ideal in $B + \mathfrak{a}$, $B \cap \mathfrak{a}$ is an ideal in $B$, and
+    %
+    \[ B/(B \cap \mathfrak{a}) \cong (B + \mathfrak{a})/\mathfrak{a} \]
+\end{theorem}
+
+\begin{theorem}[Third Isomorphism Theorem]
     If $f:A \to B$ is a surjective homomorphism, there is a one-to-one correspondence with ideals of $B$ and ideals of $A$ that contain the kernel of $f$.
 \end{theorem}
 
-A ring itself, and its trivial subring $(0)$, are always ideals in some ring, and are called trivial. In a field, these are the only ideals (from which we can deduce that a non-trivial field homomorphism is injective). Other examples in a ring $R$ are $Ra$, where $a$ is a ring element. This ideal is called the principal ideal generated by $a$. If a ring is such that all ideals are of this form, we say the ring is principal. Any ideal can be generated by these ideals in the sense that all ideals are $\bigoplus_{i \in I} Ra_i$, and we say the set of $a_i$ generate this ideal. In particular, if $I$ can be selected as finite, we say the ideal is finitely generated.
+A ring itself (denoted $(1)$ when viewed as an ideal), and its trivial subring $(0) = \{ 0 \}$, are always ideals, and are called trivial. In a field, these are the only ideals (from which we can deduce that a non-trivial ring homomorphism whose domain is a field is injective). Other examples in a ring $R$ are $Ra$, where $a$ is a ring element. This ideal is called the principal ideal generated by $a$, and in the commutative case, is denoted $(a)$. If a ring is such that all ideals are of this form, we say the ring is principal. Any ideal can be generated by these ideals in the sense that all ideals are $(S) = \bigoplus_{s \in S} Rs$ for some set $S$, and we say that $S$ generates the ideal. In particular, if $S$ can be selected as a finite set, we say the ideal is finitely generated.
 
-Quite a bit of elementary ring theory is an attempt to generalize what makes the integers so nice. The integers are a principal ideal domain, and almost any additional property that can be applied to rings will holds for integers. This is because integers are universal objects in ring theory -- they are the initial objects in the category. A ring is entire, or forms an integral domain, if it contains no zero-divisors. That is, if $ab = 0$ for two elements $a$ and $b$, then $a = 0$ or $b = 0$. In particular, if a principal ring is entire it is called a principal ideal domain. This removes some of the nasty properties inherent in the general definition of rings.
+There is one and only one homomorphism from the integers to any ring (a simple proof by induction). They are in some sense the fundamental ring object. The kernel of such a map is of the form $(n)$, for a unique positive integer $n$. We call $n$ the {\bf characteristic} of the ring, and $\mathbf{Z}_n$ the {\bf prime ring} contained within the ring. Note that this is the smallest subring.
+
+Quite a bit of elementary ring theory is an attempt to generalize what makes the integers so nice. Integers are universal objects in ring theory -- they are the initial objects in the category. Since homomorphisms relate properties of rings, integers should naturally possess nice properties.
+
+A ring is entire, or forms an integral domain, if it contains no zero-divisors. That is, if $ab = 0$ for two elements $a$ and $b$, then $a = 0$ or $b = 0$. In particular, if a principal ring is entire it is called a principal ideal domain. This removes some of the nasty properties inherent in the general definition of rings.
 
 An element $x$ is nilpotent if $x^n = 0$ for some integer $n > 0$. If $1 \neq 0$ in a ring, then a nilpotent element is not invertible. The set of all nilpotent elements in a {\bf commutative} ring $R$ is an ideal, denoted $\sqrt{R}$ and called the nilradical of the ring. The additive closure of $\sqrt{R}$ follows from the binomial theorem. If $x^n = 0$ and $y^m = 0$, then
 %
-\[ (x - y)^{nm} = \sum_{k = 0}^{nm} {n + m \choose k} x^{n + m - k}y^k (-1)^k \]
+\[ (x - y)^{nm} = \sum_{k = 0}^{nm} \binom{n + m}{k} x^{n + m - k}y^k (-1)^k \]
 %
 each element in the sum has some nilpotent power in. Hence $(x - y)^{nm} = 0$.
 
@@ -227,9 +213,9 @@ An ideal is maximal if it does not contain all ring elements, and there is no id
 \begin{theorem}
     $I$ is a maximal ideal of a ring $R$ if and only if $R/I$ is a field.
 \end{theorem}
-\begin{prf}
+\begin{proof}
     We will verify that $R/I$ is a field, and leave the converse to the reader. In $R/I$, $1 \neq 0$, since $1 \not\in I$. Consider $x + I$, where $x \not\in I$. Then $I + Rx$ is an ideal strictly bigger than $I$, so that $I + Rx = R$. Thus there is $y \in R$, $z \in I$ such that $z + yx = 1$. But then $yx + I = 1 + I$, so $y + I = (x + I)^{-1}$.
-\end{prf}
+\end{proof}
 
 In the case of the ring $\mathbf{Z}$, the maximal ideals are $p\mathbf{Z}$, where $p$ is a prime number. We already know that $\mathbf{Z}/p\mathbf{Z}$ is a field.
 
@@ -238,13 +224,13 @@ We can also use Zorn's lemma to generalize the nilradical of a commutative ring 
 \begin{theorem}
     In a commmutative ring, the Jacobson radical is equal to the nilradical of the ring.
 \end{theorem}
-\begin{prf}
+\begin{proof}
     First we must show that every prime ideal contains every nilpotent element. If $x^n = 0$, then, since every prime ideal $I$ contains $0$, $x^n \in I$. By definition of the prime ideal, $x \in I$. Conversely, suppose $x \not\in \sqrt{R}$. Consider the set $S = \{ x^n : n \in \mathbf{N} \}$. Let $L$ be the set of all (not necessarily prime) ideals in $R$ disjoint from $S$. $L$ is not empty, since $(0) \in L$, and $L$ is inductively ordered, so we may consider some upper bound $P$. Given any $a,b \not\in P$, $P + Ra$ and $P + Rb$ are strictly bigger than $P$, and thus there is $p_1,r_1$ and $p_2,r_2$ such that $p_1 + r_1a = x^n$ and $p_2 + r_2b = x^m$. But then
     %
     \[ x^{m + n} \in (P + Ra)(P + Rb) = P + P(Ra) + P(Rb) + Rab = P + Rab \]
     %
     And therefore $ab \notin P$. Thus $P$ is prime, and does not contain $x$, so that $J(R)$ does not contain $x$.
-\end{prf}
+\end{proof}
 
 
 
@@ -263,9 +249,9 @@ If $f \in R[x]$, we define the degree of $f$ to be the maximum $r_k \neq 0$ in t
 \begin{theorem}
     If $R$ is entire, then $\deg(fg) = \deg(f) + \deg(g)$. In general, $\deg(fg) \leq \deg(f) + \deg(g)$.
 \end{theorem}
-\begin{prf}
+\begin{proof}
     Let $f = \sum_{k = 0}^n r_kx^k$ and $g = \sum_{k = 0}^m l_kx^k$, then if $fg = \sum q_kx^k$ we have $q_k = 0$ for all $k > n + m$, and $q_{n + m} = r_nl_m \neq 0$, since $r_n$ and $l_m \neq 0$.
-\end{prf}
+\end{proof}
 
 \begin{corollary}
     If $R$ is entire, then $R[x]$ is entire.
@@ -278,9 +264,80 @@ If $f \in R[x]$, we define the degree of $f$ to be the maximum $r_k \neq 0$ in t
     %
     where $h$ and $r$ are polynomials, and $\deg(r) < \deg(g)$, or $\deg(r) = 0$.
 \end{theorem}
-\begin{prf}
+\begin{proof}
     Let $f = \sum a_kr_k$. We prove this by induction (our proof is very similar to the case of showing the integers are a euclidean domain). If $\deg(g) = 0$, then $g = r_k$, and $f = g(f/r_k)$. Here $r$ is of degree $-\infty$. Now suppose $\deg(g) = n$, and we have proved the theorem for all polynomials of smaller degree. Let the highest coefficient of $f$ be $a_k$.
-\end{prf}
+\end{proof}
+
+
+
+\section{Commutative Rings}
+
+\begin{definition}
+    A factorial ring $A$ is an integral domain such that every $a$ can be written
+    %
+    \[ a = \prod_{i = 1}^n p_i \]
+    %
+    where $p_i$ is irreducible, and if
+    %
+    \[ \prod_{i = 1}^n p_i = \prod_{i = 1}^m q_i \]
+    %
+    Then $n = m$, and, after a permutation, each $p_i$ differs from $q_i$ by a unit.
+\end{definition}
+
+\begin{lemma}
+    An element $x \in A$ is invertible in $S^{-1}A$ if and only if $(x) \cap S \neq \emptyset$.
+\end{lemma}
+\begin{proof}
+    If $x (m/n) = 1$, $xm = n \in S$. Conversely, if $xm \in S$, then $x (m/xm) = 1$.
+\end{proof}
+
+\begin{lemma}
+    If $p$ is prime in $A$, then it is irreducible in $S^{-1}A$, provided it is not a unit.
+\end{lemma}
+\begin{proof}
+    If $p = (m/n)(x/y)$, and it is not a unit, then $nyp = mx$, so that $p \divides mx$. It follows that $p \divides m$ or $p \divides x$. In either case, we divide by $p$ to conclude either $m/n$ or $x/y$ is a unit.
+\end{proof}
+
+\begin{lemma}
+    Let $A$ be factorial. $a/b$ is irreducible if and only if $a/b = up$, where $u \in U(S^{-1}A)$, and $p$ is irreducible in $A$ and $S^{-1}A$.
+\end{lemma}
+\begin{proof}
+     Let $a = p_1 \dots p_n$, and $b = q_1 \dots q_n$, where $p_i$ and $q_i$ are irreducible in $A$, then some $p_i$ is irreducible in $S^{-1}A$, and the other combined factors are a unit. But this implies exactly that $p_i$ is irreducible in $A$, and $(p_i) \cap S = \emptyset$.
+\end{proof}
+
+\begin{lemma}
+    If $y$ differs from $x$ by a unit, and $y$ is uniquely factorizable, then $x$ is uniquely factorizable.
+\end{lemma}
+\begin{proof}
+    Write $x = yu$, where $y$ is factorizable, $y = p_1 \dots p_n$, then $x = u p_1 \dots p_n$. Now suppose that $x$ can be factorized in two ways
+    %
+    \[ x = p_1 \dots p_n = q_1 \dots q_m \]
+    %
+    Then,
+    %
+    \[ ux = (up_1) p_2 \dots p_n = p_1' \dots p_n' = (uq_1) q_2 \dots q_m = q_1' \dots q_n' \]
+    %
+    so, up to a permutation, $p_i' = u_i q_{\pi(i)}'$. But one verifies, by taking the vary cases, that this implies that $p_i = v_i q_{\pi(i)}$, where $v_i$ is a unit.
+\end{proof}
+
+\begin{theorem}
+    If $A$ is factorial, and $S$ is a multiplicative set with $0 \not \in S$, then $S^{-1}A$ is factorial.
+\end{theorem}
+\begin{proof}
+    Let $a/b$ be given. We need only verify that $a/b$ differs from a uniquely factorizable element by a unit. $a$ differs from $a/b$ by a unit. Write $a = p_1 \dots p_n$, where $p_i$ is irreducible in $A$. We know that each $p_i$ is either still irreducible, or a unit, so without loss of generality we may as well assume all $p_i$ are irreducible in $S^{-1}A$. Suppose
+    %
+    \[ p_1 \dots p_n = (u_1 q_1) \dots (u_m q_m) = (u_1 \dots u_m q_1) q_2 \dots q_m \]
+    %
+    Let $u_1 \dots u_m = x/y$. If $u_1 \dots u_m$ can be written as the quotient of two units in $A$, then we are done, for then the $p_i$ and $q_i$ differ by units in $A$, and thus the $p_i$ differs from $u_i q_i$ by a unit. We show this is the only case that could happen, since we assume the $p_i$ are irreducible in $S^{-1}A$.
+
+    If $y$ is not a unit in $A$, write $y = y_1 \dots y_k$. If $x$ is a unit in $A$, then when we apply unique factorization in $A$, we see $y_1$ differs from some $p_i$ by a unit in $A$. But $y_1$ is a unit in $S^{-1}A$, so that $p_i$ is a unit in $S^{-1}A$. If $x$ is not a unit, then we may consider $x = x_1 \dots x_{l}$, and may assume no $x_i$ and $y_j$ differ by a unit (by cancelling like terms), so that when we apply unique factorization, $y_1$ is mapped to $p_i$ again, contradicting the irreducibility of $p_i$. Thus $y$ must be a unit in $A$, and when we expand $x$ as we have already done, and write
+    %
+    \[ (p_1/y) \dots p_n = x_1 \dots x_{l} q_1 \dots q_m \]
+    %
+    But then some $x_i$ differs from a $p_j$ by a unit in $A$, hence $p_j$ is a unit in $S^{-1}A$.
+\end{proof}
+
+
 
 
 \chapter{Modules}
@@ -290,7 +347,7 @@ In the primordial goo from which all groups descend lies the symmetric group $Sy
 \begin{lemma}
     Every ring can be embedded in a set of endomorphisms of an abelian group. (note the similarity to Cayley's theorem)
 \end{lemma}
-\begin{prf}
+\begin{proof}
     Let $R$ be a ring. Let us denote by $R_G$ the same object, but viewed solely as an abelian group (the ring's additive structure). For each $r \in R$, consider the group endomorphism $f_r:R_G \to R_G$ defined by $a \mapsto ra$. The distributive law tells us that $R_G$ is an endomorphism. That is,
     %
     \[ f_r(a + b) = r(a + b) = ra + rb = f_r(a) + f_r(b) \]
@@ -304,7 +361,7 @@ In the primordial goo from which all groups descend lies the symmetric group $Sy
     \[ f_{ab}(x) = (ab)(x) = a(bx) = f_a(f_b(x)) \]
     %
     These equations tell us that $\varphi$ is a ring homomorphism. Now if $f_a = f_b$, then $f_a(1) = f_b(1)$, so that $a = b$. Thus $\varphi$ is injective.
-\end{prf}
+\end{proof}
 
 The axioms for a ring have been perfectly aligned with the statement for this theorem, as group have for Cayley's theorem.
 
