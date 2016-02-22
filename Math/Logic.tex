@@ -853,7 +853,7 @@ A {\bf palindrome} is a string $s$ for which $s^R = s$. If $\Sigma$ is a set of 
 
 \chapter{Finite State Automata}
 
-Our initial model of computability is a computer with severely limited memory. Surprisingly, we shall still be able to compute a great many things. The idea of this model rests on representing computation by a state diagram. Suppose we would like to describe an algorithm describing if a number is divisible by three. We shall represent a number by a string of dashes. For instance, $``-----''$ represents the number 5. We describe the algorithm in a flow chart below
+Our initial model of computability is a computer with severely limited, finite amount of memory. Surprisingly, we shall still be able to compute a great many things. The idea of this model rests on explicitly representing memory as a finite amount of states, whose behaviour is uniquely determined by the state upon which it stands at a point of time. We can represent this process via a state diagram. Suppose we would like to describe an algorithm determining if a number is divisible by three. We shall represent a number by a string of dashes. For instance, $``-----''$ represents the number 5. We describe the algorithm in a flow chart below
 %
 \begin{center}
 \begin{tikzpicture}[scale=0.2]
@@ -876,13 +876,9 @@ Our initial model of computability is a computer with severely limited memory. S
 \end{tikzpicture}
 \end{center}
 %
-The algorithm proceeds as follows. Begin at the top node. For each dash, proceed clockwise around the triangle. If, at the end of our algorithm, we end up back at the top node, then the number is divisible by three. The basic idea of the finite automata is to describe computation via these flow charts -- we follow a string around a diagram, and if we end up at a `accept state', then we accept the string.
+The algorithm proceeds as follows. Begin at the top node. we proceed clockwise around the triangle, moving one spot for each dash we see. If, at the end of our algorithm, we end up back at the top node, then the number of dashes we have seen is divisible by three. The basic idea of the finite automata is to describe computation via these flow charts -- we follow a string around a diagram, and if we end up at a `accept state', then we accept the string. A mathematical model for this description is a finite state automaton.
 
-\begin{definition} 
-    A {\bf deterministic finite state automaton} is a 5-tuple $(Q, \Sigma, \Delta, q_0, F)$, where $Q$ is a finite set of states, $\Sigma$ is a finite alphabet, $q_0 \in Q$ is a start state, $F \subset Q$ are the accept states, and $\Delta: Q \times \Sigma \to Q$ is the transition function
-\end{definition}
-
-A finite state machine `works' exactly how our original algorithm worked. Draw a directed graph whose nodes are states, and draw an edge between a state $q$ and each related state $\Delta(q, \sigma)$, where $\sigma \in \Sigma$. Take a string $s \in \Sigma^*$. We begin at the start state $q_0$. Sequentially, for each symbol in $s$, we follow the directed edge from our current state to the state on the edge related to the current symbol in $s$. If, we end at an accept state in $F$, then $s$ is an `accepted' string. Formally, we define this method by extending $\Delta$ to $Q \times \Sigma^*$. We define, for $\sigma \in \Sigma$,
+A {\bf deterministic finite state automaton} is a 5-tuple $(Q, \Sigma, \Delta, q_0, F)$, where $Q$ is a finite set of states, $\Sigma$ is a finite alphabet, $q_0 \in Q$ is a start state, $F \subset Q$ are the accept states, and $\Delta: Q \times \Sigma \to Q$ is the transition function. A finite state machine `works' exactly how our original algorithm worked. Draw a directed graph whose nodes are states, and draw an edge between a state $q$ and each related state $\Delta(q, \sigma)$, for each symbol $\sigma \in \Sigma$. Take a string $s \in \Sigma^*$. We begin at the start state $q_0$. Sequentially, for each symbol in $s$, we follow the directed edge from our current state to the state on the edge related to the current symbol in $s$. If, we end at an accept state in $F$, then $s$ is an `accepted' string. Formally, we define this method by extending $\Delta$ to $Q \times \Sigma^*$. We define, for $s \in \Sigma^*$, $t \in \Sigma$,
 %
 \[ \Delta(q, \varepsilon) = q\ \ \ \ \ \Delta(q, st) = \Delta(\Delta(q,s), t) \]
 %
@@ -896,7 +892,7 @@ A state machine $M$ {\bf accepts} a string $s$ in $\Sigma^*$ if $\Delta(s,q_0) \
     then $(Q, \Sigma, \Delta, q_0, F)$ recognizes dashes divisible by three. The `graph' of the automata is exactly the graph we've already drawn.
 \end{example}
 
-The set of regular languages is closed under many useful operations. We shall find that all regular languages can be described by certain compositional operators.
+Arithmetic is closed under certain operations. Given two numbers, we can add them, subtract them and multiplication, and what results is still a number. In the theory of computation, the operations have a different flavour, but are nonetheless just as important. We shall find that all regular languages can be described from very basic languages under certain compositional operators, under which the set of regular languages is closed.
 
 \begin{theorem}
     If $A, B \subset \Sigma^*$ are regular languages, then $A \cup B$ is regular.
@@ -914,7 +910,7 @@ The set of regular languages is closed under many useful operations. We shall fi
     %
     \[ ((Q \times R), \Sigma, \Delta \times \Gamma, (q_0, r_0), H) \]
     %
-    recognizes $A \cup B$. By induction, one verifies that
+    recognizes $A \cup B$. By induction, one verifies that for any $s \in \Sigma^*$,
     %
     \[ (\Delta \times \Gamma)(q,r,s) = (\Delta(q,s), \Gamma(r,s)) \]
     %
@@ -925,7 +921,7 @@ The set of regular languages is closed under many useful operations. We shall fi
     If $A$ is a regular language, then $A^c$ is regular.
 \end{theorem}
 \begin{proof}
-    If $M = (Q,\Sigma,\Delta,q_0,F)$ recognizes $A$. Then define a new machine $N = (Q,\Sigma,\Delta,q_0,F^c)$. It is easy to see that $L(N) = A^c$.
+    If $M = (Q,\Sigma,\Delta,q_0,F)$ recognizes $A$. Then define a new machine $N = (Q,\Sigma,\Delta,q_0,F^c)$. The transition $\Delta(q_0, s)$ is in $F^c$ if and only if $\Delta(q_0, s)$ is not in $F$.
 \end{proof}
 
 \begin{corollary}
@@ -935,23 +931,27 @@ The set of regular languages is closed under many useful operations. We shall fi
 
 \section{Non Deterministic Automata}
 
-It shall be convenient to expand our definition of automaton, into a machine which is easier to work with in some situations. It is a version of a finite automata that can perform parallel-processing. This is the use of the non-deterministic automaton.
+An important concept in computability theory is the introduction of non-determinism. Deterministic machines must follows a set protocol when understanding input. Non deterministic machines can execute one of many different specified protocols. If any of the protocols accepts the input, then the entire machine accepts the input. Thus non-deterministic machines are said to multitask, for they can be seen to run every protocol specified at once, checking one of a great many protocols to see a pass. An alternative viewpoint is that the machines make a lucky guess -- they always seem to choose the write protocol which results in an accepted string.
 
-\begin{definition}
-    A {\bf non-deterministic finite state automaton} is a 5-tuple $(Q, \Sigma, \Delta, q_0, F)$, where $Q$ is a finite set of states, $\Sigma$ is a finite alphabet, $q_0$ is the start state, $F \subset Q$ are the accept states, and $\Delta: Q \times \Sigma_\varepsilon \to \mathcal{P}(Q)$ is the non-deterministic transition function.
-\end{definition}
+A {\bf non-deterministic finite state automaton} is a 5-tuple $(Q, \Sigma, \Delta, q_0, F)$, where $Q$ is a finite set of states, $\Sigma$ is a finite alphabet, $q_0$ is the start state, $F \subset Q$ are the accept states, and $\Delta: Q \times \Sigma_\varepsilon \to \mathcal{P}(Q)$ is the non-deterministic transition function.
 
-In a non-deterministic finite state automata, we {\bf accept} a string $s$ if $s = s_1 \dots s_n$, where each $q_i \in \Sigma_\varepsilon$, and there are a sequence of states $t_0, \dots, t_{n+1}$, with $q_0 = t_0$ and $t_n \in F$, such that $t_{k+1} \in \Delta(t_k, s_k)$. The set of accepting strings of a machine $M$ form the language $L(M)$. There is a nicer criterion of acceptance than described above, which is easier to work with in proofs. First, assume there are no $\varepsilon$-transitions in a machine $M$; that is, $\Delta(q, \varepsilon) = \emptyset$ for all states $q$. We may then extend $\Delta: Q \times \Sigma \to \mathcal{P}(Q)$ to $\Delta: \mathcal{P}(Q) \times \Sigma^* \to \mathcal{P}(Q)$ recursively by
+In a non-deterministic finite state automata, we {\bf accept} a string $s$ if $s = s_1 \dots s_n$, where each $s_i \in \Sigma_\varepsilon$, and there are a sequence of states $t_0, \dots, t_{n+1}$, with $q_0 = t_0$ and $t_n \in F$, such that $t_{k+1} \in \Delta(t_k, s_k)$. The set of accepting strings of a machine $M$ form the language $L(M)$. We draw a graph with nodes $Q$, and with directed edges $v$ to $w$ if $w \in \Delta(v, \Sigma_{\varepsilon})$. We begin at $q_0$. For a string $s$, we attempt to find a path from $q_0$ to an accept state, by following edges whose corresponding symbol is in $s$ (or whose symbol is $\varepsilon$, in which we get for free). The string is accepted if such a path is possible. Some call non-deterministic methods a lucky guess methods, since they always make a lucky guess of which deterministic path to take to accept a string.
+
+There is a nicer criterion of acceptance than described above, which is easier to work with in proofs. First, assume there are no $\varepsilon$-transitions in a machine $M$; that is, $\Delta(q, \varepsilon) = \emptyset$ for all states $q$. We may then extend $\Delta: Q \times \Sigma \to \mathcal{P}(Q)$ to $\Delta: \mathcal{P}(Q) \times \Sigma^* \to \mathcal{P}(Q)$ recursively by
 %
 \[ \Delta(X, \varepsilon) = X \ \ \ \ \ \Delta(X, st) = \Delta(\Delta(X,s), t) \]
 %
-A string $s$ is accepted by $M$ if and only if an accept state is an element of $\Delta(q_0, s)$. If $s = s_1 \dots s_n$, and there are $t_0, \dots, t_n$ with $t_0 = q_0$, $t_n$ an accept state, and $t_{k+1} \in \Delta(t_k, s_k)$, then by induction one verifies that $t_n \in \Delta(q_0, s)$. Conversely, if $q \in \Delta(q_0, s)$, and if $s = s_1 \dots s_n$, then there is a state $q'$ with $q' \in \Delta(q_0, s_1 \dots s_{n-1})$, $q \in \Delta(q', s_n)$. But this implies that if there is an accept state in $\Delta(q_0, s)$, then $s$ is accepted by $M$. We can always perform this trick, for we may always remove $\varepsilon$ transitions.
+where $\Delta(X,s) = \{ \Delta(x,s) : x \in X \}$. A string $s$ is accepted by $M$ if and only if an accept state is an element of $\Delta(q_0, s)$. If $s = s_1 \dots s_n$, and there are $t_0, \dots, t_n$ with $t_0 = q_0$, $t_n$ an accept state, and $t_{k+1} \in \Delta(t_k, s_k)$, then by induction one verifies that $t_n \in \Delta(q_0, s)$. Conversely, an induction on $s$ verifies that if $q \in \Delta(q_0, s)$, and if $s = s_1 \dots s_n$, then there is a state $q'$ with $q' \in \Delta(q_0, s_1 \dots s_{n-1})$, $q \in \Delta(q', s_n)$. But this implies that if there is an accept state in $\Delta(q_0, s)$, then $s$ is accepted by $M$. We can always perform this trick, for we may always remove $\varepsilon$ transitions.
 
 \begin{lemma}
-    Every non-deterministic automata is equivalent to a non-deterministic automata without $\varepsilon$ transitions.
+    Every non-deterministic automata is equivalent to a non deterministic automata without $\varepsilon$ transitions, in the sense that they both recognize the same language.
 \end{lemma}
 \begin{proof}
-    Let $M = (Q, \Sigma, \Delta, q_0, F)$ be a non-deterministic automata. Define a state $u$ to be $\varepsilon$ reachable from $t$ if there is a sequence of states $q_0, \dots, q_n$ with $q_0 = t$, $q_n = u$, and $q_{i + 1} \in \Delta(q_i, \varepsilon)$. Let $E(u)$ be the set of all states $\varepsilon$ rechable from $u$. Define
+    Consider a non-deterministic automata.
+    %
+    \[ M = (Q, \Sigma, \Delta, q_0, F) \]
+    %
+    Define a state $u$ to be $\varepsilon$ reachable from $t$ if there is a sequence of states $q_0, \dots, q_n$ with $q_0 = t$, $q_n = u$, and $q_{i + 1} \in \Delta(q_i, \varepsilon)$. Let $E(u)$ be the set of all states $\varepsilon$ reachable from $u$. Define
     %
     \[ N = (Q, \Sigma, \Delta', q_0, F) \]
     %
@@ -959,10 +959,8 @@ A string $s$ is accepted by $M$ if and only if an accept state is an element of 
     %
     \[ \Delta'(q, s) = \begin{cases} \bigcup_{u \in E(q)} \Delta(u, s) & s \neq \varepsilon \\ \emptyset & s = \varepsilon \end{cases} \]
     %
-    Then $L(N) = L(M)$. For any $\varepsilon$ transitions can be skipped in $N$.
+    Then it is easily checked that $L(N) = L(M)$, for we may skip over $\varepsilon$ transitions in $N$.
 \end{proof}
-
-We draw a graph with nodes $Q$, and with directed edges $v$ to $w$ if $w \in \Delta(v, \Sigma_{\varepsilon})$. We begin at $q_0$. For a string $s$, we attempt to find a path from $q_0$ to an accept state, by following edges whose corresponding symbol is in $s$ (or whose symbol is $\varepsilon$, in which we get for free). The string is accepted if such a path is possible. Some call non-deterministic methods a lucky guess methods, since they always make a lucky guess of which deterministic path to take to accept a string.
 
 It seems to be a much more complicated procedure to find if a string is accepted by a non-deterministic automata, but it turns out that every non-deterministic automata can be converted into a deterministic automata. The proof relies on the fact that we may exploit the operations of non-determinism, described using power sets of a set.
 
@@ -981,7 +979,7 @@ It seems to be a much more complicated procedure to find if a string is accepted
     We have already verified this deterministic machine recognizes $L(M)$, for $\Delta(\{ q_0 \}, s)$ contains an accept state if and only if $s$ is accepted.
 \end{proof}
 
-Non-determinsitic automata can now be employed to understand regular languages.
+It is now fair game to use non-deterministic automata to understand regular languages, for the language of every non-deterministic automata is regular.
 
 \begin{theorem}
     If $A$ and $B$ are regular languages, then $A \circ B$ is regular.
@@ -1010,7 +1008,7 @@ Non-determinsitic automata can now be employed to understand regular languages.
     Then $L(N) = A^*$, for if $s = a_1 \dots a_n$, with $a_i \in A$, then we may go from $i$ to $q_0$, then to an accept state via $a_1$, return to $i$ with a $\varepsilon$ transition, and continue, so $s$ is accepted. If we split a string accepted to $L(N)$ into when $\varepsilon$ transitions to $i$ are used, then we obtain strings in $A$.
 \end{proof}
 
-These operations are enough to describe all regular languages, as we shall now proceed to derive.
+In turns out that the operations of concatenation, union, and `kleene starification' are enough to describe all regular languages. Thus we may take an algebraic approach to understanding regular languages, using the symbology of regular expressions.
 
 \section{Regular Expressions}
 
@@ -1020,29 +1018,23 @@ Automata are equivalent to a much more classical notion of computation -- regula
     A {\bf regular expression} over an alphabet $\Sigma$ is the smallest subset of $(\Sigma \cup \{ \emptyset, \cup, *, (, ) \})^*$ such that
     %
     \begin{enumerate}
-        \item $\emptyset$ is a regular expression as are $s \in \Sigma^*$.
-        \item If $s$ and $w$ are regular expressions, then so are $s^*, (s \cup w)$, and $sw$.
+        \item $\emptyset$ is a regular expression, as are $s \in \Sigma^*$.
+        \item If $\lambda$ and $\gamma$ are regular expressions, then so are $\lambda^*, (\lambda \cup \gamma)$, and $(\lambda \circ \gamma)$.
     \end{enumerate}
 \end{definition}
 %
-Every regular expression describes a regular language. A string $s \in \Sigma^*$ is recognized by an regular expression $t$ if
+Every regular expression describes a language. A string $s \in \Sigma^*$ is recognized by an regular expression $\lambda$ if
 %
 \begin{enumerate}
-    \item $t \in \Sigma^*$, and $s = t$.
-    \item $t = (u \cup v)$, and $s$ is recognized by $u$ or by $v$.
-    \item $t = uv$, and $s = wl$, where $w$ is recognized by $u$, and $l$ is recognized by $v$.
-    \item $t = u^*$, and $s = \varepsilon$ or $s = s_1 \dots s_n$, where $s_i$ is recognized by $u$.
+    \item $\lambda \in \Sigma^*$, and $s = \lambda$.
+    \item $\lambda = (\lambda \cup \gamma)$, and $s$ is recognized by $\lambda$ or by $\gamma$.
+    \item $\lambda = \gamma \circ \delta$, and $s = wl$, where $w$ is recognized by $\gamma$, and $\delta$ recognizes $l$.
+    \item $\lambda = \gamma^*$, and $s = \varepsilon$ or $s = s_1 \dots s_n$, where $s_i$ is recognized by $\gamma$.
 \end{enumerate}
 %
-The regular language corresponding to a regular expression $t$ is $L(t)$, the set of strings recognized by $t$. The set of all regular expressions on an alphabet $\Sigma$ will be denoted $R(\Sigma)$.
+The regular language corresponding to a regular expression $\lambda$ is $L(\lambda)$, the set of strings recognized by $t$. The set of all regular expressions on an alphabet $\Sigma$ will be denoted $R(\Sigma)$.
 
-It is a simple consequence of our discourse that every language recognized by a regular expression {\it is actually} a regular language. In fact, we can show that every regular language is described by a regular expression. We shall describe an algorithm for converting a finite state automaton to a regular expression. We shall make a temporary generalization, by allowing non deterministic finite automata to have regular expressions in their transition functions.
-
-\begin{definition}
-    A {\bf generalized non-deterministic finite state automaton} is a 5-tuple $M = (Q,\Sigma, \Delta, q_0, f_0)$, where $\Delta: Q - \{ f_0 \} \times Q - \{ q_0 \} \to R(\Sigma)$ is the generalized transition function, and $q_0$ is the start state, $f_0$ is the end state.
-\end{definition}
-
-A generalized automaton accepts  $s \in \Sigma^*$ if we may write $s = s_1 \dots s_n$, and there are a sequence of states $t_0, \dots, t_{n+1}$ where $t_0 = q_0$, $t_n = f_0$, and $\Delta(q_i, q_{i+1})$ recognizes $s_i$.
+It is a simple consequence of our discourse that every language recognized by a regular expression {\it is actually} a regular language. In fact, we can show that every regular language is described by a regular expression. We shall describe an algorithm for converting a finite state automaton to a regular expression. We shall make a temporary generalization, by allowing non deterministic finite automata to have regular expressions in their transition functions. A {\bf generalized non-deterministic finite state automaton} is a 5-tuple $M = (Q,\Sigma, \Delta, q_0, f_0)$, where $\Delta: Q - \{ f_0 \} \times Q - \{ q_0 \} \to R(\Sigma)$ is the generalized transition function, and $q_0$ is the start state, $f_0$ is the end state. A generalized automaton accepts  $s \in \Sigma^*$ if we may write $s = s_1 \dots s_n$, and there are a sequence of states $q_0, \dots, q_n$ where $q_n = f_0$, and $\Delta(q_i, q_{i+1})$ recognizes $s_i$.
 
 \begin{theorem}
     Any generalized finite-state automaton describes the language of a regular expression.
@@ -1050,7 +1042,7 @@ A generalized automaton accepts  $s \in \Sigma^*$ if we may write $s = s_1 \dots
 \begin{proof}
     If the generalized automaton has two states, then there is only one transition from start state to begin state, and this transition describes a regular expression for the automaton. We will reduce every automaton to this form by induction. Suppose an automaton has $n$ states. Fix a state $q \in Q$, which is neither the beginning or accepting state. Define a new automaton
     %
-    \[ N = (Q - \{ q \}, \Sigma, \Delta', q_0, F) \]
+    \[ N = (Q - \{ q \}, \Sigma, \Delta', q_0, f_0) \]
     %
     where $\Delta'(a,b) = (\Delta(a,b) \cup \Delta(a,q) \Delta(q,q)^* \Delta(q,b))$
     %
@@ -1060,11 +1052,14 @@ A generalized automaton accepts  $s \in \Sigma^*$ if we may write $s = s_1 \dots
 \begin{corollary}
     Every regular language is described by a regular expression.
 \end{corollary}
+\begin{proof}
+    Clearly, every DFA and NFA is equivalent to a generalized NFA, for by adding new states, we may ensure no states map back to the start state, and that there is only one end state.
+\end{proof}
 
 
 \section{Limitations of Finite Automata}
 
-We've discovered a menagerie of different problems we can solve with finite automata, but it has already been foreshadowed that better machines await. Here we attack languages which are not recognized by finite automata.
+We've discovered a menagerie of different problems we can solve with finite automata, but it has already been foreshadowed that better machines await. Here we discover methods which attack languages, showing that they cannot be recognized by regular expressions, not finite automata.
 
 \begin{theorem}[Pumping Lemma]
     Let $L$ be a regular language. Then there is a number $p$, called the pumping length, such that any $s \in L$ which satisfies $|s| \geq p$, then we may write $s = wuv$, where $|u| > 0$, $|wu| \leq p$, and $wu^iv \in L$ for all $i \geq 0$.
@@ -1086,30 +1081,50 @@ We've discovered a menagerie of different problems we can solve with finite auto
     %
     \[ (p + 1)^2 = p^2 + 2p + 1 > p^2 + k \]]
     %
-    And there is no perefect square between $p^2$ and $(p+1)^2$, a contradiction.
+    And there is no perfect square between $p^2$ and $(p+1)^2$, a contradiction.
 \end{example}
 
 \begin{example}
     The language $L = \{ 0^i1^j : i > j  \}$ is not regular. If we had a pumping lenght $p$, then $0^p1^{p-1} \in L$. But then there is $0 < k \leq p$ such that $0^{p + (i - 1)k}1^{p-1} \in L$ for all natural numbers $i$. In particular, for $i = 0$, we find $0^{p - k}1^{p-1} \in L$ But $p - k \leq p -1$, a contradiction.
 \end{example}
 
-\section{Modelling Problems}
+There is a much more mathematically elegant and complete way of separating regular languages from non-regular ones, discovered by John Myhill and Anil Nerode. Consider an alphabet $\Sigma$, and a particular language $L \subset \Sigma^*$. Call two strings $a$ and $b$ in $\Sigma^*$ $L$-indistinguishable if $az \in L$ if and only if $bz \in L$ for any $z \in \Sigma^*$. This forms an equivalence relation on $\Sigma^*$. We shall define the index of $L$, denoted $\text{Ind}\ L$, to be the cardinality of the partition.
 
-Decision problems are sufficient to model a large variety of computational models, but for completeness, we should at least mention how we determine whether problems with multiple outputs can be. The counterpart of a finite-state automata is a finite-state transducer.
+\begin{theorem}[Myhill-Nerode]
+    $L$ is regular if and only if $\text{Ind}\ L < \infty$, and $\text{Ind}\ L$ is the number of states of the smallest finite state machine to recognize $L$.
+\end{theorem}
+\begin{proof}
+    Let $M$ be a deterministic finite state machine recognizing $L$ with $n$ states, transition function $\Delta$, and start state $q_0$. Let $a_1, \dots, a_{n+1}$ be $n + 1$ strings in $\Sigma^*$. We claim that at least one pair is indistinguishable. if we take $q_i = \Delta(q_0, a_i)$, then some $q_i = q_j$. These two strings are then indistinguishable in $L$. Conversely, suppose that $\text{Ind}\ L < \infty$. Let $A_1, \dots, A_n$ be the equivalence classes of $\Sigma^*$. If $s \in A_i$ is contained in $L$, then every other $w \in A_i$ is in $L$, for otherwise $s$ and $w$ can be distinguished. Build a finite state machine whose states are $A_i$, whose start state is $[\varepsilon]$, and whose transition function is
+    %
+    \[ \Delta([s], t) = [st] \]
+    %
+    $[s]$ is accepted if and only if $s \in L$. This finite state machine recognizes $s$.
+\end{proof}
 
-\begin{definition}
-    A {\bf finite state transducer} is a 5 tuple $(Q, \Sigma, \Lambda, \Delta, \Gamma, q_0)$, where $Q$ is the set of states, $\Sigma$ is the input alphabet, $\Lambda$ is the output alphabet, $\Delta: Q \times \Sigma \to Q$ is the transition function, $\Gamma: Q \times \Sigma \to \Lambda$ is the transduction function, and $q_0$ is the start state.
-\end{definition}
+In some circumstances, the Myhill Nerode theorem is very powerful.
 
-Each finite-state transducer $M$ gives rise to a function $f_M: \Sigma^* \to \Lambda^*$, defined by
+\begin{example}
+    For $\Sigma = \{ a, b, \dots, z \}$, consider the set $L$ of words $w$ whose last letter has not appeared before. For example, the words ``apple'', ``google'', ``k'', and $\varepsilon$ are in $L$, but the words ``potato'' and ``nutrition'' are not. Is this language regular? We apply Myhill Nerode. If the letters in one word are different to the letters in another word, these words are distinguishable. If the letters in one word are the same as the letters in another word, and both are not accepted or both are not accepted, these words are indistinguishable. Thus the index of the language in consideration is the same as the number of different subsets of the set of letters in a word, counted twice for repeated and non-repeated characters. Subtracting one from the fact that $\varepsilon$ need only be counted once, we find that $2 \cdot 2^{26} - 1 = 2^{27} - 1$. Since this is finite, the language is regular, and this is the minimal number of sets in a finite state machine recognizing the language.
+\end{example}
+
+\section{Function representation}
+
+Decision problems are sufficient to model a large variety of computational models, but for completeness, we should at least mention how we determine whether problems with multiple outputs can be. The counterpart of a finite-state automata is a finite-state transducer. A {\bf finite state transducer} is a 5 tuple $(Q, \Sigma, \Lambda, \Delta, \Gamma, q_0)$, where $Q$ is the set of states, $\Sigma$ is the input alphabet, $\Lambda$ is the output alphabet, $\Delta: Q \times \Sigma \to Q$ is the transition function, $\Gamma: Q \times \Sigma \to \Lambda_\varepsilon$ is the transduction function, and $q_0$ is the start state. Each finite-state transducer $M$ gives rise to a function $f_M: \Sigma^* \to \Lambda^*$, defined by
 %
 \[ f_M(\varepsilon) = \varepsilon\ \ \ \ \ f_M(st) = f_M(s) \circ \Gamma(\Delta(q_0,s), t) \]
 %
-A regular function is one computable by a finite state transducer.
+A {\bf regular function} is one computable by a finite state transducer.
 
 \begin{example}
     Consider an alphabet $\mathbf{F}_2$ and consider the function $f$ taking and returning strings over $\mathbf{F}_2$, inverting the strings on even positions, and leaving the strings on the odd positions. Then $f$ is a regular function, for it may be computed by the automata below.
 \end{example}
+
+
+
+
+
+
+
 
 
 
@@ -1204,11 +1219,11 @@ where $A,B,C \in V$ and $B,C \neq S$, and $a \in \Sigma$.
         \item {\bf There are no derivation rules $A \rightarrow B$, where $B$ is a variable}:\\
         Call $B$ unitarily derivable from $A$ if there are a sequence of derivation rules
         %
-        \[ A \rightarrow V_1 \dots V_n \rightarrow B \]
+        \[ A \rightarrow V_1 \rightarrow \dots \rightarrow V_n \rightarrow B \]
         %
         Define a new grammar $G' = (V,\Sigma,R',S)$. If $B$ is directly derivable from $A$, and $B$ has a derivation rule $B \rightarrow s$, then $G'$ has a production rule $A \rightarrow s$, provided that $s$ is not a variable. Then $G'$ has no rules of the form $A \rightarrow B$, and generates the same language. This is fairly clear, and left to the reader to prove.
 
-        \item {\bf every rule is of the form $A \rightarrow AB$ or $A \rightarrow a$}:\\
+        \item {\bf Every rule is of the form $A \rightarrow AB$ or $A \rightarrow a$}:\\
         If we have a rule in $G$ of the form $A \rightarrow s$, where $s = s_1 \dots s_n$, and $s_{i_1}, \dots, s_{i_m} \in \Sigma$, then add new unique variables $A_{s_{i_k}}$ for each $s_i \in \Sigma$, and replace the rule with new rules of the form
         %
         \[ A \rightarrow s_1 \dots A_{s_{i_1}} \dots A_{s_{i_m}} \dots s_n \]
@@ -1228,13 +1243,13 @@ where $A,B,C \in V$ and $B,C \neq S$, and $a \in \Sigma$.
     Now every derivation rule is in the correct form, and we have reduced every grammar to Chomsky normal form.
 \end{proof}
 
-Chomsky normal form allows one to prove
+Chomsky normal form allows us to prove a CFG pumping lemma.
 
 \begin{theorem}
-    If $L$ is a context free language, then there is $p > 0$, such that if $s \in L$, and $|s| \geq p$, then we may write $s = uvwxy$, where $|vwx| \leq p$, $v$ and $x$ are not both $\varepsilon$, and $uv^iwx^iy \in L$.
+    If $L$ is a context free language, then there is $p > 0$, such that if $s \in L$, and $|s| \geq p$, then we may write $s = uvwxy$, where $|vwx| \leq p$, $v,x \neq \varepsilon$, and for all $i \geq 0$, $uv^iwx^iy \in L$.
 \end{theorem}
 \begin{proof}
-    Let $G = (V,\Sigma,S,R)$ be a grammar in Chompysky normal form accepting $L$. If $T$ is a parsing tree which yields $s$ which has a heigh of $l$, then $|s| \leq 2^{l-1}$. Set $p = 2^{|V|}$. If $w \in L$, and $|w| \geq p$, then the parsin tree of $w$ must be greater than or equal to $k+1$. Thus there is a variable which yields itself in the parsing tree (in less than or equal to $k$ steps). In this process, we yield less than
+    Let $A$ be the language of the grammar $G$, which we assume to be in Chomsky normal form. Let there be $v$ variables in $G$. If the parse tree of $s \in A$ has height $k$, then $|s| \leq 2^{k-1}$, which follows because the tree branches in two except at roots, so there is at most $2^{k-1}$ roots. If $|s| \geq 2^{3v}$, then every parse tree of $s$ has height greater than $v$. Pick a particular parse tree of smallest size. There is a sequence of variables $A_1, A_2, \dots, A_{3v}$, such that $A_i$ is the parent of $A_{i+1}$. Because of how many variables there are, some variable must occur at least 3 times (for otherwise we may remove the variables in pairs, to conclude that $3v - 2v = v$ variables contain no variables, a contradiction). What's more, they much occur within a height of $3v$ of each other. Let $A_i = A_j = A_k$, for $i < j < k$. Let $A_i$ produce $a A_j b$, let $A_j$ produce $x A_k y$, and let $A_k$ produce $r$. Write $s = m a x r y b n$. By virtue of the minimality of the tree, we may assume that $a$ or $b$ is nonempty, and one of $x$ or $y$ is nonempty. First, if both $ax$ and $yb$ are assumed non-empty, then we may pump these strings up, and have proved our lemma. So suppose $ax$ is empty. Then $b$ and $y$ are nonempty, and $s = mrybn$. Since $A_i$ produces $A_j b$, and $A_j$ produces $A_k y$, $A_i$ may be pumped to produce $A_j b^i$, $A_j$ may be pumped to produce $A_k y^i$, and $mry^ib^in$ is in the context free language, so we have non-empty strings to pump. The proof is simlar if $by$ is empty, for then $a$ and $x$ are non-empty. The constraint $|vxy| \leq k$ is satisfies for $yb$ and $ax$, for the $A_i$ and $A_j$ lie within $3v$ of each, so the string produces in this production is at most as long as $2^{3v}$, which is less than or equal to the pumping length.
 \end{proof}
 
 \section{Pushdown Automata}
@@ -1245,8 +1260,70 @@ Regular languages have representations as the languages of regular expressions o
     A {\bf (non-deterministic) pushdown automata} is a tuple $(Q, \Sigma, \Lambda, \Delta, q_0, F)$, where $Q$ is a finite set of states, $\Sigma$ is an alphabet, $\Lambda$ is the stack alphabet, $\Delta: Q \times \Sigma_\varepsilon \times \Lambda_\varepsilon \to \mathcal{P}(Q \times \Lambda_\varepsilon)$ is the state transition function, $q_0 \in Q$ is the start state, and $F \subset Q$ are the accept states.
 \end{definition}
 
-It turns out that deterministic pushdown automata are less powerful than non-deterministic automata, so we do not discuss deterministic automata. Interestingly, languages of deterministic automata are connected to the notion of ambiguity in grammars.
+It turns out that deterministic pushdown automata are less powerful than non-deterministic automata, so we do not discuss deterministic automata. It is interesting to note that the languages of deterministic automata are connected to unambiguous grammars, though we will not have time to discuss this further.
 
-Let us describe a pushdown automata intuitively. The automata has a stack of symbols from $\Lambda$, which it can push and pull from when deciding how to move through the machine. A stack is a string in $\Lambda^*$. A string $s$ is accepted by a push-down automata $M$ if there are a sequence of states $q_0, \dots, q_n$, and stacks $w_0, \dots, w_n \in \Lambda^*$ such that $q_n \in F$, $w_0 = \varepsilon$, and if we write $w_i = w \lambda$, with $\lambda \in \Lambda_\varepsilon$, then $w_{i+1} = w_i \lambda'$, with $(q_{i+1}, \lambda') \in \Delta(q_i,\lambda)$. Thus we pop and pull off the rightmost character in the string when moving between states.
+Let us describe a pushdown automata intuitively. The automata has a stack of symbols from $\Lambda$, which it can push and pull from when deciding how to move through the machine. A stack is a string in $\Lambda^*$. Thus, formally, a string $s$ is {\bf accepted} by a push-down automata $M$ if there are a sequence of states $q_0, \dots, q_n$, and stacks $w_0, \dots, w_n \in \Lambda^*$ such that $q_n \in F$, $w_0 = \varepsilon$, and if we write $w_i = w \lambda$, with $\lambda \in \Lambda_\varepsilon$, then $w_{i+1} = w_i \lambda'$, with $(q_{i+1}, \lambda') \in \Delta(q_i,\lambda)$. Thus we pop and pull off the rightmost character in the string when moving between states.
+
+Pushdown automata have enough versatile memory to recognize context free languages. The stack can `remember' variables it has yet to parse, and check when symbols are used. We shall allow a mild generalization of pushdown automata, which can push multiple symbols to the stack at a time. This is fine, without loss of generality, because we could have instead introduced new states that take nothing from the stack, and push the symbols on one at a time. We shall also assume a pushdown automata starts with a $\$$ symbol at the bottom of its stack, which is fine, because we could have added another start state to the automata which pushes the $\$$ on as we begin running the machine.
+
+\begin{theorem}
+    Every context free language is accepted by a pushdown automata.
+\end{theorem}
+\begin{proof}
+    Consider a context free language $(V, \Sigma, R, S)$. Consider a pushdown automata $(Q,\Sigma, \Lambda,\Delta,q_0,F)$, with the stack language $\Lambda = \Sigma \cup V$, and $Q$ just two states $q_0$ and $f_0$. For each derivation $A \rightarrow s \in R$ we have
+    %
+    \[ (q_0, s) \in \Delta(q_0, \varepsilon, A) \]
+    %
+    And for each $a \in \Sigma$, we have
+    %
+    \[ (q_0, \varepsilon) \in \Delta(q_0, a, a) \]
+    %
+    And a finale transition
+    %
+    \[ (f_0, \varepsilon) \in \Delta(q_0, \varepsilon, \$) \]
+    %
+    It is clear that this automata parses the context free language.
+\end{proof}
+
+A converse also holds, so that pushdown automata are equivalent computers of context free languages. To do this, we assume that the automata pushes everything off its stack before it finishes, and has a single accept state $f_0$. In addition, we shall assume that a state only pops and pulls in one action, and doesn't do both at the same time. Adding additional states means this is no loss of generality.
+
+\begin{theorem}
+    Each pushdown automata language is context free.
+\end{theorem}
+\begin{proof}
+    The gist of our approach is as follows. Let $(Q, \Sigma, \Gamma, \delta, q_0, \{ f_0 \})$ be a pushdown automata. We shall define a context grammar with variables $A_{pq}$, with $p,q \in Q$. This variable should be able to generate all possible strings which can start in $p$ with an empty stack, and end up in $q$ with an empty stack. Our start variable will then be $A_{q_0, f_0}$. The first rules are most basic
+    %
+    \[ A_{pp} \rightarrow \varepsilon \]
+    %
+    Such a path may end up empty halfway through the path, so we have these rules, for each $p,q,r \in Q$,
+    %
+    \[ A_{pq} = A_{pr} A_{rq} \]
+    %
+    We can also pop something on the stack, and save it for a long time later. If $t \in \Sigma$, and $(r, t) \in \Delta(p, a, \varepsilon)$, and $(q, \varepsilon) \in \Delta(s, b, t)$, then we add the derivation rule
+    %
+    \[ A_{pq} = a A_{r,s} b \]
+    %
+    We claim these rules describe all possible derivations we could make in the pushdown automata. It is clear that all such derivations in this context language are accepted in the pushdown automata.
+
+    We shall prove that if we can move from $p$ to $q$ using a string $x$, both with an empty stack, then $A_{pq} \rightarrow x$. This is done by induction on the number of steps to accept the string in the automata. If we do this in one step, then the string is empty, and we have a rule $(q, \varepsilon) \in \Delta(p, \varepsilon)$, or the string consists of a single letter, and we have a rule $(q, \varepsilon) \in \Delta(p, t)$. In the first case, we have a derivation $A_{p, q} \rightarrow \varepsilon$, and in the second, we have a derivation
+    %
+    \[ A_{p,q} \rightarrow t A_{q,q} \varepsilon \rightarrow t \varepsilon \varepsilon = t \]
+    %
+    Now consider a machine that runs for a length $n$. Suppose the stack empties at some state $k$, after running through $x_1$ of the string, for $x = x_1 x_2$. Then we have, by induction, a derivation
+    %
+    \[ A_{pq} \rightarrow A_{pk} A_{kq} \rightarrow x_1 x_2 \]
+    %
+    Thus we may assume that the stack never empties except at beginning and end. Then the first action must be to push a symbol $t$ to the stack, and the last action to remove $t$. If we move from $p$ to $r$ in the first action by reading $a$, and from $s$ to $q$ in the last action by reading $b$, then we may write $x = acb$, and by induction, we have the derivation
+    %
+    \[ A_{pq} \rightarrow a A_{rs} b \rightarrow acb = x  \]
+    %
+    Thus we have verified the equivalence of the pushdown automata and context free language.
+\end{proof}
+
+Pushdown automata are easy to connect to their finite state cousins.
+
+\begin{corollary}
+    Every regular language is context free.
+\end{corollary}
 
 \end{document}
