@@ -17,134 +17,697 @@
 
 \chapter{Homotopy}
 
-To verify two topological spaces are homeomorphic, we need only find a single homeomorphism. On the contrary, verifying two topological spaces are not homeomorphic is much more tricky; we need to show that every function from one space to the other is not a homeomorphism. One trick is to find fundamental topological properties which distinguish two topological spaces. Connectedness, Compactness, and Hausdorffiness are all preserved by homeomorphism, so two spaces in which these properties differ cannot be homeomorphic. Algebraic topology consists of deep techniques to distinguish between spaces by finding distinguished properties in the space.
+\section{Deformations}
 
-It shall turn out that most interesting spatial invariants are also invariant under a type of topological equivalence more general that homeomorphism. Consider two continuous functions $f$ and $g$ between topological spaces $X$ and $Y$\footnote{From now on, we shall assume all functions continuous.}. Though $f$ might not be equal to $g$, they may be in some sense topologically equal -- we may be able to deform one to the other in a continuous fashion. Two continuous functions $f,g: X \to Y$ are {\bf homotopic}, written $f \simeq g$, if there exists a continuous map $H: [0,1] \times X \to Y$, such that for all $x \in X$, $H(0,x) = f(x)$, and $H(1,x) = g(x)$. We say that $H$ is a homotopy. $H$ is a homotopy {\bf relative to} $A \subset X$ if $H(t,a) = a$ for all $a \in A$. If $H$ exists, $f \simeq_A g$. Homotopy forms an equivalence relation on continuous maps, which we use to form the homotopy category $\textbf{Toph}$, which is obtained as a quotient category of $\textbf{Top}$. 
+Verifying two topological spaces are homeomorphic is a fairly easy ordel. One needs only find a single homeomorphism between them. The converse, verifying two topological spaces are not homeomorphic, is much more tricky; we need to show that {\it every} function from one space to the other is not a homeomorphism. One trick is to find fundamental topological properties which distinguish two topological spaces. Connectedness, Compactness, and Hausdorffiness are all preserved by homeomorphism, so two spaces in which these properties differ cannot be homeomorphic. Algebraic topology consists of deep techniques to distinguish topological spaces.
+
+It shall turn out that most interesting spatial invariants are also invariant under a type of topological equivalence more general that homeomorphism. Consider two functions $f$ and $g$ between topological spaces $X$ and $Y$\footnote{From now on, we shall assume all functions continuous.}. Though $f$ might not be equal to $g$, they may be in some sense topologically equal -- we can continuouslly deform one to the other. Two continuous functions $f: X \to Y$ and $g:X \to Y$ are {\bf homotopic}, written $f \simeq g$, if there exists a map $H: [0,1] \times X \to Y$, such that for all $x \in X$,
+%
+\[ H_0(x) = f(x)\ \ \ \ \ H_1(x) = g(x) \]
+%
+We write the image of $(t,x)$ under $H$ as $H_t(x)$. $H$ is a homotopy between $f$ and $g$. Thus we may see a homotopy as a family of maps $H_t: X \to Y$ which vary continuously with respect to $t$. $H$ is a homotopy {\bf relative to $A$} if $H_t(a) = a$ for all $a \in A$. If $f$ is homotopic to $g$ relative to $A$, we write $f \simeq_A g$.
+
+Category provides a unifying tool in algebraic topology. We aim to associate `invariant algebraic objects' to each element of a topological space, and this is most naturally explained as a functor between categories. Category theory was invented by Samuel Eilenberg and Saunders Maclane to form the foundations of abstract homology theory. Our first category is formed from the category $\textbf{Top}$ of topological spaces together with continuous maps. If we identify homotopic continuous maps, we obtain the homotopy quotient category $\textbf{Toph}$.
 
 \begin{example}
     Any two $\mathbf{R}^n$-valued functions $f$ and $g$ defined on the same domain are homotopic. The map
     %
-    \[ H(t,x) = t f(x) + (1 - t) g(x) \]
+    \[ H_t(x) = t f(x) + (1 - t) g(x) \]
     %
-    is a homotopy between $f$ and $g$. Thus the spaces $\mathbf{R}^n$ are the terminal objects in the homotopy category.
+    is a homotopy between $f$ and $g$. Thus the spaces $\mathbf{R}^n$ are the terminal objects in the homotopy category, since there is a unique homotopy class of functions from $\mathbf{R}^n$ to any other topological space.
 \end{example}
 
-Two spaces are `homotopy isomorphic' if they are isomorphic in $\textbf{Toph}$ -- that is, $X$ is homotopic to $Y$, written $X \simeq_h Y$ if there is a map $f:X \to Y$ and $g: Y \to Z$ such that $g \circ f$ and $f \circ g$ are homotopic to the identities on $X$ and $Y$. $g$ is known as the {\bf homotopy inverse} of $f$. Since each $\mathbf{R}^n$ is a terminal object, they are all homotopy equivalent.
+Two spaces are {\bf homotopy equivalent} if they are isomorphic in $\textbf{Toph}$; that is, $X$ is homotopic to $Y$, written $X \simeq_h Y$ if there is a map $f:X \to Y$ and $g: Y \to X$ such that $g \circ f$ and $f \circ g$ are homotopic to the identities on $X$ and $Y$. $g$ is known as the {\bf homotopy inverse} of $f$. Since each $\mathbf{R}^n$ is a terminal object, each is homotopy equivalent to the other, by abstract nonsense.
 
 \begin{example}
-    The $n$-sphere $S^n$ is homotopy equivalent to $\mathbf{R}^{n+1} - \{ 0 \}$. The embedding $i: S^n \to \mathbf{R}^{n+1} - \{ 0 \}$ has a homotopy inverse $f: \mathbf{R}^{n+1} - \{ 0 \} \to S^n$, defined by
+    The $n$-sphere $S^n$ is homotopy equivalent to $\mathbf{R}^{n+1} - \{ 0 \}$. The embedding $i: S^n \to \mathbf{R}^{n+1} - \{ 0 \}$ has a homotopy inverse $j: \mathbf{R}^{n+1} - \{ 0 \} \to S^n$, defined by
     %
-    \[ f(v) = v/\|v\| \]
+    \[ j(v) = v/\|v\| \]
     %
-    One just deforms the norm to show that $f \circ i$ is homotopic to $\text{id}_{S^n}$, and expands the norm to show $i \circ f$ is homotopic to $\text{id}_{\mathbf{R}^n}$.
+    One deforms the norm to show that $i \circ j$ is homotopic to $\text{id}_{\mathbf{R}}$. We take
+    %
+    \[ H_t(x) = \left( \frac{t}{\| x \|} + (1 - t) \right) x \]
+    %
+    as the required homotopy. The other end is trivial, since $j \circ i = \text{id}_{S^n}$.
 \end{example}
 
-A retraction is a map $r:X \to X$ for which $r^2 = r$. If $Y = \text{im}(X)$, and $r$ is a homotopy isomorphism, then we say $X$ {\bf deformation retracts} to $Y$. The deformation retraction is {\bf strong} if $X \simeq_Y Y$. We showed that $\mathbf{R}^{n+1} - \{ 0 \}$ strong deformation retracts to $S^n$. A space is {\bf contractible} or {\bf null-homotopic} if it is homotopic to a point.
+A retraction is a map $r:X \to X$ for which $r^2 = r$. If $Y = \text{im}(X)$, and $r$ is a homotopy isomorphism, then we say $X$ {\bf deformation retracts} to $Y$. The deformation retraction is {\bf strong} if $X \simeq_Y Y$. We showed that $\mathbf{R}^{n+1} - \{ 0 \}$ has a strong deformation retract onto $S^n$. A space is {\bf contractible} or {\bf null-homotopic} if it is deformation retracts to a point.
 
 \begin{example}
     A subset $X$ of a vector space is {\bf star-shaped} if there is $x \in X$ such that if $y \in X$, the line segment between $x$ and $y$ is contained in $X$. Then $X$ is (strongly) contractible to $\{ x \}$, by the map
     %
-    \[ H(t,y) = ty + (1 - t)x \]
+    \[ H_t(y) = ty + (1 - t)x \]
     %
     which shows every star shaped space is final.
 \end{example}
 
 \begin{example}
-    Consider a connected graph $\Gamma$. Then $\Gamma$ is a {\bf tree} if there are no cycles: paths $(v_0, \dots, v_n)$ of distinct edges such that $v_n$ connects to $v_0$. In a tree, fix a vertex $v$. For any vertex $w$, there is a unique path $(w, k_1, \dots, k_n, v)$ of distinct vertices connecting $w$ and $v$. Take $m$ to be the longest such length of a path. We may identify the path from $w$ to $v$ with the interval $[0,n+2]$, by taking a trajectory $c_w:[0,n+2] \to \Gamma$ travelling at uniform velocity from $w$ to $v$, passing over each vertex at each integer mark. Extend $c_w$ to $[0,\infty]$ by defining $c_w(n+2+t) = v$ for $t > 0$. Define $H_w: [0,m] \times (w, k_1, \dots k_n, v) \to \Gamma$ by
+    A {\bf cycle} in a graph $\Gamma$ is a sequence of distinct vertices $v_1, \dots, v_n$, together with distinct edges $e_1, e_2, \dots, e_n$ such that $e_i$ connects $v_i$ and $v_{i+1}$, and $e_n$ connects $v_n$ and $v_1$. A {\bf tree} is a connected graph with no cycles. Consider any particular tree $\Gamma$, and in that tree fix a vertex $v$. For any vertex $w$, there is then a unique path $(w, k_1, \dots, k_{n_w}, v)$ to $v$ with edges $e_0, e_1, \dots, e_{n_w}$. Identify the edge $e_i$ with its parameterization by the interval $[0,1]$, in the direction which leads to $v$. Take $m = \text{max}_w(n_w)$ to be the longest path length. We identity a topological path from $w$ to $v$ by a map which travels at a unit velocity. This can be described cryptically by
     %
-    \[ H_w(t, c_w(u)) = c_w(t + u) \]
+    \[ c_w:[0,\infty) \to \Gamma\ \ \ \ \ c_w(t) = \begin{cases} e_{\lfloor t \rfloor}(t - \lfloor t \rfloor) & t < n_w + 1 \\ v & t \geq n_w + 1 \end{cases} \]
     %
-    If $w$ and $u$ are vertices, then $H_w$ agress with $H_u$ on the intersection of their domain, so we may put all the maps together to obtain a homotopy between the identity and a point on $\Gamma$, showing $\Gamma$ is contractible.
+    So that $c_w$ moves from $w$ to $v$ at a unit velocity. Define
+    %
+    \[ H^w: [0,m] \times (w, k_1, \dots, k_n, v) \to \Gamma\ \ \ \ \ H^w_t(c_w(u)) = c_w(t + u) \]
+    %
+    If $w$ and $u$ are vertices, then $H^w$ agrees with $H^u$ on the intersection of their domain, so we may put all the maps together to obtain a strong deformation retraction from $\Gamma$ onto $\{ v \}$, hence $\Gamma$ is contractible.
 \end{example}
+
+
+\section{Homotopy Extensions}
+
+We would like to make it easy to verify homotopy equivalence. Most theorems of this variety rely on a useful property. A tuple $(X,A)$, with $A$ a subspace of $X$, satisfies the {\bf homotopy extension property} if, given any homotopy $H: [0,1] \times A \to Y$ between $f$ and $g$, and given an extension $\tilde{f}$ of $f$ to $X$, there is an extended homotopy $\widetilde{H}: [0,1] \times X \to Y$ between $\tilde{f}$ and some extension of $g$. More succinctly, $(X,A)$ has the homotopy extension property if every map defined on $X \times \{ 0 \} \cup A \times [0,1]$ extends to a map defined on $X \times [0,1]$.
+
+\begin{lemma}
+    $(X,A)$ has the homotopy extension property if and only if there is a retraction from $X \times [0,1]$ onto $X \times \{ 0 \} \cup A \times [0,1]$.
+\end{lemma}
+\begin{proof}
+    If $(X,A)$ has the homotopy extension property, one obtains a retract of $X \times [0,1]$ onto $X \times \{ 0 \} \cup A \times [0,1]$ by extending the identity map on $X \times \{ 0 \} \cup A \times [0,1]$. Conversely, if we have a homotopy $H$ between the identity of $\text{id}_X$ and a retract $r$ onto $X \times [0,1] \to X \times \{ 0 \} \cup A \times [0,1]$, then every map $f: X \times \{ 0 \} \cup A \times [0,1] \to Y$ extends to a map $f \circ r: X \times [0,1] \to Y$.
+\end{proof}
+
+\begin{corollary}
+    If $(X,A)$ has the extension property, then $(X \times Z, A \times Z)$ has the homotopy extension property.
+\end{corollary}
+\begin{proof}
+    If $r: X \times [0,1] \to X \times \{ 0 \} \cup A \times [0,1]$ is a retract, then we obtain a retract
+    %
+    \begin{align*}
+        X \times Z \times [0,1] &\cong (X \times [0,1]) \times Z\\
+        &\xrightarrow{r \times \text{id}_Z} (X \times \{ 0 \} \cup A \times [0,1]) \times Z\\
+        &\cong X \times Z \times \{ 0 \} \cup A \times Z \times [0,1]
+    \end{align*}
+    %
+    Thus $(X \times Z, A \times Z)$ has the extension property.
+\end{proof}
+
+\begin{corollary}
+    If $(X,A)$ has the extension property, then $(X \coprod B, A \coprod B)$ has the homotopy extension property.
+\end{corollary}
+\begin{proof}
+    If $r$ retracts $X \times [0,1]$ onto $X \times \{ 0 \} \cup A \times [0,1]$. Then we have a retraction
+    %
+    \begin{align*}
+        (X \coprod B) \times [0,1] &\cong (X \times [0,1]) \coprod (B \times [0,1])\\
+        &\xrightarrow{r \coprod \text{id}_{B \times [0,1]}} (X \times \{ 0 \} \cup A \times [0,1]) \coprod (B \times [0,1])\\
+        &\cong ((X \coprod B) \times \{ 0 \} \cup (A \coprod B) \times [0,1]))
+    \end{align*}
+    %
+    so $(X \coprod B, A \coprod B)$ has the extension property.
+\end{proof}
+
+\begin{theorem}
+    If $(X,A)$ has the homotopy extension property, and $X$ is hausdorff, then $A$ is closed in $X$.
+\end{theorem}
+\begin{proof}
+    Given a map $f: A \to A$ between topological spaces, the set of $x$ such that $f(x) = x$ is closed, for it is the inverse image of
+    %
+    \[ \Delta = \{ (x,x) : x \in A \} \]
+    %
+    under the map $f \times \text{id}_A: A \to A \times A$, and $\Delta$ is closed in $A \times A$ if $A$ is Hausdorff. A retraction $r$ from $X \times [0,1]$ to $X \times \{ 0 \} \cup A \times [0,1]$, then $X \times \{ 0 \} \cup A \times [0,1]$ is closed in $X \times [0,1]$. But $A \times \{ 1 \}$ is closed in $X \times \{ 0 \} \cup A \times [0,1]$, so it is closed in $X \times [0,1]$, and this implies it is closed in $X \times \{ 1 \}$, so $A$ is closed in $X$.
+\end{proof}
+
+\begin{example}
+    Let $X = [0,1]$, and $A = \{ 1, 1/2, 1/3, \dots \}$. Suppose we had a retract
+    %
+    \[ r: [0,1] \times [0,1] \to [0,1] \times \{ 0 \} \cup A \times [0,1] \]
+    %
+    Then $r(0,x) = \lim_{t \to \infty} r(1/t, x) = \lim_{t \to \infty} (1/t,x) = (0,x)$, for all $x \in X$. This is clearly impossible. Thus $(X,A)$ does not have the homotopy extension property.
+\end{example}
+
+\begin{lemma}
+    Let $A \subset X$, and suppose there is a map $f:Z \to A$, and a homeomorphism $h$ from $M_f$ onto a closed neighbourhood $N$ of $A$ in $X$ with $h([a]) = a$ for all $a \in A$, and $h(M_f - [Z \times \{ 0 \}])$ an open neighbourhood of $A$. Then $(X,A)$ has the homotopy extension property.
+\end{lemma}
+\begin{proof}
+    First note $([0,1], \{ 0, 1 \})$ has the homotopy extension property, since we have a retraction from $[0,1]^2$ to $[0,1] \times \{ 0 \} \cup \{ 0,1 \} \times [0,1]$, obtained by projection from $(0,2)$. Thus $((Z \times [0,1]) \coprod A, (Z \times \{ 0, 1 \}) \coprod A)$ has the homotopy extension property, and let
+    %
+    \begin{align*}
+        ((Z \times [0,1]) \coprod A) \times [0,1] \xrightarrow{r} ((Z \times [0,1]) \coprod A) \times \{ 0 \} \cup ((Z \times \{ 0, 1 \}) \coprod A) \times [0,1]
+    \end{align*}
+    %
+    be the retraction. Let $\pi: ((Z \times [0,1]) \coprod A) \times [0,1] \to M_f \times [0,1]$ be the projection map onto the quotient. Then
+    %
+    \[ (\pi \circ r)(z,1,t') = [z,1,t'] = [f(z),t'] = (\pi \circ u)(f(z),t') \]
+    %
+    inducing a map
+    %
+    \[ u: M_f \times [0,1] \to M_f \times [0,1] \]
+    %
+    which is a retraction, since $u$ is the unique map making the diagram below commute
+    %
+    \begin{center}
+    \begin{tikzcd}
+        ((Z \times [0,1]) \coprod A) \times [0,1] \arrow{r}{r} \arrow{d}{\pi} & ((Z \times [0,1]) \coprod A) \times \{ 0 \} \cup ((Z \times \{ 0, 1 \}) \coprod A) \times [0,1] \arrow{d}{\pi} \\
+        M_f \times [0,1] \arrow{r}{u} & M_f \times [0,1]
+    \end{tikzcd}
+    \end{center}
+    %
+    and since $r^2 = r$, $u^2$ also makes the diagram commute. We retract onto
+    %
+    \begin{align*}
+        &\pi(((Z \times [0,1]) \coprod A) \times \{ 0 \} \cup ((Z \times \{ 0, 1 \}) \coprod A) \times [0,1])\\
+        &\ \ \ \ \ = M_f \times \{ 0 \} \cup \pi(((Z \times \{ 0 \}) \coprod A) \times [0,1]))
+    \end{align*}
+    %
+    this implies $(M_f, \pi(Z \times \{ 0 \} \cup A))$ has the homotopy extension property. In turn, we find $(X,A)$ also has the homotopy extension property; take a map $g: X \to Y$ and a homotopy $H: A \times [0,1] \to Y$ with $g|_A = H(\cdot, 0)$. Take the constant homotopy on $\pi(X)$
+    %
+    \[ G: \pi(Z \times \{ 0 \} \cup A) \times [0,1] \to M_f\ \ \ \ \ G([a],t) = h^{-1}(H(a, t))\ \ \ \ \ G([z,0],t) = z \]
+    %
+    is a homotopy, and thus extends to a homotopy $\tilde{G}$ on $M_f$. Under the homeomorphism $h$, we obtain a homotopy on $N$, extending the homotopy $H$.
+
+
+    we may take the constant homotopy on $X - N$, and then apply the homotopy extension property on $(M_f, \pi(Z \times \{ 0 \} \cup A))$ to extend the map over $N$.
+\end{proof}
+
+\begin{theorem}
+    If $(X,A)$ is a CW pair, then $(X,A)$ has the homotopy extension property.
+\end{theorem}
+\begin{proof}
+    We prove that $X \times \{ 0 \} \cup A \times [0,1]$ is actually a deformation retraction of $X \times [0,1]$. There is an easy retraction $r: \mathbf{D}^n \times [0,1] \to \mathbf{D}^n \times \{ 0 \} \cup \partial \mathbf{D}^n \times [0,1]$, obtained by stereographic projection. It is a deformation retraction, a homotopy obtained by sliding down the stereographic projection on a time interval. Thus $(\mathbf{D}^n, \partial \mathbf{D}^n)$ has the homotopy extension property. Thus there is a deformation retraction from $X_n \times [0,1]$ onto
+    %
+    \[ X_n \times \{ 0 \} \cup (X_{n-1} \cup A_n) \times [0,1] \]
+    %
+    which is obtained by retracting each of the attaching disks. Perform this retraction on the time interval $[1/2^{n+1}, 1/2^n]$, and combine all of the retractions to obtain one from $X \times [0,1]$ onto $X \times \{ 0 \} \cup A \times [0,1]$. It is continuous on each $X_n \times [0,1]$, so it is continuous on the whole skeleton by the weak topology. Thus $(X, A)$ has the homotopy extension property.
+\end{proof}
+
+\begin{theorem}
+    If $(X,A)$ has the homotopy extension property and $A$ is contractible, then the quotient map $\pi:X \to X/A$ is a homotopy equivalence.
+\end{theorem}
+
+\newpage
 
 One may visualize homotopy for lower dimensional spaces in the following way. Let $f:X \to Y$ be a continuous map. Define the {\bf mapping cylinder}
 %
-\[ Z = (X \times [0,1]) \coprod Y / {\sim} \]
+\[ M_f = \left[(X \times [0,1]) \coprod Y\right] / ((x,1) \sim f(x)) \]
 %
-where $(x,1) \sim f(x)$. If $f$ is a homotopy equivalence, then $Z$ retracts to both $\pi(X \times \{0\}) = \tilde{X}$ and $\pi(Y) = \tilde{Y}$. Thus two spaces are homotopic if and only if they are both deformation retracts of a bigger space.
+where $(x,1) \sim f(x)$.
 
-The fact that homotopy is an equivalence relation will allow us to distill functions between spaces to their fundamental properties. We need to specialize our definition for it to be more of more use to us.
-
-\begin{definition}
-    Two paths in $X$ are path homotopic if they have the same start and end point, and are homotopic to each other.
-\end{definition}
-
-Let $f$ and $g$ be two paths in $X$, where the end point of $f$ is the start point of $g$. Then we may compose the two paths to form a new path $f * g$, defined by
-%
-\[ (f * g)(x) = f(2x): x \in [0,1/2]
-                g(2x - 1): x \in [1/2,1] \]
-%
-By the pasting lemma, this function is a path which connects the start point of $f$ to the end point of $g$. Unfortunately, concatenation is not associative, we do not have that $f * (g * h) = (f * g) * h$. These paths are homotopic to each other, however, and moving to path homotopy classes makes the definition much simpler.
-
-\begin{theorem}
-    Let $f$ be path homotopic to $f'$, and $g$ path homotopic to $g'$. Then $f * g$ is homotopic to $f' * g'$.
-\end{theorem}
+\begin{lemma}
+    If $f: X \to Y$ is a homotopy equivalence, and if $\pi$ is the projection onto the quotient, then $M_f$ retracts to both $\pi(X \times \{0\}) = \tilde{X}$ and $\pi(Y) = \tilde{Y}$.
+\end{lemma}
 \begin{proof}
-    Let $F$ be the path homotopy from $f$ to $f'$, and $G$ the path homotopy from $g$ to $g'$. Define a homotopy $H$ between $f * g$ and $f' * g'$ by
+    Surely $M_f$ retracts onto $Y$ by sliding down $X$, regardless of whether $f$ is a homotopy equivalence. Let $r([x,t]) = [f(x)]$, $r([y]) = [y]$ be the retraction. Let $g: Y \to X$ be a homotopy inverse for $f$. Let $H: X \times [0,1] \to X$ be a homotopy between $\text{id}_X$ and $g \circ f$. Then
     %
-    \[ H(\cdot,y) = F(\cdot, y) * G(\cdot, y) \]
+    \[ H(x,1) = (g \circ f)(x) = g(f(x)) \]
     %
-    More specifically
+    Since $H$ agrees with $g$ on the quotient of $M_f$, we induce a function
     %
-    \[ H(x,y) = \begin{cases}
-        F(2x,y) & \text{if } x \in [0,1/2]\\
-        G(2x - 1,y) & \text{if } x \in [1/2,1]\\
-\end{cases} \]
+    \[ \tilde{H}: M_f \to X \to X \times \{ 0 \} \]
     %
-    The pasting lemma guarentees this function is a new homotopy.
+    This is a retraction onto $\tilde{X}$, since $H(x,0) = x$. Let $K: Y \times [0,1] \to Y$ be a homotopy between $\text{id}_Y$ and $f \circ g$. Consider the map
+    %
+    \[ G([x,s], t) = [K(f(x), t)]\ \ \ \ \ \ \ \ \ \ G([y],t) = [K(y,t)] \]
+    %
+    $G$ is a homotopy between $r$ and
+    %
+    \[ k([x,s]) = G([x,s],1) = [K(f(x),1)] = [(f \circ g \circ f)(x)] \]
+    \[ k([y]) = G([y],1) = [(f \circ g)(y)] \]
 \end{proof}
 
-We now consider homotopy classes of paths, so when we talk about a path $f$, we are really talking about all paths homotopic to $f$.
+Thus two spaces are homotopic if and only if they are both deformation retracts of a bigger space.
+
+
+
+
+
+
+
+\chapter{Fundamental Groups}
+
+\section{The Fundamental Groupoid}
+
+In this chapter, we use homotopy to find a useful algebraic structure describing spaces. Two paths $\lambda:[0,1] \to X$ and $\gamma:[0,1] \to X$ are {\bf path homotopic} if $\lambda(0) = \gamma(0)$, $\lambda(1) = \gamma(1)$, if there is a homotopy $\{ \mu_t: [0,1] \to X \}$ between $\lambda$ and $\gamma$ such that $\mu_t(0) = \lambda(0)$, $\mu_t(1) = \lambda(1)$ for all $t \in [0,1]$. Thus a homotopy is a continuous deformation of the paths which fixes endpoints. $\{ \mu_t \}$ is known as a {\bf path homotopy}, and we write $\lambda \simeq_p \gamma$. It is simple to verify that $\simeq_p$ is an equivalence relation.
+
+\begin{example}
+    Any two paths $\lambda$ and $\gamma$ in $\mathbf{R}^n$ with the same start and endpoint are path homotopic, by the path homotopy
+    %
+    \[ \mu_t(u) = t \lambda(u) + (1 - t) \gamma(u) \]
+    %
+    which is continuous, since multiplication and addition are continuous in $\mathbf{R}^n$.
+\end{example}
+
+Given a space $X$, we shall define a category $\Pi(X)$, whose objects consists of points in $X$, and whose morphisms consist of homotopy classes of paths beginning at one point and ending at another. Let $\lambda$ be a path beginning at $x$ and ending at $y$, and a path $\gamma$ beginning at $y$ and ending at $z$. We define the composed path
+%
+\[ (\gamma * \lambda)(t) = \begin{cases} \lambda(2t) & t \leq 1/2 \\ \gamma(2t - 1) & t \geq 1/2 \end{cases} \]
+%
+If $\lambda \simeq_p \gamma$, and $\alpha \simeq_p \beta$, then $\lambda * \alpha \simeq_p \gamma * \beta$, so $*$ really acts on the morphisms in $\Pi(X)$, which are equivalence classes of paths. Composition of paths is not an associative operation, but when we project down to the quotient structure, we do have associativity
+%
+\[ [\lambda] * ([\gamma] * [\mu]) = [\lambda * (\gamma * \mu)] = [(\lambda * \gamma) * \mu] = ([\lambda] * [\gamma]) * [\mu] \]
+%
+it is easily verified that, while $\lambda * (\gamma * \mu) \neq (\lambda * \gamma) * \mu$, the two paths are path homotopic. Finally, we need to identify the `identity paths' in $\Pi(X)$. Given an point $x \in X$, consider the constant path $e_x$, which remains at $x$ at all time points. Then the path $e_x * c$ begins at one point, moves along $c$ at twice the rate than normal, and settles down at the end, waiting for half the time. We shall vary this speed continuously to construct a path homotopy between $c$ and $e_x * c$. Consider the path homotopy
+%
+\[ \mu_t(u) = \begin{cases} c(\frac{2t}{1+u}) & t \leq \frac{1 + u}{2} \\ c(1) & t \geq \frac{u}{2} \end{cases} \]
+%
+Similarily, $c * e_x \simeq_p c$, by the homotopy
+%
+\[ \mu_t(u) = \begin{cases} c(0) & t \leq \frac{1 - u}{2} \\ c(\frac{2t + u - 1}{1+u}) & t \geq \frac{1 - u}{2} \end{cases} \]
+%
+so that $e_x$ is the identity morphism in $\Pi(X)$, and $\Pi(X)$ is a category.
+
+We call a category where every morphism is invertible a {\bf groupoid}. Given a path $\gamma: [0,1] \to X$, consider the map $\overline{\gamma}: [0,1] \to X$, defined by $\overline{\gamma}(t) = \gamma(1 - t)$. We claim that $[\overline{\gamma}] = [\gamma]^{-1}$. This is because once $\gamma$ is composed with $\overline{\gamma}$, only the beginning point is fixed, so we can `pull' the path down to a point, by the homotopy
+%
+\[ \mu_t(u) = \begin{cases} c(2ut) & t \leq 1/2 \\ c(2u(1-t)) & t \geq 1/2 \end{cases} \]
+%
+This verifies that $[\overline{\gamma} \circ \gamma] = [e_x]$. That $[\gamma \circ \overline{\gamma}] = [e_x]$ follows because $\overline{\overline{\gamma}} = \gamma$. For this reason, $\Pi(X)$ is known as the {\bf fundamental groupoid} of $X$.
+
+The set of loops at a point (automorphisms in the category at a fixed object) form a group. For $x \in X$, the automorphism group at $x \in \Pi(X)$ will be denoted $\pi_1(X,x)$. If $X$ is path connected, then all objects in $\Pi(X)$ are isomorphic, and thus the group of loops at a point is invariant of which point we choose. We call this group\footnote{I suppose a pedantist would argue this is really a class of isomorphic groups, but \dots meh} the {\bf fundamental group} of $X$, denoted $\pi_1(X)$.
+
+\begin{example}
+    For a convex set $X$ in $\mathbf{R}^n$, any loop $\lambda$ can be contracted to a constant map, so $\pi_1(X)$ is the trivial group.
+\end{example}
+
+A space is {\bf simply connected} if it is path-connected and has trivial fundamental group. Every convex subset of $\mathbf{R}^n$ (and in general, any topological vector space) is simply connected. In terms of the fundamental groupoid, a space is simply connected if every object in the fundamental groupoid is initial.
+
+\begin{example}
+    If $n \geq 2$, then $S^n$ is simply connected. Consider any particular curve $\gamma$, with start-point $x$ and end-point $y$. Fix $z \neq x,y$, and pick a convex chart $(u,U)$ around $z$ not containing $x$ nor $y$. Then $\gamma^{-1}(U)$ is an open subset of $[0,1]$, and thus a union of certain intervals $(a_i,b_i)$, which we may have countably many of. Nonetheless, $\gamma^{-1}(z)$ is a compact subset, so is contained in only finitely many $(a_{i_1}, b_{i_1}), \dots, (a_{i_n}, b_{i_m})$. Suppose $m = 1$. Construct a continuous path from $\gamma(a_{i_1})$ to $\gamma(b_{i_m})$ which remains in $U$, and does not touch $z$. This is possible because it is possible in any connected, open subset of $\mathbf{R}^n$, for $n \geq 2$, and $U$ is homeomorphic to such a subset. Since $U$ is a convex subset, it is simply connected, and $\gamma$ is path homotopic to the modified path $\gamma'$, which does not touch $z$. In general, for $m > 1$, we remove the intersection intervals by induction. But if $\gamma$ does not touch $z$, then $\gamma$ remains in $S^n - \{ z \}$, which is homeomorphic to $\mathbf{R}^n$, and thus $\gamma$ is path homotopic to any other path which connects $x$ and $y$ and does not touch $z$. But then $\gamma \simeq_p \lambda$ for any other path $\lambda$, for $\lambda$ is path homotopic to a path which does not touch $z$.
+\end{example}
 
 \begin{theorem}
-    $[f] * ([g] * [h]) = ([f] * [g]) * [h]$.
+    Given two path connected spaces $X$ and $Y$, we have
+    %
+    \[ \Pi(X \times Y) \cong \Pi(X) \times \Pi(Y) \]
 \end{theorem}
+\begin{proof}
+    Given a paths $\gamma: [0,1] \to X \times Y$, we have two paths $\pi_X \circ \gamma: [0,1] \to X$, $\pi_Y \circ \gamma: [0,1] \to Y$, for which $\gamma = (\pi_X \circ \gamma) \times (\pi_Y \circ \gamma)$ We have
+    %
+    \[ \pi_X \circ (\gamma * \lambda) = (\pi_X \circ \gamma) * (\pi_X \circ \lambda) \]
+    %
+    and if $\gamma \simeq_p \lambda$, then $\pi_X \circ \gamma \simeq_p \pi_X \simeq_p \lambda$ and $\pi_Y \circ \gamma \simeq_p \pi_Y \circ \lambda$, so that map
+    %
+    \[ [\gamma] \mapsto ([\pi_X \circ \gamma], [\pi_Y \circ \gamma]) \]
+    %
+    is a well defined functor from $\Pi(X \times Y)$ to $\Pi(X) \times \Pi(Y)$, since the image of $e_{(x,y)}$ is $(e_x, e_y)$. It is easily verified to be an isofunctor.
+\end{proof}
 
+\begin{corollary}
+    $\pi_1(X \times Y) \cong \pi_1(X) \times \pi_1(Y)$.
+\end{corollary}
 
-
-
-
-
-
-
-\chapter{Appendix: CW complexes}
-
-We will not be able to approach algebraic topology on all the topological spaces, so we restrict ourselves to nice spaces. Manifolds are nice, but we can get away with a more general construction. These are the CW-complexes, described in detail in the appendix.
-
-Start with a discrete set $X_0$. Then, inductively construct $X_{n+1} = X_n \cup_{f_n} Y_n$, where $Y_n$ is the disjoint union of some number of unit disks $\mathbf{D}^n$ in $\mathbf{R}^n$, and $f_n: \partial Y_n \to X_{n-1}$ is a continuous attaching map. Then we have canonical maps $f_{ij}: X_i \to X_j$, for $i \leq j$. The direct limit
-%
-\[ \varinjlim X_i = \left( \coprod_{i = 1}^\infty X_i \right) / {\sim} \]
-%
-where $x \sim f_{ij}(x)$ for each $x \in X_i$, is known as a {\bf CW Complex}. If the $Y_i$ is empty for $i > n$, then $X_n \cong \varinjlim X_i$. If $Y_n$ is the largest non-empty set, then we call the CW complex $n$-dimensional. More generally, we shall call anything homeomorphic to a CW complex a CW complex.
+For some forthcoming examples, we shall assume $\pi_1(S^1) = \mathbf{Z}$. This will never factor into formal proofs until we perform the calculation, so it does not cause a logical issue. The reason for this is that it is in general very difficult to calculate the fundamental group of spaces, and we require examples for some of the theory.
 
 \begin{example}
-    A {\bf graph} is a 1-dimensional CW complex. It is the simplest example of a CW complex that isn't trivial. Each disk in $Y_1$ is attached between two points in $X_0$ to form $X_1$, and is known as an edge. The ends of an edgemay be attached to the same vertex.
+    The torus $\mathbf{T}^2$ can be described as the product $S^1 \times S^1$. Hence
+    %
+    \[ \pi_1(\mathbf{T}^2) = \pi_1(S^1 \times S^1) \cong \pi_1(S^1) \times \pi_1(S^1) \cong \mathbf{Z}^2 \]
+    %
+    In general, $\pi_1(\mathbf{T}^n) = \pi_1(S^1 \times \dots \times S^1) \cong \mathbf{Z}^n$.
+\end{example}
+
+
+
+
+
+\section{Induced Homomorphisms}
+
+The map $\Pi$ converts objects in $\textbf{Top}$  to object in the category $\textbf{Grpd}$ of groupoids. If $f: X \to Y$ is a map, and $\gamma$ is a path in $X$, then we define $f_*(\gamma) = f \circ \gamma$. If $\gamma \simeq_p \lambda$, then $f \circ \gamma \simeq_p f \circ \lambda$. Since
+%
+\[ f_*(\gamma * \lambda) = f \circ (\gamma * \lambda) = (f \circ \gamma) * (f \circ \lambda) \]
+%
+the map $f_*$ is a functor between $\Pi(X)$ and $\Pi(Y)$. It follows that $\Pi$ is actually a functor, since $(g \circ f)_* = g_* \circ f_*$, and ${(\text{id}_X)}_*$ is the identity map on $\Pi(X)$. It follows that if two spaces are homeomorphic, then they have isomorphic fundamental groupoids.
+
+\begin{theorem}
+    A retraction $r: X \to A$ and an embedding $i: A \to X$ induces a faithful functor $i_*: \Pi(A) \to \Pi(X)$. If $r$ is a strong deformation retraction, then $i_*$ is also full.
+\end{theorem}
+\begin{proof}
+    If $r$ is a retraction, then $r \circ i = \text{id}_A$, so
+    %
+    \[ r_* \circ i_* = (r \circ i)_* = {\text{id}_A}_* = \text{id}_{\Pi(A)} \]
+    %
+    Thus $i_*$ has a left inverse, and is therefore injective, hence faithful. Conversely, if $H: X \times [0,1] \to X$ is a deformation retraction between $\text{id}_X$ and $r$, then any path $\gamma$ between $a$ and $b$ in $A$ is path homotopic to $r_*(\gamma)$ via the map
+    %
+    \[ G(x,t) = H(\gamma(x),t) \]
+    %
+    Thus $i_*$ is surjective.
+\end{proof}
+
+\begin{example}
+    If $r$ retracts a simply connected space $X$ to a connected subset $A$, then $A$ is simply connected. This implies that there is no retraction from $\mathbf{D}$ onto $S^1$.
+\end{example}
+
+Retractions give strong relations between the fundamental group between spaces. For $a \in A$, the map $(i \circ r)_*: \pi_1(X,a) \to \pi_1(X,a)$ is a retraction onto $\pi_1(A,a)$, viewed as a subset of $\pi_1(X,a)$. If $\pi_1(A,a)$ is normal in $\pi_1(X,a)$, then
+%
+\[ \pi_1(X,a) \cong \pi_1(A,a) \times \text{ker}((i \circ r)_*) \]
+%
+More generally, if $\pi_1(A,a)$ is not normal, then we must instead take the semidirect product
+%
+\[ \pi_1(X,a) \cong \pi_1(A,a) \rtimes \text{ker}((i \circ r)_*) \]
+%
+Thus we can find whether there is a retraction to a subspace by comparing fundamental groups.
+
+While the fundamental groupoid is a more sophisticated and general construction, the fundamental group is normally easier to compute with. Since the fundamental group is basepoint dependant, it is best to consider the construction as a functor on the category $\textbf{Top.}$ of {\bf pointed topological spaces}, whose objects are pairs $(X,x_0)$, with $x_0 \in X$ is a fixed point, and whose morphisms are {\bf basepoint proserving maps}, $f: (X,x_0) \to (Y,y_0)$ which are continuous maps from $X$ to $Y$ which map $x_0$ to $y_0$. Given $f$, $f_*$ can be seen as a map from $\pi(X,x_0) \to (Y,y_0)$, so $\pi$ is a functor. A {\bf basepoint preserving homotopy} between two maps $f,g: (X,x_0) \to (Y,y_0)$ is a homotopy $H: X \times [0,1] \to X$ between $f$ and $g$ such that $H(x_0, t) = x_0$ for all $t \in [0,1]$. If $f$ is basepoint homotopic to $g$, then $f_* = g_*$ on the fundamental groups, since
+%
+\[ f_*([\gamma]) = [f \circ \gamma] = [g \circ \gamma] = g_*([\gamma]) \]
+%
+A basepoint preserving homotopy equivalence therefore induces an isomorphism between the fundamental groups at each point.
+
+We shall show that general homotopy equivalences preserve the fundamental group. The trick to this is showing that, even though we do not preserve a point $x_0$ in the homotopy equivalence, the path obtained by following the image of $x_0$ allows us to construct a homotopy between the two sets.
+
+\begin{lemma}
+    If $H$ is a homotopy between $f$ and $g$, and $h: [0,1] \to Y$ is the path $h(t) = h(x_0,t)$, then the diagram below commutes.
+    %
+    \begin{center}
+    \begin{tikzcd}
+        & \pi_1(Y, g(x_0)) \arrow{d}[right]{\beta_h: [\gamma] \mapsto [h * \gamma * \overline{h}]}\\
+        \pi_1(X,x_0) \arrow{ru}{g_*} \arrow{r}[below]{f_*} & \pi_1(Y,f(x_0))
+    \end{tikzcd}
+    \end{center}
+\end{lemma}
+\begin{proof}
+    There is a path homotopy $G$ between $h * (g \circ \gamma) * \overline{h}$ and $f \circ \gamma$. TO see this, define a path $h_t$ to be a segment of the path $h$, defined by $h_t(u) = h(tu)$. Then take $G$ to be
+    %
+    \[ G(u,t) = (h_t * H(\cdot, t)_*(\gamma) * \overline{h_t})(u) \]
+    %
+    We compute $G(0,t) = (h_0 \circ f_*(\gamma) \circ \overline{h_0})(t)$, a path which is path homotopic to $f \circ \gamma$ by reparameterization, and $G(1,t) = (h \circ g_*(\lambda) \circ \overline{h})(t)$, which is the path $h * (g \circ \gamma) * \overline{h}$. Thus $\beta_h \circ g_*([\gamma]) = [h * (g \circ \gamma) * \overline{h}] = [f \circ \gamma]$.
+\end{proof}
+
+We note that $\beta_h: [\gamma] \mapsto [h * \gamma * \overline{h}]$ is an isomorphism from $\pi_1(Y, g(x_0)$ to $\pi_1(Y, f(x_0))$, since if $[h * \gamma * \overline{h}] = [e_x]$, then $[\gamma] = [e_x]$ by composing inverses, so the map is injective and $[h * (\overline{h} * \gamma * h) * \overline{h}] = [\gamma]$, so the map is surjective.
+
+\begin{theorem}
+    if $f: X \to Y$ is a homotopy equivalence, then
+    %
+    \[ f_*: \pi(X, x_0) \to \pi_1(Y, f(x_0)) \]
+    %
+    is an isomorphism for each $x_0 \in X$.
+\end{theorem}
+\begin{proof}
+    Let $g: Y \to X$ be a homotopy inverse for $f$. Consider the maps
+    %
+    \[ \pi_1(X,x_0) \xrightarrow{f_*} \pi_1(Y, f(x_0)) \xrightarrow{g_*} \pi_1(X, (g \circ f)(x_0)) \xrightarrow{f_*} \pi_1(Y, (f \circ g \circ f)(x_0)) \]
+    %
+    Since $g \circ f$ is homotopic to $\text{id}_X$, it follows that $(g \circ f)_*$ is conjugation by $h$ for some path $h$, and is therefore an isomorphism, so $f_*$ is injective. The same argument shows $(f \circ g)_*$ is an isomorphism, so $f_*$ is also surjective.
+\end{proof}
+
+\begin{corollary}
+    A homotopy equivalence $f:X \to Y$ induces a full functor $f_*$ from $\Pi(X)$ to $\Pi(Y)$.
+\end{corollary}
+
+
+
+
+\section{Van Kampen's Theorem}
+
+
+
+
+\section{Covering Spaces}
+
+We have uncovered some basic mechanisms which govern the fundamental groups of a space, but we still haven't computed any interesting fundamental groups. The general problem of finding fundamental groups is provably computationally intractable, so it makes sense that these groups are hard to calculate. Algebraic topology must strike a balance with finding algebraic structures which are both easy to calculate, and powerful enough to distinguish spaces.
+
+The theory of covering spaces is deeply connected to field theory. Galois' correspondence shows that subextensions of a field extension corresponds to subgroups of the Galois group. If one knows the subextensions, one may calculate the Galois group. In the theory of fundamental groups, one corresponds covering spaces of a space, which correspond to subgroups of the fundamental group of the space.
+
+A {\bf covering space} is a space $E$ together with a surjective map $p: E \to B$, such that there exists an open cover $\{ U_\alpha \}$ with $p^{-1}(U_\alpha)$ is the disjoint union of open sets in $E$ known as {\bf folds} or {\bf sheets}, with each fold mapping homeomorphically onto $U_\alpha$ by the map $p$. The cardinality of the number of folds at a point is locally finite, so is constant on a connected covering space. An {\bf $\bf{n}$-fold cover} has $n$ folds at each point.
+
+\begin{example}
+    The primordial example of a covering space is $\mathbf{R}$ over $S^1$, bound by the projection $p(t) = e^{it}$. $p$ is an open map, since it is a differentiable and has full rank at every point.For each $x$, the inverse image of any open arc in $S^1$ splits into countably many disjoint intervals mapping homeomorphically onto the arc. Thus $p$ really is a cover. One can view this covering space as an infinite helix which wraps around the circle.
 \end{example}
 
 \begin{example}
-    The $n$-sphere $S^n$ is a CW complex. We take $X_0 = \{ x_0 \}$, and attach $\mathbf{D}^n$ via the trivial map $f: \mathbf{D}^n \to \{ x_0 \}$. This follows because $S^n \cong \mathbf{D}^n / \partial \mathbf{D}^n$.
+    $S^1$ is also a cover for $S^1$, together with the map $p(z) = z^n$. One visualizes this as a finite helix which wraps around $S^1$ $n$ times, then connects back with itself. Alternatively, take the curve around the torus which wraps around $n$ times, and project it down to the circle used to form the surface of revolution of the torus.
+\end{example}
+
+It turns out that the covers above are the only covers on $S^1$, and each corresponds to a unique subgroup of $\pi_1(S^1)$, which we will (eventually) show to be $\mathbf{Z}$. The cover by $\mathbf{R}$ corresponds to $\mathbf{Z}$ itself, and the loop which revolves $n$ times around the torus corresponds to $n \mathbf{Z}$.
+
+\begin{example}
+    Covers of 2-oriented graphs?
+\end{example}
+
+The primary technique in covering space theory is that covers enables us to transfer functions from the base space into the extension space. A {\bf lift} of a map $f: X \to B$ is a map $\tilde{f}: X \to E$ for which $p \circ \tilde{f} = f$. The primary techniques of covering spaces result from the existence of lifts.
+
+\subsection{Lifting}
+
+\begin{theorem}[Homotopy Lifting Lemma]
+    Given a covering space $p: E \to B$, and a homotopy $H: X \times [0,1] \to B$ between $f$ and $g$, then a lift $\tilde{f}$ of $f$ induces a unique lifted homotopy $\tilde{H}: X \times [0,1] \to E$ between $\tilde{f}$ and some lift of $g$.
+\end{theorem}
+\begin{proof}
+    We shall construct a lift locally around $\{ x \} \times [0,1]$ for each $x \in X$. Provided these lifts are unique, we can put them all together to form a homotopy on the whole space. Fix $x \in X$. For each $t$, pick a neighbourhood $U_t$ of $x$, and $t \in [a_t, b_t]$ for which $H(U_t \times [a_t, b_t])$ is contained in some $U_\alpha$. The compactness of $\{ x \} \times [0,1]$ allows us to cover this by finitely many $U_t \times [a_t, b_t]$. Taking the intersection of the $U_t$, we find a neighbourhood $N$ and $0 = t_0 < \dots < t_n = 1$ such that $H(N \times [t_i, t_{i+1}]) \subset U_\alpha$ for some $\alpha$. Assume we have constructed $\tilde{H}$ on $[0,t_n]$ (which we already have, for $n = 0$, since we have the lift $\tilde{f}$). We know $H(N \times [t_n, t_{n+1}]) \subset U_\alpha$ for some $\alpha$, so pick a homeomorphic $V$ containing $(x,t_n)$ in $p^{-1}(H(N \times [t_n, t_{n+1}]))$. By choosing $N$ to be smaller, we may assume that $\tilde{H}(N \times \{ t_n \})$ is contained in $V$. Now extend $\tilde{H}$ by composing $H$ with the homeomorphism $p^{-1}: U_\alpha \to V$. After finitely many steps, we obtain a lift $\tilde{H}$ in a neighbourhood of $x$.
+
+    To verify uniqueness, we assume, without loss of generality, that $x$ consists of a single point. If $X$ consists of more than one point, we find by the single point theorem that the homotopy $H$ lifts uniquely on the fibre of each $x \in X$, and by combining all $x$, we find the homotopy generally lifts uniquely. In the singular case, a homotopy can be viewed as a path in $B$. Suppose $\tilde{H}$ and $\tilde{H}'$ are two lifts of $H$. Pick $0 = t_0 < t_1, \dots < t_n = 1$ such that $H([t_i, t_{i+1}])$ is in some $U_\alpha$. Assume by induction that $\tilde{H}$ and $\tilde{H}'$ agree on $[0,t_i]$. Since $[t_n, t_{n+1}]$ is connected, $\tilde{H}([t_n, t_{n+1}]$ must be contained in one fold of $U_\alpha$. The same is true of $\tilde{H}'([t_n, t_{n+1}])$, and this must be the same fold, since $\tilde{H}(t_n) = \tilde{H}'(t_n)$. This implies that $\tilde{H} = \tilde{H}'$ on $[t_n, t_{n+1}]$, for there is only one way to define the maps on the fold such that they lift $H$. By induction, we verify the claim.
+\end{proof}
+
+The case where $X$ consists of a point is useful in of itself.
+
+\begin{corollary}[Path Lifting Lemma]
+    Given a path $\gamma$ beginning at $b \in B$, a point $e \in p^{-1}(b)$ induces a unique path $\tilde{\gamma}$ lifting $\gamma$, beginning at $e$.
+\end{corollary}
+
+Similarily, a path homotopy $H$ between $\gamma$ and $\lambda$ lifts to a unique path homotopy $\tilde{H}$ given a particular point $e \in p^{-1}(\gamma(0)) = p^{-1}(\lambda(0))$. This has a useful application.
+
+\begin{theorem}
+    A cover $p: E \to B$ induces a faithful functor $p_*: \Pi(E) \to \Pi(B)$.
+\end{theorem}
+\begin{proof}
+    If $\gamma \simeq_p \lambda$ in $B$ start at $b \in B$, then the path homotopy $H$ between $\gamma$ and $\lambda$ lifts to a homotopy between the lifts of $\gamma$ and $\lambda$ at each $e \in p^{-1}(b)$. Thus $p_*$ is injective on each set of morphisms with a given source and target.
+\end{proof}
+
+Note that we may consider covers $p: (E,e_0) \to (B,b_0)$ in $\textbf{Top.}$, and the last theorem gives us a corollary for the fundamental group.
+
+\begin{corollary}
+    A cover $p: (E,e_0) \to (B,b_0)$ induces an injective homomorphism $p_*: \pi_1(E,e_0) \to \pi_1(B,b_0)$.
+\end{corollary}
+
+\begin{theorem}
+    The number of sheets of a connected cover $p: (E,e_0) \to (B,b_0)$ is the index of $p_*(\pi(E,e_0))$ in $\pi_1(B,b_0)$.
+\end{theorem}
+\begin{proof}
+    Let $\gamma$ and $\lambda$ be loops at $b_0$. Then $\gamma$ and $\lambda$ lift uniquely to paths $\tilde{\gamma}$ and $\tilde{\lambda}$ beginning at $e_0$. If $\tilde{\lambda}$ and $\tilde{\gamma}$ have the same endpoint, then $[\lambda]$ and $[\gamma]$ are conjugate relative to $p_*(\pi(E,e_0))$, for
+    %
+    \[ [\gamma] = [\lambda] * [\overline{\lambda} * \gamma] \]
+    %
+    and $\overline{\lambda} * \gamma$ lifts to a loop at $e_0$.
+\end{proof}
+
+A {\bf universal cover} is a cover $p: E \to B$ for which $E$ is simply connected.
+
+\begin{corollary}
+    The number of sheets in a universal cover $p: (E,e_0) \to (B,b_0)$ is the cardinality of $\pi_1(B,b_0)$.
+\end{corollary}
+
+\begin{example}
+    The universal cover $p: \mathbf{R} \to S^1$ tells us $\pi_1(S^1)$ is countable. The projections $\pi: S^n \to \mathbf{R} \mathbf{P}^n$ is a 2-fold cover which is universal for $n \geq 2$, so $\pi_1(\mathbf{R} \mathbf{P}^n) \cong \mathbf{Z}_2$.
+\end{example}
+
+\begin{theorem}
+    Given a cover $p:(E,e_0) \to (B,b_0)$, and a path-connected, locally path-connected $X$, a map $f: (X,x_0) \to (B,b_0)$ lifts to $\tilde{f}: (X,x_0) \to (E,e_0)$ if and only if $f_*(\pi_1(X,x_0)) \subset p_*(\pi_1(E,e_0))$
+\end{theorem}
+\begin{proof}
+    If $\tilde{f}$ exists, then $f_* = p_* \circ \tilde{f}_*$, so the subset relation holds. Conversely, for $x \in X$, consider a path $\gamma$ from $x_0$ to $x$. Then $f_*(\gamma)$ is a path from $b_0$ to $b$, which lifts uniquely to a path from $e_0$ to another point, which we shall define to be $\tilde{f}(x)$. If $\lambda$ is another path from $x_0$ to $x$, then $\overline{\gamma} * \lambda$ is a loop at $e_0$, so $f_*(\overline{\gamma} * \lambda) = \overline{f_*(\gamma)} * f_*(\lambda)$ is a loop at $b_0$ which lifts to a loop at $e_0$, which we may then compose with the lift of $\gamma$, which is path homotopic to the lift of $\gamma$ and thus moves to the same endpoint. $\tilde{f}$ satisfies our needs provided it is continuous. If $U_\alpha$ is an open prefold in $B$, fix $x \in f^{-1}(U_\alpha)$ and pick a path connected $x \in V \subset f^{-1}(U_\alpha)$. If $y$ is also in $V$, then there is a path $\gamma$ between $x$ and $y$, which induces a path between $\tilde{f}(x)$ and $\tilde{f}(y)$ in $p^{-1}(U_\alpha)$. Thus $\tilde{f}(x)$ and $\tilde{f}(y)$ are in the same fold, so that locally $\tilde{f}$ is just $p^{-1} \circ f$, and therefore continuous.
+\end{proof}
+
+\begin{lemma}[Lifting Lemma]
+    If $p: E \to B$ is a cover, and $f: X \to B$ have two lifts $\tilde{f}$ and $\tilde{f}'$ that agree at a point, then provided $X$ is connected $\tilde{f} = \tilde{f}'$.
+\end{lemma}
+\begin{proof}
+    Let $C = \{ x \in X : \tilde{f}(x) = \tilde{f}'(x) \}$. Then $C$ is open, for if $\tilde{f}(x) = \tilde{f}'(x)$, pick a sheet $V$ around $f(x)$ which projects by $p$ onto some presheet $U_\alpha$. Then if $W$ is a neighbourhood of $x$ such that $\tilde{f}(W), \tilde{f}'(W) \subset V$, then on $W$  we must have $\tilde{f} = \tilde{f}'$, since there is only one way to define the lift here. A similar construction shows $C^c$ is open, so $C = X$, since it is open, closed, and nonempty.
+\end{proof}
+
+
+\subsection{Existence of a Universal Cover}
+
+Universal covers are the nicest covers to possess, and we would like to find them when they exist. Like with algebraic closures and splitting extensions, we will find the universal cover is unique up to cover isomorphism. First, lets construct the universal cover.
+
+We shall call a space $X$ is a {\bf semilocally simply connected} if every point $x$ has a neighbourhood $U$ for which the inclusion map induces a trivial morphism $i_*: \pi_1(U,x) \to \pi_1(X,x)$. This is a necessary condition for the existence of a universal cover, for if $p: E \to B$ is universal, then $b$ has a neighbourhood $U$ homeomorphic to some neighbourhood $V$ of $e$ in $E$. Each loop in $U$ then lifts to a loop in $V$, and this lifted loop is nullhomotopic in $E$. Projecting this nullhomotopy down by $p$ gives us a nullhomotopic loop in $B$. We shall construct universal covers for semilocally simply connected, path connected, locally path connected spaces.
+
+\begin{theorem}
+    Every semilocally simply connected, locally path connected, path connected space has a universal cover.
+\end{theorem}
+\begin{proof}
+Suppose we have a universal cover $p: (E,e_0) \to (B,b_0)$. Then we know that each homotopy class of paths in $B$ lifts uniquely to a homotopy class of paths in $E$ starting at $e_0$, and conversely, each point $e$ in $E$ corresponds to the lift of the projection of the unique homotopy class of paths from $e_0$ to $e$. Thus a good place to start construction a universal cover for $B$ seems to be $\Pi(B)$. In particular, consider
+%
+\[ \tilde{B} = \coprod_{e \in E} \text{Mor}_{\Pi(B)}(e_0, e) \]
+%
+We have a surjective projection $p([\gamma]) = \gamma(1)$. We shall assign a topology to $\tilde{B}$ making the space a simply connected cover of $B$, for which $p$ is a continuous projection.
+
+Let $\mathcal{U}$ be a collection of all path connected subsets $U$ of $X$ such that the embedding $i_*: \Pi(U) \to \Pi(X)$ is trivial. Then $\mathcal{U}$ is a basis for $X$ if $X$ is locally path connected and semilocally simply-connected, for if $V \subset U$ is path connected, then the injection $\Pi(V) \to \Pi(U) \to \Pi(X)$ must be trivial. We shall use $\mathcal{U}$ to construct a topology on $\tilde{B}$. Given a path class $[\gamma]$ and $U \in \mathcal{U}$, define
+%
+\[ U_{[\gamma]} = \{ [\lambda * \gamma] : \lambda\ \text{is a path in}\ U\ \text{with}\ \lambda(0) = \gamma(1) \} \]
+%
+Then $p|_{U_{[\gamma]}}$ is onto $U$, and injective for if $(\lambda * \gamma)(1) = (\mu * \gamma)(1)$, then $\lambda$ and $\mu$ both have the same end point, so $\lambda \simeq_p \mu$ in $U$, and $[\lambda * \gamma] = [\mu * \gamma]$. Furthermore, if $[\lambda] \in U_{[\gamma]}$, then $U_{[\gamma]} = U_{[\lambda]}$. This shows that $U_{[\gamma]}$ forms a basis for a topology on $\tilde{B}$, and $p$ is locally a homeomorphism, since for $V \subset U$, $p(V_{[\gamma]}) = V$. $p^{-1}(V) = \bigcup_{[\gamma]} V_{[\gamma]}$, which are disjoint or equal. This completes the construction of the universal cover.
+\end{proof}
+
+The existence of the universal cover give rise to a large variety of different covers, corresponding to subgroups of $\pi_1(B)$.
+
+\begin{theorem}
+    If $B$ is path connected, locally path connected, and semilocally simply connected, then for every subgroup $H < \pi_1(B,b_0)$ there is a cover $p_H: (E,e_0) \to (B,b_0)$ such that $(p_H)_*(\pi_1(E,e_0)) = H$.
+\end{theorem}
+\begin{proof}
+    Take a quotient on $\tilde{B}$, as in the last proof, that identifies $[\gamma]$ and $[\lambda]$ if $\gamma(1) = \lambda(1)$, and $[\overline{\lambda} * \gamma] \in H$, to form the space $\tilde{B}_H$. If $[\alpha * \lambda] \in U_{[\lambda]}$ is identified with $[\beta * \gamma] \in U_{[\gamma]}$, then $U_{[\gamma]}$ is identified with $U_{[\lambda]}$, for if $[\mu]$ is identified with $[\nu]$, then $[\eta * \mu]$ is identified with $[\eta * \nu]$ and $[\mu * \eta]$ is identified with $[\nu * \eta]$ if $\nu$ is a loop at $e_0$. Thus $[\delta * \lambda] = [\delta * \overline{\alpha} * \alpha * \lambda]$ is identified with $[\delta * \overline{\alpha} * \beta * \gamma]$. The natural basepoint is the image of the constant map $[e_{e_0}]$, which is projected onto $e_0$. Points identified project to the same point by $p$, so we obtain $p_H: (\tilde{B}_H, [e_{e_0}]) \to (B,b_0)$, which is still a cover, for we have identified entire sheets at once. We have
+    %
+    \[ (p_H)_*(\pi_1(\tilde{B}_H, [e_{e_0}])) = H \]
+    %
+    for a loop $\gamma$ at $b_0$ lifts to a loop at $[e_{e_0}]$ if and only if $[\gamma]$ is contained in $H$.
+\end{proof}
+
+\subsection{Isomorphisms of Covering Spaces}
+
+Now we turn to the question of uniqueness of covering spaces. A morphism between covering spaces $p: E \to B$ and $p' : E' \to B$ is a map $f: E \to E'$ such that the diagram below commutes
+%
+\begin{center}
+\begin{tikzcd}
+    E \arrow{rr}{f} \arrow{rd}[below]{p} & & E' \arrow{ld}[below]{p'} \\
+    & B &
+\end{tikzcd}
+\end{center}
+
+\begin{theorem}
+    If $B$ is path-connected and locally path-connected, then two path-connected covering spaces $p_1: E \to B$ and $p_2: E' \to B$ are isomorphic via an isomorphism $f: E \to E'$ taking $e_0 \in p^{-1}(b_0)$ to $e_1 \in p^{-1}(b_0)$ if and only if $(p_1)_*(\pi_1(E,e_0)) = (p_2)_*(\pi_1(E',e_1))$.
+\end{theorem}
+\begin{proof}
+    If $f$ exists, the relation must hold. Conversely, suppose
+    %
+    \[ (p_1)_*(\pi_1(E,e_0)) = (p_2)_*(\pi_1(E',e_1)) \]
+    %
+    By the lifting criterion, we may lift $p_1$ to a map $\tilde{p_1}: (E,e_0) \to (E',e_1)$. Conversely, we may lift $p_2$ to $\tilde{p_2}: (E', e_1) \to (E,e_0)$, since lifts must be unique, $\tilde{p_2} \circ \tilde{p_1}$ and $\tilde{p_1} \circ \tilde{p_2}$ must be the identity, so $\tilde{p_1}$ is an isomorphism between the two covering spaces.
+\end{proof}
+
+We have justified the first half of the classification theorem for covering spaces.
+
+\begin{theorem}
+    If $(B,b_0)$ is a path-connected, locally path-connected, semilocally simply connected pointed space, then there is a bijection between isomorphism classes of path-connected covering spaces $p: (E,e_0) \to (B,b_0)$ and subgroups of $\pi_1(B,b_0)$, obtained by associative $p$ with $p_*(\pi(E,e_0))$. When basepoints are ignored, one obtains a bijection between isomorphism classes of spaces $p: E \to B$ and conjugacy classes of subgroups of $\pi_1(B,b_0)$.
+\end{theorem}
+\begin{proof}
+    We need only prove the last statement. Given the projection $p: (E,e_0) \to (B,b_0)$, consider a path $\tilde{\gamma}$ from $e_0$ to $e_1$, with $e_1 \in p^{-1}(b_0)$. Then $\tilde{\gamma}$ projects to some $\gamma \in \pi_1(B,b_0)$. Let $H_0 = p_*(\pi_1(E,e_0))$, and $H_1 = p_*(\pi_1(E,e_1))$. Then $\gamma * H_0 * \overline{\gamma} \subset H_1$, since $\gamma * h * \overline{\gamma}$ lifts to a path that begins at $e_1$, goes to $e_0$, and then returns to $e_1$. But by symmetry, $\overline{\gamma} * H_1 * \gamma \subset H_0$, so that $H_0$ and $H_1$ are conjugate. Conversely, given $H_1 = \gamma * H_0 * \overline{\gamma}$, consider the isomorphism from $p: (E,e_0) \to (B,b_0)$ to $p: (E,e_1) \to (B,b_0)$, where $e_1$ is the endpoint of the lift of $\overline{\gamma}$ beginning at $e_0$.
+\end{proof}
+
+
+
+
+
+
+
+\chapter{Homology}
+
+The main study of homology revolves around the functors $C_n$ from $\textbf{Delta}$ to $\textbf{Ab}$, which associates with each $\Delta$-set $\mathfrak{S}$ the abelian groups $C_n(\mathfrak{S})$, which is the free abelian group whose generators are simplexes in $\mathfrak{S}_n$. Elements of $C_n(\mathfrak{S})$ are known as $n$-chains. We define the {\bf differentials} $d_n: C_n(\mathfrak{S}) \to C_{n-1}(\mathfrak{S})$ by
+%
+\[ d_n(S) = \sum_{k = 0}^n (-1)^k \partial_k S \]
+%
+and $d_0: C_0(\mathfrak{S}) \to (0)$ the trivial map. Extending this to arbitrary linear combinations of the $S$. We therefore obtain an infinite sequence
+%
+\[ \dots C_n(\mathfrak{S}) \xrightarrow{d_n} \dots \xrightarrow{d_3} C_2(\mathfrak{S}) \xrightarrow{d_2} C_1(\mathfrak{S}) \xrightarrow{d_1} C_0(\mathfrak{S}) \]
+
+\begin{lemma}
+    For each $n$, $d_{n-1} \circ d_n: C_n(\mathfrak{S}) \to C_{n-2}(\mathfrak{S})$ is the zero map. Leaving out indices, we say $d^2 = 0$.
+\end{lemma}
+\begin{proof}
+    We need only prove this for each element of the basis. Let $S \in \mathfrak{S}_n$. Then, using the identity $\partial_i \partial_j = \partial_{j-1} \partial_i$ for $i < j$,
+    %
+    \begin{align*}
+        (d_{n-1} \circ d_n)(S) &= d_{n-1} \left( \sum_{i = 0}^n (-1)^i \partial_i S \right)\\
+        &= \sum_{i = 0}^n (-1)^i d_{n-1}(\partial_i S)\\
+        &= \sum_{i = 0}^n \sum_{j = 0}^{n-1} (-1)^{i+j} (\partial_j \partial_i S)\\
+        &= \sum_{i = 1}^n \sum_{j = 0}^{i-1} (-1)^{i+j} \partial_{i-1} \partial_j S + \sum_{i = 0}^n \sum_{j = i}^{n-1} (-1)^{i + j} \partial_j \partial_i S\\
+        &= - \sum_{i = 0}^{n-1} \sum_{j = 0}^i (-1)^{i+j} \partial_i \partial_j S + \sum_{i = 0}^n \sum_{j = i}^{n-1} (-1)^{i+j} \partial_j \partial_i S\\
+        &= - \sum_{i = 0}^{n-1} \sum_{j = 0}^i (-1)^{i+j} \partial_i \partial_j S + \sum_{j = 0}^{n-1} \sum_{i = 0}^j (-1)^{i+j} \partial_j \partial_i S = 0\\
+    \end{align*}
+    %
+    We have verified that $d^2 = 0$ by calculation.
+\end{proof}
+
+A {\bf chain complex} is an arbitrary sequence of abelian groups
+%
+\[ \dots A_n \xrightarrow{d_n} \dots \xrightarrow{d_3} A_2 \xrightarrow{d_2} A_1 \xrightarrow{d_1} A_0 \]
+%
+such that $d_n \circ d_{n+1} = 0$ for all $n$. The $d_i$ are known as the boundary operators. A {\bf chain map} between chain complexes $A$ and $B$ are a sequence of homomorphisms $f = \{ f_i : A_i \to B_i \}$ such that the family of diagrams
+%
+\begin{center}
+\begin{tikzcd}
+    A_{n+1} \arrow{r}{f_{n+1}} \arrow{d}{d_{n+1}} & B_{n+1} \arrow{d}{d_{n+1}} \\
+    A_n \arrow{r}{f_n} & B_n
+\end{tikzcd}
+\end{center}
+%
+commute. This makes the set of chain complexes a category $\textbf{Chain}$, and we have basically argued the existence of a natural functor from $\textbf{Delta}$ to $\textbf{Chain}$. The {\bf $\mathbf{n}$'th simplicial homology group} of a $\Delta$-set $\mathfrak{S}$ is
+%
+\[ H^\Delta_n(\mathfrak{S}) = \text{ker}(d_n)\ /\ \text{im}(d_{n+1}) \]
+%
+It is the basic invariant of homology theory. It is a way to count holes in the geometric simples $|\mathfrak{S}|$, for the kernel of $d_n$ can be seen as the spaces which can be filled by elements of $\mathfrak{S}_{n+1}$, but we wish to discount the boundaries of spaces which are already filled, hence modulation by the image.
+
+
+
+
+
+
+
+
+
+
+\chapter{Appendix: CW-Complexes}
+
+Algebraic topology is difficult to approach from the perspective of all the topological spaces, since general topological spaces are very pathological. We restrict ourselves to nice spaces. Manifolds are pleasant, but we can get away with a more general construction. These are the CW-complexes.
+
+A {\bf cell decomposition} of a space $X$ together is a partition $\mathcal{C}$ of $X$ into subsets $C$ of $X$ relatively homeomorphic to $B_{\mathbf{R}^n}$ for some $n \geq 0$. Elements of $\mathcal{C}$ are known as {\bf cells}. A cell decomposition is {\bf finite} if the partition is finite. The set of cells homeomorphic to $B_{\mathbf{R}^n}$, for a fixed $n \geq 0$, are the $n$-cells, denoted $\mathcal{C}_n$. The {\bf dimension} of a decomposition, if it exists, is the largest $n$ for which $\mathcal{C}_n$ is non-empty. The $n$-skeleton of a cell decomposition is the subspace $\bigcup \left( \bigcup_{i \leq n} \mathcal{C}_i \right)$ of $X$. A {\bf cell complex} is a space $X$ together with a fixed cell decomposition $\mathcal{C}$. In this case, we denote the $n$ skeleton by $X_n$. A decomposition $\mathcal{C}$ of a Hausdorff space $X$ is a {\bf CW-decomposition} if
+%
+\begin{itemize}
+    \item (Extension Maps) For each cell $C \in \mathcal{C}_n$, there is a map $f: \mathbf{D}^n \to X$ such that $f|_{B_{\mathbf{R}^n}}$ is an embedding onto $C$. All zero cells are closed in $X$.
+    \item ({\bf C}losure finiteness) The closure of each $n$-cell intersects only finitely many other cells, and these other cells are contained in the $n-1$ skeleton.
+    \item ({\bf W}eak Topology) A subset $D$ of $X$ is closed if and only if $D \cap \overline{C}$ is closed in $\overline{C}$ for each cell $C \in \mathcal{C}$. Thus $X$ possesses the weakest topology such that each map $f: \mathbf{D}^n \to X$ chosen above is continuous. This is superfluous if $\mathcal{C}$ is finite.
+\end{itemize}
+%
+A {\bf CW-complex} is a Hausdorff space $X$ together with a fixed CW decomposition. It is the primary object of study in algebraic topology, since it is essentially a combinatorial object. The advantage of the weak topology is that $f: X \to Y$ is continuous if and only if $f|_{\overline{C}}$ is continuous for each $\overline{C}$, and thus on a certain disjoint union of $\mathbf{D}^n$, provided they are compatible with one another.
+
+For each cell $C$ in a CW complex $(X,\mathcal{C})$, fix a map $f_C: \mathbf{D}^n \to X$ which extends a homeomorphism, as in the definition of the complex. Then $X$ is homeomorphic to a quotient of
+%
+\[ \coprod_{k = 0}^\infty \coprod_{C \in \mathcal{C}_n} \mathbf{D}^n \]
+%
+where $x_C$ and $y_D$ are identified if $f_C(x) = f_D(y)$. Since we have a surjective map $g$ from the coproduct to $X$, by combining all $f_C$, we also have a surjective map $\tilde{g}$ from the quotient, which is injective by construction. It is also closed, since each $f_C$ is closed (a map from a compact set is automatically closed), and the space has the weak topology. Thus $\tilde{g}$ is a homeomorphism.
+
+Now let $(X,\mathcal{C})$ be a CW complex. Pick $f_C$ for each $C \in \mathcal{C}_n$. Then
+%
+\[ X_n \cong X_{n-1} \coprod \left( \coprod_{C \in \mathcal{C}_n} \mathbf{D}^n \right)  \]
+%
+which identifies $x \in (C,\partial \mathbf{D}^n)$ with $f_C(x) \in X_{n-1}$. For each $i \leq j$, we have the embeddings $f_{ij}: X_i \to X_j$. Then we may consider the direct limit with respect to these mappings, and
+%
+\[ X \cong \varinjlim X_i \]
+%
+where the direct limit $\varinjlim X_i$ is the quotient of $\coprod X_i$ obtained by identifying $x \in X_i$ with $f_{ij}(x)$, which has the topology such that $A$ is closed if and only if the intersection of $A$ and the image of $X_i$ is closed in the image of $X_i$, viewed as homeomorphic to $X_i$. We have projection maps $f_i: X_i \to \varinjlim X_i$, which for $i < j$ satisfies the commutative diagram
+%
+\begin{center}
+\begin{tikzcd}
+    X_i \arrow{rr}{f_{ij}} \arrow{rd}{f_i} & & X_j \arrow{ld}{f_j}\\
+    & \varinjlim X_i &
+\end{tikzcd}
+\end{center}
+%
+because of how the quotient structure of $\varinjlim X_i$ is constructed, so by the weak topology on $X$, we obtain a continuous map $f: X \to \varinjlim$. The map is surjective, and injective, for each $f_i$ is injective. The inverse map is also continuous, for if $A$ is closed in $X$, $A \cap X_i$ is closed for each $X_i$, so $f(A \cap X_i) = f_i(A \cap X_i)$ is closed in the image of $X_i$, hence $f(A)$ is closed in $X$. Thus every CW complex is homeomorphic to a CW complex constructed inductively from a direct limit by attaching the boundary of $n$ disks to the $n-1$ skeleton.
+
+\begin{example}
+    A {\bf graph} $\Gamma$ is a 1-dimensional CW complex, the simplest non-trivial example of a CW complex. zero cells are known as {\bf vertices}, and one cells are known as {\bf edges}. For each one cell $C$, there is a map $f_C:[0,1] \to \Gamma$ such that $f_C(0)$ and $f_C(1)$ are vertices, known as the {\bf ends} of $C$. These ends are unique, for $f_C([0,1]) = \overline{C}$, so the ends can be identified as the elements in $\overline{C} - C$. An edge can connect a vertex to itself.
 \end{example}
 
 \begin{example}
-    Real projective space $\mathbf{R} \mathbf{P}^n$ is a CW complex, which consists of the quotient space of all lines through the origin in Euclidean space.
+    The $n$-sphere $S^n$ has a CW decomposition. Take a partition
+    %
+    \[ \mathcal{C} = \{ \{ (1,0,\dots,0) \}, S^n - \{ (1,0,\dots,0) \} \} \]
+    %
+    By stereographic projection, we obtain a homeomorphism
+    %
+    \[ \pi: S^n - \{ (1,0,\dots,0) \} \to \mathbf{R}^n \]
+    %
+    $\mathbf{R}^n$ can be shrunk down to $B_{\mathbf{R}^n}$ by a map $f$. If $x \to \infty$ in $\mathbf{R}^n$, then $\pi^{-1}(x) \to (1,0,\dots,0)$, so the map
+    %
+    \[ \pi^{-1} \circ f^{-1}: B_{\mathbf{R}^n} \to S^n \]
+    %
+    can be uniquely extended to $\mathbf{D}^n$ by mapping the boundary of the disk to $(1,0,\dots,0)$. Thus a CW complex for $S^n$ consists of a one cell and a zero cell. The corresponding inductive construction takes $X_0 = \{ x_0 \}$, and attaches $\mathbf{D}^n$ to the point via the trivial map $f: \mathbf{D}^n \to \{ x_0 \}$. This follows because $S^n \cong \mathbf{D}^n / \partial \mathbf{D}^n$.
+\end{example}
+
+\begin{example}
+    Real projective space $\mathbf{R} \mathbf{P}^n$ has a CW decomposition. The space is the quotient of all lines through the origin in $\mathbf{R}^{n+1}$.
     %
     \[ \mathbf{R} \mathbf{P}^n = (\mathbf{R}^{n+1} - \{ 0 \})/ ({x \sim \lambda x : \lambda \in \mathbf{R} - \{ 0 \}, x \in \mathbf{R}^{n+1}} - \{ 0 \}) \]
     %
-    The space may also be described as
+    The space may also be described, by throwing away redundant points, as
     %
-    \[ \mathbf{R} \mathbf{P}^n = S^n / {(x \sim -x : x \in S^n)} \]
+    \[ \mathbf{R} \mathbf{P}^n \cong S^n / {(x \sim -x : x \in S^n)} \]
     %
-    First, we notice that we may throw away half the points on the sphere, so that only the top half needs to be considered. Flattening this half sphere, we obtain that
+    First, we notice that we may throw away half the points on the sphere, keeping only the top hemisphere of the sphere. Flattening this, we obtain that
     %
-    \[ \mathbf{R} \mathbf{P}^n = \mathbf{D}^n / {(x \sim -x : x \in \partial \mathbf{D}^n)} \]
+    \[ \mathbf{R} \mathbf{P}^n \cong \mathbf{D}^n / {(x \sim -x : x \in \partial \mathbf{D}^n)} \]
     %
     But $\partial \mathbf{D}^n \cong S^{n-1}$, and $\mathbf{R} \mathbf{P}^{n-1}$ is obtained from $S^{n-1}$ by attaching opposite points, so essentially
     %
     \[ \mathbf{R} \mathbf{P}^n = \mathbf{D}^n \coprod_f \mathbf{R} \mathbf{P}^{n-1} \]
     %
-    where $f: \partial \mathbf{D}^n \to \mathbf{R} \mathbf{P}^{n-1}$ is just the projection map onto the quotient. Since $\mathbf{R} \mathbf{P}^1 \cong S^1$ is a $1$-dimensional CW complex, by a recursive construction, $\mathbf{R} \mathbf{P}^n$ is obtained from an $n-1$ dimensional CW complex by attaching a single $n$-dimensional unit disk. It may be of interest to take this to the extreme, and consider
+    where $f: \partial \mathbf{D}^n \to \mathbf{R} \mathbf{P}^{n-1}$ is just the projection map onto the quotient. Since $\mathbf{R} \mathbf{P}^1 \cong S^1$ is a $1$-dimensional CW complex, by a recursive construction, $\mathbf{R} \mathbf{P}^n$ is obtained from an $n-1$ dimensional CW complex by attaching a single $n$-dimensional unit disk. It is interesting to take this to the extreme, and consider
     %
-    \[ \varinjlim \mathb{R} \mathbf{P}^n = \mathbf{R} \mathbf{P}^\infty \]
+    \[ \varinjlim \mathbf{R} \mathbf{P}^n = \mathbf{R} \mathbf{P}^\infty \]
     %
     This CW complex can be seen as the set of lines in $\mathbf{R}^\infty$ through the origin.
 \end{example}
@@ -156,21 +719,97 @@ where $x \sim f_{ij}(x)$ for each $x \in X_i$, is known as a {\bf CW Complex}. I
     %
     As with real projective space, we can flatten out the quotient to the sphere
     %
-    \[ \mathbf{C} \mathbf{P}^n = S^{2n + 1} / {(x \sim \lambda x : |\lambda| = 1, x \in S^{2n + 1})} \]
+    \[ \mathbf{C} \mathbf{P}^n = S^{2n+1} / {(x \sim \lambda x : |\lambda| = 1, x \in S^{2n + 1})} \]
     %
     One throws away duplicated points to obtain that the space is really
     %
     \[ \mathbf{C} \mathbf{P}^n = \mathbf{D}^{2n} / {(x \sim \lambda x : x \in \partial \mathbf{D}^{2n}, |\lambda| = 1)} \]
     %
-    But, as with the real case, we can write $\mathbf{C} \mathbf{P}^n = \mathbf{D}^{2n} \coprod_f \mathbf{C} \mathbf{P}^{2n - 1}$, where the map $f: \partial \mathbf{D}^{2n} \to \mathbf{C} \mathbf{P}^{2n-1}$ is just the projection, since $\partial \mathbf{D}^{2n} = S^{2n-1}$. We can then constructively build up a CW complex of $\mathbf{C} \mathbf{P}^1 \cong S^2$ is a CW complex. It is interesting to note that we construct the CW complex $\mathbf{C} \mathbf{P}^{2n}$ only using even dimensional disks.
+    But, as with the real case, we can write $\mathbf{C} \mathbf{P}^n = \mathbf{D}^{2n} \cup_f \mathbf{C} \mathbf{P}^{2n - 1}$, where the map $f: \partial \mathbf{D}^{2n} \to \mathbf{C} \mathbf{P}^{2n-1}$ is just the projection, since $\partial \mathbf{D}^{2n} = S^{2n-1}$. We can then constructively build up a CW complex for all $\mathbf{C} \mathbf{P}^n$, since $\mathbf{C} \mathbf{P}^1 \cong S^2$ is a CW complex. It is interesting to note that the CW complex of $\mathbf{C} \mathbf{P}^{2n}$ can be constructed only using even dimensional disks.
 \end{example}
 
-A {\bf Subcomplex} of a CW complex $X$ is a closed subspace $A$ that is the union of some projections of cells in $X$. A pair $(X,A)$, where $A$ is a subcomplex of $X$, is known as a {\bf CW pair}. Particular examples include $(\mathbf{C} \mathb{P}^i, \mathbf{C} \mathbf{P}^j)$ and $(\mathbf{R} \mathbf{P}^i, \mathbf{R} \mathbf{P}^j)$, for $i > j$. $S^i$ is a subcomplex of $S^j$ if we give $S^i$ a different CW structure, since $S^{n+1}$ can be obtained from a CW complex for $S^n$ by attaching two copies of $\mathbf{D}^n$ at the boundary, in the obvious way. We may then consider the sphere
+A {\bf subcomplex} of a CW complex $(X,\mathcal{C})$ is a closed subspace $A$ of $X$ which is the union of some number of cells in $X$. A tuple $(X,A)$, where $A$ is a subcomplex of $X$, is known as a {\bf CW pair}. Particular examples include $(\mathbf{C} \mathbf{P}^i, \mathbf{C} \mathbf{P}^j)$ and $(\mathbf{R} \mathbf{P}^i, \mathbf{R} \mathbf{P}^j)$, for $i > j$. $S^i$ is a subcomplex of $S^j$ if we give $S^i$ a different CW structure, since $S^{n+1}$ can be obtained from a CW complex for $S^n$ by attaching two copies of $\mathbf{D}^n$ at the boundary. We may then consider
 %
 \[ S^\infty = \varinjlim S^n \]
 %
 and $\mathbf{R} \mathbf{P}^\infty$ can be constructed from $S^\infty$ in the obvious way.
 
-The subcategory of CW complexes $\textbf{CW}$ in $\textbf{Top}$
+\begin{theorem}
+    A compact subset of a CW complex $X$ is contained in a finite subcomplex.
+\end{theorem}
+\begin{proof}
+    s
+\end{proof}
+
+\begin{example}
+    Let $c:[0,1] \to X$ be a path between two vertices $v$ and $w$. Then $c$ corresponds to a unique discrete sequence of edges in $X$ connecting $v$ and $w$ -- a graph theoretic path. $c([0,1])$ is compact, and is therefore contained in a finite subcomplex.
+\end{example}
+
+\section{Operations on Complexes}
+
+There are some useful operations one can perform on CW complexes. Consider two complexes $(X,\mathcal{C})$ and $(Y,\mathcal{C}')$. We shall form the product complex $(X \times Y, \mathcal{C} \times \mathcal{C}')$, where if $C$ is a $n$ cell in $X$, and $D$ is an $m$ cell in $Y$, then $C \times D$ is an $n + m$ cell in $X \times Y$. These cells cover $X \times Y$. One verifies the properties of a CW complex quite simply. The only problem is that this construction has a slightly weaker topology than the product topology, in the case when we take infinite dimensional CW complexes. This rarely causes problems.
+
+Let $(X,A)$ be a CW pair, where $X = \varinjlim X_i$. We shall ascribe a CW complex $Y = \varinjlim Y_i$ homeomorphic to $X/A$. Let $\pi_i: X_i \to X$ embed $X_i$ in $X$, and let $f_n$ attach $X_n$ to $X_{n-1}$. Define $Y_0 = \{ x \in X_0 : \pi_1(x) \in A \} \cup \{ a \}$, where $a$ is a new point corresponding to the collapse of $A$.
+
+\section{$\Delta$-Complexes}
+
+Singular homology must work with a different class of cell decompositions. Recall that an {\bf n-simplex} is the convex hull of an ordered sequence of $n+1$ points $v_0, \dots, v_n$ in $\mathbf{R}^m$ which do not lie in any hyperplane of dimension smaller than $n$ (equivalently, $v_1 - v_0, \dots, v_n - v_0$ is linearly independent). We denote this simplex by $[v_0, \dots, v_n]$, and the set of all $n$ simplexes by $\mathfrak{D}^n$. The standard simplices are
+%
+\[ \Delta^n = [e_1, \dots, e_{n+1}] = \{ (t_1, \dots, t_{n+1}) \in \mathbf{R}^{n+1} : \sum t_i = 1, t_1, \dots, t_n \geq 0 \} \]
+%
+$\Delta^0$ is just a singleton $\{ 1 \}$, $\Delta^1$ is the line from $(1,0)$ to $(0,1)$, $\Delta^2$ is the triangle with corners $(1,0,0)$, $(0,1,0)$, $(0,0,1)$, and so on and so forth. Each point $p$ in an $n$-simplex $[v_0, \dots, v_n]$ can be uniquely specified by numbers $t_0, \dots, t_n$ such that $p = \sum t_i v_i$, $\sum t_i = 1$, and $t_0, \dots, t_n \geq 0$. These are known as the {\bf barycentric coordinates} of $p$ with respect to $[v_0, \dots, v_n]$. The reason such coordinates are unique is that $v_1 - v_0, \dots, v_n - v_0$ must be a linearly independent set, for they are not contained in a hyperplane of dimension less than $n$. Suppose
+%
+\[ \sum t_i v_i  = \sum u_i v_i \]
+%
+where $\sum t_i = \sum u_i = 1$. Then
+%
+\[ \sum (t_i - u_i) (v_i - v_0) = \left( \sum (t_i - u_i) \right) v_0 = \left( \sum t_i - \sum u_i \right) v_0 = (1 - 1) v_0 = 0 \]
+%
+Thus $t_i = u_i$ for all $i$. Thus $(t_0, \dots, t_n) \mapsto \sum t_i v_i$ establishes a linear homeomorphism between $\Delta^n$ and $[v_0, \dots, v_n]$, so these simplices are topologically the same. A {\bf face} of a simplex $[v_0, \dots, v_n]$ is a simplex of the form $[v_0, \dots, \widehat{v_i}, \dots, v_n]$, obtained by deleting a vertex in the generator. If $S$ is a simplex, we let $\partial S$ denote the boundary of $S$, the union of all faces of $S$, and $S^\circ = S - \partial S$ the interior.
+
+An important connection between a simplex and its faces are the {\bf boundary operators} $\partial_0, \dots, \partial_n$, defined from $\mathfrak{D}^n$ to $\mathfrak{D}^{n-1}$ by the map
+%
+\[ \partial_i [v_0, \dots, v_n] = [v_0, \dots, \widehat{v_i}, \dots, v_n] \]
+%
+For $i < j$, we have that $\partial_i \circ \partial_j = \partial_{j-1} \circ \partial_i$. In the other direction, we have maps $\sigma_i: \partial_i(S) \to S$, defined in the barycentric coordinates by
+%
+\[ (t_0, \dots, \widehat{t_i}, \dots, t_n) \mapsto (t_0, \dots, 0, \dots, t_n) \]
+%
+These operators are very important, as they allow one to connect simplices of varying dimension.
+
+A {\bf $\Delta$-set} is an arbitrary sequence of sets
+%
+\[ \mathfrak{S}_{\bullet} = \mathfrak{S}_0, \mathfrak{S}_1, \mathfrak{S}_2, \mathfrak{S}_3, \dots \]
+%
+Together with a collection of abstract maps $\partial_i : \mathfrak{S}_n \to \mathfrak{S}_{n-1}$ for $i = 0, \dots, n$ which satisfy
+%
+\[ \partial_i \circ \partial_j = \partial_{j-1} \circ \partial_i \]
+%
+for $i < j$. The collection of all $\Delta$-sets forms a category $\textbf{Delta}$, if we define a {\bf $\Delta$-morphism} between two $\Delta$ sets $\mathfrak{S}$ and $\mathfrak{M}$ to be a sequence $f = \{ f_n: \mathfrak{S}_n \to \mathfrak{M}_n \}$ of functions which satisfy the family of commutative diagrams
+%
+\begin{center}
+\begin{tikzcd}
+    \mathfrak{S}_{n+1} \arrow{d}{\partial_i} \arrow{r}{f_{n+1}} & \mathfrak{M}_{n+1} \arrow{d}{\partial_i}\\
+    \mathfrak{S}_n \arrow{r}{f_n} & \mathfrak{M}_n
+\end{tikzcd}
+\end{center}
+%
+We define a functor from $\textbf{Delta}$ to $\textbf{Top}$ which maps $\mathfrak{S}$ to
+%
+\[ |\mathfrak{S}| = \left. \coprod_{k = 0}^\infty \mathfrak{S}_k \times \Delta^k \right/ {\sim} \]
+%
+where $(S,\sigma_i(x)) \sim (\partial_i S, x)$, and we give each $\mathfrak{S}_k$ the discrete topology. Given a $\Delta$-morphism $f: \mathfrak{S} \to \mathfrak{M}$, define $f: |\mathfrak{S}| \to |\mathfrak{M}|$ by
+%
+\[ f([S,x]) = [f_n(S),x] \]
+%
+where $S \in \mathfrak{S}_n$. The map is well defined, for
+%
+\[ f([S,\sigma_i(x)]) = [f_n(S),\sigma_i(x)] = [\partial_i f_n(S), x] = [f_{n-1}(\partial_i S), x] = f([\partial_i S, x]) \]
+%
+And it is continuous, for it is simply the identity on each individual component. Given another $\Delta$ homomorphism $g: \mathfrak{M} \to \mathfrak{O}$, we obtain $g: |\mathfrak{M}| \to |\mathfrak{O}|$, and if we let $h: |\mathfrak{S}| \to |\mathfrak{O}|$ be the function induced by $g \circ f$, then
+%
+\[ h([S,x]) = [(g_n \circ f_n)(S), x] = g([f_n(S), x]) = (g \circ f)([S,x]) \]
+%
+So $| \cdot |$ truly is a functor. The advantage of $\Delta$ complexes is that they are a purely combinatorial object, so they are easy to calculate with. They are used extensively in singular homology.
 
 \end{document}
