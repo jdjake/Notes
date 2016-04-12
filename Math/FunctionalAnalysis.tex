@@ -10,6 +10,9 @@
 \tableofcontents
 \pagenumbering{arabic}
 
+
+\part{Banach Spaces}
+
 \chapter{Introduction}
 
 Functional analysis is the interlace of algebra and analysis, in which algebraic structures are endowed with topological structure. The approach's utility counts for the rapid growth of applications over the past century, be it in quantum mechanics, statistics, or computing science. Rarely are we concerned with a single object, like a function, a random variable, or a measure, but instead consider large classes of such objects. One technique for handling these classes is to add algebraic structure which elaborates on the natural relation between these objects. Functional analysis provides general tools for this methodology.
@@ -237,6 +240,13 @@ We will be studying a specific subclass of topological vector space.
     We obtain a distance function on a norm space by defining $d(v,w) = \| v - w \|$.
 \end{definition}
 
+
+
+
+
+
+
+
 \section{Convexity}
 
 A function $f:(a,b) \to \mathbf{R}$ is convex when the line segment between $(a,f(a))$ and $(b,f(b))$ lies above the graph of $f$. The line segment connecting these two points is described by
@@ -352,284 +362,684 @@ Jensen's inequality implies so many other inequalities in analysis.
 
 
 
-\chapter{Operator Algebras}
 
-In Linear algebra, one studies structure theorems for linear transformations from a finite dimensional vector space to itself. One shows that, in almost all cases, such a transformation can be `diagonalized': we are able to choose a basis of vectors which map into multiples of themselves under the linear transformation. We shall attempt to extend methods related to classification to infinite dimensional spaces.
 
-\begin{definition}
-    A {\bf compact operator} between two spaces $X$ and $Y$ maps bounded sets onto precompact sets. The set of all compact operators is denoted $K(X,Y)$.
-\end{definition}
+\section{The Dual of a Hilbert Space}
 
 \begin{lemma}
-    Every compact operator is bounded.
+    Fix $x,z \in H$. If $\langle x, y \rangle = \langle z, y \rangle$ for all $y \in H$, then $x = z$.
 \end{lemma}
 \begin{proof}
-    The image of the unit ball is pre-compact, hence bounded.
+    For then $\langle x - z, y \rangle = 0$ for all $y$, and in particular, $\langle x - z, x - z \rangle = 0$.
 \end{proof}
 
-\begin{definition}
-    A {\bf finite-rank operator}
-\end{definition}
+
+
+
+
+\chapter{Operator Theory}
+
+\section{Operators on a Hilbert Space}
+
+If $H$ is a Hilbert space, then $H^*$ is a dull object to study, for it is essentially $H$. When one says they study Hilbert spaces, they really study the bounded operators from one space to another. This is the task we begin in this section. Given two Hilbert spaces, we let $B(H,K)$ denote the continuous linear maps from $H$ to $K$.
+
+\begin{lemma}
+    If $( \cdot, \cdot )$ is a bounded\footnote{In the sense that there is a `sesquilinear norm' $\|(\cdot, \cdot)\|$, which is the smallest number such that $(x,y) \leq \| x \| \| y \| \|(\cdot, \cdot)\|$.}, sesquilinear form on a Hilbert space, then there is a unique $M \in B(H)$ such that $(x,y) = \langle x, My \rangle$.
+\end{lemma}
+\begin{proof}
+    For each $x$, $(\cdot, x)$ is a bounded linear functional, so there is a unique $Mx \in H$ such that $(y,x) = \langle y, Mx \rangle$. Since
+    %
+    \[ (z, \lambda x + \gamma y) = \overline{\lambda}(z, x) + \overline{\gamma}(z,y) = \langle z, \lambda Mx + \gamma My \rangle \]
+    %
+    $M$ is linear, because $M(\lambda x + \gamma y) = \lambda Mx + \gamma My$. $M$ is certainly uniquely defined, and
+    %
+    \[ \langle x, My \rangle = (x,y) \leq \|(\cdot, \cdot)\| \| x \| \| y \| \]
+    %
+    So $\| M \| \leq \|(\cdot,\cdot)\|$, but also
+    %
+    \[ (x,y) = \langle x, My \rangle \leq \| M \| \| x \| \| y \| \]
+    %
+    so $\|(\cdot, \cdot)\| \leq \| M \|$, and we have equality of norms.
+\end{proof}
+
+\begin{theorem}
+    Let $H$ and $K$ be Hilbert spaces. If $M \in B(H,K)$, there is a unique map $M^* \in B(K,H)$ such that
+    %
+    \[ \langle Mx, y \rangle = \langle x, M^*y \rangle \]
+    %
+    $M^*$ is known as the {\bf adjoint} of $M$. We also have $\| M^* \| = \| M \|$.
+\end{theorem}
+\begin{proof}
+    The map $(x,y) = \langle Mx, y \rangle$ is a sesquilinear form, so there is a unique $M^*$ such that $(x,y) = \langle x, M^*y \rangle$.
+\end{proof}
+
+\begin{example}
+    If we are working in $\mathbf{R}^n$, then every operator $B(\mathbf{R}^n, \mathbf{R}^m)$ can be identified with a unique matrix in $M_{n,m}(\mathbf{R})$. If $(a_{ij})$ is that operator, then the adjoint is the transpose $(a_{ji}) \in M_{m,n}(\mathbf{R})$. In $\mathbf{C}^n$, the adjoint is the conjugate transpose $(\overline{a_{ji}})$.
+\end{example}
+
+\begin{example}
+    Given $\phi \in L^\infty(X)$, where $X$ is a $\sigma$-finite measure space, we have an operator $M_\phi \in B(L^2(X))$ defined by $M_\phi(f) = \phi f$. Then
+    %
+    \[ \langle M_\phi f, g \rangle = \int \phi f \overline{g} = \int f \overline{g \overline{\phi}} = \langle f, \overline{\phi} g \rangle \]
+    %
+    Thus $M_\phi^* = M_{\overline{\phi}}$.
+\end{example}
+
+The adjoint operation $*$ is an antilinear operator from $B(H,K)$ to $B(K,H)$, such that $(ST)^* = T^*S^*$. This is verified by calculation, since
+%
+\[ \langle ST x, y \rangle = \langle Tx, S^* y \rangle = \langle x, T^*S^* y \rangle \]
+%
+We also have $\| T^*T \| = \| T \|^2$, since
+%
+\[ \langle T^*T x, x \rangle = \langle Tx, Tx \rangle = \| T \|^2 \| x \| \]
+%
+so $\| T^*T \| \leq \| T \|^2$, and this is inequality is attained in the suprema, since if $x_i \in B_H$ is such that $\| T x_i \| \to \| T \|$, then
+%
+\[ \langle T^*T x_i, x_i \rangle = \| T x_i \|^2 \to \| T \|^2 \]
+%
+Thus $*$ is what is known as an involution.
+
+We can described some operators from a Hilbert space to itself by their action under the involution. $T$ is a {\bf self adjoint operator} if $T^* = T$. This is something like $T$ being symmetric, but in the infinite dimensional case. $T$ is unitary if $T^* = T^{-1}$. These are analogous to rotations, but in infinite dimensions. $T$ is {\bf normal} if $T^*T = TT^*$. Any operator $M$ can be expressed as $M = T + iS$, where $T$ and $S$ are self adjoint operators, by defining
+%
+\[ T = \frac{1}{2}(M + M^*)\ \ \ \ \ S = \frac{1}{2i}(M - M^*) \]
+%
+We shall show this is a unique expression. This is essentially like beginning with $\mathbf{C}$, and identifying $\mathbf{R}$ as those elements invariant under complex conjugation.
+
+\begin{theorem}
+    If $T$ is a self-adjoint operator on a complex Hilbert space, then
+    %
+    \[ \| T \| = \sup \{ \langle Tx, x \rangle: \| x \| \leq 1 \} \]
+\end{theorem}
+\begin{proof}
+    Let $M$ be the supremum. Clearly $M \leq \| T \|$. If $\| x \|, \| y \| \leq 1$,
+    %
+    \begin{align*}
+        \langle T(x \pm y), x \pm y \rangle &= \langle Tx, x \rangle \pm \langle Ty, x \rangle \pm \langle Tx, y \rangle + \langle Ty, y \rangle\\
+        &= \langle Tx, x \rangle \pm \overline{\langle Tx, y \rangle} \pm \langle Tx, y \rangle + \langle Ty, y \rangle\\
+        &= \langle Tx, x \rangle \pm 2 \Re \langle Tx, y \rangle + \langle Ty, y \rangle
+    \end{align*}
+    %
+    Then, subtracting, we find
+    %
+    \[ 4\Re \langle Tx, y \rangle = \langle T(x+y),x+y \rangle - \langle T(x - y), x - y \rangle \]
+    %
+    Thus
+    %
+    \[ 4 \Re \langle Tx, y \rangle \leq M(\|x + y\|^2 + \|x - y\|^2) = 2M(\|x\|^2 + \|y\|^2) \leq 4M \]
+    %
+    Let $\lambda$ be such that $\langle Tx, y \rangle = \lambda |\langle Tx, y \rangle|$. If we replace $x$ by $\lambda x$, we find
+    %
+    \[ |\langle Tx, y \rangle| = \overline{\lambda} \langle Tx, y \rangle = \langle T(\overline{\lambda}x), y \rangle \leq M \]
+    %
+    Hence
+    %
+    \[ \| Tx \| = \sup \{ |\langle Tx, y \rangle| : y \in B_H \} \leq M \]
+    %
+    and therefore $\|T\| \leq M$.
+\end{proof}
+
+\begin{corollary}
+    $\langle Tx, x \rangle = 0$ if and only if $T = 0$.
+\end{corollary}
+\begin{corollary}
+    If $\langle Tx, x \rangle = \langle Sx, x \rangle$ for each $x \in H$, then $T = S$.
+\end{corollary}
+
+This theorem is false for real spaces, for instance, if we take a rotation operator on the plane.
+
+\begin{theorem}
+    $T$ is normal if and only if $\| Tx \| = \| T^* x \|$ for each $x$.
+\end{theorem}
+\begin{proof}
+    For then, for each $x$,
+    %
+    \[ \| Tx \|^2 = \langle Tx, Tx \rangle = \langle T^*Tx, x \rangle \]
+    \[ \| T^*x \|^2 = \langle T^*x, T^*x \rangle = \langle TT^*x, x \rangle \]
+    %
+    which implies $T^*T = TT^*$. The converse repeats backwards through the proof, since the norm of $\| T \|$ is specified by its action through the inner product.
+\end{proof}
+
+\begin{theorem}
+    Any normal operator $T$ has the following properties.
+    %
+    \begin{enumerate}
+        \item[(a)] $\text{ker}(T) = \text{ker}(T^*)$.
+        \item[(b)] $T(H)$ is dense in $H$ if and only if $T$ is injective.
+        \item[(c)] $T$ is a surjective isomorphism if and only if $\| Tx \| \geq C \| x \|$ for some $C$.
+        \item[(d)] If $Tx = \lambda x$, then $T^*x = \overline{\lambda} x$.
+        \item[(e)] If $\lambda$ and $\gamma$ are distinct eigenvalues, then the eigenspaces are orthogonal to one another.
+    \end{enumerate}
+\end{theorem}
+\begin{proof}
+    To prove $(a)$ notice that $\| Tx \| = 0$ if and only if $\| T^*x \| = 0$. $(b)$ follows since
+    %
+    \[ T(H)^\perp = \text{ker}(T^*) = \text{ker}(T) \]
+    %
+    If $\| Tx \| \geq C \| x \|$, then $T(H)$ is closed, and dense, therefore $T(H) = H$. The converse follows by definition. If $T$ is normal, then $\lambda - T$ is also normal, since $(\lambda - T)^* = \overline{\lambda} - T^*$, so $\text{ker}(\lambda - T) = \text{ker}(\lambda - \overline{\lambda})$. Finally, if $Tx = \lambda x$, and $Ty = \gamma y$, then
+    %
+    \[ \lambda \langle x, y \rangle = \langle Tx, y \rangle = \langle x, T^*y \rangle = \langle x, \overline{\gamma} y \rangle = \gamma \langle x, y \rangle \]
+    %
+    so if $\lambda \neq \gamma$, then $\langle x,y \rangle = 0$.
+\end{proof}
+
+\begin{theorem}
+    If $U \in B(H)$, then the following are equivalent.
+    %
+    \begin{enumerate}
+        \item[(a)] $U$ is unitary.
+        \item[(b)] $GL(H) = H$ and $\langle Ux, Uy \rangle = \langle x, y \rangle$.
+        \item[(c)] $GL(H) = H$ and $\| Ux \| = \| x \|$, so $U$ is an isometry from $H$ to itself.
+    \end{enumerate}
+\end{theorem}
+\begin{proof}
+    If $U$ is unitary, then $U$ is invertible, so $GL(H) = H$, and
+    %
+    \[ \langle Ux, Uy \rangle = \langle U^*Ux, y \rangle = \langle x, y \rangle \]
+    %
+    If $(b)$ holds, then
+    %
+    \[ \| Ux \|^2 = \langle Ux, Ux \rangle = \langle x, x \rangle = \| x \|^2 \]
+    %
+    If $(c)$ holds, then
+    %
+    \[ \langle U^*Ux, x \rangle = \langle Ux, Ux \rangle = \|Ux\|^2 = \|x\|^2 = \langle x, x \rangle \]
+    %
+    Thus $U^*U$ is the identity. Since $U$ is injective and surjective, the open mapping theorem tells us $U$ is invertible, so $U^* = U^{-1}$.
+\end{proof}
+
+This shows that unitary operators are the natural automorphisms in the category of Hilbert spaces.
+
+\begin{lemma}
+    An operator $T \in B(H)$ in a complex Hilbert space is self adjoint if and only if $\langle Tx, x \rangle \in \mathbf{R}$ for each $x \in H$.
+\end{lemma}
+\begin{proof}
+    If $T$ is self adjoint, then
+    %
+    \[ \langle Tx, x \rangle = \langle x, Tx \rangle = \overline{\langle Tx, x \rangle} \]
+    %
+    Conversely, if $\langle Tx, x \rangle \in \mathbf{R}$ for each $x \in H$, then
+    %
+    \[ \langle Tx, x \rangle = \overline{\langle x, Tx \rangle} = \langle x, Tx \rangle = \langle T^*x, x \rangle \]
+    %
+    for each $x$, from which we conclude $T = T^*$.
+\end{proof}
+
+\begin{theorem}
+    If $P$ is a projection, then the following are equivalent:
+    %
+    \begin{enumerate}
+        \item[(a)] $P$ is self-adjoint.
+        \item[(b)] $P$ is normal.
+        \item[(c)] $P(H) = \text{ker}(P)^\perp$.
+        \item[(d)] $\langle Px, x \rangle = \| Px \|^2$.
+    \end{enumerate}
+\end{theorem}
+\begin{proof}
+    If $P$ is self-adjoint, then $P$ is trivially normal. If $P$ is normal, then
+    %
+    \[ P(H) = \text{ker}(P^*)^\perp = \text{ker}(P)^\perp \]
+    %
+    If (c) holds, then every $x = y + Px$, where $Py = 0$. Then
+    %
+    \[ \langle P(y + Px), y + Px \rangle = \langle Px, y + Px \rangle = \langle Px, Px \rangle = \| Px \|^2 \]
+    %
+    If (d) holds, then $\langle Px, x \rangle \in \mathbf{R}$ for each $x$, so $P$ is self-adjoint. If (c) holds, then $\langle Px, x \rangle$
+\end{proof}
+
+
+
+
+
+
+\section{Compact Operators}
+
+We already know operators on an infinite dimensional Banach space are more tricky than there finite dimensional counterparts. Thus we restrict our attention to operators which do not `spread themselves out' too much. An operator is {\bf compact} if the image of any bounded set is precompact. It suffices to verify that the image of the unit ball is precompact. Given two Banach spaces $X$ and $Y$, we shall let $K(X,Y)$ denote the space of all compact operators from $X$ to $Y$.
+
+\begin{theorem}
+    $K(X,Y)$ is a closed subspace of $B(X,Y)$, such that for any $M \in K(X,Y)$, $N \in B(Y,Z)$, and $L \in B(Z',X)$, $NML \in K(Z',Z)$.
+\end{theorem}
+\begin{proof}
+    Suppose $M$ and $N$ are compact. Let $U$ be a bounded susbet of $X$. Then
+    %
+    \[ (\lambda M + \gamma N)(U) = \lambda M(U) + \gamma N(U) \]
+    %
+    And the sum of two precompact sets is precompact. Thus $\lambda M + \gamma N$ is precompact. If $U$ is a bounded subset of $Z'$, then $L(U)$ is a bounded subset of $X$, so $ML(U)$ is a precompact subset of $Y$, implying $NML(U)$ is a precompact subset of $Z$, for if every sequence $y_i$ has a convergent subsequence, so must $N(y_i)$.
+
+    To prove $K(X,Y)$ is closed we rely on the fact that a subset of a complete metric space is precompact if and only if, for any $\varepsilon > 0$, the subset can be covered by finitely many balls of radius $\varepsilon$. Now suppose we have $M_1, M_2, \dots \in K(X,Y)$, and $M_i \to N$. We claim $N$ is compact. Let $U$ be a bounded subset of $X$, such that $\| x \| < K$ for each $x \in U$. Then for each $\varepsilon > 0$, there are finitely many balls of radius $\varepsilon$ which cover $M_i(U)$, for each $i$. If $\| M_i - N \| < \varepsilon / K$, then $\| (M_i - N)(x) \| < \varepsilon$ for each $x \in U$, so that if $M_i x$ is contained in some ball with center $y$ of radius $\varepsilon$, then $Nx$ is contained in the ball with center $y$ and radius $2 \varepsilon$. Thus $N(U)$ can be covered with finitely many balls of radius $2\varepsilon$, and is therefore precompact.
+\end{proof}
+\begin{corollary}
+    $K(X)$ is a closed, two-sided ideal of $B(X)$.
+\end{corollary}
+
+The best examples of compact operators were found in function spaces, and the best way to verify compactness in these spaces is to use the Arzela-Ascoli criterion. Say a family of functions $\{ g_\alpha : X \to \mathbf{C} \}$ is {\bf equicontinuous} at $x \in X$ if, for any $\varepsilon > 0$, there is an open set $U$ containing $x$ such that $\| g(a) - g(b) \| < \varepsilon$ for $a,b \in U$.
+
+\begin{theorem}[Arzela-Ascoli]
+    The precompact subsets of $l^\infty(X)$ are precisely those subsets which are equicontinuous, when $X$ is compact.
+\end{theorem}
+\begin{proof}
+    Suppose $C$ is a precompact subset of $l^\infty(X)$. 
+\end{proof}
+
+\begin{example}
+    The best examples of compact operators, and the operators for which most of the theory was developed, are integral equations. Given two Hausdorff spaces $A$ and $B$, equipped with respective measures $\mu$ and $\nu$, consider some measurable function $K: A \times B \to \mathbf{C}$, and consider the integral operator $\mathbf{K}$ mapping a measurable function $f$ to a function on $A$ defined by
+    %
+    \[ \mathbf{K}f(x) = \int_A K(x,y) f(y) d \mu(y) \]
+    %
+    $K$ is known as the {\bf kernel} of $\mathbf{K}$. We assume that $K$ has bee chosen such that $\mathbf{K}f$ is measurable for each measurable $f$. If $A$ and $B$ are compact, and $K$ is continuous, then $\mathbf{K}$ is a compact operator from $L^1(A)$ to $L^1(B)$.
+\end{example}
+
+It is a theorem of Calkin that $K(X)$ is the only closed, two-sided ideal of $B(X)$, when $X$ is a Hilbert space. Thus we are lead to consider the {\bf Calkin Algebra} $B(X)/K(X)$, which is simple, and quite useful in $K$-theory.
+
+A {\bf finite-rank} operator is an operator whose range is finite-dimensional. It is clear that every finite-rank operator is compact. We shall eventually show that the set $F(X)$ of all finite-rank operators is dense in $K(X)$, when $X$ is a Hilbert space.
+
+
+
+\newpage
+
+In Linear Algebra, we know we may diagonalize any symmetric matrix. Here we apply our knowledge of Hilbert spaces to extend this to infinite dimensional spaces, for `symmetric' operators which are `almost finite dimensional'.
+
+\begin{theorem}
+    If $X$ is a Banach space, and $Y$ is a closed subspace, $M$ is a compact operator on $X$, and $\lambda \neq 0$ is such that
+    %
+    \[ \inf \{ \| (\lambda - M)y : y \in B_Y \| \} = 0 \]
+    %
+    then $Y \cap \ker(\lambda - M) \neq 0$.
+\end{theorem}
+\begin{proof}
+    Let $y_i$ be a sequence in $B_Y$ such that $(\lambda - M)y_i \to 0$. Since $M$ is a compact operator, we may assume that $My_i$ converges to some $z$. But then, by continuity,
+    %
+    \[ \lim_i \lambda y_i = \lim_i \lambda y_i - M y_i + M y_i = \lim_i y_i - M y_i + \lim_i M y_i = 0 + z \]
+    %
+    Since $\lambda \neq 0$, $y_i \to \lambda^{-1} z$. But then $z \in Y$, and $z = Mz$.
+\end{proof}
+
+\begin{corollary}
+    Let $M$ be a compact operator. If $\lambda \in \sigma(M)$ is non-zero, then $\dim(\ker(\lambda - M)) < \infty$, $(\lambda - M)X$ is closed and $\text{codim}(\lambda - M) < \infty$, and there is $n$ such that
+    %
+    \[ \ker[(\lambda - M)^n] = \ker[(\lambda - M)^{n+1}] \]
+    %
+    \[ (\lambda - M)^n X = (\lambda - M)^{n+1} X \]
+\end{corollary}
+\begin{proof}
+    First note that $\lambda = M$ on $\ker(\lambda - M)$, implying the identity is compact on $\ker(\lambda - M)$, and therefore that $\dim(\ker(\lambda - M)) < \infty$. It follows that $\ker(\lambda - M)$ is closed, and thus there is a subspace $Y$ of $X$ such that $X = \ker(\lambda - M) \oplus Y$. $M$ restricted to $Y$ is injective, and the last theorem implies, since $Y \cap \ker(\lambda - M) = (0)$, that
+    %
+    \[ C = \inf \{ \| (\lambda - M)y \| : y \in B_Y \} > 0 \]
+    %
+    Hence $\| (\lambda - M)y \| \geq C \|y\|$ on $Y$, and so $\lambda - M$ is an isomorphism from $Y$ to a subspace of $X$, which is therefore complete and thus closed. Note that
+    %
+    \[ [(\lambda - M)X]^\perp = \{ \phi \in X^*: \phi \circ (\lambda - M) = 0 \} = \ker( \lambda - M^*) \]
+    %
+    Since $T$ is compact, so is $T^*$, and because $\lambda$ must also be an eigenvalue of $T^*$, $\text{dim}[((\lambda - M)X)^\perp] < \infty$, so that $(\lambda - M)X$ has finite codimension.
+\end{proof}
+
+
+
+
+
+
+
+
+
+
+\part{Operator Theory}
+
 
 
 
 
 \chapter{Banach Algebras}
 
-Recall that an algebra over a field $\mathbf{F}$ is an $\mathbf{F}$ vector-space equipped with an associative multiplicative structure which contains an identity. The set of all units (invertible elements) on such an algebra $A$ will be denoted $U(A)$. A consistant norm attached to an algebra is a nice situation to study characterization theorems, since all algebras can be identified with a set of linear maps over some vector space. We shall use capital letters, like $M$ and $N$, to denote abstract elements of a Banach algebra, and denote algebras by capital letters near the beginning of the alphabet, such as $A$ or $B$.
+In this chapter, we develop the machinery to study the various classes of bounded operators which occur when classifying transformations on a space. To do this, we employ tools from abstract algebra. Recall that an algebra over a field $\mathbf{F}$ is a (not necessarily unital) ring $A$ together with a fixed embedding of $\mathbf{F}$ into $A$, which gives $A$ a vector space structure. We shall often assume algebras have a unit, though in most naturally occuring non-unital algebras, there's usually a sneaky way to add a unit. A consistant norm attached to an algebra is a nice situation to study operators over a Banach space. What's more, the general theory gives light to many other circumstance  which would not have been apparent were we just analyzing concrete operators. We shall use capital letters, like $M$ and $N$, to denote abstract elements of these algebras, and we denote algebras by capital letters near the beginning of the alphabet, such as $A$ or $B$. A {\bf Banach Algebra} is a Banach space which is also an algebra, and satisfies
+%
+\begin{equation} \label{algebranorm} \| MN \| \leq \| M \| \| N \|\ \ \ \ \ \| 1 \| = 1 \end{equation}
+%
+Thus multiplication is a continuous operation. We shall only consider Banach algebras over the complex numbers, because here we can apply the unique properties of holomorphicity and conjugation. Why this is so important will become clear over time.
 
-\begin{definition}
-    A {\bf Banach Algebra} is a Banach space $A$ which is also an algebra, and satisfies $\| MN \| \leq \| M \| \| N \|$ for any $M,N \in A$, and $\| 1 \| = 1$.
-\end{definition}
+\begin{example}
+    Let $K$ be a compact space. Then the space $C(K)$ of complex-valued continuous functions is a Banach algebra under the uniform convergence norm $\| \cdot \|_\infty$ and with pointwise multiplication. If $K$ consists of $n$ points, then $C(K) \cong \mathbf{C}^n$, which is perhaps the most basic commutative Banach algebra.
+\end{example}
 
-It is obvious that this makes multiplication (in addition to addition and scaling) a continuous operation on the space. What is less obvious is that this is really all you need to define a Banach algebra.
+\begin{example}
+    The space $L_\infty(X)$ of essentially bounded functions on a measure space $X$ is a Banach algebra. More generally, the space $C_b(X)$ of continuous, bounded complex-valued functions on any topological space $X$ is a Banach algebra. If $\mu$ is the measure of $X$, then, provided $\mu(X) > 0$, $L_\infty(X)$ has a unit.
+\end{example}
 
-\begin{theorem}
-    Let $V$ be a Banach space upon with a continuous multiplication structure. Then there is an equivalent norm on $V$ which makes the space into a Banach algebra.
-\end{theorem}
+\begin{example}
+    If $X$ is locally compact, then the space $C_0(X)$ of functions which vanish at infinity form a Banach algebra, except that the space does not always contain an identity. To add an identity, we enlarge the space to $C_c(X)$, the space of eventually constant continuous functions $f$ for which there is $\lambda \in \mathbf{C}$ such that $f - \lambda$ vanishes at infinity.
+\end{example}
+
+\begin{example}
+    If $K$ is a compact neighbourhood in $\mathbf{C}$, then we define $A(K)$ to be the set of continuous functions on $K$ which are analytic in $K^\circ$. Since uniform convergence preserves holomorphicity, $A(K)$ is a closed subalgebra of $C(K)$, and is therefore a Banach algebra. $A(\mathbf{D})$ is known as the disk algebra.
+\end{example}
+
+\begin{example}
+    Let $G$ be a locally compact group, with Haar measure $\mu$, and consider the space of functions $L^1(G)$, where multiplication is convolution,
+    %
+    \[ (f * g)(x) = \int f(y) g(y^{-1}x) d\mu(y) \]
+    %
+    The space is a Banach algebra since
+    %
+    \begin{align*}
+        \| (f * g) \|_1 &= \int \left| \int f(y) g(y^{-1}x) d\mu(y) \right| d\mu(x)\\
+        &\leq \int |f(y) g(y^{-1}x)| d \mu^2(y,x)\\
+        &= \int |f(y)| \int |g(y^{-1}x)| d\mu^2(x,y)\\
+        &= \int |f(y)| \int |g(x)| d\mu^2(x,y)\\
+        &= \| f \|_1 \| g \|_1
+    \end{align*}
+    %
+    This algebra is commutative when $G$ is a commutative. It does not always possess a unit, but we can enlarge the space so it does. We identify each $f$ with the measure $(f \mu) (E) = \int_E f d\mu$. In other words, $f \lambda$ is defined by the equation
+    %
+    \[ \frac{d(f \mu)}{d \mu} = f \]
+    %
+    Then the set of all measures of the form $f \mu + \gamma \delta$ form a Banach algebra, where $\lambda, \gamma \in \mathbf{C}$, and $\delta$ is the dirac function at the identity, under the total variation norm, and with multiplication defined by convolution
+    %
+    \[ (\nu * \eta)(E) = \int \chi_E (u^{-1}t) d (\nu \times \eta)(t,u) \]
+    %
+    Thus $L^1(G)$ is considered a subalgebra of $M(G)$, the space of all regular Borel measures on $G$. In most cases, an algebra without unit can be naturally extended to have a unit.
+\end{example}
+
+Almost all examples above are abelian algebras. One of the prime reasons to study Banach algebras is to study operators on a Banach space, which are almost always non-commutative. In fact, some folks call the study of Banach algebras `non-commutative analysis'.
+
+\begin{example}
+    Let $E$ be a Banach space. The space $B(E)$ of all bounded linear operators from $E$ to itself is a Banach algebra with respect to the operator norm. It is a unital algebra, since it possesses the identity operator. The subset $K(E)$ of compact linear operators is a closed (double-sided) ideal of $B(E)$, and so is also a Banach algebra. $K(E)$ is unital if and only if $E$ is finite dimensional.
+\end{example}
+
+Really, all that distinguishes a Banach space from a Banach algebra is a continuous multiplication structure, modulo the norm we use to define the topology of the space.
+
+\begin{prop}
+    Let $X$ be a Banach space upon with a continuous multiplication structure. Then there is an equivalent norm on $X$ which makes the space into a Banach algebra.
+\end{prop}
 \begin{proof}
-    Embed $V$ in $B(V)$ by defining $\Lambda_M(N) = MN$, for each $M \in V$ (since multiplication on the right is continuous, $\Lambda_M$ truly is in $B(V)$ rather than just being a linear map). This is an algebra isomorphism, which is also a Banach space isomorphism, provided  that the set of all $\Lambda_M$ is closed in $B(V)$, so we may apply the inverse function theorem. To see this, note two nice properties of the map. First,
+    Embed $X$ in $B(X)$ by defining $\Lambda_M(N) = MN$ (since multiplication on the right is continuous, $\Lambda_M$ truly is in $B(X)$ rather than just being a linear map). It is trivial to verify this is an algebra morphism, and we have the inequality
     %
-    \[ \| M \| = \| M \cdot 1 \| = \| \Lambda_{M}(1) \| \leq \| \Lambda_{M} \| \| 1 \|  \]
+    \begin{equation} \label{embedinequality} \| M \| = \| \Lambda_M (1) \| \leq \| \Lambda_M \| \| 1 \| \end{equation}
     %
-    and second, $\Lambda_{M + N} = \Lambda_M + \Lambda_N$. Suppose $\Lambda_{M_i}$ is a Cauchy seqeunce. Then the $M_i$ are a Cauchy sequence, since
+    which implies the map is injective, and its inverse is continuous. The open mapping theorem implies that our embedding is continuous, provided the image of the map is closed in $B(X)$. To verify closure, suppose $\Lambda_{M_i}$ is a Cauchy sequence, and tends to some $T \in B(X)$. Then, by (\ref{embedinequality}), the $M_i$ are a Cauchy sequence, and thus converge to some $M \in X$. Now for $N \in X$, since multiplication on the left is continuous,
     %
-    \[ \| M_i - M_j \| \leq \| \Lambda_{M_i - M_j} \| \| 1 \| = \| \Lambda_{M_i} - \Lambda_{M_j} \| \| 1 \| \]
+    \[ T(N) = \lim_{i \to \infty} \Lambda_{M_i}(N) = \lim_{i \to \infty} M_iN = M N \]
     %
-    and therefore they converge to an element $M$. By right continuity, $M_i N \to M N$ for all $N$, so by definition, $\Lambda_{M_i} \to \Lambda_M$. One may verify that the set $\{ \Lambda_m \}$ is a Banach algebra.
+    so $T = \Lambda_M$. The proof is complete, since in $B(X)$, the inequalities ($\ref{algebranorm}$) are known to hold, except in one special case: if $X = (0)$, then $\| \text{id}_X \| = 0$, but in this case, it is impossible to define an algebra structure on $X$.
 \end{proof}
 
-\begin{example}
-    Let $K$ be a compact space. Then the space $C(K)$ of $\mathbf{F}$-valued continuous functions is a Banach algebra under the infinity norm $\| \cdot \|_\infty$ and with pointwise multiplication. If $K$ is finite, then $C(K) \cong \mathbf{F}^{|K|}$.
-\end{example}
+\section{Invertibility in Banach Algebras}
+
+We shall begin Banach algebra theory by analyzing criteria for invertibility, which coincides with the spectral theory of these algebras. For obvious reasons, we restrict our attention to unital algebras. The set of all units in a unital algebra $A$ will be denoted $GL(A)$, and called the general linear group of $A$. The {\bf spectrum} and {\bf resolvent} of an element $M$ of a Banach algebra $A$ are defined respectively as
+%
+\[ \sigma_{A}(M) = \{ \lambda \in \mathbf{C} : \lambda - M \not \in GL(A) \} \]
+%
+\[ \rho_{A}(M) = \{ \lambda \in \mathbf{C} : \lambda - M \in GL(A) \} \]
+%
+The resolvent is the complement of the spectrum. When the underlying algebra is canonical, we just use $\sigma(M)$ and $\rho(M)$ to denote the spectrum. I view the addition of a complex number to an operator as an `infinitisimal shifts' in the effects of the operator. The spectrum tells us in which directions the operator goes bad under infinitisimal changes, and we shall find that knowledge of the spectrum will allow us to perturb operators more finely. A large number of theorems are based on relating these perturbations to the original operator.
 
 \begin{example}
-    The space $L_\infty(X)$ of essentially bounded functions on a measure space $X$ is a Banach algebra, again under the $\| \cdot \|_\infty$ norm.
-\end{example}
-
-\begin{example}
-    More generally, the space $C_b(X)$ of continuous, bounded $\mathbf{F}$-valued functions on any topological space $X$ is a Banach algebra. If $X$ is locally compact, then the space $C_0(X)$ of functions which vanish at infinity form a Banach algebra, except that the space does not always contain an identity. Normally, there exists a trick to add an identity to the space on any `Banach algebra without identity' -- in this case, we enlarge the space to consist of the space of functions which eventually become constant at infinity.
-\end{example}
-
-\begin{example}
-    If $K$ is a compact neighbourhood in $\mathbf{C}$, then we define $A(K)$ to be the set of continuous functions defined on $K$ which are analytic in $K^\circ$. Since uniform convergence preserves holomorphicity, $A(K)$ is a closed subset of $C(K)$ and is therefore a Banach algebra. $A(\mathbf{D})$ is known as the disk algebra.
-\end{example}
-
-\begin{example}
-    If $G$ is a group with measure $\mu$, $L_1(G, \mu)$ is a Banach algebra, where multiplication is convolution,
-    %
-    \[ (f * g)(x) = \int f(y) g(xy^{-1}) d\mu(y) \]
-    %
-    This algebra is commutative when $G$ is a commutative. It does not always possess a unit, but we can enlarge the space so it does. We identify each $f$ with the measure $f \lambda$, where $(f \lambda) (E) = \int_E f d\lambda$. In other words, $f \lambda$ is the measure defined by the equation
-    %
-    \[ \frac{d(f \lambda)}{d \lambda} = f \]
-    %
-    Then the set of all measures of the form $f \lambda + \mu \delta$ where $\delta$ is the dirac function evaluated at the identity, and $\mu \in \mathbf{F}$ form a Banach algebra under the total variation norm, and multiplication defined by convolution
-    %
-    \[ (\nu * \eta)(E) = \int \chi_E (tu^{-1}) d \nu(t) d\eta(u) \]
-    %
-    In most cases, an algebra without unit can be naturally extended to have a unit.
-\end{example}
-
-All the examples above are abelian algebras. One of the prime reasons to study Banach algebras is to study operators on a Banach space, which are almost always non-commutative. In fact, some folks call the study of operator algebras `non-commutative analysis'.
-
-\begin{example}
-    Let $E$ be a Banach space. The space $B(E)$ of all bounded linear operators from $E$ to itself is a Banach algebra with respect to the operator norm. Our theorem above essentially says every Banach algebra is a closed subalgebra of this kind of space. It is a unital algebra, since it possesses the identity operator. The subset $K(E)$ of compact linear operators is a closed (double-sided) ideal of $B(E)$, and so is also a Banach algebra. $K(E)$ is a unital algebra if and only if $E$ is finite dimensional.
-\end{example}
-
-The abstraction to Banach algebras is justified since we may talk about many classes of linear operators at once. Now to begin the Spectral theory. We shall restrict our attention almost everywhere to algebras over $\mathbf{C}$, where we may apply the deep and beautiful properties of holomorphicity.
-
-\section{Spectral Theory}
-
-\begin{definition}
-    The {\bf spectrum} and {\bf resolvent} of an element $M$ of a Banach algebra $A$ are defined respectively as
-    %
-    \[ \sigma_{A}(M) = \{ \lambda \in \mathbf{C} : \lambda - M \not \in U(A) \} \]
-    %
-    \[ \rho_{A}(M) = \{ \lambda \in \mathbf{C} : \lambda - M \in U(A) \} \]
-    %
-    The resolvent is the complement of the spectrum.
-\end{definition}
-
-\begin{example}
-    Let $X$ be a space, and consider $f \in C_b(X)$. Then $\sigma_{C_b(X)}(f) = \overline{f(X)}$. If $\lambda \in \rho_{C_b(X)}(f)$, then
+    Let $X$ be a space, and consider $f \in C_b(X)$. Then $\sigma(f) = \overline{f(X)}$. If $\lambda \in \rho(f)$, then
     %
     \[ (\lambda - f)^{-1}(x) = \frac{1}{\lambda - f(x)} \]
     %
-    This continuous function is bounded if and only if $\lambda \not \in \overline{f(X)}$. Similarily, if $X$ is compact, then for $f \in C(X)$, $\sigma_{C(X)}(f) = f(X)$.
+    This function is bounded if and only if $\lambda \not \in \overline{f(X)}$. Similarily, if $X$ is compact, and if $f \in C(X)$, $\sigma(f) = f(X)$.
 \end{example}
 
 \begin{example}
-    Consider a Banach space $E$. $T \in B(E)$ is invertible if and only if it is bijective, by the inverse mapping theorem. If $\dim(E) < \infty$, this is simply the set of injective operators. The spectrum is then exactly the set of eigenvalues of the operator. One can consider eigenvalues in the infinite operator, yet they are almost always a proper subset of the spectra, which we call the point spectrum.
+    Consider a Banach space $E$. The inverse mapping theorem tells us that $M \in B(E)$ is invertible if and only if it is bijective. If $\dim(E) < \infty$, this is simply the set of injective operators; the spectrum is then exactly the set of eigenvalues of the operator. One can consider eigenvalues in the infinite dimensional case, yet they are almost always a proper subset of the spectra. The collection of eigenvalues is known as the {\bf point spectra}, denoted $\sigma_p(M)$.
 \end{example}
 
-\begin{definition}
-    The {\bf point spectra} of an element $\Lambda \in B(V)$, where $V$ is an Banach algebra over $\mathbf{F}$, is
-    %
-    \[ \sigma_p(M) = \{ \lambda \in \mathbf{F} : \ker(\lambda I - M) \neq \{ 0 \} \} \]
-    %
-    If $\lambda \in \sigma_p(M)$, there is $v \in V$, $v \neq 0$, with $\Lambda v = \lambda v$. $v$ is known as an {\bf eigenvector}.
-\end{definition}
+The next lemma is incredibly important, and is an extension of the power series formula
+%
+\[ \frac{1}{1 - z} = \sum_{k = 0}^\infty z^k \]
+%
+whose conclusion really relies on no properties of the complex numbers, aside from the products and sum all Banach algebras possess.
 
 \begin{lemma}[Neumann Series]
-    If $M \in B_{A}$, then $1 - M \in U(A)$, and
+    If $\|M\| \leq 1$, then $1 - M \in GL(A)$, and
     %
     \[ (1 - M)^{-1} = \sum_{k = 0}^\infty M^k \]
     %
-    in the sense that the right hand side converges and satisfies the equality.
+    in the sense that the right hand side also converges to a well-defined value.
 \end{lemma}
 \begin{proof}
-    The right side converges absolutely by the comparison test, since $\| M^k \| \leq \| M \|^k$. Since $A$ is Banach, the right side converges, and
+    The right side converges absolutely by the comparison test, since $\| M^k \| \leq \| M \|^k$. Because $A$ is Banach, absolute convergence implies convernences, and so we are justified in the manipulation
     %
     \[ (1 - M) \sum_{k = 0}^\infty M^k = \sum_{k = 0}^\infty (1 - M)M^k = \sum_{k = 0}^\infty M^k - M^{k+1} = \lim_{n \to \infty} 1 - M^{n+1} \]
     %
-    As $n \to \infty$, $M^{n+1} \to 0$, so the limit above tends to one. We may repeat this argument by multiplying on the right hand side, which shows the sum truly is the inverse.
+    As $n \to \infty$, $M^{n+1} \to 0$, so the limit above tends to one. To obtain a right side inverse, note $(1 - M)$ commutes with $\sum_{k = 0}^n M^k$ for each $k$, so that, by continuity, $(1 - M)$ commutes with $\sum_{k = 0}^\infty M^k$, and thus $\sum_{k = 0}^\infty M^k$ is also a right sided inverse.
 \end{proof}
 
 \begin{corollary}
-    If $\| 1 - M \| < 1$, then $M \in U(A)$, and
+    If $\| 1 - M \| < 1$, then $M \in GL(A)$, and
     %
     \[ M^{-1} = \sum_{k = 0}^\infty (1 - M)^k \]
 \end{corollary}
-\begin{proof}
-    Apply the theorem above, with $M$ replaced with $1 - M$.
-\end{proof}
 
 \begin{corollary}
-    $U(A)$ is an open subset of $A$.
+    $GL(A)$ is an open subset of $A$.
 \end{corollary}
 \begin{proof}
-    If $M \in U(A)$, and if $\| M - N \| < 1/\| M^{-1} \|$, then 
+    If $M \in GL(A)$, and if $\| M - N \| < 1/\| M^{-1} \|$, then 
     %
     \[ \| 1 - M^{-1}N \| \leq \| M^{-1} \| \| M - N \|  < 1 \]
     %
-    so $M^{-1}N \in U(A)$, and thus $N \in U(A)$.
+    so $M^{-1}N \in GL(A)$, and thus $N \in GL(A)$.
 \end{proof}
 
 \begin{corollary}
-    $\sigma(M)$ is a closed subset of $\mathbf{F}$, and $\rho(M)$ is open.
+    $\sigma(M)$ is a closed and bounded subset of $\mathbf{C}$, and $\rho(M)$ is open.
 \end{corollary}
 \begin{proof}
     The map $f: \lambda \mapsto \lambda - M$ is a continuous operation, for
     %
     \[ \| (\lambda - M) - (\mu - M) \| = \| \lambda - \mu \| = | \lambda - \mu | \]
     %
-    Since $U(A)$ is open, $f^{-1}(U(A)) = \rho(M)$ is open.
+    Since $GL(A)$ is open, $f^{-1}(GL(A)) = \rho(M)$ is open, hence $\sigma(M)$ is closed. If $|\lambda| > \|M\|$, then $\| M/\lambda \| < 1$, so $(1 - M/\lambda) \in GL(A)$, which means $\lambda - M$ is also invertible. Thus $\sigma(A)$ is closed and bounded, hence compact.
 \end{proof}
 
-\begin{theorem}
-    $\sigma(M)$ is a compact subset of $A$.
-\end{theorem}
-\begin{proof}
-    If $|\lambda| > \|M\|$, then $\| M/\lambda \| < 1$, so $(1 - M/\lambda) \in U(A)$, which means $\lambda - M$ is also invertible. Thus $\sigma(A)$ is closed and bounded, hence compact.
-\end{proof}
+We shall see that the spectra of complex algebras are never empty. This is why we mainly study complex algebras, rather than real algebras; there are even finite dimensional real operators with empty spectra.
 
-We shall see that the spectra of complexalgebras never have empty spectra. This is why we mainly study $\mathbf{C}$-algebras, rather than $\mathbf{R}$-algebras -- there are even finite dimensional real operators with empty spectra (for instance, take a rotation matrix).
+\begin{example}
+    Consider the matrix
+    %
+    \[ M = \begin{pmatrix} 0 & 1 \\ -1 & 0 \end{pmatrix} \]
+    %
+    as an element of the Banach algebra $M_2(\mathbf{R})$. The characteristic polynomial is calculated to be $\lambda^2 + 1$, so the matrix has no eigenvalues in the real numbers, and correspondingly, $\sigma(M) = \emptyset$. Over $M_2(\mathbf{C})$, we find $\sigma(M) = \{ i, -i \}$, so the spectrum is non-empty in the complex extension of the Banach algebra.
+\end{example}
 
 \begin{lemma}
     Inversion in an operator algebra $A$ is continuous.
 \end{lemma}
 \begin{proof}
-    Let $(M_n)$ be a sequence in $U(A)$ converging to an invertible element $M$. Then, by continuity, $M_nM^{-1} \to 1$. If $\| 1 - M_n M^{-1} \| < 1/2$, then
+    Let $(M_n)$ be a sequence in $GL(A)$ converging to an invertible element $M$. Then, by continuity, $M_nM^{-1} \to 1$. If $\| 1 - M_n M^{-1} \| < 1/2$, then
     %
     \[ M_n^{-1} M = (M^{-1}M_n)^{-1} = \sum_{k = 0}^\infty (1 - M^{-1}M_n)^k \]
     %
     It follows that
     %
     \begin{align*}
-        \| M_n^{-1} \| \leq \| M^{-1} \| \| M M_n^{-1} \| \leq \| M^{-1} \| &\sum_{k = 0}^\infty \| (1 - M_nM^{-1})^k \|\\
+        \| M_n^{-1} \| &\leq \| M^{-1} \| \| M_n^{-1} M \| \leq \| M^{-1} \| \sum_{k = 0}^\infty \| (1 - M^{-1} M_n)^k \|\\
         &\leq \| M^{-1} \| \sum 2^{-k} = 2 \| M^{-1} \|
     \end{align*}
     %
     Finally, we obtain convergence of inverses,
     %
-    \[ \| M_n^{-1} - M^{-1} \| = \| M_n^{-1} (M - M_n) M^{-1} \| \leq \overbrace{\| M_n^{-1} \|}^{\leq 2 \| M^{-1} \|} \overbrace{\| M - M_n \|}^{\to 0} \overbrace{\| M^{-1} \|}^{\text{constant}} \to 0 \]
+    \[ \| M_n^{-1} - M^{-1} \| = \| M_n^{-1} (M - M_n) M^{-1} \| \leq \| M_n^{-1} \| \| M - M_n \| \| M^{-1} \| \]
     %
-    so inversion is continuous.
+    which tends to zero, since the first and third values are bounded, and the second converges to zero. Thus inversion is continuous.
 \end{proof}
 
-We can now prove the fundamental theorem of spectral theory, after a brief interlude with complex analysis.
-
-\begin{definition}
-    The resolvent of $M$, defined on $\rho(M)$, is the map
-    %
-    \[ R(z; M) = (A - zI)^{-1} \]
-\end{definition}
+The invertible elements $GL(A)$ cannot be closed, for $A$ is path-connected, so it is possible to escape the invertible elements if one goes too far. Fortunately, Banach algebras have a way of telling us when things are about to go wrong; the norm of the operator blows up.
 
 \begin{lemma}
-    $R$ is analytic, in that $\langle \phi, R(\cdot, M) \rangle$ is analytic for each $\phi \in A^*$.
+    If $x_i \to x$, each $x_i \in GL(A)$, and $x \not \in GL(A)$, then $\| x_i^{-1} \| \to \infty$.
 \end{lemma}
 \begin{proof}
-    Let $f = \langle \phi, R(\cdot, M) \rangle$. Then
+    If $\| x_n^{-1} \| \leq M$ for all $n$, then
     %
-    \begin{align*}
-        \frac{f(\lambda + h) - f(\lambda)}{h} &= \frac{\langle \phi, (\lambda + h - a)^{-1} - (\lambda - a)^{-1} \rangle}{h}\\
-        &= \frac{\langle \phi, (\lambda + h - a)^{-1} (\lambda - a)^{-1} [(\lambda - a) - (\lambda + h - a)] \rangle}{h}\\
-        &= \langle \phi, -(\lambda + h - a)^{-1} (\lambda - a)^{-1} \rangle
-    \end{align*}
+    \[ \| 1 - x_n^{-1} x \| \leq \| x_n^{-1} \| \| x_n - x \| \leq M \| x_n - x \| \]
     %
-    As $h \to 0$, this tends to $\langle \phi, - (\lambda - a)^{-2} \rangle$, by continuity of inversion.
+    If we choose $n$ large enough that $\| x_n - x \| < 1/M$, then $x_n^{-1} x$ is invertible, implying $x$ is invertible.
 \end{proof}
 
-In Banach theory, we call such a mapping {\bf weakly analytic}. A {\bf strongly analytic} function $f$ is then a mapping from a subset of $\mathbf{C}$ to a Banach space such that the limit
-%
-\[ \lim_{h \to 0} \frac{f(z + h) - f(z)}{h} \]
-%
-exists at every point $z$ in the domain. By the chain rule, every strongly analytic function is weakly analytic. It is surprising that the converse also holds.
-
 \begin{theorem}
-    Every weakly analytic function $f$ into a Banach space $V$ is strongly analytic.
+    If $B$ is a closed subalgebra of $A$, and $M \in GL(B)$, then the entire connected component of $M$ in $B \cap GL(A)$ is contained in $GL(B)$.
 \end{theorem}
 \begin{proof}
-    Fix $\phi \in V^*$. Consider a particular contour winding counterclockwise around a point $w$ in the domain, which is at least a unit distance away from $w$ at any point on the contour. If $h,k \in \mathbf{C}$ are small enough that $w + h$ and $w + k$ are contained within the contour, then by the Cauchy integral theorem,
+    $GL(A)$ is open, so $B \cap GL(A)$ is open in $B$. If $M_n \to M$, with $M_n \in GL(B)$, and $M \in GL(A)$, then $\| M_n^{-1} \| \to \| M^{-1} \| < \infty$, so by the last lemma, $M$ must be invertible.
+\end{proof}
+
+\begin{corollary}
+    If $B$ is a closed subalgebra of $A$, then $\sigma_B(M)$ is obtained from $\sigma_A(M)$ by adding certain components of $\rho_A(M)$.
+\end{corollary}
+\begin{proof}
+    $\sigma_B(M)$ is homeomorphic to the set $GL(B) \cap \{ \lambda - M : \lambda \in \mathbf{C} \}$, and $\sigma_A(M)$ homeomorphic to $GL(A) \cap \{ \lambda - M : \lambda \in \mathbf{C} \}$. Any component in $GL(B) \cap \{ \lambda - M : \lambda \in \mathbf{C}$ can be enlarged to a component of $GL(B)$, so if $\lambda \in \sigma_A(M)$, consider the component of $\lambda - M$ in $GL(B)$.
+\end{proof}
+
+\begin{corollary}
+    If $A \subset B$ are algebras, and $\sigma_B(M) \subset \mathbf{R}$, then $\sigma_A(M) = \sigma_A(M)$.
+\end{corollary}
+\begin{proof}
+    $\sigma_B(M)$ is a bounded subset of $\mathbf{R}$, so $\rho_B(M)$ is connected in $\mathbf{C}$. Hence $\sigma_A(M) = \sigma_B(M)$, since $\sigma_A(M) \neq \mathbf{C}$, and if we added any more points to the spectrum we would have to add the entire component, which would have to be all of $\rho_B(M)$.
+\end{proof}
+
+\subsection{Holomorphicity and Resolvent Formalism.}
+
+The fundamental theorem of spectral theory relies on heavy complex analysis, hence its restricted application to Banach algebras over the complex numbers. Define the resolvent of $M$, defined on $\rho(M)$ by
+%
+\[ R(z; M) = (M - z)^{-1} \]
+%
+Fixing $M$, we obtain an analytic function into $A$.
+
+\begin{lemma}
+    $R$ is analytic, in the sense that
+    %
+    \[ \lim_{w \to 0} \frac{R(z + w, M) - R(z,M)}{w} \]
+    %
+    converges to a well defined value. for all $z \in \rho(M)$
+\end{lemma}
+\begin{proof}
+    The proof is a pure computation.
     %
     \begin{align*}
-        \left\langle \phi, \frac{1}{h-k} \left[ \frac{f(w + h) - f(w)}{h} - \frac{f(w + k) - f(k)}{k} \right] \right\rangle\\
-        = \frac{1}{2\pi i} \int_C \frac{\langle \phi, f(z) \rangle\ dz}{[z - (w + h)][z - (w + k)][z - w]}
+        \lim_{w \to 0} &\frac{R(z + w, M) - R(z,M)}{w}\\
+        &= \lim_{w \to 0} \frac{(z + w - M)^{-1} - (z - M)^{-1}}{w}\\
+        &= \lim_{w \to 0} (z + w - M)^{-1} \frac{(z - M) - (z + w - M)}{w} (z - M)^{-1}\\
+        &= \lim_{w \to 0} -(z + w - M)^{-1} (z - M)^{-1}\\
+        &= -(z - M)^{-2}
+    \end{align*}
+    %
+    We apply the continuity of multiplication and inversion.
+\end{proof}
+
+In Banach theory, we call such a mapping {\bf strongly analytic}. A {\bf weakly analytic function} is $f: \mathbf{C} \to A$ for which $\langle \phi, f \rangle$ is analytic for any choice of $\phi \in A^*$. It is clear that all strongly analytic functions are weakly analytic, which follows because
+%
+\[ \lim_{w \to 0} \phi \left( \frac{f(z + w) - f(z)}{w} \right) = \phi \left( \lim_{w \to 0} \frac{f(z + w) - f(z)}{w} \right) \]
+%
+For fun, we shall also prove that all weakly analytic functions are strongly analytic.
+
+\begin{theorem}
+    Every weakly analytic function $f: D \to X$ is strongly analytic.
+\end{theorem}
+\begin{proof}
+    Fix $\phi \in X^*$. Consider a particular contour winding counterclockwise around a point $w$ in the domain, which is at least a unit distance away from $w$ at any point on the contour. If $h,k \in \mathbf{C}$ are small enough that $w + h$ and $w + k$ are contained within the contour, then by the Cauchy integral theorem,
+    %
+    \begin{align*}
+        &\phi\left( \frac{1}{h-k} \left[ \frac{f(w + h) - f(w)}{h} - \frac{f(w + k) - f(w)}{k} \right] \right)\\
+        &\ \ \ \ \ =  \phi \left( \frac{f(w)}{hk} + \frac{f(w + h)}{(h - k)h} - \frac{f(w + k)]}{(h - k)k} \right)\\
+        &\ \ \ \ \ = \frac{1}{2\pi i} \int_C \frac{\phi[f(z)]\ dz}{[z - (w + h)][z - (w + k)][z - w]}
     \end{align*}
     %
     Find $\delta$ such that if $\| h \| < \delta$, the distance between any point on $C$ and $w + h$ is greater than $1/2$. Then, if $M$ is the length of $C$, and $K$ is the supremum of $f$ on $C$, then
     %
-    \[ \left| \frac{1}{2\pi i} \int_C \frac{\langle \phi, f(z) \rangle\ dz}{[z - (w + h)][z - (w + k)][z - w]}\right| \leq \frac{4MK}{2 \pi} \| \phi \| = \frac{2MK}{\pi} \| \phi \| \]
+    \[ \left| \frac{1}{2\pi i} \int_C \frac{\phi[f(z)]\ dz}{[z - (w + h)][z - (w + k)][z - w]}\right| \leq \frac{4MK}{2 \pi} \| \phi \| = \frac{2MK}{\pi} \| \phi \| \]
     %
-    Applying the Banach Steinhaus theorem (on $X^*$, viewing elements of $X$ as elements of $X^{**}$), we conclude that for all $h,k$ sufficiently small, there exists $D$ such that
+    Applying the Banach Steinhaus theorem (on $X^*$, viewing elements of $X$ as elements of $X^{**}$), we conclude that for all $h,k$ sufficiently small, there exists $K$ such that
     %
-    \[ \left| \frac{f(w + h) - f(w)}{h} - \frac{f(w + k) - f(k)}{k} \right| \leq D |h - k| \]
+    \[ \left| \frac{f(w + h) - f(w)}{h} - \frac{f(w + k) - f(k)}{k} \right| \leq K |h - k| \]
     %
-    By the completeness of $V$, the quotients of $h$ and $k$ converge to a well defined quantity as $h - k$ converges to zero.
+    By the completeness of $X$, the quotients of $h$ and $k$ converge to a well defined quantity as $h - k$ converges to zero.
+\end{proof}
+
+The non-emptiness of the spectrum relies on Louiville's theorem, in Banach space form. The reason for this is that the resolvent is an entire function if the spectrum exists.
+
+\begin{theorem}
+    A bounded weakly analytic function $f: \mathbf{C} \to X$ is constant.
+\end{theorem}
+\begin{proof}
+    Let $\phi \in X^*$. Then $\phi \circ f$ is an analytic function, and
+    %
+    \[ | (\phi \circ f)(z) | \leq \| \phi \| \| f \|_\infty \]
+    %
+    Louiville tells us there is $w \in \mathbf{C}$ such that $\phi \circ f = w$. Fix $x,y \in \mathbf{C}$. Then $\phi[f(x) - f(y)] = 0$ for all $\phi \in X^*$. By the Hahn Banach theorem, since $\phi$ was arbitrary, we must have $f(x) - f(y) = 0$, so $f(x) = f(y)$.
 \end{proof}
 
 There is a deep relationship between complex analysis and Banach algebras. We shall return to `holomorphic functional analysis' later.
 
 \begin{theorem}
-    Points of a complex Banach algebra have nonempty spectra.
+    The spectrum of a complex Banach algebra is non-empty.
 \end{theorem}
 \begin{proof}
-    Assume $\sigma(M)$ is empty. Then $\lambda - M$ is always invertible, for all $\lambda \in \mathbf{C}$. Fix an arbitrary $\phi \in A^*$. Then $f = \langle \phi, R(\cdot, M) \rangle$ is an entire function. What's more, $f$ is bounded, since, as $\lambda \to \infty$,
+    Assume $\sigma(M)$ is empty. Then $R(\cdot, M)$ is an analytic, entire function, and tends to zero at infinity, since if $|\lambda| > N \| M \|$,
     %
-    \[ | \langle \phi, (\lambda - M)^{-1} \rangle | \leq \| \phi \| \| (\lambda - M)^{-1} \| = \| \phi \| \left\| \sum_{k = 0}^\infty \frac{M^k}{\lambda^{k+1}} \right\| \to 0 \]
+    \begin{align*}
+        \| R(\lambda, M) \| &= \| (\lambda - M)^{-1} \| = \frac{1}{|\lambda|} \left\| \sum_{k = 0}^\infty \frac{M^k}{\lambda^k} \right\| \leq \sum_{k = 0}^\infty \frac{\| M \|^k}{|\lambda|^{k+1}}\\
+        &\leq \frac{1}{|\lambda|} \sum_{k = 0}^\infty \frac{1}{N^{k+1}} = \frac{1}{N(N - 1)\|M\|}
+    \end{align*}
     %
-    Which implies that $f$ is constant, and since it converges to zero at infinity, $f = 0$. In particular, this means that $\langle \phi, M^{-1} \rangle = 0$. But this contradicts the Hahn-Banach theorem, which says that for any non-zero element of a banach space there exists a bounded linear functional non-zero at the element. Hence $\sigma(M)$ must be non-empty.
+    This implies $\| R(\cdot, M) \|$ is therefore constant. Since it tends to zero at infinity, $R(z, M) = 0$ for all $z \in \mathbf{C}$. But then
+    %
+    \[ R(z, M) = (z - M)^{-1} = 0 \]
+    %
+    and this is clearly impossible for any particular $\lambda$.
 \end{proof}
 
-A cute little theorem results from this property of Banach algebras.
+A cute little theorem arises from this property of Banach algebras that will surprisingly find great use in the analysis of abelian Banach algebras.
 
 \begin{corollary}
     Every complex Banach division algebra is isometric to $\mathbf{C}$.
 \end{corollary}
 \begin{proof}
-    Let $A$ be a complex division algebra, and fix $M \in A$. Pick some $\lambda \in \sigma(A)$. Then $\lambda - M \not \in U(A)$, hence $\lambda - M = 0$, i.e. $M = \lambda$. Thus $A = \mathbf{C} \cdot 1 \cong \mathbf{C}$.
+    In any unital Banach algebra $A$, $\mathbf{C} \cdot 1$ is isometric to $\mathbf{C}$, for
+    %
+    \[ \| \lambda \cdot 1 \| = |\lambda| \| 1 \| = |\lambda| \]
+    %
+    Let $A$ be a complex division algebra, and fix $M \in A$. Pick some $\lambda \in \sigma(A)$. Then $\lambda - M \not \in GL(A)$, hence $\lambda - M = 0$, i.e. $M = \lambda$. Thus $A = \mathbf{C} \cdot 1 \cong \mathbf{C}$.
 \end{proof}
 
 The real case is much more complicated. There are three real division algebras: $\mathbf{R}$, $\mathbf{C}$, and $\mathbf{Q}$ (the quaternions), and it is much more difficult to show that these are the only three.
 
-\begin{definition}
-    The {\bf spectral radius} of an element $M \in A$ is defined to be
+\begin{theorem}
+    If $A$ is a Banach algebra for which $M$ exists such that
     %
-    \[ r(M) = \sup \{ |\lambda| : \lambda \in \sigma(M) \} \]
-\end{definition}
+    \[ \| x \| \| y \| \leq M \| x y \| \]
+    %
+    for all $x,y \in \mathbf{C}$, then $A$ is isometric to $\mathbf{C}$.
+\end{theorem}
+\begin{proof}
+    Let $y \in \partial GL(A)$. Then there are $y_i \to y$ with $y_i \in GL(A)$. Thus $\| y_i^{-1} \| \to \infty$. But since
+    %
+    \[ \| y_i \| \| y_i^{-1} \| \leq M \]
+    %
+    we must have $\| y_i \| \to 0$, so $y = 0$. Suppose $z \not \in GL(A)$. Consider the line between $z$ and 1. Consider
+    %
+    \[ \lambda = \inf \{ \gamma \in [0,1] : \gamma + (1 - \gamma) z \in GL(A) \} \]
+    %
+    then $\gamma + (1 - \gamma) z \in \partial GL(A)$, so $\gamma + (1 - \gamma) z = 0$, and since $\gamma \neq 1$ (since $GL(A)$ is open), we conclude $z = \gamma/(1-\gamma)$, and since $z$ is not invertible, we must have $z = 0$. Thus $A$ is a division algebra, so Gelfand implies that $A$ is isometric to $\mathbf{C}$.
+\end{proof}
 
-What is amazing is that we can define the spectral radius without any reference to the spectrum -- this is crazy, since if we enlarge our Banach algebra, more elements in the spectrum become invertible and are removed. Regardless, the supremum of the non-invertible elements will stay the same. To show this, we first prove a lemma
+\begin{theorem}
+    $\sigma$ is `continuous', in the sense that for any open set $U \subset \mathbf{C}$ containing $\sigma(M)$, there is an open neighbourhood $V$ of $M$ such that if $N \in V$, $\sigma(N) \subset U$.
+\end{theorem}
+\begin{proof}
+    The map $\lambda \mapsto \| (\lambda - M)^{-1} \|$ is a bounded continous function in $U^c$, with some bound $K$. If $\| N \| < 1/K$, and $\lambda \in U^c$, then
+    %
+    \[ \lambda - (M + N) = (\lambda - M)(1 - (\lambda - M)^{-1}N) \]
+    %
+    is invertible, since $(\lambda - M)$ is invertible, since $\| (\lambda - M)^{-1} N \| < 1$. It follows that $\sigma(M + N) \subset U$.
+\end{proof}
+
+\subsection{Spectral Radii}
+
+The {\bf spectral radius} of an element $M \in A$ is defined to be
+%
+\[ r(M) = \sup \{ |\lambda| : \lambda \in \sigma(M) \} \]
+%
+It bounds where to look for the spectrum of $M$ occurs. What is amazing is that we can define the spectral radius without any algebraic reference; this is crazy, since if we enlarge our Banach algebra, more elements become invertible, and thus the spectrum shrinks in size. The radius formula says that there still exists points on the boundary of the spectrum.
 
 \begin{lemma}
     Let $M \in A$, $n \in \mathbf{N}$. Then, if $\lambda \in \sigma(M)$, $\lambda^n \in \sigma(M^n)$.
@@ -639,39 +1049,50 @@ What is amazing is that we can define the spectral radius without any reference 
     %
     \[ \lambda^n - M^n = (\lambda - M) \left(\sum \lambda^{n-1-k} M^k \right) = \left(\sum \lambda^{n-1-k} M^k \right) (\lambda - M) \]
     %
-    If $\lambda^n - M^n$ was invertible, then $\lambda - M$ would also be invertible.
+    If $\lambda - M$ was invertible, then $\lambda^n - M^n$ would also be invertible.
 \end{proof}
 
 \begin{theorem}[Spectral Radius Theorem]
-    \[ r(a) = \lim_{n \to \infty} \| a^n \|^{1/n} \]
+    \[ r(M) = \lim_{n \to \infty} \| M^n \|^{1/n} \]
 \end{theorem}
 \begin{proof}
-    Let $\lambda \in \sigma(M)$. Then $\lambda^n \in \sigma(M^n)$. Thus $|\lambda|^n \leq \| M^n \|$, hence
+    If $\lambda \in \sigma(M)$, then $\lambda^n \in \sigma(M^n)$, and therefore by Neumann's lemma, $|\lambda|^n \leq \| M^n \|$. We conclude
     %
     \[ |\lambda| \leq \| M^n \|^{1/n} \]
     %
-    Thus $r(M) \leq \| M^n \|^{1/n}$, so $r(M) \leq \liminf_{n \to \infty} \| M^n \|^{1/n}$. Set $R = 1/r(M)$ (which can be $\infty$, if $r(M) = 0$), and $r = 1/\|M\|$. Let $\lambda$ be a complex number with modulus less than $R$. Then $1/|\lambda| > r(M)$, so $1 - \lambda M \in U(A)$. If $\phi \in A^*$, define the function
+    taking extrema,
+    %
+    \[ r(M) = \sup_{\lambda \in \sigma(M)} |\lambda| \leq \liminf_{n \to \infty} \|M^n\|^{1/n} \]
+    %
+    Set $R = r(M)^{-1}$ (which can be $\infty$, if $r(M) = 0$), and $r = \|M\|^{-1}$. Let $\lambda$ be a complex number with modulus less than $R$. Then $1/|\lambda| > r(M)$, so $1 - \lambda M \in GL(A)$. If $\phi \in A^*$, define
     %
     \[ f: \lambda \mapsto \langle \phi, (1 - \lambda M)^{-1} \rangle \]
     %
-    Then $f$ is holomorphic in the disk of radius $R$, as we have already verified. If $\lambda$ has radius less than $r$, then $\| \lambda M \| < 1$, $1 - \lambda M \in U(A)$, and
+    Then $f$ is holomorphic in the disk of radius $R$. If $|\lambda| < r$, then $\| \lambda M \| < 1$, $1 - \lambda M \in GL(A)$, and
     %
-    \[ \langle \phi, (1 - \lambda M)^{-1} \rangle = \sum_{k = 0}^\infty \langle \phi, M^k \rangle \lambda^k \]
+    \[ \phi \left( (1 - \lambda M)^{-1} \right) = \sum_{k = 0}^\infty \phi( \lambda^k M^k) \]
     %
+    power series expansions are unique, hence this expansion should work in the whole disk of radius $R$. But $\phi$ was arbitrary, so the sequence $\lambda^k M^k$ must be bounded, by Banach Steinhaus. If $\lambda$ is fixed, then there is $C$ such that
     %
-    but power series expansions are unique, hence this expansion should work in the whole disk of radius $R$. But $\phi$ was arbitrary, so the sequence $\lambda^k M^k$ must be bounded. If $\lambda$ is fixed, then there is $C$ such that
+    \[ |\lambda^n| \|M^n\| \leq C \]
     %
-    \[ |\lambda^k| \|M^k\| \leq C \]
+    for all $n$, so
     %
-    So
+    \[ \|M^n\|^{1/n} \leq \frac{C^{1/n}}{|\lambda|} \]
     %
-    \[ \|M^k\|^{1/k} \leq \frac{C^{1/n}}{\lambda} \]
+    Hence
     %
-    Hence $\limsup \|M^k\|^{1/k} \leq \frac{1}{\lambda}$. Letting $\lambda \to R$, we obtain that $\limsup \|M^k\|^{1/k} \leq r(a)$. We have shown $\liminf \|M^k\|^{1/k} = r(M) = \limsup \|M^k\|^{1/k}$, from which the theorem follows.
+    \[ \limsup_{n \to \infty} \|M^n\|^{1/n} \leq \lim_{n \to \infty} \frac{C^{1/n}}{\lambda} = \frac{1}{\lambda} \]
+    %
+    Letting $\lambda \to R$, we obtain that $\limsup \|M^k\|^{1/k} \leq r(a)$. We have shown
+    %
+    \[ \liminf \|M^k\|^{1/k} \geq r(M) \geq \limsup \|M^k\|^{1/k} \]
+    %
+    from which the theorem follows.
 \end{proof}
 
 \begin{corollary}
-    If $A$ is an algebra, and $B$ a closed subalgebra containing $M$, then $r_{A}(M) = r_B(a)$.
+    The spectral radius of a Banach algebra element is invariant of which Banach algebra the element is in. If $B$ is a Banach subalgebra of $A$, with $M \in B$, then $r_{A}(M) = r_B(a)$.
 \end{corollary}
 
 \begin{example}
@@ -682,164 +1103,595 @@ What is amazing is that we can define the spectral radius without any reference 
     while the spectrum are different, the spectral radius is the same.
 \end{example}
 
-\begin{theorem}
-    Let $A \subset B$ be Banach algebras, both containing an element $M$. Then $\sigma_B(M) \subset \sigma_B(M)$, and if $\lambda \in \sigma_A(M) \cap \rho_B(M)$, then the connected component of $\lambda$ in $\rho_B(M)$ is contained in $\sigma_A(M)$.
+In our last example, enlarging the spectrum of $f$ from $\mathbf{T}$ to $\mathbf{D}$ ws the only thing that could occur from enlarging the algebra, for we cannot add any more points outside of the unit disk, and adding a single point in the unit disk will add the entire component to the spectrum.
+
+\subsection{Non-Unital Spectrum \& Non-Commutative Topology}
+
+We would like to extend these tools to non-unital algebras, but there is no way to talk about invertibility since there is no unit to invert to! We still need to analyze these algebras, since they naturally occur in analysis. If $X$ is not compact, then $C_0(X)$ does not contain an identity. Though we have noted that there is usually a natural trick for adding an identity, this modifies the structure of the algebra (for instance, the ideals change). Nonetheless, it is psychologically relieving to find that all non-unital Banach algebras can be isometrically embedded into Banach algebras with unit. Given a non-unital algebra $A$, consider
+%
+\[ A \ltimes \mathbf{C} = \{ (a,\lambda) : a \in A, \lambda \in \mathbf{C} \} \]
+%
+with a multiplicative structure
+%
+\[ (M + \lambda)(N + \gamma) = MN + \lambda N + \gamma M + \lambda \gamma \]
+%
+We have an identity $0 + 1$, and the space considered still satisfies the properties that make it a Banach algebra if we give it the norm
+%
+\[ \| M + \lambda \| = \| M \| + |\lambda| \]
+%
+If $M_i + \lambda_i$ is a cauchy sequence, then $M_i$ and $\lambda_i$ are both separately cauchy sequences, and therefore converge to a well defined quantity, which also converges in the abstract norm. We may then define $\sigma_A(M) = \sigma_{A \ltimes \mathbf{C}}(M)$. The fundamental theorem of spectral theory still applies, as does the spectral radius formula.
+
+Given $X$, we may embed $C_0(X)$ in $C(X^*)$, the continuous functions on the one-point compactification of $X$. We then find that $\mathbf{C} \ltimes C_0(X)$ is isometric to $C(X^*)$, so unitization on an arbitrary Banach algebra corresponds to the one-point compactification of the `underlying space', even if there is no underlying space. This is the premise behind the school of non-commutative topology. We shall soon see that all commutative Banach algebras can be seen as subalgebras of continuous functions on some compact space. The school of non-commutative topology contends that the intuition gained from the algebra of continuous functions gives us intuitions about arbitrary Banach algebras, which are seen as spaces of continuous functions over `noncommutative space'.
+
+\subsection{Bounded Approximate Identities}
+
+We may not have an identity in a non-unital Banach algebra, but we may be able to `approximate' an identity in some sense. An {\bf approximate identity} (or {\bf AI}) for an algebra $A$ is a net $\{ M_\alpha \}$ such that for any $N \in A$,
+%
+\[ \lim M_\alpha N = N\ \ \ \ \ \ \ \ \lim N M_\alpha = N \]
+%
+Nets for which one of these equations hold are known as {\bf left} or {\bf right} approximate identities. A {\bf bounded approximate identity} ({\bf BLAI} for short) is an approximate identity for which $\sup \| M_\alpha \| < \infty$.
+
+\begin{example}
+    Let $X$ be locally compact and Hausdorff. The set of all compact subsets is a directed, exhausting set. Using Urysohn's lemma, find $f_K$, for each compact $K$, such that $f_K |_K = 1$, and $\| f_K \|_\infty \leq 1$. Fix $g \in C_0(X)$. Pick $K$ such that $|g| \leq \varepsilon$ outside of $K$. Then, in $K$, $|f_K g - g| = 0$, and outside of $K$, $|f_K g - g| < 2 \varepsilon$. Thus $\| f_K g - g \|_\infty < 2 \varepsilon$. $\{ f_K \}$ is not cauchy, for if $|f_K| < \varepsilon$ outside of $K'$, then $\| f_K - f_{K'} \|_\infty > 1 - \varepsilon$.
+\end{example}
+
+\begin{example}
+    Consider the net $P_r(z) = \sum_\mathbf{Z} r^{|n|} z^n$ in the group algebra $L^1(S^1)$, ordered on $r \in (0,1)$. Given $g \in L^1(S^1)$, we have
+    %
+    \begin{align*}
+        (g * P_r)(z) &= \int_{S^1} g(w) P_r(zw^{-1}) d \mu(w)\\
+        &= \sum_\mathbf{Z} \frac{r^{|n|} z^n}{2 \pi} \int_0^{2\pi} g(e^{it}) e^{-nit} dt\\
+        &= \sum_\mathbf{Z} \widehat{g}(n) r^{|n|} z^n
+    \end{align*}
+    %
+    And this fourier transform should converge, but I can't verify it right now because my knowledge of measure theory is weak.
+\end{example}
+
+\begin{example}
+    If $H$ is a Hilbert space, $B(H)$ always has the bounded approximation property, as do the classical sequence spaces $c_0$ and $l_p$. Finding a space without the approximation property was an open problem for more than 40 years. Proposed as a challenge by Stanislaw Mazur in 1936, the solver of this problem was promised a live goose. In 1972, the goose was granted to the swedish mathematician Per Enflo, who solved the problem.
+\end{example}
+
+Advanced Banach space theory makes large uses of bounded left approximate identities. A Banach space $E$ has the {\bf approximation property} if there is a net $\{ T_\alpha \}$ of finite rank operators which tend to $\text{id}_E$ uniformly on compact subsets. The space has the {\bf bounded approximation property} if $\| T_\alpha \|$ is bounded. Uniform convergence on compact sets is equivalent to pointwise convergence for bounded operators. Choose some compact $K$, fix $\varepsilon > 0$, and pick $x_1, \dots, x_n$ for which $\{ B_\varepsilon(x_i) \}$ is a cover of $K$. Then, if $x \in K$, there is $x_j$ with $\| x - x_j \| < \varepsilon$, and then
+%
+\begin{align*}
+    \| T_\alpha x - x \| &\leq \| T_\alpha x - T_\alpha x_j \| + \| T_\alpha x_j - x_j \| + \| x_j - x \|\\
+    &\leq \varepsilon \sup \|T_\alpha\| + \| T_\alpha x_j - x_j \| + \varepsilon
+\end{align*}
+%
+If we choose $\alpha$ big enough, then this is guaranteed to be less than $3 \varepsilon$. For any Banach space $X$, we denote by $A(X)$ the closure of all finite rank operators in $B(X)$. It is clear than $A(X) \subset K(X)$. The problem of whether $A(X) = K(X)$ is much more subtle.
+
+\begin{example}
+    Let $X$ be a Banach space with the bounded approximation property. Let $\{ T_\alpha \}$ be a bounded net. If $S$ is a compact operator, then $S(\overline{B_X})$ is precompact, and
+    %
+    \[ \| T_\alpha S - S \| = \sup \{ \| T_\alpha Sx - Sx \| : x \in B_X \} \leq \sup \{ \| T_\alpha y - y \| : y \in \overline{S(B_X)} \} \]
+    %
+    The right side is the supremum over a compact set, and since $\{ T_\alpha \}$ uniformly tends to the identity on compact sets, $\| T_\alpha S - S \| \to 0$. This shows $\{ T_\alpha \}$ is a bounded left approximate identity, and that $A(X) = K(X)$.
+
+    Now suppose $A(X)$ has a bounded left approximate identity $\{ T_\alpha \}$. Without loss of generality, we may assume each $T_\alpha$ is of finite rank, because if we choose, for each $\alpha$, a bounded net $W_{\alpha, \beta}$ of finite rank operators such that $\lim_\beta W_{\alpha, \beta} = T_\alpha$, then $\{ W_{\alpha, \beta} \}$ is a bounded left approximate identity. For $x \in X$, $\phi \in X^*$, let $x \otimes \phi : X \to X$ be defined by $(x \otimes \phi)(y) = \phi(y) x$. Then $x \otimes \phi$ obviously has finite rank. Pick $y$ for which $\langle \phi, y \rangle = 1$. Then
+    %
+    \[ \| T_\alpha x - x \| = \| T_\alpha (x \otimes \phi)(y) - (x \otimes \phi)(y) \| \leq \| y \| \| T_\alpha (x \otimes \phi) - (x \otimes \phi) \| \to 0 \]
+    %
+    So the nets converge pointwise, which implies convergence on compact sets. To summarize, $X$ has the bounded approximxation property if and only if $A(X)$ has a bounded left approximate identity if and only if $K(X)$ has a bounded left approximate identity belonging to $A(X)$.
+\end{example}
+
+\begin{lemma}
+    If a space has the bounded left and right approximation properties then it has the two sided approximation property.
+\end{lemma}
+\begin{proof}
+    Let $\{ M_\alpha \}$ be a left approximation identity, and $\{ N_\beta \}$ a right approximation identity. We contend $\{ M_\alpha + N_\beta - M_\alpha N_\beta \}$ is a two sided approximator. The limits below certainly converge, and the iterated limits must therefore equal the convergent factor, which is
+    %
+    \[ \lim_\alpha \lim_\beta L(M_\alpha + N_\beta - M_\alpha N_\beta) = \lim_\alpha LM_\alpha + L - LM_\alpha = L \]
+    %
+    \[ \lim_\beta \lim_\alpha (M_\alpha + N_\beta - M_\alpha N_\beta)L = \lim_\beta L + N_\beta L - N_\beta L = L \]
+    %
+    So twe have a two sided approximator.
+\end{proof}
+
+Before the logician Paul Cohen got into logic, he was a functional analyst who contributed to the theory of approximation identities. We shall prove the theorem he contributed to the field, generalized to work over arbitrary modules. Let $A$ be a Banach algebra. A {\bf left banach $A$-module} is a Banach space $X$, which is a module over $A$, for which for any $M \in A$, $x \in X$,
+%
+\[ \| Mx \| \leq \| M \| \| x \| \]
+%
+This makes the module operations continuous. As with Banach algebras, if module operations are continuous, then a Banach space can be made into a Banch $A$-module.
+
+Now if $A$ is a unital Banach algebra, then every $M \in A$ can be trivially written as $NL$, with $NL \in A$ (just let $N = 1$). If we have an approximate identity, then we may write $M$ approximately as $NL$. Suprisingly, Cohen found that we need not approximate this factorization.
+
+\begin{theorem}[Cohen's Factorization Theorem]
+    Let $A$ be a Banach algebra with BLAI $\{ E_\alpha \}$, bounded by $K$. If $X$ is a Banach $A$-module, let $x \in \overline{AX}$, and let $\varepsilon > 0$. Then there is $M \in A$ with $\| M \| \leq K$, $y \in \overline{AE}$ with $\| y - x \| < \varepsilon$, for which $x = My$.
 \end{theorem}
 \begin{proof}
-    Let $V$ be a component of $\rho_B(M)$. Obviously, $V \cap \rho_A(M)$ is open in $V$, since $\rho_A(M)$ is open. But $V \cap \rho_A(M)$ is also closed, for if $\lambda_n \in V \cap \rho_A(M)$ converges to $\lambda \in V$, then $\lambda_n - M \in U(A)$ converges to $\lambda - M \in U(B)$, then $\lambda - M \in U(A)$, since $A$ is a closed subalgebra, and $(\lambda_n - M)^{-1} \to (\lambda - M)^{-1}$. A non-empty open and closed subset of a connected space is either empty or the entire space. It follows that if $V \cap \sigma_A(M) \neq \emptyset$, then $V \subset \sigma_A(M)$.
+    If $A$ has an identity, then the proof is trivial. Since $\overline{AX}$ is a closed subset of $X$, we might as well assume $\overline{AX} = X$. We may extend $X$ to be an module over $A \ltimes \mathbf{C}$, by defining 
+    %
+    \[ (M + \lambda) x = Mx + \lambda x \]
+    %
+    Pick $\lambda > 0$ small enough such that
+    %
+    \[ 0 < \frac{\lambda}{1 - \lambda} K < 1 \]
+    %
+    Define a net $\{ L_\alpha \}$ in $A \ltimes \mathbf{C}$ by letting
+    %
+    \[ L_\alpha = \lambda E_\alpha + (1 - \lambda) = (1 - \lambda) \left( 1 + \frac{\lambda}{1 - \lambda} E_\alpha \right) \]
+    %
+    Then $L_\alpha N \to N$ for all $N \in A$, so $\{ L_\alpha \}$ is a BLAI, and each $L_\alpha$ is invertible in $A \ltimes \mathbf{C}$ by the choice of $\lambda$, so
+    %
+    \[ L_\alpha^{-1} = \frac{1}{1 - \lambda} \sum_{k = 0}^\infty \left(- \frac{\lambda}{1 - \lambda} L_\alpha \right)^k \]
+    %
+    which implies
+    %
+    \begin{align*}
+        \| L_\alpha^{-1} N - N \| &= \| L_\alpha^{-1} N - L_\alpha^{-1} L_\alpha N \| \leq \| L_\alpha^{-1} \| \| N - L_\alpha N \|\\
+        &\leq \left( \frac{1}{1 - \lambda} \sum_{k = 0}^\infty \left( \frac{\lambda K}{1 - \lambda} \right)^k \right) \| N - L_\alpha N \| \to 0
+    \end{align*}
+    %
+    Therefore $L_\alpha^{-1}$ is also a BLAI. Fix $x \in X$, and let
+    %
+    \[ \delta < 1, \frac{\varepsilon}{2 + \|x\|} \]
+    %
+    We will inductively construct a sequence $\alpha_n$ of indices such that the sequence $\{ L_{\alpha_n} \dots L_{\alpha_1} \}$ and $\{ L_{\alpha_1}^{-1} \dots L_{\alpha_n}^{-1} \}$ are convergent subnets. Choose $\alpha_1$ such that
+    %
+    \[ \| L_{\alpha_1}^{-1} x - x \| < \delta/2 \]
+    %
+    If $\alpha_1, \dots, \alpha_n$ has been chosen. There is a unique element $T_n \in A$ such that
+    %
+    \[  L_{\alpha_n} \dots L_{\alpha_1} = (1 - \lambda)^n + T_n \]
+    %
+    Pick $\alpha_{n+1}$ such that
+    %
+    \[ \| L_{\alpha_{n+1}} x - x \| < \frac{\delta}{\| L_{\alpha_1}^{-1} \dots L_{\alpha_n}^{-1} \| 2^{n+2}}\ \ \ \ \ \ \ \ \ \ \| L_{\alpha_{n+1}} T_n - T_n \| < 1/2^n \]
+    %
+    Then
+    %
+    \[ \| L_{\alpha_1}^{-1} \dots L_{\alpha_n}^{-1} L_{\alpha_{n+1}}^{-1} x - L_{\alpha_1}^{-1} \dots L_{\alpha_n}^{-1} x \| \leq \| L_{\alpha_1}^{-1} \dots L_{\alpha_n}^{-1} \| \| x - L_{\alpha_{n+1}}^{-1} x \| < \frac{\delta}{2^{n+2}} \]
+    %
+    This implies $\lim_{n \to \infty} L_{\alpha_1}^{-1} \dots L_{\alpha_n}^{-1} x = y$ exists, and
+    %
+    \begin{align*}
+    \| y - x \| &= \left\| \sum_{n = 0}^\infty (L_{\alpha_1}^{-1} \dots L_{\alpha_{n+1}^{-1}} x - L_{\alpha_1}^{-1} \dots L_{\alpha_n}^{-1} x) \right\|\\
+    &\leq \sum_{n = 0}^\infty \| L_{\alpha_1}^{-1} \dots L_{\alpha_{n+1}^{-1}} x - L_{\alpha_1}^{-1} \dots L_{\alpha_n}^{-1} x \| < \sum_{n = 0}^\infty \frac{\delta}{2^{n+2}} < \delta/2
+    \end{align*}
+    %
+    By construction,
+    %
+    \[ L_{\alpha_{n+1}} (L_{\alpha_n} \dots L_{\alpha_1}) = (1 - \lambda)^n L_{\alpha_{n+1}} + L_{\alpha_{n+1}} T_n \]
+    %
+    Thus
+    %
+    \begin{align*}
+        \| L_{\alpha_{n+1}} L_{\alpha_n} \dots L_{\alpha_1} - L_{\alpha_n} \dots L_{\alpha_1} \| &= \| (1 - \lambda)^n L_{\alpha_{n+1}} + L_{\alpha_{n+1}} T_n - T_n - (1-  \lambda)^n \|\\
+        &\leq (1 - \lambda)^n \| L_{\alpha_{n+1}} - 1 \| + \frac{1}{2^n}
+    \end{align*}
+    %
+    Thus $L_{\alpha_n} \dots L_{\alpha_1}$ converge to some element $M$. Since $A$ is closed in $A \ltimes \mathbf{C}$, $M \in A$, and moreover,
+    %
+    \[ x = \lim_{n \to \infty} (L_{\alpha_1} \dots L_{\alpha_n}) (L_{\alpha_1}^{-1} \dots L_{\alpha_n}^{-1} x) = My \]
+    %
+    Also, observe that
+    %
+    \begin{align*}
+        T_{n+1} &= L_{\alpha_{n+1}} \dots L_{\alpha_1} - (1 - \lambda)^{n+1}\\
+        &= L_{\alpha_{n+1}} T_n + L_{\alpha_{n+1}} (1 - \lambda)^n - (1 - \lambda)^{n+1}\\
+        &= L_{\alpha_{n+1}} T_n + (1 - \lambda)^n \lambda e_{\alpha_{n+1}}
+    \end{align*}
+    %
+    Thus
+    %
+    \[ \| T_{n+1} - T_n \| = \| (L_{\alpha_{n+1}} T_n - T_n + (1 - \lambda)^n \lambda e_{\alpha_{n+1}} \| \leq 1/2^n + (1 - \lambda)^n \lambda K \]
+    %
+    Since $M = \lim T_n$,
+    %
+    \[ \| M \| \leq \| T_1 \| + \left(\sum_{n = 1}^\infty (1 - \lambda)^n \lambda K \right) + \delta \leq \lambda K + (1 - \lambda) K + \delta = K + \delta \]
+    %
+    Let $M' = \frac{K}{K + \delta} M$, $y' = \frac{K + \delta}{K} y$. Then $M'y' = My = x$, and by the choice of $\delta$ (kept hidden all this time),
+    %
+    \[ \| x - y' \| \leq \frac{\| Kx - Ky \| + \| \delta y \|}{K} < \delta + \delta \| x \| + \delta^2 \leq \delta(2 + \|x\|) = \varepsilon \]
+    %
+    And we have verified what was needed.
 \end{proof}
 
 \begin{corollary}
-    If $A \subset B$ are algebras, with $\sigma_B(M) \subset \mathbf{R}$, then $\sigma_A(M) = \sigma_A(M)$.
+    If $A$ is a non-unital Banach algebra with a BLAI, then each $M \in A$ may be written $M = NL$, with $N,L \in A$.
+\end{corollary}
+
+\begin{corollary}
+    Let $A$ be a Banach algebra with a BLAI, and let $\{ M_n \}$ be a sequence in $A$ converging to 0. Then there is $M \in A$ and $\{ N_m \}$ in $A$ tending to zero such that $M_k = M N_k$.
 \end{corollary}
 \begin{proof}
-    If $\sigma_B(M)$ is a bounded subset of $\mathbf{R}$, so $\rho_B(M)$ is connected in $\mathbf{C}$. Hence $\sigma_A(M) = \sigma_B(M)$, since $\sigma_A(M) \neq \mathbf{C}$.
+    Let $X$ be the set of all sequences in $A$ that converge to zero, with the $\| \cdot \|_\infty$ norm. Then $X$ is a left $A$ module, and $X = \overline{AX}$, since $A$ has a BLAI. Applying Cohen's theorem, we find that we may write
+    %
+    \[ (M_1, M_2, \dots) = M (N_1, N_2, \dots) \]
+    %
+    hence $M_i = M N_i$ for each $i$.
 \end{proof}
+
+
+
+
 
 \section{Gelfand Theory}
 
-Gelfand realized that all commutative Banach algebras were really just spaces of continuous functions in disguise. This has incredibly important repurcussions which we will get to. The main part of Gelfand's theory is the connection between homomorphisms and maximal ideals -- an additive subgroup of the ring closed under multiplication by any element of the algebra, and under scalar multiplication by elements of a field. An arbitrary ideal of a algebra shall be denoted by gaudy letters near the beginning of the alphabet, like $\mathfrak{a}$ and $\mathfrak{b}$. We note that no proper ideal contains invertible elements in a ring, and that every ring possesses some maximal ideal (appealing to some method of transfinite induction). We first deal with some not-necessarily commutative theorems.
+Gelfand realized that all commutative Banach algebras were really just manifestations of continuous functions over a compact set. The way to find a space representing a given algebra. This has incredibly important repurcussions for all of Banach algebra theory, since all algebras contain commutative subalgebras. The ingenious trick to Gelfand theory is how to find a compact space on which to represent this algebra. We shall first analyze $C(K)$, for compact $K$, and find that points in $K$ can be uniquely defined with maximal ideals in $C(K)$. This means that, in general, if a given algebra is to be represented by continuous functions, the only space we could represent it on would be homeomorphic to the space of maximal ideals, with some topology. In any algebra, we may consider this space, but it is only for abelian algebras where we obtain a full representation.
+
+\subsection{Algebra Homomorphisms and Ideals}
+
+Algebraically, if $A$ is an algebra, the ideals are the objects we may quotient $A$ by. Since $A$ is both a ring and a vector space, an ideal therefore must be a ring ideal and a subspace. This continues to hold in the non-unital cases. We can consider left, right, and two-sided ideals, and we'll denote them by gaudy letters such as $\mathfrak{a}$ and $\mathfrak{b}$. It is an easy consequence of ring theory that a proper left ideal cannot contain any left invertible elements, and a right ideal cannot contain any right invertible elements. It is also easy to verify that the closure of any ideal is an ideal. In the commutative case, the quotient of an algebra by a maximal ideal is a field. Furthermore, every left, right, or double sided ideal can be extended to a maximal ideal of the same type.
+
+For completeness, we include a discussion of quotients of algebras by ideals, which will come very handy in the near future. Given an ideal $\mathfrak{a}$ in an algebra $A$, we can surely form a subalgebra $A/\mathfrak{a}$, which consists of equivalence classes of the form
+%
+\[ [M] = \{ N : M - N \in \mathfrak{a} \} \]
+%
+where multiplication is obtained by performing the opeartions in the equivalence classes. This also has a natural Banach space structure, under the quotient norm.
+%
+\[ \| X \| = \inf \{ \| N \| : N \in X \} \]
+%
+It remains to be seen that this is a Banach algebra. By definition, for each $M$ and $\varepsilon > 0$, there is $N \in X$ such that
+%
+\[ \| N \| \leq \| X \| + \varepsilon \]
+%
+Similarily, for another equivalence class $Y$, there is $L$ such that
+%
+\[ \| L \| \leq \| Y \| + \varepsilon \]
+%
+From which it follows that
+%
+\[ \| XY \| \leq \| NL \| \leq \| N \| \| L \| \leq \| X \| \| Y \| + [\| X \| + \| Y \|] \varepsilon + \varepsilon^2 \]
+%
+Letting $\varepsilon$ tend to zero, we find
+%
+\[ \| XY \| \leq \| X \| \| Y \| \]
+%
+so the quotient structure really is a Banach algebra.
+
+Ideals are naturally connected with homomorphisms $f: A \to B$ between algebras, maps which are both ring homomorphisms and linear maps. Every ideal is the kernel of some homomorphism, and the kernel of every homomorphism is an ideal. Correspondingly, {\it closed ideals} in a Banach algebra correspond to continuous homomorphisms. The most tractable homomorphisms to study are the {\bf characters}, homomorphisms from a ring $A$ to $\mathbf{C}$. In this section, we will deduce their structure.
 
 \begin{lemma}
-    If $\| M \| \leq 1$, then $|f(M)| \leq 1$ for every (non necessarily) complex homomorphism $f: A \to \mathbf{C}$.
+    If $\| M \| \leq 1$, then $|\phi(M)| \leq 1$ for a character $\phi$. Thus $\| \phi \| \leq 1$.
 \end{lemma}
 \begin{proof}
-    The kernel of every homomorphism cannot be all of $A$, and it is certainly an ideal of $A$. Therefore the kernel cannot contain any invertible elements. If $f(M) = \lambda$, then $\lambda - M \in \ker(M)$, so that $\lambda - M$ is not invertible, which, from our discussion of the spectrum of $M$, we determine that $|\lambda| < 1$.
+    The kernel of every homomorphism cannot be all of $A$, and it is certainly an ideal of $A$. Therefore the kernel cannot contain any invertible elements. If $f(M) = \lambda$, then $\lambda - M \in \ker(M)$, so that $\lambda - M$ is not invertible. This implies, from our discussion of $\sigma(M)$, that $|\lambda| \leq 1$.
 \end{proof}
 
 \begin{corollary}
-    Every algebraic functional (from $A$ to $\mathbf{C}$) is continuous.
+    Every character is a continuous linear map.
 \end{corollary}
+
+The next lemma follows because a proper ideal of an algebra cannot contain invertible elements.
 
 \begin{lemma}
     Every maximal ideal of a Banach algebra is closed.
 \end{lemma}
 \begin{proof}
-    Let $\mathfrak{a}$ be a maximal ideal of an algebra $A$. It is easy to show the closure of any ideal is an ideal. It follows that either $\overline{\mathfrak{a}} = \mathfrak{a}$ (so that $\mathfrak{a}$ is closed), or $\mathfrak{a}$ is dense in $A$. Suppose the second option holds. Let $a \in U(A)$ be chosen. Then there is $a_i \in \mathfrak{a}$ converging to $a$. But then the $a_i$ are eventually invertible, since $U(A)$ is open, from which we conclude $\mathfrak{a} = A$, a contradiction.
+    Let $\mathfrak{a}$ be a maximal ideal of an algebra $A$. It is easy to show the closure of any ideal is an ideal. It follows that either $\overline{\mathfrak{a}} = \mathfrak{a}$ (so that $\mathfrak{a}$ is closed), or $\mathfrak{a}$ is dense in $A$. Suppose the second option holds. Let $M \in GL(A)$ be chosen. Then there is $M_i \in \mathfrak{a}$ converging to $M$. But then the $M_i$ are eventually invertible, since $GL(A)$ is open, from which we conclude $\mathfrak{a} = A$, a contradiction.
 \end{proof}
 
-Next, we consider the notion of a continuous homomorphism between two algebras $A$ and $B$, which is a map which is both linear and a ring homomorphism (we note that this means that no homomorphism can be zero). The first isomorphism theorem holds in such a space, and preserves completeness. If $f:A \to B$ is a continuous homomorphism from a Banach algebra $A$ to a normed algebra $B$, then $K$ is a closed ideal in $A$ contained within the kernel of $f$, so that $A/K$ is also a Banach space, then there is a continuous map $\overline{f}$ from $A/K$ to $B$ such that the standard diagram commutes. If $K = \ker(f)$, the map is injective, and therefore is an Banach algebra isomorphism if it is surjective.
-
-\begin{lemma}
-    Every maximal ideal of $A$ is the kernel of some complex homomorphism, and correspondingly, the kernel of every complex homomorphism is a maximal ideal.
-\end{lemma}
+\begin{corollary}
+    If $\mathfrak{a}$ is a maximal ideal in an abelian Banach algebra, then $A/\mathfrak{a}$ is isometric to $\mathbf{C}$.
+\end{corollary}
 \begin{proof}
-    If $\mathfrak{a}$ is a maximal ideal, then $\mathfrak{a}$ is closed, so $A/\mathfrak{a}$ is a complex Banach algebra. But $A/\mathfrak{a}$ is also a division ring, so is really just $\mathbf{C}$ in disguise. The map $\phi: A \to A/\mathfrak{a} \cong \mathbf{C}$ is then a complex homomorphism we require. Conversely, let $\phi: A \to \mathbf{C}$ be a homomorphism. Then $\phi$ is surjective, for $\phi(\mathbf{C} \cdot 1) = \mathbf{C}$. Then if $K = \ker(f)$, $A/K \cong \mathbf{C}$, and thus $K$ is maximal.
+    For then $A/\mathfrak{a}$ is a Banach division algebra.
 \end{proof}
 
 \begin{lemma}
-    $M \in U(A)$ if and only if $\phi(M) \neq 0$ for all complex homomorphisms $\phi$.
+    The kernel of every character is a maximal ideal. In an abelian algebra, every maximal ideal corresponds to the kernel of some character.
 \end{lemma}
 \begin{proof}
-    If $M \in U(A)$, we know $\phi(M) \neq 0$ for all $\phi \in \Phi_A$, for otherwise $\ker(\phi)$ would contain an invertible element. Conversely, if $M \not \in U(A)$, then $M$ is contained in a maximal ideal $\mathfrak{a}$, and the projection $\phi: A \to A/\mathfrak{a}$ is non-zero at $M$, and we have an algebra isomorphism from $A/\mathfrak{a}$ to $\mathbf{C}$ by Gelfand-Mazur, which does not enlarge the kernel.
+    We apply the first isomorphism theorem. Let $\phi$ be a character. Then $\phi$ is surjective, for $\phi(\mathbf{C} \cdot 1) = \mathbf{C}$. Thus if $\mathfrak{a} = \ker(f)$, $A/\mathfrak{a} \cong \mathbf{C}$, implying $\mathfrak{a}$ is maximal. If $A$ is commutative, and $\mathfrak{a}$ is a maximal ideal, then $A/\mathfrak{a}$ is a division ring, so we may project $A$ down to $A/\mathfrak{a}$, and then apply an isometry to $\mathbf{C}$.
+\end{proof}
+
+\begin{lemma}
+    If the kernels of two characters correspond, then the two characters are equal.
+\end{lemma}
+\begin{proof}
+    Suppose $\ker(\phi) = \ker(\psi)$. Fix $x \in A$. Then
+    %
+    \[ \phi(x - \phi(x)) = \phi(x) - \phi(x) = 0 \]
+    %
+    so
+    %
+    \[ \psi(x - \phi(x)) = \psi(x) - \phi(x) = 0 \]
+    %
+    Thus $\psi(x) = \phi(x)$.
+\end{proof}
+
+\begin{corollary}
+    In a commutative algebra, every maximal ideal of $A$ is the kernel of a unique complex homomorphism, so there is a one-to-one correspondence between maximal ideals and characters.
+\end{corollary}
+
+We denote the set of characters of a Banach algebra by $A$ by $\Phi_A$, known as the {\bf character space} of $A$. Gelfand's theory is the study of $\Phi_A$, and its relation to $A$.
+
+\begin{example}
+    Let $K$ be a compact space, and consider the algebra $C(K)$ of continuous functions. Given a closed subset $C$ of $K$, the set
+    %
+    \[ \{ f \in C(K) : f|_C = 0 \} \]
+    %
+    is an ideal of $C(K)$. We contend these are all such closed ideals. Let $\mathfrak{a}$ be an arbitrary closed ideal of $C(K)$. It is easy to see that the set
+    %
+    \[ C = \{ x \in K : (\forall f \in \mathfrak{a}: f(x) = 0) \} \]
+    %
+    is closed. Let $x_i \to x$. If $f(x_i) = 0$ for all $x_i$, then $f(x_i) \to f(x)$, so $f(x) = 0$. Let $g$ be an arbitrary continuous function with $g|_C = 0$. Fix $\varepsilon > 0$. Let $V = g^{-1}(B_\varepsilon(0))$. For each $y \in K - C$, there is a function $f_y \in \mathfrak{a}$ with $f_y(y) \neq 0$. We may assume $f_y(y) = g(y)$, since $\mathfrak{a}$ is closed under multiplication by a constant. Let $U_y = (f_y - g)^{-1}(B_\varepsilon(0))$. Then $\{ V \} \cup \{ U_y \}$ is an open cover of $K$, and thus has a finite subcover $V, U_{y_1}, \dots, U_{y_n}$. Let $h_V, h_{y_1}, \dots, h_{y_n}$ be a partition of unity subordinate to the cover. Consider the function $g' = \sum h_{y_i} f_{y_i} \in \mathfrak{a}$. For $x \in K - V$,
+    %
+    \[ |g'(x) - g(x)| = | \sum h_{y_i}(x) (f(x) - f_{y_i}(x)) | \leq \sum h_{y_i}(x) |f(x) - f_{y_i}(x)| < \varepsilon \]
+    %
+    For $x \in V$,
+    %
+    \[ |g'(x) - g(x)| = | \sum h_{y_i}(x) (f(x) - f_{y_i}(x)) - h_V(x) f(x) | < \varepsilon + h_V(x) f(x) \leq 2 \varepsilon \]
+    %
+    Thus $\| g' - g \|_\infty \leq 2 \varepsilon$. It follows that $g$ can be approximated to arbitrary precision by elements of $\mathfrak{a}$, so $g \in \mathfrak{a}$, since $\mathfrak{a}$ is closed. We conclude $\mathfrak{a}$ consists of all functions which vanish on $C$. Thus closed ideals of $C(K)$ are in one-to-one correspondence with closed sets of $K$. From this, it is fairly easy to identify the maximal ideals. If $C \subset D$, then the ideal corresponding to $D$ is a subset of the ideal corresponding to $C$. The closed ideal corresponding to $\emptyset$ is $C(K)$, so the maximal ideals correspond to the smallest, non-empty compact sets; these are just the points. Thus the character space of $C(K)$ is in one-to-one correspondence with $K$.
+\end{example}
+
+\begin{lemma}
+    If $M \in GL(A)$ then $M \not \in \text{ker}(\phi)$ for all $\phi \in \Phi_A$. The converse holds in commutative algebras.
+\end{lemma}
+\begin{proof}
+    If $M \in GL(A)$, we know $\phi(M) \neq 0$ for all $\phi \in \Phi_A$, for otherwise $\ker(\phi)$ would contain an invertible element, implying $\ker(\phi) = A$. Conversely, in a commutative ring, if $M \not \in GL(A)$, then $(M) \neq A$, so $(M)$ extends to a maximal ideal $\mathfrak{a}$, and the projection $\phi: A \to A/\mathfrak{a}$ contains $M$ in its kernel, so we have an algebra isomorphism from $A/\mathfrak{a}$ to $\mathbf{C}$ by Gelfand-Mazur, which does not enlarge the kernel.
 \end{proof}
 
 \begin{corollary} \label{spectralhomomorphism}
-    In a commutative algebra, $\lambda \in \sigma(M)$ if and only if $\phi(M) = \lambda$ for some complex homomorphism $\phi$.
+    If $\phi(M) = \lambda$ for some character $\phi$, then $\lambda \in \sigma(M)$. The converse holds for commutative algebras.
 \end{corollary}
 
-The key to Gelfand theory is noticing that homomorphisms of commutative Banach algebras naturally reflect the structure of the Banach algebra in question.
+\begin{example}
+    Things can go very wrong for noncommutative algebras. Let us classify the ideals of $M_n(\mathbf{C})$. Let $\mathfrak{a}$ be a left ideal of $M_n(\mathbf{C})$, and suppose that $\mathfrak{a}$ contains a non-zero element $M$. It follows from the elementary theory of matrices that there are matrices $N$ and $L$ such that $NML \in \mathfrak{a}$ is a diagonal matrix non-zero somewhere. By multiplying on the left by a basis matrix $e_{ij}$, and normalizing, we find that $\mathfrak{a}$ contains an element with a single non-zero entry on the diagonal. Multiplying by permutation matrices, we find that $\mathfrak{a}$ contains all matrices with a one in a certain position, and zeroes everywhere else. Finally, by summing up, we find $\mathfrak{a}$ contains all matrices in $M_n(\mathbf{C})$. Thus $M_n(\mathbf{C})$ is a {\it simple} algebra, it contains no non-trivial ideals. Consequently, we find every algebra homomorphism from $M_n(\mathbf{C})$ to another algebra must be injective, for the kernel is a proper ideal. Then, if $n > 1$, the character space of $M_n(\mathbf{C})$ is $\emptyset$; there is no injective homomorphism from $M_n(\mathbf{C})$ to $\mathbf{C}$.
+\end{example}
 
-\begin{definition}
-    For a commutative algebra $A$, the {\bf character space} $\Phi_A$ is the set of all maximal ideals of the algebra, or, correspondingly, as we shall see, the set of all algebraic functionals from $A$ to $\mathbf{C}$. We assign to each $M \in A$ the {\bf gelfand transform} $\widehat{M}: \Phi_A \to \mathbf{C}$, which is defined by $\widehat{M}(\phi) = \phi(M)$. The {\bf Gelfand topology} is the weakest topology on $\Phi_A$ which makes each $\widehat{M}$ continuous.
-\end{definition}
+The key to Gelfand theory is noticing that characters of Banach algebras naturally reflect the structure of the Banach algebra in question. Understanding the character space leads to a natural understanding of the invertibility of the elements of the algebra.
+
+\begin{example}
+    Consider the space $W$ of all functions $f \in L_2(\mathbf{T})$ which have a Fourier expansion of the form
+    %
+    \[ f(z) = \sum_{k = -\infty}^\infty a_k z^k \]
+    %
+    such that the coefficients converge absolutely
+    %
+    \[ \sum |a_k| < \infty \]
+    %
+    On this subspace, define a new norm $\| f \| = \sum |a_k|$. This makes the space into a commutative Banach algebra, since it is isometric to $l_1(\mathbf{Z})$. We contend that $\Phi_W$ consists only of the evaluation maps $\phi_w: f \mapsto f(w)$, for a fixed $w \in \mathbf{T}$. Clearly, each such map is an algebra morphism.  If $z$ denotes the identity function on $\mathbf{T}$, then $\| z \| = 1$. Similarily, the function $1/z$ also has norm $1$. Thus if $\phi$ is an arbitrary morphism, then $\| \phi(z) \| \leq 1$, $\| \phi(1/z) \| = 1$. Now $\phi(1/z) = 1/\phi(z)$, implying that $\phi(z) = w$ lies on $\mathbf{T}$. We claim $\phi = \phi_w$. Surely, for any polynomial $\sum_{k = -N}^N a_k z^k$, we have
+    %
+    \[ \phi \left( \sum_{k = -N}^N a_k z^k \right) = \sum_{k = -N}^N a_k \phi(z^k) = \sum_{k = -N}^N a_k w^k \]
+    %
+    so $\phi$ is equal to $\phi_w$ on finite polynomials. But the set of all such polynomials is dense in $W$, so $\phi = \phi_W$.
+
+    From this discussion, we obtain Wiener's lemma. If $f$ has an absolutely convergent fourier seires, and $f(z) \neq 0$ for all $z \in \mathbf{T}$, then $1/f$ has an absolutely convergent fourier series. To see this, note that the hypothesis implies $f \in W$, $f(z) \neq 0$ implies $\phi(f) \neq 0$ for all $\phi \in \phi_W$, and this implies that $f$ is invertible.
+\end{example}
+
+Wiener had a long, technical and messy proof of the lemma long before Banach algebras were invented. The Gelfand theory reduces the theorem to a few statements. Here's another example from complex analysis.
+
+\begin{example}
+    Consider the commutative algebra $A(\mathbf{D})$. We also contend that $\Phi_{A(\mathbf{D})}$ are just the evaluations of functions at a point in the unit disk. The identity function $z$ has norm 1 in this space, implying that if $\phi$ is any homomorphism, then $\phi(z) = w \in \mathbf{D}$. Then
+    %
+    \[ \phi(\sum_{k = 0}^N a_k z^k) = \sum_{k = 0}^N a_k w^k \]
+    %
+    and these polynomials are dense in $A(\mathbf{D})$, so $\phi = \phi_w$.
+
+    Now let $f_1, \dots, f_n \in A(\mathbf{D})$ be such that for each $z \in \mathbf{D}$, some $f_i(z)$ is non-zero. Then we claim there are $g_i \in A(\mathbf{D})$ for which $\sum f_i g_i = 1$. It is clear that this is equivalent to the ideal relation
+    %
+    \[ (f_1, \dots, f_n) = A(\mathbf{D}) \]
+    %
+    If this were not true, then $(f_1, \dots, f_n)$ would be contained in a closed, maximal ideal, and would therefore be annihilated by some $\phi \in \Phi_{A(\mathbf{D})}$. But $\phi$ corresponds to evaluation at some $w \in \mathbf{D}$, so $f_i(w) = 0$ for all $i$, a contradiction which shows $(f_1, \dots, f_n) = A(\mathbf{D})$. One can apply Runge's theorem to classify the character spaces of arbitrary $A(C)$, but we leave this to the reader.
+\end{example}
+
+There is a fairly natural topology on $\Phi_A$. We assign to each $M \in A$ the {\bf Gelfand transform} $\widehat{M}: \Phi_A \to \mathbf{C}$, which is defined by $\widehat{M}(\phi) = \phi(M)$. The {\bf Gelfand topology} is the weakest topology on $\Phi_A$ which makes each $\widehat{M}$ continuous. We shall denote the Gelfand transform itself as the map $\Gamma: A \to C(\Phi_A)$.
 
 \begin{lemma}
-    The map $M \mapsto \widehat{M}$ is an algebra homomorphism into $C(\Phi_A)$, whose kernel is the {\bf Jacobson radical}, the intersection of all maximal ideals. Thus the map is an isomorphism if and only if the algebra is semisimple. We have $\widehat{M}(\Phi_A) = \sigma(M)$.
+    The map $M \mapsto \widehat{M}$ is a contractive algebra homomorphism into $C(\Phi_A)$, whose kernel is the Jacobson radical, the intersection of all maximal ideals. Thus the map is an isomorphism if and only if the algebra is semisimple. We have $\widehat{M}(\Phi_A) \subset \sigma(M)$, with equality in the commutative case.
 \end{lemma}
 \begin{proof}
     By direct calculation,
     %
     \[ \widehat{MN}(\phi) = \phi(MN) = \phi(M) \phi(N) = (\widehat{M} \widehat{N})(\phi) \]
     %
-    If $\widehat{M} = 0$, then $\phi(M) = 0$ for all $\phi$. Thus $M$ is contained in every maximal ideal. The converse is equally trivial. That $\widehat{M}(\Phi_A) = \sigma(M)$ follows from Corollary \ref{spectralhomomorphism}.
+    If $\widehat{M} = 0$, then $\phi(M) = 0$ for all $\phi$. Thus $M$ is contained in every maximal ideal. The converse is equally trivial. That $\widehat{M}(\Phi_A) \subset \sigma(M)$ follows from Corollary \ref{spectralhomomorphism}. In the commutative case, if $\lambda \in \sigma(M)$, then $\lambda - M$ is contained in a unique maximal ideal in $A$, which corresponds to a unique homomorphism $\phi \in \Phi_A$ for which $\phi(\lambda - M) = 0$.
 \end{proof}
 
 It was Gelfand's idea to surplant the character spaces with a topological structure. This is the Gelfand topology of the character space. We shall now deduce its structure.
 
 \begin{theorem}
-    The Gelfand topology makes $\Phi_A$ into a compact, Hausdorff space.
+    $\Phi_A$ into a compact, Hausdorff space.
 \end{theorem}
 \begin{proof}
-    We may view $\Phi_A$ as a subset of $A^*$, and thus we have an induced weak * topology on $\Phi_A$. The Gelfand topology has less open sets than the weak * topology, so if it is compact in the weak * topology, it is compact in the Gelfand topology. For each $\phi \in \Phi_A$, $\| \phi \| \leq 1$, so the Gelfand space is contained in the unit ball of $A^*$, which is compact, by the Banach-Alaoglu theorem. Thus we need only verify that $\Phi_A$ is closed. Let $\Lambda$ be in the weak* closure of $\Phi_A$. We must show that it is a complex homomorphism. Fix $x,y \in A$, $\varepsilon > 0$. Consider
+    Let us first verify the Hausdorff condition. Given $\phi, \psi \in \Phi_A$, there is $M \in A$ such that $\phi(M) \neq \psi(M)$ (for otherwise they are equal as functions). If we pick a neighbourhood $U$ of $\phi(x)$ and a neighbourhood $V$ of $\psi(x)$ disjoint from each other, then $\widehat{M}^{-1}(U)$ and $\widehat{M}^{-1}(V)$ are disjoint neighbourhoods in $\Phi_A$ which separate $\phi$ and $\psi$.
+
+    Compactness is a little trickier. We may view $\Phi_A$ as a subset of $A^*$, and $\Phi_A$ has the same topology under the relative topology of $A^*$. For each $\phi \in \Phi_A$, $\| \phi \| \leq 1$, so the Gelfand space is contained in the unit ball of $A^*$, which is compact, by the Banach-Alaoglu theorem. Thus we need only verify that $\Phi_A$ is weak $*$ closed in $A^*$. Let $\Lambda$ be in the weak $*$ closure of $\Phi_A$. Fix $M,N \in A$, $\varepsilon > 0$. Consider
     %
-    \[ W = \{ \psi \in A^* : | \psi - \Lambda | (z) < \varepsilon\ \text{for}\ z \in \{ 1, x, y, xy \} \} \]
+    \[ W = \{ \psi \in A^* : | \psi - \Lambda | (z) < \varepsilon\ \text{for}\ z \in \{ 1, M, N, MN \} \} \]
     %
-    Then $W$ is a weak* neighbourhood of $\Lambda$, and contains some $\phi \in \Phi_A$. Thus
+    Then $W$ is a weak $*$ neighbourhood of $\Lambda$, and contains some $\phi \in \Phi_A$. Thus
     %
-    \[ | 1 - \Lambda(1) | < \varepsilon \]
+    \[ |\phi(1) - \Lambda(1)| = | 1 - \Lambda(1) | < \varepsilon \]
     %
     so that $\Lambda(1) = 1$, since $\varepsilon$ was arbitrary. Furthermore,
     %
     \begin{align*}
-        \Lambda(xy) -   \Lambda(x) \Lambda(y) &= [\Lambda(xy) - \phi(xy)] + [\phi(x)\phi(y) - \Lambda(x)\Lambda(y)]\\
-        &= [\Lambda(xy) - \phi(xy)] + [\phi(y) - \Lambda(y)] \phi(x)\\
-        &\ \ \ + [\phi(x) - \Lambda(x)] \phi(y)
+        \Lambda(MN) -   \Lambda(M) \Lambda(N) &= [\Lambda(MN) - \phi(MN)] + [\phi(M)\phi(N) - \Lambda(M)\Lambda(N)]\\
+        &= [\Lambda(MN) - \phi(MN)] + [\phi(N) - \Lambda(N)] \phi(M)\\
+        &\ \ \ + [\phi(M) - \Lambda(M)] \Lambda(N)
     \end{align*}
     %
     Hence, since $\phi$ is a complex homomorphism,
     %
-    \[ | \Lambda(xy) -   \Lambda(x) \Lambda(y) | < (1 + |\phi(x)| + |\phi(y)|) \varepsilon \leq 3 \varepsilon \]
+    \[ | \Lambda(MN) -   \Lambda(M) \Lambda(N) | < (1 + |\phi(M)| + |\Lambda(N)|) \varepsilon \leq (1 + \| M \| + \| \Lambda \| \| N \|) \varepsilon \]
     %
-    Letting $\varepsilon \to 0$, we obtain that $\Lambda$ is a complex homomorphism, and thus $\Phi_A$ is compact.
+    Letting $\varepsilon \to 0$, we find $\Lambda(MN) = \Lambda(M) \Lambda(N)$, so $\Lambda \in \Phi_A$, and thus $\Phi_A$ is compact.
 \end{proof}
 
-The next lemma is part of classical harmonic analysis. It was proved in an extremely convoluted way by Norbert Weiner. With Gelfand's theory, the proof was shortened to an algebraic argument.
+\subsection{The Non-Unital Gelfand Space}
 
-\begin{lemma}[Wiener's Lemma]
-    Consider a function which admits a Fourier expansion
-    %
-    \[ f(z) = \sum_{n = -\infty}^\infty a_n z^n \]
-    %
-    If $\sum_{-\infty}^\infty |a_n| < \infty$, and if $f(z) \neq 0$ for all $z \in \mathbf{T}$, then $1/f$ also admits a Fourier expansion, and it coefficients converge absolutely.
-\end{lemma}
-\begin{proof}
-    Let $A$ be the set of all functions with absolutely convergent Fourier expansions. If we define $\| f \| = \sum |a_i|$, then $A$ is a commutative Banach algebra, for if
-    %
-    \[ f(z) = \sum_{n = -\infty}^\infty a_n z^n\ \ \ \ \ g(z) = \sum_{n = -\infty}^\infty b_n z^n \]
-    %
-    Then
-    %
-    \[ (fg)(z) = \sum_{n = -\infty}^\infty \left ( \sum_{m = -\infty}^\infty a_m b_{n-m} \right) z^n \]
-    %
-    and
-    %
-    \begin{align*}
-        \sum_{n = -\infty}^\infty \left| \sum_{m = -\infty}^\infty a_m b_{n-m} \right| &\leq \sum_{n,m = -\infty}^\infty |a_n b_m| = \left( \sum_{n = -\infty}^\infty |a_n| \right) \left( \sum_{m = -\infty}^\infty |b_m| \right)
-    \end{align*}
-    %
-    The space is complete, since it is essentially just $l_1(\mathbf{Z})$.
-
-    The map $f \mapsto f(w)$ is a complex homomorphism, for each $w \in \mathbf{T}$. We wish to show that these are the only such homomorphisms, so that $f$ is invertible if and only if it does not equal 0 at any point. If $z$ denotes the identity function, then it has norm 1, as does its inverse $1/z$. This implies that $|\phi(z)| \leq 1$ for any $\phi \in \Phi_A$, and that $|1/\phi(z)| = |\phi(1/z)| \leq 1$. Thus $\phi(z) = z(w) = w$, for some $w \in \mathbf{T}$. If $P = \sum_{k = -n}^m a_k z^k$ is a trigonometric polynomial function, it follows that $\phi(P) = P(w)$. But the trigonometric polynomials are dense in $A$, so we have proved what was needed to be shown.
-\end{proof}
-
-The next theorem applies ideal theory to complex analysis.
+Let us also address the non-unital case of Gelfand theory. In the Gelfand theory, we have a little trouble defining ideals. We call an ideal $\mathfrak{a}$ (an additive subgroup closed under multiplication) for a non-unital algebra $A$ {\bf modular} if there is $N \in A$ such that $MN - M, NM - M \in \mathfrak{a}$ for all $M \in A$. If $\mathfrak{a}$ is modular, it follows that $A/\mathfrak{a}$ contains an identity. Maximal modular ideals exist with Zorn's help. We need to edit the proof which shows a maximal ideal is closed, which relies on an algebraic trick.
 
 \begin{lemma}
-    Let $f_1, \dots, f_n \in A(\mathbf{D})$, and suppose that for each $z \in \mathbf{D}$ at least one of the $f_i$ satisfy $f_i(z) \neq 0$. Then there are $g_1, \dots, g_n \in A(\mathbf{D})$ such that $\sum f_i g_i = 1$.
+    A maximal modular ideal in an algebra $A$ is closed.
 \end{lemma}
 \begin{proof}
-    In other words, $(f_1, \dots, f_n) = A(\mathbf{D})$. If $(f_1, \dots, f_n)$ is not $A(\mathbf{D})$, then $(f_1, \dots, f_n)$ is annihilated by some $\phi \in \Phi_{A(\mathbf{D})}$. We have $\phi(z) = w$, for some $w \in \mathbf{D}$. Then $\phi(P) = P(w)$, as in the last proof. Polynomials are dense in the set of holomorphic functions, so that $\phi(f) = f(w)$ for all $f \in A(\mathbf{D})$. But then $f(w) = 0$ for all $f \in (f_1, \dots, f_n)$, a contradiction which proves the theorem. Runge's theorem can be used to extend the theorem in question to general domains in $\mathbf{C}$, but we leave this to the reader.
+    If a maximal ideal $\mathfrak{a}$ was not closed, then we would have $\overline{\mathfrak{a}} = A$. Let $N$ be a right modular identity for $\mathfrak{a}$. Then there is $M \in \mathfrak{a}$ with $\| M - N \| < 1$, so
+    %
+    \begin{align*}
+        N &= (N - M) + M = \sum_{k = 1}^\infty (N - M)^k - \sum_{k = 2}^\infty (N - M)^k + M\\
+        &= \sum_{k = 1}^\infty (N - M)^k - \left[ \sum_{k = 1}^\infty (N - M)^k \right] (N - M) + M\\
+        &= \underbrace{\left[ \left( \sum_{k = 1}^\infty (N - M)^k \right) M + M \right]}_{\in \mathfrak{a}} - \underbrace{\left[ \left( \sum_{k = 1}^\infty (N - M)^k \right) N - \left( \sum_{k = 1}^\infty (N - M)^k \right) \right]}_{\in \mathfrak{a}}
+    \end{align*}
+    %
+    Given any $L \in A$, $LM - M \in \mathfrak{a}$, implying $M \in \mathfrak{a}$. This implies $\mathfrak{a} = A$, an impossibility.
 \end{proof}
 
-We have embedded each commutative banach algebra $A$ in a commutative banach algebra $C(\Phi_A)$. What happens if we start with $A = C(K)$? The answer is pleasant, for once.
+\begin{lemma}
+    The kernel of any {\it nonzero} algebra homomorphism from $A$ to $\mathbf{C}$ is a maximal modular ideal, and in a commutative non-unital algebra, any maximal modular ideal is the kernel of some non-zero algebra homomorphism.
+\end{lemma}
+\begin{proof}
+    If $\phi: A \to \mathbf{C}$ is a non-zero algebra homomorphism, then $\phi$ is surjective, for if $\phi(M) \neq 0$, then $\phi(\mathbf{C} \cdot x) = \mathbf{C}$. We claim that if $\mathfrak{a} = \ker(\phi)$, and if $\phi(M) = 1$, then $M$ is a modular identify for $\mathfrak{a}$, because
+    %
+    \[ \phi(MN - N) = \phi(M)\phi(N) - \phi(N) = \phi(N) - \phi(N) = 0 \]
+    %
+    Implying $MN - N \in \mathfrak{a}$ for each $N$, so $\mathfrak{a}$ is a modular ideal. The first isomorphism theorem gives us an isomorphism from $A/\mathfrak{a}$ to $\mathbf{C}$, so $\mathfrak{a}$ is maximal, since $A/\mathfrak{a}$ is a field.
+
+    If $A$ is commutative, and $\mathfrak{a}$ is a maximal modular ideal, then $A/\mathfrak{a}$ is an algebra with identity, whose only ideals consists of $(0)$ and $A/\mathfrak{a}$, since $\mathfrak{a}$ is maximal, so $A/\mathfrak{a}$ is a field, and is therefore isometric to $\mathbf{C}$, giving us an algebra homomorphism.
+\end{proof}
+
+We may therefore consider the Gelfand transform of a non-unital algebra, into the character space of all nonzero non-unital algebra homomorphisms.
+
+\begin{lemma}
+    If $A$ is an algebra without identity, and $\phi$ is a character, then there is a unique non-zero algebra functional $\tilde{\phi}$ defined on $A \ltimes \mathbf{C}$ which extends $\phi$.
+\end{lemma}
+\begin{proof}
+    Define $\tilde{\phi}(M + \lambda) = \phi(M) + \lambda$. Then $\tilde{\phi}$ is linear, $\tilde{\phi}(1) = 1$, and
+    %
+    \begin{align*}
+        \tilde{\phi}(M + \lambda) \tilde{\phi}(N + \gamma) &= [\phi(M) + \lambda][\phi(N) + \gamma]\\
+        &= \phi(MN) + \phi(\lambda N) + \phi(\gamma M) + \lambda \gamma\\
+        &= \tilde{\phi}((M + \lambda)(N + \gamma))
+    \end{align*}
+    %
+    The uniqueness of the extension follows from the fact any maximal modular ideal of $A$ can be uniquely extended to a maximal ideal on $A \ltimes \mathbf{C}$, for the projection $M + \lambda \mapsto M$ maps ideals to ideals, and the only ideals of $\mathbf{C}$ are $(0)$ and $(1)$.
+\end{proof}
+
+\begin{corollary}
+    The Gelfand space extension $\Phi_{A \ltimes \mathbf{C}} = \Phi_A \cup \{ \phi_\infty \}$, where
+    %
+    \[ \phi_\infty(M + \lambda) = \lambda \]
+    %
+    and $\sigma(M) \subset \widehat{M}(\Phi_A) \cup \{ 0 \}$, with equality in the commutative case.
+\end{corollary}
+
+\begin{example}
+    The unitization of $C_0(X)$, where $X$ is locally compact, is equivalent to an embedding in $C(X^*)$. The maximal ideals of $C_0(X)$ correspond to the points in $X$, as well as the `infinity point', which is the one-point added in the compactification.
+\end{example}
+
+We may still apply a topology to $\Phi_A$, but it is no longer compact.
 
 \begin{theorem}
-    Let $K$ be a compact space. Then $K$ is homeomorphic to $\Phi_{C(K)}$, by the map $x \mapsto \phi_x$, where $\phi_x(M) = M(x)$.
+    The Gelfand topology on $\Phi_A$ is locally compact when $A$ does not possess an identity, and the Gelfand transform maps $A$ into $C_0(\Phi_A)$.
 \end{theorem}
-\begin{proof}
-    Clearly the map is continuouse and injective, and will be a homeomorphism if it is verified surjective. Suppose it isn't surjective. Then there is a maximal ideal $M$ which isn't the kernel of any $\phi_x$. In particular, this implies that the kernel of $M$ cannot be contained in the kernel of any $\phi_x$. For each $x \in X$, there is $f_x \in M$ with $f_x(x) \neq 0$. Let $U_x = \{ y \in K : f_x(y) \neq 0 \}$. Then $U_x$ is an open cover of $K$. Then $K$ is compact, so there are $x_1, \dots, x_n$ with $K = \bigcup_{i = 1}^n U_{x_i}$. Let
+\begin{proof}is the map
+    Let $\psi \in \Phi_A$ be arbitrary, and fix $M \in A$ such that $\psi(M) = 1$. We shall verify that
     %
-    \[ f = \sum |f_{x_i}| = \sum f_{x_i} \overline{f_{x_i}} \]
+    \[ K = \{ \psi \in \Phi_A : |\psi(M)| \geq 1/2 \} \]
     %
-    Then $f$ is invertible, yet is in $M$, a contradiction.
+    is compact. We need only verify if it is closed, for if $\psi \in \Phi_A$, and if $\tilde{\psi} \in \Phi_{A \ltimes \mathbf{C}}$ is the unique extension, then $\| \tilde{\psi} \| \leq 1$, so $\| \psi \| \leq 1$. Thus $K$ is contained in the closed unit ball of $A^*$. Since $K = \Lambda^{-1}([1/2, \infty))$, where $\Lambda: A^* \to \mathbf{C}$ is the map $\phi \mapsto |\phi(M)|$, then $\Lambda$ is weak $*$ continuous, so $K$ is closed, hence compact. $K$ contains an open neighbourhood
+    %
+    \[ U = \{ \psi \in \Phi_A : |\psi(M)| > 1/2 \} \]
+    %
+    so $\Phi_A$ is locally compact. If $M \in A$, $\widehat{M} \in C_0(\Phi_A)$, since
+    %
+    \[ \{ \phi \in \Phi_A : |\phi(M)| \geq \varepsilon \} \]
+    %
+    is compact, and outside of this set $\widehat{M} \leq \varepsilon$.
 \end{proof}
 
 
 
-\section{Holomorphic Functional Calculus}
+\section{The Riesz Calculus}
 
-We now have the ability to extend single variate complex analysis, and maps from $\mathbf{C}$ to complex Banach algebras. Complex analysis begins with an analysis of polynomials $P \in \mathbf{C}[X]$, mapping $M \in A$ to $P(M)$. We don't need anything topological here, and we may extend maps to general spaces. However, we do need topology to consider power series. For instance, we define the exponential of $M \in A$ by
+\subsection{Vector-valued integration}
+
+We would like to define the integral of arbitrary measurable functions $f: \Omega \to X$, where $(\Omega, \mu)$ is a measure space, and $X$ is some Banach space, to be some element $\int f d\mu \in X$. This is not so easy as in the real case, as we have no canonical order through which we can carry summations.
+
+We would like our definition to have properties that ordinary integrals have, namely
+%
+\[ \Lambda \left( \int f d\mu \right) = \int (\Lambda f) d\mu \]
+%
+for every $\Lambda \in X^*$. This is certainly true of other measures, since it is true of finite sums, and the integral can be fort of as some limit of a net of sums.
+
+We shall define a function $f: \Omega \to X$ to be {\bf measurable} if $\Lambda f$ is measurable for each $\Lambda \in X^*$, where $\Lambda f = \Lambda \circ f$. This is equivalent to the fact that $(\Lambda \circ f)^{-1}(U)$ is measurable for each measurable subset $U$ of the complex plane, and therefore that $f$ is Borel measurable when $X$ has the weak topology. We shall say that a measurable $f$ is {\bf Pettis Integrable} if there is $x \in X$ for which
+%
+\[ \Lambda x = \int (\Lambda f) d\mu \]
+%
+for all $\Lambda \in X^*$. We say $x$ is the integral of $f$, and denote $x$ by $\int f d\mu$. It is clear that $x$ is unique, for if $y$ also has the property, then $x - y$ is annihilated by all linear maps, hence $x - y = 0$.
+
+\begin{theorem}
+    Suppose $(\Omega, \mu)$ is a compact measure space with a positive Borel measure, $f: \Omega \to X$ is a continuous map into a Banach space, and $\overline{co}(f(\Omega))$ is compact in $X$, then $f$ is integrable, and $\int f d\mu \in \overline{co}(f(\Omega))$.
+\end{theorem}
+\begin{proof}
+    Assume, without loss of generality, that $\mu$ is a probability measure. Let $H = \text{co}(f(Q))$. For a finite set $L$ is a finite set of functionals, let
+    %
+    \[ E_L = \left\{ x \in \overline{H} : \Lambda_i(x) = \int (\Lambda_i f) d\mu \right\} \]
+    %
+    Then $E_L \cap E_{L'} = E_{L \cup L'}$, and each $E_L$ is compact, and therefore has the finite intersection property. If we can show that $E_L$ is non-empty for each $L$, then $\bigcap E_L$ is non-empty, and $\int f d\mu$ exists. Given $L$, fix an ordering $(\Lambda_1, \dots, \Lambda_n)$, which defines a function from $X$ to $\mathbf{R}^n$, and consider $m = (m_1, \dots, m_n)$, where
+    %
+    \[ m_i = \int (\Lambda_i f) d\mu \]
+    %
+    We shall show that $m$ is in the convex hull of $(L \circ f)(\Omega)$. If $m$ were not in the hull, then, since $\{ m \}$ is a convex set, there is a linear functional which separates $m$ and the convex hull of $(L \circ f)(\Omega)$, and since we know the structure of linear functionals on $\mathbf{R}^n$, there would be $c_1, \dots, c_n \in \mathbf{R}$ for which
+    %
+    \[ \sum c_i v_i < \sum c_i m_i \]
+    %
+    whenever $v = (v_1, \dots, v_n)$ is in the hull. But then
+    %
+    \[ \sum c_i [(\Lambda_if) (\omega)] < \sum c_i m_i \]
+    %
+    and integrating,
+    %
+    \[ \sum c_i m_i = \sum c_i \int (\Lambda_i f) < \sum c_i m_i \]
+    %
+    Hence $m$ is in the convex hull. Since $L$ is linear, $m = Ly$ for some $y \in H$. At this $y$, we have
+    %
+    \[ \Lambda_i y = m_i = \int (\Lambda_i f) d\mu \]
+    %
+    so $y \in E_L$. Thus $\int f d\mu$ exists, and it lies in $\overline{\text{co}}(f(\Omega))$.
+\end{proof}
+
+This theorem may be generalized to arbitrary complex valued measures by Jordan decomposition.
+
+\begin{theorem}
+    If $X$ is a Banach space, $K \subset X$ is compact, and $\overline{H} = \overline{\text{co}}(K)$, then for each $x \in \overline{H}$ there is a regular Borel probability measure $\mu$ for which $x = \int \text{id}_K d\mu$.
+\end{theorem}
+\begin{proof}
+    The Riesz representation theorem identifies $C(K)^*$ with the space $R$ of all Borel probability measures on $K$. Define $\phi: C(K)^* \to X$ by $\phi(\mu) = \int \text{id}_K d\mu$. The theorem says that $\phi(R) = \overline{H}$. Certainly $K \subset \phi(R)$, for if $\delta_x$ is the unit measure at $x \in K$, then $\phi(\delta_x) = x$, for $\Lambda x = \int \Lambda d \delta_x$. Since $R$ is convex, $\phi(R)$ is convex, and we know from the last theorem that it is a subset of $\overline{H}$. Thus all we need verify is that $\phi(R)$ is closed. This is a consequence of the fact that $R$ is weak $*$ compact in $C(Q)^*$, and $\phi$ is weak $*$ continuous into the weak topology on $X$, so $\phi(R)$ is weakly closed, and all weakly closed sets are strongly closed.
+
+    To see that $R$ is weak $*$ compact, notice that each probability measure has unit variation, and thus lies within the unit ball of $C(K)^*$, which is weak $*$ compact. For $f \in C(K)^*$, let $E_f = \{ \mu : \int f d\mu \geq 0 \}$. Then each $E_f$ is weak $*$ closed, since the map $f \mapsto f(x)$ is weak $*$ continuous. Hence $\bigcap E_f$ is weak $*$ closed. Similarily, the set $E = \{ \mu : \int 1 d\mu = 1 \}$ is weak $*$ closed, and $E \cap \bigcap E_f = R$ is therefore weak $*$ closed.
+
+    It is sufficient to show $\phi$ is weak $*$ continuous at the origin. $X$ has a weak subbasis of neighbourhoods at the origin of the form
+    %
+    \[ W = \{ x \in X : |\Lambda(x)| < r \} \]
+    %
+    for $r > 0$, $\Lambda \in X^*$. Thus we must verify that the set of $\mu$ for which $\left| \int \Lambda d\mu \right| < r$ is weak $*$ open. But $\Lambda|_K \in C(K)$, so this set is open almost by definition. Thus $\phi$ is weak $*$ continuous.
+\end{proof}
+
+\begin{theorem}
+    If $\Omega$ is a compact Hausdorff space with a positive Borel measure $\mu$, $X$ is a Banach space, and $f: \Omega \to X$ is continuous, then
+    %
+    \[ \left\| \int f d\mu \right\| \leq \int \| f \| d\mu \]
+\end{theorem}
+\begin{proof}
+    For each $\Lambda \in X^*$,
+    %
+    \[ \left| \Lambda\left(\int f d\mu\right) \right| = \left| \int \Lambda f d\mu \right| \leq \int | \Lambda f | d\mu \leq \| \Lambda \| \int | f | d\mu \]
+    %
+    If $\Lambda$ is chosen (by the Hahn Banach theorem) such that $\Lambda(\int f d\mu) = \| \int f d\mu \|$, and such that $\| \Lambda \| = 1$, then we obtain the needed inequality.
+\end{proof}
+
+If $A$ is a Banach algebra, then $\int f d\mu$ has an additional property, namely, for each $M \in A$,
+%
+\[ M \int f d\mu = \int Mf d\mu\ \ \ \ \ \ \ \ \ \ \left(\int f d\mu\right) M = \int fM d\mu \]
+%
+This follows since multiplication on the left and right by $x$ is a bounded linear function. If we let $L: N \mapsto MN$ be the left multiplication operator, and fix $\Lambda \in X^*$, then
+%
+\[ \Lambda \left( M \left( \int f d\mu \right) \right) = (\Lambda \circ L) \left( \int f d\mu \right) = \int (\Lambda \circ L) f d\mu = \int \Lambda(Mf) d\mu \]
+%
+the right case is similar.
+
+
+
+
+
+\subsection{Holomorphic Functional Calculus}
+
+Given a polynomial $P \in \mathbf{C}[X]$, the definition of $P(M)$, for $M \in A$, is obvious -- we just overload the operator. We don't need anything topological here. In this section, we use the topological structure of Banach algebra to evaluate holomorphic functions. For instance, in matrix theory it is useful to define the exponential of $M \in A$ by
 %
 \[ e^M = \sum_{k = 0}^\infty \frac{M^k}{k!} \]
 %
@@ -847,51 +1699,23 @@ We may define $\sin$ and $\cos$ similarily. More generally, for any power series
 %
 \[ f(M) = \sum_{k = 0}^\infty c_k (M - \alpha)^k \]
 %
-And this function is defined for any $M$ satisfying $\|M - \alpha \| < R$. It is non-trivial to `overload' arbitrary analytic functions, which is the topic of this section.
+And this function is defined for any $M$ satisfying $\|M - \alpha \| < R$. It is non-trivial to `overload' arbitrary analytic functions, but it is very useful.
 
 We shall use the formulation of complex analysis in terms of chains, arbitrary finite `integer combinations' of differentiable curves $\gamma = \sum n_i \gamma_i$, where we let $- \gamma_i = \gamma_i^{-1}$ in the path homotopic sense (what we are really doing is considering the free abelian group $\mathbf{Z}\langle C^\infty(\mathbf{R}, \mathbf{C}) \rangle$, modulo the relation $- \gamma = \gamma^{-1}$). The trace of a curve will be its image,
 %
 \[ \text{tr}(\sum n_i \gamma_i) = \bigcup_{n_i \neq 0} \text{Im}(\gamma_i) \]
 %
-If $f$ is a function defined on $\text{tr}(\gamma)$, and $\gamma_i$ is defined on $[a_i, b_i]$ we define the integral
+If $f$ is a continuous function defined on $\text{tr}(\gamma)$ valued in a Banach space, and $\gamma_i$ is defined on $[a_i, b_i]$ we define the integral
 %
 \[ \int_\gamma f(z) dz = \sum n_i \int_{\gamma_i} f(z) dz = \sum_i n_i \int_{a_i}^{b_i} (f \circ \gamma_i) \gamma_i' \]
 %
-The first property of importance to note is that Riemann integrals can be defined on functions from an interval to any Banach space. Provided the function is continuous, the integral will exist.
+where the integrals on the right side are Pettis integrals, if they exist.
 
-If $\gamma$ is a chain in $\mathbf{C}$, and $a \in E$ is given, then we define the {\bf index} of $\gamma$ with respect to $x$, denoted $\text{Ind}_a \gamma$, to be the value
+If $\gamma$ is a chain in $\mathbf{C}$, and $w \in \mathbf{C}$ is given, then we define the {\bf index} of $\gamma$ with respect to $w$, denoted $\text{Ind}_w \gamma$, to be the value
 %
-\[ \frac{1}{2 \pi i} \int_\gamma \frac{dz}{z - a} \]
+\[ \frac{1}{2 \pi i} \int_\gamma \frac{dz}{z - w} \]
 %
-A chain $\gamma$ is {\bf positively oriented} if $\text{Ind}_a \gamma \in \{ 0, 1 \}$ for each $a \in \mathbf{C}$.
-
-\begin{lemma} \label{banachcauchy}
-    If $D$ is open, $f: D \to E$ is a holomorphic function into a Banach space, and $\gamma$ satisfies $\text{Ind}_z \gamma = 0$ for all $z \not\in D$, then $\int_\gamma f(z) dz = 0$.
-\end{lemma}
-\begin{proof}
-    Take $\phi \in E^*$. The Riemann integral of a curve $\gamma: [a,b] \to E$ can be defined as the limit of the net
-    %
-    \[ \lim \sum_k \gamma(x_k) (x_k - x_{k-1}) \]
-    %
-    But since $\phi$ is continuous,
-    %
-    \begin{align*}
-        \phi \left( \int_\gamma f(z) dz \right) &= \phi \left(\lim \sum_k \gamma(x_k) (x_k - x_{k-1}) \right) = \lim \sum_k \phi(\gamma(x_k)) (x_k - x_{k-1})\\
-        &= \int (\phi \circ f)(z) dz
-    \end{align*}
-    %
-    And this holds by linearity for arbitrary chains. Since $f$ is holomorphic in $D$, so is $\phi \circ f$. Applying Cauchy's theorem, we obtain that
-    %
-    \[ \phi \left( \int_\gamma f(z) dz \right) = 0 \]
-    %
-    Since $\phi$ was arbitrary, we must have
-    %
-    \[ \int_\gamma f(z) dz = 0 \]
-    %
-    By the Hahn-Banach theorem.
-\end{proof}
-
-We shall call a collection of chains $\{ \gamma_1, \dots, \gamma_n \}$ {\bf positively oriented} if the trace of $\gamma_i$ is disjoint from $\gamma_j$ for $i \neq j$, and if, letting $\gamma = \sum \gamma_i$, $\text{Ind}_w \gamma \in \{ 0,1 \}$ for all $w \in \mathbf{C}$. We shall let
+A chain $\gamma$ is {\bf positively oriented} if $\text{Ind}_w \gamma \in \{ 0, 1 \}$ for each $w \in \mathbf{C}$. We then let
 %
 \begin{align*}
     \text{Int}(\gamma) = \{ w \in \mathbf{C} : \text{Ind}_w \gamma = 1 \} \\
@@ -900,6 +1724,17 @@ We shall call a collection of chains $\{ \gamma_1, \dots, \gamma_n \}$ {\bf posi
 %
 Each is the union of connected components in $\mathbf{C} - \text{tr}(\gamma)$.
 
+\begin{lemma} \label{banachcauchy}
+    If $D$ is open, $f: D \to X$ is a holomorphic function into a Banach space, and if $\gamma$ satisfies $\text{Ind}_z \gamma = 0$ for all $z \not\in D$, then $\int_\gamma f(z) dz = 0$.
+\end{lemma}
+\begin{proof}
+    Take $\Lambda \in X^*$. Then $\Lambda f: D \to \mathbf{C}$ is holomorphic, and so
+    %
+    \[ \int \Lambda f dz = 0 \]
+    %
+    But this implies that $\Lambda(\int f dz) = 0$ for all $\Lambda$, hence $\int f dz = 0$.
+\end{proof}
+
 \begin{lemma}
     Let $D$ be an open set, and $K$ a compact subset. There is a positively oriented chain whose interior contains $K$, and whose exterior contains $D^c$.
 \end{lemma}
@@ -907,17 +1742,11 @@ Each is the union of connected components in $\mathbf{C} - \text{tr}(\gamma)$.
     Split $D$ into its connected components. It suffices to prove the theorem assuming $D$ is a component. Let $\varepsilon = d(K,D^c)$. Then $\varepsilon > 0$, since $K$ is disjoint from $\varepsilon$. Let $G$ be a set of positively oriented squares (a chain consisting of the sum of four clockwise lines), whose interior lies in $D$, and whose vertices are elements of the product $\mathbf{Z}/n \times \mathbf{Z}/n$, where $n > \varepsilon / 2$. If we let $\gamma = \sum_{g \in G} g$, then by construction, $\text{Ind}_z \gamma = 0$ for all $z \in D^c$, and since the interiors of the squares are disjoint, the winding number around each point in $K$ is 1. By construction, we have found a required chain.
 \end{proof}
 
-We shall temporarily say that such a chain has the $(K,D)$ separation property. We can now extend holomorphic functions to arbitrary algebras, by artificially introducing the cauchy integral theorem into the algebra.
-
-\begin{definition}
-    Let $A$ be a Banach algebra, consider an element $M \in A$, $D$ an open set containing all of $\sigma(M)$, and $f:D \to A$ a holomorphic function. Let $\gamma$ be a positively oriented curve satisfying the $(\sigma(M), D)$ separation property, with $\sigma(M) \subset \text{Int}(\gamma)$. Define
-    %
-    \[ f(M) = \int_\gamma f(z) (z - M)^{-1} dz \]
-    %
-    Then the extension of $f$ is a well-defined holomorphic function.
-\end{definition}
-
-Of course, we must verify the map is well-defined.
+We shall temporarily say that such a chain has the $(K,D)$ separation property. We can now extend holomorphic functions to arbitrary algebras, by artificially introducing the cauchy integral theorem into the algebra. Let $A$ be a Banach algebra, consider an element $M \in A$, $D$ an open set containing all of $\sigma(M)$, and $f:D \to A$ a holomorphic function. Let $\gamma$ be a positively oriented curve satisfying the $(\sigma(M), D)$ separation property, with $\sigma(M) \subset \text{Int}(\gamma)$. Define
+%
+\[ f(M) = \int_\gamma f(z) (z - M)^{-1} dz \]
+%
+Then the extension of $f$ is a well-defined holomorphic function. Of course, we must verify the map is well-defined.
 
 \begin{lemma}
     Let $D$ be an open set. If $f: D \to \mathbf{C}$ is holomorphic, and $\gamma, \lambda$ be two chains in $D$ satisfying the $(\sigma(M), D)$ separation property. When $f: D \to A$ is holomorphic, then
@@ -988,13 +1817,15 @@ The ultimatum of the holomorphic functional calculus is the proof of the spectra
 %
 If $S$ is a subset of $A$, then we may consider
 %
-\[ Z(S) = \{ M \in A : MN = NM \forall N \in S \} \]
+\[ Z(S) = \{ M \in A : (\forall N \in S: MN = NM) \} \]
 %
-which is also a closed subset of $A$. If $S$ is commutative, then $Z(Z(S))$ is commutative, for if $M$ and $N$ commutes with all elements in $Z(S)$, they certainly commute with all elements in $S$, so that $M,N \in S$, and $MN = NM$. Consider $Z(Z(\{ M \}))$. If $\lambda - M$ is invertible in $A$, there is $N = (\lambda - M)^{-1}$. But then if $K \in Z(\{ M \})$, then $K$ commutes with $\lambda - M$, and
+which is a commutative subalgebra of $A$. For any subset $S$, the double centralizer $Z(Z(S))$ also contains $S$. $Z(Z(S))$ is commutative if $S \subset Z(S)$, for then $Z(Z(S)) \subset Z(S)$, and thus commutes with itself by definition.
+
+Now consider the commutative subalgebra $B = Z(Z(\{ M \}))$ of an algbera $A$. If $\lambda - M$ is invertible in $A$, there is $N = (\lambda - M)^{-1}$. But then if $K \in Z(\{ M \})$, then $K$ commutes with $\lambda - M$, and
 %
-\[ KN = N(\lambda - M) K N = (\lambda - M)^{-1} K (\lambda - M) N = NK \]
+\[ KN = N(\lambda - M) K N = NK (\lambda - M) N = NK \]
 %
-which implies that $\lambda - M$ is invertible in $Z(Z(\{M\}))$, so $\sigma_A(M) = \sigma_{Z(Z(\{M\}))}(M)$.
+which implies that $\lambda - M$ is invertible in $Z(Z(\{M\}))$, so $\sigma_A(M) = \sigma_B(M)$.
 
 \begin{theorem}[Spectral Mapping Theorem]
     If $\sigma(M) \subset D$, with $D$ open, and $f \in \mathcal{O}(D)$, then $\sigma(f(M)) = f(\sigma(M))$.
@@ -1002,213 +1833,827 @@ which implies that $\lambda - M$ is invertible in $Z(Z(\{M\}))$, so $\sigma_A(M)
 \begin{proof}
     First, suppose $A$ is commutative. By Gelfand theory,
     %
-    \[ \sigma(f(M)) = \widehat{f}(M) = f(\widehat{M}) = f(\sigma(M)) \]
+    \[ \sigma(f(M)) = \widehat{f(M)}(\Phi_A) = f(\widehat{M}(\Phi_A)) = f(\sigma(M)) \]
     %
-    If $A$ is not commutative, consider $Z(Z(\{M\}))$. Then $\sigma(M) \subset Z(Z(\{M\}))$, and we may apply the thorem in the commutative case.
+    If $A$ is not commutative, consider the commutative subalgebra $B = Z(Z(\{M\}))$. If $f$ is analytic in a neighbourhood of $\sigma_A(M)$, then $f(M) \in B$, for there is surely a homomorphism from analytic functions in a neighbourhood of $\sigma_A(M)$ into $B$, and the embedding of $B$ in $A$ produces the unique homomorphism required. Thus we have justified the computation
+    %
+    \[ \sigma_A(f(M)) = \sigma_B(f(M)) = f(\sigma_B(M)) = f(\sigma_A(M)) \]
+    %
+    and the spectral mapping theorem is proved in general.
 \end{proof}
 
-
-
-
-
-\section{Banach Algebras Without Identity}
-
-We shall now treat Banach algebras without identities. The reason for this is that such objects naturally appear in analysis. If $X$ is not compact, then $C_0(X)$ does not contain an identity. Though we have noted that there is almost always a natural trick for adding an identity, it is psychologically relieving to find that all non-unital Banach algebras can be isometrically embedded into Banach algebras with unit.
-
-There is always a trick to add an identity to a banach algebra $A$, though it is abstract, since it applies to all algebras. We consider
-%
-\[ A \ltimes \mathbf{C} = \{ (a,\lambda) : a \in A, \lambda \in \mathbf{C} \} \]
-%
-with a multiplicative structure
-%
-\[ (M + \lambda)(N + \gamma) = MN + \lambda N + \gamma M + \lambda \gamma \]
-%
-We have an identity $0 + 1$, and the space considered still satisfies the properties that make it a Banach algebra if we give it the norm
-%
-\[ \| M + \lambda \| = \| M \| + |\lambda| \]
-%
-If $M_i + \lambda_i$ is a cauchy sequence, then $M_i$ and $\lambda_i$ are both separately cauchy sequences, and therefore converge to a well defined quantity, which also converges in the abstract norm. We may then define $\sigma_A(M) = \sigma_{A \ltimes \mathbf{C}}(M)$. The fundamental theorem of spectral theory still applies, as does the spectral radius formula.
-
-In the Gelfand theory, we have a little trouble defining ideals. We call an ideal $\mathfrak{a}$ (an additive subgroup closed under multiplication) for a commutative algebra without identity $A$ {\bf modular} if there is $N \in A$ such that $MN - M \in \mathfrak{a}$ for all $M \in A$. Equivalently, this follows if $A/\mathfrak{a}$ contains an identity. We may consider maximal modular ideals as well. We need to edit the proof which shows a maximal ideal is closed, which again relies on an algebraic trick.
-
-\begin{lemma}
-    A maximal modular ideal in an algebra $A$ is closed.
-\end{lemma}
-\begin{proof}
-    If a maximal ideal $\mathfrak{a}$ was not closed, then we would have $\overline{\mathfrak{a}} = A$. Let $N$ be a right identity for $\mathfrak{a}$. Then there is $M$ with $\| M - N \| < 1$, so
-    %
-    \begin{align*}
-        N &= (N - M) + M = \sum_{k = 1}^\infty (N - M)^k - \sum_{k = 2}^\infty (N - M)^k + M\\
-        &= \sum_{k = 1}^\infty (N - M)^k - \left[ \sum_{k = 1}^\infty (N - M)^k \right] (N - M) + M\\
-        &= \underbrace{\left[ \left( \sum_{k = 1}^\infty (N - M)^k \right) M + M \right]}_{\in \mathfrak{a}} - \underbrace{\left[ \left( \sum_{k = 1}^\infty (N - M)^k \right) N - \left( \sum_{k = 1}^\infty (N - M)^k \right) \right]}_{\in \mathfrak{a}}
-    \end{align*}
-    %
-    which is clearly a contradiction of the maximality of $\mathfrak{a}$.
-\end{proof}
-
-The kernel of any {\it nonzero} algebra homomorphism from $A$ to $\mathbf{C}$ is a maximal modular ideal, and any maximal modular ideal is the kernel of some algebra homomorphism.  We may therefore consider the gelfand transform of a commutative algebra without identity.
-
-\begin{lemma}
-    If $A$ is an algebra without identity, and $\phi$ is a homomorphism to $\mathbf{C}$, then there is a unique non-zero algebra functional $A \ltimes \mathbf{C}$ which extends $\phi$.
-\end{lemma}
-\begin{proof}
-    Define $\tilde{\phi}(M + \lambda) = \phi(M) + \lambda$. Then $\tilde{\phi}$ is linear, $\tilde{\phi}(1) = 1$, and
-    %
-    \begin{align*}
-        \tilde{\phi}(M + \lambda) \tilde{\phi}(N + \gamma) &= [\phi(M) + \lambda][\phi(N) + \gamma]\\
-        &= \phi(MN) + \phi(\lambda N) + \phi(\gamma M) + \lambda \gamma\\
-        &= \tilde{\phi}((M + \lambda)(N + \gamma))
-    \end{align*}
-    %
-    The uniqueness of the extension follows from the fact any maximal modular ideal of $A$ can be uniquely extended to a maximal ideal on $A \ltimes \mathbf{C}$, for the projection $M + \lambda \mapsto M$ maps ideals to ideals, and the only ideals of $\mathbf{C}$ are $(0)$ and $(1)$.
-\end{proof}
-
-\begin{corollary}
-    The Gelfand space extension $\Phi_{A \ltimes \mathbf{C}} = \Phi_A \cup \{ \phi_\infty \}$, where $\phi_\infty(M + \lambda) = \lambda$, and $\sigma(M) = \widehat{M}(\Phi_{A}) \cup \{ 0 \}$.
-\end{corollary}
-
-We may still apply the Gelfand topology to $A$, but it is no longer compact.
+The holomorphic functional calculus is incredibly useful for it allows us to apply calculations on the complex plane to arbitary algebras. Here are some immediate uses.
 
 \begin{theorem}
-    The Gelfand topology on $\Phi_A$ is locally compact when $A$ does not possess an identity.
+    Suppose $A$ is a Banach algebra, $M \in GL(A)$, and $\sigma(M)$ does not separate the origin from $\infty$, then for each $m$, there is $N$ such that $M = N^m$, and there is $N$ such that $M = e^N$. If $\sigma(M) \subset \mathbf{R}^+$, then we may choose the $N$ such that $\sigma(N) \subset \mathbf{R}^+$.
 \end{theorem}
-
-\section{Bounded Approximate Identities}
-
-We may not have an identity in a general Banach algebra, but we may be able to `approximate' an identity in some sense.
-
-\begin{definition}
-    A {\bf bounded left approximate identity} (or {\bf BLAI}) for an algebra $A$ is a net $\{ M_\alpha \}$ for which, for any $N \in A$, $\lim M_\alpha N = N$. One may similarily define {\bf bounded right} ({\bf BRAI}) and {\bf two sided} ({\bf AI}) identities.
-\end{definition}
-
-\begin{example}
-    Let $X$ be locally compact and Hausdorff. The set of all compact subsets is a directed, exhausting set. Using Urysohn's lemma, find $f_K$, for each compact $K$, such that $f_K |_K = 1$, and $\| f_K \|_\infty \leq 1$. Fix $g \in C_0(X)$. Pick $K$ such that $|g| \leq \varepsilon$ outside of $K$. Then, in $K$, $|f_K g - g| = 0$, and outside of $K$, $|f_K g - g| < 2 \varepsilon$. Thus $\| f_K g - g \|_\infty < 2 \varepsilon$. $\{ f_K \}$ is not cauchy, for if $|f_K| < \varepsilon$ outside of $K'$, then $\| f_K - f_{K'} \|_\infty < 1 - \varepsilon$.
-\end{example}
-
-Advanced Banach space theory makes use of a large amount of bounded left approximate identities.
-
-\begin{definition}
-    A Banach space $E$ has the {\bf approximation property} if there is a net $\{ T_\alpha \}$ of finite rank operators which tend to $\text{id}_E$ uniformly on compact subsets. The space has the {\bf bounded approximation property} if $\| T_\alpha \|$ is bounded.
-\end{definition}
-
-Uniform convergence on compact sets is equivalent to pointwise convergence for bounded operators. Choose some compact $K$, fix $\varepsilon > 0$, and pick $x_1, \dots, x_n$ for which $\{ B(x_i, \varepsilon) \}$ is a cover of $K$. Then, if $x \in K$, there is $x_j$ with $\| x - x_j \| < \varepsilon$, and then
-%
-\begin{align*}
-    \| T_\alpha x - x \| &\leq \| T_\alpha x - T_\alpha x_j \| + \| T_\alpha x_j - x_j \| + \| x_j - x \|\\
-    &\leq \varepsilon \sup \|T_\alpha\| + \| T_\alpha x_j - x_j \| + \varepsilon
-\end{align*}
-%
-If we choose $\alpha$ big enough, then this is guaranteed to be less than $3 \varepsilon$.
-
-\begin{example}
-    All Hilbert space have the bounded approximation property, as do the classical sequence spaces $c_0$ and $l_p$. Finding a space without the approximation property was an open problem for more than 40 years. Proposed as a challenge by Stanislaw Mazur in 1936, the solver of this problem was promised a live goose. In 1972, the goose was granted to the swedish mathematician Per Enflo.
-\end{example}
-
-For any Banach space $E$, we denote by $A(E)$ the closure of all finite rank operators in $B(E)$. It is clear than $A(E) \subset K(E)$. The problem of whether $A(E) = K(E)$ is much more subtle.
-
-\begin{example}
-    Let $E$ have the bounded approximation property. Let $\{ T_\alpha \}$ be such a bounded net. If $S$ is compact, then $S\overline{B_E}$ is precompact, and
-    %
-    \[ \| T_\alpha S - S \| \leq \sup \{ \| T_\alpha - Sx \| : x \in B_x \} \]
-    %
-    The right side is precompact, and since $\{ T_\alpha \}$ uniformly tends to the identity on compact sets, we must have $\| T_\alpha S - S \| \to 0$. This shows $\{ T_\alpha \}$ is a bounded left approximate identity, and that $A(E) = K(E)$.
-
-    Now suppose $A(E)$ has a bounded left approximate identity $\{ T_\alpha \}$. Without loss of generality, we may assume each $T_\alpha$ is of finite rank. For $x \in E$, $\phi \in E^*$, let $x \otimes \phi : E \to E$ be defined by $(x \otimes \phi)(y) = \phi(y) x$. Then $x \otimes \phi$ obviously has finite rank. Pick $y$ for which $\langle \phi, y \rangle = 1$. Then
-    %
-    \[ \| T_\alpha x - x \| = \| T_\alpha (x \otimes \phi)(y) - (x \otimes \phi)(y) \| \leq \| y \| \| T_\alpha (x \otimes \phi) - (x \otimes \phi) \| \to 0 \]
-    %
-    So the nets converge pointwise, which implies convergence on compact sets. To summarize, $E$ has the bounded approximxation property if and only if $A(E)$ has a bounded left approximate identity if and only if $K(E)$ has a bounded left approximate identity belonging to $A(E)$.
-\end{example}
-
-It can be proven (though we won't prove it here) that
-
-\begin{theorem}[Lewis, Goldbeck]
-    In a Banach space, TFAE:
-    %
-    \begin{enumerate}
-        \item $E^*$ has the bounded approximation property.
-        \item $A(E)$ has the bounded right approximation property.
-        \item $A(E)$ has the bounded approximation property.
-    \end{enumerate}
-\end{theorem}
-
-\begin{lemma}
-    If a space has the bounded left and right approximation properties then it has the two sided approximation property.
-\end{lemma}
 \begin{proof}
-    Let $\{ M_\alpha \}$ be a left approximation identity, and $\{ N_\beta \}$ a right approximation identity. We contend $\{ M_\alpha + N_\beta - M_\alpha N_\beta \}$ is a two sided approximator. The limits below certainly converge, and the iterated limits must therefore equal the convergent factor, which is
+    Choose a branch of $\sqrt[m]{z}$ holomorphic on a neighbourhood of $\sigma(M)$. If $\sigma(M) \subset \mathbf{R}^+$, choose $\sqrt[m]{z}$ to be the principal branch. Then $\sqrt[m]{M}$ is well defined, and the function $z^m$ is holomorphic everywhere, so $(\sqrt[m]{M})^m$ is defined, and
     %
-    \[ \lim_\alpha \lim_\beta L(M_\alpha + N_\beta - M_\alpha N_\beta) = \lim_\alpha LM_\alpha + L - LM_\alpha = L \]
+    \[ \left( {\sqrt[m]{M}}\ \right)^m = (z^m \circ \sqrt[m]{z})(M) = z(M) = M \]
     %
-    \[ \lim_\beta \lim_\alpha (M_\alpha + N_\beta - M_\alpha N_\beta)L = \lim_\beta L + N_\beta L - N_\beta L = L \]
-    %
-    So twe have a two sided approximator.
+    The spectral mapping theorem implies $\sigma(\sqrt[m]{M}) = \sqrt[m]{\sigma(M)}$, so by the choice of the branch, if $\sigma(M) \subset \mathbf{R}^+$, $\sigma(\sqrt[m]{M}) \subset \mathbf{R}^+$. We may also define $\log(M)$, and $e^{\log(M)} = M$, by similar calculation.
 \end{proof}
 
-Before the logician Paul Cohen got into logic, he was a functional analyst who contributed to the theory of approximation identities. We shall prove the theorem he contributed to the field, generalized to work over arbitrary modules.
+Even for finite dimensional matrix algebras, this theorem has nontrivial repercussions.
 
-\begin{definition}
-    Let $A$ be a Banach algebra. A left banach $A$-module is a Banach space $E$, which is a module of $A$, with a constant $C > 0$ for which for any $M \in A$, $x \in E$,
-    %
-    \[ \| Mx \| \leq C \| M \| \| x \| \]
-    %
-    This makes the module operations continuous.
-\end{definition}
+\begin{corollary}
+    If $M \in GL_n(\mathbf{C})$, then for each $m$, there is $N \in GL_n(\mathbf{C})$ such that $M = N^m$, and there is $N$ such that $M = e^N$.
+\end{corollary}
 
-\begin{theorem}[Cohen's Factorization Theorem]
-    Let $A$ be a Banach algebra with BLAI $\{ x_i \}$, bounded by $K$. If $E$ is a banach $A$ module, let $x \in \overline{AE}$, and let $\varepsilon > 0$. Then there are $M \in A$, $y \in \overline{AE}$ with
+\begin{example}
+    Now consider the exponential function $\exp: A \to A$. If $M$ and $N$ commute, it is easy to see from the power series representation that $\exp(M + N) = \exp(M) \exp(N)$. In particular, this implies that $\exp(M)$ is invertible, and $\exp(-M) = \exp(M)^{-1}$. Thus for each $M$, the image of the map
     %
-    \begin{enumerate}
-        \item $\| M \| \leq K$
-        \item $\| y - x \| < \varepsilon$
-        \item $x = My$
-    \end{enumerate}
+    \[ t \mapsto \exp(tM) \]
+    %
+    is a one-parameter subgroup of $G(A)$, which gives us a path from the identity $\exp(0)$ to $\exp(M)$. The connected component of $G(A)$ containing the identity is the {\bf principal component}, denoted $G_0(A)$. Since $N \mapsto MNM^{-1}$ is a continuous map leaving the identity fixed, it maps $G_0(A)$ to itself, so $G_0(A)$ is a normal subgroup. The quotient group $G(A)/G_0(A)$ is sometimes called the {\bf index group}.
+\end{example}
+
+\begin{theorem}
+    If $P(X) = (X - \alpha_1)^{m_1} \dots (X - \alpha_s)^{m_s}$, and $P(M) = 0$, then $\sigma(M) \subset \{ \alpha_1, \dots, \alpha_n \}$, and if $\Omega$ is an open subset of the plane containing $\alpha_1, \dots, \alpha_n$, then for any $f \in H(\Omega)$, there is a polynomial $Q$ of degree less than $m_1 + \dots + m_s$, such that $f - Q = gP$, for some $g \in H(\Omega)$, so $f(M) = Q(M)$.
 \end{theorem}
 \begin{proof}
-    If $A$ has an identity, then the proof is trivial. Since $\overline{AE}$ is a closed subset of $E$, we might as well assume $\overline{AE} = E$. We may extend $E$ to be an module of $A \ltimes \mathbf{C}$, with
+    Applying the spectral theorem, we find $\{ 0 \} = \sigma(P(M)) = P(\sigma(M))$, from which the spectrum of $M$ is restricted to lie in the roots of $P$. The Laurent series about each $\alpha_i$ gives constants $c_{it}$ such that
     %
-    \[ (M + \lambda) x = Mx + \lambda x \]
+    \[ g(z) = f(z)/P(z) - \sum_{i = 1}^s \sum_{k = 1}^{m_i} \frac{c_{it}}{(z - \alpha_i)^k} \]
     %
-    Pick $\lambda \in \mathbf{C}$ with
+    is holomorphic in $\Omega$, and
     %
-    \[ 0 < K < \frac{1 - \lambda}{\lambda} \]
+    \[ gP = f - \sum_{i = 1}^s \sum_{k = 1}^{m_i} c_{it} P (z - \alpha_i)^{-k} \]
     %
-    Consider a particular BLAI $\{ N_\alpha \}$ with $\sup \| N_\alpha \| \leq K$. Define a net $\{ M_\alpha \}$ in $A \ltimes \mathbf{C}$ by letting
+    constructing $Q$ with degree less than $n$.
+\end{proof}
+
+In non-unital algebras, we cannot evaluate any polynomial of the form $\sum a_i z^i$, since $a_0 \in \mathbf{C}$ does not necessarily have an interpretation in the algebra. If $a_0 = 0$, we can evaluate $\sum a_i z^i$, and thus any holomorphic function $f$, provided $f(0) = 0$. To verify this, one need only use the simple trick of switching from a non-unital algebra $A$ to a unital algebra $\mathbf{C} \ltimes A$.
+
+
+
+
+
+
+\chapter{$C^*$ algebras}
+
+\section{Involutions}
+
+An {\bf involution} on a Banach algebra $A$ is an antilinear map $M \mapsto M^*$, which satisfies
+%
+\[ M^{**} = M\ \ \ \ \ (MN)^* = N^*M^* \]
+%
+It is a canonical way to reverse the rotation provided by the complex structure on the algebra. A {\bf $\mathbf{B}^*$ algebra} is a Banach algebra with a fixed involution, and a {\bf $\mathbf{C}^*$ algebra} is a $B^*$ algebra $A$ which satisfies
+%
+\[ \| M^* M \| = \| M \|^2 \]
+%
+for all $M \in A$.
+
+\begin{example}
+    Let $H$ be a Hilbert space. Then the map $T \mapsto T^*$ gives an involution in $B(H)$, where $T^*$ is defined by the equation $\langle T^* x, y \rangle = \langle x, Ty \rangle$. Now if $\| x \|, \| y \| \leq 1$, then
     %
-    \[ M_\alpha = \lambda N_\alpha + (1 - \lambda) \]
+    \[ | \langle T^* T x, y \rangle | = | \langle Tx, Ty \rangle | \leq \| T \|^2 \]
     %
-    Then $M_\alpha L \to L$ for all $L \in E$, and each $M_\alpha$ is invertible in $A \ltimes \mathbf{C}$ by the choice of $\lambda$, and
+    and this is attained, for if there are $\| x_i \| \leq 1$ such that $\| Tx_i \| \to \| T \|$, then
     %
-    \[ M_\alpha^{-1} = \frac{1}{1 - \lambda} \sum_{k = 0}^\infty \left(- \frac{\lambda N_\alpha}{1 - \lambda} \right)^k \]
+    \[ \langle T^* T x_i, x_i \rangle = \| Tx_i \|^2 \to \| T \|^2 \]
+    %
+    so $\| T^* T \| = \| T \|^2$. If we are working over $\mathbf{C}^n$, then each element of $B(\mathbf{C}^n)$ can be expressed as a matrix in $M_n(\mathbf{C})$ If $(a_{ij})$ is such a matrix, then one verifies that $(a_{ij})^* = (\overline{a_{ji}})$, so involution here is analogous to the complex transpose on sets of matrices.
+\end{example}
+
+\begin{example}
+    The map $f \mapsto \overline{f}$ is an involution in $C_0(X)$, where $X$ is a locally compact Hausdorff space, and
+    %
+    \[ \| f \overline{f} \|_\infty = \| |f|^2 \|_\infty = \| f \|^2_\infty \]
+    %
+    The central result of commutative involution theory shows that all commutative $*$ algebras are isometric to a subspace of $C_0(X)$.
+\end{example}
+
+\begin{example}
+    For $f \in A(\mathbf{D})$, define $f^*(z) = \overline{f(\overline{z})}$, then $*$ is an isometric involution. If $f(z) = e^{iz}$, then
+    %
+    \[ (ff^*)(z) = e^{iz} \overline{e^{i\overline{z}}} = e^{iz} e^{-iz} = 1 \]
+    %
+    Thus $\| f f^* \|_\infty = 1$, yet $f(1) = f^*(-1) = e > 1$, so
+    %
+    \[ \| f \|_\infty \| f^* \|_\infty > \| ff^* \|_\infty \]
+    %
+    which implies $A(\mathbf{D})$ is not a $C^*$ algebra.
+\end{example}
+
+\begin{prop}
+    In a $C^*$ algebra, $\| M \| = \| M^* \|$.
+\end{prop}
+\begin{proof}
+    Note that
+    %
+    \[ \| M \|^2 = \| M M^* \| \leq \| M \| \| M^* \| \]
+    %
+    so $\| M \| \leq \| M^* \|$. But then, by symmetry,
+    %
+    \[ \| M^* \| \leq \| M^{**} \| = \| M \| \]
+    %
+    so we have equality.
+\end{proof}
+
+\begin{prop}
+    For any $M$ in a $C^*$ algebra,
+    %
+    \[ \| M \| = \sup \{ \| MN \| : \| N \| \leq 1 \} = \sup \{ \| NM \| : \| N \| \leq 1 \} \]
+\end{prop}
+\begin{proof}
+    If $N = M^* \|M\|^{-1}$, $\| N \| = 1$, and
+    %
+    \[ \| MN \| = \| MM^* \| \| M \|^{-1} = \| M \| \]
+    %
+    Thus the suprema on the right is greater than or equal to $\| M \|$. But if $\| N \| \leq 1$, then
+    %
+    \[ \| MN \| \leq \| M \| \| N \| \leq \| M \| \]
+    %
+    so the suprema is also less than or equal to $\| M \|$.
+\end{proof}
+
+It follows that we may isometrically embed any $C^*$-algebra $A$ into $B(A)$, by either considering the left or right multiplications. This is known as the {\bf left regular representation}. Thus if $A$ is a $C^*$ algebra without identity, then we may embed $A$ in $B(A)$, and then consider the smallest closed $C^*$-subalgebra of $B(A)$ which contains $A$ and the identity.
+
+Given a (nonunital) $C^*$ algebra $A$, there is a natural $C^*$ structure on $A^\#$, given by
+%
+\[ (\lambda + M)^* = \overline{\lambda} + M^* \]
+%
+given that we define a new norm
+%
+\[ \| \lambda + M \| = \sup \{ \| MN + \lambda \| : N \in A, \| N \| \leq 1 \} \]
+%
+The above proposition verifies that the embedding of $A$ in $A^\#$ is an isometry.
+
+$C^*$ algebras are very closely related to operator theory. In fact, one can show that all $C^*$ algebras are isometric to some $C^*$-subalgebra of $B(H)$, where $H$ is a Hilbert space. Thus it makes sense to extend terminology from Hilbert space theory to the $C^*$ domain. We say $M \in A$ is {\bf self-adjoint} or {\bf hermitian} if $M^* = M$. The set of all such elements is denoted $A_{\text{sa}}$, which forms a real subspace of $A$. Hermitian elements are analogous to the real numbers, which form a subset of $A$.
+
+\begin{prop}
+    Any $M \in A$ can be uniquely written as $M = T + iS$, where $T$ and $S$ are self-adjoint elements.
+\end{prop}
+\begin{proof}
+    Write
+    %
+    \[ T = \frac{M + M^*}{2}\ \ \ \ \ S = \frac{M - M^*}{2i} \]
+    %
+    Then $T + iS = M$, and they are trivially verified to be self-adjoint. Now suppose $M = N + iL$, where $N$ and $L$ are self-adjoint. Then
+    %
+    \[ 0 = (N - T) + i(L - S) \]
+    %
+    is normal. Thus
+    %
+    \[ (N - T) + i(L - S) = (N - T) - i(L - S) \]
+    %
+    And $i(L - S) = -i(L - S)$, which can only occur when $L - S = 0$. But then $N - T = 0$ also.
+\end{proof}
+
+An element $M$ is {\bf normal} if
+%
+\[ M^* M = MM^* \]
+%
+These elements will turn out to have useful descriptions for, if $M$ is normal, then the smallest $C^*$ subalgebra containing $M$ will be commutative, in which case we can apply Gelfand theory to its full extent. {\bf Unitary} elements satisfy
+%
+\[ MM^* = M^*M = 1 \]
+%
+the set of all such elements forming a closed subgroup $U(A)$ of $GL(A)$. A {\bf projection} is a hermitian element $M$ such that $M^2 = M$. Thus the terminology from operator theory carries across to arbitrary $*$ algebras, along with some of the interesting properties.
+
+\begin{prop}
+    If $A$ is a $C^*$ algebra, and $M \in A$ is normal, then $\| M \| = r(M)$.
+\end{prop}
+\begin{proof}
+    A calculation reveals
+    %
+    \[ \| M^2 \|^2 = \| (M^2)^* M^2 \| = \| (M^* M) (M^* M)^* \| = \| M^* M \|^2 = \| M \|^4 \]
+    %
+    Thus $\| M^2 \|^{1/2} = \| M \|$, and more generally by induction,
+    %
+    \[ \| M^{2^k} \|^{1/2^k} = \left( \| (M^{2^{k-1}})^2 \|^{1/2} \right)^{1/2^{k-1}} = \| M^{2^{k-1}} \|^{1/2^{k-1}} = \| M \| \]
     %
     which implies
     %
-    \begin{align*}
-        \| M_\alpha^{-1} N - N \| &= \| M_\alpha^{-1} N - M_\alpha^{-1} M N \| \leq \| M_\alpha^{-1} \| \| N - M N \|\\
-        &\leq \left( \frac{1}{1 - \lambda} \sum_{k = 0}^\infty \left( \frac{\lambda K}{1 - \lambda} \right)^k \right) \| N - M_\alpha N \| \to 0
-    \end{align*}
+    \[ r(M) = \lim_{k \to \infty} \| M^k \|^{1/k} = \lim_{k \to \infty} \| M^{2^k} \|^{1/2^k} = \| M \| \]
     %
-    Therefore $M_\alpha^{-1}$ is also a BLAI. Fix $x \in E$, and let $\delta < 1, \frac{\varepsilon}{2 + \|x\|}$. We will inductively construct a sequence $\alpha_n$ of indices such that the sequence $E_{\alpha_1} \dots E_{\alpha_n}$ and $E_{\alpha_1}^{-1} \dots E_{\alpha_n}^{-1}$ converge. Choce $\alpha_1$ such that
+    since $\| M^{2^k} \|^{1/2^k}$ is a subsequence of $\| M^k \|^{1/k}$.
+\end{proof}
+
+In a commutative $C^*$ algebra, every element is trivially normal, which implies that
+
+\begin{corollary}
+    The Gelfand transform from a commutative $C^*$ algebra $A$ to $C(\Phi_A)$ is an isometry.
+\end{corollary}
+\begin{proof}
+    $\widehat{M}(\Phi_A) = \sigma(M)$, so $\|\widehat{M}\|_\infty = r(M) = \| M \|$.
+\end{proof}
+
+Gelfand's main result is that the isometry is actually surjective, which means all commutative $C^*$ algebras are just algebras of continuous functions in disguise. The surjectivity is the tricky part, which requires some work.
+
+\begin{prop}
+    If $M$ is unitary, then $\sigma(M) \subset \mathbf{T}$.
+\end{prop}
+\begin{proof}
+    Since
     %
-    \[ \| E_{\alpha_1}^{-1} x - x \| < \delta/2 \]
+    \[ \| M \|^2 = \| M^* M \| = \| 1 \| = 1 \]
     %
-    If $\alpha_1, \dots, \alpha_n$ has been chosen. There is a unique element $L_n \in A$ such that
+    and because $M$ is normal, $r(M) = \| M \| = 1$. But $M^{-1} = M^*$ is also unitary, so $r(M^{-1}) = 1$, and by the spectral mapping theorem,
     %
-    \[  E_{\alpha_n} \dots E_{\alpha_1} = (1 - \lambda)^n + L_n \]
+    \[ \sigma(M^{-1}) = \sigma(M)^{-1} \]
     %
-    Pick $\alpha_{n+1}$ such that
+    which implies that both spectra lie on $\mathbf{T}$.
+\end{proof}
+
+\begin{prop}
+    If $M$ is self-adjoint, then $\sigma(M) \subset \mathbf{R}$.
+\end{prop}
+\begin{proof}
+    The operator $e^{iM}$ is unitary, for
     %
-    \[ \| E_{\alpha_{n+1}} L_n - L_n \| < \frac{\delta}{(C + 1)\| E_{\alpha_1}^{-1} \dots E_{\alpha_n}^{-1} \| 2^{n+1}} \]
+    \[ e^{-iM} = \sum_{k = 0}^\infty \frac{(-i)^k M^k}{k!} = \sum_{k = 0}^\infty \left( \frac{(iM)^k}{k!} \right)^* = (e^{iM})^* \]
     %
-    where $C$ is the module constant. Then
+    The spectral mapping theorem implies that $\sigma(e^{iM}) = e^{i \sigma(M)} \subset \mathbf{T}$, which implies $\sigma(M) \subset \mathbf{R}$.
+\end{proof}
+
+\begin{prop}
+    If $A$ is a $C^*$ algebra, and $\phi$ a character on $A$, then
     %
-    \[ E_{\alpha_1}^{-1} \dots E_{\alpha_n}^{-1} E_{\alpha_{n+1}}^{-1} x - E_{\alpha_1}^{-1} \dots E_{\alpha_n}^{-1} x \| \leq C \| E_{\alpha_1}^{-1} \dots E_{\alpha_n}^{-1} \| \| x - E_{\alpha_{n+1}}^{-1} x \| < \frac{\delta}{2^{n+1}} \]
+    \begin{enumerate}
+        \item[(a)] $\phi(M) \in \mathbf{R}$ if $M$ is self-adjoint.
+        \item[(b)] $\phi(M^*) = \phi(M)^*$.
+        \item[(c)] $\phi(M^*M) \geq 0$ for all $M \in A$.
+        \item[(d)] If $M$ is unitary, then $|\phi(M)| = 1$.
+    \end{enumerate}
+\end{prop}
+\begin{proof}
+    (a) and (d) follow from Gelfand theory, since we may unitize our algebra, adding at most one extra chracter which is uniformly zero on $A$. Now for any $M$, write $M = T + iS$, and then
+    %
+    \[ \phi(M^*) = \phi(T - iS) = \phi(T) - i \phi(S) = \overline{\phi(T) + i \phi(S)} = \overline{\phi(M)} \]
+    %
+    (c) follows immediately.
+\end{proof}
+
+The next result fully characterizes commutative $C^*$ algebras.
+
+\begin{theorem}[Gelfand-Naimark]
+    Let $A$ be a commutative $C^*$ algebra. Then the Gelfand transform is a $*$-isomorphism between $A$ and $C(\Phi_A)$.
+\end{theorem}
+\begin{proof}
+    We shall show $\hat{A}$ is dense in $C(\Phi_A)$. It is surely a subalgebra. Given $M \in A$, write $M = N + iL$, with $N$ and $L$ self adjoint. Now
+    %
+    \[ \widehat{M^*}(\phi) = \overline{\widehat{M}(\phi)} \]
+    %
+    Thus $\widehat{A}$ is a subalgebra of $C(A)$ closed under conjugation, and which separates points. The complex Stone Weirstra{\ss} tells us $\widehat{A}$ is dense in $C(\Phi_A)$, and since it is closed, we obtain that $\widehat{A} = C(\Phi_A)$.
+\end{proof}
+
+The Gelfand Naimark has two important applications. Recall that space $X$ is {\bf completely regular} if it is $T1$, and if for each closed $C$ and $x \in X - C$, there is $f \in C_b(X)$ for which $f|_F = 0$, and $f(x) = 1$. Urysohn's lemma tells us all normal spaces (for instance, those which are compact and Hausdorff, or metrizable) are completely regular.
+
+\begin{theorem}
+    Let $X$ be a completely regular space. Then there is a compact Hausdorff space $\beta X$ with an embedding $i: X \to \beta X$ onto a dense subset of $\beta X$ satisfying the following universal property; $j: X \to K$ is a continuous map into a compact Hausdorf space, then there is a unique $f: \beta X \to K$ such that
+    %
+    \begin{center}
+    \begin{tikzcd}
+        X \arrow{r}{i} \arrow{d}{j} & \beta X \arrow{ld}{f} \\
+        K
+    \end{tikzcd}
+    \end{center}
+    %
+    The universal property means $\beta X$ is unique up to homeomorphism.
+\end{theorem}
+\begin{proof}
+    The map $f \mapsto \overline{f}$ is an isometric involution on $C_b(X)$. Then $C_b(X)$ is a commutative $C^*$ algebra with identity, so $\Phi_{C_b(X)}$ is compact and Hausdorff. The map
+    %
+    \[ i: X \to \Phi_{C_b(X)}\ \ \ \ \ \ \ \ \ \ x \mapsto \phi_x \]
+    %
+    is continuous and injective. Fix $\phi \in \beta X - \overline{i(X)}$, if it exists. Pick $f \in C(\Phi_A)$ such that $f|_{\overline{i(X)}} = 0$, and $f(\phi) = 1$. But since $\widehat{\cdot}$ is an isomorphism, $f = \widehat{g}$ for some $g \in C_b(X)$, so $g(x) = 0$ for all $x \in X$, so $\widehat{g} = f = 0$, a contradiction, since $f \not \in i(X)$. Thus $i(X)$ is dense in $\beta X$
+
+    Now we show $i$ is an embedding. Let $\{ x_\alpha \}$ be a net in $X$, and suppose $i(x_\alpha) \to i(x)$. Assume $x_\alpha$ does not tend to $x$. Then there is a neighbourhood $U$ of $x$ and a subnet $\{ x_\beta \}$ of $\{ x_\alpha \}$ such that $x_\beta \not \in U$ for all $\beta$. Since $X$ is completely regular, choose $f \in C_b(X)$ such that $f|_{X - U} = 0$, and $f(x) = 1$. Then $\widehat{f}(\phi_{x_\beta})$ does not tend to $\widehat{f}(\phi_x)$ even pointwise, and, consequently by the weak topology on $\Phi_{C_b(X)}$, $i(x_\beta)$ does not tend to $i(x)$, a contradiction.
+
+    Finally, let $K$ be any compact Hausdorff space, and let $j: X \to K$ be continuous. Define
+    %
+    \[ j^*: C(K) \to C_b(X)\ \ \ \ \ f \mapsto f \circ j\ \ \ \ \ \ \ \ \ \ \widehat{j}: \Phi_{C_b(X)} \to \Phi_{C(K)} \cong K\ \ \ \ \ \phi \mapsto \phi \circ j^* \]
+    %
+    then $\widehat{j}$ is continuous, and for any $f \in C(K)$,
+    %
+    \[ [(\widehat{j} \circ i)(x)](f) = [\phi_x \circ j^*](f) = f(j(x)) \]
+    %
+    Thus if $\Gamma$ is the Gelfand transform from $\Phi_{C(K)}$ to $K$, then
+    %
+    \[ \Gamma^{-1}((\widehat{j} \circ i)(x)) = j(x) \]
+    %
+    so $g \circ \widehat{j} \circ i = j$, thus $g \circ \widehat{j}$ is a map making the diagram commute, and it must be unique, since $i(X)$ is dense in $\Phi_{C_b(X)}$.
+\end{proof}
+
+\begin{theorem}
+    If  $B$ is a $C^*$-subalgebra of $A$, then $GL(A) = GL(B)$.
+\end{theorem}
+\begin{proof}
+    Any involution satisfies $1^* = 1$, since the involution is linear, and satisfies, for any $w \in \mathbf{C}$,
+    %
+    \[ w^* = (w1)^* = w^*1^* \]
+    %
+    If $N \in GL(A)$, then $N^* \in GL(A)$, for
+    %
+    \[ N^*(N^{-1})^* = (N^{-1}N)^* = 1^* = 1\ \ \ \ \ \ \ \ (N^{-1})^* N^* = (NN^{-1})^* = 1^* = 1 \]
+    %
+    Thus $NN^*$ is an invertible, self adjoint operator, so $\sigma_A(NN^*) \subset \mathbf{R}$, implying $\sigma_A(NN^*) = \sigma_B(NN^*)$, which implies $NN^* \in GL(B)$. But then $N$ has a right inverse in $B$. Computing with $N^*N$ instead we find $N$ has a left inverse, so $N \in GL(B)$.
+\end{proof}
+
+\begin{corollary}
+    If $A$ is a $C^*$ algebra, and $B$ is a $C^*$-subalgebra, then 
+    %
+    \[ \sigma_A(M) = \sigma_B(M) \]
+    %
+    so spectral theory over $C^*$-algebras is invariant of a particular $C^*$ algebra.
+\end{corollary}
+
+For normal operators, we can extend the holomorphic functional calculus to all continuous functions.
+
+\begin{theorem}[Continuous Functional Calculus]
+    Let $M$ be a normal element of a $C^*$ algebra $A$. Then there is a unique isometric $C^*$-isomorphism between $C(\sigma(M))$ and $C^*(M)$ such that
+    %
+    \[ 1 \mapsto 1\ \ \ \ \ \text{id}_{\sigma(M)} \mapsto A\ \ \ \ \ \overline{\text{id}_{\sigma(M)}} \mapsto A^* \]
+\end{theorem}
+\begin{proof}
+    The uniqueness assumption is clear, since $C(\sigma(M))$ is generated by the identity function by the Stone Weirstra{\ss} theorem. Since $M$ is normal, $C^*(M)$ is a commutative $C^*$ algebra, so the Gelfand transform gives us an isometric isomorphism from $C^*(M)$ to $C(\Phi_{C^*(M)})$. But the map
+    %
+    \[ \widehat{M}: \Phi_{C^*(M)} \to \Sigma(M) \]
+    %
+    is a continuous bijection (for $C^*(M)$ is commutative), which therefore must be a homeomorphism. Then,
+    %
+    \[ f \mapsto \widehat{\cdot}\ ^{-1}(f \circ \widehat{M}) \]
+    %
+    is what we desire, where $\widehat{\cdot}\ ^{-1}$ is the inverse Gelfand transform.  We write the image of $f$ under this map as $f(M)$.
+\end{proof}
+
+\begin{corollary}
+    If $A$ is a $C^*$ algebra, and $M \in A$ is normal, and let $f \in C(\sigma(M))$. Then
+    %
+    \[ f(\sigma(M)) = \sigma(f(M)) \]
+\end{corollary}
+\begin{proof}
+    We just apply Gelfand theory.
+    %
+    \[ \sigma(f(M)) = \sigma(\Gamma^{-1}(f \circ \widehat{M})) = (f \circ \widehat{M})(\Phi_{C^*(M)}) = f(\sigma(M)) \]
+    %
+    Thus the spectrum of normal operators is nicely defined under spectral mappings.
+\end{proof}
+
+\section{$*$-Morphisms}
+
+The natural morphism between $*$-algebras is a $*$-morphism, an algebra homomorphism $T$ which satisfies $T(M^*) = T(M)^*$.
+
+\begin{prop}
+    If $T: A \to B$ is a $*$-morphism, then $\| T(M) \| \leq \| M \|$ for all $M$.
+\end{prop}
+\begin{proof}
+    Assume first that $A$ is unital. For any $M$, $\sigma(T(M)) \subset \sigma(M)$. But then if $M$ is normal, then $T(M)$ is normal, and
+    %
+    \[ \| T(M) \| = r(T(M)) \leq r(M) = \| M \| \]
+    %
+    In general, for any $M$,
+    %
+    \[ \| T(M) \|^2 = \| T(M) T(M)^* \| = \| T(MM^*) \| \leq \| MM^* \| = \| M \|^2 \]
+    %
+    so $\| T \| \leq 1$. In the non-unital case, $T$ induces a $*$-extension between $A^\#$ and $B^\#$, in which we can apply the previous case.
+\end{proof}
+
+Thus every $*$-morphism is continuous. Injective $*$-morphisms are isometries. Let $A$ be a $C^*$ algebra, and let $M \in A$. We let $C^*(M)$ be the smallest $C^*$ algebra containing $M$. It can be described as the smallest closed subalgebra which contains $1$, $M$, and $M^*$. Certainly, the latter is contained in the former. Consider a monomial, consider of products of $M$ and $M^*$. Then the involution of a monomial is a monomial, and by linearity, the span is closed under involution, hence the closed span is also closed under involution.
+
+\begin{prop}
+    An injective $*$-morphism is an isometry.
+\end{prop}
+\begin{proof}
+    Let $M \in A_{\text{sa}}$, and let $N = \pi(M)$. Restrict $\pi$ to a map between $C^*(M)$ and $C^*(N)$. Thus we may assume that $A$ and $B$ are abelian. By adjoining an identity, we may also assume the algebras are unital, and thus we may explicitly introduce isometries $A \cong C(X)$ and $B \cong C(Y)$. An isomorphism $\pi: C(X) \to C(Y)$ induces the dual map $\pi^*: Y \to X$ on the character space. Since $Y$ is compact, $\pi^*(Y)$ is closed in $\Phi_A$. Suppose $\pi^*$ was not surjective. Let $f$ be the constant 1 function on $\pi^*(Y)$, which vanishes outside some proper neighbourhood of $\pi^*(Y)$. Then there is a non-zero function $g$ for which $fg = 0$, and so
+    %
+    \[ \pi(fg) = \pi(f) \pi(g) = 0 \]
+    %
+    and $\pi(f) = 1$, for
+    %
+    \[ \pi(f)(x) = f(\pi^*(x)) = 1 \]
+    %
+    Thus $\pi(f)$ is invertible, which is impossible, for this would imply $\pi(g) = 0$, a contradiction to the fact that $g$ is non-zero and $\pi$ is injective. By contradiction, we find $\pi^*(Y) = X$, and for any $h \in C(X)$
+    %
+    \[ \| \pi(h) \|_\infty = \sup \{ |\pi(h)(y)|: y \in Y \} = \sup \{ |h(\pi^*(y))| : y \in Y \} = \| h \|_\infty \]
+    %
+    So $\pi$ is an isometry on $C^*(M)$ and $C^*(N)$. In general, for any $M$,
+    %
+    \[ \| M \|^2 = \| MM^* \| = \| \pi(MM^*) \| = \| \pi(M) \pi(M^*) \| = \| \pi(M) \|^2 \]
+    %
+    so $\pi$ is an isometry.
 \end{proof}
 
 
 
 
-\chapter{Appendix: Nets}
+
+
+
+\section{Positivity}
+
+A self-adjoint element $M$ is {\bf positive} if $\sigma(M) \subset [0, \infty)$. In shorthand, we write $M \geq 0$. The set of all positive elements in an algebra $A$ is denoted $A_+$. We write $M \leq N$ if $N - M \geq 0$. The identification of positive elements gives us a useful ordering on $A_{\text{sa}}$, analogous to the ordering of the real numbers.
+
+\begin{example}
+    If $f \in C_b(X)$, then $f$ is normal if and only if $f$ is real-valued. Similarily, $f$ is positive if and only if $f \geq 0$, in the usual sense, for this occurs if and only if $\overline{f(X)} \subset [0,\infty)$.
+\end{example}
+
+\begin{prop}
+    If $M \in A_+$, there is a unique $N \in A_+$ for which $M = N^2$.
+\end{prop}
+\begin{proof}
+    Consider the map $f(z) = \sqrt{z}$. This is well defined, since $\sigma(M) \subset [0,\infty)$, and $f \in C(\sigma(M))$, so we may consider $f(M)$. Now
+    %
+    \[ f(M)^2 = (f^2)(M) = (\text{id}_{\sigma(M)})(M) = M \]
+    %
+    If $N^2 = M$, then
+    %
+    \[ NM = N^3 = (N^2)N = MN \]
+    %
+    similarily, $(N^*)^2 = (N^2)^* = M^*$, and since $N$ is normal,
+    %
+    \[ NM^* = NN^*N^* = N^*N^*N = M^*N \]
+    %
+    so, since $f(M)$ is a limit of certain sums of monomials of $M$ and $M^*$, under which $N$ commutes,
+    %
+    \[ Nf(M) = f(M)N \]
+    %
+    Consider $B = C^*(N, f(M))$. This is a commutative sub $C^*$-algebra of $A$. Applying the Gelfand transform, for any $\phi \in \Phi_B$, $\widehat{N}(\phi) \geq 0$, since $N$ is a positive operator. Similarily, $\widehat{f(A)}(\phi) \geq 0$. Since
+    %
+    \[ \widehat{N}(\phi)^2 = \widehat{M}(\phi) = \widehat{f(A)}(\phi)^2 \]
+    %
+    we must have $\widehat{N}(\phi) = \widehat{f(A)}(\phi)$, hence $\widehat{N} = \widehat{f(A)}$, so $N = f(A)$, since the Gelfand transform is injective for commutative algebras.
+\end{proof}
+
+We denote the unique positive square root of $M \in A_+$ by $\sqrt{M}$. If self-adjoint operators behave like real numbers, positive operators behave like positive real numbers.
+
+\begin{prop}
+    Let $A$ be a $C^*$ algebra, and let $M \in A_{\text{sa}}$. Then there are unique $M_+$, $M_- \in A_+$ for which $M = M_+ - M_-$, and $M_+ M_- = 0$.
+\end{prop}
+\begin{proof}
+    Let $f_+(t) = \text{max}(t,0)$, and $f_-(t) = -\text{min}(t,0)$. Then $f_+$ and $f_-$ are continuous maps, and we may consider $f_+(M)$, $f_-(M)$. Since
+    %
+    \[ f_+ - f_- = \text{id}_{\sigma(M)} \]
+    %
+    $f_+(M) - f_-(M) = M$. By the spectral mapping theorem,
+    %
+    \[ \sigma(f_+(M)) = f_+(\sigma(M)) \subset [0,\infty)\ \ \ \ \ \sigma(f_-) = f_-(\sigma(M)) \subset [0,\infty) \]
+    %
+    so $f_+(M), f_-(M) \geq 0$. Since $f_+ f_- = 0$, $f_+(M) f_-(M) = 0$.
+
+    To prove uniqueness, suppose $L - U = M$, and $LU = 0$. Let $B = C^*(L,U)$. Then $M \in B$, and thus $M_+$, $M_- \in B$. For any $\phi \in \Phi_B$, either $\widehat{L}(\phi) = 0$, or $\widehat{U}(\phi) = 0$. If $\widehat{M}(\phi) \geq 0$, then $\widehat{U}(\phi) = 0$, so $\widehat{L}(\phi) = \widehat{M}(\phi)$, and if $\widehat{M}(\phi) \leq 0$, then $\widehat{L}(\phi) = 0$, so $\widehat{U}(\phi) = -\widehat{M}(\phi)$. But then $\widehat{L} = \widehat{f_+(M)}$ and $\widehat{U} = \widehat{f_-(M)}$. Then equality is obtained, since $B$ is commutative, because $L$ and $U$ commute.
+\end{proof}
+
+\begin{example}
+    Suppose $M$ is a positive element of $B(H)$. Then, for any $x \in H$,
+    %
+    \[ \langle Mx,x \rangle = \langle \sqrt{M}\sqrt{M}x,x \rangle = \langle \sqrt{M}x, \sqrt{M}x \rangle \geq 0 \]
+    %
+    Conversely, let $M \in B(H)$ be an operator such that, for any $x \in H$,
+    %
+    \[ \langle Mx, x \rangle \geq 0 \]
+    %
+    Write $M = N + iL$, with $N$ and $L$ self adjoint.Then
+    %
+    \[ \langle Mx, x \rangle = \langle Nx, x \rangle + i \langle Lx, x \rangle \geq 0 \]
+    %
+    implying $\langle Lx, x \rangle = 0$ for all $x$, so $L = 0$, and $M = N$ is self-adjoint. The last proposition implies that we may write $M = M_+ - M_-$. Then
+    %
+    \[ 0 \leq \langle MM_-x, M_-x \rangle = - \langle M_-^2 x, M_- x \rangle \leq 0 \]
+    %
+    Since $H = \overline{M_-H} \oplus \ker M_-$, we find that
+    %
+    \[ \langle M_-x, x \rangle = 0 \]
+    %
+    for all $x$, implying $M_- = 0$, so $M = M_+$ is positive. Thus positive operators have a nice characterization on Hilbert spaces.
+\end{example}
+
+\begin{lemma}
+    If $M$ is self-adjoint, and $\| M - t \| \leq t$, then $M$ is positive. If $M$ is positive, and $\| M \| \leq t$, then $\| M - t \| \leq t$.
+\end{lemma}
+\begin{proof}
+    Suppose $\| M - t \| \leq t$. Then $\sigma(M - t) \in [-t,t]$, so
+    %
+    \[ \sigma(M) = \sigma(M - t) + t \in [0, 2t] \]
+    %
+    Conversely, if $M$ is positive and $\| M \| \leq t$, then $\sigma(M) \subset [0,t]$, and
+    %
+    \[ \sigma(M - t) = \sigma(M) - t \subset [-t,0] \]
+    %
+    which means $\| M - t \| = r(M - t) \leq t$.
+\end{proof}
+
+\begin{prop}
+    If $A$ is a $C^*$ algebra, then
+    %
+    \begin{enumerate}
+        \item[(a)] $A_+$ is closed.
+        \item[(b)] If $M,N \in A_+$, then $M + N \in A_+$.
+        \item[(c)] If $M \in A_+$, and $t \geq 0$, then $tM \in A_+$.
+        \item[(d)] $A_+ \cap -A_+ = (0)$.
+    \end{enumerate}
+\end{prop}
+\begin{proof}
+    Suppose that $N \in \overline{A_+}$, choose $K > \| N \|$. Fix $\varepsilon > 0$ and pick $M \in A_+$ with $\| N - M \| < \varepsilon$. Then if $\varepsilon$ is chosen small enough, then $\| M \| < K$, and
+    %
+    \[ \| N - K \| = \| N - M \| + \| M - K \| \leq \varepsilon + K \]
+    %
+    Letting $\varepsilon \to 0$, we find $N \in A_+$. To prove (b), we apply the inequality in the lemma to conclude
+    %
+    \[ \| M + N - (\| M \| + \| N \| ) \| \leq \| M - \| M \| \| + \| N - \| N \| \| \leq \| M \| + \| N \| \]
+    %
+    So $M + N \in A_+$. Since $\sigma(\lambda M) = \lambda \sigma(M)$, we obtain (c). To prove (d), suppose $M \in A_+ \cap -A_+$. Then $\sigma(M) = \{ 0 \}$, and since $M$ is normal, $\| M \| = r(M) = 0$.
+\end{proof}
+
+The next corollary says that `$| x | \leq 0$ if and only if $x = 0$', but in a $C^*$-algebra setting.
+
+\begin{lemma}
+    If $-M^*M \in A_+$, then $M = 0$.
+\end{lemma}
+\begin{proof}
+    Since
+    %
+    \[ \sigma(MM^*) \cup \{ 0 \} = \sigma(M^*M) \cup \{ 0 \} \]
+    %
+    which can be proved by some algebraic tricks, $-MM^* \in A_+$ as well. If we write $M = T + iS$, where $T$ and $S$ are normal, then
+    %
+    \[ M^*M + MM^* = (T - iS)(T + iS) + (T + iS)(T - iS) = 2(T^2 + S^2) \in A_+ \]
+    %
+    Thus
+    %
+    \[ M^*M = 2(T^2 + S^2) - MM^* \in A_+ \]
+    %
+    which implies $M^*M = 0$.
+\end{proof}
+
+\begin{prop}
+    The following are equivalent
+    %
+    \begin{enumerate}
+        \item[(a)] $M \in A_+$.
+        \item[(b)] There is $N \in A_+$ such that $M = N^2$.
+        \item[(c)] There is $N \in A$ such that $N^*N = M$.
+    \end{enumerate}
+\end{prop}
+\begin{proof}
+    We have already show (a) implies (b). The proof of (c) from (b) is trivial. To prove (a) from (c), note that if $M = N^*N$, then $M$ is certainly self-adjoint, so we may write $M = M_+ - M_-$. Let $L = NM_-$. Then
+    %
+    \[ - L^*L = - M_-N^*NM_- = - M_- M M_- = M_-^3 \in A_+ \]
+    %
+    Implying $NM_- = 0$, hence
+    %
+    \[ 0 = N^*L = N^*NM_- = -M_-^2 \in A_+ \]
+    %
+    This implies $M_- = 0$, so $M = M_+ \in A_+$.
+\end{proof}
+
+Thus we are inclined to define $|M| = \sqrt{MM^*}$, for any $M \in A$, which is a positive element.
+
+\begin{prop}
+    If $M \leq N$, then
+    %
+    \begin{enumerate}
+        \item[(a)] $M + L \leq N + L$.
+        \item[(b)] $L^*ML \leq L^*NL$.
+    \end{enumerate}
+    %
+    If in addition, $0 \leq M \leq N$, then
+    %
+    \begin{enumerate}
+        \item[(c)] $\| M \| \leq \| N \|$.
+        \item[(d)] $\sqrt{M} \leq \sqrt{N}$.
+    \end{enumerate}
+    %
+    and if $M, N \in GL(A)$, then
+    %
+    \begin{enumerate}
+        \item[(e)] $0 \leq N^{-1} \leq M^{-1}$
+    \end{enumerate}
+\end{prop}
+\begin{proof}
+    (a) is trivial. To prove (b), note that
+    %
+    \[ L^*(N - M)L = L^*\sqrt{N - M}\sqrt{N - M}L = (\sqrt{N - M} L)^* (\sqrt{N - M} L) \in A_+ \]
+    %
+    Let us prove (c). If $N$ is positive, then $N \leq \| N \|$, which follows by Gelfand theory. Thus if $M$ and $N$ are positive, then
+    %
+    \[ 0 \leq M \leq N \leq \| N \| \]
+    %
+    But then $\phi(M) \leq \| N \|$ for each $\phi$, so $\| M \| \leq \| N \|$.
+
+    Fix $\varepsilon > 0$. Write
+    %
+    \[ (\varepsilon + \sqrt{N} + \sqrt{M})(\varepsilon + \sqrt{N} - \sqrt{M}) = T \]
+    %
+    where $T,U \in A_{\text{sa}}$. By calculation
+    %
+    \[ T = \varepsilon^2 + 2 \varepsilon \sqrt{N} + N - M \geq \varepsilon^2 \]
+    %
+    Thus $T$ is positive and invertible, so $\varepsilon + \sqrt{N} - \sqrt{M}$ is left invertible and therefore invertible. Thus $\varepsilon \not \in \sigma(\sqrt{M} - \sqrt{N})$, and thus
+    %
+    \[ \sigma(\sqrt{M} - \sqrt{N}) \subset (-\infty, 0) \]
+    %
+    But this implies $\sqrt{N} - \sqrt{M}$ is positive.
+
+    If $M \geq \varepsilon$, then $M^{-1} \leq 1/\varepsilon$, which follows by Gelfand theory, since $\phi(M^{-1}) = \phi(M)^{-1}$. Since
+    %
+    \[ 1 = \sqrt{M}^{-1}M\sqrt{M}^{-1} \leq \sqrt{M}^{-1} N \sqrt{M}^{-1} \]
+    %
+    this yields
+    %
+    \[ \sqrt{M} N^{-1} \sqrt{M} \leq 1 \]
+    %
+    and by conjugation again,
+    %
+    \[ N^{-1} = \sqrt{M}^{-1} \sqrt{M} N^{-1} \sqrt{M} \sqrt{M}^{-1} \leq M^{-1} \]
+\end{proof}
+
+\section{Positive Approximate Units}
+
+we show that all $C^*$ algebras have {\bf approximate units}, which are bounded approximate identities which are also increasing nets, in the sense of the positive ordering on the $C^*$ algebra.
+
+\begin{lemma}
+    If $0 \leq M \leq N$, then $M(1 + M)^{-1} \leq N(1 + N)^{-1}$.
+\end{lemma}
+\begin{proof}
+    Note that
+    %
+    \[ M(1 + M)^{-1} = 1 - (1 + M)^{-1}\ \ \ \ \ N(1 + N)^{-1} = 1 - (1 + N)^{-1} \]
+    %
+    We know $1 + M \leq 1 + N$, so $(1 + N)^{-1} \leq (1 + M)^{-1}$, so
+    %
+    \[ N(1 + N)^{-1} = 1-(1 + N)^{-1} \leq 1-(1 + M)^{-1} = M(1 + M)^{-1} \]
+    %
+    which is exactly the inequality we needed.
+\end{proof}
+
+\begin{prop}
+    For a $C^*$ algebra $A$, the net
+    %
+    \[ \{ M \in A_+ : \| M \| < 1 \} \]
+    %
+    ordered by the positivity of the algebra, is an approximate unit.
+\end{prop}
+\begin{proof}
+    The set is a net, because any $M,N \in A_+$ are less than or equal to $\max(\|M\|,\|N\|)$. Fix $M \in A_{\text{sa}}$, and let $\varepsilon > 0$. Let $B$ by the (non-unital) $C^*$ algebra generated by $M$. Then $B$ is commutative, and $\widetilde{M} \in C_0(\Phi_B)$. Let $g \in C_0(\Phi_B)$ be a function such that $0 \leq g < 1$, such that $\| \widetilde{M} - g \widetilde{M} \| < \varepsilon^2$, and set $N$ to be the unique element of $B$ such that $\widetilde{N} = g$. Then $\| N \| \leq 1$, $N$ is positive, and $\| M - MN \| < \varepsilon^2$. Let $N \leq L < 1$. Then, since $\sigma(\sqrt{1 - L}) \in [0,1]$, $\| \sqrt{1 - L} \| < 1$, and
+    %
+    \begin{align*}
+        \| M - LM \|^2 &= \| \sqrt{1 - L}^2 M \|^2 \leq \| \sqrt{1 - L}\ M \|^2 = \| M(1 - L)M \|\\
+        &\leq \| M(1 - N)M \| \leq \| M \| \| (1 - N)M \| < \| M \| \varepsilon^2
+    \end{align*}
+    %
+    Decreasing $\varepsilon$, we find $\lim LM = M$. Similar results show $\lim ML = M$.
+\end{proof}
+
+
+
+
+
+\section{Ideals and Quotients of $C^*$ Algebras}
+
+If we quotient a $C^*$ algebra by a closed ideal, we certainly get a Banach algebra back. But does this algebra still have an involution, or do we need to restrict our quotient even more. This is the problem we discuss in this chapter, which leads to the Gelfand Naimark construction, establishing that every $C^*$ algebra is isometric to some subalgebra of bounded operators on a Hilbert space.
+
+\begin{prop}
+    If $\mathfrak{a}$ is a closed left/right ideal in a $C^*$ algebra $A$ containing a self-adjoint element $M$, and if $f \in C(\sigma(M))$ satisfies $f(0) = 0$, then $f(M) \in \mathfrak{a}$.
+\end{prop}
+\begin{proof}
+    There is a sequence $P_i$ of polynomials which uniformly approximate $f$. Thus $P_i(0) \to 0$, and the sequence $Q_i = P_i - P_i(0)$ also converges uniformly to $f$, and so $Q_i(M) \to f(M)$. If we write $Q_i = \sum a_{ij} X^i \overline{X}^j$, then $Q_i(M) = \sum a_{ij} X^{i+j} \in \mathfrak{a}$, and since $\mathfrak{a}$ is closed, we find $f(M) \in \mathfrak{a}$.
+\end{proof}
+
+\begin{corollary}
+    If $M \in A_{\text{sa}}$ is in $\mathfrak{a}$, then $M_+$, $M_-$, $|M|$, and $\sqrt{M}$ are all in $\mathfrak{a}$.
+\end{corollary}
+
+If an ideal is closed under involution, then it is a two sided ideal, for involution reverses the multiplication structure. We shall show that this is true of all closed ideals.
+
+\begin{prop}
+    A closed ideal in a $C^*$ algebra is closed under involution.
+\end{prop}
+\begin{proof}
+    s
+\end{proof}
+
+
+
+
+
+
+\section{Spectral Theorem for Normal Operators}
+
+In finite dimensional theory, a normal linear transformation $T: \mathbf{C}^n \to \mathbf{C}^n$ can be written
+%
+\[ T = \sum \lambda_i P_i \]
+%
+where $P_i$ is projection onto the eigenspace corresponding to the eigenvalue $\lambda_i$. In this section we apply the theory of $C^*$ algebras to extend this theorem to arbitrary normal bounded transformations from a Hilbert space to itself. The trick is to `integrate' rather than sum up the subspaces.
+
+A {\bf spectral measure} on a measure space $(\Omega, \mathcal{F})$ is a function $E: \mathcal{F} \to B(H)$, for which
+%
+\[ E(\Omega) = \text{id}_H \]
+%
+such that $E(S)$ is a projection for each $S$, and such that for a disjoint family of sets $\{ S_1, S_2, \dots \}$ in $\mathcal{F}$, then
+%
+\[ E \left( \bigcup S_i \right) = \sum E(S_i) \]
+%
+with convergence pointwise (the strong operator topology), rather than in the operator norm. It follows that $E(\emptyset) = 0$.
+
+\begin{lemma}
+    If $S \subset W$, $E(S) \leq E(W)$.
+\end{lemma}
+\begin{proof}
+    Since $E(W - S)$ is a projection, $E(W - S) \geq 0$, so
+    %
+    \[ E(W) = E(W - S) + E(S) \geq E(S) \]
+    %
+    Hence a spectral measure is monotone on projections.
+\end{proof}
+
+\begin{lemma}
+    If $S$ and $W$ are disjoint sets, then $E(S)E(W) = 0$.
+\end{lemma}
+\begin{proof}
+    $E(S \cup W) = E(S) + E(W)$, so
+    %
+    \[ E(S \cup W) = E(S \cup W) E(S \cup W) = E(S) + E(W) E(S) + E(S)E(W) + E(W) \]
+    %
+    which implies
+    %
+    \[ E(S) + E(W) = E(S) + E(W) E(S) + E(S) E(W) + E(W) \]
+    %
+    hence $E(W) E(S) + E(S) E(W) = 0$.
+\end{proof}
+
+\begin{lemma}
+    $E(S \cap W) = E(S) \circ E(W)$.
+\end{lemma}
+\begin{proof}
+    We have
+    %
+    \[ E(S \cap W) + E(S - W) = E(S)\ \ \ \ \ \ \ \ E(S \cap W) + E(W - S) = E(W) \]
+    %
+    and
+    %
+    \[ E(S \cup W) = E(S \cap W) + E(S - W) + E(W - S) \]
+    %
+    From which it follows that
+    %
+    \begin{align*}
+        E(S) + E(W) &= 2E(S \cap W) + E(S - W) + E(W - S)\\
+        &= E(S \cap W) + E(S \cup W)
+    \end{align*}
+    %
+    Now multiply both sides of the equation on the right by $E(W)$ gives
+    %
+    \[ E(S) E(W) + E(W)^2 = E(S \cap W) E(W) + E(S \cup W) E(W) \]
+    %
+    Since $S \subset S \cup W$, $E(S) \leq E(S \cup W)$, and
+    %
+    \[ E(S \cup W) E(S) = E(S) \]
+
+    Now $E(S \cup W) E(S) = E(S)^2 + E(W - S) E(S) = E(S)$
+\end{proof}
+
+\begin{example}
+    If $H = \mathbf{C}$, then $B(H) \cong \mathbf{C}$, and any $\{ 0, 1 \}$ valued measure $\mu$ is a spectral measure, provided $\mu(\Omega) = 1$. If $\mu(S_1) = \mu(S_2) = 1$, then
+    %
+    \[ 1 = \mu(S_1) = \mu(S_1 \cap S_2) + \mu(S_1 - S_2) \]
+    %
+    \[ 1 = \mu(S_2) = \mu(S_1 \cap S_2) + \mu(S_2 - S_1) \]
+    %
+    If $\mu(S_1 \cap S_2) = 0$, then $\mu(S_1 - S_2) = \mu(S_2 - S_1) = 1$, which implies
+    %
+    \[ \mu((S_1 - S_2) \cup (S_2 - S_1)) = \mu(S_1 - S_2) + \mu(S_2 - S_1) = 2 \]
+    %
+    an impossibility. Thus $\mu(S_1 \cap S_2) = 1$. If $\mu(S_1) = 0$, then $S_1 \cap S_2 \subset S_1$, so $\mu(S_1 \cap S_2) \leq \mu(S_1) = 0$. The same holds if $\mu(S_2) = 0$. Thus we have verified that $\mu(S_1 \cap S_2) = \mu(S_1) \circ \mu(S_2)$ on a case by case basis. The countable summation property holds by the property of the measure itself.
+\end{example}
+
+\begin{example}
+    If $H$ is infinite dimensional, and $N \in K(H)$, then
+    %
+    \[ \sigma(N) = \{ \lambda_0, \lambda_1, \dots \} \]
+    %
+    where $\lambda_0 = 0$, and each $\lambda_i$ is an eigenvalue. For each $n > 0$, let $P_n$ be orthogonal projection onto $\text{ker}(\lambda_n - N)$, and let $P_0$ project onto the orthogonal complement of the closed linear space of the images of $P_1, P_2, \dots$. For $S \subset \sigma(N)$, let
+    %
+    \[ E(S) = \sum_{\lambda_n \in S} P_n \]
+    %
+    In the sense that the sum on the right is interpreted pointwise. Then $E$ is a spectral measure on $(\sigma(N), \mathcal{P}(\sigma(N)))$. Surely
+    %
+    \[ E(\sigma(N)) = \sum_{n = 0}^\infty P_n = \text{id}_H \]
+    %
+    And since $P_i \circ P_j = 0$ if $i \neq j$,
+    %
+    \begin{align*}
+        E(S_1) \circ E(S_2) &= \left( \sum_{\lambda_n \in S_1} P_n \right) \circ  \left( \sum_{\lambda_m \in S_2} P_m \right)\\
+        &= \sum_{\lambda_n \in S_1, \lambda_m \in S_2} P_n P_m\\
+        &= \sum_{\lambda_n \in S_1 \cap S_2} P_n = E(S_1 \cap S_2)
+    \end{align*}
+    %
+    And the countable additivity follows by the pointwise definition of the sum of operators.
+\end{example}
+
+\begin{example}
+    If $\Omega$ is a $\sigma$-finite measure space with measure $\mu$, and $H = L^2(\Omega)$, define
+    %
+    \[ E(S) \xi = \chi_S \xi \]
+    %
+    Then $E$ is a spectral measure. Surely $E(\Omega) = \text{id}_H$, $E(\emptyset) = 0$, because $\chi_\Omega = 1$, $\chi_\emptyset = 0$. Now $E(S_1 \cap S_2) = E(S_1) \circ E(S_2)$ follows because $\chi_{S_1 \cap S_2} = \chi_{S_1} \chi_{S_2}$. Similarily, $\chi_{\bigcup S_i} = \sum \chi_{S_i}$ pointwise if the $S_i$ are disjoint.
+\end{example}
+
+
+\part{Appendix}
+
+\chapter{Nets}
 
 In functional analysis, topologies are most naturally formed by describing the convergent sequences in the topology. Unfortunately, the cardinality of some spaces can be too big, so that sequences, being unavoidably countable, are not fine enough to get into the `cracks' of the space. Our salvation results from allowing sequences to be `uncountable'.
 
