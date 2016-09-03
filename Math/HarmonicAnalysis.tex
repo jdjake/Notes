@@ -1,0 +1,742 @@
+\input{../style.tex}
+
+\DeclareMathOperator{\Dom}{Dom}
+
+\title{Harmonic Analysis}
+\author{Jacob Denson}
+
+\begin{document}
+
+\pagenumbering{gobble}
+
+\maketitle
+
+\tableofcontents
+
+\pagenumbering{arabic}
+
+\part{Classical Fourier Analysis}
+
+Deep mathematical knowledge is often found by noticing a subtle symmetry in the phenomena studied. Nowhere is this more clear than in the foundations of harmonic analysis, where we attempt to understand `oscillating' mathematical objects, in one form or another. The resulting ideas offer beautiful insights into many mathematical problems, and the mathematical ideas form the foundations of most of modern analysis. Here we approach the subject from the classical viewpoint, exploring the convergence of Fourier series, and elementary properties of the Fourier transform.
+
+\chapter{Springs, Strings, and Symmetry}
+
+It is almost compulsory to begin our study by looking at the most basic example of oscillating behaviour. We shall see it's dynamics reflected in all that we shall study. In fact, almost every example of real world oscillation follows this behaviour -- be it the pendulum of a grandfather clock or a compressed spring. It is in these systems that force on objects resists motion away from an equilibrium position. Regardless of the equation describing the force, the motion can be linearly approximated by the differential equation
+%
+\[ \ddot{x} = -k^2x \]
+%
+It is well known that solutions of this equation take the form
+%
+\[ x = A \cos(kt) + B \sin(kt) = C \cos(kt + \phi) \]
+%
+where the two representations are connected by the trigonometric equality
+%
+\[ \cos(x + y) = \cos(x) \cos(y) - \sin(x) \sin(y) \]
+%
+No serious effort was required on our part of produce these equations -- they were known to Newton, and to Hooke before him, and require only the basic methods of calculus. But this equation is very important; it forebodes that trigonometric functions will occur over and over again in the study of oscillatory behaviour.
+
+Fourier analysis took form from a more substantial problem. Consider a tethered string vibrating under the influence of tension. There is an obvious connection between the dynamics of the spring and string; both describe motion under the effects of tension. What makes the string's motion tricky to analyze is that the motion is infinite dimensional -- we must describe the motion over a line of infinitely many points. However, as we know from physics, a string is really just a collection of atoms, strung together by certain physical forces. Therefore we should be able to understand the motion of the string by looking at only finitely many particles at a time. This shall turn out to be the key in a great many problems we shall find in the field of Fourier analysis. Infinite dimensional problems are best understood via approximation from the finite dimensional.
+
+Since the horizontal tension is uniform in a string of uniform thickness and mass, there is no horizontal motion in the string. Thus we can describe the position of a string at time $t$ by a real-valued function $u(t,x)$, defined on $\mathbf{R} \times [0,\pi]$. Since the string is tethered down at both ends, $u(t,0) = u(t,\pi) = 0$. To obtain an equation describing $u$, we approximate our system by imagining a system of $n$ evenly distributed particles on the string. We may see the dynamics of the system, as if adjacent particles are strung together by springs, since the tension between adjacent particles can be linearly approximated. Physical experience tells us that as we make the springs smaller, the tension in the spring increases. Thus we assume there is a number $K$ such that the spring constant $k$ of the string segments is equal to $nK$. If $M$ is the total mass of the spring, then the smaller masses have mass $m = M/n$. We can then combine the spring forces to the left and right of each force, and conclude (by Newton's law) that
+%
+\[ \frac{M}{n} \frac{\partial^2 u}{\partial t^2} \approx - nK \left[u\left(t, x + \frac{\pi}{n}\right) - u(t, x)\right] - nK \left[ u\left(t, x - \frac{\pi}{n}\right) - u(t, x) \right] \]
+%
+Taking this approximation to it's limits, and assuming $u \in C^2[0,\pi]$, we find
+%
+\[ \frac{\partial^2 u}{\partial t^2} = \lim_{n \to \infty} -n^2 \frac{K}{M} \left[ u\left(t, x + \frac{\pi}{n}\right) + u\left(t,x - \frac{\pi}{n}\right) - 2u(t,x) \right] = \frac{K}{M} \frac{\partial^2 u}{\partial x^2} \]
+%
+The one dimensional wave equation is the partial differential equation
+%
+\[ \frac{\partial^2 u}{\partial t^2} = \frac{\partial^2 u}{\partial x^2} \]
+%
+a normalized version of the equation describing the string.
+
+If you've seen a string vibrate, you'll notice that it follows a motion with an initial pattern which is perturbed back and forth vertically. These are standing waves, described by a motion of the form
+%
+\[ u(t,x) = \psi(x) \nu(t) \]
+%
+where $\nu$ is periodic. As a start to solving the wave equation, let us find all standing wave solutions to the wave equation. Such an equation must satisfy
+%
+\[ \psi''(x) \nu(t) = \psi(x) \nu''(t) \]
+%
+or
+%
+\[ \frac{\psi''(x)}{\psi(x)} = \frac{\nu''(t)}{\nu(t)} \]
+%
+Since the left side is independent of $t$, and the right side independent of $x$, the value the equations describe must be independent of both $t$ and $x$, hence constant over the entire region to a value $\lambda$, where we obtain the equations\footnote{One small problem with this argument is that $\psi$ and $\nu$ could be zero at certain points, and it is not clear that the region in which $\psi$ and $\nu$ is non-zero is connected, so that this argument works. Technically, this doesn't cause problems, since the method `works' (it gives us solutions to the wave equation), but for complete understanding, we should be a bit more careful.
+
+First assume $u \neq 0$. Then there is $(t,x)$ such that $u(t,x) = \psi(x) \nu(t) \neq 0$. Here it is possible to consider the relation
+%
+\[ \frac{\nu''(t)}{\nu(t)} = \frac{\psi''(x)}{\psi(x)} \]
+%
+By first varying $t$, and then varying $x$, we conclude that $\nu''/\nu$ and $\psi''/\psi$ are equal to some constant $\lambda$ whenever $\nu$ and $\psi$ do not equal zero. Thus $\nu''(t) = \lambda \nu(t)$, except possibly when $\nu(t) = 0$. We shall show that this relation does hold everywhere, by breaking our argument into two cases. First, suppose there is a sequence $t_1, t_2, \dots$ converging to $t$ such that $\nu(t_k) \neq 0$. Then, assuming $\nu \in C^2(\mathbf{R})$, $\nu''(t_k) \to \nu''(t)$, but also $\nu''(t_k) = \lambda \nu(t_k) \to \lambda \nu(t)$, so $\nu''(t) = \lambda \nu(t)$. The second case occurs when $t$ is contained in an interval $(a,b)$ on which $\nu = 0$. In this case, $\nu'' = 0$ (since $\nu$ is constant here), so certainly $\nu''(t) = \lambda \nu (t)$. The same argument shows that the relation holds for $\psi$ everywhere as well.}
+%
+\[ \psi''(x) = \lambda \psi(x)\ \ \ \ \ \nu''(t) = \lambda \nu(t) \]
+%
+We can assume $\lambda < 0$, for otherwise our standing wave solution will not oscillate as required. Thus we return to the solution of the spring equation and find
+%
+\[ \psi(x) = a \cos(mx) + b \sin(mx) \ \ \ \ \ \nu(t) = a' \cos(mt) + b' \sin(mt) \]
+%
+where $m^2 = -\lambda$. Since $\psi(0) = \psi(\pi) = 0$, we have $a = 0$, , and $m \in \mathbf{Z}$. Our final expression can then be rewritten as
+%
+\[ u(t,x) = \sin(mx) (A \cos(mt) + B \sin(mt)) = A \sin(mx) \cos(mt - \phi) \]
+%
+These are the harmonics. If you've ever learned to play music, these are the `pure tones', which overlap to form an interesting and pleasant harmony.
+
+It was Fourier who had the audacity to suggest that one could produce {\it all} solutions to the wave equation from these base tones. Since the wave equation is a {\it linear} partial differential equation, we obtain a family of solutions to the wave equation of the form
+%
+\[ u(t,x) = \sum_{m = 1}^n \sin(mx) (A_m \cos(mt) + B_m \sin(mt)) \]
+%
+Fourier said that these were {\it all} such solutions, provided we take $n \to \infty$. Now given the initial conditions $u(0,x) = f(x)$, we find
+%
+\[ f(x) = \sum_{m = 0}^\infty A_m \sin(mx) \]
+%
+and given the initial velocity $\frac{\partial u}{\partial t}(0,x) = g(x)$, if there's any justice in the world, we should have
+%
+\[ g(x) = \sum_{m = 0}^\infty m B_m \sin(mx) \]
+%
+Finding the expansion of $u$ in terms of harmonic frequencies reduces to decomposing an arbitrary one dimensional function on $[0,\pi]$ into the sum of sinusoidal functions of differing frequency. The first problem of Fourier analysis is the investigation of the limits of this method; How do we obtain the coefficients of the sum from the function itself, and how can we ensure convergence?
+
+The first question can also be approached by formal calculation. Suppose that a function $f$ has an expansion
+%
+\[ f(x) = \sum_{n = 0}^\infty A_n \sin(nx) \]
+%
+Using the fact that
+%
+\[ \int_0^\pi \sin(mx) \sin(nx) = \begin{cases} 0 & m \neq n \\ \frac{\pi}{2} & m = n \end{cases} \]
+%
+We find that
+%
+\begin{align*}
+    \int_0^\pi f(x) \sin(mx) dx &= \int_0^\pi \sum_{n = 0}^\infty A_n \sin(nx) \sin(mx)\\
+    &= \sum_{n = 0}^\infty \int_0^\pi A_n \sin(nx) \sin(mx) = \frac{\pi}{2} A_m
+\end{align*}
+%
+And so given any function $f:[0,\pi] \to \mathbf{R}$, a reasonable candidate for each $A_n$ is
+%
+\[ \frac{2}{\pi} \int_0^\pi f(x) \sin(mx) \]
+%
+These values will be known as the Fourier coefficients of the function $f$.
+
+\section{The Heat Equation}
+
+Now we come to a quite different physical situation. Suppose we have a two-dimensional region $D$, upon which temperature fluctuates. What differential equation describes the change of temperature over time? Let $u(t,x,y)$ describe the temperature at a certain time and position. Consider a small square $S$ centered at $x$, with sides parallel to the axis and with side lengths $2h$. Then the total heat in this square at time $t$ is
+%
+\[ H(t) = \int_S u(t,x,y)\ dx\ dy \approx 4h^2 u(t,x,y) \]
+%
+After differentiating, we find
+%
+\[ H'(t) \approx 4h^2 \frac{\partial u}{\partial t}(t,x,y) \]
+%
+Newton's law of cooling tells us that the heat flow at a point is proportional to the negative of the gradient. To find the total amount of heat leaving the square, we perform a line integral around the sides of the square. Thus
+%
+\begin{align*} H'(t) &= \int_{\partial S} \left( \frac{\partial u}{\partial x}, \frac{\partial u}{\partial y} \right) \cdot n\ dS\\
+&\approx 2h \left[\frac{\partial u}{\partial x}(t,x+h) - \frac{\partial u}{\partial x}(t,x-h) + \frac{\partial u}{\partial y}(t,x+h) - \frac{\partial u}{\partial y}(t,x-h)\right] \end{align*}
+%
+Now we approximate to the extreme to obtain equality.
+%
+\[ \frac{\partial u}{\partial t} = \lim_{h \to 0} \frac{1}{2h} \left[\frac{\partial u}{\partial x}(t,x+h) - \frac{\partial u}{\partial x}(t,x-h) + \frac{\partial u}{\partial y}(t,x+h) - \frac{\partial u}{\partial y}(t,x-h)\right] \]
+%
+Using the same trick as in the string equation, we find that
+%
+\[ \frac{\partial u}{\partial t} = \frac{\partial^2 u}{\partial x^2} + \frac{\partial^2 u}{\partial y^2} = \Delta u \]
+%
+where $\Delta$ is the Laplacian operator. This partial differential equation is the heat equation.
+
+To simplify again, we start by looking at only the steady state heat equations, those functions $u$ satisfying $\Delta u = 0$. Normally, we fix the boundary of a set $C$, and attempt to find a solution on the interior satisfying the boundary condition - physically, we fix a temperature on the boundary, wait for a long time, and see how the heat disperses on the interior. For now, let's consider functions on $\mathbf{D}$, with boundary $S^1$. In this domain, we can switch to polar coordinates, in which the Laplacian operator takes the form
+%
+\[ \Delta u = \frac{\partial^2 u}{\partial r^2} + \frac{1}{r} \frac{\partial u}{\partial r} + \frac{1}{r^2} \frac{\partial^2 u}{\partial \theta^2} \]
+%
+We then apply the method of separation of coordinates. If $\Delta u = 0$, then
+%
+\[ r^2 \frac{\partial^2 u}{\partial r^2} + r \frac{\partial u}{\partial r} = - \frac{\partial^2 u}{\partial \theta^2} \]
+%
+Writing $u(r,\theta) = f(r)g(\theta)$, the equation above reads
+%
+\[ r^2 f''(r) g(\theta) + r f'(r) g(\theta) = - f(r) g''(\theta) \]
+%
+Or, separating variables,
+%
+\[ \frac{r^2 f''(r) + r f'(r)}{f(r)} = - \frac{g''(\theta)}{g(\theta)} \]
+%
+In which case we find the value is fixed, and equal to $\lambda^2$ for some $\lambda$ (If the constant value was negative, $g$ wouldn't be periodic). Solving these equations tells us
+%
+\[ g''(\theta) = - \lambda g(\theta)\ \ \ \ \ \ \ r^2 f''(r) + r f'(r) - \lambda f(r) = 0 \]
+%
+Then we have
+%
+\[ g(\theta) = A \cos(\lambda \theta) + B \sin(\lambda \theta) \]
+%
+Since $g$ is $2\pi$ periodic, we require $\lambda$ to be an integer $m$. The equation for $f$ can be solved when $m \neq 0$ to be
+%
+\[ f(r) = A r^m + B r^{-m} \]
+%
+and for physical reasons (and because we want to solve the equation on all of $\mathbf{D}$), we force $f(r)$ to be bounded at zero, so $B = 0$, and we find the only solutions with separable variables are
+%
+\[ u(r,\theta) = [A \cos(m \theta) + B \sin(m \theta)] r^m = A \cos(m \theta - \phi) r^m \]
+%
+When $m = 0$, the solution is just constant, because the solutions to $r f''(r) + f'(r) = 0$. here all solutions are described by the equation $f(r) = A \log(r) + B$, which is unbounded near the origin unless $A = 0$. After our previous work, we would hope that all solutions are of the form
+%
+\[ u(r,\theta) = \sum_{m = 0}^\infty [A_m \cos(m \theta) + B_m \sin(m \theta)] r^m \]
+%
+If we know the values of $u$ at $r = 1$, then we may apply the same expansion technique of the wave equation, except now we are trying to expand a functions on $[-\pi,\pi]$ in sines and cosines. Applying a formal integration trick, given a particular function $f(\theta)$ on $[-\pi,\pi]$, the coefficents of the expansion should be
+%
+\[ A_m = \frac{1}{\pi} \int_{-\pi}^\pi f(t) \sin(t)\ dt\ \ \ \ \ \ \ \ \ \ B_m = \frac{1}{\pi} \int_{-\pi}^\pi f(t) \cos(t)\ dt \]
+%
+If we begin with a function on $[0,\pi]$, and enlarge the domain to $[-\pi,\pi]$ by making the function odd, then the cosine terms cancel out, and we end up with the same expansion as on $[0,\pi]$. Since an arbitrary function $f$ can be written as the sum of odd and even functions, expansion on $[-\pi,\pi]$ in terms of $\sin$ and $\cos$ is no more general than an expansion on $[0,\pi]$.
+
+%\begin{example}
+%    This method can be used to find all harmonic functions $f$ on a rectangle $[0,\pi] \times [0,1]$, such that $f(0,y) = f(\pi,y) = 0$. Let us first attempt to find all separable solutions $f(x,y) = u(x) v(y)$. Then the equations defining harmonic functions tell us that
+%    %
+%    \[ u''v + v''u = 0 \]
+%    %
+%    or
+%    %
+%    \[ \frac{u''}{u} = - \frac{v''}{v} = - \lambda^2 \]
+%    %
+%    (we assume the constant factor is negative, since the constraints on $u$ would force $f$ to be trivial otherwise). Then we have
+%    %
+%    \[ u'' = - \lambda^2 u \]
+%    %
+%    so $u(x) = A \cos(\lambda x) + B \sin(\lambda x)$. The constraints that $u(0) = u(\pi) = 0$ force $A = 0$, and $\lambda \in \mathbf{Z}$. We may similarily solve the equation
+%    %
+%    \[ v'' = \lambda^2 v \]
+%    %
+%    to conclude $v(y) = M e^{\lambda y} + N e^{- \lambda y}$, so we obtain the solution set
+%    %
+%    \[ f(x,y) = \sin(n x) (Ae^{n y} + Be^{-ny}) \]
+%    %
+%    where $n \in \mathbf{Z}$, $A,B \in \mathbf{R}$.
+
+%    Now suppose we can write
+%    %
+%    \[ f(x,y) = \sum_{n = -\infty}^\infty \sin(nx) (A_n e^{ny} + B_n e^{-ny}) \]
+%    %
+%    Then
+%    %
+%    \[ f_0(x) = \sum_{n = -\infty}^\infty (A_n + B_n) \sin(nx) \]
+%    \[ f_1(x) = \sum_{n = -\infty}^\infty (A_n e^n + B_n e^{-n}) \sin(nx) \]
+%    %
+%    So if $\widehat{f_0}$ and $\widehat{f_1}$ denote the sine coefficients of $f_0$ and $f_1$, then
+%    %
+%    \[ A_n + B_n = \widehat{f_0}(n)\ \ \ \ \ A_n e^n + B_n e^{-n} = \widehat{f_1}(n) \]
+%    %
+%    \[ A_n = \frac{\widehat{f_1}(n) - \widehat{f_0}(n) e^{-n}}{e^{n} - e^{-n}} \]
+%    %
+%    \[ B_n = \widehat{f_0}(n) - \frac{\widehat{f_1}(n) - \widehat{f_0}(n) e^{-n}}{e^{n} - e^{-n}} = \frac{e^n \widehat{f_0}(n) - \widehat{f_1}(n)}{e^n - e^{-n}} \]
+%    %
+%    Thus
+%    %
+%    \begin{align*}
+%        f(x,y) &= \sum_{n = -\infty}^\infty \sin(nx) \left( \frac{(\widehat{f_1}(n) - \widehat{f_0}(n) e^{-n}) e^{ny} + (e^n \widehat{f_0}(n) - \widehat{f_1}(n)) e^{-ny}}{e^n - e^{-n}} \right)\\
+%        &= \sum_{n = -\infty}^\infty \frac{\sin(nx)}{e^n - e^{-n}} [(e^{n(1-y)} - e^{n(y-1)}) \widehat{f_0}(n) + (e^{ny} - e^{-ny}) \widehat{f_1}(n)]\\
+%        &= \sum_{n = -\infty}^\infty \left( \frac{\sinh n(1-y)}{\sinh n} \widehat{f_0}(n) + \frac{\sinh ny}{\sinh n} \widehat{f_1}(n) \right) \sin(nx)
+%    \end{align*}
+%\end{example}
+
+\section{Exponentials and Euler}
+
+We are working with $2 \pi$-periodic functions $f: \mathbf{R} \to \mathbf{R}$, and attempting to decompose them into summations of sines and cosines, but we have a much more elegant representation. First, we note the correspondence between functions on $S^1$; Given $g$, defined on $S^1$ (which is often also denoted as $\mathbf{T}$), we obtain a $2\pi$-periodic function $f$ defined by $f(t) = g(e^{it})$. Conversely, we may obtain $g$ from $f$ by the same formula. An expansion of $f: [-\pi,\pi] \to \mathbf{R}$ in the form
+%
+\[ f(t) = \sum_{k = 0}^\infty A_k \cos(kt) + \sum B_k \sin(kt) \]
+%
+Leads to an expansion of $g: S^1 \to \mathbf{R}$ (writing $z = e^{it}$, and using the euler expansion $e^{it} = \cos(t) + i \sin(t)$) of the form
+%
+\begin{align*}
+    g(z) &= \sum_{k = 0}^\infty A_k \Re[z^k] + B_k \Im[z^k]\\
+    &= \sum_{k = 0}^\infty A_k \left( \frac{z^k + z^{-k}}{2} \right) - i B_k \left( \frac{z^k - z^{-k}}{2} \right)\\&= \sum_{k = -\infty}^\infty C_k z^k
+\end{align*}
+%
+so a Fourier expansion is really just a power series expansion in disguise. Our function $f$ may then be expressed as
+%
+\[ f(t) = \sum_{k = -\infty}^\infty C_k e^{kit} \]
+%
+with $C_{-k} = \overline{C_k}$, so that the complex part of the sum to cancel out. In this form, we see that there is no harm in generalizing our reach to functions from $[-\pi, \pi]$ to $\mathbf{C}$. Indeed, given a complex-valued function $f = u + iv$, if we can expand $u$ and $v$ in complex exponentials, then we can expand $f$ in complex exponentials too, by adding up the two series. If we are given $f(t)$, the coefficients $C_k$ can be found by the expansion
+%
+\[ C_k = \frac{1}{2\pi} \int_{-\pi}^\pi f(t) e^{-kit} dt \]
+%
+Thus a function $f: [-\pi, \pi] \to \mathbf{C}$ gives us a function
+%
+\[ \hat{f}(n) = \frac{1}{2\pi} \int_{-\pi}^\pi f(t) e^{-kit} dt \]
+%
+defined on $\mathbf{Z}$, called the Fourier series of $f$. For notational simplicity, we shall define, for functions $f: S^1 \to \mathbf{C}$, the integral
+%
+\[ \int_{S^1} f(z)\ dz = \frac{1}{2\pi} \int_0^{2\pi} f(e^{it})\ dt \]
+%
+so we are essentially just averaging out $f$ over the circle. The notation for the Fourier transform becomes
+%
+\[ \hat{f}(n) = \int_{S^1} f(z) z^{-n} \]
+%
+the most austere and elegant way to write the transform. In the sequel, our core goal is to analyze the relation of $\hat{f}$ to $f$, most notably the convergence of
+%
+\[ \sum_{n = -\infty}^\infty \hat{f}(n) z^n \]
+%
+to the function $f$.
+
+Before we get to the real work, let's start by computing some Fourier series, to use as examples. We also illustrate the convergence properties of the series, which we shall look at in more detail later. The brunt of the calculation is left as an exercise.
+
+\begin{example}
+    Consider the function $f$, defined on $[0,\pi]$ by $f(x) = x(\pi - x)$, made odd so that the function is defined on $[-\pi,\pi]$. The Fourier series can be calculated as
+    %
+    \[ \hat{f}(n) = \begin{cases} \frac{-4i}{\pi n^3} & n\ \text{odd} \\ 0 & n\ \text{even} \end{cases} \]
+    %
+    which we may rewrite as
+    %
+    \[ f(x) \sim \sum_{n\ \text{odd}} \frac{4i}{\pi n^3} [e^{nix} - e^{-nix}] = \sum_{n\ \text{odd}} \frac{8}{\pi n^3} \sin(nx) \]
+    %
+    This sum converges absolutely and uniformly on the entire real line.
+\end{example}
+
+\begin{example}
+    The tent function
+    %
+    \[ f(x) = \begin{cases} 1 - \frac{|x|}{\delta} & : |x| < \delta \\ 0 & : |x| \geq \delta \end{cases} \]
+    %
+    has a Fourier expansion
+    %
+    \[ \hat{f}(n) = \frac{1 - \cos(n\delta)}{\delta \pi n^2} \]
+    %
+    for $n \neq 0$, and $\hat{f}(0) = \frac{\delta}{2\pi}$, so
+    %
+    \[ f(x) \sim \frac{\delta}{2\pi} + \sum_{n \neq 0} \frac{1 - \cos(n\delta)}{\pi \delta n^2} e^{inx} = \frac{\delta}{2 \pi} + 2 \sum_{n = 1}^\infty \frac{1 - \cos(n\delta)}{\pi \delta n^2} \cos(nx) \]
+    %
+    This sum also converges absolutely and uniformly.
+\end{example}
+
+\begin{example}
+    Consider the characteristic function
+    %
+    \[ \chi_{(a,b)}(x) = \begin{cases} 1 & : x \in (a,b) \\ 0 & : x \not \in (a,b) \end{cases} \]
+    %
+    Then
+    %
+    \[ \widehat{\chi_{(a,b)}}(n) = \frac{1}{2\pi} \int_a^b e^{-inx} = \frac{e^{-ina} - e^{-inb}}{2\pi i n} \]
+    %
+    Hence we may write
+    %
+    \begin{align*}
+        \chi_{(a,b)}(x) &= \frac{b-a}{2\pi} + \sum_{n \neq 0} \frac{e^{-ina} - e^{-inb}}{2 \pi i n} e^{inx}\\
+        &= \frac{b-a}{2\pi} + \sum_{n = 1}^\infty \frac{\sin(nb) - \sin(na)}{\pi n} \cos(nx) + \frac{\cos(na) - \cos(nb)}{\pi n} \sin(nx)
+    \end{align*}
+    %
+    This sum does not converge absolutely for any value of $x$ (except when $a$ and $b$ are chosen trivially). To see this, note that
+    %
+    \[ \left|\frac{e^{-inb} - e^{-ina}}{2 \pi n}\right| = \left| \frac{1 - e^{in(b-a)}}{2 \pi n} \right| \geq \left| \frac{\sin(n(b-a))}{2 \pi n} \right| \]
+    %
+    so that it suffices to show $\sum |\sin(nx)| n^{-1} = \infty$ for every $x \not \in \pi \mathbf{Z}$. This follows because enough of the values of $|\sin(nx)|$ are large, so that the divergence of $\sum n^{-1}$ become applicable. First, assume $x \in (0,\pi/2)$. If
+    %
+    \[ m \pi - x/2 < nx < m \pi + x/2 \]
+    %
+    for some $m \in \mathbf{Z}$, then
+    %
+    \[ m \pi + x/2 < (n+1)x < m \pi + 3x/2 < (m+1) \pi - x/2 \]
+    %
+    so that if $nx \in (-x/2,x/2) + \pi \mathbf{Z}$, $(n+1)x \not \in (-x/2,x/2) + \pi \mathbf{Z}$. For $y$ outside of $(-x/2,x/2) + \pi \mathbf{Z}$, we have $|\sin(y)| > |\sin(x/2)|$, and therefore for any $n$,
+    %
+    \[ \frac{|sin(nx)|}{n} + \frac{|\sin((n+1)x)|}{n+1} > \frac{|\sin(x/2)|}{n+1} \]
+    %
+    and thus
+    %
+    \begin{align*}
+        \sum_{n = 1}^\infty \frac{|\sin(nx)|}{n} &= \sum_{n = 1}^\infty \frac{|\sin(2nx)|}{2n} + \frac{|\sin((2n+1)x)|}{2n+1}\\
+        &> |\sin(x/2)| \sum_{n = 1}^\infty \frac{1}{2n+1} = \infty
+    \end{align*}
+    %
+    In general, we may replace $x$ with $x - k \pi$, with no effect to the values of the sum, so we may assume $0 < x < \pi$. If $\pi/2 < x < \pi$, then
+    %
+    \[ \sin(nx) = \sin(n(\pi - x)) \]
+    %
+    and $0 < \pi - x < \pi/2$, completing the proof, except when $x = \pi$, in which case
+    %
+    \[ \sum_{n = 1}^\infty \left| \frac{1 - e^{in \pi}}{2 \pi n} \right| = \sum_{n\ \text{even}} \left| \frac{1}{\pi n} \right| = \infty \]
+    %
+    Thus the convergence of Fourier series need not be absolute.
+\end{example}
+
+
+
+
+\chapter{Introductory Results}
+
+Let's focus in on the problem we introduced in the last chapter. For each function $f: \mathbf{T} \to \mathbf{C}$, we have an associated series
+%
+\[ \sum_{n = -\infty}^\infty a_n e^{inx} \]
+%
+known as a {\bf trigonometric series}. We can also consider finite sums
+%
+\[ \sum_{n = -N}^N a_n e^{inx} \]
+%
+which we call a {\bf trigonometric polynomial}. The largest value of $n$ such that $|a_n| + |a_{-n}| \neq 0$ is known as the {\bf degree} of the polynomial. At this point, we haven't deduced a reason for the equation
+%
+\[ f(x) = \sum_{n = -\infty}^\infty \hat{f}(n) e^{nix} \]
+%
+to hold in any reasonable way. First, we define the $m$'th partial sum
+%
+\[ S_m(f)(x) = \sum_{n = -m}^m \hat{f}(n) e^{inx} \]
+%
+The first relation we can expect is pointwise convergence; is it true that for every $x$,
+%
+\[ \lim_{m \to \infty} S_m(f)(x) = f(x) \]
+%
+Perhaps if we're lucky, we'll get uniform convergence as well. Unfortunately, we will show that there are even continuous functions whose partial sums diverge, so we must search for more exotic methods of convergence.
+
+To begin with, we shall begin with a brief look at the properties of the association of $f$ and $\hat{f}$. For a start, since the operation of integration is linear, we know that
+%
+\[ \widehat{(af + bg)}(n) = a \hat{f}(n) + b \hat{g}(n) \]
+%
+If we rotate the argument of a function, writing $g(z) = f(zw)$, for $w \in S^1$, then
+%
+\[ \hat{g}(n) = \int_{S^1} f(zw) z^{-n} dz = \int_{S^1} f(z) (zw^{-1})^{-n} = w^n \hat{f}(n) \]
+%
+If we take complex conjugates, we find
+%
+\[ \hat{\overline{f}}(n) = \int_{S^1} \overline{f}(z) z^{-n} dz = \overline{\int_{S^1} f(z) z^n dz} = \overline{\hat{f}(-n)} \]
+%
+The relations among the Fourier coefficients essentially holds because of the rotational, scaling, and inversion symmetry of the circle. Note that this shows us that for real valued functions, the $n$'th Fourier coeffient is the conjugate of the $-n$'th coefficient.
+
+If the Fourier series of every function converged pointwise, we could conclude that if $f$ and $g$ have the same fourier coefficients, they must necessarily be equal. This is clearly not true, for if we alter a function at a point, the fourier series, defined by integrals, remains the same. Nonetheless, if a function is continuous editing the function at a point will break continuity, so we may have some hope.
+
+\begin{theorem}
+    If the Fourier coefficients of a function vanishes, then the function vanishes at every point of continuity.
+\end{theorem}
+\begin{proof}
+    We shall begin by proving this for real valued functions. Consider a function $f$ whose Fourier coefficients vanish. Then for every trigonometric polynomial $P(x) = \sum_{n = -N}^N a_n e^{-nix}$, we have
+    %
+    \[ \int_{-\pi}^\pi f(x) P(x) dx = 2 \pi \sum a_n \hat{h}(n) = 0 \]
+    %
+    Suppose that $f$ is continuous at zero, and assume without loss of generality that $f(0) > 0$. Pick $\delta$ such that if $|x| < \delta$, $|f(x)| > f(0)/2$. Consider the trigonometric polynomial
+    %
+    \[ P(x) = \varepsilon + \cos x = \varepsilon + \frac{e^{ix} + e^{-ix}}{2} \]
+    %
+    where $\varepsilon$ is chosen small enough that $P(x) > A > 1$ for $|x| < \delta/2$, and $P(x) < B < 1$ for $|x| \geq \delta$. Consider the series of trigonometric polynomials
+    %
+    \[ P_n(x) = (\varepsilon + \cos x)^n \]
+    %
+    For which we have
+    %
+    \begin{align*}
+        \left| \int_{-\pi}^\pi P_n(x) f(x) dx \right| &\geq \left| \int_{|x| < \delta/2} P_n(x) f(x) dx \right| - \left| \int_{|x| \geq \delta/2} P_n(x) f(x) dx \right|\\
+        &> \delta A^n \frac{f(0)}{2} - B^n \| f \|_{\infty}
+    \end{align*}
+    %
+    The left side is always equal to zero, regardless of $n$, whereas the right side tends to infinity as we take $n$ to extreme values.
+
+    In general, for an arbitrary point of continuity $x$, we replace $f$ with the function $g(y) = f(x+y)$. Then
+    %
+    \[ \hat{g}(n) = e^{nix} \hat{f}(n) = 0 \]
+    %
+    So the Fourier coefficients of $g$ vanish at $0$, hence $g(0) = f(x) = 0$. For an arbitrary function $f(x) = u(x) + i v(x)$, we have
+    %
+    \[ \hat{u}(n) = \frac{\hat{f}(n) + \widehat{\overline{f}}(n)}{2} = \frac{\hat{f}(n) + \overline{\hat{f}(-n)}}{2} = 0 \]
+    %
+    \[ \hat{v}(n) = \frac{\hat{f}(n) - \widehat{\overline{f}}(n)}{2i} = \frac{\hat{f}(n) - \overline{\hat{f}(-n)}}{2i} = 0 \]
+    %
+    so $u = v = 0$.
+\end{proof}
+
+
+\begin{corollary}
+    If two continuous functions $f$ and $g$ have the same Fourier coefficients, then $f = g$.
+\end{corollary}
+\begin{proof}
+    Because then $f - g$ is a continuous function whose Fourier coefficients vanish, so $f - g = 0$.
+\end{proof}
+
+We also have a first positive result for convergence.
+
+\begin{corollary}
+    If a continuous function $f$ has absolutely convergent Fourier coefficients, then it's Fourier series converges uniformly to $f$.
+\end{corollary}
+\begin{proof}
+    If $\sum |\hat{f}(n)| < \infty$, then the functions $S_m(f)$ converge uniformly to a function $g$, which necessarily must be continuous. We may apply uniform convergence again to conclude
+    %
+    \[ \hat{g}(n) = \lim_{m \to \infty} \frac{1}{2\pi} \int_{-\pi}^\pi S_m(f)(t) e^{-int} = \hat{f}(n) \]
+    %
+    Hence $\hat{f} = \hat{g}$, so $f = g$.
+\end{proof}
+
+\section{Methods of Summation}
+
+The standard method of summation suffices for much of analysis. To recall, given a sequence $a_0, a_1, \dots$, we define the infinite sum as the limit of partial sums.
+%
+\[ \sum_{k = 0}^\infty a_k = \lim_{n \to \infty} \sum_{k = 0}^n a_k \]
+%
+Similarily,
+%
+\[ \sum_{k = -\infty}^\infty a_k = \sum_{k = 0}^\infty a_k + a_{-k} = \lim_{n \to \infty} \sum_{k = -n}^n a_k \]
+%
+However, we shall see that this method of summation is not sufficient for understanding the convergence of fourier series, which we have seen manifest in the dirichlet kernel not vanishing away from the origin.
+
+Thus we must introduce more subtle methods of convergence. The first is due to Cesaro. Rather than considering limits of partial sums, we consider limits of averages of sums. Letting $s_n = \sum_{k = 0}^n a_k$, we define the Cesaro summation as
+%
+\[ \lim_{n \to \infty} \frac{s_0 + \dots + s_n}{n+1} = \lim_{n \to \infty} \sigma_n \]
+%
+If the normal summation exists, then the Cesaro limit exists, and is equal to the original sum. However, the Cesaro summation is stronger, for if we consider the sequence
+%
+\[ 1,-1,1,-1,1,\dots \]
+%
+Then the partial sums do not converge, but the Cesaro sum converges to zero.
+
+Finally, we consider Abel summation. Given a sequence $\{ a_i \}$, we can consider the power series $\sum a_k r^k$. If this converges in $(-1,1)$, we can ask if $\lim_{r \to 1} \sum a_k r^k$, which should be `almost like' $\sum a_k$. If this limit exists, we call in the Abel summation.
+
+\begin{theorem}
+    If a sequence is Cesaro summable, it is Abel summable, and to the same value.
+\end{theorem}
+\begin{proof}
+    Let $\{ a_i \}$ be a Cesaro summable sequence, which we may without loss of generality assume converges to $0$. Now $(n + 1)\sigma_n - n \sigma_{n-1} = s_n$, so
+    %
+    \[ (1 - r)^2 \sum_{k = 0}^n (k + 1) \sigma_k r^k = (1 - r) \sum_{k = 0}^n s_k r^k = \sum_{k = 0}^n a_k r^k \]
+    %
+    As $n \to \infty$, the left side tends to a well defined value for $r < 1$, hence the same is true for $\sum_{k = 0}^n a_k r^k$. Given $\varepsilon > 0$, let $N$ be large enough that $|\sigma_n| < \varepsilon$ for $n > N$, and let $M$ be a bound for all $|\sigma_n|$. Then
+    %
+    \begin{align*}
+        \left| (1 - r)^2 \sum_{k = 0}^\infty (k + 1) \sigma_k r^k \right| &\leq (1 - r)^2 \left( \sum_{k = 0}^N (k + 1) |\sigma_k| r^k + \varepsilon \sum_{k = N+1}^\infty (k + 1) r^k \right)\\
+        &= (1 - r)^2 \left( \sum_{k = 0}^N (k + 1) (|\sigma_k| - \varepsilon) r^k + \varepsilon \left[ \frac{r^{n+1}}{1-r} + \frac{1}{(1 - r)^2} \right] \right)\\
+        &\leq (1 - r)^2 M \sum_{k = 0}^N (k + 1) r^k + \varepsilon r^{n+1} (1 - r) + \varepsilon\\
+        &\leq (1 - r)^2 M \frac{(N+1)(N+2)}{2} + \varepsilon r^{n+1} (1 - r) + \varepsilon
+    \end{align*}
+    %
+    Fixing $N$, and letting $r \to 1$, we may make the complicated sum on the end as small as possible, so the absolute value of the infinite sum is less than $\varepsilon$. Thus the Abel limit converges to zero.
+\end{proof}
+
+To relate Abel summation to fourier analysis, we express the limit of the abel sum as a limit of convolutions. If
+%
+\[ f(z) \sim \sum a_i z^i \]
+%
+then formally, we write
+%
+\[ f(z) \sim \lim_{r \to 1} \sum_{i = -\infty}^\infty a_i r^{|i|} z^i = \left( \sum a_i z^i \right) * \left( \sum r^{|i|} z^i \right) \]
+%
+Now for $r < 1$, and $z \in S^1$,
+%
+\[ \sum_{i = -\infty}^\infty r^{|i|} z^i = 1 + \frac{rz}{1 - rz} + \frac{rz^{-1}}{1 - rz^{-1}} = \frac{1 - r^2}{1 + r^2 - 2r \Re[z]} \]
+%
+We define the Poisson kernel $P_r$ by this formula, and by convergence properties we have already established, the abel limit of the fourier series is
+%
+\[ \lim_{r \to 1} (f * P_r) \]
+%
+Thankfully, we find $P_r$ is a good kernel, and the Abel means work nicely with Fourier series.
+
+
+
+\section{A Continuous Function with Divergent Fourier Series}
+
+Analysis was built to analyze continuous functions, so we would hope the method of fourier expansion would work for all continuous functions. Unfortunately, this is not so. The behaviour of the Dirichlet kernel away from the origin already tells us that the convergence of Fourier series is subtle. We shall take advantage of this to construct a continuous function with divergent fourier series at a point.
+
+To start with, we shall consider the series
+%
+\[ f(t) \sim \sum_{n \neq 0} \frac{e^{int}}{n} \]
+%
+where $f$ is an odd function equaling $i(\pi - t)$ for $t \in (0,\pi]$. Such a function is nice to use, because its Fourier representation is simple, yet very close to diverging. Indeed, if we break the series into the pair
+%
+\[ \sum_{n = 1}^\infty  \frac{e^{int}}{n}\ \ \ \ \ \ \ \ \ \ \sum_{n = -\infty}^{-1} \frac{e^{int}}{n} \]
+%
+Then these series no longer are the Fourier representations of a Riemann integrable function. For instance, if $g(t) \sim \sum_{n = 1}^\infty \frac{e^{int}}{n}$, then the Abel means
+
+$A_r(f)(t) = $
+
+
+\chapter{The Fourier Transform}
+
+For the last 4 chapters, we have been discussing the role of Fourier analysis on $[-\pi,\pi]$. Is there any way to extend this to functions on $(-\infty,\infty)$? If $f$ is such a function, we can certainly compute the fourier expansion by restricting $f$ to $[-\pi,\pi]$, though there is no guarantee that the fourier expansion will converge outside of $[-\pi,\pi]$, to a function that looks anything like $f$. In general, we can also expand the function on $[-x,x]$, obtaining expansions of the form
+%
+\[ f(t) \sim \sum_{n = -\infty}^\infty \frac{a_n}{2x} e^{nit/x} \]
+%
+where
+%
+\[ a_n = \int_{-x}^x f(t) e^{-yit} dt \]
+%
+as we take $x$ to $\infty$, we might expect the limit of the expansions on $[-x,x]$ to converge on all of $\mathbf{R}$, provided they converge to anything meaningful. The trick to guessing the convergence is to view these expansions as Riemann sums, sampling the {\bf Fourier transform}
+%
+\[ \widehat{f}(x) = \int_{-\infty}^\infty f(t) e^{-tix} dt \]
+%
+which results in the relation
+%
+\[ f \sim \int_{-\infty}^\infty \widehat{f}(y) e^{yit} dy \]
+%
+This is the inversion formula, which essentially says that $\widehat{f}$ is another representation of $f$ (for we may obtain $f$ uniquely, given that we know $\widehat{f}$). The duality of a function and its Fourier transform shall be the main focus in this chapter.
+
+For a general $f$, we may not even be able to define $\widehat{f}$ for all real values, so it is hopeless to pursue the inversion formula for all functions. Thus, to understand the Fourier transform, we restrict ourselves to certain subclasses of all functions. This also gives us insight into the transform, for it tells us upon which subspaces the transformation performs well. First, we recall the definition of an integral over $\mathbf{R}$.
+%
+\[ \int_{-\infty}^\infty f(x) dx = \lim_{y \to \infty} \int_{-y}^y f(x) dx \]
+%
+As should be expected this far into analysis, these types of limits do not play nicely with certain manipulations which will soon become essential. In the theory of series, we restrict our understanding to absolutely converging sequences; in integration, the corresponding objects are functions $f$ such that
+%
+\[ \int_{-\infty}^\infty |f(x)| dx < \infty \]
+%
+such a function shall be called absolutely integrable. It is then clear that $\int f(x) dx$ exists, because if
+%
+\[ \int_{-\infty}^\infty |f(x)| - \int_{-a}^a |f(x)| < \varepsilon \]
+%
+Then for $b > a$,
+%
+\[ \left| \int_{-b}^b f(x) dx - \int_{-a}^a f(x) dx \right| \leq \int_{-b}^{-a} |f(x)| dx + \int_a^b |f(x)| dx < \varepsilon \]
+%
+This is essentially the same proof as that for the convergence of absolutely convergent series.
+
+If $f(x)$ is an absolutely integrable function, then $f(x) e^{-nix}$ is absolutely integrable, since $|e^{-nix}| = 1$ for all $x$. Thus we see that the Fourier transform is well defined for all real values. However, we still may not be able to interpret the inversion formula in this setting, because $\widehat{f}$ may not be absolutely integrable. In the theory of Fourier series, we found that the smoothness of $f$ had a direct relationship with the decay of $\widehat{f}$. We find respite in the refinement of our space of functions, considered by Schwartz and very useful in the analysis of the Fourier transform.
+
+The {\bf Schwartz space} consists of all smooth functions $f$ (continous derivatives of all orders) which rapidly decrease at infinity. That is, for any $k > 0$, $l \in \mathbf{Z}$,
+%
+\[ \sup |x|^k |f^{(l)}(x)| < \infty \]
+%
+We denote this space by $\mathcal{S}$. The Schwartz space is closed under addition, scalar multiplication, differentiation, and multiplication by polynomials.
+
+It is not even obvious that $\mathcal{S}$ contains functions other than those which are constant, but there is a central example. Consider the Gaussian, defined by
+%
+\[ f(x) = e^{-x^2} \]
+%
+s
+
+\begin{lemma}
+    If $f$ is an increasing function which tends to $\infty$, and $g$ is a decreasing function which tends to $-\infty$, then for any absolutely integrable $h$,
+    %
+    \[ \lim_{x \to \infty} \int_{g(x)}^{f(x)} h = \int_{-\infty}^\infty h \]
+\end{lemma}
+\begin{proof}
+    We shall prove the theorem assuming $h \geq 0$. In this case the limit above is increasing in $x$, and since
+    %
+    \[ \int_{g(x)}^{f(x)} h \leq \int_{-M}^{M} h \leq \int_{-\infty}^\infty h \]
+    %
+    taking limits of both sides, we find
+    %
+    \[ \lim_{x \to \infty}  \int_{g(x)}^{f(x)} h \leq \int_{-\infty}^\infty h \] 
+    %
+    Similarily, if we take $x$ big enough that $N \leq f(x)$, $g(x) \leq -N$, then
+    %
+    \[ \int_{g(x)}^{f(x)} h \geq \int_{-N}^N h \]
+    %
+    As we take $x$ to $\infty$, we may also increase $N$ to $\infty$, and we find
+    %
+    \[ \lim_{x \to \infty} \int_{g(x)}^{f(x)} h \geq \int_{-\infty}^\infty h \]
+    %
+    and now we've squeezed the limit between the same value. The general case where $h$ is not necessarily positive results by comparing the growth of $h$ with the growth of $|h|$, as in the last theorem.
+\end{proof}
+
+\begin{corollary}[Translation Invariance]
+    If $f$ is absolutely integrable, and $h \in \mathbf{R}$, then
+    %
+    \[ \int_{-\infty}^\infty f(x) dx = \int_{-\infty}^\infty f(x + h) dx \]
+\end{corollary}
+
+\begin{lemma}
+    If $\delta > 0$, and $f$ is integrable on $\mathbf{R}$, then
+    %
+    \[ \int_{-\infty}^\infty f(\delta x) dx = \frac{1}{\delta} \int_{-\infty}^\infty f(x) \]
+\end{lemma}
+\begin{proof}
+    By the change of variables formula,
+    %
+    \[ \int_{-N}^N f(\delta x) dx = \frac{1}{\delta} \int_{-\delta N}^{\delta N} f(y) dy \]
+    %
+    We then take limits of both sides of the equation.
+\end{proof}
+
+We say a continuous function $f$ is of {\bf moderate decrease} if $|f| = O \left(\frac{1}{1 + |x|^2} \right)$. Certainly then $f$ is absolutely integrable.
+
+\begin{theorem}
+    If $f$ is of moderate decrease, then
+    %
+    \[ \lim_{h \to 0} \int_{-\infty}^\infty |f(x - h) - f(x)| dx = 0 \]
+\end{theorem}
+
+\chapter{Applications}
+
+\section{The Wirtinger Inequality on an Interval}
+
+\begin{theorem}
+    Given $f \in C^1[-\pi,\pi]$ with $\int_{-\pi}^\pi f(t) dt = 0$,
+    %
+    \[ \int_{-\pi}^\pi |f(t)|^2 \leq \int_{-\pi}^\pi |f'(t)|^2 \]
+\end{theorem}
+\begin{proof}
+    Consider the fourier series
+    %
+    \[ f(t) \sim \sum a_n e^{nit}\ \ \ \ \ f'(t) \sim \sum in a_n e^{nit} \]
+    %
+    Then $a_0 = 0$, and so
+    %
+    \[ \int_{-\pi}^\pi |f(t)|^2\ dt = 2 \pi \sum |a_n|^2 \leq 2 \pi \sum n^2 |a_n|^2 = \int_{-\pi}^\pi |f'(t)|^2\ dt \]
+    %
+    equality holds here if and only if $a_i = 0$ for $i > 1$, in which case we find
+    %
+    \[ f(t) = A e^{nit} + \overline{A} e^{-nit} = B \cos(t) + C \sin(t) \]
+    %
+    for some constants $A \in \mathbf{C}$, $B,C \in \mathbf{R}$.
+\end{proof}
+
+\begin{corollary}
+    Given $f \in C^1[a,b]$ with $\int_a^b f(t)\ dt = 0$, 
+    %
+    \[ \int_a^b |f(t)|^2 dt \leq \left(\frac{b-a}{\pi}\right)^2 \int_a^b |f'(t)|^2\ dt \]
+\end{corollary}
+
+\section{Energy Preservation in the String equation}
+
+Solutions to the string equation are
+
+If $u(t,x)$
+
+\part{A More Sophisticated Viewpoint}
+
+\part{Abstract Harmonic Analysis}
+
+\chapter{Topological Groups}
+
+In abstract harmonic analysis, the main subject matter is the {\bf topological group}, a group $G$ equipped with a topology which makes the operation of multiplication and inversion continuous. In the mid 20th century, it was realized that basic Fourier analysis could be generalized to a large class of groups. The nicest generalization occurs over the locally compact groups, which simplifies the theory considerably.
+
+The topological structure of a topological group naturally possesses large amounts of symmetry, simplifying the spatial structure. For any topological group, the maps
+%
+\[ x \mapsto gx\ \ \ \ \ \ \ \ \ \ x \mapsto xg\ \ \ \ \ \ \ \ \ \ x \mapsto x^{-1} \]
+%
+are homeomorphisms. Thus if $U$ is a neighbourhood of $x$, then $gU$ is a neighbourhood of $gx$, $Ug$ a neighbourhood of $xg$, and $U^{-1}$ a neighbourhood of $x^{-1}$, and as we vary $U$ through all neighbourhoods of $x$, we obtain all neighbourhoods of the other points. Understanding the topological structure at any point reduces to studying the neighbourhoods of the identity element of the group.
+
+In topological group theory it is even more important than in basic group theory to discuss set multiplication. If $U$ and $V$ are subsets of a group, then we define
+%
+\[ U^{-1} = \{ x^{-1} : x \in U \}\ \ \ \ \ \ \ \ UV = \{ xy: x \in U, y \in V \} \]
+%
+We let $V^2 = VV$, $V^3 = VVV$, and so on.
+
+\begin{theorem}
+    Let $U$ and $V$ be subsets of a topological group.
+    %
+    \begin{enumerate}
+        \item[(i)] If $U$ is open, then $UV$ is open.
+        \item[(ii)] If $U$ is compact, and $V$ closed, then $UV$ is closed.
+        \item[(iii)] If $U$ and $V$ are connected, $UV$ is connected.
+        \item[(iv)] If $U$ and $V$ are compact, then $UV$ is compact.
+    \end{enumerate}
+\end{theorem}
+\begin{proof}
+    To see that (i) holds, we see that
+    %
+    \[ UV = \bigcup_{x \in V} Ux \]
+    %
+    and each $Ux$ is open. To see (ii), suppose $u_i v_i \to x$. Since $U$ is compact, there is a subnet $u_{i_k}$ converging to $y$. Then $y \in U$, and we find
+    %
+    \[ v_{i_k} = u_{i_k}^{-1} ( u_{i_k} v_{i_k} ) \to y^{-1} x \]
+    %
+    Thus $y^{-1} x \in V$, and so $x = y y^{-1} x \in UV$. (iii) follows immediately from the continuity of multiplication, and the fact that $U \times V$ is connected, and (iv) follows from similar reasoning.
+\end{proof}
+
+\begin{lemma}
+    Every neighbourhood $U$ of the identity has a subneighbourhood $V$ for which $V^2 \subset U$.
+\end{lemma}
+\begin{proof}
+    Multiplication is continuous, so there is a pair $W, W'$ of neighbourhoods of the origin such that $WW' \subset U$. We then just let $V = W \cap W'$.
+\end{proof}
+
+\begin{theorem}
+    If $K$ and $C$ are disjoint, $K$ is compact, and $C$ is closed, then there is a neighbourhood $V$ of the origin for which $KV$ and $CV$ is disjoint.
+\end{theorem}
+\begin{proof}
+    For each $x \in K$, $C^c$ is an open neighbourhood containing $x$, so by applying the last lemma recursively we find that there is a symmetric neighbourhood $V_x$ such that $V_x^4 x \subset C^c$. Since $K$ is compact, finitely many of the $xV_x$ cover $K$. If we then let $V$ be the open set obtained by intersecting the finite subfamily of the $V_x$, then $KV$ is disjoint from $CV$.
+\end{proof}
+
+Taking $K$ to be a point, we find that any open neighbourhood of a point contains a closed neighbourhood. Provided points are closed, we can set $C$ to be a point as well.
+
+\begin{corollary}
+    Every Frechet topological group is Hausdorff.
+\end{corollary}
+
+\end{document}
