@@ -21,7 +21,11 @@ Number theory is the study of the positive integers, those numbers you know as
 %
 \[ 1,2,3,\dots \]
 %
-The most basic relation between these numbers is that of divisibility. An integer $a$ is divisible by $b$, denoted $b \divides a$, if there is a number $n$ for which $nb = a$. Any number $n$ has divisors $1$ and itself. Of particular interest are the primes, integers greater than $1$, whose divisors consist of only itself and one. The composite numbers are those that are not prime. It is of great importance that one may `compose' prime numbers to form composites.
+The most basic relation between these numbers is that of divisibility. An integer $a$ is divisible by $b$, denoted $b \divides a$, if there is a number $n$ for which $nb = a$. Any number $n$ has divisors $1$ and itself. Of particular interest are the primes, integers greater than $1$, whose divisors consist of only itself and one. The first few examples are
+%
+\[ 2,3,5,7,11 \]
+%
+The numbers that are left over once we remove all prime numbers are called composite. It is of great importance that one may `compose' prime numbers to form all the composite numbers.
 
 \begin{theorem}
     Every integer can be written as a product of prime numbers.
@@ -30,21 +34,53 @@ The most basic relation between these numbers is that of divisibility. An intege
     If $n$ is a prime number, then it can obviously be written as a prime. Otherwise, we may write $n = ab$, for $1 < a,b < n$. Continuing this expansion process, we may continue to expand $a$ and $b$ as a product of smaller numbers. Eventually these smaller numbers must be prime, for otherwise we would have an infinite decreasing chain of positive integers, of which we know the impossibility. Thus we have prime decompositions $a = p_1 p_2 \dots p_n$, and $b = q_1 q_2 \dots q_m$, and then $n = p_1 \dots p_n q_1 \dots q_m$.
 \end{proof}
 
-An interesting fact to notice is that if $n = ab$, then either $a < \sqrt{n}$ or $b < \sqrt{n}$. Thus every composite number is divisible by a prime number smaller than the composite's square root. This leads to a simple procedure for finding all primes up to a certain number $M$. We first write down the integers
+An interesting fact to notice is that if $n = ab$, then either $a \leq \sqrt{n}$ or $b \leq \sqrt{n}$. Thus every composite number is divisible by a prime number smaller than the composite's square root. This leads to a simple procedure for finding all primes up to a certain number $M$. We first write down the integers
 %
-\[ 2,3,4,\dots \]
+\[ 2,3,4,\dots, M \]
 %
 and cross off all numbers divisible by $2$ (all even numbers). We end up with the list
 %
 \[ 3,5,7,9,11,\dots \]
 %
-Now we cross off all numbers divisible by $3$. Any number which eventually ends up at the beginning of the queue must be prime, for it is not divisible by a prime smaller than it. If we continue to cross of numbers divisible by the first primes, we will find all primes. We may stop once we reach an integer bigger than $\sqrt{M}$, for if a number has not been crossed off at this point, it must be prime. The number of operations to perform this procedure is propotional to $O(M \pi(\sqrt{M}))$, where $\pi(n)$ counts the number of primes less than or equal to $n$. We will eventually show that $\pi(n)$ converges to $n/\log(n)$, so that our algorithm is $O(M^{3/2}/\log(M}))$
+Now we cross off all numbers divisible by $3$. Any number which eventually ends up at the beginning of the queue must be prime, for it is not divisible by any prime smaller than it. If we continue to cross of numbers divisible by the first primes, we will find all primes. We may stop once we reach an integer bigger than $\sqrt{M}$, for if a number has not been crossed off at this point, it is not divisible by any number less than the square root of $n$, it must be prime. The number of operations to perform this procedure is therefore proportional to the sum of reciprocol primes
+%
+\[ \sum_{p \leq \sqrt{M}} \frac{M}{p} \]
+%
+which is $O(M \pi(\sqrt{M}))$, where $\pi(n)$ counts the number of primes less than or equal to $n$. We will eventually show that $\pi(n) \sim n/\log(n)$, so that our algorithm is $O(M^{3/2}/\log(M))$. A tighter analysis can show this algorithm actually runs in $\Theta(\sqrt{M} \log \log M)$ time.
 
-The primes in an expansion are not necessarily distinct, nor in a particular order. We say a decomposition
+A particular decomposition of a composite number is not necessarily unique, because we can just rearrange the prime numbers
+%
+\[ 2 \cdot 3 = 3 \cdot 2 \]
+%
+But we shall soon know that this is the only problem we can have. We shall assume all future decompositions
 %
 \[ p_1^{n_1} \dots p_m^{n_m} \]
 %
-is in standard form if $p_1 < p_2 < \dots < p_m$. A simple question is whether a decomposition in standard form is unique? This composes exactly what is commonly known as the fundamental theorem of arithmetic.
+are in standard for, with $p_1 < p_2 < \dots < p_m$. That there is only one decomposition of each number composes exactly what is commonly known as the fundamental theorem of arithmetic, but is a bit tricky to prove formally.
+
+Before our endeavor, however, we answer a fundamental question about the primes. Are there infinitely many of them? It is entirely possible that we have some finite set of primes. The very first proof in all of number theory shows this is not the case.
+
+\begin{theorem}[Euclid]
+    There are infinitely many prime numbers.
+\end{theorem}
+\begin{proof}
+    Let $p_1, \dots, p_n$ be a finite collection of prime numbers, and consider the number
+    %
+    \[ n = p_1 \dots p_n + 1 \]
+    %
+    Then $n$ is not divisible by $p_1$, $p_2, \dots, p_n$, because, dividing by the $p_i$ leaves a remainder of 1. But $n$ must be divisible by a prime, so there is some prime not among the $p_i$, and so no finite subset of the primes exhausts the set.
+\end{proof}
+
+This theorem also gives us bounds on how spread apart the prime numbers are. If $p_1, p_2, \dots, p_n$ are all primes from $1$ to $n$, then there is a prime between $p_n$ and $p_1 \dots p_n + 1$.
+
+To start with, we essentially prove we can perform long division on $\mathbf{N}$.
+
+\begin{lemma}
+    If $n,m \in \mathbf{N}$, then we may write $m = ln + r$, where $r < n$.
+\end{lemma}
+\begin{proof}
+    If $m < n$, the proof is trivial. Otherwise, write $m' = m - n$, apply induction, and write $m' = l'n + r$. Then $m = (l' + 1)n + r$.
+\end{proof}
 
 \begin{theorem}
     Every integer has a unique decomposition in standard form.
