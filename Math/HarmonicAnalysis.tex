@@ -768,7 +768,7 @@ It is these functions which are `primitive' in the synthesis of Fourier series o
     Implying $e'(x) = A e(x)$ for some $A \in \mathbf{C}$, so $e(x) = e^{Ax}$. We require that $e(x) \in \mathbf{T}$ for all $x$, so $A = \xi i$ for some $\xi \in \mathbf{R}$.
 \end{example}
 
-\section{Fourier analysis on $\mu_n$}
+\section{Fourier analysis on Cyclic Groups}
 
 We shall start our study of abstract Fourier analysis by looking at a particular case -- fourier analysis on $\mu_n$. Geometrically, these points uniformly distribute themselves over $\mathbf{T}$, and therefore $\mu_n$ provides a good finite approximation to $\mathbf{T}$. Functions from $\mu_n$ to $\mathbf{C}$ are really just functions from $[n] = \{ 1, \dots, n \}$ to $\mathbf{C}$, so we're really computing the fourier analysis of finite domain functions.
 
@@ -808,7 +808,7 @@ where
 %
 \[ a_m = \frac{1}{n} \sum_{k = 1}^n f(k) e^{- 2 \pi i mk /n} \]
 %
-but this method is really just a cheat, for it does not generalize to arbitrary abelian groups. A more enlightening approach takes advantage of the character theory we've developed.
+but this method is really just a cheat, for it does not generalize to arbitrary abelian groups. A more enlightening approach takes advantage of the character theory we've developed. Perhaps more interesting is the fact that we can recover much of the theory of Fourier series on $\mathbf{T}$ from finite fourier anlaysis, which I'll do the calculations for later.
 
 Let $V$ denote the set of all functions from $\mu_n$ to $\mathbf{C}$. We make $V$ into an inner product space by defining
 %
@@ -829,8 +829,6 @@ Since the family of characters is orthonormal, they are linearly independant. Be
 \[ f(k) = \sum_{m = 1}^n \frac{\langle f, e_m \rangle}{\langle e_m, e_m \rangle} \omega^{mk} = \sum_{m = 1}^n \left( \frac{1}{n} \sum_{l = 1}^n f(l) \omega^{-ml} \right) \omega^{mk} \]
 %
 which is the fourier expansion we obtained above.
-
-Perhaps more interesting is the fact that we can recover much of the theory of Fourier series on $\mathbf{T}$, which I'll do the calculations for later.
 
 \section{The Fast Fourier Transform}
 
@@ -1041,6 +1039,21 @@ The Riemann-Zeta function is very good at giving us information about the prime 
 
 In abstract harmonic analysis, the main subject matter is the {\bf topological group}, a group $G$ equipped with a topology which makes the operation of multiplication and inversion continuous. In the mid 20th century, it was realized that basic Fourier analysis could be generalized to a large class of groups. The nicest generalization occurs over the locally compact groups, which simplifies the theory considerably.
 
+\begin{example}
+    There are a few groups we should keep in mind for intuition in the general topological group.
+    %
+    \begin{itemize}
+        \item The classical groups $\mathbf{R}^n$ and $\mathbf{T}^n$, from which Fourier analysis originated.
+        \item The group $\mu$ of roots of unity, rational numbers $\mathbf{Q}$, and cyclic groups $\mathbf{Z}_n$.
+        \item The matrix subgroups of the general linear group $GL(n)$.
+        \item The countable product $\mathbf{T}^\omega$ of Torii, which occurs in the theory of Dirichlet series in number theory.
+    \end{itemize}
+\end{example}
+
+A few more pathological examples are also important for understanding the intuition of results. We detail a basic example now. More will occur in the sequel.
+
+\section{Basic Results}
+
 The topological structure of a topological group naturally possesses large amounts of symmetry, simplifying the spatial structure. For any topological group, the maps
 %
 \[ x \mapsto gx\ \ \ \ \ \ \ \ \ \ x \mapsto xg\ \ \ \ \ \ \ \ \ \ x \mapsto x^{-1} \]
@@ -1075,24 +1088,160 @@ We let $V^2 = VV$, $V^3 = VVV$, and so on.
     Thus $y^{-1} x \in V$, and so $x = y y^{-1} x \in UV$. (iii) follows immediately from the continuity of multiplication, and the fact that $U \times V$ is connected, and (iv) follows from similar reasoning.
 \end{proof}
 
+\begin{example}
+    If $U$ is merely closed, then (ii) need not hold. For instance, in $\mathbf{R}$, take $U = \alpha \mathbf{Z}$, and $V = \mathbf{Z}$, where $\alpha$ is an irrational number. Then $U + V = \alpha \mathbf{Z} + \mathbf{Z}$ is dense in $\mathbf{R}$, and is hense not closed.
+\end{example}
+
+There are useful ways we can construct neighbourhoods under the group operations, which we list below.
+
 \begin{lemma}
-    Every neighbourhood $U$ of the identity has a subneighbourhood $V$ for which $V^2 \subset U$.
+    Let $U$ be a neighbourhood of the identity. Then
+    %
+    \begin{itemize}
+        \item[(1)] There is an open $V$ such that $V^2 \subset U$.
+        \item[(2)] There is an open $V$ such that $V^{-1} \subset U$.
+        \item[(3)] For any $x \in U$, there is an open $V$ such that $xV \subset U$.
+        \item[(4)] For any $x$, there is an open $V$ such that $xVx^{-1} \subset U$.
+    \end{itemize}
 \end{lemma}
 \begin{proof}
-    Multiplication is continuous, so there is a pair $W, W'$ of neighbourhoods of the origin such that $WW' \subset U$. We then just let $V = W \cap W'$.
+    (1) follows simply from the continuity of multiplication, and (2) from the continuity of inversion. (3) is verified because $x^{-1}U$ is a neighbourhood of the origin, so if $V = x^{-1}U$, then $xV = U \subset U$. Finally (4) follows in a manner analogously to (3) because $x^{-1}Ux$ contains the origin.
 \end{proof}
 
+If $\mathcal{U}$ is an open basis at the origin, then it is only a slight generalization to show that for any of the above situations, we can always select $V \in \mathcal{U}$. Conversely, suppose that $\mathcal{V}$ is a family of subsets of a (not yet topological) group $G$ containing $e$ such that (1), (2), (3), and (4) hold. Then the family $\mathcal{V}' = \{ xV : V \in \mathcal{V}, x \in G \}$ forms a subbasis for a topology on $G$ which forms a topological group. If $\mathcal{V}$ also has the base property, then $\mathcal{V}'$ is a basis.
+
 \begin{theorem}
-    If $K$ and $C$ are disjoint, $K$ is compact, and $C$ is closed, then there is a neighbourhood $V$ of the origin for which $KV$ and $CV$ is disjoint.
+    If $K$ and $C$ are disjoint, $K$ is compact, and $C$ is closed, then there is a neighbourhood $V$ of the origin for which $KV$ and $CV$ is disjoint. If $G$ is locally compact, then we can select $V$ such that $KV$ is precompact.
 \end{theorem}
 \begin{proof}
-    For each $x \in K$, $C^c$ is an open neighbourhood containing $x$, so by applying the last lemma recursively we find that there is a symmetric neighbourhood $V_x$ such that $V_x^4 x \subset C^c$. Since $K$ is compact, finitely many of the $xV_x$ cover $K$. If we then let $V$ be the open set obtained by intersecting the finite subfamily of the $V_x$, then $KV$ is disjoint from $CV$.
+    For each $x \in K$, $C^c$ is an open neighbourhood containing $x$, so by applying the last lemma recursively we find that there is a symmetric neighbourhood $V_x$ such that $x V_x^4 \subset C^c$. Since $K$ is compact, finitely many of the $xV_x$ cover $K$. If we then let $V$ be the open set obtained by intersecting the finite subfamily of the $V_x$, then $KV$ is disjoint from $CV$.
 \end{proof}
 
 Taking $K$ to be a point, we find that any open neighbourhood of a point contains a closed neighbourhood. Provided points are closed, we can set $C$ to be a point as well.
 
 \begin{corollary}
-    Every Frechet topological group is Hausdorff.
+    Every Kolmogorov topological group is Hausdorff.
 \end{corollary}
+
+An advantage of the real line $\mathbf{R}$ is because continuity can be explained in a {\it uniform sense}, because we can transport any topological questions about a certain point $x$ to questions about topologies near the origin, via the map $g \mapsto x^{-1}g$. Thus it makes sense to say that a function $f: \mathbf{R} \to \mathbf{R}$ is continuous uniformly, by saying that for any $\varepsilon > 0$ there is $\delta$ such that if $|y| < \delta$, $|f(x+y) - f(x)|<\varepsilon$. Instead of having to specify a $\delta$ for every point on the domain, it works uniformly everywhere. Similarly, we say a function $f: G \to H$ between topological groups is (left) uniformly continuous if, for any open neighbourhood $U$ of the origin in $H$, there is a neighbourhood $V$ of the origin in $G$ such that for each $x$, $f(xV) \subset f(x) U$. Right continuity requires $f(Vx) \subset U f(x)$. The requirement of distinguishing between left and right uniformity is important when we study non-commutative groups, for there are certainly left uniform maps which are not right uniform in these groups.
+
+\begin{example}
+    Let $G$ be any Hausdorff non-commutative topological group, with sequences $x_i$ and $y_i$ for which $x_i y_i \to e$, $y_i x_i \to z \neq e$. Let $U$ be a neighbourhood of $z$, and $V$ a neighbourhood of $e$, with $U$ and $V$ disjoint. Let
+    %
+    \[ x_j (y_j^{-1})^{-1} = x_j y_j \in V\ \ \ \ \ (y_j^{-1})^{-1} x_j = y_j x_j \in U \]
+    %
+    for $j > n$. Thus
+
+    Then the left and right uniform structures are inequivalent. This shows that on most matrix groups, the left and right uniformality is not equivalent.
+\end{example}
+
+It is hopeless to express uniform continuity in terms of a new topology on $G$, because the topology only gives a local description of continuity, which prevents us from describing things uniformly across the whole group. However, a theorem of logic might give us respite. We can turn a statement of the form $(\forall x, \exists y: S(x,y))$ to a statement of the form $(\exists y, \forall x: S'(x,y))$ by letting $y$ be a function, so that $S'(x,y)$ is interpreted as $S(x,y(x))$. In the case of uniform continuity, we have the logical statement
+%
+\[ (\forall U, \exists V, \forall x: f(x)^{-1} f(xV) \subset U) \]
+%
+which can be `skolemized' to
+%
+\[ (\forall U, \exists V: f(c)^{-1} f(cV(c)) \subset U) \]
+
+
+we introduce a function $V$ of points $g \in G$ and neighbourhoods $U \in H$, such that $f(V(g,U)) \subset U$.
+
+We can express uniform continuity in terms of a new topology on $G \times G$. If $U \subset G$ is an open neighbourhood of the origin, let
+%
+\[ L_U = \{ (x,y): x^{-1}y \in U \}\ \ \ \ \ R_U = \{ (x,y): yx^{-1} \in U \} \]
+%
+The family of all $L_U$ (resp. $R_U$) is known as the left (right) uniform structure on $G$, denoted $\mathcal{S}_l(G)$ and $\mathcal{S}_r(G)$. Fix a map $f: G \to H$, and consider the map
+%
+\[ g(x,y) = (f(x), f(y)) \]
+%
+from $G^2$ to $H^2$. Then $f$ is uniformly continuous if and only if $g$ is continuous with respect to the uniform structures on $G$ and $H$. Since $\mathcal{S}_l(G)$ and $\mathcal{S}_r(G)$ are weaker than the product topologies on $G$ and $H$. We can also consider uniform maps with respect to $\mathcal{S}_l(G)$ and $\mathcal{S}_r(H)$, and so on and so forth. We can also consider uniform continuity on functions defined on subsets of a group.
+
+\begin{example}
+    Here are a few examples of easily verified continuous maps.
+    \begin{itemize}
+        \item If the identity map on $G$ is left-right uniformly continuous, then $\mathcal{S}_l(G)$ and $\mathcal{S}_r(G)$ define the same topologies, and so uniform continuity is invariant of the uniform structure chosen.
+        \item Translation maps $x \mapsto axb$, for $a,b \in G$, are uniform.
+        \item Inversion is uniformly continuous.
+    \end{itemize}
+\end{example}
+
+\begin{theorem}
+    All continuous maps on compact subsets of topological groups are uniformly continuous.
+\end{theorem}
+\begin{proof}
+    Let $K$ be a compact subset of a group $G$, and let $f:K \to H$ be a continuous map into a topological group. We claim that $f$ is then uniformly continuous. Fix an open neighbourhood $V$ of the origin, and let $V'$ be a symmetric neighbourhood such that $V'^2 \subset V$. For any $x$, there is $U_x$ such that
+    %
+    \[ f(x)^{-1} f(xU_x) \subset V' \]
+    %
+    Choose $U'_x$ such that $U'^2_x \subset U_x$. The $xU'_x$ cover $K$, so there is a finite subcover corresponding to sets $U'_{x_1}, \dots, U'_{x_n}$. Let $U = U'_{x_1} \cap \dots \cap U'_{x_n}$. Fix $y \in G$, and suppose $y \in x_k U'_{x_k}$. Then
+    %
+    \begin{align*}
+        f(y)^{-1} f(yU) &= f(y)^{-1} f(x_k) f(x_k)^{-1} f(yU)\\
+        &\subset f(y)^{-1} f(x_k) f(x_k)^{-1} f(x_k Ux_k)\\
+        &\subset f(y)^{-1} f(x_k) V'\\
+        &\subset V'^2 \subset V
+    \end{align*}
+    %
+    So that $f$ is left uniformly continuous. Right uniform continuity is proven in the exact same way.
+\end{proof}
+\begin{corollary}
+    Uniform continuity on compact groups is invariant of the uniform structure chosen.
+\end{corollary}
+
+\section{Ordered Groups}
+
+In this section we describe a general class of groups which contain both interesting and pathological examples. Let $G$ be a group with an ordering $<$ preserved by the group operations, so that $a < b$ implies both $ag < bg$ and $ga < gb$. We now prove that the order topology gives $G$ the structure of a normal topological group (the normality follows because of general properties of order topologies).
+
+First note, that $a < b$ implies $a^{-1} < b^{-1}$. This results from a simple algebraic trick, because
+%
+\[  a^{-1} = a^{-1} b b^{-1} > a^{-1} a b^{-1} = b^{-1} \]
+%
+This implies that the inverse image of an interval $(a,b)$ under inversion is $(b^{-1}, a^{-1})$, hence inversion is continuous.
+
+Now let $e < b < a$. We claim that there is then $e < c$ such that $c^2 < a$. This follows because if $b^2 \geq a$, then $b \geq ab^{-1}$ and so
+%
+\[ (ab^{-1})^2 = ab^{-1}ab^{-1} \leq ab^{-1}b = a \]
+%
+Now suppose $a < e < b$. If $\inf \{ y : y > e \} = x > e$, then $(x^{-1}, x) = \{ e \}$, and the topology on $G$ is discrete, hence the continuity of operations is obvious. Otherwise, we may always find $c$ such that $c^2 < b$, $a < c^{-2}$, and then if $c^{-1} < g,h < c$, then
+%
+\[ a < c^{-2} < gh < c^2 < b \]
+%
+so multiplication is continuous at every pair $(x,x^{-1})$. In the general case, if $a < gh < b$, then $g^{-1}ah^{-1} < e < g^{-1}bh^{-1}$, so there is $c$ such that if $c^{-1} < g',h' < c$, then $g^{-1}ah^{-1} < g'h' < g^{-1}bh^{-1}$, so $a < gg'h'h < b$. The set of $gg'$, where $c^{-1} < g' < c$, is really just the set of $gc^{-1} < x < gc$, and the set of $h'h$ is really just the set of $c^{-1}h < x < ch$. Thus multiplication is continuous everywhere.
+
+\begin{example}[Dieudonne]
+    For any well ordered set $S$, the dictionary ordering on $\mathbf{R}^S$ induces a linear ordering inducing a topological group structure on the set of maps from $S$ to $\mathbf{R}$.
+\end{example}
+
+Let us study Dieudonne's topological group in more detail. If $S$ is a finite set, or more generally possesses a maximal element $w$, then the topology on $\mathbf{R}^S$ can be defined such that $f_i \to f$ if eventually $f_i(s) = f(s)$ for all $s < w$ simultaneously, and $f_i(w) \to f(w)$. Thus $\mathbf{R}^S$ is isomorphic (topologically) to a discrete union of a certain number of copies of $\mathbf{R}$, one for each tuple in $S - \{ w \}$.
+
+If $S$ has a countable cofinal subset $\{ s_i \}$, the topology is no longer so simple, but $\mathbf{R}^S$ is still first countable, because the sets
+%
+\[ U_i = \{ f : (\forall w < s_i: f(w) = 0) \} \]
+%
+provide a countable neighbourhood basis of the origin.
+
+The strangest properties of $\mathbf{R}^S$ occur when $S$ has no countable cofinal set. Suppose that $f_i \to f$. We claim that it follows that $f_i = f$ eventually. To prove by contradiction, we assume without loss of generality (by thinning the sequence) that no $f_i$ is equal to $f$. For each $f_i$, find the largest $w_i \in S$ such that for $s < w_i$, $f_i(s) = f(s)$ (since $S$ is well ordered, the set of elements for which $f_i(s) \neq f(s)$ has a minimal element). Then the $w_i$ form a countable cofinal set, because if $v \in S$ is arbitrary, the $f_i$ eventually satisfy $f_i(s) = f(s)$ for $s < v$, hence the corresponding $w_i$ is greater than $v_i$. Hence, if $f_i \to f$ in $\mathbf{R}^S$, where $S$ does not have a countable cofinal subset, then eventually $f_i = f$. We conclude all countable sets in $\mathbf{R}^S$ are closed, and this proof easily generalises to show that if $S$ does not have a cofinal set of cardinality $\mathfrak{a}$, then every set of cardinality $\leq \mathfrak{a}$ is closed.
+
+The simple corollary to this proof is that compact subsets are finite. Let $X = f_1, f_2, \dots$ be a denumerable, compact set. Since all subsets of $X$ are compact, we may assume $f_1 < f_2 < \dots$ (or $f_1 > f_2 > \dots$, which does not change the proof in any interesting way). There is certainly $g \in \mathbf{R}^S$ such that $g < f_1$, and then the sets $(g,f_2), (f_1, f_3), (f_2,f_4), \dots$ form an open cover of $X$ with no finite subcover, hence $X$ cannot be compact. We conclude that the only compact subsets of $\mathbf{R}^S$ are finite.
+
+Furthermore, the class of open sets is closed under countable intersections. Consider a series of functions
+%
+\[ f_1 \leq f_2 \leq \dots < h < \dots \leq g_2 \leq g_1 \]
+%
+Suppose that $f_i \leq k < h < k' \leq g_j$. Then the intersection of the $(f_i, g_i)$ contains an interval $(k,k')$ around $h$, so that the intersection is open near $h$. The only other possiblity is that $f_i \to h$ or $g_i \to h$, which can only occur if $f_i = h$ or $g_i = h$ eventually, in which case we cannot have $f_i < h$, $h < g_i$. We conclude the intersection of countably many intervals is open, because we can always adjust any intersection to an intersection of this form without changing the resulting intersecting set (except if the set is empty, in which case the claim is trivial). The general case results from noting that any open set in an ordered group is a union of intervals.
+
+\section{Topological Groups arising from Normal subgroups}
+
+Let $G$ be a group, and $\mathcal{N}$ a family of normal subgroups closed under intersection. If we interpret $\mathcal{N}$ as a neighbourhood base at the origin, the resulting topology gives $G$ the structure of a totally disconnected topological group, which is Hausdorff if and only if $\bigcap \mathcal{N} = \{ e \}$. First note that $g_i \to g$ if $g_i$ is eventually in $gN$, for every $N \in \mathcal{N}$, which implies $g_i^{-1} \in Ng^{-1} = g^{-1}N$, hence inversion is continuous. Furthermore, if $h_i$ is eventually in $hN$, then $g_ih_i \in gNhN = ghN$, so multiplication is continuous. Finally note that $N^c = \bigcup_{g \neq e} gN$ is open, so that every open set is closed.
+
+\begin{example}
+    Consider $\mathcal{N} = \{ \mathbf{Z}, 2\mathbf{Z}, 3\mathbf{Z}, \dots \}$. Then $\mathcal{N}$ induces a Hausdorff topology on $\mathbf{Z}$, such that $g_i \to g$, if and only if $g_i$ is eventually in $g + n \mathbf{Z}$ for all $n$. In this topology, the series $1,2,3,\dots$ converges to zero!
+\end{example}
+
+This example gives us a novel proof, due to Furstenburg, that there are infinitely many primes. Suppose that there were only finitely many, $\{ p_1, p_2, \dots, p_n \}$. By the fundamental theorem of arithmetic,
+%
+\[ \{ -1, 1 \} = (\mathbf{Z} p_1)^c \cap \dots \cap (\mathbf{Z} p_n)^c \]
+%
+and is therefore an open set. But this is clearly not the case as open sets must contain infinite sequences.
 
 \end{document}

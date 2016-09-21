@@ -1,18 +1,14 @@
-\documentclass{report}
-
-\usepackage{amsthm}
-\usepackage{amsopn}
-\usepackage{mathtools}
-\usepackage{amsmath}
-
-\setlength{\parskip}{10pt}
+\input{../style.tex}
 
 \title{Reinforcement Learning}
-\author{Jacob Denson\thanks{Influenced by Lectures by Joseph Modayil}}
+\author{Jacob Denson}
 
 \begin{document}
 
+\pagenumbering{gobble}
 \maketitle
+\tableofcontents
+\pagenumbering{arabic}
 
 \chapter{Markov Decision Processes}
 
@@ -24,81 +20,80 @@ AI takes the intentional stance on this issue, treating all systems as having in
 
 \chapter{Bandit Problems}
 
-Imagine you are at a casino, which has a healthy selection of games. The casino you are in specializes in specific slot machine games. You of course, being a strategic game player, want to find the slot machine that maximizes your profit from gambling. You hope that you will end up with a profit, but you will also be satisfied, if this is not possible, to find the machine that results in you losing the least amount of money. From the start, you have no idea how any slot machines work, so the only way to determine its reward is to get results from pulling its lever. This is the one-armed bandit problem.
+Imagine you are at a casino, which has a healthy selection of slot machines to play on. You of course, being a strategic game player, want to find the slot machine that maximizes your profit from gambling\footnote{Casino's do actually adjust the odds of certain slot machines to give certain players the `feel' of being ahead of the casino, to promote further play.}. You hope that you will end up with a profit, but you will also be satisfied, if this is not possible, to find the machine that results in you losing the least amount of money. From the start, you have no idea how any slot machines work, so the only way to determine its reward is to get results from pulling its lever. This is the one-armed bandit problem. It forms a good problem to begin the attack on reinforcement learning, because it is the simplest type of problem which is mathematically tractable, yet still possesses problems involved in `real' machine learning tasks.
 
-One armed bandits provide a good introduction to reinforcement learning because they are non-associative. Actions taken at a current moment have no impact on future actions, and thus are simpler to analyse. We will see that bandit problems are a subset of reinforcement learning problems. A formal specification of the problem is below.
+Mathematically, the problem of the multi armed bandits is given by a set $A$ of actions, and, for each action $a$, a probability distribution of `rewards' $R_a$ over the real numbers. The goal is to choose a sequence of actions to maximize our reward, by learning which actions gives us the most reward. In the simplest case which we will begin by addressing, the action space $A$ is discrete.
 
-A one-armed bandit problem is a tuple $\langle \mathcal{A}, \mathcal{R} \rangle$, where $\mathcal{A}$ is a non-empty set, called the set of actions, and $\mathcal{R}$ is a function from $\mathcal{A}$ to a probability distribution over the real numbers, called the reward distribution. Given an action $a$, we denote the distribution mapped from $a$ by $\mathcal{R}$ as
+After a bandit problem has been specified, how do we make a decision on actions we want to take? The key is a policy or decision function, which, given a memory of past actions, decides (possibly randomly) on the next action to take. First, define a history of length $k$ to be an element of $(A \times \mathbf{R})^k$. The decision function is actually a sequence of functions $\pi_1, \pi_2, \dots$, such that $\pi_k$ maps histories of length $k-1$ to probability distributions over action space. The policy induces a sequence of actions $A_1, A_2, \dots$ and rewards $X_1, X_2, \dots$, such that if $H_k = [(A_1,X_1), \dots, (A_k, X_k)]$, then
 %
-\[ \mathcal{R}(\cdotp|a) \]
+\[ A_k \sim \pi_k(H_{k-1})\ \ \ \ \ \ \ \ \ \ (X_k | A_k) \sim R_{A_k} \]
 %
-\noindent We will assume $\mathcal{A}$ is countable, and the range of each distribution mapped from $\mathcal{R}$ discrete.
+The goal is to choose a policy which maximizes the expected reward
+%
+\[ \mathbf{E} \left[\sum_{k=1}^n X_k \right] \]
+%
+for some value $n \in \mathbf{N}$ (the `finite horizon problem') or for $n = \infty$ (the infinite horizon problem), in which case we try to optimize the order of growth of the expected reward as $n \to \infty$.
 
-After a bandit problem has been specified, how do we make a decision on actions we want to take? The key is a policy or decision function. First we decribe the memory of an agent. An experience is a finite sequence from $\mathcal{A} \times \mathbf{R}$ of the form
+For each action $a$, let
 %
-\[ (A_0, R_0), (A_1, R_1), \dots, (A_n, R_n) \]
+\[ \mu_a = \mathbf{E}(X_k | A_k = a) = \int_\mathbf{R} dR_a \]
 %
-\noindent where for each pair $(A_i, R_i)$, the event that $\mathcal{R}(\cdotp|A_i)$ takes the value $R_i$ has positive probability. A policy or decision function is a mapping from experiences to a probability distribution over actions. Intuitively, policies learn from experience what actions to take, by changing their policy as actions are learned. We denote the distribution from an experience by
+In the finite case, we may define $\mu^* = \max \mu_a$, which is the reward taken for choosing the `best' action. If a user knew the distributions of each action, he would obviously try and pick the action corresponding to $\mu^*$ every time. The real problem is learning the distributions of each action, which still optimizing the reward obtained. We see therefore that this problem possesses the {\it explore-exploit tradeoff}; if we wish to maximize reward, we must attempt to use the arms which have the highest estimated mean reward. But if we only exploit, then we will never learn the optimum reward, because we need to sample all the arms to obtain good estimates of the mean reward, so we need to `explore' as well. Good general-use policies must balance exploring and exploiting to achieve maximal rewards.
+
+Another way to visualize the problem is that we do not want to maximize `good' decisions, but to minimize the number of `bad' decisions we make. Define the regret function
 %
-\[ \pi(\cdotp|(a_0,r_0),\dots,(a_n,r_n)) \]
+\[ R_n = \mathbf{E}[\sum_{k = 1}^n (\mu^* - X_k)] \]
 %
-The goal of the one-armed bandit can be written rigorously now: Find a policy such that the reward gained is maximized. How do we formalize the reward? Given a policy $\pi$, and experience $X$ we define the reward $R_\pi$ recursively by the equations
+We wish to minimize the growth of regret over time. Using the tower rule, defining the random variable
+%
+\[ T_a(n) = \# \{ 1 \leq k \leq n : A_k = a \} \]
+%
+we find that
 %
 \begin{align*}
-R_\pi(X) = \sum_{a,r} \pi(a|X)\mathcal{R}(r|a) + \gamma R(X,(a,r))
+    \mathbf{E}[\sum_{k = 1}^n (\mu^* - X_k)] &= n \mu^* - \mathbf{E}[\sum_{k = 1}^n X_k]\\
+    &= n \mu^* - \sum_{k = 1}^n \mathbf{E}[\mathbf{E}[X_k | A_k]]\\
+    &= n \mu^* - \sum_{a \in A} \sum_{k = 1}^n \mathbf{P}(A_k = a) \mu_a\\
+    &= n \mu^* - \sum_{a \in A} \mu_a \mathbf{E}(T_a(n))\\
+    &= \sum_{a \in A} \Delta_a \mathbf{E}(T_a(n))
 \end{align*}
 %
-where $\gamma$, a number between 0 and 1, is the discount rate. The smaller the discount rate, the more rewards in the present impact the score, rewarding greedy decisions up front, whereas as the discount rate increases, the future reward becomes more important. The policy thus runs for an infinite amount of periods, the reward converging to an amount. An alternate reward would be to only let the policy execute for a certain number of periods, say $T$ of them. Then the reward equation is $R_T$, where
-%
-\[ R_T = \sum_{a,r} \pi(a)\mathcal{R}(r|a)(r + R_{T-1}((a,r))) \]
-%
-\[ R_k(X) = \sum_{a,r} \pi(a|X)\mathcal{R}(r|a)(r + R_{k-1}(X,(a,r))) \]
-%
-\[ R_0(X) = \sum_{a,r} \pi(a|X)\mathcal{R}(r|a)r \]
-%
-Given either of these rewards, we denote the policy that maximises the reward to be $\pi_*$
-Of course, if we know $\mathcal{R}$ exactly, it is easy to find $\pi_*$. Simply define $\pi_*$ to map absolutely to the action which has the highest expected reward. The real problem is finding a policy given that we know nothing about $\mathcal{R}$. The best we can hope for is that our policy converges to $\pi_*$, either in the infinite strategy or as the number of periods allowed in the problem extends to infinity. This forms the definition of regret. What the policy should really minimize is the regret of the policy, the difference between the agents action at each interval and the optimal action. In a good policy, the regret should converge to zero over time.
+where $\Delta_a = \mu^* - \mu_a$ is the action gap between $a$ and the optimal action. In a good policy, the regret should have a low order of growth. An achievable order is sublinear.
 
-We begin by attempting to estimate the expected reward of an action. For an action $a$, denote the expected reward, or action value, as $q_*(a)$. If we keep an unbiased estimator of $q_*(a)$ for each $a$, then if we sample every action with non-zero probability at every interval, the estimator will converge to $q_*(a)$. To be simple, given an experience $(A_0,R_0), \dots, (A_t,R_t)$. Given that the experience contains the subsequence $(a, R_{k_0}), (a, R_{k_1}), \dots, (a, R_{k_m})$, denote by $Q_t(a)$ the sample average defined by the formula
+We begin by attempting to estimate the expected reward of an action. The law of large numbers tells us that, provided we sample an action infinitely many times, the random variable
 %
-\[ Q_t(a) = \frac{R_{k_0} + R_{k_1} + \dots R_{k_m}}{m} \]
+\[ \widehat{\mu_m}(n) = \frac{1}{T_a(n)} \sum_{k = 1}^n \mathbf{I} \{A_k = a \} X_k \]
 %
-\noindent This estimator is unbiased, and thus as $m \to \infty$, $Q_t(a) \to q_*(a)$. We normally define $Q_0(a) = 0$ for all actions $a$. Storing all these values becomes computationally infeasible. Thus the following equations helps us calculate the value recursively. If $R_{k_{m-1}}$ was discovered at time $t'$, we may iteratively construct $Q_{t}$ by
+converges to $\mu_m$ as $n \to \infty$ almost surely. There is a computational trick for keeping track of these estimates without having to store the indicator function. We have
 %
-\begin{align*}
-    Q_t(a) &= \frac{R_{k_0} + R_{k_1} + \dots R_{k_m}}{m}\\
-           &= \frac{m-1}{m} \frac{R_{k_0} + \dots R_{k_{m-1}}}{m-1} + \frac{R_{k_m}}{m}\\
-           &= \frac{m-1}{m} Q_{t'}(a) + \frac{R_{k_m}}{m} + \frac{Q_{t'}(a)}{m} - \frac{Q_{t'}(a)}{m}\\
-           &= Q_{t'} + \frac{1}{m} [R_{k_m} - Q_{t'}(a)]
-\end{align*}
+\[ \widehat{\mu_m}(n+1) = \frac{T_a(n) \widehat{\mu_m}(n) + \mathbf{I} \{ A_{n+1} = a \} X_{n+1}}{T_a(n+1)} \]
 %
-This may seem to solve our problem completely, but in order for our sample of each action to approach infinity, we must select each action with non-zero probability at each step. It then follows that we cannot use our converging estimate to our advantage completely - if we switch our policy to choose only the action $a$ such that $Q_t(a)$ is the maximum of all other actions, then our convergence stops -- we cannot assure $Q_t$ tends to $q_*$ for any action but action $a$, which is the only action we will continue to sample. Thus we must form a balance of acting in the greedy way, choosing an action with the highest sample average, and acting in an exploratory way.
+and this gives a recurrence relation meaning we need only keep track of $T_a(n)$ and $\widehat{\mu_m}(n)$, for the rest of the data is given to us sequentially. This may seem to solve our problem completely, for our change in regret will then converge to zero once we begin selecting optimum actions. But, if we start selecting optimal actions, then we won't necessarily sample all actions infinitely often, which implies that our estimates will not converge. Thus we must form a balance of acting in the greedy way, choosing an action with the highest sample average, and acting in an exploratory way.
 
-A naive policy, the greedy method, always takes the action with the highest sample average. The problem with this method is, if the reward for some action gets distorted low enough, it may never be taken again, even if the actual expected reward is much higher. This normally occurs if the variance of actions is too high. Given a low-variance reward function, the greedy policy may choose the right action, but no guarentees are set. One other helpful trick may be to set $Q_0(a)$ optimistically, that is, not the default value of zero but some value higher than all rewards for an action. Then all values are at least tried one before they begin to settle down, so some exploration is done. Again, there are no guarentees on how successful this will be. A smarter policy, the $\varepsilon$ greedy method, attempts to fix this issue by guarenteeing convergence at the cost of complete optimality.
+A naive policy, the greedy method, always takes the action with the highest sample average. The problem with this method is, if the reward for some action gets distorted low enough, it may never be taken again, even if the actual expected reward is much higher. This normally occurs if the variance of actions is too high. Given a low-variance reward function, the greedy policy may choose the right action, but no guarentees are set. One other helpful trick may be to set $Q_0(a)$ optimistically, that is, not the default value of zero but some value higher than all rewards for an action. Then all values are at least tried one before they begin to settle down, so some exploration is done. Again, there is not really a way of mathematically guarenteeing the success of this policy. A smarter policy, the $\varepsilon$ greedy method, which attempts to fix this issue by guarenteeing convergence at the cost of complete optimality.
 
-Our first policy which attempts to solve this problem is the $\varepsilon$ greedy method, for some real number $\varepsilon$ such that $0 \leq \varepsilon \leq 1$. The idea is that we act greedily most of the time, whereas for some proportion of the time related to $\epsilon$, we act randomly, ensuring we sample enough time to get convergence of our sample averages. The $\varepsilon$ greedy policy $\pi$ is defined for each action $a$ by
+Fix some real number $\varepsilon$ such that $0 \leq \varepsilon \leq 1$. The idea of the $\varepsilon$ greedy method is to act greedily most of the time, whereas for some proportion of the time related to $\epsilon$, we act randomly, ensuring we sample enough time to get convergence of our sample averages. The $\varepsilon$ greedy policy $\pi$ is defined for each action $a$ by
 %
-\[ \pi(a|(A_0,R_0), \dots ,(A_t,R_t)) =
-        \begin{cases} \varepsilon + \frac{1 - \varepsilon}{|\mathcal{A}|} &: Q_t(a) \text{ is the maximum over all a}\\
+\[ \pi_k(H_{k-1})(a) =
+        \begin{cases} \varepsilon + \frac{1 - \varepsilon}{|A|} &: a = \text{argmax}_{a' \in A}\ \widehat{\mu_{a'}}(k)\\
         \frac{1 - \varepsilon}{|\mathcal{A}|} &: \text{otherwise}
         \end{cases} \]
 %
-\noindent No action has non-zero probability, so $Q_t$ converges to $q_*$ as the number of actions taken approaches infinity. This means that the $\varepsilon$ greedy strategy will act optimally a proportionally to $\varepsilon + \frac{1 - \varepsilon}{|\mathcal{A}|}$. If we decrease the value of $\varepsilon$, our policy will act more correctly, but it will probably take longer for $Q_t$ to converge to $q_*$. (NEEDS FURTHER PROOF). Then the reward for $\pi$ converges to
+No action has non-zero probability, so $\widehat{\mu_a}(k)$ converges to $\mu_a$ for each $a$. This means that, in the limit, the $\varepsilon$-greedy strategy will act optimally $\varepsilon + (1 - \varepsilon)/|A|$ percent of the time. If we decrease the value of $\varepsilon$, our policy will act more optimally in the limit, but it will take longer for $\widehat{\mu_a}(k)$ to converge to $\widehat{\mu_a}(k)$. The expected change in regret for $\pi$ converges in the limit to
 %
-\[ (1 - \varepsilon) \max_{a \in \mathcal{A}} q_*(a) + \frac{\varepsilon}{|\mathcal{A}|}\sum_{a \in \mathcal{A}} q_*(a) \]
+\[ \frac{\varepsilon}{|A|} \sum_{a \in A} \Delta_a \]
 %
-\noindent as the length of the experience extends to infinity.
+as the length of the experience extends to infinity, and hence we see that $R_n \sim n \varepsilon \left( \sum \Delta_a \right)/ |A|$, and we have linear regret.
 
-$\varepsilon$ policies are a simple method that converge to a close to optimal policy. However, if there is one action $a$ with a very low expected value, the reward for $\pi$ will be strongly affected. The problem is that the action with low value expectation is selected at equal probability with any other action. The softmax method attempts to fix this. We select an action more probably if it has a higher sample average. A softmax method takes as a parameter a temperature $\tau$, and calculates a policy by:
+$\varepsilon$-greedy policies are a simple method that converge to a close to optimal policy. However, if there is one action $a$ with a very low expected value, the regret for $\pi$ will be strongly affected (in other words, if the average value of the action gap is large). The problem is that the action with low value expectation is selected at equal probability with any other action. The softmax method attempts to fix this. We select an action more probably if it has a higher sample average. A softmax method takes as a parameter a temperature $\tau$, and calculates a policy to be
 %
-\[ \pi(a|(S_0,A_0),(S_1,A_1),\dots,(S_n,A_n)) =
-        \frac{e^{Q_t(a)/\tau}}{\sum_{a'} e^{Q_t(a')/\tau}}\]
+\[ \pi_k(H_{k-1})(a) = \frac{e^{\widehat{\mu_a}(k)/\tau}}{\sum_{a'} e^{\widehat{\mu_{a'}}(k)/\tau}}\]
+% 
+In the limit, our regret converges to
+
+\[ \sum_a \frac{e^{\mu_a/\tau}}{\sum_{a'} e^{\mu_{a'}/\tau}} \Delta_a \]
 %
-Then as we increase the length of the experience, our reward converges to
-
-\[ \sum_a \frac{e^{q_*(a)/\tau}}{\sum_{a'} e^{q_*(a')/\tau}} q_*(a) \]
-
-As $\tau$ decreasing in value, the disparity between the selection of actions with differing sample average increases, causing the policy to act more greedily. Besides the convergence of the policy, there are no mathematical guarentees on which $\tau$ to use that have been developed, which makes it hard to pick which $\tau$ is useful. This means unless the quality of softmax is absolutely needed, it is hard to recommend softmax over an $\varepsilon$ greedy algorithm do to the more complicated definition of softmax.
+As $\tau$ decreases in value, the disparity between the selection of actions with differing sample average increases, causing the policy to act more greedily. Besides the convergence of the policy, there are no mathematical guarentees on which $\tau$ to use that have been developed, which makes it hard to pick which $\tau$ is useful. This means unless we can find an optimal value of $\tau$ for softmax by experimentation, it is hard to recommend softmax over an $\varepsilon$ greedy algorithm do to the more complicated definition of softmax.
 
 A more advanced and recent solution to the problem is to compute confidence intervals for the sample averages collected. Then we act greedily, our policy selecting the action $a$ such that the equation
 %

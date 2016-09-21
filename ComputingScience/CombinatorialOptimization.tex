@@ -1,0 +1,233 @@
+\input{../style.tex}
+
+\DeclareMathOperator{\Dom}{Dom}
+\DeclareMathOperator{\delin}{\delta_{\text{in}}}
+\DeclareMathOperator{\delout}{\delta_{\text{out}}}
+
+\def\@fnsymbol#1{\ensuremath{\ifcase#1\or *\or \dagger\or \ddagger\or
+   \mathsection\or \mathparagraph\or \|\or **\or \dagger\dagger
+   \or \ddagger\ddagger \else\@ctrerr\fi}}
+\renewcommand{\thefootnote}{\fnsymbol{footnote}}
+
+\title{Combinatorial Optimization}
+\author{Jacob Denson}
+
+\begin{document}
+
+\pagenumbering{gobble}
+
+\maketitle
+
+\tableofcontents
+
+\pagenumbering{arabic}
+
+\chapter{Matchings and Flows}
+
+\section{Bipartite Matching}
+
+Let $G = (V,E)$ be a graph. A {\bf matching} is $M \subset E$ such that no vertex in $V$ is the endpoint of more than one edge in $M$. $M$ is maximal if $|M| \geq |M'|$ for any other matching $M'$. The maximal matching problem asks us to find a fast algorithm to find a maximum matching in any graph.
+
+There is a polynomial time algorithm which can find matchings on any graph, but the problem is much more similar if $G$ is bipartite -- that is, if we may partition $V$ into the disjoint union $W \amalg U$ of two sets of vertices, such that every edge in $E$ contains a point in $W$ and a point in $U$. The bipartite matching asks us to find a maximal matching in a bipartite graph.
+
+\begin{figure}
+\begin{center}
+\begin{tikzpicture}[scale=0.5,transform shape]
+    \GraphInit[vstyle=Classic]
+
+    \Vertex[NoLabel,x=1,y=0]{A1}
+    \Vertex[NoLabel,x=1,y=-1.5]{B1}
+    \Vertex[NoLabel,x=1,y=-3]{C1}
+    \Vertex[NoLabel,x=1,y=-4.5]{D1}
+    \Vertex[NoLabel,x=1,y=-6]{E1}
+
+    \Vertex[NoLabel,x=6,y=-0.75]{A2}
+    \Vertex[NoLabel,x=6,y=-2.25]{B2}
+    \Vertex[NoLabel,x=6,y=-3.75]{C2}
+    \Vertex[NoLabel,x=6,y=-5.25]{D2}
+
+    \Edge[style={dashed}](A1)(A2)
+    \Edge(B1)(A2)
+    \Edge[style={dashed}](B1)(D2)
+    \Edge(C1)(B2)
+    \Edge[style={dashed}](D1)(C2)
+    \Edge(E1)(C2)
+
+    \Vertex[x=9,y=-3]{S}
+    \Vertex[x=18,y=-3]{T}
+
+    \Vertex[NoLabel,x=11,y=0]{A1'}
+    \Vertex[NoLabel,x=11,y=-1.5]{B1'}
+    \Vertex[NoLabel,x=11,y=-3]{C1'}
+    \Vertex[NoLabel,x=11,y=-4.5]{D1'}
+    \Vertex[NoLabel,x=11,y=-6]{E1'}
+
+    \Vertex[NoLabel,x=16,y=-0.75]{A2'}
+    \Vertex[NoLabel,x=16,y=-2.25]{B2'}
+    \Vertex[NoLabel,x=16,y=-3.75]{C2'}
+    \Vertex[NoLabel,x=16,y=-5.25]{D2'}
+
+    \draw[->, thick](S)--(A1');
+    \draw[->, dashed, thick](S)--(D1');
+    \draw[->, thick](D2')--(T);
+    \draw[->, thick](A1')--(A2');
+    \draw[->, thick](B1')--(D2');
+    \draw[->, dashed, thick](D1')--(C2');
+    \draw[->, thick](A2')--(B1');
+    \draw[->, dashed, thick](B2')--(C1');
+    \draw[->, dashed, thick](C2')--(E1');
+\end{tikzpicture}
+\end{center}
+\caption{The left graph shows a matching in a graph of cardinality 3. The solid lines correspond to the edges chosen. On the right is the augmenting path graph corresponding to the matching. It contains a path from $s$ to $t$, hence there is a way to improve the matching to a match of cardinality 4.}
+\end{figure}
+
+Suppose we are given a particular matching in a bipartite graph. Is there a reliable procedure to improve the matching? We could proceed by a guess and check method -- we remove an edge in our matching, then try and add an edge using one of the vertices which has been freed up. If this edge cannot be taken because the end point is attached to an edge still in the matching, we remove that edge, freeing up more vertices. If we ever end up adding more edges than we started with (which occurs when we add an edge not attached to any points in the current matching), then we find a matching with an extra edge than before. This process is formalized by the `augmenting paths' construction.
+
+Given a particular matching $M$, construct a directed graph $G_M = (V \cup \{ s, t \},E_M)$, where $s$ and $t$ are new vertices. Let $w \in W$, $u \in U$. Construct the edges $E_m$ such that
+%
+\begin{itemize}
+    \item $wu \in E_M$, if $wu \in M^c$.
+    \item $uw \in E_M$, if $uw \in M$.
+    \item $sw \in E_M$, if $w$ is not the endpoint of any edge in $M$.
+    \item $ut \in E_M$, if $u$ is not the endpoint of any edge in $M$.
+\end{itemize}
+%
+Let $(s,w_1,u_1,\dots,w_n,u_n,t)$ be a path in $G_M$ from $s$ to $t$, with $w_i \in W$, $u_i \in U$. Then $w_i u_i \in M^c$ and $u_iw_{i+1} \in M$, and $w$ and $u$ are both unused in $M$. Let $M'$ be obtained from $M$ by removing all edges of the form $u_iw_{i+1}$, and adding all edges of the form $w_i u_i$. It is easy to convince yourself that $M'$ is a matching, with one more edge than $M$.
+
+Conversely, suppose that there is no path from $s$ to $t$ in $G_M$. We claim $M$ is then a maximal matching on $G$. Otherwise, we would have a matching $M^*$ with $|M^*| > |M|$. Consider the multigraph $H = (V, M \amalg M^*)$. Every vertex in $V$ has at most degree two (for it can only be the endpoint of a single edge in $M$, and a single endpoint in $M^*$), and thus $V$ breaks into cycles and paths. For any cycle $C$, we find $|M \cap C| = |M^* \cap C|$, for the edges in the cycle must alternate being being in $M$ and $M^*$. Since $|M^*| > |M|$, there must be a path $P$ in $H$ containing more edges in $M^*$ than in $M$. $P$ must therefore begin and end with a path in $M^*$, and we see that this path is exactly an augmenting path for $M$.
+
+This argument justifies the correctness of the following matching algorithm. We take any initial matching $M$. Then, we construct the augmenting path graph $G_M$, and use any of the standard algorithms to find a path from $s$ to $t$. If we have $2n$ nodes, and $e$ edges, then we can find a path in $O(e)$ time, and we can bound the number of augmentations we require to $O(n)$, so the algorithm runs in $O(en)$ time.
+
+\section{Vertex Covers}
+
+A vertex cover $C \subset V$ is a set of points containing at least one endpoint of every edge in $E$. Clearly if $M$ is a maximal matching in $G$, then $|M| \leq |C|$, because there is an injective function $f:M \to C$, obtained by mapping an edge to one of its endpoints which lies in $C$.
+
+\begin{theorem}[K\"{o}nig - Egerv\'{a}ry]
+    Let $G = (W \amalg U, E)$ be bipartite, and let $M$ be a maximal matching in $G$. Let $Z \subset V \cup \{ s, t \}$ be the nodes reachable from $s$ in the augmenting path graph $G_M$. Then $C = (W - Z) \cup (U \cap Z)$ is a cover with $|C| = |M|$.
+\end{theorem}
+\begin{proof}
+    First we prove $C$ is a cover. Let $wu \in E$ be arbitrary.
+    %
+    \begin{itemize}
+        \item Suppose that $wu \in M$. If $u \in Z$, then $w \in Z$, because $uw$ is an edge in $G_M$, so that if $w \not \in C$, $u \in C$. \item Suppose that $wu \not \in M$. Then $wu$ is an edge in $G_M$, so that if $w \in Z$, $u \in Z$, and therfore if $w \not \in C$, $u \in C$.
+    \end{itemize}
+    %
+    Now we show $|U| = |M|$. First, note that $C$ contains {\it exactly one} of each of the endpoints of $M$, so $|U| \geq |M|$. Conversely, let $wu \in E - M$ be arbitrary. If $u \in C$, then $u$ is reachable from $s$, and hence $u$ is the endpoint of an edge in $M$, for otherwise $t$ is reachable from $s$ through $u$. Conversely, if $w \in C$, then $w$ is not reachable from $s$, hence $w$ is on an edge in $M$ (for otherwise there is an edge directly to $w$ from $s$ in $G_M$). This shows that every vertex in $C$ is on one of the edge in $M$, and hence $|U| = |M|$.
+\end{proof}
+
+This gives us a method of finding a min cover in a graph. One equivalent form of this theorem is very useful. Given an undirected graph $G = (V,E)$, let $N$ be the neighbour function $N(S) = \{ v \in V : sv \in E, s \in S \}$.
+
+\begin{theorem}[Hall]
+    Let $G = (W \amalg U, E)$ be a bipartite graph. Then $G$ has a matching $M$ which covers $W$ if and only if $|N(S)| \geq |S|$ for all $S \subset W$.
+\end{theorem}
+\begin{proof}
+    Certainly if a matching $M$ covers $W$, then it induces an injective function from $S$ to $N(S)$ for each $S \subset W$. Conversely, assume no matching of $M$ covers $W$. Then K\"{o}nig's theorem tells us there is a cover $C$ of $W \amalg U$ containing less than $|W|$ nodes. Then write $A = C \cap W$, $B = C \cap U$. We find $N(W - A) \subset B$, so $|N(W-A)| \leq |B| < |W| - |A|$.
+\end{proof}
+
+\section{The Hopcroft-Karp Matching Algorithm}
+
+\section{Network Flow}
+
+Let $G = (V,E)$ be a directed graph with two identified vertices $s \neq t$.  Let $\mu: E \to \mathbf{R}^+$ be a function measuring the `capacity' of each edge in the graph (Thinking of the edges as if they were `pipes' which can only carry a certain throughput). Define, for $U \subset V$,
+%
+\[ \delout(U) = \{ w \in V - U : vw \in E \}\ \ \ \ \ \ \ \ \ \ \delin(v) = \{ w \in V - U : wv \in E \} \]
+%
+A flow is a mapping $f: E \to \mathbf{R}^+$ such that $0 \leq f \leq \mu$, and for any $v \neq s,t$,
+%
+\[ f(\delout(v)) = f(\delin(v))\ \ \footnote{We extend functions $g: X \to \mathbf{R}$ to $g: 2^X \to \mathbf{R}$ by defining $g(A) = \sum_{x \in A} g(x)$} \]
+%
+a relation known as the flow conservation law. The aim of the maximum flow problem is to find $f$ such that the value function
+%
+\[ \text{val}(f) = f(\delout(s)) - f(\delin(s)) \]
+%
+is maximized. This is essentially the amount of flow which is created at $f$. It is also the amount of flow which is `absorbed' at $t$, because
+%
+\begin{align*}
+    f(\delout(t)) - f(\delin(t)) &= f(\delout(t)) - f(\delin(t)) + \sum_{v \neq s,t} f(\delout(v)) - f(\delin(v))\\
+    &= \sum_{v \neq s} \left( \sum_{vw \in E} f(vw) - \sum_{wv \in E} f(wv) \right)\\
+    &= \left( \sum_{\substack{v \neq s\\vs \in E}} f(vs) + f(ss) \right) - \left( \sum_{\substack{v \neq s\\sv \in E}} f(sv) + f(ss) \right)\\
+    &= -[\delout(f,s) - \delin(f,s)]
+\end{align*}
+%
+Thus the maximum flow problem tells us a method of maximizing the amount of flow which gets to $t$.
+
+There is an interesting relation between flows on graphs, and another structure known as a cut, which we will take full advantage of in finding solutions to the max flow problem. Define a $(s,t)$ cut on a directed graph $G = (V,E)$, with $s,t \in G$, to be $U \subset V$. If we have a capacity function $\mu$, then we define the value of the cut to be $\text{val}(U) = \mu(\delout(U))$. The min cut problem is to find a cut of smallest value.
+
+\begin{lemma}
+    If $f$ is a flow, and $C$ is an $(s,t)$ cut, then $\text{val}(f) \leq \mu(\delout(C))$.
+\end{lemma}
+\begin{proof}
+    Since $t \not \in C$, similar manipulations to the ones above show that
+    %
+    \begin{align*}
+        \text{val}(f) &= \sum_{v \in C} f(\delout(v)) - f(\delin(v))\\
+        &= f(\delout(C)) - f(\delin(C))\\
+        &\leq \mu(\delout(C))
+    \end{align*}
+    %
+    Note that we obtain equality if $f(\delout(C)) = \mu(\delout(C))$ and $f(\delin(C)) = 0$, in which case $f$ must be a maximal flow, and $C$ a min cut.
+\end{proof}
+
+As with maximal matchings, we attempt to find a maximal flow by finding ways of augmenting suboptimal flows to a maximal solution. Given a flow $f$, we construct the residual graph $G_f$, which has the same vertices as $G$, but whose edges are defined to be the set
+%
+\[ E_f = \{ uv \in E : f(uv) < \mu(uv) \} \coprod \{ vu : uv \in E, f(uv) > 0 \} \]
+%
+We shall denote the element $vu$ in the second set which makes up $E_f$ by $\overleftarrow{uv}$, since we obtained in from an edge $uv$ in $G$. Also define a capacity function
+%
+\[ \mu_f(uv) = \mu(uv) - f(uv)\ \ \ \ \ \ \ \ \ \mu_f(\overleftarrow{uv}) = f(uv) \]
+%
+Suppose we can find a simple path $P$ from $s$ to $t$ in $G_f$, and define $\alpha = \min_{e \in P} \mu_f(e)$. Consider a new flow
+%
+\[ f'(uv) = \begin{cases} f(uv) + \alpha : uv \in P \\ f(uv) - \alpha : \overleftarrow{uv} \in P \end{cases} \]
+%
+First we show that $f'$ is a flow. By the choice of $\alpha$, $0 \leq f' \leq \mu$. For each vertex $v \neq s,t$, we must show that flow conservation still holds. Let $e_1, e_1', \dots, e_n, e_n'$ be the edges in $G$ containing $v$ as an endpoint obtained from $P$, by reversing edges of the form $\overleftarrow{uv}$, considered in the order they appear in $P$. We may write pair up the edges in this manner because, for every edge that enters $v$ in $P$, there must be an edge that leaves $v$ in $P$. Let
+%
+\[ S_i = \begin{cases} f(e_i) - f'(e_i) & e_i = uv \\ f'(e_i) - f(e_i) & e_i = vu \end{cases} \]
+%
+Define $S_i'$ similarily for $e_i'$. Then, since no edges are repeated,
+%
+\begin{align*}
+    f'(\delout(v)) - f'(\delin(v)) &= f(\delout(v)) - f(\delin(v))\\
+    &\ \ \ \ \ + \sum_{i = 1}^n (S_i + S_i')
+\end{align*}
+%
+We now show $S_i + S_i' = 0$ for each $i$. This breaks into several cases.
+%
+\begin{itemize}
+    \item If $e_i = uv$, $e_i' = vw$, in which case $f'(e_i) = f(e_i) + \alpha$, $f'(e_i') = f(e_i') + \alpha$, and $S_i + S_i' = \alpha - \alpha = 0$.
+    \item If $e_i = uv$, $e_i' = wv$, then $e_i'$ was obtained from an edge of the form $\overleftarrow{vw}$ in $P$, in which case $f'(e_i') = f(e_i') - \alpha$, and so $S_i + S_i' = -\alpha -(-\alpha) = 0$.
+    \item If $e_i = vu$, $e_i' = wv$, then $e_i$ and $e_i'$ were obtained from reversed edges in $P$, and so $S_i + S_i' = (-\alpha) - (-\alpha) = 0$.
+    \item If $e_i = vu$, $e_i' = vw$, then $e_i$ was obtained from reversing edges, and so $S_i + S_i' = (-\alpha) + \alpha = 0$.
+\end{itemize}
+%
+And it follows, because flow conservation holds at $v$ for $f$, that it holds at $v$ for $f'$ as well. Finally, we find that $\text{val}(f') = \text{val}(f) + \alpha$, which can be shown by performing an analysis, similar to $v$ above, for $s$, noting that $s$ will have an extra edge at the beginning of the path, which causes the extra $\alpha$. We see that if $f$ is integral valued, and all edges in in $G$ are integral valued, then $f'$ will also be integral valued. All that remains is to show this augmentation method yields a maximum flow in all cases, after enough iterations.
+
+Let $f$ be a flow such that $G_f$ has no augmented path for $f$. Let $U$ be the nodes reachable from $s$ in $G_f$, easily verified to be a cut. Then $\text{val}(f) = \mu(\delout(U))$, proving maximality of the flow, and minimality of the cut $U$. To see this, let $uv \in \delout(U)$. Then $f(uv) = \mu(uv)$, for otherwise $v$ would be reachable from $s$ in $G_f$. Similarily, we must have $f(\delin(U)) = 0$, for if $vu \in \delin(U)$, and $f(vu) > 0$, then $\overleftarrow{vu} \in G_f$, and so $v$ is reachable from $s$, a contradiction. We conclude that
+%
+\[ \text{val}(f) = f(\delout(U)) - f(\delin(U)) = \mu(\delout(U)) \]
+%
+which shows that our augmenting paths approach works.
+
+The Ford Fulkerson algorithm solves the max flow problem by repeatedly augmenting an initial flow. In principle, this approach is correct, but if you do not find a residual path in a smart way, this algorithm does not terminate in polynomial time for all inputs. The graph in the figure above provides an example. We achieve much better estimates if we use breadth first search to find our residual path -- that is, we always take the shortest path (in length, not in weight) from $s$ to $t$.
+
+\begin{figure}
+\begin{center}
+\begin{tikzpicture}[transform shape]
+    \GraphInit[vstyle=Classic]
+
+    \Vertex['`x=-3,y=0]{S}
+    \Vertex[NoLabel,x=0,y=1.5]{A1}
+    \Vertex[NoLabel,x=0,y=-1.5]{A2}
+    \Vertex[x=3,y=0]{T}
+
+    \draw[label={$2^n$}, ->, thick](S)--(A1) node[draw=none,fill=none,midway,above] {$2^n$};
+    \draw[label={$1$}, ->, thick](A1)--(A2) node[draw=none,fill=none,midway,left] {1};
+    \draw[label={$2^n$}, ->, thick](S)--(A2) node[draw=none,fill=none,midway,below] {$2^n$};
+    \draw[label={$2^n$}, ->, thick](A1)--(T) node[draw=none,fill=none,midway,above] {$2^n$};
+    \draw[->, thick](A2)--(T) node[draw=none,fill=none,midway,below]  {$2^n$};
+\end{tikzpicture}
+\end{center}
+\caption{If our algorithm continuously switches between adding weights from left to right via the central edge, then we will need to compute $O(2^n)$ residual graphs before termination, even though the graph can be represented in $O(n)$ bits.}
+\end{figure}
+
+\end{document}
