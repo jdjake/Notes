@@ -1,5 +1,9 @@
 \input{../style.tex}
 
+\usepackage{amsmath}
+\usepackage{algorithm}
+\usepackage[noend]{algpseudocode}
+
 \DeclareMathOperator{\Dom}{Dom}
 \DeclareMathOperator{\delin}{\delta_{\text{in}}}
 \DeclareMathOperator{\delout}{\delta_{\text{out}}}
@@ -28,7 +32,7 @@
 
 Let $G = (V,E)$ be a graph. A {\bf matching} is $M \subset E$ such that no vertex in $V$ is the endpoint of more than one edge in $M$. $M$ is maximal if $|M| \geq |M'|$ for any other matching $M'$. The maximal matching problem asks us to find a fast algorithm to find a maximum matching in any graph.
 
-There is a polynomial time algorithm which can find matchings on any graph, but the problem is much more similar if $G$ is bipartite -- that is, if we may partition $V$ into the disjoint union $W \amalg U$ of two sets of vertices, such that every edge in $E$ contains a point in $W$ and a point in $U$. The bipartite matching asks us to find a maximal matching in a bipartite graph.
+There is a polynomial time algorithm which can find matchings on any graph, but the problem is much more simple if $G$ is bipartite -- that is, if we may partition $V$ into the disjoint union $W \amalg U$ of two sets of vertices, such that every edge in $E$ contains a point in $W$ and a point in $U$. The bipartite matching asks us to find a maximal matching in a bipartite graph.
 
 \begin{figure}
 \begin{center}
@@ -83,7 +87,7 @@ There is a polynomial time algorithm which can find matchings on any graph, but 
 
 Suppose we are given a particular matching in a bipartite graph. Is there a reliable procedure to improve the matching? We could proceed by a guess and check method -- we remove an edge in our matching, then try and add an edge using one of the vertices which has been freed up. If this edge cannot be taken because the end point is attached to an edge still in the matching, we remove that edge, freeing up more vertices. If we ever end up adding more edges than we started with (which occurs when we add an edge not attached to any points in the current matching), then we find a matching with an extra edge than before. This process is formalized by the `augmenting paths' construction.
 
-Given a particular matching $M$, construct a directed graph $G_M = (V \cup \{ s, t \},E_M)$, where $s$ and $t$ are new vertices. Let $w \in W$, $u \in U$. Construct the edges $E_m$ such that
+Given a particular matching $M$, construct a directed graph $G_M = (V \cup \{ s, t \},E_M)$, where $s$ and $t$ are new vertices. Let $w \in W$, $u \in U$. Construct the edges $E_M$ such that
 %
 \begin{itemize}
     \item $wu \in E_M$, if $wu \in M^c$.
@@ -96,7 +100,7 @@ Let $(s,w_1,u_1,\dots,w_n,u_n,t)$ be a path in $G_M$ from $s$ to $t$, with $w_i 
 
 Conversely, suppose that there is no path from $s$ to $t$ in $G_M$. We claim $M$ is then a maximal matching on $G$. Otherwise, we would have a matching $M^*$ with $|M^*| > |M|$. Consider the multigraph $H = (V, M \amalg M^*)$. Every vertex in $V$ has at most degree two (for it can only be the endpoint of a single edge in $M$, and a single endpoint in $M^*$), and thus $V$ breaks into cycles and paths. For any cycle $C$, we find $|M \cap C| = |M^* \cap C|$, for the edges in the cycle must alternate being being in $M$ and $M^*$. Since $|M^*| > |M|$, there must be a path $P$ in $H$ containing more edges in $M^*$ than in $M$. $P$ must therefore begin and end with a path in $M^*$, and we see that this path is exactly an augmenting path for $M$.
 
-This argument justifies the correctness of the following matching algorithm. We take any initial matching $M$. Then, we construct the augmenting path graph $G_M$, and use any of the standard algorithms to find a path from $s$ to $t$. If we have $2n$ nodes, and $e$ edges, then we can find a path in $O(e)$ time, and we can bound the number of augmentations we require to $O(n)$, so the algorithm runs in $O(en)$ time.
+This argument justifies the correctness of the following matching algorithm, a variant of the `Ford Fulkerson Algorithm'. We take any initial matching $M$. Then, we construct the augmenting path graph $G_M$, and use any of the standard algorithms to find a path from $s$ to $t$. If we have $2n$ nodes, and $m$ edges, then we can find a path in $O(m)$ time, and we can bound the number of augmentations we require to $O(n)$, so the algorithm runs in $O(nm)$ time.
 
 \section{Vertex Covers}
 
@@ -126,6 +130,29 @@ This gives us a method of finding a min cover in a graph. One equivalent form of
 
 \section{The Hopcroft-Karp Matching Algorithm}
 
+The augmenting path approach to finding a maximal matching in a Bipartite graph improves the length of a candidate matching by one for each cycle of the algorithm. If we were able to consistently find augmentations which improved matchings by more than one edge, we could find a faster algorithm for maximal matching.
+
+If $M$ is a matching, and $N_M$ be the length of a shortest alternating path in $G_M$, we shall let a collection of vertex disjoint alternating paths $P_1, \dots, P_n$ be called {\bf $\mathbf{M}$-blocking} if $|P_i| = N_M$, and every alternating path of length $N_M$ shares a vertex with one of the $P_i$. The next lemma is a simple generalization of the augmenting paths approach.
+
+\begin{theorem}
+    If $P_1, \dots, P_n$ are vertex disjoint $M$-alternating paths, then
+    %
+    \[ M' = (M - \cup P_i) \cup (\cup P_i - M) \]
+    %
+    is a matching with $|M'| = |M| + n$.
+\end{theorem}
+
+The Hopcroft-Karp algorithm proceeds as in Ford-Fulkerson, albeit improving matchings by taking $M$-blocking paths as augmentations, improving matchings in chunks. We shall discover a method to find an $M$-blocking in linear time, and also show the chunk method yields an asymptotic speedup in the number of cycles to find a maximal matching, so that Hopcroft-Karp is objectively faster than Ford-Fulkerson.
+
+\begin{lemma}
+    If $M$ is a matching, and $P_1, \dots, P_n$ an $M$-blocking set of paths. Then $M' = (M - \cup P_i) \cup (\cup P_i - M)$, and $N_{M'} \geq N_M + 1$.
+\end{lemma}
+\begin{proof}
+    Let $Q = (v_1, \dots, v_k)$ be an alternating path in $G_{M'}$ with $|Q| \leq |N_M|$, where $v_1$ and $v_k$ are $M'$ exposed. Then $v_1$ and $v_k$ are also $M$ exposed, because switching from $M$ to $M'$ only removes exposed vertices, not adds them.
+
+    Let $H$ be the directed graph with edges taken from all the edge lying on the $P_i$, and the directed edges of $Q$, except that we remove both copies of duplicate edges. The reverse $vu$ of any edge $uv$ in $Q$ that is not an edge on some $P_i$ must be on some $P_j$
+\end{proof}
+
 \section{Network Flow}
 
 Let $G = (V,E)$ be a directed graph with two identified vertices $s \neq t$.  Let $\mu: E \to \mathbf{R}^+$ be a function measuring the `capacity' of each edge in the graph (Thinking of the edges as if they were `pipes' which can only carry a certain throughput). Define, for $U \subset V$,
@@ -151,7 +178,7 @@ is maximized. This is essentially the amount of flow which is created at $f$. It
 %
 Thus the maximum flow problem tells us a method of maximizing the amount of flow which gets to $t$.
 
-There is an interesting relation between flows on graphs, and another structure known as a cut, which we will take full advantage of in finding solutions to the max flow problem. Define a $(s,t)$ cut on a directed graph $G = (V,E)$, with $s,t \in G$, to be $U \subset V$. If we have a capacity function $\mu$, then we define the value of the cut to be $\text{val}(U) = \mu(\delout(U))$. The min cut problem is to find a cut of smallest value.
+There is an interesting relation between flows on graphs, and another structure on these graphs known as a cut, which we will take full advantage of in finding solutions to the max flow problem. Define a $(s,t)$ cut on a directed graph $G = (V,E)$ with vertices $s$ and $t$, to be a partition of $V$ into two sets, one containing $s$, and one containing $t$. It is however more simple to consider a cut to be a subset $C$ of $V$ containing $s$, but not $t$. If we have a capacity function $\mu$, then we define the value of the cut to be $\text{val}(C) = \mu(\delout(C))$. The min cut problem is to find a cut of smallest value.
 
 \begin{lemma}
     If $f$ is a flow, and $C$ is an $(s,t)$ cut, then $\text{val}(f) \leq \mu(\delout(C))$.
@@ -200,22 +227,30 @@ We now show $S_i + S_i' = 0$ for each $i$. This breaks into several cases.
     \item If $e_i = vu$, $e_i' = vw$, then $e_i$ was obtained from reversing edges, and so $S_i + S_i' = (-\alpha) + \alpha = 0$.
 \end{itemize}
 %
-And it follows, because flow conservation holds at $v$ for $f$, that it holds at $v$ for $f'$ as well. Finally, we find that $\text{val}(f') = \text{val}(f) + \alpha$, which can be shown by performing an analysis, similar to $v$ above, for $s$, noting that $s$ will have an extra edge at the beginning of the path, which causes the extra $\alpha$. We see that if $f$ is integral valued, and all edges in in $G$ are integral valued, then $f'$ will also be integral valued. All that remains is to show this augmentation method yields a maximum flow in all cases, after enough iterations.
+And it follows, because flow conservation holds at $v$ for $f$, that it holds at $v$ for $f'$ as well. Finally, we find that $\text{val}(f') = \text{val}(f) + \alpha$, which can be shown by performing an analysis, similar to $v$ above, for $s$, noting that $s$ will have an extra edge at the beginning of the path, which causes the extra $\alpha$. All that remains is to show this augmentation method yields a maximum flow in all cases, after enough iterations.
 
-Let $f$ be a flow such that $G_f$ has no augmented path for $f$. Let $U$ be the nodes reachable from $s$ in $G_f$, easily verified to be a cut. Then $\text{val}(f) = \mu(\delout(U))$, proving maximality of the flow, and minimality of the cut $U$. To see this, let $uv \in \delout(U)$. Then $f(uv) = \mu(uv)$, for otherwise $v$ would be reachable from $s$ in $G_f$. Similarily, we must have $f(\delin(U)) = 0$, for if $vu \in \delin(U)$, and $f(vu) > 0$, then $\overleftarrow{vu} \in G_f$, and so $v$ is reachable from $s$, a contradiction. We conclude that
+Let $f$ be a flow for which $G_f$ has no augmenting path. Let $U$ be the nodes reachable from $s$ in $G_f$, easily verified to be a cut.
+%
+\[ \text{val}(f) = \mu(\delout(U)) \]
+%
+proving maximality of the flow, and minimality of the cut $U$. To see this, let $uv \in \delout(U)$. Then $f(uv) = \mu(uv)$, for otherwise $v$ would be reachable from $s$ in $G_f$. Similarily, we must have $f(\delin(U)) = 0$, for if $vu \in \delin(U)$, and $f(vu) > 0$, then $\overleftarrow{vu} \in G_f$, and so $v$ is reachable from $s$, a contradiction. We conclude that
 %
 \[ \text{val}(f) = f(\delout(U)) - f(\delin(U)) = \mu(\delout(U)) \]
 %
-which shows that our augmenting paths approach works.
+which shows that our augmenting paths approach works. Notice that if all edge weights are integral, then the augmenting flows are always integral, and thus there exists a maximal flow with interal weights.
 
-The Ford Fulkerson algorithm solves the max flow problem by repeatedly augmenting an initial flow. In principle, this approach is correct, but if you do not find a residual path in a smart way, this algorithm does not terminate in polynomial time for all inputs. The graph in the figure above provides an example. We achieve much better estimates if we use breadth first search to find our residual path -- that is, we always take the shortest path (in length, not in weight) from $s$ to $t$.
+The Ford Fulkerson algorithm solves the max flow problem by repeatedly augmenting an initial flow. In principle, this approach is correct, but if you do not find a residual path in a smart way, this algorithm does not terminate in polynomial time for all inputs. If all edge weights are integers $n_1, \dots, n_m$, then each augmentation increases the value of the flow by at least the greatest common factor of the $n_i$. Since there is a bound on the size of a maximal flow, obtained by taking the trivial cut $\{ s \}$, the algorithm will eventually terminate in time proportional to
+%
+\[ O \left(\frac{n_1 + \dots + n_m}{\lcm(n_1, \dots, n_m)} \right) \]
+%
+which is exponential in the bit complexity of the representation. We cannot do any better than this, as the graph in the figure above provides an example. If the edge weights are rational, similar results can be obtained by multiplying out denominators.
 
 \begin{figure}
 \begin{center}
 \begin{tikzpicture}[transform shape]
     \GraphInit[vstyle=Classic]
 
-    \Vertex['`x=-3,y=0]{S}
+    \Vertex[x=-3,y=0]{S}
     \Vertex[NoLabel,x=0,y=1.5]{A1}
     \Vertex[NoLabel,x=0,y=-1.5]{A2}
     \Vertex[x=3,y=0]{T}
@@ -229,5 +264,301 @@ The Ford Fulkerson algorithm solves the max flow problem by repeatedly augmentin
 \end{center}
 \caption{If our algorithm continuously switches between adding weights from left to right via the central edge, then we will need to compute $O(2^n)$ residual graphs before termination, even though the graph can be represented in $O(n)$ bits.}
 \end{figure}
+
+We achieve much better estimates if we use breadth first search to find our residual path -- that is, we always take the shortest path (in length, not in weight) from $s$ to $t$. But this, of course, requires a careful analysis.
+
+\begin{theorem}[Mader]
+    Let $G$ be an undirected graph, and $s,t$ vertices not directly connected by an edge. Then the maximal number of vertex-disjoint $(s,t)$ paths is equal to the minimum cardinality of a set $B \subset V - \{ s, t \}$ which contains a vertex in any path from $s$ to $t$.
+\end{theorem}
+\begin{proof}
+    Form a directed bipartite graph $W$, which consists of two copies of the vertices in $G$. If $v$ is a vertex, then we shall separately denote its copies by $v^1$ and $v^2$. If $uv$ is an edge in $G$, attach edges $u^2v^1$ and $v^2u^1$ to $W$, and attach an edge $v^1v^2$ for each vertex $v$. Define a capacity function on $w$ by
+    %
+    \[ \mu(u^2v^1) = \mu(v^2u^1) = \infty\ \ \ \ \ \mu(v^1v^2) = 1 \]
+    %
+    Note that any $(s,t)$ path in $G$ leads to an alternating path in $W$ from $s^2$ to $t^1$, which must cross at least one 1-capacity edge because there is no edge from $s$ to $t$.
+
+    Let $f$ be an integer-valued flow in $W$. Then $f \leq 1$, because an infinite capacity edge $u^2 v^1$ satisfies $f(u^2 v^1) \leq f(\delin(u^2)), f(\delout(v^1))$
+\end{proof}
+
+\section{Goldberg-Tarjan Push Relabel Algorithm}
+
+Our previous algorithm found max flows in a graph by starting with a flow, then slowly augmenting it, improving the flow value until it is maximum. An alternative idea would be to take a flow-like function, which would be a maximum flow if it obeyed flow conservation, and slowly correcting the flow until we have a maximum flow. Define a {\bf preflow} on a graph with capacity function $\mu$ to be a positive real-valued function $f$, defined on the edges, such that $f \leq \mu$, and $f(\delout(v)) - f(\delin(v)) \geq 0$ for all $v \neq s$. A preflow defines a residual graph $G_f$ in the same way that a flow does. A non-negative integer valued function $\psi$ on vertices is a {\bf distance label} for a particular preflow $f$ if $\psi(s) = |V|$, $\psi(t) = 0$, and $\psi(v) \leq \psi(w) + 1$ for $vw \in G_f$. Notice that if there is a path from $s$ to $t$ in $G_f$, then a distance label cannot exist, because if it has length $k$, then the inequality property gives
+%
+\[ \psi(s) \leq (k-1) + \psi(t) \leq (|V|-1) + \psi(t) < |V| \]
+%
+Thus if we continuously keep track of a preflow and a distance label, and keep adjusting the preflow and distance label to obtain a flow with a distance label, we have obtained a maximal flow. In order to describe a method achieving this, we call a vertex $v \neq s,t$ {\bf active} if $f(\delout(v)) - f(\delin(v)) > 0$, and an edge $vw \in G_f$ {\bf admissable} if $\psi(v) = \psi(w) + 1$. The goal is to find a preflow with no active vertices, in which case we have a flow.
+
+We now describe the push-relabel algorithm for finding the maximal flow in a graph. Begin by setting
+%
+\[ f(e) = \begin{cases} \mu(e) & e = sv \\ 0 & \text{otherwise} \end{cases}\ \ \ \ \ \ \ \ \ \ \psi(v) = \begin{cases} |V| & v = s \\ 0 & v \neq s \end{cases} \]
+%
+Then $\psi$ is a distance label for the preflow $f$, since $G_f$ has no edges leaving $s$.
+
+Suppose there is an active vertex $v$ relative to $f$. If there are no admissable edges leaving $v$, we may introduce an admissable edge by setting $\psi(v) = \min_{vw \in G_f} \psi(w) + 1$. This leaves the $f$ a preflow, and $\psi$ a distance label. If there is an admissable edge $vw$ leaving $v$, we set $f(vw)$ to be
+%
+\[ \min[ \mu_f(vw), f(\delout(v)) - f(\delin(v))] \]
+%
+Then $f \leq \mu$ still holds, and $f(\delout(v)) - f(\delin(v)) \geq 0$, since we can only have let at most $f(\delout(v)) - f(\delin(v))$ flow out. Also $f(\delout(w)) - f(\delin(w)) \geq 0$, since we have only let more flow in. The distance labeling is still a distance labelling, because we introduce an edge $wv$ in $G_f$, which requires that $\psi(w) \leq \psi(v) + 1 = \psi(w) + 2$, and an edge from $vw$, so that $\psi(v) = \psi(w) + 1 \leq \psi(w) + 1$. Thus the fact that $\psi$ is a distance labelling of the preflow $f$ is an invariant of the algorithm.
+
+\begin{lemma}
+    If $f$ is a preflow and $\psi$ a distance label for $f$, then if $f(\delout(v)) - f(\delin(v)) > 0$, there is a $(v,s)$ path in $G_f$.
+\end{lemma}
+\begin{proof}
+    s
+\end{proof}
+
+\section{Cuts in Undirected Graphs}
+
+Let $G$ be an undirected graph with capacities $\mu \geq 0$. For a subset of vertices $U$ let $\delta(U)$ denote all edges with a single endpoint in $U$. A {\bf cut} in such a graph is $\emptyset \subsetneq U \subsetneq V$, with value $\mu(\delta(U))$. The global minimum cut problem is to find the cut with $\mu(\delta(U))$ minimized, without regard to where any particular pair $(s,t)$ resides. A naive way to calculate the global minimum cut is to calculate a minimum $(s,t)$ cut, for all pairs $(s,t)$. This requires $n^2$ calls to the maximum flow problem.
+
+And while we discuss this problem, we briefly sketch out how to compute a max flow in an undirected graph. Given such a graph $G$ with capacity $\mu$, we define $H$ to be the directed graph with the same vertices as $G$, and for each edge $uv \in G$, two edges $uv$ and $vu$ in $H$, with a capacity function $\psi$ such that $\psi(uv) = \psi(vu) = \mu(uv)$. Given any flow $f$ in the directed graph, we obtain a flow $f'$ in the undirected graph of the same value by subtracting $\min(f(uv), f(vu))$ from each edge. Thus we can compute a max flow in $O(V^2E)$ time in an undirected graph as well. The value of min cuts in the directed graph is the same as the value of min cuts in the undirected graph, so the max flow min cut theorem holds here as well.
+
+More smartly, we notice that if $s$ is fixed, $s$ lies on either side of the cut, and since $\mu(\delta(U)) = \mu(\delta(U^c))$, we need only try each $(s,t)$ cut as $t$ ranges over all $t \neq s$, which only requires $n-1$ calls to the max flow function. In a directed call, we need try all $(s,t)$ cuts and $(t,s)$ cuts, which requires $2(n-1)$ calls to max flow.
+
+We can do much better than just computing a min-cut in $O(n)$ times. It turns out that there is a way to compactly represent all minimum cuts via $O(n)$ calls to a min-cut algorithm. The first step to the representation is to find a useful relationship between the values of the numbers $\lambda_{u,v}$, the capacities of a min $(u,v)$ cut.
+
+\begin{lemma}
+    Let $v_1, \dots, v_k$ be vertices. Then $\lambda_{v_1, v_k} \geq \min(\lambda_{v_1,v_2}, \dots, \lambda_{v_{k-1},v_k})$.
+\end{lemma}
+\begin{proof}
+    Assume that $k \geq 3$, since the proof is trivial for $k = 2$. Let $C$ be a $(v_1,v_k)$ cut with $\mu(\delta(C)) < \min(\lambda_{v_1,v_2}, \dots, \lambda_{v_{k-1},v_k})$. Inductively, we conclude that $v_2, \dots, v_k \in C$. But then by definition $C$ cannot be a $(v_1, v_k)$ cut.
+\end{proof}
+
+Let $T = (V,E)$ be a tree, and $e \in E$ an edge in the tree. Then the set of nodes in some connected components of the graph $T' = (V, E - \{ e \})$ is known as the {\bf fundamental cut}. There are only two connected components, one for each vertex on the ends of $e$. A {\bf Gomory-Hu Tree} for an undirected graph $G$ is a tree $T$ with the same vertices as $G$, such that the fundamental cut for every edge $uv \in T$ is a minimal $uv$ cut. It turns out that Gomory-Hu trees always exist, can be computed in $O(n)$ calls to a min $(s,t)$ cut function, and compactly represent every min cut in a graph, for if $(v_1, \dots, v_n)$ is the unique simple path in $T$, then
+%
+\[ \lambda_{v_1,v_n} = \min(\lambda_{v_1,v_2}, \dots, \lambda_{v_{n-1},v_n}) \]
+%
+Certainly the left side is $\geq$ to the right side. On the other hand, by construction of the tree, the fundamental cut of $(v_i,v_{i+1})$ is also a $(v_1,v_n)$, hence the left side is $\leq$ to the right side.
+
+\begin{theorem}[Cut Submodularity]
+    For $A,B \subset V$, we have
+    %
+    \[ \mu(\delta(A)) + \mu(\delta(B)) \geq \mu(\delta(A \cap B)) + \mu(\delta(A \cup B)) \]
+\end{theorem}
+\begin{proof}
+    Fix an edge $uv$. We shall show that every edge counted on the right side occurs at least as many times on the left side.
+    %
+    \begin{itemize}
+        \item Suppose $uv \in \delta(A \cap B)$, $uv \not \in \delta(A \cup B)$. Then we may assume $u \in A \cap B$, $v \not \in A \cap B$, $v \in A \cup B$. Then $\mu(uv)$ is counted once on the right hand side, and once on the left hand side.
+        \item Suppose $uv \not \in \delta(A \cap B)$, $uv \in \delta(A \cup B)$. Thus we may assume $u \in A \cup B$, $v \not \in A \cup B$, $u \not \in A \cap B$. Then $\mu(uv)$ is counted once on the right hand side, and once on the right hand side as well.
+        \item Suppose $uv \in \delta(A \cap B)$, $uv \in \delta(A \cup B)$. Then we may assume $u \in A \cup B$, $v \not \in A \cup B$, and so $u \in A \cap B$. Then $\mu(uv)$ is counted once on the right hand side, and twice on the left hand side.
+    \end{itemize}
+    %
+    Equality holds when $\delta(A \cap B)$ is disjoint from $\delta(A \cup B)$.
+\end{proof}
+
+\begin{lemma}
+    Let $s \neq t$ be two vertices in a graph $G$, and let $C$ be a min $(s,t)$ cut. If $u \neq v$ are also distinct vertices, then there is a min $(u,v)$ cut $D$ with $C \subset D$ or $D \cap C = \emptyset$.
+\end{lemma}
+\begin{proof}
+    Note that the statement is really redundant, because $C \subset D$ occurs exactly when $D^c \cap C = \emptyset$. Let $B$ be any minimum $(u,v)$ cut. We will modify $B$ to another min cut with the desired properties. Note that
+    %
+    \[ \mu(\delta(C)) + \mu(\delta(B)) \geq \mu(\delta(C \cap B)) + \mu(\delta(C \cup B)) \]
+    %
+    We may assume $s,u \in B$. Then $t \not \in B$, $C \cap B$ is an $(s,t)$ cut, hence $\mu(\delta(C \cap B)) \geq \mu(\delta(C))$, and so
+    %
+    \[ \mu(\delta(B)) \geq \mu(\delta(C \cup B)) \]
+    %
+    Now $u \in C \cup B$, and $v \not \in C \cup B$ (WHY?), so $D = C \cup B$ satisfies the properties of the lemma.
+\end{proof}
+
+\section{Potentials}
+
+Fix a directed graph $G$ with edge costs $c$. A {\bf potential} for $G$ is a mapping $\phi: V \to \mathbf{R}$ such that
+%
+\[ c_\phi(uv) = c(uv) - (\phi(v) - \phi(u)) \geq 0 \]
+%
+for al edges $uv$ in $G$. The costs $c_\phi$ are known as the potential costs.
+
+\begin{lemma}
+    For any $s-t$ path $P$ in $G$,
+    %
+    \[ c_\phi(P) = c(P) - (\phi(t) - \phi(s)) \]
+\end{lemma}
+\begin{proof}
+    If $P = (v_1, \dots, v_n)$, then we have an alternating sum
+    %
+    \[ c_\phi(P) = \sum_{k = 1}^{n-1} c(v_k v_{k+1}) + \phi(v_k) - \phi(v_{k+1}) = \sum_{k = 1}^{n-1} c(v_k v_{k+1}) + \phi(v_1) - \phi(v_n) \]
+    %
+    and the right side is exactly the form considered in the statement of the theorem.
+\end{proof}
+
+This is a discrete version of the fact that the energy change of a particle under a conservative force is invariant of the path of the particle, but only the change of the particles position in space. A simple corollary to the lemma is that the minimal cost paths relative to the metric $c$ are the same as the minimal cost paths relative to $c_\phi$.
+
+If a graph has negative edge weights, but possesses some potential $\phi$, then we can compute minimal paths under the cost function $c_\phi$ (which is now has positive edge weights everywhere) using Dijkstra's algorithm. There is a simple method to finding a potential, which we now detail.
+
+If $P$ is a cycle in a graph $G$ with potential $\phi$, we calculate
+%
+\[ c_\phi(P) = c(P) \geq 0 \]
+%
+so that $G$ has no negative weight cycles. Conversely, if $G$ has no negative weight cycles, then it turns out that $G$ has a potential, and this potential can be computed in polyomial time.
+
+\begin{theorem}
+    A potential can be computed for a graph $G$ can be computed in $O(nm)$ time.
+\end{theorem}
+\begin{proof}
+    Given $G$, compute a graph $H$ by adding a new vertex $r$ to $G$, and adding edges from $r$ to every vertex in $G$. Set $c(rv) = 0$ for all vertices $v \in V$, and let $\phi(v)$ be the cost of the cheapest walk from $r$ to $v$. This is well defined since $G$ has no negative weight cycles (there is a cheapest walk with no repeated vertices, for if a path has a repeated vertex, it contains a cycle, which must have non-negative weight, and this cycle can be removed with no penalty to the length of the walk -- we then need only consider the finite set of paths with no repeated vertices to obtain an answer). Note that $c(uv) + \phi(u) \geq \phi(v)$, so $\phi$ is a potential for $G$. The Bellman-Ford can compute $\phi$ in $O(nm)$ time.
+\end{proof}
+
+Let $\omega$ be a differential 1-form on a manifold $M$ such that
+%
+\[ \int_\gamma \omega \geq 0 \]
+%
+for any cycle $\gamma$. Then if $\gamma$ and $\delta$ are two paths from a point $x$ to a point $y$, we find
+%
+\[ \int_\gamma \omega - \int_\delta \omega, \int_\delta \omega - \int_\gamma \omega \geq 0 \]
+%
+so $\int_\gamma \omega = \int_\delta \omega$, and given a fixed $x$, we can define
+%
+\[ F(y) = \int_\gamma \omega \]
+%
+where $\gamma$ is a path from $x$ to $y$, and one verifies that $dF = \omega$, so that
+%
+\[ \int_\gamma \omega - (F(y) - F(x)) = 0 \]
+%
+a stronger fact which is analogous to the result above, although our result is weaker because in directed graphs we cannot perform the swapping trick to obtain equality of all paths.
+
+\section{Minimum Cost Flows}
+
+Throughout this section, we fix a directed graph with edge costs $c$, edge capacities $\mu$, fixed vertices $s,t$, and a target flow value $\gamma$. The minimum cost flow problem tries to find a flow $f$ with value $\text{val}(f) \geq \gamma$, which minimizes the cost $\text{cost}(f) = \sum c(e) f(e)$, or to determine if no such flow exists.
+
+We can certainly compute in polynomial time if a flow exists satisfying the constraints, because we can find a maximal flow in the graph. It is not so clear that we can find such a flow with minimal cost. It shall always be the case that the minimal flow satisfies $\text{val}(f) = \gamma$, because given any flow $f$, the value of the flow $g = \text{val}(f)/\gamma f$ satisfies $\text{val}(g) = \gamma$, and $\text{cost}(g) = \text{val}(f)/\gamma \sum c(e) f(e)$, which will be smaller than $\text{cost}(f)$ if $\text{val}(f) \neq \gamma$.
+
+\section{Minimal Cost Bipartite Matching}
+
+We now take a brief aside to discuss how minimal cost flows can be used to solve the analogous problem in bipartite graphs. Given the name, the minimal cost bipartite matching problem should be fairly self explanatory. We take a particular Bipartite graph $G = (L \cup R, E)$ with edge costs $c$, and we must find a minimum cost perfect matching on $G$ in polynomial time. That is, our goal is a perfect matching $M$ which minimizes
+%
+\[ \text{cost}(M) = \sum_{e \in M} c(e) \]
+%
+The similarity to the minimal cost flow problem immediately suggests a connection between the two problems.
+
+We can formulate the perfect matching problem as a minimal cost max flow problem, by modifying slightly the standard reformulation of the maximal matching problem as a max flow problem. The original process is to construct a directed bipartite graph $H$, whose vertices are obtained from $G$ by adding two new vertices $s$ and $t$, orienting all edges in $E$ so that they point from $L$ to $R$, and adding new edges $sv$, for $v \in L$, and $wt$, for $w \in R$. If we define a capacity function $\mu = 1$, then there is a one-to-one correspondence between integral valued $s-t$ flows and matchings in the graph. To see this, note that an integral valued flow $f$ gives rise to a characteristic function $\chi_{A_f}$ on the edges of $G$, and the flow conservation law shows that if $e$ and $e'$ are adjoint, then $\chi_{A_f}(e) + \chi_{A_f}(e') \leq 1$, so that $A_f$ forms a matching on $G$. Correspondingly, the reverse process takes a matching to a characteristic function on the edges of $G$, which can easily be completed into a flow on $H$.
+
+Now we define a cost function $c'$ on $H$ in a way which mirrors the cost function $c$ on $G$. We let
+%
+\[ c'(sv) = c'(wt) = 0\ \ \ \ \ c'(vw) = c(vw) \]
+%
+Then we see that the correspondence described above preserves the cost function. That is, if a matching $M$ corresponds to a flow $f$, then $\text{cost}(M) = \text{cost}(f)$, because $f$ is obtained from $M$ by adding edges of the form $sv$ and $wt$, which add no value to the cost of the flow. Thus if we find a minimal cost maximal flow in $H$, we can find a minimal cost perfect matching in $G$, and we know we can find such a maximal flow using the successive shortest paths algorithm, and we need only compute $|L| = |R|$ successive paths, since each iteration of the algorith improves the length of the candidate path, hence now have an algorithm for the minimal cost perfect matching problem which runs in $O(n(m + n \log n))$ time.
+
+\section{Minimum Mean Cycle Cancelling}
+
+We already know that a flow $f$ has minimal cost if $G_f$ contains no negative-cost cycles. This suggests that a strategy for finding minimal cost flows is obtained from successively pruning negative-cost cycles from $G_f$ until there are none left. As with Ford Fulkerson, we must be careful which cycles we prune in order to guarantee a good asymptotic speed to our algorithm. It turns out that fast asymptotic results are available if we prune negative cycles with `minimum mean'.
+
+\begin{algorithm}
+\caption{The Minimum Mean Cycle Canceling Algorithm}
+\begin{algorithmic}[1]
+\State $f \gets$ any $(s,t)$ flow of value $\gamma$ (found in $O(n^3 \sqrt{m})$ time)
+\While {$G_f$ contains negative weight cycles}
+\State $C \gets$ a cycle in $G$ which minimizes its mean cost $c(C)/|C|$.
+\State Augment $f$ along $C$.
+\EndWhile
+\State \Return $f$
+\end{algorithmic}
+\end{algorithm}
+
+The algorithm certainly terminates, since the cost of $f$ decreases for every iteration of the algorithm, at a rate bounded by the rational values of the edge costs. It remains to be seen that the algorithm terminates in a polynomial amount of time (and this is not immediately obvious, and is not true if we do not take cycles which minimize the mean cost).
+
+First, we argue why we can find a minimum ratio cycle $C$ in polynomial time.
+
+\begin{lemma}
+    Any Eulerian multigraph $H = (W,F)$ with edge costs $c$ contains a cycle $C$ such that
+    %
+    \[ \frac{c(C)}{|C|} \leq \frac{c(F)}{|F|} \]
+\end{lemma}
+\begin{proof}
+    Perform a cycle decomposition on $H$, writing $F = C_1 \amalg \dots \amalg C_n$, we find
+    %
+    \[ \frac{c(F)}{|F|} = \frac{c(C_1) + \dots + c(C_n)}{|C_1| + \dots + |C_n|} \]
+    %
+    If $c(C_i)/|C_i| > c(F)/|F|$ for each $i$, then $c(C_i) |F| > c(F) |C_i|$ also holds for each $i$, and so, summing up we find
+    %
+    \[ c(F) |F| = \sum_i c(C_i) |F| > \sum_i c(F) |C_i| = |F| c(F) \]
+    %
+    a clear contradiction which proves the existence of a $C_i$ satisfying the constraints of the lemma.
+\end{proof}
+
+Given any cycle $C$, the corresponding multigraph (which contains duplicates of repeated edges in the cycle) is Eulerian, and can thus be broken up into disjoint cycles. The lemma above shows that if $C$ is not a simple cycle, we can always find a strictly smaller cycle $C'$ without increasing the mean value of the cycle, so that we need only search simple cycles to find a minimum mean.
+
+For $k \leq n$, define $\delta_k(v)$ to be the cheapest closed walk from $v$ to itself using exactly $k$ (not necessarily distinct) edges. If we let $\delta_k(v,w)$ be the cheapest path from $v$ to $w$ using $k$ edges, then we find
+%
+\[ \delta_k(v,w) = \min_{u \in V}\ c(v,u) + \delta_{k-1}(u,w) \]
+%
+Each value of $\delta_k(v,w)$ can be computed in $O(m)$ time, and so the set of all $\delta_k(v,w)$ can be computed in $O(mn^3)$ time. Let $v^*$ and $k^*$ minimize $\delta_{k^*}(v^*)/k^*$, and pick $k^*$ to be smallest to break ties. Then the walk from $v^*$ in $k^*$ stops is verified to be a cycle, from the above remark, and thus is a minimum ratio cycle, since it is a minimum ratio walk in general.
+
+\begin{theorem}
+    The number of iterations of the minimum mean cycle cancelling algorithm is $O(m^2 n \log n)$.
+\end{theorem}
+\begin{proof}
+    Consider the sequence of flows
+    %
+    \[ f_1, f_2, \dots, f_N \]
+    %
+    which are found in the MMCC algorithm, together with the cycles
+    %
+    \[ C_1, \dots, C_{N-1} \]
+    %
+    which are augmented to produce the sequence of flows. For $i < j$, define
+    %
+    \[ \alpha(i,j) = \{ e, \overleftarrow{e} : e, \overleftarrow{e} \in C_i \cup C_j \} \]
+    %
+
+    \begin{lemma}
+        If $\alpha(i,k) = \emptyset$ for $i < k < j$, then we find
+        %
+        \[ \frac{c(C_i)}{|C_i|} \leq \frac{n}{n-|\alpha(i,j)|}\ \frac{c(C_j)}{|C_j|} \]
+    \end{lemma}
+    \begin{proof}
+    %
+    Let $H = C_i \coprod C_j - \alpha(i,j)$ (essentially, $H$ is obtained from the cycles $C_i$ and $C_j$ by keeping duplicate edges, and `cancelling out' edges with their reverse). Then $H$ is Eulerian, for $C_i \coprod C_j$ is Eulerian, and removing edges along with their reverse changes both the in degree and out degree of a vertex by the same amount. Furthermore, each edge in $H$ is in $E_{f_i}$ because $\alpha(i,k) = \emptyset$, so
+    %
+    \begin{align*}
+        \frac{c(C_i)}{|C_i|} (|C_i| + |C_j|) &= \frac{c(C_i)}{|C_i|} (|H| + |\alpha(i,j)|)\\
+        &\leq c(H) + |\alpha(i,j)| \frac{c(C_i)}{|C_i|}\\
+        &= c(C_i) + c(C_j) + |\alpha(i,j)| \frac{c(C_i)}{|C_i|}
+    \end{align*}
+    %
+    where we have used the fact that $c(H) = c(C_i) + c(C_j)$ since the cost of reverse edges cancels out. This can be rephrased as
+    %
+    \[ \frac{c(C_i)}{|C_i|} \left( |C_j| - |\alpha(i,j)| \right) \leq \frac{c(C_j)}{|C_j|} |C_j| \]
+    %
+    And dividing out, we find
+    %
+    \[ \frac{c(C_i)}{|C_i|} \leq \frac{|C_j|}{|C_j| - |\alpha(i,j)|} \frac{c(C_j)}{|C_j|} \]
+    %
+    and this inequality can be weakened to the form above, because $x/(x-y)$ is a decreasing function of $x$ for $y > 0$, and $n/(n-|\alpha(i,j)|) \geq 0$.
+    \end{proof}
+
+    Returning to our original proof, we see that $j = i+1$ satisfies the theorem, and proves that the minimum mean ratios are non-decreasing. If $i < j$ is the smallest value such that $\alpha(k,i) \neq \emptyset$, for some $i \leq k < j$, then we find
+    %
+    \[ \frac{c(C_i)}{|C_i|} \leq \frac{n}{n - 2} \frac{c(C_j)}{|C_j|} = \left(1 - \frac{n}{2} \right) \frac{c(C_j)}{|C_j|} \]
+    %
+    and we have a bound $j \leq i + m$. To see this, note that at least one edge is removed in the residual graph from each of the cycles $C_i, C_{i+1}, \dots, C_{i+m}$ during the algorithm. Thus we conclude
+    %
+    \[ \frac{c(C_i)}{|C_i|} \leq \left( 1 - \frac{n}{2} \right)^n \frac{c(C_{i+nm})}{|C_{i+nm}|} \leq e^{-1/2} \frac{c(C_{i+nm})}{|C_{i+nm}|} \leq 2 \frac{c(C_{i+nm})}{|C_{i+nm}|} \]
+    %
+    If the edge weights are integral (and all rational cost problems can be reduced to this form), this already gives us enough information to prove a polynomial time bound. Note that since the minimum mean cycles are simple, we must have
+    %
+    \[ \frac{|c(C_i)|}{|C_i|} \geq \frac{1}{n} \]
+    %
+    and
+    %
+    \[ \frac{|c(C_1)|}{|C_1|} \leq \min_{e \in E} |c(e)| \]
+    %
+    so if $N$ is large enough that $2^{-N} \min_{e \in E} |c(e)| \leq n^{-1}$, then
+    %
+    \[ \frac{c(C_{i+Nnm})}{|C_{i+Nnm}|} \geq \frac{1}{2^N} \frac{c(C_1)}{|C_1|} \geq - \frac{\min_{e \in E} |c(e)|}{2^N} \geq -\frac{1}{n} \]
+    %
+    which forces the mean cycle ratio to be positive, and hence the algorithm will terminate. We can choose any $\lg(n \min_{e \in E} |c(E)|) < N$, so the algorithm terminates in at most
+    %
+    \[ nm  \lceil \lg n \min_{e \in E} |c(E)| \rceil \]
+    %
+    iterations, which is polynomial in the bit complexity of the algorithm, since if the costs are given with $l$ bits, then the total bit complexity is about $\Theta(n + ml)$, and $|c(E)| \leq 2^l$, so
+    %
+    \[ nm \lceil \lg n \min_{e \in E} |c(E)| \receil \leq nm \lg(n) + lnm \]
+    %
+    This finishes our initial analysis of the mean cycle canceling algorithm.
+\end{proof}
+
+The polynomial bound for this algorithm is absolutely awful, and we can do much much better. In the next lecture we will begin the arguments that give us a much better bound on the runtime on this algorithm.
 
 \end{document}

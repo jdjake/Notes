@@ -1,21 +1,4 @@
-\documentclass{report}
-
-\usepackage{amsmath}
-\usepackage{amsthm}
-\usepackage{mathtools}
-
-\DeclareMathOperator{\real}{\mathbf{R}}
-\DeclareMathOperator{\nat}{\mathbf{N}}
-\DeclarePairedDelimiter\ceil{\lceil}{\rceil}
-\DeclarePairedDelimiter\floor{\lfloor}{\rfloor}
-
-\newtheorem{definition}{Definition}
-
-\newtheorem{theorem}{Theorem}[chapter]
-\newtheorem{lemma}{Lemma}[theorem]
-\newtheorem{corollary}{Corollary}[theorem]
-
-\newtheorem{exercise}{Exercise}
+\input{../style.tex}
 
 \title{Linear Programming}
 \author{Jacob Denson}
@@ -27,17 +10,18 @@
 
     Most problems in computing science can be described in a specific format. The problem, given an input, has a certain set of feasible outputs. On this output we can place a partial ordering. The problem is then phrased as an optimization -- find the maximum or minimum feasible solution according to the ordering placed on the solutions. Examples of these problems are finding the `shortest' path, the `longest' common subsequence. Since we only have a finite set of solutions, the maximum can always be obtained in these problems.
 
-    Linear Programming attempts to provide a general solution to problems where solutions can be mapped to real numbers in a linear fashion, with an ordering defined on this, and such that feasible solutions are specified by linear constraints. We give an example to show this idea in action.
+    Linear Programming attempts to provide a general solution to optimization problems with a `linear' structure. We attempt to optimize a linear reward function, subject to linear constraints, where the parameters we attempt to optimize take values in a linear space. We give an example to show this idea in action.
 
-    Suppose we are a store attempting to stock items. Each item needs to be created from a specific number of ingredients we need to buy, each with a specific stock. For simplicity, suppose we can only stock two items, apple pie, and chocolate bars. Let $a$ be the number of apple pies we make, and $c$ the number of chocolate bars.
+    \begin{example}
+    Suppose we are stocking items at a store. Each item needs to be created from a specific number of ingredients we need to buy, each with a specific stock. For simplicity, suppose we can only stock two items, apple pie, and chocolate bars. Let $a$ be the number of apple pies we make, and $c$ the number of chocolate bars.
 
     For each apple pie we make, we must buy $3$ apples, and use $1/2$ bags of sugar, and for every three chocolate bars, $1$ bag of sugar must be used. Each apple is $\$1$, and each bag of sugar is $\$3$. Then we can model the cost in dollars of the process by the equation
     %
-    \[ 4.5a + 1/3c \]
+    \[ 9a/2 + 1/3c \]
     %
     However, we are not only buying items, but selling them as well. Each apple pie is sold for $\$6$, and each chocolate bar for $\$1$. The problem is to find the optimal number of applie pies and chocolate bars to make, maximizing the equation
     %
-    \[ (6 - 4.5)a + (1 - 1/3)c \]
+    \[ (6 - 9/2)a + (1 - 1/3)c \]
 
     The problem with the current description is that theoretically we could make as many apple pies and chocolate bars as we wanted, making theoretically an unbounded amount of money. Thus we add additional constraints. There is only a limited supply of sugar: we can only buy 50 bags. This means that, if we let $s = 1/2a + 1/3c$ be the number of bags of sugar we buy
     %
@@ -51,21 +35,32 @@
     %
     \[ a + c \leq 40 \]
     %
-    With these constraints, the problem of maximizing revenue becomes much more involved. This is an example of a linear program. If we require the number of apple pies and chocolate bars we make to be integers, then this is an integer linear programming.
+    With these constraints, the problem of maximizing revenue becomes much more involved. This is an example of a linear program. If we require the number of apple pies and chocolate bars we make to be integers, then this is an integer linear programming, which is computationally much harder.
+    \end{example}
 
-    \begin{definition}
-        A linear program is a tuple $(r,\mathcal{A}, \mathcal{B})$, where $r$ is a vector called the objective function, and $\mathcal{F} = (a_1, a_2, \dots, a_m)$ is a finite set of vectors in $\real^n$ called the constraints, each with an associated $b_i$ in the finite set of values $\mathcal{B}$.
-    \end{definition}
+    A linear program is specified by a reward functional $r \in V^*$ contraint functionals $c_1, \dots, c_n \in V^*$, and a contraint vector $b \in \mathbf{R}^n$. The aim of the linear program is to maximize $r(v)$, subject to the contraints that $c_i(v) \leq b_i$. For computational purposes, we can choose a $m$ dimensional basis for $V$, and specify the problem with a contraint matrix $M \in M_{n,m}(\mathbf{R})$ and reward functional $r \in \mathbf{R}^m$. Our job is then to maximize $\langle r, v \rangle$, subject to the constraints
+    %
+    \[ \sum M_{ij} v_j \leq b_i \]
+    %
+    which we write in condensed form as $Mv \leq b$. We also assume the constraints $v_i \geq 0$ for purposes of calculation.
 
-    It is customary to specify a linear programming in the following way:
-
-    \begin{alignat*}{3}
-        &\text{maximize }   & r_1x_1 + r_2x_2 + \dots r_nx_n &\\
-        &\text{subject to } & a_{11}x_1 + a_{12}x_2 + \dots a_{1n}x_n &\leq b_2\\
-        &                   & a_{21}x_1 + a_{22}x_2 + \dots a_{2n}x_n &\leq b_2\\
-        &                   & \vdots &\\
-        &                   & a_{m1}x_1 + a_{m2}x_2 + \dots a_{mn}x_n &\leq b_m
-    \end{alignat*}
+    Our problem is much more general than upper bounding constraints, for there are ways of formulating more general problems into standard form, in a way in which solutions to the original problem can be recovered. First, if we want a contraint
+    %
+    \[ \sum a_i v_j \geq b_i \]
+    %
+    Then we just add the contraint
+    %
+    \[ \sum (-a_i) v_j \leq -b_i \]
+    %
+    If we want an equality contraint
+    %
+    \[ \sum a_i v_j = b_i \]
+    %
+    Then we just introduce two constraints
+    %
+    \[ \sum a_i v_j \leq b_i\ \ \ \ \ \sum a_i v_j \geq b_i \]
+    %
+    If we don't have the contraint $v_i \geq 0$ for some variable $v_i$, then we replace $v_i$ with two new variables $w_i$ and $w_i'$, and replace any instance of $v_i$ in the constraints via the equality $v_i = w_i - w_i'$. We can then assume $w_i, w_i' \geq 0$.
 
     Without loss of generality, we may consider the problem of linear program as a maximization of $\langle r, x \rangle$. If our real objective is to minimize $\langle r, x \rangle$, this is equivalent to maximizing $\langle -r, x \rangle$. Furthermore, we may also assume each constraint is a less than or equal to relationship, as if we want the constraint $\langle a_i, v \rangle \geq b_i$, this is equivalent to saying $\langle -a_i, v \rangle \leq -b_i$.
 
@@ -231,5 +226,28 @@
         &\text{subject to}  & xA &\geq c\\
         &                   & x  &\geq 0
     \end{alignat*}
+
+\chapter{Applications to Combinatorial Optimization}
+
+Unfortunately, we normally have to perform combinatorial problems over $\mathbf{Z}$-modules, a much more intractable problem than over real vector spaces. However, there is a trick, known as unimodularity, which enables us to optimize over the real vector space corresponding to the $\mathbf{Z}$-module, and then recover results in the original space.
+
+\begin{example}
+    Let $G = (L \cup R, E)$ be a Bipartite graph. The problem of finding a maximal matching in this graph can be reduced to integer linear programming. Let $V = \mathbf{Z} \cdot E$ be the free module generated by the edges. Consider the linear function $\lambda_v$ which assigns a value of one to edges containing $v$ as an endpoint, and assigning zero to other edges. We can also consider the functionals $\mu_e$ which maps $e$ to one, and other edges to zero. The bipartite matching problem can then be expressed as maximizing $\sum_e \mu_e(w)$ over $V$, subject to the contraints that $0 \leq \lambda_v(w) \leq 1$ and $0 \leq \mu_e(w) \leq 1$. It turns out that the matrix constraints related to this problem are unimodular, so we may solve the problem using non-integer linear programming in $\mathbf{R} \cdot E$, and then project results back into $\mathbf{Z} \cdot E$, which makes the problem tractable.
+\end{example}
+
+\begin{example}
+    The maximum $s-t$ flow problem for a graph $(V,E)$ with capacities $c$ can be represented as a linear program over $\mathbf{R} \cdot E$. We attempt to maximize the operator $\mu_{\text{out}} - \mu_{\text{in}}$, where $\mu_{\text{out}} = \lambda_t$ and $\mu_{\text{in}} = \lambda_s$, using the notation of the last example. The constraints are that $0 \leq \mu_e \leq c(e)$. The constraint matrix is not necessarily unimodular, but here we allow real values, so we can solve the problem in polynomial time using linear programming.
+\end{example}
+
+A {\bf network matrix} is a matrix corresponding to a tree $(V,E)$, with edges oriented arbitrarily. Given a pair of vectors $(v,w)$, and an edge $e$, we define $A_{(v,w),e} = 1$ if $e$ appears on the $v-w$ path positively, $-1$ if it appears negatively, and zero if it doesn't occur on the path.
+
+\begin{theorem}
+    Every network matrix is totally unimodular.
+\end{theorem}
+\begin{proof}
+    We prove by induction. Let $e = uv$ be an edge, where $u$ is a leaf node. We may assume $e$ is directed this way, because swapping the orientation of the edge preserves the unimodularity of the network matrix (it either maintains the determinant of each submatrix, or negates it). Any submatrix of $A$ which does not contain the column corresponding to $e$ is unimodular by induction, since it corresponds to a submatrix in $(V-u, E-e)$.
+
+    Thus we may asume the submatrices of $B$ we are analyzing contains the column corresponding to $e$. If no column of $B$ is for a pari with $s_i = u$, then $\text{det}(B) = 0$.
+\end{proof}
 
 \end{document}

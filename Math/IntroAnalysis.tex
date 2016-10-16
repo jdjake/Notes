@@ -1,0 +1,275 @@
+\input{../style.tex}
+
+\title{Introductory Analysis}
+\author{Jacob Denson}
+
+\begin{document}
+
+\pagenumbering{gobble}
+\maketitle
+\tableofcontents
+\pagenumbering{arabic}
+
+\chapter{Differential Equations}
+
+Here we describe some general techniques for solving differential equations. The goal is simple -- we are given an arbitrary vector field $v: \mathbf{R}^n \to \mathbf{R}^n$, and we must find the family of all curves $c$ for which $v \circ c = c'$ holds on the domain of the curve. More generally, we are given a function $F: \mathbf{R}^{n+1} \to \mathbf{R}^m$ (which can be seen as a system of $m$ equations), and we wish to find real-valued differentiable functions $f$ such that
+%
+\[ F(f(t), \dots, f^{(n)}(t), t) = 0 \]
+%
+Geometrically, we must find a curve $c: \mathbf{R} \to \mathbf{R}^{n+1}$ such that
+%
+\[ c_1'(t) = c_2\ \ \ c_2'(t) = c_3(t)\ \ \ \dots\ \ \ c_{n-1}'(t) = c_{n-1}(t) \]
+\[ F(c_1(t), c_2(t), \dots, c_{n-1}(t), c_n'(t), c_{n+1}(t)) = 0 \]
+\[ c_{n+1}'(t) = 1 \]
+%
+Thus we think of $c_{n+1}$ as the time variable, and the other variables as derivatives of another function. Normally we try and find such a solution such that $c_1(0) = x_0, c_2(0) = x'_0, \dots, c_n(0) = x^{(n)}_0, c_{n+1}(0) = t_0$. If $F$ is $C^1$ and everywhere non-singular, we can use the inverse function theorem to locally write
+%
+\[ c_{n+1}'(t) = f(c_1(t), \dots, c_n(t)) \]
+%
+around $(x_0, \dots, x^{(n)}_0, t_0)$, which gives us a local vector field around $(c_1, \dots, c_n)$ defining the same set of solutions as $F$, so if we assume $F$ is non-singular we have no real loss of generality in proofs of the local properties of solutions in assuming a vector field defines the differential equation. We will also use Leibnitz notation in certain cases, for instance writing
+%
+\[ f(x,y) dx + g(x,y) dy = 0 \]
+%
+For the simple differential equation corresponding to
+%
+\[ F(t,x,x') = f(t,x) + g(t,x) x' \]
+%
+which is non-singular provided that for no $(t,x,x')$ we have
+%
+\[ \partial_t f(t,x,x') = \partial_t g(t,x) x' = \partial_x f(t,x) = \partial_x g(t,x) x' = g(t,x) = 0 \]
+%
+simultanously hold.
+
+The most basic type of differential equation is of the form $f'(x) = g(x)$, where $g$ is continuous. The solution family is then found by applying the fundamental theorem of calculus, writing
+%
+\[ f(x) = f(0) + \int_0^x g(t) \]
+%
+and if we let $f(0)$ over all real numbers, we obtain all solutions to the equation. In general, if we find a single function with $f'(x) = g(x)$, then the set of all solutions to the equation is of the form $f(x) + A$.
+
+More advanced techniques are required for more general formulas. A differential equation is separable if it can be rearranged to the form
+%
+\[ h(y) dy + f(x) dx = 0 \]
+%
+Any solution to this equation is also a solution to the equation
+%
+\[ h(f(x)) f'(x) = g(x) \]
+%
+Applying the chain rule, in reverse, we find
+%
+\[ h(f(0)) + \int_{f(0)}^{f(x)} h(t) = \int_0^x g(t) \]
+%
+Which hopefully simplifies the equation to a more simpler form. If we write the equation in Leibnitz notation
+%
+\[ \frac{dy}{dx} = g(x)/f(y) \]
+%
+Then the strategy of separability can be obtained by (formally) writing
+%
+\[ f(y) dy = g(x) dx \]
+%
+And then integrating
+%
+\[ \int f(y) dy = \int g(x) dx \]
+
+\begin{example}
+    Consider the equation
+    %
+    \[ e^{f(x)} f'(x) = x (x-2) \]
+    %
+    Integrating, we find
+    %
+    \[ e^{f(x)} - e^{f(0)} = \int_{f(0)}^{f(x)} e^t = \int_0^x t(t-2) = x^3/3 - x^2 \]
+    %
+    Hence
+    %
+    \[ f(x) = \log(e^{f(0)} + x^3/3 - x^2) \]
+\end{example}
+
+An equation $f: \mathbf{R}^n \to \mathbf{R}$ is {\bf homogenous of degree $n$} if $f(tv) = t^n f(v)$. A differential equation
+%
+\[ M(x,y) dy + N(x,y) dx = 0 \]
+%
+is homogenous if $M$ and $N$ are homogenous of the same order $n$. If we let $y = xv$, then $dy = vdx + xdv$, and so
+%
+\[ x M(x,xv) dv + [v M(x,xv) + N(x,y)] dx = 0 \]
+%
+Now
+%
+\[ x M(x,xv) =  x^{n+1} M(1,v) \]
+\[ v M(x,xv) + N(x,xv) = x^n[vM(1,v) + N(1,v)] \]
+%
+which separates the variables of $N$, so we can write
+%
+\[ \frac{M(1,v)}{vM(1,v) + N(1,v)} dv + \frac{dx}{x} \]
+%
+which is a separable equation.
+
+\begin{example}
+    \[ (x^2 + y^2) dx - 2xy dy = 0 \]
+    %
+    Both coefficients are homogenous of degree 2, so if we let $y = xv$, we find
+    %
+    \[ x^2[1 - v^2] dx - 2x^3v dv \]
+    %
+    Which can be rewritten
+    %
+    \[ 2 \frac{v dv}{1-v^2} = \frac{dx}{x} \]
+    %
+    Hence
+    %
+    \[ \log\left( \frac{1-v_0^2}{1 - v^2} \right) = \log(x/x_0) \]
+    %
+    \[ v = \pm \sqrt{ 1 - \frac{x_0 (1 - v_0^2)}{x} } \]
+    \[ y = \pm x \sqrt{ 1 - \frac{1 - y_0^2}{x x_0} } \]
+\end{example}
+
+The differential of a function $f: \mathbf{R}^2 \to \mathbf{R}$ is
+%
+\[ df = \frac{\partial f}{\partial x} dx + \frac{\partial f}{\partial y} dy \]
+%
+Any differential $a dx + b dy$ can be written in this form, as long as the domain is simply connected and $\partial_x b = \partial_y a$. Then if $f(x,c(x)) = A$ for all $a$, we find
+%
+\[ a + b c' = \partial_x f + \partial_y f c'(x) = 0 \]
+%
+So $c$ satisfies the differential equation.
+
+\begin{example}
+    The differential equation
+    %
+    \[ (1 - 2xy) dx + (4y^3 - x^2) dy = 0 \]
+    %
+    can be expressed $df = 0$, where
+    %
+    \[ f(x,y) = x - x^2y + y^4 \]
+    %
+    So the solutions the equation satisfy the algebraic equation
+    %
+    \[ x - x^2 c(x) + c^4(x) = A \]
+\end{example}
+
+If a differential equation
+%
+\[ a dx + b dy \]
+%
+is not exact, we may be able to find $f$ such that $f a dx + f b dy$ is exact. $f$ is known as an integrating factor for the equation.
+
+\section{Linear Equations}
+
+Suppose that $v(x_0) = 0$. Then, locally around $x_0$, we may linearize, writing
+%
+\[ v_i(x - x_0) = \sum_{j = 1}^n \frac{\partial v_i}{\partial x_j} x_j \]
+%
+The resulting equation is the best linear approximation to $v$. For instance, linearize the pendulum equation $v(x) = - \sin x$ around a point $n \pi$ gives us the vector field $w(x - n \pi) = (-1)^{n+1} x $
+
+$dy/dx = -\sin x$
+$dy = - \sin x dx$
+$y - y_0 = \cos(x) -$
+
+\chapter{The Exponential Function}
+
+We now provide a brief interlude on the subject on the powers of a number. For any complex number $x$, we may consider its powers $x^n$, for $n > 0$. Two incredibly useful formulas hold
+%
+\[ x^{n+m} = x^n x^m\ \ \ \ \ (x^n)^m = x^{nm} \]
+%
+which can be used to reduce arbitrary calculations of powers to questions about the addition and multiplication of integers. In generalizing the power function to more general numeric systems, we would like these same formulas hold. First, we would like to define $x^0$. Since we would then have $x^n = x^{n + 0} = x^n x^0$, we are forced to define $x^0 = 1$, for all $x$. Since we would like to have
+%
+\[ x^{-n} x^n = x^{n-n} = x^0 = 1 \]
+%
+we are then forced to define $x^{-n}$ to be the unique multiplicative inverse of $x^n$. These notions hold in any field, and do not require any analysis to define. A more careful analysis is required for generalization to rational numbers. Since
+%
+\[ (x^n)^q = x^{nq} = x^p \]
+%
+we must define $x^n$ to be a $q$'th root of $x^p$. The problem here is that $q$'th roots are not unique, and for general complex numbers there is no particular way to make a standard choice. For positive reals, however, we can define $x^n$ to be the unique {\it positive} $q$'th root of $x^p$. One verifies that this choice is well defined, for if $a/b = p/q$, then $aq = bp$, so that if $y^b = x^a$, then $y^{aq} = y^{bp} = x^{ap}$. By taking unique positive roots, we conclude $y^q = x^p$. If we want the powers of a real number to be real, we are effectively forced into this path, because then $x^{p/q} = (x^{p/2q})^2 \geq 0$.
+
+Really, we have not applied any real analysis yet, other than the continuity and monotonicity of $n$'th roots. Without more analysis, our attempt to generalize the power function stops. Stated more elegantly, we desire, for each $x > 0$, to find a real-valued continuous function $f$, for which
+%
+\[ f(a + b) = f(a)f(b)\ \ \ \ \ f(1) = x \]
+%
+$f$ must necessarily be positive, for $f(x) = f(x/2)^2 \geq 0$. This shows why our programme fails for non-positive numbers. If $g$ also satisfies these formulae, then $g(1) = f(a)$, then $g(m/n) = f(a)^{m/n} = f(am/n)$, and by continuity, letting $m/n \to b$ for any $b$, we find $g(b) = f(ab)$, so that the product formula automatically holds.
+
+One automatically verifies that $f$ must necessarily be unique in the formula, for if $f(1) = g(1)$, and $f$ and $g$ satisfy the formulae, then one verifies that $f$ and $g$ agree on all rational values, implying by continuity that $f = g$ everywhere. Thus we need only find one formula that works for each positive $x$, and we shall define $x^t = f(t)$.
+
+For any complex $z$, we define the exponential function
+%
+\[ \exp(z) = \sum_{k = 0}^\infty \frac{z^k}{k!} \]
+%
+Since
+%
+\[ \sqrt[n]{\frac{|z|^n}{n!}} = \frac{|z|}{\sqrt[n]{n!}} \leq \frac{|z|}{\sqrt{n}} \to 0 \]
+%
+the series converges absolutely for all $z$, and therefore converges uniformly on any bounded subset. This implies the exponential function is continuous. Since
+%
+\[ \frac{d}{dz} \left( \sum_{k = 0}^N \frac{z^k}{k!} \right) = \sum_{k = 0}^{N-1} \frac{z^k}{k!} \]
+%
+which converges absolutely to the exponential function, we have the incredibly useful formula $\exp'(z) = \exp(z)$. What's more, the absolute convergence of the series implies the manipulation
+%
+\[ \sum_{k = 0}^\infty \sum_{j = 0}^\infty \frac{z^k w^j}{k! j!} = \sum_{n = 0}^\infty \sum_{k = 0}^n \frac{z^k w^{n-k}}{k! (n-k)!} = \sum_{n = 0}^\infty \frac{(z + w)^n}{n!} \]
+%
+so $\exp(z+w) = \exp(z) \exp(w)$. Thus we have found a function $f$, for $f(1) = \exp(0)$, which we define to be the number $e$.
+
+\begin{theorem}
+    \ 
+    \begin{enumerate}
+        \item[(a)] $\exp(z) \neq z$ for any complex $z$.
+        \item[(b)] $\exp(t) > 0$ for all $t \in \mathbf{R}$.
+        \item[(c)] $\exp$ is monotonically increasing on the real axis.
+        \item[(d)] $\exp(t) \to \infty$ as $t \to \infty$, and $\exp(t) \to 0$ for $t \to -\infty$.
+    \end{enumerate}
+\end{theorem}
+\begin{proof}
+    (a) is proved by noticing
+    %
+    \[ \exp(z) \exp(-z) = \exp(0) = 1 \]
+    %
+    What's more, $\exp(\mathbf{R})$ is a connected subset of $\mathbf{R}$ containing $1$ but not $0$, so $\exp(\mathbf{R}) \subset (0,\infty)$, proving (b). Then (c) is shown, since $\exp' = \exp > 0$. We have the very weak estimate $\exp(t) > 1 + t$ for $t > 0$, so that $\exp(t) \to \infty$ as $t \to \infty$ and therefore (since $\exp(-t) = \exp(t)^{-1}$) that $\exp(t) \to 0$ as $t \to - \infty$. We conclude that the exponential function provides a homeomorphism between $\mathbf{R}$ and $(0,\infty)$.
+\end{proof}
+
+This finalizes are discussion of powers, for if $x$ is any positive number, then $x = e^y$ for some unique $y \in \mathbf{R}$ (which we define to be $\log x$, called the logarithm of $x$), and the function $f(a) = e^{ay}$ satisfies the properties which define an extension of the power function. For negative $x$, there is no natural choice of $y$ for which $e^y = x$, so that general powers cannot be defined. Nonetheless, we will define $e^z = \exp(z)$, for any complex number $z$, and this is a continuous function satisfying the desired properties.
+
+Let us switch to studying the miraculous properties of the function $e^{it}$, for $t \in \mathbf{R}$.
+
+\begin{theorem}\ 
+    \begin{enumerate}
+        \item[(a)] $|e^{it}| = 1$ for all $t$.
+        \item[(b)] There exists a number $\pi$ such that $e^{i(\pi/2)} = i$, and any number satisfying $e^{x} = 1$ is an integer multiple of $2 \pi i$.
+        \item[(c)] The map $t \mapsto e^{it}$ is surjective onto the set $\mathbf{T}$ of complex numbers with absolute value 1, and the exponential map is surjective onto $\mathbf{C} - \{ 0 \}$.
+    \end{enumerate}
+\end{theorem}
+\begin{proof}
+    Note that
+    %
+    \[ \overline{e^{it}} = \sum_{k = 0}^\infty \frac{(-it)^k}{k!} = e^{-it} \]
+    %
+    so that
+    %
+    \[ |e^{it}|^2 = e^{it} \overline{e^{it}} = e^{it} e^{-it} = 1 \]
+    %
+    which is enough to prove (a).
+
+    Finding $\pi$ requires a careful exploration of the power series of $e^{it}$. Notice it is alternating in each axis of the plane, which enables us to easily get precise estimates on the values of the function. Take the projections of the power series of the exponential onto the real and imaginary axis, obtaining the expansions
+%
+\[ \Re(e^{ix}) = \sum_{k = 0}^\infty (-1)^k \frac{x^{2k}}{(2k)!}\ \ \ \ \ \Im(e^{ix}) = x \sum_{k = 0}^\infty (-1)^k \frac{x^{2k}}{(2k+1)!} \]
+%
+For $x \in (0,2]$ the absolute values of the coeffients begin to decrease for $k \geq 1$, so we obtain the bounds
+%
+\[ \Re(e^{ix}) \leq 1 - x^2/2 + x^4/24\ \ \ \ \ \ \ \ x(1 - x^2/6) \leq \Im(e^{ix}) \]
+%
+This implies that $0 < \Im(e^{ix})$, and $\Re(e^{2i}) \leq 1 - 2 + 2/3 = -1/3$, so that $e^{iy} = i$ for some $y \in (0,2)$. There is only one such solution in this region, because here
+%
+\[ \frac{d}{dx} \Re(e^{ix}) = - \Im(e^{ix}) < 0 \]
+%
+We define $\pi$ to be the smallest positive number for which $e^{i \pi} = -1$. It is easy to see $\pi = 2y$, because if $e^{iz} = -1$, then $e^{i(z/2)} = \pm i$, and if $0 \leq z/2 \leq y$, we must in fact have $e^{i(z/2)} = i$, hence $z/2 = y$. It is also simple to show that $e^{ix} = 1$ holds if and only if $x$ is a multiple of $2 \pi i$. First, the set of all such $x$ must lie in $i \mathbf{R}$, because
+%
+\[ |e^{a + ib}| = e^a |e^{ib}| = e^a \]
+%
+and so $|e^{a+ib}| = 1$ if and only if $e^a = 1$, so $a = 0$. Secondly, note that the set of all $x$ for which $e^{ix} = 1$ must form a discrete subgroup $G$ of $\mathbf{R}$, because there is a neighbourhood of the origin such that $e^{ix} \neq 1$ unless $x = 0$. This implies that $G = y \mathbf{Z}$ for the smallest positive $y \mathbf{R}$ satisfying $e^{iy} = 1$. We must have $e^{i(y/2)} = -1$, hence $y/2 \geq \pi$, and so $y \geq 2 \pi$, and we must in fact have equality since $e^{2 \pi i} = 1$.
+
+Now we prove that the map $e^{ix}$ is surjective onto $S^1$. First, consider $w = x + iy$, with $x,y \geq 0$. Then $x \leq 1$, and because $\Re(e^0) = 1$, $\Re(e^{i\pi/2}) = 0$, there is some $t \in (0,\pi/2)$ for which $\Re(e^{it}) = x$. Since $\Im(e^{it}) \geq 0$, we have
+%
+\[ \Im(e^{it}) = \sqrt{1 - \Re(e^{it})^2} = \sqrt{1 - x^2} = y \]
+%
+so $e^{it} = w$. If $w = x + iy$ with $x \geq 0$, $y < 0$, then $iw = ix - y$, and $x, -y \geq 0$, so there is $t$ for which $e^{it} = iw$, and then $e^{i(t-\pi/2)} = w$. The other cases can be shown by employing the same technique. Since any non-zero complex number $z$ can be written $aw$, where $a > 0$ and $|w| = 1$, there are $t,t'$ such that $a = e^t$, $w = e^{it'}$, and then $z = e^{t + it'}$.
+\end{proof}
+
+Thus $\exp$ is a surjective homomorphism from the additive group of complex numbers to the multiplicative group, with kernel $2\pi i \mathbf{Z}$. If we look at the topological structure of $\mathbf{C}/2 \pi i \mathbf{Z}$, we see the shape forms an infinitely long cylinder, which is exactly the way we think of complex multiplication -- the imaginary part of a number forms a loop around the origin, and the real part scales the number radially outward from the origin, like a cylinder.
+
+\end{document}
