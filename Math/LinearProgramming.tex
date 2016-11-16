@@ -4,7 +4,10 @@
 \author{Jacob Denson}
 
 \begin{document}
+    \pagenumbering{gobble}
     \maketitle
+    \tableofcontents
+    \pagenumbering{arabic}
 
     \chapter{Introduction}
 
@@ -38,63 +41,117 @@
     With these constraints, the problem of maximizing revenue becomes much more involved. This is an example of a linear program. If we require the number of apple pies and chocolate bars we make to be integers, then this is an integer linear programming, which is computationally much harder.
     \end{example}
 
-    A linear program is specified by a reward functional $r \in V^*$ contraint functionals $c_1, \dots, c_n \in V^*$, and a contraint vector $b \in \mathbf{R}^n$. The aim of the linear program is to maximize $r(v)$, subject to the contraints that $c_i(v) \leq b_i$. For computational purposes, we can choose a $m$ dimensional basis for $V$, and specify the problem with a contraint matrix $M \in M_{n,m}(\mathbf{R})$ and reward functional $r \in \mathbf{R}^m$. Our job is then to maximize $\langle r, v \rangle$, subject to the constraints
+    A linear program is specified by a reward (objective) functional $r \in V^*$, contraint functionals $c_1, \dots, c_n \in V^*$, and a contraint vector $b \in \mathbf{F}^n$ (where $\mathbf{F}$ is either the rational or real numbers). The aim of the linear program is to maximize $r(v)$, subject to the contraints that $c_i(v) \leq b_i$ (the set of all $v$ such that $c_i(v) \leq b_i$ is known as the solution space, and forms a polyhedron, a finite intersection of half planes). For computational purposes, we can choose a $m$ dimensional basis for $V$, and specify the problem with a contraint matrix $M \in M_{n,m}(\mathbf{F})$ and reward functional $r \in \mathbf{R}^m$. Our job is then to maximize $\langle r, v \rangle$, subject to the constraints
     %
     \[ \sum M_{ij} v_j \leq b_i \]
     %
-    which we write in condensed form as $Mv \leq b$. We also assume the constraints $v_i \geq 0$ for purposes of calculation.
+    which we write in condensed form as $Mv \leq b$ (which makes sense if we make $\mathbf{R}^n$ into a Riesz space, viewing it as functions over a discrete set of $n$ points). We say a linear program is {\bf infeasible} if the solution space is empty, and unbounded if there is $x_i$ in the solution space such that $r(x_i) \to \infty$.
 
-    Our problem is much more general than upper bounding constraints, for there are ways of formulating more general problems into standard form, in a way in which solutions to the original problem can be recovered. First, if we want a contraint
-    %
-    \[ \sum a_i v_j \geq b_i \]
-    %
-    Then we just add the contraint
-    %
-    \[ \sum (-a_i) v_j \leq -b_i \]
-    %
-    If we want an equality contraint
-    %
-    \[ \sum a_i v_j = b_i \]
-    %
-    Then we just introduce two constraints
-    %
-    \[ \sum a_i v_j \leq b_i\ \ \ \ \ \sum a_i v_j \geq b_i \]
-    %
-    If we don't have the contraint $v_i \geq 0$ for some variable $v_i$, then we replace $v_i$ with two new variables $w_i$ and $w_i'$, and replace any instance of $v_i$ in the constraints via the equality $v_i = w_i - w_i'$. We can then assume $w_i, w_i' \geq 0$.
+    In a more general form, we allow more fluid constraints for the problem, which can be simplified to the existing problem with little asymptotic cost. For instance, we may allow constraints of the form $c_i(v) \geq b_i$. This can be reduced to the form $-c_i(v) \leq -b_i$, which fits into our current assumptions nicely. We can also allow equalities of the form $c_i(v) = b_i$, which corresponds to two inequalities of the form $c_i(v) \leq b_i$ and $c_i(v) \geq b_i$. Finally, we shall assume there is a basis $x_1, \dots, x_n$ such that, relative to this basis, the constraints $x_i^*(v) \geq 0$ are satisfied for any $v$ in the solution space. In general, if we do not have these constraints on a certain basis $x_1, \dots, x_n$, we may introduce a new linear program on $V \times V$, with constraints (and objective function) induced from $V$ by the map $T: (y,x) \mapsto y-x$. Any maximum solution on this new linear program induces a solution on the original programming by considering the image under $T$, and since each element of $V$ can be written as $y - x$, where $y_i, x_i \geq 0$ for all $i$, we can introduce these new constraints at no fault.
 
-    Without loss of generality, we may consider the problem of linear program as a maximization of $\langle r, x \rangle$. If our real objective is to minimize $\langle r, x \rangle$, this is equivalent to maximizing $\langle -r, x \rangle$. Furthermore, we may also assume each constraint is a less than or equal to relationship, as if we want the constraint $\langle a_i, v \rangle \geq b_i$, this is equivalent to saying $\langle -a_i, v \rangle \leq -b_i$.
+    Linear programming can be considered a specialization of convex optimization, since the solution space is always the intersection of finitely many closed hyperplanes, and is therefore convex. We recall that a point in a convex set is an {\bf extreme point} if it does not lie between any two points in the convex set. An alternate criteria for $x$ on a set $X$ is that for any $y$, either $x + y$ or $x - y$ is not in $X$. Furthermore, a point on a polyhedron is an extreme point if it is the maximum of some linear functional over the polyhedron, which indicates their importance in linear ptimization. The extreme points of a linear constraint problem are particularly easily to quantify. If we consider a particular constraint matrix $Ax \leq b$, we shall let $A^x$ denote the rows the matrix obtained from $A$ for which the inequality is tight, i.e. $(Ax)_i = b_i$. Similarily, we let $b^x$ denote denote the subvector of $b$ such that $A^x x = b^x$.
 
-    \begin{definition}
-        The set of {\bf feasible solutions} to a linear program is the subset of $\real^n$ such that, if $v$ is a feasible solution, for each $a_i \in \mathcal{A}$, $\langle a_i, v \rangle \leq b_i$. A problem is infeasible if there are no feasible solutions. The optimal solution is the solution $v$ such that $\langle v, r \rangle$ is maximized.
-    \end{definition}
+    \begin{theorem}
+        The extremities to $Ax \leq b$ are those where $A^x$ has full rank.
+    \end{theorem}
+    \begin{proof}
+        Let $A^x$ have full rank, and suppose $Ax \leq b - Ay$, $Ax \leq b + Ay$. Then $A^x y = 0$, so $y = 0$ since $A^x$ has full rank. Conversely, suppose that $A^x$ does not have full rank. Then there is $y \neq 0$ for which $A^x y = 0$. If $\varepsilon > 0$ is made small enough, we have $Ax \leq b - Ay$ and $Ax \leq b + Ay$.
+    \end{proof}
 
-    It is notationally simple to introduce an ordering on $\real^n$. Say a vector $a$ is less than or equal to a vector $b$ if this is true for all corresponding components. Then a linear program is really just $(M,b)$, where $M$ is an $m \times n$ matrix, and $b$ is a vector in $\real^m$. Then the feasible solutions are just the vectors $v \in \real^n$ such that $Mv \leq b$.
+    \begin{lemma}
+        If a linear program has an optimal solution, it has an optimal solution which is an extreme point.
+    \end{lemma}
+    \begin{proof}
+        Let $X$ be the solution space of the linear program. We take some optimal solution $x$, and slide it along $\ker(r)$. If $y$ is an extreme point of $Y = (x + \ker(r)) \cap X$ (which must exist because of the $x_i \geq 0$ condition), then we claim $x + y$ is also an extreme point of $X$. If $x + y + z \in X$ and $x + y - z \in X$, then we cannot have $r(z) = 0$, since $y$ is an extreme point of $Y$. But then since $r(x + y) = r(x)$ maximizes $r$, we cannot have both $x + y + z$ and $x + y - z$ be elements of $X$, because either $r(x + y + z)$ and $r(x + y - z)$ is greater than $r(x + y) = r(x)$.
+    \end{proof}
 
-    It is not clear that an optimal solution to a problem will always exists. We could have infinitely many vectors and thus there is no guarenteed optimum.
+    Note that the last theorem is not true if we do not assume $x_i \geq 0$ for all $i$, which is why we prefer discussing linear programs in standard form. Given $m$ constraints on an $n$-dimensional linear program, there can only be ${m \choose n}$ extreme points on the solution space, because a point is uniquely specified by its particular value on an invertible matrix, and every extreme point is determined by its values on some invertible submatrix of the constraint matrix. This gives us a particular algorithm for finding the solution to a linear program -- just find the value of the function at the extreme points. Unfortunately, this method can be exponential in the description of the problem. However, we can represent these points in polynomial time.
 
-    \begin{definition}
-        A linear program is unbounded, if, for any $M \in \real$, there exists a feasible solution $v$ such that $\langle v,r \rangle > M$. It then follows that there is no optimal solution to the program.
-    \end{definition}
+    \begin{theorem}
+        If a polyhedron is defined by an inequality of the form $Ax \leq b$, where $A \in M_{n,m}(\mathbf{Q})$, and all coefficients involved can be expressed in $K$ bits, then the extreme points of the polyhedron can be expressed in coefficients using only $2m \log(m) K$ bits.
+    \end{theorem}
+    \begin{proof}
+        Each extreme point $x$ can be defined as the unique solution to $Bx = c$, where $B$ is an invertible $m \times m$ submatrix of $A$. Then, using Cramer's rule, we may write
+        %
+        \[ x_i = \frac{\det(A_i)}{\det(A)} \]
+        %
+        where $A_i$ is obtained from $A$ by replacing the $i$'th column of $A$ with $c$. Now the determinant can be expressed as
+        %
+        \[ \det(X) = \sum_{\sigma \in S_m} \text{sgn}(\sigma) \prod_{i = 1}^m X_{i \sigma(i)} \]
+        %
+        The product of $m$ numbers representable in $K$ bits can be writted in $mK$ bits, and the sum of these numbers can be expressed in $m \log(m) K$ bits. Similarily, the number of bits to express $a/b$ is bounded by the sum of the number of bits to express $a$ and $b$. Thus each coefficient of $x$ can be expressed in $2m \log(m) K$ bits.
+    \end{proof}
 
-    The main goal of this report is to find ways of optimizing linear programs in an algorithmically simple way. We introduce another way of formulating a linear program.
+    Since $A$ and $c$ take $(n + 1)mK$ bits to describe, this gives us a polynomial bound in the size of solutions. Thus, if we can choose extreme points wisely, then we may well achieve a polynomial solution.
 
-    \begin{definition}
-        A linear program is in slack form if, instead of the feasible solutions being solutions to inequalities, the feasible solutions are equalities. More specifically, a linear program is in slack form if it is of the form.
+    \begin{theorem}
+        A feasible, bounded linear program has an optimal solution.
+    \end{theorem}
+    \begin{proof}
+        If $X$ is the feasible solution space of a linear program, then it is closed and convex. Thus $r(X)$ is also closed and convex. If we are working over $\mathbf{R}$, we may apply completeness and conclude that $r(X) = (-\infty,b]$ or $r(X) = [a,b]$. In either case, we conclude there is $v \in X$ for which $r(x) = b$ maximizes the functional. To obtain results in $\mathbf{Q}$, we first maximize over $\mathbf{R}$, and then justify why we can obtain estimates over $\mathbf{Q}$. The last lemma implies that if $x \in \mathbf{R}^n$ maximizes $r(x)$, and we take $x$ to be an extreme point, then $A^x$ has full rank. Since $A^x x = b^x$, we may throw away rows from $A^x$ to make an invertible matrix, and then express $x$ as the product of $b^x$ with an inverse, which has rational entries, and thus $x \in \mathbf{Q}^n$.
+    \end{proof}
 
-        \begin{alignat*}{3}
-        &\text{maximize }  & \zeta(v) &\\
-        &\text{subject to} & f_1(v) &= b_1\\
-        &                  & f_2(v) &= b_2\\
-        &                  & \vdots &\\
-        &                  & f_n(v) &= b_n\\
-        &                  & v_1,v_2,\dots,v_n &\geq 0
-        \end{alignat*}
-    \end{definition}
+    The main goal of this report is to find ways of optimizing linear programs in an algorithmically simple way. In the combinatorial method (where we maximize over the finite number of extreme points) the linear optimization problem is often easier to solve if almost all constraints are equalities. That is, a linear program is in {\bf slack form} if we attempt to maximize $c(v)$ such that $Av = b$, and $v \geq 0$. We can make an inequality of the form $\lambda(v) \leq b$ into an equality by introducing a new variable $x$, defining $\lambda(v,x) = \lambda(v) + x$, and enforcing that $\lambda(v,x) = b$, and $x \geq 0$. This only increases the dimensionality of the problem by a linear amount in the constraints of the problem.
 
-    Every linear program can be put into slack form. Given an inequality, $f_i(v) \leq b_i$, introduce a slack variable $w_i$, and replace the inequality with the equality $f_i(v) + w_i = b_i$, and append the equality $w_i \geq 0$. Then every solution of the original linear program is a solution to the new linear program for some values of $w_i$, and has the same reward. If $v_i \geq 0$ is not already a constraint, introduce two new variables $v_i' v_i''$, enforce that $v_i',v_i'' \geq 0$, and replace every occurence of $v_i$ with $v_i' - v_i''$.
+    We finish this chapter by discussing some applications of linear programming, mainly to combinatorial problems in computing science (since they are the most interesting).
 
+    \begin{example}
+        The classical computing science problem to be explained in linear programming is the max flow problem. Given a directed graph, where every edge $e$ has a certain capacity $c$, we want to maximize the amount of `flow' between two vertices $s$ and $t$, such that flow conservation is preserved at every vertex other than $s$ and $t$. That is, we wish to find a function $f: E \to \mathbf{R}^+$, such that
+        %
+        \[ \sum_{sv \in E} f(sv) \]
+        %
+        is maximized, and for any vertex $v \neq s,t$ in the graph,
+        %
+        \[ \sum_{wv \in E} f(wv) = \sum_{vw \in E} f(wv) \]
+        %
+        which is the flow conservation law. After the formalization of linear programming, we see this is just a linear constraint problem over $\mathbf{R}^E$.
+    \end{example}
 
+    \begin{example}
+        The shortest path problem on an undirected graph with edge costs $c: E \to \mathbf{R}^+$ asks us to find the path between two fixed vertices $s$ and $t$ which minimizes the sum of the costs of the edges in the path. To obtain a linear program describing the program, we would like to associate each subset of edges as an element $f \in \{ 0, 1 \}^E$. The only problem with this is that no system of linear constraints can enforce that $f(e) \in \{ 0, 1 \}$ for all $e$, because the set formed is not convex. The problem is we are discussing an {\bf integer linear program}, where we attempt to optimize over a $\mathbf{Z}$-module rather than an $\mathbf{R}$-vector space (a mathematically well posed problem, though normally exponentially more complex than a normal linear program, though this problem, an exception of the rule, can be computed using linear programming in subexponential time). In addition to the 0/1 constraint, we desire that for each vertex $v$,
+        %
+        \[ \sum_{wv \in E} f(wv) \leq 1 \ \ \ \ \ \sum_{vw \in E} f(vw) - \sum_{wv \in E} f(wv) = 0\ \ \ \ \ \sum_{vw \in E} f(vw) \leq 1 \]
+        %
+        and
+        %
+        \[ \sum_{ws \in E} f(ws) = \sum_{tw \in E} f(tw) = 1 \]
+        %
+        Once the constraints are specified, we just need to minimize $\sum c(e) f(e)$.
+    \end{example}
 
+    \begin{example}
+        Suppose that we are classifying objects into two categories, based on information contained in a feature vectors $v_1, \dots, v_n$. To prevent overfitting, we attempt to find a linear classifier -- an linear functional $\lambda$ together with a scalar $b$ such that the object corresponding to $v_i$ is in category $A$ if $\lambda(v_i) \geq b$, and in category $B$ if $\lambda(v_i) < b$. These constraints describe exactly a convex region corresponding to a linear problem, so this problem can be reduced to a finding a {\bf feasible solution} with respect to the linear constraints.
+    \end{example}
+
+    \begin{example}
+        Consider a set $X$ described by constraints of the form $\langle y_i, x \rangle \leq b_i$ for some $y_i, x \in \mathbf{R}^n$ and $b_i \in \mathbf{R}$. The {\bf Chebyshev center} is the largest circle contained within $X$. A circle can be specified by a center $x$ and a radius $r$. We of course require that $r > 0$. To verify the circle is contained within $X$, we require $\langle y_i, x + tv \rangle \leq b_i$ is true for all $t \leq r$ and $\| v \|^2 = 1$. This can be reexpressed as $t \langle y_i, v \rangle \leq b_i - \langle y_i, x \rangle$. Since $t \langle y_i, v \rangle \leq t \| y_i \|$. The Cauchy Schwarz gives us bounds of the form $\langle y_i, t v \rangle \leq t \| y_i \|$, and this bound is tight since we can choose $v$ to be a scalar multiple of $y_i$. Thus $B_r(x) \subset X$ if and only if $\langle y_i, x \rangle \leq b - \| y_i \|$ for each $i$. This gives us a linear constraint problem to find the Chebyshev center.
+    \end{example}
+
+    \section{Piecewise Linear Convex Functions}
+
+    A function $f$ is {\bf convex} if $f(\lambda a + (1 - \lambda) b) \leq \lambda f(a) + (1 - \lambda) f(b)$ for every $a,b$ in the domain of $f$. All linear functions are convex (as well as linear functions plus a constant, known as affine functions), but not all convex functions are linear (for instance, the exponential function is convex, and any differentiable function which satisfies $f'' \geq 0$). If $f_1, \dots, f_n$ are convex functions, then $\max(f_1, \dots, f_n)$ is also a convex function. Thus the maximum of affine functions is convex. This tells us that the absolute value function $|x| = \max(x, -x)$ is convex. A more general optimization problem, given affine functionals $\lambda_i(\cdot) + a_i$, would be to maximize $\max(\lambda_i(v) + a_i)$ subject to some constraint function $Av \leq b$. This turns out to be no more general than linear programming. Note that $\max(\lambda_i(v) + a_i)$ is equal to the minimum value of $z$ such that $z \geq \lambda_i(v) + a_i$ for all $i$. Thus we just need to add a linear number of constraints of this form, in addition to the new variable $z$, and then mimimize the value of $z$ over the constraint region.
+
+    What about if we are just discussing absolute value. For example, consider the problem of maximizing $\sum c_i |x_i|$, such that $Ax \geq b$, and all $c_i$ are non-negative. We could perform the trick in the last problem, but it is quite involved. Instead, we note that $|x_i|$ is the smallest value of $z_i$ such that $x_i \leq z_i$ and $-x_i \leq z_i$. Thus we  are minimizing $\sum c_i z_i$, subject to these new constraints. Alternatively, we replace each $x_i$ with non-negative values $x_i^+$ and $x_i^-$ for each $x_i$, such that $x_i = x_i^+ - x_i^-$.
+
+    \begin{example}
+        Consider the problem of minimizing $2 |x| + |y|$, such that $x + y \geq 4$. We introduce new variables $a$ and $b$, and minimize $2a + b$, such that $-x, x \leq a$, and $-y,y \leq b$. The solution is seen to be unbounded, because we can set $x = 4 - y$, and then as we let $x \to \infty$, $y \to -\infty$ and so $2 |x| + |y| \to \infty$. An alternate and equivalent linear program to optimize is minimize $2 x_+ + 2x_- + y_- + y_-$, such that $x_+ - x_- + y_+ + y_- \geq 4$, $x_+, x_-, y_+, y_- \geq 0$.
+    \end{example}
+
+    \begin{example}
+        Returning to linear optimization, we may have to perform a linear regression on a certain regression sample $(x_1, y_1), \dots, (x_n, y_n)$, with $x_i \in \mathbf{R}^n$ and $y_i \in \mathbf{R}^m$. We wish to find a linear relation of the form $y = Mx + b$, which fits the data best. For each data point $(x_i, y_i)$, we consider the prediction error $|y_i - (Mx_i + b)|$. The total error is the sum of these errors
+        %
+        \[ \sum_i |y_i - (Mx_i + b)| \]
+        %
+        We have discussed how to formulate this problem as a linear program. The quadratic error $\sum_i |y_i - (Mx_i + b)|^2$ can also be discussed, which can be solved by methods of elementary calculus.
+    \end{example}
+
+    \begin{example}
+        Consider a linear discrete dynamical system defined by
+        %
+        \[ x_{n+1} = Ax_n + Bz_n\ \ \ \ \ \ \ \ y_n = c_nx_n \]
+        %
+        Where $x_n \in \mathbf{R}^n$ is the state of the system, $y_n \in \mathbf{R}^n$ is the output, and $x'$ is a sequence of values we get to choose to control how the system evolves. We may enforce that $C x_n \leq a$ for some constraint matrix $C$. Given initial conditions $x_0^i = a_i$, we may want to drive the state of the system to a state $b \in \mathbf{R}^n$ at time $N$. If this is possible, we might want to minimize the total pertubation of the system. This turns into an optimization problem, trying to minimize $\sum |c_nx_n|$ subject to the constraints described above.
+    \end{example}
 
 
 
@@ -103,75 +160,7 @@
 
     \chapter{Polyhedra}
 
-    Ideas developed in this chapter result from the idea that geometric properties of $\real^n$ can be used to explore solutions to linear programs. Note that every linear programming can be specified as a shape in $\real^n$.
-
-    \begin{definition}
-        A polyhedra is a set in $\real^n$ defined by a matrix $M$ and a real number $b$ by
-        %
-        \[ \{ v \in \real^n : Mv \leq b \} \]
-    \end{definition}
-
-    The constraints of every linear program form a polyhedra, and every polyhedra can be seen as the constraints of a linear program.
-
-    \begin{theorem}
-        Every polyhedra is convex.
-    \end{theorem}
-    \begin{proof}
-        Let $v$ and $w$ be vectors such that $Mv \leq b$ and $Mw \leq b$. Then, for any $\lambda \in [0,1]$, $M(\lambda v + (1 - \lambda) w)) = \lambda Mv + (1 - \lambda)Mw \leq \lambda b + (1 - \lambda) b = b$. Thus $\lambda v + (1 - \lambda) w$ is a feasible solution, and thus the set is convex.
-    \end{proof}
-
-    \begin{definition}
-        If a vector $v$ in a polyhedra satisfies, for some row $M_i$ in $M$ with corresponding $b_i$,
-        %
-        \[ M_iv = b_i \]
-        %
-        We say the constraint $(M_i,b_i)$ is binding or active at $v$.
-    \end{definition}
-
-    \begin{definition}
-        A vector $v$ is a basic solution of a polyhedra in $\real^n$ if the binding rows of the constraint matrix $M$ spans $\real^n$. A vector is a basic feasible solution if the vector is also a vector such that $Mv \leq b$.
-    \end{definition}
-
-    \begin{theorem}
-        For a vector $v$, the following are equivalent:
-
-        \begin{enumerate}
-            \item There exists some vector $w$ such that for any other point $u$ in the polyhedra,
-            $\langle v, w \rangle > \langle v, u \rangle$.
-            \item $v$ is an extreme point of the polyhedra.
-            \item $v$ is a basic feasible solution.
-        \end{enumerate}
-    \end{theorem}
-    \begin{proof}
-        We prove the implications in the order given.
-
-        \begin{itemize}
-            \item $(1) \implies (2)$: We prove by contraposition. Suppose $v$ is not an extreme point, so that there exists two points $w$ and $u$ in the polyhedra such that for some number $\lambda$, $\lambda w + (1 - \lambda)u = v$. Let $z$ be an arbitrary vector. Without loss of generality, suppose $\langle w, z \rangle \leq \langle u, z \rangle$. Then
-            %
-            \begin{align*}
-                \langle z, v \rangle &= \langle z, \lambda w + (1 - \lambda) u \rangle\\
-                                     &= \lambda \langle w, z \rangle + (1 - \lambda) \langle u, z \rangle\\
-                                     &\leq \langle w , z \rangle
-            \end{align*}
-
-            Hence the point is not a vertex.
-
-            \item $(2) \implies (3)$: Suppose $v$ is not a basic feasible solution. Then the set of rows $I$ that are binding span a proper subspace in $\real^n$, so we can pick some vector $d$ such that $\langle a_i, d \rangle = 0$ for all $a_i$. Consider equations of the form
-            %
-            \[ v + \varepsilon d \]
-            %
-            Note for all $a_i \in I$, $\langle v + \varepsilon d, a_i \rangle = \langle v, a_i \rangle = b_i$. For $a_i \notin I$, we know that $\langle a_i, v \rangle < b_i$, and thus for a small enough $\varepsilon$, $\langle a_i, v + \varepsilon d \rangle < b_i$ for all $a_i$. The $v + \varepsilon d$ is in the set, and by the same argument, $v - \varepsilon d$ is also. We note that $v$ is between these two points, and hence is not an extreme point.
-
-            \item $(3) \implies (1)$: Let $v$ be a basic feasible solution. Consider the vectors $a_i$ that span $\real^n$. We then know $\langle \sum_{i \in I} a_i, v \rangle = \sum_{i \in I} b_i$. For any other value $w$ in the polyhedra, $\langle a_i, w \rangle \leq b_i$. Hence $\langle \sum_{i \in I} a_i, w \rangle \leq \langle \sum_{i \in I} a_i , v \rangle$, and equality only holds if $\langle a_i, w \rangle = b_i$ for all $b_i$ needed. Since $v$ is basic, and we have $n$ linearly independant $a_i$, $v$ is the only solution to the system of linear equations above, hence equality only holds for $v$.
-        \end{itemize}
-    \end{proof}
-
-    \begin{corollary}
-        Given a finite number of linear inequalities, there are only a finite number of basic solutions.
-    \end{corollary}
-    \begin{proof}
-        Consider a system of $m$ linear inequality contraints. At any basic solution, there are $n$ linearly independant action constraints. These system determines a unique point in $n$; there can only be one solution to system of equalities $\langle a_i, x \rangle = b_i$. Hence there is at maximum $\binom{m}{n}$ basic solutions.
-    \end{proof}
+    We shall now describe a more optimal way to check the extreme points of a polyhedron against a constraint matrix, to find optimal solutions. Given two extreme points on a polyhedron, we say they are adjacent
 
     \begin{definition}
         Let $v$ and $w$ be two basic solutions in a polyhedra. We say the two vertices are adjacent if we can find $n-1$ linearly independent constraints that are active at both of them. The line segment joining the two vertices is called an edge.
@@ -201,53 +190,156 @@
         \end{itemize}
     \end{proof}
 
-    \begin{theorem}
-        Suppose a linear programming problem has an optimal solution and an extreme point. Then there is an optimal solution that is an extreme point.
-    \end{theorem}
 
-    \begin{theorem}
-        If a linear programming problem has an extreme point, there is an optimal solution or the problem is unbounded.
-    \end{theorem}
 
-    \chapter{Duality}
 
-    Consider the linear programming problem below:
 
-    \begin{alignat*}{3}
-        &\text{maximize } & cx\\
-        &\text{subject to } & Ax &\leq b\\
-        &                  & x &\geq 0
-    \end{alignat*}
 
-    Let us call this the primal problem. The dual problem is
 
-    \begin{alignat*}{3}
-        &\text{minimize }   & \langle x, b \rangle &\\
-        &\text{subject to}  & xA &\geq c\\
-        &                   & x  &\geq 0
-    \end{alignat*}
+
+
+
+\chapter{Duality}
+
+The method of Lagrangian multipliers allows us to find the optima of a function $f$ over the level set of some function $g: \mathbf{R}^n \to \mathbf{R}$ -- i.e. $g(x) = c$. For instance, we may wish to find the maximum $x^2 + y^2$, such that $x + y = 1$. If we could find a maximum over all of $\mathbf{R}^n$, and it happened to lie on the level set of $g$, then we'd be done, but this almost never happens. However, suppose we can modify $f$ to a new function $f_1$, such that it takes on the same values on the level set of $g$. Then, if the maximum of $f_1$ lies on the level set of $g$, we'd be done, since this would also be the maximum of $f$ on the level set of $g$. The easiest method is to define $f_1(x) = f(x) + p(g(x) - c)$, for some $p \in \mathbf{R}$. We then express the values of $\partial_i f_1(x) = 0$ as functions of $p$, and then solve for $p$ to guarantee these solutions lie on $g(x) = c$. For instance, we take $f_1(x,y) = x^2 + y^2 + p(x + y - 1)$. Then
+%
+\[ \partial_x f_1(x,y) = 2x + p\ \ \ \ \ \ \ \ \ \ \partial_y f_1(x,y) = 2y + p \]
+%
+so the optima here occur at $x = y = -p/2$. If we want $x + y = 1$, then we must have $p = -1$, and then we find the maximum occurs at $(1/2,1/2)$, with maximum value $1/2$.
+
+Let us apply a similar method to linear programming. Consider a problem of maximizing $c^t x$, such that $Ax \leq b$, and $x \geq 0$. We call this the {\bf primal} linear program. We switch to the dual space, and attempt to find $y$ which minimizes $b^t y$, such that $A^t y \geq c$, and $y \geq 0$. This is the {\bf dual} linear program. Note that this really reflects a duality, because the double dual of a linear program is the original linear program.
+
+\begin{theorem}[Weak Duality]
+    Any solution satisfying the dual of a linear program bounds the solutions of the original program.
+\end{theorem}
+\begin{proof}
+    Note that if $x$ and $y$ are as in previous notation,
+    %
+    \[ c^t x \leq y^t A x \leq y^t b \]
+    %
+    The first part follows because $x \geq 0$, and the last because $y \geq 0$.
+\end{proof}
+
+We can actually prove that the optimum value of the dual is the same as the optimum value of the original program. The proof gives us much more about the relationship between the two programs. First, a fundamental theorem from the theory of convex bodies, which emerges from the Hilbert space theory of finite dimensional vector spaces.
+
+\begin{theorem}
+    If $X \subset \mathbf{R}^n$ is closed and convex, and $y \not \in X$, then there is an affine functional $\lambda$ such that $\lambda(X) < 0$, and $\lambda(y) > 0$.
+\end{theorem}
+\begin{proof}
+    Let $x$ be the point in $X$ that is closest to $y$. Then if $x' \in X$,
+    %
+    \begin{align*}
+        \langle y - x, x' \rangle &= \langle y - x, x \rangle + \| y - x \|^2 - \langle y - x, y - x' \rangle\\
+        &\leq \langle y - x, x \rangle + \| y - x \| \left( \| y - x \| - \| y - x' \| \right)\\
+        &\leq \langle y - x, x \rangle
+    \end{align*}
+    %
+    and
+    %
+    \[ \langle y - x , y \rangle = \| y - x \|^2 + \langle y - x, x \rangle > \langle y - x, x \rangle \]
+    %
+    Hence $a \mapsto \langle y - x, a \rangle - \langle y - x, x \rangle - \varepsilon$ is the affine functional we need, for small enough $\varepsilon$.
+\end{proof}
+
+Geometrically, this theorem says there is a hyperplane separating $y$ and $X$, not containing $y$ or any points in $X$, since a hyperplane is just a level set of a linear functional.
+
+A {\bf cone} is a convex subset of $\mathbf{R}^n$ closed under multiplication by non-negative scalars. In the two dimensional case, we obtain the points between some angle, hence the geometric name.
+
+\begin{theorem}
+    If $X$ is a non-empty closed cone, an $y \not \in C$ there is linear functional $\lambda$ such that $\lambda(X) \geq 0$, and $\lambda(y) < 0$.
+\end{theorem}
+\begin{proof}
+    Using the last theorem, find an affine function $\mu$ such that $\mu(X) > 0$ and $\mu(y) < 0$. If we define $\lambda = \mu - \mu(0)$, then $\lambda$ is linear, and if $\lambda(y) > 0$, then we find $\lambda(y) > \mu(0) > 0$, which is impossible.
+\end{proof}
+
+\begin{theorem}[Farkas]
+        If $A \in M_{n,m}(\mathbf{R})$, $b \in \mathbf{R}^m$, and $c \in \mathbf{R}^n$. Then either there is $x \geq 0$ such that $Ax \leq b$, $y \geq 0$ such that $A^t y \geq 0$ and $b^t y < 0$, but not both.
+\end{theorem}
+\begin{proof}
+    Suppose that both $x$ and $y$ existed. Then we find
+    %
+    \[ 0 \leq y^t (Ax) \leq y^t b < 0 \]
+    %
+    We now show that one of the two conditions must hold.
+\end{proof}
+
+Farkas' lemma gives us strong duality in linear programs, for it relates the slack in the dual program to slack in the original program.
+
+\begin{theorem}[Strong duality]
+    The optimal value of the dual of a linear program is equal to the optimal value of the original program.
+\end{theorem}
+\begin{proof}
+    Let $y^*$ be the optimal value of the dual of the linear program which maximizes $\lambda(x)$, such that $Ax \leq b$, and let $v^* = b^t y^*$. We apply Farka's lemma to conclude that there is either $x \geq 0$ such that $- \lambda(x) \leq -v^*$ and $Ax \leq b$, which implies that $\lambda(x) \geq v^*$ (which would imply equality since we have already proven that $\lambda(x) \leq v^*$), or there is $(y_0, y) \geq 0$ such that $\langle b, y \rangle < \langle v^*, y_0 \rangle$, and if $M = \begin{pmatrix} -c^t \\ A \end{pmatrix}$, then $M^t (y_0, y) \geq 0$. If $y_0 = 0$, then $A^t y \geq 0$ and $b^t y < 0$, so $A^t(y^* + y) \geq c$ and $b^t(y^* + y) < v^*$, contradicting optimality. Similarily, if $y_0 > 0$, then we obtain the same conclusion by some tricky manipulation. This completes the proof.
+\end{proof}
+
+We finalize our discussion of duality by talking about complementary slackness. Let $x$ be a solution of a linear program, and $y$ a solution of its dual. Then $x$ and $y$ are both optimal if for all $1 \leq j \leq n$, $x_j (A^t)_j y - c_j = 0$, and for all $1 \leq i \leq m$, $y_i (A_i x - b_i) = 0$. To see this, we recall the proof of weak duality, and calculate
+%
+\[ \sum_j c_j x_j \leq \sum_j \sum_i (A^t)_{j,i} y_i x_j = \sum_i \left( \sum_j A_{i,j} x_j \right) y_i \leq \sum_i b_i y_i \]
+%
+and the last theorem shows the inequalities are equalities if and only if the condition holds.
 
 \chapter{Applications to Combinatorial Optimization}
 
-Unfortunately, we normally have to perform combinatorial problems over $\mathbf{Z}$-modules, a much more intractable problem than over real vector spaces. However, there is a trick, known as unimodularity, which enables us to optimize over the real vector space corresponding to the $\mathbf{Z}$-module, and then recover results in the original space.
+Unfortunately, we normally have to perform combinatorial problems over $\mathbf{Z}$-modules, a much more intractable problem than over real vector spaces. However, there is a trick, known as unimodularity, which enables us to optimize over the real vector space corresponding to the $\mathbf{Z}$-module, and then recover results in the original space. Call a matrix unimodular if the determinant of every square submatrix is $0$, $1$, or $-1$.
+
+\begin{theorem}
+    If a polyhedron is expressed by $Ax \leq b$ where $A$ is totally unimodular, and $b \in \mathbf{Z}^n$, then every extreme point of the polyhedron is integral.
+\end{theorem}
+\begin{proof}
+    We apply Cramer's rule. If we take a submatrix equality $Bx = c$ to find an extreme point $x$, then
+    %
+    \[ x_i = \frac{\det B_i}{\det B} \]
+    %
+    Then $\det B \in \{ -1, 0, 1 \}$, and $\det B_i \in \mathbf{Z}$, so that $x \in \mathbf{Z}^n$.
+\end{proof}
+
+Thus we may apply linear programming techniques to integer linear programs, provided they are specified by a unimodular constraint.
 
 \begin{example}
-    Let $G = (L \cup R, E)$ be a Bipartite graph. The problem of finding a maximal matching in this graph can be reduced to integer linear programming. Let $V = \mathbf{Z} \cdot E$ be the free module generated by the edges. Consider the linear function $\lambda_v$ which assigns a value of one to edges containing $v$ as an endpoint, and assigning zero to other edges. We can also consider the functionals $\mu_e$ which maps $e$ to one, and other edges to zero. The bipartite matching problem can then be expressed as maximizing $\sum_e \mu_e(w)$ over $V$, subject to the contraints that $0 \leq \lambda_v(w) \leq 1$ and $0 \leq \mu_e(w) \leq 1$. It turns out that the matrix constraints related to this problem are unimodular, so we may solve the problem using non-integer linear programming in $\mathbf{R} \cdot E$, and then project results back into $\mathbf{Z} \cdot E$, which makes the problem tractable.
+    Let $G = (L \cup R, E)$ be a Bipartite graph. The problem of finding a maximal matching in this graph can be reduced to integer linear programming. Let $V = \mathbf{Z} \cdot E$ be the free module generated by the edges. Consider the linear function $\lambda_v$ which assigns a value of one to edges containing $v$ as an endpoint, and assigning zero to other edges. We can also consider the functionals $\mu_e$ which maps $e$ to one, and other edges to zero. The bipartite matching problem can then be expressed as maximizing $\sum_e \mu_e(w)$ over $V$, such that $0 \leq \mu_e(w) \leq 1$ for all $e$, and $\lambda_v(w) \leq 1$. It turns out that the matrix constraints related to this problem are unimodular, so we may solve the problem using non-integer linear programming in $\mathbf{R} \cdot E$, and then project results back into $\mathbf{Z} \cdot E$, which makes the problem tractable.
 \end{example}
 
 \begin{example}
     The maximum $s-t$ flow problem for a graph $(V,E)$ with capacities $c$ can be represented as a linear program over $\mathbf{R} \cdot E$. We attempt to maximize the operator $\mu_{\text{out}} - \mu_{\text{in}}$, where $\mu_{\text{out}} = \lambda_t$ and $\mu_{\text{in}} = \lambda_s$, using the notation of the last example. The constraints are that $0 \leq \mu_e \leq c(e)$. The constraint matrix is not necessarily unimodular, but here we allow real values, so we can solve the problem in polynomial time using linear programming.
 \end{example}
 
-A {\bf network matrix} is a matrix corresponding to a tree $(V,E)$, with edges oriented arbitrarily. Given a pair of vectors $(v,w)$, and an edge $e$, we define $A_{(v,w),e} = 1$ if $e$ appears on the $v-w$ path positively, $-1$ if it appears negatively, and zero if it doesn't occur on the path.
+A {\bf network matrix} is a matrix corresponding to a tree $(V,E)$, with edges oriented arbitrarily (and non-empty). Given a pair of vectors $(v,w)$, and an edge $e$, we define $A_{(v,w),e} = 1$ if $e$ appears on the $v-w$ path positively, $-1$ if it appears negatively, and zero if it doesn't occur on the path. More generally, we can consider any submatrix of a matrix of this form to be a network matrix, for we only need to discuss these matrices to prove unimodularity.
 
 \begin{theorem}
     Every network matrix is totally unimodular.
 \end{theorem}
 \begin{proof}
-    We prove by induction. Let $e = uv$ be an edge, where $u$ is a leaf node. We may assume $e$ is directed this way, because swapping the orientation of the edge preserves the unimodularity of the network matrix (it either maintains the determinant of each submatrix, or negates it). Any submatrix of $A$ which does not contain the column corresponding to $e$ is unimodular by induction, since it corresponds to a submatrix in $(V-u, E-e)$.
-
-    Thus we may asume the submatrices of $B$ we are analyzing contains the column corresponding to $e$. If no column of $B$ is for a pari with $s_i = u$, then $\text{det}(B) = 0$.
+    We prove by induction. If we only have one edge, then our network matrix is a column of elements in $\{ 0, 1, -1 \}$, and is therefore unimodular. Inductively, suppose a network matrix $A$ is presented by $(V,E)$, and a network matrix corresponding to fewer nodes is unimodular. Let $B$ be a submatrix. We may assume $E$ contains more than one edge, because otherwise the matrix is just a columns of elements of $\{ 0, 1, -1 \}$, and is therefore unimodular. Fix some edge $vw \in E$. If the row corresponding to $vw$ and $wv$ does not lie in $B$, then $B$ is a submatrix of the network matrix corresponding to $(V,E-e)$, and is unimodular by induction. We may without loss of generality assume $vw$ lies in $B$. If there is no $ur$ such that $vw$ is on the path from $u$ to $r$, then the row corresponding to $vw$ is equal to zero, and $\det(B) = 0$. Thus we may assume $ur$ exists. By negating columns, we may assume that for any such $ur$ $vw$ occurs positively. If we subtract the column corresponding to $ur$ with every other column where $vw$ occurs, we obtain a new matrix $B'$ with the same determinant as $B$. What's more, the row corresponding to $vw$ has value one only on the column corresponding to $ur$, so we may consider the submatrix $C$ of $B'$ obtained from removing the row $vw$ and column $ur$, and $C$ has the same determinant of $B'$, thought perhaps multiplied by $-1$. Now we may apply induction to $C$, since it doesn't contain $vw$ or $wv$, to conclude that the determinant of $B$ is in $\{ 0, -1, 1 \}$.
 \end{proof}
+
+It is very useful in the intersection of linear programming and combinatorial optimization to be able to link intuitions about the specific problems at hand (in this case graph theory) with the intuitions about linearity from in the programming itself.
+
+\begin{example}
+    The Bipartite problem has unimodular constraints. To see this, we need only note that each row of the constraint matrix corresponds to a row of the network matrix corresponding to some tree in $G = (L \cup R, E)$. To prove this, we may assume none of the rows corresponding to the constraints $0 \leq \mu_e(w) \leq 1$ are in the matrix, since the row is just a single value of $1$. Thus we take $n$ vertices $v_1, \dots, v_n$ and consider certain columns corresponding to edges $e_1, \dots, e_n$. If the edges have a cycle $e_{i_1}, e_{i_2}, \dots, e_{i_k}$, then by summing the corresponding columns by alternately adding and subtracting the columns, we end up with a zero vector,b and so the determinant of the submatrix is zero. Thus the 
+\end{example}
+
+The Gouila-Houri theorem is also useful for verifying unimodularity.
+
+\begin{theorem}
+    A matrix $A \in M_{m,n}(\mathbf{R})$ is unimodular if and only if for every subset of rows can be partitioned into two subset $v_1, \dots, v_l$ and $w_1, \dots, w_k$ such that $\sum v_i - \sum w_i \in \{ -1, 0, 1 \}^n$.
+\end{theorem}
+
+\chapter{The Ellipsoid Method}
+
+Recall that every Ellipsoid in $\mathbf{R}^n$ at the origin is the unit ball relative to some positive definite inner product on $\mathbf{R}^n$. The classification theorem on inner product tells us that we can identify every ellipsoid in $\mathbf{R}^n$ with a positive definite matrix $M > 0$ and $x \in \mathbf{R}^n$. To find a polynomial time algorithm for linear programming, we shall shrink ellipsoids around polyhedra to find optimal points.
+
+Thus, given $M > 0$, $x, a \in \mathbf{R}^n$, we wish to find a new ellipsoid $E(N,y)$, which shrinks around $a$, such that
+%
+\[ E(N, y) \supset E(M,x) \cap \{ z \in \mathbf{R}^n : a_z \geq a_x \} \]
+%
+and the volume of $E(N, y)$ is less than or equal to $\sqrt{\alpha}$ times the volume of $E(M,x)$, fo rsmall enough $\alpha$ (we shall find $\alpha = e^{-1/2n}$). Since the determinant measures the volume change of the respective linear transformation, the volume condition algebraically means $\det(N) \leq \alpha \det(M)$.
+
+Define
+%
+\[ b = \frac{Ma}{\|a\|_M}\ \ \ \ \ N = \frac{n^2}{n^2 - 1} (M - \frac{2}{n+1} b \cdot b^t) \]
+%
+First, we verify that $N$ is positive definite. Note
+%
+\[ M - \frac{2}{n+1} bb^t = M - \frac{2}{n+1} \frac{Maa^tM^t}{\|a\|_M^2} \]
 
 \end{document}

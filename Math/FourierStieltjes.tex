@@ -1,0 +1,158 @@
+\documentclass{article}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{prop}[theorem]{Proposition}
+
+%\theoremstyle{remark}
+\newtheorem*{example}{Example}
+\newtheorem*{proof*}{Proof}
+
+\theoremstyle{definition}
+\newtheorem*{defi}{Definition}
+\newenvironment{definition}
+    {\begin{samepage}\begin{framed}\begin{defi}}
+    {\end{defi}\end{framed}\end{samepage}}
+
+\title{The Fourier Stieltjes Integral}
+\author{Jacob Denson}
+
+\begin{document}
+
+\maketitle
+
+With the help of the Gelfand representation on $L^1(G)$, we are able to discern a generalized Fourier transform on any compact group which transforms elements of $L^1(G)$ into functions on $\Gamma(G)$. These functions are normally easier to understand than the original functions; they are continuous, vanish at infinity, and transform convolution into pointwise multiplication. What makes the Gelfand transform even more important in the analysis of locally compact groups is that there is an integral representation of the transform
+%
+\[ \widehat{f}(\phi) = \int \frac{f(x)}{\phi(x)} dx \]
+%
+Thus the transform naturally reflects the group structure, since we are integrating over the Haar measure. Such an elegant representation indicates that we might perhaps have a nice representation of the characters of $M(G)$, since the algebraic structure of $M(G)$ is a simple extension of $L^1(G)$. Such a representation, if it exists at all, remains elusive\footnote{A strategy developed in \cite{taylor} indicates a representation of $M(G)^*$ as an algebra of continuous functions over a new group $G'$, but the group $G'$ is normally pathologically complicated, and as such we shall not discuss this representation here.}. We can, however, extend the Fourier transform to $M(G)$, since integration is defined on all of $M(G)$, not just $L^1(G)$. The algebra homomorphism obtained is known as the {\bf Fourier-Stieltjes transform}.
+%
+\[ \widehat{\mu}(\phi) = \int \frac{d\mu(x)}{\phi(x)} \]
+%
+The topic of this article is to justify why this generalization is useful, and why it is a natural generalization of the transform on $L^1(G)$.
+
+Though $M(G)$ has manifold complexities over $L^1(G)$, the Stieltjes transform is useful is that it still has many of the important properties of the Fourier transform. It's still a homomorphism with respect to convolution, because
+%
+\[ \widehat{\mu * \nu}(\phi) = \int \frac{d(\mu * \nu)(x)}{\phi(x)} = \int \frac{d \mu (x) d \nu(y)}{\phi(xy)} = \int \frac{d \mu(x)}{\phi(x)} \frac{d \nu(y)}{\phi(y)} = \widehat{\mu}(\phi) \widehat{\nu}(\phi) \]
+%
+Unfortunately, the functions obtained cannot vanish at infinity; $M(G)$ has a unit, unlike $L^1(G)$, so the transform must contain constant functions. However, we still have continuity (and in fact, uniform continuity as well). This is easy to verify for a measure $\mu$ supported on a compact set $K$, because then
+%
+\[ | L_\psi \widehat{\mu}(\phi) - \widehat{\mu}(\phi)| = \int_K \frac{1 - \psi(x)}{\psi(x) \phi(x)} \]
+%
+The family
+%
+\[ U_{K,\varepsilon} = \{ \phi : |\phi(x) - 1| < \varepsilon\ \text{for all}\ x \in K \} \]
+%
+for $K \subset G$ compact is verified to be a neighbourhood basis of the origin in $\Gamma(G)$, and if $\psi$ is in this neighbourhood it is easy to see that $\| L_\psi \widehat{\mu} - \widehat{\mu} \|_\infty < \varepsilon \| \mu \|$. Since we may approximate all finite Radon measures by compactly supported measures, and the Fourier transform is continuous as a map from the topology induced by the variation norm to the uniform norm, the theorem is then proven for all measures.
+
+Physical considerations brought rise to the Fourier transform, so it is useful to look back to physics to understand why the Stieltjes transform is a good generalization. Physical quantities are often defined as limits of averages over regions, essentially by using the Lebesgue-differentiation function to find a function $f \in L^1(G)$ such that the equation
+%
+\[ f(x) = \lim_{r \to 0} \frac{1}{v(B_r(x))} \int_{B_r(x)} f(x) dx = \lim_{r \to 0} F_r(x) \]
+%
+holds around almost every point $x$. This is often used to define mathematical models of electrical charge or mass. However, problems with this model occur when one wants to discuss point masses and point charges at some point $y$, where we would like to define
+%
+\[ \int_{B_r(x)} f(x) dx = \mathbf{I}(y \in B_r(x)) \]
+%
+Then the formula above implies that $f(x) = 0$, except at $y$, where it somehow integrates to one. We would like to define $f$ as the limit of the functions
+%
+\[ F_r(x) = \frac{\mathbf{I}(B_r(y))}{v(B_r(y)} \]
+%
+but this limit does not exist in any of the standard limiting procedures.
+
+It is much more elegant to define charge or mass, not in terms of functions, but instead of measures. Indeed, this enables us to define the dirac delta function at points $y$, which gives us the properties of point masses needed earlier. In this context, we see why these weird properties occur, we are trying to take the Radon-Nikodym derivative of a function which isn't absolutely continuous with respect to the Lebesgue measure. Physicists may also need to take a charge distribution over a surface, and while geometric intuition about the Dirac delta function begins to break down, measure theorists can just take the Radon Nikodym derivative with respect to the two dimensional Hausdorff measure.
+
+Nonetheless, it is often useful to think of charge distributions as limitations of functions of the form $F_r$, and this thought process actually has an interpretation in the general theory of the Stieltjes transform, because we can obtain the Fourier transform on general measures by taking limits of elements of $L^1(G)$.
+
+\begin{theorem}
+    If $f_U$ is an approximate identity in $L^1(G)$ like those we have constructed before, then $\widehat{f_U} \to 1$ pointwise.
+\end{theorem}
+\begin{proof}
+    Let $\phi \in \Gamma(G)$ be arbitrary. Then
+    %
+    \[ \widehat{f_U}(\phi) = \int \frac{f_U(x)}{\phi(x)} dx \]
+    %
+    Fix some precompact $U$. Then, by modifying $\phi$ outside $U$ so it is in $L^1(G)$, we find
+    %
+    \[ \widehat{f_U}(\phi) = (f_U * \phi)(e) \to \phi(e) = 1 \]
+    %
+    Since $\phi$ was arbitrary, $\widehat{f_U} \to 1$.
+\end{proof}
+
+We can then define the Fourier transform of an arbitrary measure $\mu$ as the pointwise limit of the Fourier transforms of the functions $f_U * \mu$, since $\widehat{f_U * \mu} = \widehat{f_U} * \widehat{\mu} \to \widehat{\mu}$. This essentially brings us back to the situation in physics, since if $G = \mathbf{R}^n$, and $f_r$ is the normalized characteristic function of $B_r$ around the origin, then we find
+%
+\[ (f_r * \mu)(x) = \frac{1}{v(B_r(x))} \int_{B_r(x)} d\mu \]
+%
+So measures are really `limits' of functions in $L^1(G)$, in the sense that the Fourier transform of any measure is the pointwise limit of Fourier transforms of functions. The physicists were right all along! This can be used to obtain deeper results, once the inversion theorem is proved (a fact left to a future presentation).
+
+To determine explicit results on the method of reasoning, we need to do some calculation with the weak $*$ topology. If $\mu_\alpha \to \mu$, $f \in C_c(G)$, and $\nu$ has compact support then
+%
+\[ \int f d(\nu * \mu_\alpha) = \int f(xy) d\nu(x) d\mu_\alpha(y) \to \int f(xy) d\nu(x) d\mu(y) \]
+%
+Which completes the needed calculation, provided that the map $y \mapsto \int f(xy) d\nu(x)$ is in $C_c(G)$, which is true by applying uniform continuity, since
+%
+\[ \left| \int [f(xy) - f(xy')] d\nu(x) \right| \leq \| \nu \| \| f(xy) - f(xy') \|_\infty \to 0 \]
+%
+If $\nu$ does not necessarily have compact support, we need only approximate it by functions which do, for
+%
+\begin{align*}
+        &\left| \int f d(\nu * \mu_\alpha) - \int f d(\nu * \mu) \right|\\
+        &\leq \left| \int f d((\nu - \nu_\beta) * \mu_\alpha) \right|\\
+        &\ \ \ \ \ \ + \left| \int f d (\nu_\beta * \mu_\alpha) - \int f d (\nu_\beta * \mu) \right|\\
+        &\ \ \ \ \ \ + \left| \int fd((\nu_\beta - \nu) * \mu) \right|\\
+        &\leq \| f \|_\infty \| \nu - \nu_\beta \| \left( \| \mu_\alpha \| + \| \mu \| \right) + \left| \int f d (\nu_\beta * \mu_\alpha) - \int f d (\nu_\beta * \mu) \right|
+\end{align*}
+    %
+    If the $\mu_\alpha$ are bounded, we may first fix $\beta$ such that $\| \nu - \nu_\beta \| < \varepsilon$, and then let $\alpha$ be large enough such that the whole term becomes miniscule.
+
+\begin{theorem}
+    The Fourier-Stieltjes transform is injective. That is, if $\mu$ is a measure for which $\widehat{\mu} = 0$, then $\mu = 0$.
+\end{theorem}
+
+\begin{theorem}
+    $L^1(G)$ is weak-$*$ dense in $M(G)$.
+\end{theorem}
+\begin{proof}
+    Let $\{ f_U \}$ be an approximate identity for $L^1(G)$. By previous constructions we may assume $\| f_U \| \leq 1$, and since the unit ball of $M(G)$ is weak $*$ compact, we may let $f_U dx$ converge weakly to some measure $\nu$ by taking a subnet. We have already verified that $\widehat{f_U} \to 1$ pointwise. This implies that if $\mu \in M(G)$ is arbitrary, then $\widehat{f_U * \mu} \to \widehat{\mu}$ pointwise. But $\widehat{f_U * \mu} = \widehat{f_U} \widehat{\mu} \to \widehat{\nu} \widehat{\mu}$ pointwise, so
+    %
+    \[ \mu = \nu * \mu = \left( \lim f_U \right) * \mu = \lim f_U * \mu \]
+    %
+    so $f_U$ is an approximate identity on $M(G)$ as well as $L^1(G)$, and the weak-$*$ closure of $L^1(G)$ can be seen by looking at the equation above to be $M(G)$.
+\end{proof}
+
+Thus we finally see why the Fourier-Stieltjes transform is a natural extension of $L^1(G)$ -- it is the unique continuous extension of the transform, relative to the weak $*$ topology on $M(G)$, and the pointwise topology of $\mathbf{C}^{\Gamma(G)}$. Conversely, this also tells us why the Fourier transform is useful -- it is a specialization of the Stieltjes transform which is actually calculatable, while still representing most of the properties of the Stieltjes transform in the first place. We can study $L^1(G)$ instead of $M(G)$ because, at least with respect to integration theory, the two spaces are the same.
+
+\begin{thebibliography}{9}
+
+\bibitem{folland}
+    Gerald Folland,
+    \emph{A Course in Abstract Harmonic Analysis},
+    CRC Press,
+    2015.
+
+\bibitem{follandreal}
+    Gerald Folland
+    \emph{Real Analysis: Modern Techniques and Applications}
+    Wiley,
+    1999.
+
+\bibitem{rudin}
+    Walter Rudin,
+    \emph{Fourier Analysis on Groups},
+    Wiley,
+    1990.
+
+\bibitem{taylor}
+    Joseph L. Taylor,
+    \emph{The Structure of Convolution Measure Algebras},\\
+    Transactions of the American Mathematical Society,
+    1965.
+
+\end{thebibliography}
+
+\end{document}
