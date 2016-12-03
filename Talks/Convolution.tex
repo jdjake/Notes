@@ -1,0 +1,278 @@
+\documentclass{article}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{prop}[theorem]{Proposition}
+
+%\theoremstyle{remark}
+\newtheorem*{example}{Example}
+\newtheorem*{proof*}{Proof}
+
+\theoremstyle{definition}
+\newtheorem*{defi}{Definition}
+\newenvironment{definition}
+    {\begin{samepage}\begin{framed}\begin{defi}}
+    {\end{defi}\end{framed}\end{samepage}}
+
+\title{Convolution Algebras}
+\author{Jacob Denson}
+
+\begin{document}
+
+\maketitle
+
+In MATH 642, we have learned that the most fruitful way of understanding a locally compact group $G$ is to look at the convolution algebra $L^1(G)$ and measure algebra $M(G)$. In this paper we generalize these methods to a more general class of operators, by removing all that is not algebraically essential. First, note that convolution is only defined with respect to multiplication
+%
+\[ \int f d(\mu * \nu) = \int \int f(xy) d\mu(x) d\nu(y) = \int \int f(xy) d\nu(y) d\mu(x) \]
+%
+so convolution is well defined on $M(G)$ when $G$ is just a semigroup, since we only need composition, not inversion. Now we were a little brusque when introducing convolution. Indeed, it is not clear that the integral above is even well defined. In due course we will provide the technicalities needed to justify the calculation.
+
+So what's happening algebrically here? We have three linear maps at play here, the functionals on $C_0(G)$, defined by
+%
+\[ E_\mu: f \mapsto \int f d\mu\ \ \ \ \ \ E_{\mu * \nu}: g \mapsto \int g d(\mu * \nu)\ \ \ \ \ \ \ E_\nu: h \mapsto \int h d\nu \]
+%
+If we define a new operator $\overline{E_\nu}: C_0(G) \to C_0(G)$ by
+%
+\[ \overline{E_\nu}(f)(x) = \int f(xy) d\nu(y) = E_\nu(L_x f) \]
+%
+Then convolution of measures is defined exactly so that
+%
+\[ E_{\mu * \nu} = E_\mu \circ \overline{E_\nu} \]
+%
+In this form, convolution is easy to generalize.
+
+Let $T$ and $U$ be functionals defined on a subspace $V$ of $\mathbf{C}^S$, where $S$ is a semigroup, and $V$ is closed under left translation by elements of $S$. Then we can define the conjugate of an operator, which lies in $B(V,\mathbf{C}^S)$ and is defined by the equation
+%
+\[ \overline{T}(f)(y) = T(L_x f) \]
+%
+If $\overline{T}(f) \in V$ for all $f \in V$, then we may define convolution as
+%
+\[ T * U = T \circ \overline{U} \]
+%
+which corresponds to the standard notion of convolution on $C_0^*(G)$. If we return to the view of $T$ as the integration operators it generalizes, then $\overline{T}f$ is the function which, for each $x$, averages out $f$ over the measure obtained by shifting the origin to $x$. Indeed, if $T$ is integration by a Haar measure, then $\overline{T} f (x) = Tf$ for all $x$, and so $(U * T)(f) = T(f) U(1)$ (a fact which wouldn't even be defined in the standard definition of convolution on $M(G)$).
+
+\begin{theorem}\ 
+    %
+    \begin{enumerate}
+        \item[(a)] Conjugation is a linear operation.
+        \item[(b)] Convolution is a bilinear operation on $V$.
+        \item[(c)] Convolution is also associative, where associativity can be defined.
+    \end{enumerate}
+\end{theorem}
+\begin{proof}
+    To prove (a), we calculate
+    %
+    \[ \overline{aT + bU}(f)(x) = (aT + bU)(L_x f) = a T(L_x f) + bU(L_x f) = a \overline{T}(f)(x) + b \overline{U}(f)(x) \]
+    %
+    (b) then follows directly from (a) because if $C: V \times W \to U$ is bilinear, and $T: V' \to V$, $U: W' \to W$ are linear, then $C \circ (T \times U)$ is bilinear. In our case, $C$ is the composition operator on $V \times B(V,V)$, $T$ is the identity map, and $U$ is the conjugation map. Now given $T, L, U \in V$, suppose that $U * L$ and $T * U$ are functions in $V$, then
+    %
+    \[ (\overline{U \circ \overline{L}})(f)(x) = (U \circ \overline{L})(L_x f) = (\overline{U} \circ \overline{L})(f)(x) \]
+    %
+    So $\overline{U \circ \overline{L}} = \overline{U} \circ \overline{L}$, and so
+    %
+    \[ T * (U * L) = T \circ \overline{U \circ \overline{L}} = T \circ \overline{U} \circ \overline{L} = (T * U) * L  \]
+    %
+    and so $*$ has associativity.
+\end{proof}
+%
+Now suppose that $V$ is chosen such that for any $T,U \in V$, $T * U \in V$. Then $*$ defines an algebra operation on $V$, and we call $V$ a convolution algebra.
+
+For intuition, let's return to the study of $C_0^*(G)$, but from an algebraic perspective this time, so that we can see what's going on in the classical definition of convolution. That is, we'll try and eschew the isomorphism $C_0^*(G) \cong M(G)$ as much as possible. To maintain the operator theoretic perspective, we will try to abstain from using measures where possible, but in some cases we will mention theorems that are incredibly difficult without associating an operator with its canonical Riesz measure. This allows us to see more of the algebraic side of the proofs, which are often hidden by the Riesz theorem.
+
+\begin{theorem}
+    For any $T \in C^*_0(G)$, and $f \in C_0(G)$, $\overline{T}f \in C_0(G)$.
+\end{theorem}
+\begin{proof}
+    We may write
+    %
+    \[ (\overline{T}f)(hx) - (\overline{T}f)(x) = (T \circ (L_h - 1) \circ L_x)(f) \]
+    %
+    Since $f$ is uniformly continuous, $\| ((L_h - 1) \circ L_x) (f) \| \to 0$ at a rate independent of $x$, so by continuity of $T$ under the uniform norm, $(\overline{T}f)(hx) - (\overline{T}f)(x) \to 0$ at a rate independent of $x$, so $\overline{T}f$ is right uniformly continuous.
+
+    Now we rely on a nontrivial theorem from the point of view of operator theory, which is trivial when seen as a measure theoretic statement by the Riesz theorem. For any $T \in C^*_0(G)$, there is a positive measure $|T| \in C^*_0(G)$ with $\| |T| \| = \| T \|$ and $|Tf| \leq |T||f|$. Consider a compact $K$ for which $|f| \leq \varepsilon$ outside of $K$. Using measure theory again, we may decompose $|T| = U_0 + U_1$, where $\| U_0 \| \leq \varepsilon$, and $U_1(f) = 0$ for $f$ vanishing outside some compact set $E$ ($U_0$ is integration over $E$, and $U_1$ integration over $E^c$). Thus $U_1$ descends to a functional on the quotient algebra $C_0(G)/C_0(E^c)$, and one sees by applying Urysohn functions that $\| U_1 f \| \leq \| U_1 \| \| \tilde{f} \|_\infty$, where $\tilde{f}$ is the restriction of $f$ to $E$. Thus if $x \not \in KE^{-1}$ (a compact set), we find that $|L_x f| < \varepsilon$ on $E$, and so
+    %
+    \begin{align*}
+        |\overline{T}f(x)| &= |T(L_x f)| \leq |T|(L_x |f|)\\
+        &= U_0(L_x |f|) + U_1(L_x |f|) \leq \varepsilon \| f \| + \| T \| \varepsilon
+    \end{align*}
+    %
+    So that $\overline{T}f$ vanishes at infinity.
+\end{proof}
+
+The algebraic way of thinking allows us to see abstractly why it is easy to manipulate $C_0^*(G)$ in the context of the theorem; we can decompose arbitrary operators into operators which are controlled on compact subsets of $G$, so that we can suitably control the effects of the operators on functions which themselves are suitably controlled on finite subsets of $G$. We see the integration theory on $C^*_0(G)$ is analogous to the functional calculi on the various classes of Banach algebras.
+
+By our previous discussion, we find that $C^*_0(G)$ is a convolution algebra, and in fact a Banach algebra under the convolution norm. This follows because
+%
+\[ |\overline{T}f(x)| = |T(L_x f)| \leq \| T \| \| f \|_\infty \]
+%
+so that $\| U * T \| = \| U \circ \overline{T} \| \leq \| U \| \| \overline{T} \| \leq \| U \| \| T \|$. If $G$ is noncommutative, then $C^*_0(G)$ is certainly non-commutative, for we have a homomorphism $x \mapsto E_x$, where $E_x$ is the evaluation operator of continuous functions at $x$. I can't see a way to prove the opposite without applying Fubini's theorem on $M(G)$. This makes sense, because an application of Fubini's theorem is integral, because in spaces where Fubini's theorem fails, $C^*_0(G)$ can be non-commutative even when $G$ is commutative. To state an example, consider the dual space of bounded functions on an infinite abelian group. Verifying that $C^*_0(G)$ is non-abelian requires machinery in the theory of invariant means that we unfortunately do not have time to discuss.
+
+\begin{theorem}
+    In $C_0^*(G)$, $|T * U| \leq |T| * |U|$.
+\end{theorem}
+\begin{proof}
+    Consider $f \in C_0^+(G)$, and suppose $g \in C_0(G)$, $|g| \leq f$. If we associate $T$ with the measure $\nu$, and $U$ with the measure $\mu$, then
+    %
+    \begin{align*}
+        |(T * U)(g)| &= \left| \int g(xy) d\nu(y) d\mu(x) \right|\\
+        &\leq \int |g(xy)| d|\nu|(y) d|\mu|(x)\\
+        &\leq \int f(xy) d|\nu|(y) d|\mu|(x) = |T| * |U|\ (f)
+    \end{align*}
+    %
+    Since $|g| \leq f$ was arbitrary, we find $|T * U|(f) \leq |T| * |U| (f)$.
+\end{proof}
+
+Now let's apply the techniques of $M(G)$ full on. Measure theory shows that any $T \in C_0^*(G)$ associated with $\mu \in M(G)$ may be extended canonically to a continuous linear functional on a larger class of functions defined on $G$, the class $L^1(G, \mu)$. For any $f \in C_0(G)$,
+%
+\[ \int f d(\mu * \nu) = \int f(xy) d\mu(x) d\nu(y) \]
+%
+The question is whether this continues to hold for the more general class of integrable functions on which the transformation is defined. In order to even interpret the equation, we need $f \in L^1(G, \mu * \nu)$, and $f \circ \tau \in L^1(G \times G, \mu \times \nu)$, where $\tau(x,y) = xy$ is the multiplication operator. It turns out that if $f \in L^1(G, \mu * \nu)$, we get measurability of $f \circ \tau$ for free, and the equation continuous to hold, provided we consider functions which are `absolutely summable'.
+
+There is another way to view our theorem. Essentially, we are proving that $\tau$ is a $\mu \times \nu$ to $\mu * \nu$ measure preserving transformation. This is the point of view which makes convolution incredibly useful in probability theory. If $X$ and $Y$ are random variables, with respective distributions $\mu_X$ and $\mu_Y$, then $X + Y$ has distribution $\mu_X * \mu_Y$ (with convolution taken with respect to addition). This is easiest to see if $X$ and $Y$ are discrete, in which case
+%
+\[ \mathbf{P}(X + Y = n) = \sum_{k = -\infty}^\infty \mathbf{P}(X = k) \mathbf{P}(Y = n-k) \]
+%
+We'll verify this is true for non-discrete measures as well. If we can verify that this is true, we get our theorem for free, but it turns out that the other direction is remarkably easier.
+
+\begin{theorem}
+    If $f \in L^1(G, |\mu * \nu|)$, then $f \circ \tau \in L^1(G \times G, |\mu| \times |\nu|)$, and
+    %
+    \[ \int f d\mu * \nu = \int f(xy) d\mu(x) d\nu(y) \]
+\end{theorem}
+\begin{proof}
+    The theorem is essentially trivial with some technicalities making things more difficult. Indeed, consider the pushforward measure $\eta = \tau_*(\mu * \nu)$, corresponding to the operator
+    %
+    \[ E_\eta: f \mapsto \int f(xy) d\mu(x) d\nu(y) \]
+    %
+    If we can prove this operator is not only well defined on the space, but also continuous $L^1(G, \mu * \nu)$, we can apply the density of $C_0(G)$ to prove that the operator is equal to $\int f d(\mu * \nu)$ everywhere. We shall prove, in fact, that $\| E_\eta \| \leq \| E_{|\mu| * |\nu|} \|$, by bounding the functional over positive functions.
+
+    In the beginning, we rely on Urysohn's theorem to prove the initial parts of the theorem. Fix a compact $K$, and consider an open $U$ with
+    %
+    \[ |\mu| * |\nu| (U) \leq |\mu| * |\nu| (K) + \varepsilon \]
+    %
+    If we pick $f \in C_0(G)$ with $\chi_K \leq f \leq \chi_U$, then
+    %
+    \begin{align*}
+        \int \chi_K(xy) d |\mu|(x) d|\nu|(y) &\leq \int f(xy) d|\mu|(x) d|\nu|(y)\\
+        &= \int f d(|\mu| * |\nu|)\\
+        &\leq |\mu| * |\nu| (U) \leq |\mu| * |\nu| (K) + \varepsilon
+    \end{align*}
+    %
+    Taking $\varepsilon \to 0$, we find that if $\eta = \tau_*(|\mu| \times |\nu|)$ is the pushforward measure induced by multiplication, then $\eta(K) \leq \mu(K)$. By the monotone convergence theorem, this inequality continues to hold for $\sigma$-compact subsets of $G$, but this inequality is still not strong enough to generalize to all Borel sets.
+
+    Now suppose that $|\mu| * |\nu|\ (A) = 0$. By applying regularity, consider a $G_\delta$ set $D$ with $A \subset D$, and $|\mu| * |\nu|\ (D) = 0$. To prove that $|\mu| \times |\nu|\ (\tau^{-1}(D)) = 0$. To prove this, we let $K \subset \tau^{-1} D$ be arbitrary and compact in $G \times G$. Then $\tau(K)$ is compact, and $\chi_K \leq \chi_{\tau(K)} \circ \tau$, so
+    %
+    \begin{align*}
+        |\mu| \times |\nu| (K) &= \int \chi_K(x,y) d|\mu|(x) d|\nu|(y) \leq \int \chi_{\tau(K)}(xy) d|\mu|(x) d|\nu|(y)\\
+        &= \eta(\tau(K)) \leq (\mu * \nu)(\tau(K)) \leq (\mu * \nu)(D) = 0
+    \end{align*}
+    %
+    This implies that $\nu(D) = 0$, so $\nu(A) = 0$.
+
+    Any Borel measurable subset $E$ of finite $\mu * \nu$ measure differs from a $\sigma$-compact set $F$ by a set of null measure. But then by the last paragraph,
+    %
+    \[ \eta(E) = \eta(F) \leq (\mu * \nu)(f) \leq (\mu * \nu)(E) \]
+    %
+    This implies that for any simple positive function $f = \sum a_i \chi_E$,
+    %
+    \[ \int f d\nu \leq \int f d(|\mu| * |\nu|) \]
+    %
+    But this implies that the inequalities holds for any positive measurable function $f$. This is enough to tell us that if $f \in L^1(G, |\mu| * |\nu|)$, then $f \circ \tau \in L^1(G \times G, |\mu| \times |\nu|)$, and $\| f \circ \tau \|_1 \leq \| f \|_1$, in the context of the measures considered.
+
+    But now we can apply absolute values on the original measures, because we can be absolutely sure there's no hiccups. Indeed,
+    %
+    \[ \left| \int f(xy) d\mu(x) d\nu(y) \right| \leq \int |f| d\nu \leq \| f \|_1 \]
+    %
+    And this implies that $E_\mu * E_\nu$ and $E_{\mu * \nu}$ are two continuous linear operators on $L^1(G, \mu * \nu)$ which agree on $C_0(G)$, a dense subset of $L^1(G, \mu * \nu)$. Thus the operators must agree everywhere.
+\end{proof}
+
+The representations of $C_0^*(G)$ have many uses, but it is still important not to forget that $C_0^*(G)$ is actually the dual space of some Banach space. For instance, this enables us to consider the weak-$*$ topology on the set (which can be defined on $M(G)$ without mention of $C_0^*(G)$, but noticing the two are the same makes it easier to apply theorems of functional analysis of the space).
+
+We finalize our more in-depth look at convolution by analyzing some important subalgebras of $C_0^*(G)$. A lemma will help verify the more important topological properties of these subalgebras.
+
+\begin{lemma}
+    For any measurable $A$, the set of $\mu \in M(G)$ such that $|\mu|(A) = 0$ is a closed subspace.
+\end{lemma}
+\begin{proof}
+    If $\mu_\alpha \to \mu$, then for any Borel $B$,
+    %
+    \[ | (\mu_\alpha - \mu)(B) | \leq |\mu_\alpha - \mu|(B) \leq \| \mu_\alpha - \mu \| \]
+    %
+    so $\mu_\alpha(B) \to \mu(B)$. This shows that the subspace is closed, and verifying it is actually a subspace is trivial.
+\end{proof}
+
+The discrete operators are those that can be written $\sum_{k = 1}^\infty a_k E_{x_k}$ for some $x_k \in G$. In terms of measure theory, these are the measures $\mu \in M(G)$ which vanishes outside a countable set, and we denote this set by $M_d(G)$. Since $|\mu| = \sum |a_k| \delta_{x_k}$, the $a_k$ must be absolutely summable. One finds by calculation that if $\nu = \sum_{k = 1}^\infty b_k E_{x_k}$, then
+%
+\[ \mu * \nu = \sum a_j b_k E_{x_j x_k} \]
+%
+and so $M_d(G)$ is actually a closed subalgebra of $M(G)$.
+
+A measure is continuous if $\mu(\{x\}) = 0$ for all $x \in G$, and the set is denoted $M_c(G)$. As the intersection of closed subspaces, the absolutely continuous measures form a closed vector space. In fact, this space is an ideal (two sided!). if $\mu \in M(G)$ is arbitrary, and $\nu \in M_c(G)$, then
+%
+\[ (\nu * \mu)(\{ a \}) = \int \chi_{\{ a \}}(xy) d\nu(x) d\mu(y) = \int_G \nu(\{ ay^{-1} \}) d\mu(y) = \int 0 d\mu(y) = 0 \]
+%
+and
+%
+\[ (\mu * \nu)(\{ a \}) = \int \chi_{\{ a \}}(xy) d\nu(y) d\mu(x) = \int \nu( \{ x^{-1}a \}) d\mu(x) = \int 0 d\mu(x) = 0 \]
+%
+So by calculation,
+
+Finally, we complete our discussion by discussing the absolutely continuous measures, denoted $M_a(G)$. By the Radon Nikodym theorem, these measures are exactly those written as $f dx$, where $dx$ is the Haar measure, and $f$ is in $L^1(G)$. For any continuous $h$, we find by a constant shift, that
+%
+\[ \int h (f dx * g dx) = \int h(xy) f(x) g(y) dy dx = \int h(x) f(xy^{-1}) g(y) dy dx \]
+%
+So that $(f dx * g dx)$ has a density with respect to $dx$, of the form
+%
+\[ (f * g)(x) = \int f(xy^{-1}) g(y) dy \]
+%
+and this brings us back to the convolution found at the very heart of harmonic analysis, a far cry from the convolution of operators we started with, but much more concretely representable, and much more analytically flexible.
+
+\begin{thebibliography}{9}
+
+\bibitem{folland}
+    Gerald Folland,
+    \emph{A Course in Abstract Harmonic Analysis},
+    CRC Press,
+    2015.
+
+\bibitem{rudin}
+    Walter Rudin,
+    \emph{Fourier Analysis on Groups},
+    Wiley,
+    1990.
+
+\end{thebibliography}
+
+\end{document}
+
+\begin{example}
+    Let $S$ be any semigroup, and let $E_x$ be the operator defined on the space of bounded functions on $S$ for each $x \in S$ by $E_x(f) = f(x)$. Then
+    %
+    \[ \overline{E_y}(f)(x) = (L_x f)(y) = f(xy) \]
+    %
+    so $\overline{E_y}(f) = R_y f$ and
+    %
+    \[ (E_x * E_y)(f) = (E_x \circ \overline{E_y})(f) = E_x(R_y f) = f(xy) = E_{xy}(f) \]
+    %
+    The vector space generated by the $E_x$ forms an algebra, which is essentially the semigroup algebra $\mathbf{C}[S]$. We can also consider the space of operators formed by infinite sums $\sum_{i = 1}^\infty a_i E_{x_i}$, where $\sum |a_i| < \infty$, because if $f \leq N$, then
+    %
+    \[ \left( \sum_{k = 1}^\infty a_k E_{x_k} \right)(f) = \sum_{k = 1}^\infty a_i f(x_i) \]
+    %
+    and this sum converges with respect to the $L_\infty$ norm on the bounded functions. In fact, in terms of the operator norm,
+    %
+    \[ \left\| \sum_{k = 1}^\infty a_k E_{x_k} \right\| = \sum_{k = 1}^\infty |a_k| \]
+    %
+    so this operator space is $l^1(S)$. Indeed, we find that when $A = \sum a_i E_{x_i}$, and $B = \sum b_i E_{x_i}$,
+    %
+    \[ (A * B)(f) = (A * \overline{B})(f) = \sum_{i = 1}^\infty  a_i \sum_{j = 1}^\infty b_j f(x_i x_j) \]
+    %
+    This converges absolutely, so we may rearrange terms to find
+    %
+    \[ (A * B) = \sum_{i, j = 1}^\infty a_i b_j E_{x_i x_j} \]
+\end{example}

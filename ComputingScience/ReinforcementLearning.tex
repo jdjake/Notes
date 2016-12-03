@@ -20,37 +20,41 @@ Reinforcement learning attempts to design intelligences that can learn from its 
 
 Imagine you are at a casino, with rows upon rows of slot machines. A strategic game player would quickly determine the slot machine that maximizes your profit, and exploits this machine to obtain the best payoff. From the start, you have no idea of the mechanisms determining how the rewards are given. Thus you must balance the act of determining these mechanisms by trial and error with exploiting the knowledge you have obtained. The problem of maximizing the amount of money you make is known as the {\bf multi armed bandit problem}.
 
-In the general reinforcement learning problem, the exploration exploitation tradeoff mentioned in the last paragraph is just as prevelant. However, the bandit problem is much more mathematically tractable, and is therefore more prone to theoretical analysis. We note that the problem is not just a toy problem for mathematicians. In medical studies, we want to obtain information about the potency of medicine as early as possible, to prevent possible harm to those in the study. In a test where questions are sequentially generated, one wants to ask questions which best evaluate a student's skill. That these problems can be solved by mathematical means is a boon to those who need the solutions.
+In the general reinforcement learning problem, the exploration exploitation tradeoff mentioned in the last paragraph is just as prevelant. However, the bandit problem is much more mathematically tractable, and is therefore more prone to theoretical analysis. The problem is not just a toy problem though. In medical studies, we want to obtain information about the potency of medicine as early as possible, to prevent possible harm to those in the study -- this was the original context in which the bandit problem was introduced, by William R. Thompson in 1933. In the 1950s, psychologists designed an experiment which placed mice in a T-shaped maze, seeing if they could learn to consistently choose a direction in order to get food. To study a similar problem in humans, the scientists imagined a two armed slot machine, where pulling each arm gives different distributions. In a test where questions are sequentially generated, one wants to ask questions which best evaluate a student's skill. That these Problems can be solved by mathematical means is a windfall to those who need reliable solutions to the related problems.
 
-Mathematically, the domain of the bandit problem is based on a finite set of actions $A$. Then, for each $a \in A$, we fix a reward distribution $\rho_a$ over the real numbers. The set of all such distributions will be denoted $\mathcal{E}(A)$, which we call the space of all {\bf environments} over the action set $A$. Given a fixed environment, the goal is to choose a sequence of actions to maximize our reward, by learning which actions consistently gives us the highest reward, in the fewest exploratory moves possible (or at least, to explore only on states that won't cause us to miss out on rewards). Technically, the domain we are defining is the stochastic, stationary bandit problem, but for now we shall just call the problem the bandit problem.
+Mathematically, the domain of the bandit problem is based on a finite set of actions $A$. Then, for each $a \in A$, we fix a reward distribution $\rho(a)$ over the real numbers. The set of all collections of such distributions will be denoted $\mathcal{E}(A)$, which we call the space of all {\bf environments} over the action set $A$. Given a fixed environment, the goal is to find a sequence of actions to maximize our reward, subject to the fact that we don't know our environment in advance. We must learn optimal actions by choosing exploratory moves in such a way that we are minimally penalized.
 
-After a bandit problem has been specified, we must decide our strategy to maximize reward? The key definition is a policy which, given a memory of past actions, decides (possibly randomly) on the next action to take. Deterministic policies are simplest to define. First, define a {\bf history} of length $k$ to be an element of $(A \times \mathbf{R})^k$ -- a sequence of data obtained from interactions in the environment. We shall denote the set of all histories of length $k$ by $\mathcal{H}_k(A)$. We shall let $\mathcal{H}_0(A)$ consist of the single empty tuple. A {\bf decision function} for a policy is a sequence of functions $\pi_i: \mathcal{H}_{i-1} \to A$, which decide based on prior experience what to take as an $i$'th action. The decision function induces a random sequence of actions $A_1, A_2, \dots$, rewards $X_1, X_2, \dots$, and histories $H_k = [(A_1,X_1), \dots, (A_k,X_k)]$, such that
+A policy is the mathematical model of a strategy which, given a memory of past actions, decides (possibly randomly) on the next action to take. Deterministic policies are simplest to define. First, define a {\bf history} of length $k$ to be an element of $(A \times \mathbf{R})^k$ -- a sequence of data obtained from interactions in the environment. We shall denote the set of all histories of length $k$ by $\mathcal{H}_k(A)$. We shall let $\mathcal{H}_0(A)$ consist of the single empty tuple. A {\bf decision function} for a policy is a sequence of functions $\pi_i$, which map histories in $\mathcal{H}_k(A)$ to probability distributions over $A$ which decide based on prior experience what to take as an $i$'th action. The decision function induces a random sequence of actions $A_1, A_2, \dots$, rewards $X_1, X_2, \dots$, and histories $H_k = [(A_1,X_1), \dots, (A_k,X_k)]$, such that
 %
-\[ A_k = \pi_k(H_{k-1})\ \ \ \ \ \ (X_k | H_{k-1}, A_k) \sim \rho_{A_k} \]
+\[ A_k = \pi_k(H_{k-1})\ \ \ \ \ \ (X_k | H_{k-1}, A_k) \sim \rho(A_k) \]
 %
-More generally, a {\bf stochastic policy} is given by $\pi_i: \mathcal{H}_{i-1} \to P(A)$, a sequence which now map into the space of all probability measures on $A$. A stochastic policy the induces a sequence $A_1, A_2, \dots$ and rewards $X_1, X_2, \dots$, together with a filtration $\{ \mathcal{F}_1, \mathcal{F}_2, \dots \}$ such that $A_k$ is $\mathcal{F}_k$-measurable, $X_k$ is $\mathcal{F}_{k+1}$-measurable, and
+More generally, a {\bf stochastic policy} maps historys to probability distributions over $A$. A stochastic policy then induces a sequence $A_1, A_2, \dots$ and rewards $X_1, X_2, \dots$, together with a filtration $\{ \mathcal{F}_1, \mathcal{F}_2, \dots \}$ such that $A_k$ is $\mathcal{F}_k$-measurable, $X_k$ is $\mathcal{F}_{k+1}$-measurable, and
 %
-\[ (X_k | \mathcal{F}_k) \sim \rho_{A_k} \]
+\[ (X_k | \mathcal{F}_k) \sim \rho(A_k) \]
 %
 The goal of the bandit problem is to choose a policy which induces the maximum expected reward
 %
-\[ \mathbf{E} \left[\sum_{k=1}^n X_k \right] \]
+\[ Q_n = \sum_{k=1}^n X_k \]
 %
-for some value $n \in \mathbf{N}$ (the `finite horizon problem') or for $n = \infty$ (the infinite horizon problem), in which case we try to optimize the order of growth of the expected reward as $n \to \infty$.
+for some value $n \in \mathbf{N}$ (the `finite horizon problem') or to optimize the order of growth of the expected reward as $n \to \infty$ (the infinite horizon problem). Sometimes we may not know $n$, and we will develop so-called {\bf anytime algorithms} which give good results without knowledge of the horizon length.
 
 For each action $a \in A$, let
 %
-\[ \mu_a = \mathbf{E}(X_k | A_k = a) = \int_\mathbf{R} x d \rho_a(x) \]
+\[ \mu(a) = \mathbf{E}(X_k | A_k = a) = \int_\mathbf{R} x d \rho(a)(x) \]
 %
-We then define $\mu^* = \max \mu_a$, which is the reward taken for choosing the most optimal action. If a user knew the distributions of each action, he would obviously try and pick the action corresponding to $\mu^*$ every time. The real problem is learning if $\mu^*$ is optimal, which still optimizing the reward obtained. We see therefore that this problem possesses the {\it explore-exploit tradeoff}; if we wish to maximize reward, we must attempt to use the arms which have the highest estimated mean reward. But if we only exploit, then we will never learn the optimum reward, because we need to sample all the arms to obtain good estimates of the mean reward, so we need to `explore' as well. Good general-use policies must balance exploring and exploiting to achieve maximal rewards.
+We then define $\mu^* = \max \mu^a$, which is the reward taken for choosing the optimal action. If a user knew the distributions of each action, he would obviously try and pick the action corresponding to $\mu^*$ every time. The real problem is learning if $\mu^*$ is optimal, while still optimizing the reward obtained. This is the {\it explore-exploit tradeoff}; if we wish to maximize reward, we must attempt to use the arms which have the highest estimated mean reward. But if we only exploit, then we will never learn the optimum reward, because we need to sample all the arms to obtain good estimates of the mean reward, so we need to `explore' as well. Good general-use policies must balance exploring and exploiting.
 
 \section{The Regret Function}
 
-Another way to visualize the problem is that rather than maximizing `good' decisions, but to minimize the number of `bad' decisions we make. Define the regret function
+Another way to visualize the problem is that rather than maximizing `good' decisions, we minimize the number of `bad' decisions we make. Define the regret function
 %
 \[ R_n = \mathbf{E} \left[\sum_{k = 1}^n (\mu^* - X_k) \right] \]
 %
-Maximizing the expected reward in a particular environment of the bandit problem is exactly the same as minimizing the regret. Indeed, the regret is obtained by a shift and sign change. However, the regret is a much more meaningful quantity when we consider algorithms over certain classes of different environments, where the reward distributions may be unbounded, but the differences $(\mu^* - \mu_a)$ bounded.
+Maximizing the expected reward in a particular environment of the bandit problem is exactly the same as minimizing the regret. Indeed, we may write
+%
+\[ R_n = n \mu^* - Q_n  \]
+%
+and thus the $R_n$ is obtained from $Q_n$ by a sign change and a shift, provided we are only working over a single environment. However, the regret is translation invariant, making it a much better measure of an algorithm's learning rate if we analyze asymptotics of a policy over many environments. One drawback is that the regret is not scale invariant, which means we normally assume the means of the rewards are bounded an interval, usually the unit interval $[0,1]$.
 
 To calculate the regret, it is often useful to apply a certain formula measuring the expected regret in terms of the number of bad decisions we make. Define a new random variable
 %
@@ -71,40 +75,36 @@ In applied statistics, it is normal to blindly apply the law of large numbers to
 %
 \[ \widehat{\mu_n}(a) = \frac{1}{T_n(a)} \sum_{k = 1}^n \mathbf{I} \{A_k = a \} X_k \]
 %
-converge to the sample mean. However, for our purposes, we want to obtain explicit bounds on the quantities obtained, so the convergence rate of the sample means comes into question. In general, the convergence rate is questionable, but reasonable assumptions about random variables will give us quantifiable bounds which we can use to bound the regret we obtain. Thus we keep the notation above for use later.
+converge to the sample mean. However, for our purposes, we want to obtain explicit bounds on the quantities obtained, so the convergence rate of the sample means comes into question. In general, the convergence rate is questionable, but reasonable assumptions about random variables will give us quantifiable bounds which we can use to bound the regret we obtain.
 
-One problem with calculating the means above is that to calculate the means of each action we need to store the values $T_n(a)$ $\mathbf{I}(A_k = a)$, and $X_k$, and the we can calculate this in $\Theta(n^2 |A|)$ with $\Theta(n|A|)$ memory usage. There is a computational trick for keeping track of these estimates without having to store the values of the indicator function for all $k$, reducing the computation time to amortized $\Theta(|A|)$ time. We have
+One problem with calculating the means above is that the naive way needs to store all $T_n(a)$, $\mathbf{I}(A_k = a)$, and $X_n$. The formula above allows to calculate the sample means in $\Theta(n^2 |A|)$ time, with $\Theta(n|A|)$ memory usage. However, there is a computational trick for keeping track of these estimates without having to store the values of the indicator function for all $k$. Write
 %
-\[ \widehat{\mu_n}(a) = \frac{T_n(a) \widehat{\mu_n}(a) + \mathbf{I} \{ A_{n+1} = a \} X_{n+1}}{T_{n+1}(a)} \]
+\[ \widehat{\mu_{n+1}}(a) = \frac{T_n(a) \widehat{\mu_n}(a) + \mathbf{I} \{ A_{n+1} = a \} X_{n+1}}{T_{n+1}(a)} \]
 %
-and this gives a recurrence relation meaning we need only keep track of $T_n(a)$ and $\widehat{\mu_n}(a)$, for the rest of the data is given to us sequentially and therefore does not need to be memorized.
+and this gives a recurrence relation meaning we need only keep track of $T_n(a)$ and $\widehat{\mu_n}(a)$, for the rest of the data is given to us sequentially and therefore does not need to be memorized. Thus we can calculate new sample means in $\Theta(|A|)$ time, and we need only memorize the $T_n(a)$ for the most recent $n$, so that we only use $\Theta(|A|)$ memory.
 
-\section{Naive, Epsilon-Greedy, and Softmax Policies}
+\section{Naive and Epsilon-Greedy Policies}
 
-A naive policy, the greedy method, always takes the action with the highest sample average. The problem with this method is, if the reward for some action gets distorted low enough, it may never be taken again, even if the actual expected reward is much higher. This normally occurs if the variance of actions is too high. Given a low-variance reward function, the greedy policy may choose the right action, but no guarentees are set. One other helpful trick may be to set $\widehat{\mu_0}(a)$ optimistically, that is, not the default value of zero but some value higher than all rewards for an action. Then all values are at least tried once before they begin to settle down, so some exploration is done. Again, there is not really a way of mathematically guaranteeing the success of this policy, since the effects of initial choices in the algorithm give rise to combinatorial number of different outcomes. A smarter policy, the $\varepsilon$ greedy method, attempts to fix this issue by guaranteeing convergence at the cost of the hope of complete optimality.
+A naive policy, the greedy method, always takes the action with the highest sample average. The problem with this method is, if the sample reward for some action becomes distorted from it's actual mean, it may never be taken again, even if the actual expected reward is much higher. This normally occurs if the variance of actions is too high. Given a low-variance reward function, the greedy policy may choose the right action, but it is very difficult to give a mathematical guarantee. One helpful trick may be to set $\widehat{\mu_0}(a)$ optimistically, that is, not the default value of zero but some value higher than all rewards for an action. Then all values are at least tried once before they begin to settle down, so some exploration is done. Again, we cannot prove anything successful about this policy because it's decisions are so volatile. A somewhat smarter policy, the $\varepsilon$-greedy method, attempts to fix this issue by guaranteeing convergence at the cost of the hope of complete optimality.
 
-Fix some real number $\varepsilon$ such that $0 \leq \varepsilon \leq 1$. The idea of the $\varepsilon$ greedy method is to act greedily most of the time, whereas for some proportion of the time related to $\varepsilon$, we act randomly, ensuring we sample enough time to get convergence of our sample averages. The $\varepsilon$ greedy policy $\pi$ is defined for each action $a$ by the distribution
+Fix some real number $\varepsilon$ with $0 \leq \varepsilon \leq 1$. The idea of the $\varepsilon$ greedy method is to act greedily, except for a small portion of time where we act randomly, ensuring we sample enough times for our sample averages to converge. The $\varepsilon$ greedy policy $\pi$ is defined for each action $a$ by the distribution
 %
-\[ \mathbf{P}(\pi_k = a | H_{k-1})  =
-        \begin{cases} \varepsilon + \frac{1 - \varepsilon}{|A|} &: a = \text{argmax}_{a' \in A}\ \widehat{\mu_{a'}}(k)\\
+\[ \mathbf{P}(A_{n+1} = a | H_n)  =
+        \begin{cases} \varepsilon + \frac{1 - \varepsilon}{|A|} &: a = \text{argmax}_{b \in A}\ \widehat{\mu_b}(n)\\
         \frac{1 - \varepsilon}{|\mathcal{A}|} &: \text{otherwise}
         \end{cases} \]
 %
 We can use the regret decomposition formula to conclude that
 %
-\[ n \sum_a \Delta_a \frac{(1 - \varepsilon)}{|A|} \leq \sum_a \Delta_a \mathbf{E}(T_n(a)) \leq n \sum_a \Delta_a \left( \varepsilon + \frac{1 - \varepsilon}{|A|} \right) \]
+\[ R_n = \sum_a \Delta_a \mathbf{E}(T_n(a)) \leq n \sum_a \Delta_a \left( \varepsilon + \frac{1 - \varepsilon}{|A|} \right) \]
 %
-so that we have $\Theta(n)$ expected regret; not the best situation to be in, but a good start. With some work, and further specializing the distributions of the arms, we can show that $R_n \sim n \varepsilon (\sum \Delta_a)/|A|$.
+so that we have $O_{\varepsilon, \Delta}(n)$ expected regret; this is not the best situation to be in, but a good start, for at least we have some mathematical bound. We also have upper bounds
+%
+\[ R_n \geq \Delta_a \mathbf{E}(T_n(a)) \geq \Delta_a \frac{1 - \varepsilon}{|A|} \]
+%
+so $R_n$ is in fact $\Theta_{\varepsilon, \Delta}(n)$.
 
-While $\varepsilon$-greedy policies are a simple method that converge to a close to optimal policy, if there is one action $a$ with a very low expected value, the regret for $\pi$ will be strongly affected (in other words, if the average value of the action gap is large). Take for example the problem of helping a patient with the possibility of diabetes, where we can either not give the patient insulin, give the patient insulin, or chop off the patient's legs. The softmax method attempts to fix this `wanton exploration' by choosing actions randomly, just with a higher probability of taking actions with a higher average reward.We select an action more probably if it has a higher sample average. A softmax method with parameter $\tau$ is the policy defined by
-%
-\[ \mathbf{P}(\pi_k = a | H_{k-1}) = \frac{e^{\widehat{\mu_a}(k)/\tau}}{\sum_{a'} e^{\widehat{\mu_{a'}}(k)/\tau}}\]
-% 
-In the limit for nice distrubtions we should have
-%
-\[ R_n \sim \sum_a \frac{e^{\mu_a/\tau}}{\sum_{a'} e^{\mu_{a'}/\tau}} \Delta_a \]
-%
-As $\tau$ decreases in value, the disparity in probabilities between actions increases, causing the policy to act more greedily. Besides the convergence of the policy, there are no mathematical guarentees on which $\tau$ to use that have been developed, which makes it hard to pick which $\tau$ is useful. We shall, however, see the algorithm reoccur when we analyze adversarial bandits, where we see that the algorithm can prevent itself from `being tricked' by faulty data.
+So what are the shortcomings of the $\varepsilon$-greedy policy? The first is that it considers every action by a probability that is lower bounded by a constant greater than zero, so that we have guaranteed linear regret. In order to obtain better results, we must choose actions with probabilities which vary over time -- being large over all actions initially to explore our opportunities, then honing in on potential good choices.
 
 \section{Explore Then Commit}
 
@@ -121,7 +121,7 @@ If $a^*$ is an optimal action, then
     &= \mathbf{P}((\widehat{\mu_a} - \mu_a) + (\mu^* - \widehat{\mu_{a^*}}) \geq \Delta_a)
 \end{align*}
 %
-so determining the optimality of the algorithm depends on properties of the tail distribution of the random variable $Y = (\widehat{\mu_a} - \mu_a) + (\mu^* - \widehat{\mu_{a^*}})$. Note that if the reward distributions $\rho_a - \mu_a$ are $1$-subgaussian, then $Y$ is $2/m$ subgaussian, and so by standard properties of subgaussian random variables, we find
+so determining the optimality of the algorithm depends on properties of the tail distribution of the random variable $Y = (\widehat{\mu_a} - \mu_a) + (\mu^* - \widehat{\mu_{a^*}})$. Note that if the reward distributions are $1$-subgaussian, then $Y$ is $2/m$ subgaussian, and so by standard properties of subgaussian random variables, we find
 %
 \[ \mathbf{P}(Y \geq \Delta_a) \leq e^{-m\Delta_a^2/4} \]
 %
@@ -135,40 +135,55 @@ For a two-armed bandit, the expected regret after $n$ rounds (for large enough $
 %
 \[ m \Delta + (n - 2m) \Delta e^{-m \Delta^2/4} \leq m \Delta + n \Delta e^{-m \Delta^2/4} \]
 %
-If we could choose $m$ to minimize this regret, which we find is minimized for
+We should expect these bounds to be tight, the first because the subgaussian bound is tight, and the second because if $m$ is large, $e^{-m \Delta^2/4}$ will be very small, and the difference between $(n - 2m) e^{-m \Delta^2/4}$ and $ne^{-m \Delta^2/4}$.
+
+If we knew $\Delta$ and $n$ in advance, we could minimize this bound by choosing the optimal $m$. Indeed, we find that
+%
+\[ \frac{\partial}{\partial m}(m + n e^{-m \Delta^2/4}) = 1 - (\Delta^2 n/4) e^{-m \Delta^2/4} \]
+%
+and setting this equation equal to zero gives us
 %
 \[ m = \frac{4}{\Delta^2} \log \left(\frac{n \Delta^2}{4} \right) \]
 %
-Which gives us a regret bounded by
+so taking the actual exploration number to be the floor or ceiling of this number should give us optimal estimates, giving us a regret bound approximately equal to
 %
-\[ \frac{4 (1 + \log(n\Delta^2/4))}{\Delta} \]
+\[ R_n \leq \frac{4}{\Delta} (1 + \log(n\Delta^2/4)) \]
 %
-This appears to tell us that the algorithm performs poorly if $\Delta$ is small, but we have a trivial bound $R_n \leq n \Delta$.
+If $\Delta \to 0$, this bound becomes useless. However, we can always use the trivial bound $R_n \leq n \Delta$, so that
+%
+\[ R_n \leq \min \left( n \Delta, \frac{4}{\Delta} (1 + \log(n \Delta^2/4)) \right) \]
+%
+The only problem with this strategy is that we require knowledge of both $n$ and $\Delta$ to obtain logarithmic regret, but this regret depends on both $\Delta$ and $n$, and we rarely know $n$ ahead of time, let alone $\Delta_a$ ahead of time in real applications.
 
-The only problem with this strategy is that we require knowledge of both $n$ and $\Delta$ to obtain logarithmic regret, but this regret depends on both $\Delta$ and $n$, and we do not know $\Delta$ ahead of time in real applications. The general style for obtaining `fair' bounds on policies is to first fix a policy, and then bound the regret over all choices of parameters possible in a situation. In this case, we obtain lower worst case bounds of order $\Omega(n^{2/3})$.
+Suppose we know $m$, but not $\Delta$. The mathematical way to measure how good a policy is if it doesn't know some information is to consider the worst case regret with respect to $\Delta$. If we let $\Delta$ take all positive values, then this worst-case would always be infinite, so we normally enforce that $\Delta \in [0,1]$, and so we want to optimize
+%
+\[ \max_{\Delta \in [0,1]} \min_{1 \leq m \leq n} R_n(m, \Delta) \]
+%
+where $R_n(m, \Delta)$ is the expected regret over the two-armed bandit environment corresponding to $\Delta$, and $m$ is the exploration parameter to the explore then commit algorithm. We shall prove asymptotically tight bounds on the `correct' choice of $m$ in this situation.
 
-For any $n$ and $m$, if we let the action gap be $\Delta = (\log n^{4/3m})^{1/2}$, then we find
+If $\Delta \leq 4n^{-1/3}$, then we trivially have a bound
 %
-\[ R_n = m \Delta + n \Delta e^{-m \Delta^2/4} = ((4/3m) \log n)^{1/2} [m + n^{2/3}] \in \Omega(n^{2/3}) \]
+\[ R_n(m, \Delta) \leq n \Delta \leq 4n^{2/3} \]
 %
-We may even obtain this worst case bound even if we assume the action gap is bounded, say $\Delta \leq 2$ (which occurs if our means occur in $[-1,1]$). Our previous bound works, unless $\Delta^2 \geq 4$, in which case $\log n \geq 3m$ (where we do not explore nearly enough to expect a good regret bound), and then
-%
-\[ m \Delta + n \Delta e^{- m \Delta^2/4} \geq m \Delta + n \Delta e^{-\log n \Delta^2/12} = \Delta[m + n^{1-(\Delta^2/12)}] \]
-%
-We may then set $\Delta = 2$, in which case the regress is bounded below by
-%
-\[ 2m + 2n^{2/3} \]
-%
-This lower bound isn't even just asymptotic -- there is a universal constant $C$ such that $R_n \geq C n^{2/3}$ over all environments and horizons.
+regardless of our choice of $m$. If we assume $\Delta \geq 4n^{-1/3}$, and if we choose $m = \log(n) n^{1/3}/3$, we find
 %
 \begin{align*}
-    \inf_{m \leq n} \frac{((4/3m) \log n)^{1/2} [m + n^{2/3}]}{n^{2/3}} &= (2/3^{1/2}) (\log n)^{1/2} \inf_{m \leq n} \left[ \frac{m^{1/2}}{n^{2/3}} + \frac{1}{m} \right]\\
-    &= (2/3^{1/2}) (\log n)^{1/2} \frac{1}{n^{4/9}} \left( 2^{1/3} + 4^{-1/3} \right)
+    R_n(m, \Delta) &\leq \Delta(m + n e^{-m \Delta^2/4})\\
+    &= \Delta (\log(n) n^{1/3}/3 + n e^{- \log(n^{1/3})})\\
+    &= \Delta(\log(n) n^{1/3}/3 + n^{2/3}) = \Delta O(n^{2/3})
 \end{align*}
 %
-As $n \to \infty$, this value tends to zero, so that such a $C$ exists. While a very simple algorithm, there are algorithms which increase this rate to $O(n^{1/2})$, which we will soon discuss.
+So we have a $\Delta O(n^{2/3})$ bound for the regret. This is effectively the best we can do. For any $n$ and $m$, if we let $\Delta^2 = 4 \log(n^{1/3})/m$, then we find
+%
+\[ R_n(m, \Delta) \approx \Delta (m + n e^{-m \Delta^2/4}) = \Delta(m + n^{2/3}) \geq \Delta n^{2/3} = \Delta \Omega(n^{2/3}) \]
+%
+This asymptotic lower bound still occurs if we assume the action gap is bounded. If our choice of $\Delta$ above happens to be $> 1$, then we conclude $\log(n) > 3m/4$, which means we hardly explore at all. We then find
+%
+\[ \Delta (m + n e^{-m \Delta^2/4}) > \Delta n e^{-\log(n) \Delta^2/3} = \Delta n^{1 - \Delta^2/3} \]
+%
+Choosing $\Delta = 1$ gives us a $\Delta n^{2/3}$ regret lower bound (since we hardly explore, a large action gap has little effect on the power of the algorithm determining the best action). There are algorithms which have $O(n^{1/2})$ regret, so the explore then commit bandit is still asymptotically suboptimal.
 
-\chapter{The UCB Algorithm}
+\section{The UCB Algorithm}
 
 A more advanced and recent solution to the problem results from acting optimistically -- we always choose our actions as if the environment was as nice as plausibly possible. In this case, we either choose the best action (our optimism was deserved), or we choose a suboptimal action which we learn is worse than others available. The difference between this algorithm and the greedy algorithm is that confidence intervals are much more tractable to formally analyze, and it's easier to prevent yourself from becoming `trapped' in a suboptimal action. If $X_1, \dots, X_n$ are i.i.d and 1-subgaussian, then the sample means satisfy
 %
@@ -178,11 +193,13 @@ By a change in variables, we find
 %
 \[ \mathbf{P}\left(\widehat{\mu_n} \geq \sqrt{\frac{2}{n} \log(1/\delta)} \right) \leq \delta \]
 %
-So we have constructed confidence intervals of order $1-\delta$. If we are optimistic, then it is consistent with our hypothesis that
+So we have constructed confidence intervals with a probability of $\delta$ being correct. If we are optimistic, then it is consistent with our hypothesis that
 %
 \[ \mu = \widehat{\mu_n} + \sqrt{\frac{2}{n} \log(1/\delta)} \]
 %
-The upper confidence bound algorithm chooses the action $a$ which maximizes this quantity (after choosing each action once, so that the values are well defined). We see now that our algorithm is more optimistic for small values of $\delta$, and less optimistic for large values. It is useful to increase $\delta$ over time, to avoid becoming `trapped' in suboptimal actions. A standard choice is $\delta_n = 1 + n \log^2 n$, which increases slightly faster than $n$. If we optimal arm is discredited, an algorithm must pay linear regret. Trying to fix this by adjusting the $\delta$ so that this occurs with $1/n$ probability essentially gives us $\delta_n$.
+The upper confidence bound algorithm chooses the action $a$ which maximizes this quantity (after choosing each action once, so that the values are well defined). We see now that our algorithm is more optimistic for small values of $\delta$, and less optimistic for large values. It will be useful to decrease $\delta$ over time, to avoid becoming `trapped' in suboptimal actions, or to become more and more confident in our action over time.
+
+A standard choice is $\delta_n = 1 + n \log^2 n$, which increases slightly faster than $n$. Why is this chosen? If an optimal arm is discredited even once, an algorithm must pay linear regret. If we fix $\delta$, we will choose a suboptimal action $(1 - \delta)$ of the time. Trying to fix this by adjusting the $\delta$ so that this occurs with $1/n$ probability, we find that we need to choose $\delta_n$.
 
 If our algorithm is to achieve good regret bounds, it should only pick an arm many times if it is highly confident of the arm's reward. This leads directly to the notion of confidence intervals, and thus to the upper confidence bound algorithm. The upper confidence bound algorithm is asymptotically much better than the other algorithms we have considered. While all other algorithms have linear regret, this algorithm actually has logarithmic regret. This is proven by analyzing the number of times a suboptimal action $a$ is taken. First, a lemma.
 
@@ -193,7 +210,7 @@ If our algorithm is to achieve good regret bounds, it should only pick an arm ma
     %
     Then
     %
-    \[ \mathbf{E}[Y] \leq 1 + \frac{2(M + \sqrt{\pi M} + 1)}{\varepsilon^2} \]
+    \[ \mathbf{E}[Y] \leq 1 + \frac{2}{\varepsilon^2} \left(M + \sqrt{\pi M} + 1 \right) \]
 \end{lemma}
 \begin{proof}
     We just use the one inequality we know for subgaussian variables. Let $u = 2M/\varepsilon^2$. Then
@@ -204,13 +221,15 @@ If our algorithm is to achieve good regret bounds, it should only pick an arm ma
         &\leq (u+1) + \int_u^\infty e^{-t(\varepsilon - \sqrt{2M/t})^2/2} dt\\
         &= 1 + \frac{2}{\varepsilon^2}(M + \sqrt{\pi M} + 1)
     \end{align*}
+    %
+    and this gives us the needed bound.
 \end{proof}
 
 To analyze the regret of the UCB algorithm, we shall bound $\mathbf{E}(T_n(a))$, for a non-optimal action $a$. Note that for a fixed $\varepsilon$,
 %
 \begin{align*}
     T_n(a) &= \sum_{k = 1}^n \mathbf{I}(A_k = a)\\
-    &\leq \sum_{k = 1}^n \mathbf{I} \left(\widehat{\mu^*}(k-1) + \sqrt{\frac{2 \log 1/\delta_k}{T_a(k-1)}} \leq \mu^* - \varepsilon\ \text{and}\ A_k = a \right)\\
+    &\leq \sum_{k = 1}^n \mathbf{I} \left(\widehat{\mu^*}(k-1) + \sqrt{\frac{2 \log 1/\delta_k}{T_a(k-1)}} \leq \mu^* - \varepsilon \right)\\
     &\ \ \ \ \ + \mathbf{I} \left(\widehat{\mu_a}(k-1) + \sqrt{\frac{2 \log 1/\delta_k}{T_a(k-1)}} \geq \mu^* - \varepsilon\ \ \text{and}\ \ A_k = a \right)
 \end{align*}
 %
@@ -225,8 +244,6 @@ Let's bound the first term, using the fact that tails of subgaussian variables a
     &\leq \sum_{k = 1}^n \frac{1}{1 + k \log^2 k} \frac{1}{1 - e^{- \varepsilon^2/2}}\\
     &\leq \frac{2}{1 - e^{- \varepsilon^2/2}} \leq \frac{4}{\varepsilon^2}
 \end{align*}
-
-$e^{-\varepsilon^2/2} = 1 - \varepsilon^2/2 + \varepsilon^4/2$
 %
 where we use the fact that $\delta_k = 1 + k \log^2 k$. We apply the previous lemma to the second indicator function to obtain
 %
@@ -259,13 +276,17 @@ Putting the two bounds together, we obtain
     So $R_n$ has logarithmic regret.
 \end{theorem}
 
-The bound above requires us to know the action gaps. But it is fairly easy to obtain a action-gap free bound. Indeed, if $\Delta = \sqrt{|A| C \log n / n}$, then
+We do not need to know the action gaps in order to use UCB, but we require the action gaps in order to obtain the regret bound above. But it is fairly easy to obtain a action-gap free bound. Indeed, if $\Delta = \sqrt{|A| C \log n / n}$, then
 %
 \begin{align*}
     R_n = \sum \Delta_a \mathbf{E}(T_n(a)) &= \sum_{\Delta_a < \Delta} \Delta_a \mathbf{E}(T_n(a)) + \sum_{\Delta_a \geq \Delta} \Delta_a \mathbf{E}(T_n(a))\\
-    &< n \Delta + \sum_{\Delta_a \geq \Delta} \frac{C \log n}{\Delta_a}\\
+    &\leq n \Delta + \sum_{\Delta_a \geq \Delta} \frac{C \log n}{\Delta_a}\\
     &\leq n \Delta + |A| \frac{C \log n}{\Delta} = \sqrt{|A| C n \log n}
 \end{align*}
+%
+so that the regret is $O(|A| n \log n)$.
+
+One can improve these bound if we assume the distributions of the arms of the bandit are better than subgaussian. This is mainly done by assuming that the rewards are Bernoulli. Indeed, if we assume $\rho(a)$ is a Bernoulli distribution with mean $\lambda$ and variance $\lambda (1 - \lambda)$. We bound the regret by the two terms bounded above. We keep the same bound for the first one, but for the second bound, we use that ... (I'll finish this later)
 
 \chapter{Lower Bounding Regret}
 
@@ -273,15 +294,49 @@ It turns out that, if we measure a bandit policy by its worst case regret over a
 %
 \[ R_n^*(\mathcal{E}) = \inf_\pi \left( \sup_{E \in \mathcal{E}} R_n(\pi, E) \right) \]
 %
-The value is independant of any policy or environment, and for any policy $\pi$, there is an environment $E \in \mathcal{E}$ such that $R_n(\pi, E) \geq R_n^*(\mathcal{E})$. It essentially tells us how difficult a particular class of environments is for a policy to optimize over. Thus lower bounding $R_n^*$ is exactly what we need to lower bound how well our algorithms will do in the worst case. A {\bf minimax optimal} policy is a policy $\pi$ which minimizes the supremum in the definition of minimax regret. That is, a minimax policy satisfies $R_n^*(\mathcal{E}) \geq R_n(\pi, E)$ for all $E \in \mathcal{E}$. It is almost impossible to find a minimax optimal policy, and it is not even guaranteed that such a policy exists. However, we shall often find {\bf near minimax policies}, which are within a fixed, constant factor of $R_n^*(\mathcal{E})$, for all choices of $n$. Once we have found the appropriate lower bound for $R_n^*$ over all $1$-subgaussian bandits, we will have essentially verified that the upper confidence bound algorithm is optimal for the class of $1$-subgaussian environments.
+The value is independant of any policy or environment, and for any policy $\pi$, there is an environment $E \in \mathcal{E}$ such that $R_n(\pi, E) \geq R_n^*(\mathcal{E})$. It essentially tells us how difficult a particular class of environments is for a policy to optimize over. Thus lower bounding $R_n^*$ is exactly what we need to lower bound how well our algorithms will do in the worst case. A {\bf minimax optimal} policy is a policy $\pi$ which minimizes the supremum in the definition of minimax regret. That is, a minimax policy satisfies $R_n^*(\mathcal{E}) \geq R_n(\pi, E)$ for all $E \in \mathcal{E}$. It is almost impossible to find a minimax optimal policy, and it is not even guaranteed that such a policy exists. However, we shall often find {\bf near minimax policies}, which are within a fixed, constant factor of $R_n^*(\mathcal{E})$, for all choices of $n$. If this is too much, we want $\log$ near minimax policies, which are bounding with a logarithmic factor of $R_n^*(\mathcal{E})$. Once we have found the appropriate lower bound for $R_n^*$ over the class $\mathcal{E}_1$ of all $1$-subgaussian bandits, we will have essentially verified that the upper confidence bound algorithm is optimal for the class of $1$-subgaussian environments. The UCB gives us the bound
+%
+\[ R_n^*(\mathcal{E}_1) \leq C \sqrt{K n \log n} \]
+%
+We verify that this is with a log factor of the true optimum, so UCB is log near optimum of the set of 1 subgaussian environments. Thus we have set out to prove.
 
 \begin{theorem}
     For any action space $A$, let $\mathcal{E}$ be the space of $1$-subgaussian environments. Then there is a universal constant $C$ such that
     %
     \[ R_n^*(\mathcal{E}) \geq C \sqrt{|A| n} \]
+    %
+    So that the bandit problem on 1-subgaussian is $\sqrt{n}$ hold.
 \end{theorem}
 
-To prove this, we apply the High probability Pinsker bound of information theory. Given an environment $\mu$, policy $\nu$, and fixed horizon $n$, we let $\mathbf{P}_{\mu, \nu}$ be the distribution over histories of length $n$ induced by the environment and policy, and $\mathbf{E}_{\mu, \nu}$ the expectation with respect to this distribution. Our lower bound will depend on fixing $\pi$, and altering $\nu$ slightly so that $\pi$ fails to realize the needed bound.
+\section{Worst Case Lower Bounds}
+
+How on earth can we lower bound regret? The idea descends from information theory, and essentially the only way we can obtain lower bounds for statistical measurements. Consider the most basic problem, where we observe estimates $X_1, \dots, X_n$ from a gaussian distribution with unknown mean $\mu$ and variance $1/n$. We know either $\mu = 0$, or $\mu = \Delta$ for some $\Delta \in \mathbf{R}$, and we must decide which is true. If $n$ is large compared to $\mu$, then we should expect the problem to be easy, whereas if $n$ is small the problem should be hard. Indeed, the concentration bound gives upper bounds
+%
+\[ (2 \pi n (\Delta/2)^2)^{-1/2} \exp(-n (\Delta/2)^2/2) \leq \exp(- \frac{n(\Delta/2)^2}{2}) \]
+%
+so we have exponential decay in $n$. Using integration by parts, we can calculate that if $X \sim N(0,\sigma^2)$, then
+%
+\[ \mathbf{P}(X > \varepsilon) \geq \left( \frac{\sigma}{\varepsilon} - \frac{\sigma^3}{\varepsilon^3} \right) \frac{\exp(-\varepsilon^2/(2\sigma^2))}{\sqrt{2\pi}} \]
+%
+This shows that any decision procedure with $n \leq 8c/\Delta^2$ will make a mistake with probability at least $Cc^{-1/2}(1 - 1/c) \exp(-c)$. The high level idea is to construct two environments which are impossible to separate with the number of samples given. We will perform the same technique on bandits, constructing bandits similar enough that cannot be distinguished, but such that a policy doing well on one instance cannot do well on the other instance, so an algorithm is forced to make a decision between the two instances. Thus we must reduce the bandit problem to a hypothesis testing problem. The lower bound has little interest in algorithms ran on a fixed instance, since we can often obtain much better bounds for specific instances (indeed, any environment has a policy that has zero, regret -- the challenge is finding a policy that works uniformly well across all environments).
+
+To prove this, we apply the High probability Pinsker bound of information theory, using the Kullback Leibler distance to measure the ability for a policy to distinguish between two environments. That is,
+
+\begin{theorem}[High Probability Pinsker]
+    Let $\mu$ and $\nu$ be probability measures on the same measure space. Then for any event $A$,
+    %
+    \[ \mu(A) + \nu(A^c) \geq \frac{1}{2} \exp(-D(\mu,\nu)) \]
+    %
+    Where $D(\mu, \nu)$ is the Kullback Leibler distance betwee $\mu$ and $\nu$.
+\end{theorem}
+
+Intuitively, if $\mu$ and $\nu$ are difficult to distinguish between, then we should expect $\mu(A) \approx \nu(A)$, and $\mu(A^c) \approx \nu(A^c)$, so $\mu(A) + \nu(A^c)$ should be large. For instance, for any $\delta$, to guarantee that $\max(\mu(A),\nu(A^c)) \leq 1$, the Pinsker inequality tells us that we should have $D(\mu,\nu) \geq \log(1/4\delta)$. The theorem is useful for proving lower bounds, because it implies that $\mu(A)$ or $\nu(A^c)$ is large. If we make $\mu$ and $\nu$ be such that $A$ is a `bad' event for $\mu$ (a misclassification of a hypothesis), and $A^c$ a `bad' event for $\nu$, then we can guarantee that any decision making procedure working of $\mu$ and $\nu$ could make a mistake with high probability.
+
+So how do we formulate the problem with bandit optimality as a hypothesis testing problem? Given an environment $\mu$, policy $\nu$, and fixed horizon $n$, we let $\mathbf{P}_{\mu, \pi}$ be the distribution over histories of length $n$ induced by the environment $\mu$ and policy $\pi$, and $\mathbf{E}_{\mu, \pi}$ the expectation with respect to this distribution. Our lower bound will depend on fixing $\pi$, and altering $\nu$ slightly so that $\pi$ fails to realize the needed bound. First, note that
+%
+\[ d\mathbf{P}_{\mu, \pi}(a_1,x_1,\dots,a_n,x_n) = \prod_{m = 1}^n \pi(a_m | a_1, x_1, \dots, a_{m-1}, x_{m-1}) f^\mu_{a_m} (x_m | a_m) d\lambda(x_m) d\nu(a_m) \]
+%
+where $\lambda$ is a dominating measure for the $\rho_a$, and $d\rho_a = f^\mu_a d\lambda$, and $\nu$ is the counting measure.
 
 \begin{lemma}
     For any policy $\pi$,
@@ -289,9 +344,93 @@ To prove this, we apply the High probability Pinsker bound of information theory
     \[ D(\mathbf{P}_{\pi, \mu}, \mathbf{P}_{\pi, \nu}) = \sum_a \mathbf{E}_{\pi, \mu}[T_a(n)] D(\mu(a), \nu(a)) \]
 \end{lemma}
 \begin{proof}
-    First assume $D(\mu(a), \nu(a)) < \infty$ for all $a$. define $\lambda = \sum_a \mu(a) + \nu(a)$, so that all measures involed are absolutely continuous with respect to $\lambda$. Then by the chain rule,
+    First assume $D(\mu_a, \nu_a) < \infty$ for all $a$. Then by the chain rule for Radon Nikodym derivatives, and by using the decomposition formula above, the policy ratios cancel out and we find
     %
-    \[ D(\mu(a), \nu(a)) = \int \frac{d\mu(a)}{d \lambda} \log \left( \frac{d\mu(a)}{d\nu(a)} \right) d\lambda \]
+    \begin{align*}
+        D(\mathbf{P}_{\pi, \mu}, \mathbf{P}_{\pi, \nu}) &= \mathbf{E}_{\pi, \nu} \left[\log \left( \frac{d\mathbf{P}_{\pi, \mu}}{d\mathbf{P}_{\pi, \nu}} \right) \right]\\
+        &= \sum_{a_1, \dots, a_n} \int \log \left( \frac{f_{a_1}^\mu(x_1) \dots f_{a_n}^\mu(x_n)}{f_{a_1}^\nu(x_1) \dots f_{a_n}^\nu(x_n)} \right) \\
+        &\ \ \ \ \ \ \left( \prod_{m = 1}^n \pi(a_m | a_1, \dots, x_{n-1}) f_{a_m}^\mu(x_m | a_m) \right) d\lambda(x_1) \dots d\lambda(x_n)\\
+        &= \sum_{m = 1}^n \mathbf{E}_{\mu,\pi}[D(\mu_{A_m}, \nu_{A_m})]\\
+        &= \sum_a \mathbf{E}_{\mu, \pi} \left[ \sum_{m = 1}^n \mathbf{I}(A_m = a) D(\mu_a, \nu_a) \right]\\
+        &= \sum_a \mathbf{E}_{\mu, \pi}[T_n(a)] D(\mu_a, \nu_a)
+    \end{align*}
+    %
+    And this was the formula we wanted to prove.
+\end{proof}
+
+Denote by $G_\mu \in \mathcal{E}_1$ the bandit environment where all distributions are Gaussian with unit variance and means $\mu \in [0,1]^A$. We let $R_n(\pi,E)$ denote the expected regret for a policy $\pi$ on an environment $E$.
+
+\begin{theorem}
+    For any policy $\pi$, there is a mean vector $\mu \in [0,1]^A$ such that
+    %
+    \[ R_n(\pi, G_\mu) \geq \frac{1}{27} \sqrt{(|A| - 1) n} \]
+\end{theorem}
+\begin{proof}
+    Let $\Delta \in [0,1/2]$ be the action gap, to be chosen later to optimize a bound. Pick some $a^* \in A$, and define
+    %
+    \[ \mu(a) = \begin{cases} \Delta & a = a^* \\ 0 & \text{otherwise} \end{cases} \]
+    %
+    Now let $a' = \text{argmin}_{b \neq a^*} \mathbf{E}_{\mu,\pi}[T_b(n)]$. Define a second environment
+    %
+    \[ \mu'(a) = \begin{cases} \Delta & a = a^* \\ 2 \Delta & a = a' \\ 0 & \text{otherwise} \end{cases} \]
+    %
+    Note that the optimal action in the first action is $a^*$, whereas in the second algorithm the best action is $a'$. Now if $\pi$ chooses action $a^*$ more often, it will likely succeed on $G_\mu$, but not $G_{\mu'}$. Conversely, if $\pi$ chooses $a'$, then it will succeed on $G_{\mu'}$, but not $G_\mu$. In particular
+    %
+    \[ R_n(\pi, G_\mu) \geq \mathbf{P}_{\mu, \pi}(T_n(a^*) \leq n/2) \frac{n\Delta}{2}\ \ \ \ \ \ \ \ R_n(\pi, G_{\mu'}) \geq \mathbf{P}_{\mu', \pi}(T_n(a^*) > n/2) \frac{n\Delta}{2} \]
+    %
+    The Pinsker inequality implies, since $\mathbf{E}_{\mu, \pi}[T_{a'}(n)] \leq n/(|A|-1)$, by the minimality choice,
+    %
+    \begin{align*}
+        R_n(\pi, G_\mu) + R_n(\pi, G_{\mu'}) &\geq \frac{n\Delta}{2} \left( \mathbf{P}_{\mu, \pi}(T_n(a^*) \leq n/2) + \mathbf{P}_{\mu', \pi}(T_n(a^*) > n/2) \right)\\
+        &\geq \frac{n \Delta}{4} \exp(- \sum_a \mathbf{E}_{\pi, \mu} [T_n(a)] D(N(\mu_a,1), N(\mu'_a,1))\\
+        &= \frac{n \Delta}{4} \exp( - 2 \mathbf{E}_{\pi, \mu}[T_n(a')] \Delta^2 )\\
+        &= \frac{n \Delta}{4} \exp( - 2n \Delta^2/(|A| - 1) )
+    \end{align*}
+    %
+    If we tune $\Delta^2 = (|A|-1)/4n$, we obtain the required bound.
+\end{proof}
+
+Now we assumed that the class of 1-subgaussian bandits obtained the Gaussian distributions, we only ever used the fact that the class contained probability distributions $\rho^\mu$ with certain means $\mu_a$, such that $D(\rho^\mu_a, \rho^{\mu'}_a) = O((\mu_a - \mu_a')^2)$. This is certainly not true of all families of distributions, but we should expect it to be true for a large class of algorithms, since if we have a parametric family of functions whose densities are twice differentiable, we can approximate these parameters by the second derivative, and this gives us bounds of the form needed above.
+
+Note that UCB is log near optimal, but a slight modification of UCB, known as MOSS, can obtain near optimal estimates by chopping off the log factor. Unfortunately, we do not have time to discuss it here, so we refer to the \href{http://research.microsoft.com/en-us/um/people/sebubeck/COLT09_AB.pdf}{paper} by Bubeck and Audibert.
+
+\section{Instance Dependent Lower Bounds}
+
+Just because the UCB algorithm is log near optimal for the class of 1 subgaussian environments, is not a sufficient argument to justify that the algorithm is necessarily is the correct algorithm to use over all 1-subgaussian environments. Indeed, consider the modification of the UCB algorithm, which takes $0 < D \ll C$, where $C$ is the constant in the upper bound for UCB. The modified version of UCB explores in the first $m = D \sqrt{|A| n}$ rounds, and then switch to the UCB policy. It is not difficult to see that this version of UCB is also log near optimal in the worst case.
+
+So why do we feel like UCB is still a better algorithm? Consider a 1-subgaussian environment $\nu$ where choosing any action suboptimally gives you a reward close to one. Then UCB will stop using suboptimal actions very quickly, so that UCB would achieve small regret. Indeed, the upper bound gives
+%
+\[ R_n \leq \sum_a \frac{C \log(n)}{\Delta_a} \sim C|A| \log n \]
+%
+whereas the new exploratory version of UCB we defined obtains $C' \sqrt{|A|n/2}$ guaranteed regret, which for large $n$ will eventually be larger than the other bound. The problem is that even though UCB and exploratory UCB obtain essentially the same regret in the worst case, UCB tends to achieve much better regret bounds on easier instances of the problem.
+
+Thus we desire our algorithms to not only be bad on worst-case instances, but also get better regret bounds on `nice' instances on the problem. We have shown that in certain instances UCB can obtain logarithmic regret. One difficulty of a particular instance of the bandit problem could be measured as
+%
+\[ \limsup_{n \to \infty} \frac{R_n}{\log n} \]
+%
+We shall show that in some sense, the logarithmic regret bound for UCB on certain problems is the best possible. No {\it reasonable} strategy can beat UCB on any instance of the bandit problem. This is an important result, separate from the worst case regret bounds, for it shows why UCB can be successfully applied to both reasonable and unreasonable environments, with good asymptotic regrets in both, relative to the environment chosen. However, the logarithmic measure of difficulty is perhaps overly restrictive, so we will only require that the policy chosen has subpolynomial growth.
+
+Let us rigorously define these ideas. A policy $\pi$ over $\mathcal{E}$ is {\bf consistant} if for any environment $\mu \in \mathcal{E}$, and $p > 0$,
+%
+\[ R_n(\pi, \mu) = O_{p, \mu}(n^p) \]
+%
+The set of consistant policies is denoted $\Pi_{\text{cons}}(\mathcal{E})$. The UCB policy is consistant, because it gives asymptotically logarithmic regret over individual environments. The main theorem of this section is that UCB is the best consistant policy over Gaussian bandits. Let $\mathcal{E}_N$ be the class of bandits whose arms have unit variance normal distributions.
+
+\begin{theorem}
+    For any consistant policy $\pi$ over $\mathcal{E}_N$, and $\nu \in \mathcal{E}_N$,
+    %
+    \[ \liminf_{n \to \infty} \frac{R_n(\pi \nu)}{\log n} \geq \sum_a \frac{2}{\Delta_a(\nu)} \]
+    %
+    so that UCB is optimal to a fixed constant factor.
+\end{theorem}
+\begin{proof}
+    We apply the Pinsker inequality over Gaussian environments. Consider a sequence of means $\mu$, pick some action $a'$, and consider a new sequence
+    %
+    \[ \mu'(a) = \begin{cases} \mu(a) + \lambda & a = a' \\ \mu(a) & \text{otherwise} \end{cases} \]
+    %
+    Let $A = \{ T_{a'}(n) \geq n/2 \}$, so $A^c = \{ T_{a'}(n) < n/2 \}$. We have
+    %
+    \[ R_n(\mu, \pi) \geq \frac{n \Delta_{a'}}{2} \mathbf{P}_{\mu, \pi}(A) \ \ \ \ \ R_n(\mu', \pi) \geq \frac{n(\lambda - \Delta_{a'})}{2} \mathbf{P}_{\mu', \pi}(A^c) \]
 \end{proof}
 
 \chapter{Adversarial Bandits}
@@ -493,6 +632,61 @@ We call this the exponential recency weighted average, as past results decrease 
 
 s
 
+\section{Adversarial Linear Bandits}
+
+We can generalize EXP to linear bandits, when we look at linear bandits that are adversarial. We consider loss vectors $y_1, y_2, \dots \in \mathbf{R}^n$, and we assume that each action is identified with a vector $a \in \mathbf{R}^n$. In the one dimensional adversarial problem, $-1 \leq 0 \leq 1$. In this version of adversarial bandits, we assume $|\langle y_1, a \rangle| \leq 1$. We obtain loss estimates $\hat{Y}_n(a)$, and define probabilities
+
+\chapter{Partial Monitoring}
+
+The partial monitoring problem models the bandit problem with the additional difficulty that our observation of rewards is obscured. For example, consider $W_1, W_2, \dots \sim \text{Ber}(p)$, where $p \in [0,1]$ is unknown. In each round, we have 3 actions $A$, $B$, $C$, and
+%
+\[ (X_k | A_k = A) \sim W_k\ \ \ \ \ (X_k | A_k = B) \sim 1 - W_t\ \ \ \ \ (X_k | A_k = C) \sim -1 \]
+%
+So that in the normal bandit problem, choosing $C$ would always be an accident. But suppose that we only observe $W_t$ when we select action $C$. Then the problem becomes more interesting, for we must choose action $C$ to be able to statistically determine whether $A$ or $B$ is more optimal.
+
+Consider an explore and commit approach, where we attempt to estimate $p$ until we are confident enough that one action is more optimal. Since $W_t$ is one-subgaussian, if we sample $W_t$ $n$ times than
+%
+\[ \mathbf{P}(|p - \widehat{p}| < x) = 1 - \mathbf{P}(|p - \widehat{p})| \geq x) \geq 1 - 2e^{-(xn)^2} \]
+%
+So a confidence interval for $1 - \delta$ is $x = \sqrt{\log(2/\delta)}/n$. If we can conclude that $\widehat{p} > 1/2$ with some confidence, it may be wise to play action $B$. If $\widehat{p} < 1/2$, we should play action $A$. The only problem is being able to conclude that $\widehat{p} = 1/2$, which we can only do with some confidence.
+
+We shall consider the adversarial partial monitoring problem. We have finitely many actions $A$, states $E$, and observations $O$ we have a loss function $L(a,e) \in \mathbf{R}$, and an observed function $\Sigma(a,e) \in O$. The regret is then defined as
+%
+\[ R_n = \sum_{m = 1}^n L(a_m,e_m) - \min_a \sum_{m = 1}^n L(a,e_m) \]
+%
+The $L$ and $\Sigma$ are given to you to optimize over, but the adversary can choose $e_m$ at whim. The proper way to think about $\Sigma$ is a way to count frequencies of observations.
+
+We can reformulate the problem as being very nearly a linear bandit problem. Given losses $l_a \in [0,1]^E$, and actions $S_a: E \to O$. The states of the problem are chosen by the opponent $e_1, \dots, e_n \in E$. The player then chooses an action $A_k$ on round $k$, observes $S_{A_k}(e_k)$. The reward is
+%
+\[ R_n = \mathbf{E} \left[ \sum l_{A_k}(e_m) - \min_{a \in A} \sum_{m = 1}^n l_a(e_m) \right] \]
+%
+Consider the averages
+%
+\[ q_n = \frac{1}{n} \sum_{m = 1}^n e_m \in \mathbf{R} \langle E \rangle \]
+%
+which move around the simplex $\Delta_E$ of points $p$ with $\sum_e p(e) = 1$, which we can interpret as the space of probability distributions over possible events. We can see the adversaries problem as manipulating the motion of the sequence $q_1, q_1, \dots, q_n$ in such a way that $l_a(q_n)$ is maximized, in such a way that is confuses the player as much as possible.
+
+We can decompose the simplex $\Delta_E$ into cells which correspond to actions. Indeed, we let $C_a$ be the set of distributions $p$ such that $a$ minimizes $l_a(p)$. These are cells, because they are the intersection of half planes -- the half planes defined by $l_a(p) \leq l_b(p)$, for other actions $b$. We say $a$ and $b$ are neighbors if $C_a \cap C_b \neq \emptyset$. We say $a$ and $b$ are $BC$ if there are $p,q \in \Delta_E$ for which $S_a p = S_a q$, $S_b p = S_b q$, and $\text{sgn}((l_a - l_b)(p)) \neq \text{sgn}((l_a - l_b)(q))$. There is an effective way to determine if two actions are $BC$ -- $l_a - l_b \not \in \text{Im}(S_{ab}^t)$, where $S_{ab}(p) = (S_a(p), S_b(p))$. This is just checked by linear algebra.
+
+Now suppose $p_0$ is an interior point of $\Delta_E$, with $q = p_0 + \varepsilon v \in C_a$, $q' = p - \varepsilon v \in C_b$. We normalize $v$ such that $(l_a - l_b)(q) = \varepsilon$, so $(l_b - l_a)(q') = \varepsilon$. Suppose that the adversary draws events $Y_1, Y_2, \dots, Y_n$ randomly according to the distribution $q$, and $Y_1', \dots, Y_n'$ from $q'$. Then
+%
+\[ R_n = \mathbf{E} \left[\sum_{m = 1}^n l_{A_k}(Y_k) - \min_a \sum_{m = 1}^n l_a(Y_k) \right] \]
+\[ R_n' = \mathbf{E} \left[ \sum_{m = 1}^n l_{A_k}(Y_k') - \min_a \sum_{m = 1}^n l_a(Y_k') \right] \]
+%
+If we let $T_a$ $T_b$ count the number of times we chose action $b$, we can spit the reward up and apply the Pinsker bound to obtain $\Omega(n^{2/3})$ lower bounds on the regret of any policy in partial monitoring.
+
+The good case of partial monitoring occurs when all actions are distinguishable. We expect good results here, because adversarial bandits lie here (where we see the state as our observation). Suppose there are no dominated actions (for which $C_a = \emptyset$), duplicated actions ($l_a = l_b$), or degenerate actions (there is $b$ with $C_a$ a proper subset of $C_b$). Then the minimax regret satisfies $R_n^*(G) = \inf_\pi \sup_{E \in \mathcal{E}} R_n^\pi(E, G)$. Then either $R_n^*(G) = 0$, if there is one action, $\Theta(n^{1/2})$, if there is more than one action and $G$ is locally observable, or $\Theta(n^{2/3})$ if $G$ is globally observable but not locally observable (locally observable means any two actions can be distinguished by their losses, globally observable means $l_i - l_j \in \oplus_a \text{Im}(S_a^t)$). If $G$ is not globablly observable, the reward is $\Theta(n)$. (The $\Theta$'s may obscure logarithm factors).
+
+To find a good algorithm on a {\bf point-local process}, where the intersection of all $C_a$ is nosn-trivial, is to take estimates $\hat{l}_a$ of the losses, and define $\hat{P}_{n,a} = (1 - \gamma) P_{n,a} + \gamma \frac{1}{|A|}$, where
+%
+\[ P_{n,a} = \frac{\exp(- \eta \sum_{m = 1}^{n-1} \hat{l}_{m,a})}{\sum_b \exp(- \eta \sum_{m = 1}^{n-1} \hat{l}_{m,b})} \]
+%
+Where
+%
+\[ \hat{l}_{n,t} = \left( \frac{A_{n,a}}{\hat{P}_{n,a}} v_{a,A_n'} - v_{A_n,a} \right)^T Y_n \]
+%
+and $A_n, A_n'$ are two actions drawn from $\hat{P}_n$. Then $\hat{l}_{n,b} - \hat{l}_{n,b}$ is an unbiased estimator of $(l_a - l_b)(y_n)$. The standard proof for exponential weighting owrks.
+
 \chapter{Markov Decision Processes}
 
 The next step to adding to the learning process is the introduction of state, the `colours' of the bandit problem discussed at the end of the last chapter represent what we mean by the word state, a summary of experiences relevant enough to predict the present to the best of our abilities. Actions thus have further consequences than immediate reward. We call this associate learning problem the reinforcement learning problem.
@@ -517,6 +711,16 @@ We write $R_{t+1}$ instead of $R_t$ in the sequence to represent the fact that $
 %
 Intuitively, given some initial state $S_0$, the policy picks an action, gets a reward from it, and moves to a new state. Given the new information, it picks an action, gets a reward, and the process continues. $R_i$ then becomes the expected reward from the $t$'th action given we are using policy $\pi$. The optimal function $\pi_*$ maximises this value.
 
-Before we end this short chapter
+
 
 \end{document}
+
+While $\varepsilon$-greedy policies are a simple method that converge to a close to optimal policy, if there is one action $a$ with a very low expected value, the regret for $\pi$ will be strongly affected (in other words, if the average value of the action gap is large). Take for example the problem of helping a patient with the possibility of diabetes, where we can either not give the patient insulin, give the patient insulin, or chop off the patient's legs. The softmax method attempts to fix this `wanton exploration' by choosing actions randomly, just with a higher probability of taking actions with a higher average reward.We select an action more probably if it has a higher sample average. A softmax method with parameter $\tau$ is the policy defined by
+%
+\[ \mathbf{P}(\pi_k = a | H_{k-1}) = \frac{e^{\widehat{\mu_a}(k)/\tau}}{\sum_{a'} e^{\widehat{\mu_{a'}}(k)/\tau}}\]
+% 
+In the limit for nice distrubtions we should have
+%
+\[ R_n \sim \sum_a \frac{e^{\mu_a/\tau}}{\sum_{a'} e^{\mu_{a'}/\tau}} \Delta_a \]
+%
+As $\tau$ decreases in value, the disparity in probabilities between actions increases, causing the policy to act more greedily. Besides the convergence of the policy, there are no mathematical guarentees on which $\tau$ to use that have been developed, which makes it hard to pick which $\tau$ is useful. We shall, however, see the algorithm reoccur when we analyze adversarial bandits, where we see that the algorithm can prevent itself from `being tricked' by faulty data.

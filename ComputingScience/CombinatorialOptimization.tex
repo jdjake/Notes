@@ -692,6 +692,126 @@ An independence oracle is an algorithm to decide whether an arbitrary subset is 
 
 A base of a matroid is a maximal set -- an element $B$ such that if $B \subset B'$, and $B'$ is in the matroid, then $B = B'$. If our matroid consists of finite sets, then two bases have the same cardinality. Indeed, if $|B| < |B'|$, there is $z \in B' - B$ such that $B + z$ is in the matroid, which cannot occur since this is an expansion of $B$.
 
-The first algorithm we consider is to efficiently find a min weight base for a matroid over a set $X$, for some function $c: X \to \mathbf{R}$. This is a generalization of the minimum spanning tree problem. The algorithm to do this is to just greedily add the minimum element of $X$ to a set until we cannot anymore. The set $B$ we end up with is a base by construction, because the order we add elements is immaterial. To prove that $B$ is minimal, let $C$ be a min-weight base. Order the items in $B$ by weight, $B = \{ x_1, \dots, x_n \}$, $C = \{ y_1, \dots, y_n \}$. Suppose that $x_1 = y_1, \dots, x_k = y_k$, for $k < n$, but $x_{k+1} \neq y_{k+1}$. Consider $C - \{ y_n \}$. Since $|C - \{ y_n \}| < |B|$, there is a minimal $i > k$ such that $C' = C - \{ y_n \} + \{ x_i \}$ is in the matroid, and therefore a base. But by minimality, $c(y_n) \leq c(x_i)$.
+The first algorithm we consider is to efficiently find a min weight base for a matroid over a set $X$, for some function $c: X \to \mathbf{R}$. This is a generalization of the minimum spanning tree problem. The algorithm to do this is to just greedily add the minimum element of $X$ to a set until we cannot anymore. The set $B$ we end up with is a base by construction, because the order we add elements is immaterial. To prove that $B$ is minimal, consider a minimal base $B^*$, and order the elements of both sets
+%
+\[ B = \{ x_1, \dots, x_n \}\ \ \ \ \ B^* = \{ x_1^*, \dots, x_n^* \} \]
+%
+We prove by induction that $w(x_i) \leq w(x_i^*)$. Indeed, consider the partial set $B_{i-1} \{ x_1, \dots, x_{i-1} \}$ and $B_i^* \{ x_1^*, \dots, x_i^* \}$. There is a minimal weight element $x_k^*$ of $B_i^*$ which is not in $B_{i-1}$, and can be safely added to $B$, and $w(x_i) \leq w(x_k^*)$. If $k \leq i$, this shows that $w(x_i) \leq w(x_i^*)$. (FIGURE THIS PROOF OUT LATER)
+
+The {\bf rank} $r(A)$ of a subset $A$ of $X$, with respect to a matroid $M$ is the cardinality of the largest subset of $A$ in $M$. Then $r$ is order preserving, and $r(A) \leq |A|$. More interestingly,
+%
+\[ r(A) + r(B) \geq r(A \cup B) + r(A \cap B) \]
+%
+To prove this, let $J$ be a maximal subset of $A \cap B$ in the matroid, $K \subset A - B$ a complementary set for $J$, so that $|K| + |J| = r(A)$. This is always possible because we can extend $J$ to a base in $A$. Do the same for $J$ in $B$, forming $L$ such that $|K| + |J| + |L| = r(A \cup B)$. By construction, $J \cup K$ is independant in $A$, and $L$ is independent in $B$. But then by maximality we obtain the bound above. It turns out that the rank function of a matroid uniquely determines the matroid, but we won't discuss that.
+
+A subset $C$ of $X$ is a {\bf circuit} if it is not independent, but removing any particular element of $C$ makes it independent. If $Y$ is any independent set, and $Y \cup \{ x \}$ is independent, then there is a unique circuit contained in $Y \cup \{ x \}$. We call this circuit $C(Y,x)$. To find this circuit, consider a minimal element of $Y \cup \{ x \}$ which is not independent. The hard part is showing this is the only circuit. Let $C_1$ and $C_2$ be two circuits. If $C_1 \neq C_2$, let $x \in C_1 \cap C_2$, and $y \in C_1 - C_2$ (without loss of generality). We will show there is a circuit contained in $(C_1 \cup C_2) - \{ x \}$ contains a circuit. Indeed, using submodularity we find
+%
+\begin{align*}
+    |C_1| - 1 + r((C_1 \cup C_2) - \{ x, y \}) + |C_2| - 1 &= r(C_1) + r((C_1 \cup C_2) - \{ x, y \}) + r(C_2)\\
+    &\geq r(C_1) + r((C_1 \cup C_2) - \{ y \} ) + r(C_2 - \{ x \})\\
+    &\geq r(C_1 - \{ y \}) + r(C_1 \cup C_2) + r(C_2 - \{ y \})\\
+    &= |C_1| - 1 + r(C_1 \cup C_2) + |C_2| - 1
+\end{align*}
+%
+The point of this calculation is that now we know $r(C_1 \cup C_2) = r((C_1 \cup C_2) - \{ x, y \})$, so that we cannot add $x$ or $y$ to any maximal independent set in $(C_1 \cup C_2) - \{ x, y \}$ while keeping it independant. In particular, $(C_1 \cup C_2) - \{ x \}$ is not independent, so there must be a circuit contained in the set.
+
+That there is always a unique circuit `screwing us over' is very useful in analyzing the matroid intersection problem. Given two matroids $M$ and $N$ over a set $X$, the intersection problem aks us to find the maximal set which is contained in both matroids. Similarily, we may have a subset $Y$ independent in both $M$ and $N$, and we wish to know whether we can extend $Y$ while preserving independence. Consider the following algorithm: given $Y$, we construct a directed graph with nodes in $Y$ and $X - Y$, and directed edges $ab$ (for $a \in Y$, $b \in X - Y$) if $Y - a + b \in M$, and $ba$ if $Y - a + b \in N$. We find a shortest path from $Y_1$ to $Y_2$ where
+%
+\[ Y_1 = \{ x \in X - Y : Y + x \in M \}\ \ \ \ \ \ Y_2 = \{ x \in X - Y: Y + x \in N \} \]
+%
+and we then augment along that path to find a better matroid. If there is no path from $Y_1$ to $Y_2$, we have a maximal matroid.
+
+\section{Linear Programs for Matroids}
+
+Let $M$ be a matroid over a set $X$, together with a weight function $w: M \to \mathbf{R}$. We can formulate the maximum weight independent set problem over $X$ as a linear program. Specifically, we consider the space of functions in $\mathbf{R}^X$, and take the linear program
+%
+\begin{gather*}
+\max \quad\ \ \sum_{e \in X} w(e) x(e) \\
+\begin{aligned}
+\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textup{s.t.} \quad x(A) &\leq r(A)\ \ \ \ \forall A \subset X \\
+                  x &\geq 0
+\end{aligned}
+\end{gather*}
+%
+in particular, the constraints guarantee that $0 \leq x(e) \leq 1$ for all $e \in X$, so integral points correspond to indicator functions over $X$. What's more, integral points also correspond to independent sets in the matroid. If $x \in \chi_B$, then $B = x(B) \leq r(B) \leq B$, so $r(B) = B$, and so $B$ is independant.
+
+It turns out that (surprise surprise!) all extreme points are integral, so we can solve the problem in polynomial time. Our proof will use an interesting technique known as the uncrossing method, which `thins' the constraints of the LP so they correspond to a Laminar family (If we say $A$ and $B$ are crossed if $A \cap B \neq \emptyset$, then by breaking them into disjoint chains we have `uncrossed them'). First, we embed $2^X$ in $\mathbf{R}$ by mapping $A \subset X$ to the $0/1$ indicator function $\chi_A$. Then we let $\mathcal{C}$ to be the largest linearly ordered subset of $2^X$ (a {\it chain} in $2^X$) only containing subsets $A$ for which we have a tight constraint, $x(A) = r(A)$, and such that the $\chi_A$ are independent. We claim that the $\chi_A$ span $\mathbf{R}^X$.
+
+Next, note that the functionals $x \mapsto x(A)$ are essentially the duals of the characteristic function $\chi_A$, and since $2^X$ spans $\mathbf{R}^X$, the rows of the constraint matrix which $x$ satifies span $\mathbf{R}^X$. In particular, since $x$ is extreme, the set of tight constraints spans $\mathbf{R}^X$, and it suffices for us to prove that $\text{span}(\mathcal{C})$ contains all $\chi_A$ such that $x(A) = r(A)$. Suppose that $\chi_B$ was not in $\text{span}(\mathcal{C})$, where $r(B) = x(B)$. If such a $B$ exists, we may choose $B$ such that the number of elements is minimized
+%
+\[ \tau(B) = \{ A \in \mathcal{C} : A \not \subset B\ \text{and}\ B \not \subset A \} \]
+%
+is minimized. Note that we must have $\tau(B)$ must contain at least one element, or else $\mathcal{C} \cup \{ B \}$ would be a chain of linearly independent vectors which is larger than $\mathcal{C}$. So let $T \in \mathcal{C}$ be such that $B \not \in T$ and $T \not \in B$. Note that by using the inclusion/exclusion principle, optimality, and the submodularity property,
+%
+\begin{align*}
+    r(B) + r(T) &= x(B) + x(T)\\
+    &= x(B \cup T) + x(B \cap T)\\
+    &\leq r(B \cup T) + r(B \cap T)\\
+    &\leq r(B) + r(T)
+\end{align*}
+%
+So that $x(B \cup T) + x(B \cap T) = r(B \cup T) + r(B \cap T)$, and since $x(B \cup T) \leq r(B \cup T)$, $x(B \cap T) \leq r(B \cap T)$, we can actually split this inequality into the equalities $x(B \cup T) = r(B \cup T)$, $x(B \cap T) = r(B \cap T)$.
+
+It turns out that $\tau(B \cup T), \tau(B \cap T) \subsetneq \tau(B)$, which by optimality implies $\chi_{B \cup T}, \chi_{B \cap T} \in \text{span}(\mathcal{C})$. This is clearly in contradiction to our assumption, since then
+%
+\[ \chi_B = \chi_{B \cup T} + \chi_{B \cap T} - \chi_T \in \text{span}(\mathcal{C}) \]
+%
+so all that remains is to prove properties of the $\tau$ function. This is most easily shown by drawing out Venn diagrams, which is often useful in matroid theory, but we'll also provide a textual description (and drawing your own diagram will probably be much more revealing than looking at someone elses).
+
+Consider $S$ in $\mathcal{C}$. Then either $S \subset T$, or $T \subset S$. If $S \subset T$, then $S \subset B \cup T$ and so $S \not \in \tau(B \cup T)$. If $T \subset S$, then $B \cap T \subset S$, so $S \not \in \tau(B \cap T)$. If $S \in \tau(B \cup T)$ but $S \not \in \tau(B)$, then we would have to have $T \subset S$. This also shows $S \subset B$, because if $B \subset S$, then $B \cup T \subset S$. But then $T \subset B$, which is a contradiction. Similarily, if $S \in \tau(B \cap T)$ but $S \not \in \tau(B)$, then $S \subset T$ and $B \subset S$, so $B \subset T$, another contradiction. We finish this conclusion by noticing that $T \not \in \tau(B \cap T), \tau(B \cup T)$ by obvious relations.
+
+Thus we conclude that $\mathcal{C}$ forms a basis of $\mathbf{R}^X$ (in fact, $\mathcal{C}$ forms a basis for $\mathbf{Z}^X$ -- the same proof follows through since we've never used real numbers, but we won't need this in our proof. Now our homework comes in handy. Consider the laminar constrainted matching problem, over the Bipartite graph whose left vertices are subsets of $X$, and with only one right vertex, with an edge between every left vertex. We consider $L_L = \mathcal{C}$ as a laminar family over the left vertices, and $L_R = \emptyset$, with $b_A = r(A)$ for $A \in \mathcal{C}$. Every solution to this problem can be identified with a characteristic function over the vertices, and by the identification $x$ can be seen as a feasible solution to the Laminar constraints. Since $x$ is tight for {\it all} constraints, it must be a feasible solution to this problem, and in our homework we proved that therefore $x$ has integral coordinates.
+
+The matroid intersection problem can be formulated as an LP with integral extreme points in a very similar manner. We consider two matroids $M$ and $N$, take the same solution space as the maximal independent set LP, and find solutions such that
+%
+\begin{gather*}
+\max \quad\ \ \sum_{e \in X} w(e) x(e) \\
+\begin{aligned}
+\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textup{s.t.} \quad x(A) &\leq \min(r_M(A), r_N(A))\ \ \ \ \forall A \subset X \\
+                  x &\geq 0
+\end{aligned}
+\end{gather*}
+%
+The extreme points of this set are integral, which can be verified from the uncrossing technique of the last problem. Here we will end up with a laminar family of tight constraints $\mathcal{C}_M$ and $\mathcal{C}_N$ over each matroid, rather than a chain,prove that $\text{span}(\mathcal{C}_M \cup \mathcal{C}_N)$ is full, and then use the laminar family $L_L = \mathcal{C}_M$, $L_R = \mathcal{C}_N$ to prove integrality. Our homework problem does not generalize to intersections of three or more matroids, and for good reason! The matroid intersection problem for more than 2 matroids is NP complete.
+
+\chapter{Submodular Functions}
+
+A {\bf submodular function} is a function $f:2^\Omega \to \mathbf{R}$, such that
+%
+\[ f(S) + f(T) \geq f(S \cup T) + f(S \cap T) \]
+%
+One algorithm that occurs across computing science is to find a maximum set for a submodular function. Consider the greedy approximation which constructs a set by taking the point which increases the current set by the largest amount. If $Z$ is the set constructed, and $Z^*$ is an optimum set, we claim that $f(Z) \geq (1 - 1/e) f(Z^*)$ -- this is the best approximation one can do in polynomial time, unless $P = NP$.
+
+\begin{lemma}
+    \[ f(Z^*) \leq k (f(z) - f(z)) \]
+\end{lemma}
+\begin{proof}
+    \[ f(Z^*) \leq f(Z^* \cup Z_{i-1}) \]
+\end{proof}
+
+\chapter{Perfect Graphs}
+
+There are many numbers of interest associated to graphs. For instance, we have $\alpha(G)$, the size of the maximum independent set, $\omega(G)$, the maximum clique size, $\chi(G)$, the chromatic number, and $k(G)$, the clique cover number (the minimum number of cliques required to cover the vertices of $G$). A graph is {\bf perfect} if $\chi(H) = \omega(H)$ for every subgraph of $G$. For each graph, we associate the polytope
+%
+\[ P_{\text{clique}}(G) = \{ x \in \mathbf{R} \langle V \rangle : x \geq 0, x(C) \leq 1,\ \forall\ \text{cliques}\ C: x(C) \leq 1 \} \]
+%
+We claim this polytope is integral if and only if $G$ is perfect.
+
+Perfect graphs include the families of bipartite graphs and chordal graphs. Given a graph $G$, define the complement of $G$ to be the graph $\overline{G}$ obtained by `flipping edges'. Then
+%
+\[ \alpha(G) = \omega(\overline{G})\ \ \ \chi(G) = k(\overline{G}) \]
+%
+It is an important theorem of Lovatz, proved in 1972, that a graph is perfect if and only if its complement is perfect. Beyond the scope of this course is the proof that $G$ is perfect if and only if $G$ and $\overline{G}$ contain no cyclic graphs of size $\geq 5$ (the strong perfect graph theorem).
+
+To prove Lovatz's theorem, consider the graph $G^{+v}$, for $v \in V$, obtained by adding a new vertex connected to ever vertex but $v$.
+
+\begin{lemma}[Replication Lemma]
+    $G$ is perfect if and only if $G^{+v}$ is perfect.
+\end{lemma}
+\begin{proof}
+    The lemma is trivial if $G$ has one vertex. For $|V| \geq 2$, it suffices to check $\chi(G^{+v}) = \omega(G^{+v})$. It is always true that $\alpha(G^{+v}) = \alpha(G) + 0/1$. If $\alpha(G^{+v}) = \alpha(G)$
+\end{proof}
+
+So suppose $G$ is perfect. Let $x \in P_{\text{clique}}(G)$ be an extreme point. From what we know in class, we know $x \in \mathbf{Q}$. Thus there is an integer $\eta \neq 0$ such that $\eta x \in \mathbf{Z}$. So consider $H$, obtained by copying $G$ $\eta$ times, and then connecting all edges $(u_i,v_i)$, if $u = v$ or $(u,v)$ is an edge in the original graph. The lemma above implies $H$ is perfect. Let $C_H$ be a max clique in $H$, with $|C_H| = \omega(H)$.
 
 \end{document}
