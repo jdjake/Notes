@@ -344,4 +344,132 @@ First, we verify that $N$ is positive definite. Note
 %
 \[ M - \frac{2}{n+1} bb^t = M - \frac{2}{n+1} \frac{Maa^tM^t}{\|a\|_M^2} \]
 
+
+
+\part{Convex Optimization}
+
+It is often the case that the functions we attempt to maximize are non-linear, or the set we are optimizing over is not a polyhedron. Convex optimization is the safest step to generalizing the linear programming optimization problem, for it is still a semi-tractable problem.
+
+\chapter{Convex Functions}
+
+Let $D \subset \mathbf{R}^n$ be a convex subset of euclidean space. A function $f: D \to \mathbf{R}$ is {\bf convex} if the graph of $f$ lies below the lines between any two points on the graph. Analytically, this can be expressed by the inequality
+%
+\[ f(\lambda x + (1 - \lambda y)) \leq \lambda f(x) + (1 - \lambda) f(y) \]
+%
+Or equivalently, the epigraph $\{ (x,y): f(x) \leq y \}$ of the function is convex.
+
+The inner product on $\mathbf{R}^n$ gives us lots of information about the convex subsets of $\mathbf{R}^n$. Indeed, the Banach and Hilbert space structure of $\mathbf{R}^n$ tells us nice separation theorems about convex sets.
+
+\begin{theorem}
+    If $D \subset \mathbf{R}^n$ is convex and closed, and $x_0 \in \mathbf{R}^n - D$, then there is $y \in \mathbf{R}^n$ such that for any $x \in D$,
+    %
+    \[ \langle y, x \rangle < \langle y, x_0 \rangle \]
+    %
+    Geometrically, there is a hyperplane separating $D$ and $x_0$. If $x_0 \in \partial D$, then there is a nonzero $y \in \mathbf{R}^n$ such that for $x \in D$,
+    %
+    \[ \langle y, x \rangle \leq \langle y, x_0 \rangle \]
+    %
+    So there is a hyperplane supporting the convex set in $\mathbf{R}^n$.
+\end{theorem}
+
+If $f$ is a function defined on a convex set, then $v$ is a {\bf subgradient} of $f$ at $x$ if the hyperplane defined at $x$ by $v$ lies below the graph of $f$. Analytically, for any $y$,
+%
+\[ f(x) - f(y) \geq \langle v, x - y \rangle \]
+%
+The set of subgradients of $f$ at $x$ is denoted $\partial f(x)$. It is a pleasant way to obtain a form of differentiation of a convex function that need not be convex.
+
+\begin{theorem}
+    If a convex $f$ is differentiable at $x$, then $\partial f(x)$ contains a single element.
+\end{theorem}
+\begin{proof}
+    Write $f(x + h) = f(x) + \langle \nabla f(x), h \rangle + O(\|h\|^2)$, so
+    %
+    \[ f(x + h) - f(x) = \langle \nabla f(x), h \rangle + O(\|h\|^2) \]
+    %
+    Now if $v \in \partial f(x)$, this implies that
+    %
+    \[ |\langle v - \nabla f(x), h \rangle| = O(\|h\|^2) \]
+    %
+    But this implies $v = \nabla f(x)$, before linear functions cannot approach the origin quadratically. Indeed, find $x_0 \in S^{n-1}$ with
+    %
+    \[ |\langle \nabla f(x) - v, x_0 \rangle| = \| \nabla f(x) - v \| \]
+    %
+    Then
+    %
+    \[ \frac{\langle \nabla f(x) - v, \lambda x_0 \rangle}{|\lambda|^2} = \frac{\| \nabla f(x) - v \|}{|\lambda|} \]
+    %
+    which must vanish as $\lambda \to 0$, impossible unless $\| \nabla f(x) - v \| = 0$.
+
+    Conversely, we verify that $\nabla f(x)$ is a subgradient for $f$. We use the convexity of $f$ to write
+    %
+    \[ f(y) \geq \frac{f((1 - \lambda)x + \lambda y) - (1 - \lambda) f(x)}{\lambda} = f(x) + \frac{f((1 - \lambda)x + \lambda y) - f(x)}{\lambda} \]
+    %
+    By the convexity in one dimension, the values on the right converge monotonically to $\langle \nabla f(x), y \rangle$, and this completes the proof.
+\end{proof}
+
+\begin{theorem}
+    If $\partial f(x)$ is non-empty for each $x$, then $f$ is convex. Conversely, if $f$ is convex, $\partial f(x)$ is non-empty on the interior of the domain of $f$.
+\end{theorem}
+\begin{proof}
+    If $v \in \partial f((1 - \lambda)x + \lambda y)$, then
+    %
+    \[ f((1 - \lambda)x + \lambda y) \leq f(x) - \lambda \langle v, y - x \rangle \]
+    \[ f((1 - \lambda)x + \lambda y) \leq f(y) + (1 - \lambda) \langle v, y - x \rangle \]
+    %
+    If we multiply the first equation by $\lambda$, the second by $(1 - \lambda)$, and then by adding the two equation togther, we obtain the convexity inequality.
+
+    Now let $x \in D$. Then $(x,f(x))$ is on the boundary of the epigraph of $f$, so using the supporting hyperplanes theorem, there is $(a,b) \in \mathbf{R}^n \times \mathbf{R}$ such that for any $(y, t)$, with $t \geq f(y)$, with
+    %
+    \[ \langle a, x \rangle + b f(x) \leq \langle a, y \rangle + bt \]
+    %
+    Letting $t \to \infty$, we conclude $b \leq 0$. If $b = 0$, and $x \in D^\circ$, then we can let $y = x - \varepsilon a$, for which we conclude that
+    %
+    \[ \langle a, x \rangle \leq \langle a, x - \varepsilon a \rangle \]
+    %
+    so that $- \varepsilon \| a \|^2 \geq 0$, an impossibility unless $a = 0$, which is impossible due to the separating hyperplanes theorem. Thus $b \neq 0$, and we may divide out, choosing $t = f(y)$, we find
+    %
+    \[ f(y) - f(x) \geq \langle v/b, y - x \rangle \]
+    %
+    So $v/b \in \partial f(x)$.
+\end{proof}
+
+Why are convex functions so interesting in optimization theory? Optimizing an arbitrary general convex function is {\it not} easy in general, but if we have a pleasant convex domain, the problem becomes much easier. First, note that if we have an arbitrary function $f: D \to \mathbf{R}$, then we can write a minimization problem $\inf_{x \in D} f(x)$ as minimizing the linear function $\inf_{(x,t) \in \text{epi}(f)} t$ over the epigraph of $f$, so regardless of the qualities of $f$, we can view a minimization of any function as a minimization of a linear functional on your set. Next, note that minimizing a function over $D$ is the same as minimizing the function over the convex hull of $D$. However, obtaining a solution on $D$ from a solution over the convex hull of $D$ is normally very difficult, for it involves, given a set $y \in D' \supset D$, finding $x_1, \dots, x_n \in D$ for which $y = \sum a_i x_i$, with $a_i \geq 0$ and $\sum a_i = 1$. This is a very difficult problem algorithmically.
+
+\chapter{Mirror Descent}
+
+Mirror descent is a way to apply Gradient descent in space with arbitrary norms, that is, on a Banach space rather than a Hilbert space. We cannot apply standard gradient descent to a function $f$, because for Banach spaces the gradients (Fr\'{e}chet derivatives) $\nabla f(x)$ lie in the dual space of the Banach space. On a Hilbert space, there is a canonical way of identifying $\nabla f(x)$ with a vector in the original space, so we can consider the iterative procedure $x \mapsto x - \eta \nabla f(x)$. The main idea of mirror descent is to generalize this procedure to Banach spaces is by mapping the Banach space into its dual, finding some way of performing gradient descent in the dual space of the Banach space, and then mapping the space back into the original space, in such a way that we truly obtain a minimizing procedure.
+
+Suppose we are optimizing over a compact, convex subset $D \subset \mathbf{R}^n$ contained in the closure of an open convex subset $U$, for which $U \cap D$ is non-empty. Now consider a convex function $\Phi$ defined on $U$, which will enable us to map $D$ into the dual space by the map $x \mapsto \nabla \Phi(x)$, the `mirror map'. Provided that $\nabla \Phi(U) = \mathbf{R}^n$, we can always reverse the mirror rap. If we consider the iteration
+%
+\[ x \mapsto (\nabla \Phi)^{-1}(\Phi(x) - \eta \nabla f(x)) \]
+%
+where $(\nabla \Phi)^{-1}(\Phi(x) - \eta \nabla f(x))$ is a point $y \in U$ for which
+%
+\[ \nabla \Phi(y) = \Phi(x) - \eta \nabla f(x) \]
+%
+Now this point may not lie in $D$, so we define the Bregman divergence
+%
+\[ D_\Phi(x,y) = \Phi(x) - \Phi(y) - \langle \nabla \Phi(y), x - y \rangle \]
+%
+and project $y$ onto a point $x'$ in $D$ which minimizes the divergence $D_\Phi(x',y)$, for $x' \in D \cap U$. This projection exists provided that
+%
+\[ \lim_{x \to \partial U} \| \nabla \Phi(x) \| =  \infty \]
+%
+which implies $x \mapsto D_\Phi(x,y)$ is locally increasing on the boundary of $U$, and if $D_\Phi(x,y)$ is strongly convex, then the existence and uniqueness of a projection is guaranteed (I don't have a proof right now, so let's just assume this is true).
+
+Now we describe mirror descent. Let $x_1$ minimize $\Phi(x)$ on $U \cap D$. Then, once $x_n$ is specified, let $y_n$ be defined by $\nabla \Phi(y_n) = \nabla \Phi(x_n) - \eta v$, where $v \in \partial f(x_n)$ and $x_{n+1} \in \text{argmin} D_\Phi(x,y_n)$.
+
+\begin{theorem}
+    If $\Phi$ is strongly convex on $D \cap U$ with respect to the norm $\| \cdot \|$, that is
+    %
+    \[ \Phi(x) - \Phi(y) \leq \langle \nabla \Phi(x), x - y \rangle - \frac{m}{2} \| y - x \|^2 \]
+    %
+    Define $\lambda^2 = \sup_{x \in U \cap D} \Phi(x) - \Phi(x_1)$, let $f$ be convex, and let $L$ be Lipschitz with respect to $\| \cdot \|$. If we let $\eta = (\lambda/L) \sqrt{2a/K}$, then
+    %
+    \[ f \left( \frac{1}{K} \sum_{k = 1}^K x_k \right) - \min_{x \in D} f(x) \leq \lambda L \sqrt{\frac{2}{mK}} \]
+\end{theorem}
+\begin{proof}
+    To Be Continued...
+\end{proof}
+
 \end{document}
