@@ -1425,7 +1425,7 @@ We are actually able to prove a much strong proposition.
     Let $M$ be a model of $\Gamma$. Fix $x \in U^M$. Extend $U^M$ to a set $U^N$ of cardinality $\omega$. Each new element will behave exactly like $x$. We define $f^N(t_1, \dots, t_n) = f^M(t_1', \dots, t_n')$, where $t_k' = t_k$ if $t_1 \in U^M$, else $t_k' = x$. Similarily, let $(t_1, \dots, t_n) \in P^N$ if and only if $(t_1', \dots, t_n') \in P^M$. Define constants the same as constants are defined in $U^M$. Then $N$ is a model of $\Gamma$ of cardinality $\omega$.
 \end{proof}
 
-This theorem appears to contradict various classical results, such as the fact that any complete, ordered fields are isomorphic (and thus $\mathbf{R}$ should be `the only model' of such fields, which contradicts the cardinality argument). Remember that first order theories are only a model of real mathematics, and thus do not sufficiently encapsulate all mathematical proofs. We therefore learn from the L\"{o}wenheim theorem that one cannot prove that $\mathbf{R}$ is the only complete ordered field.
+This theorem appears to contradict various classical results, such as the fact that any complete, ordered fields are isomorphic (and thus $\mathbf{R}$ should be `the only model' of such fields, which contradicts the cardinality argument). Remember that first order theories are only a model of real mathematics, and thus do not sufficiently encapsulate all mathematical proofs. We therefore learn from the L\"{o}wenheim theorem that one cannot prove that $\mathbf{R}$ is the only complete ordered field, using only the principles of first order logic.
 
 The Skolem L\"{o}wenheim theorem holds because first order logic is not sufficiently powerful enough to distinguish `infinities'. The semantics cannot sufficiently describe what it means for two elements to be equal, so we can hide various model-theoretic `elements' of a theory inside a single semantic element of a theory. Perhaps, if we add additional equality semantics, can we prevent the Lowenheim theorem from occuring.
 
@@ -1527,40 +1527,49 @@ And now, the true L\"{o}wenheim-Skolem theorem, since the other proof relied on 
 \section{New Function Letters and Constants}
 
 
+\chapter{Combinatory Logic}
 
-\part{Combinatory Logic}
+Standard propositional logic formalizes the mathematical process of proof, pincering mathematical statements in a formal system where they can be examined in detail. Rather than looking at statements which can be verified true or false, Combinatory logic instead analyzes higher order functions, and our limitations in defining them. These functions are universally found in mathematics. The statement $(\forall x: \neg P(x) \vee Q(x))$ contains the functions $\neg$, $\vee$, $P$, $Q$, and $\forall$, and it is semantically interesting to interpret the statement not as a schema which can be applied to assert truths about objects of some domain of discourse, but instead as a single truth about the logical function obtained by composing the atomic logical operations. Combinatory logic studies the formal representation of these higher order functions, revealing the limitations in the functions we can define.
 
-Mathematical logic's prime goal is to discover the limitations of the ethereal mathematical processes used everyday by mathematicians, by trapping them in concrete, unambiguous formal mathematical systems. Propositional logic formalizes the discussion of statements which are true or false. Predicate logic expands this to include statements which only become true or false when we introduce a particular object to discuss. Combinatory logic discusses a completely different mathematical process. Rather than looking at statements which can be verified true or false, the field studies functions and operators, and our limitations in how we define and understand them.
+The primal nature of the substitution operator was discovered early on in the theory of combinatory logic. It is fundamental tool for constructing functions. For instance, if we represent numbers as tallies, so that $1$ is $\cdot$, $2$ is $\cdot \cdot$, and 7 is $\cdot \cdot \cdot \cdot \cdot \cdot \cdot$, then we can add 3 to any number by substituting it into the expression $\cdot \cdot \cdot x$ for the variable $x$. Similarily, we may multiply a number by two by substituting it into the equation $xx$ for $x$. Addition and multiplication is thus a special case of substitution, and we shall find that a more complicated specification of this process will suffice to represent any function. Substitution is so important to combinatory logic that the field is often seen as the formal analysis of substitution.
 
-The first paradigm of combinatory logic is to switch emphasis from objects in the universe of discourse to the universal properties of logical operators independant of a particular domain. This is similar to the main tool of functional analysis -- understanding functions by abstracting away their properties as they pertain to objects on their domain, analyzing them as objects independent of their domain. Classically, we would interpret the formula
+Combinatorial logic was initially designed to provide a foundation for mathematics, where we can view inference rules as operators on formulas which can be formally analyzed. The operation of substitution plays a subtle role in much of this process, and this encouraged Combinatorial logic forerunner Moses Sch\"{o}nfinkel to introduce substitution as an explicit connective in a formal system. It turns out that unrestricted substitution is an incredibly volatile operator, especially in the context of first order logic. While it provides expressive power, it also opens the floodgate to paradoxes which can easily lead to an inconsistant system. Even if these careless systems are refined, the systems are likely not expressive enough to handle all mathematical concepts. Nonetheless, the formal systems of combinatory logic are sufficiently expressive to describe all realistic forms of computation, and it is this application which makes the theory useful to modern computing science.
+
+\section{The $\lambda$ Calculus}
+
+The $\lambda$-calculus is the most famous formalization used to study combinatory logic. Every formula in the calculus represents an operator over the other formulas in the calculus, and there are only two fundamental connectives we can use to manipulate these operators. The first is {\bf function application}, which takes a function $f$ and applies it to an argument $a$, denoted $(f a)$. The second is {\bf function abstraction}, which transforms a term $t$ into a function $(\lambda x.t)$, which takes some argument $a$ and substitutes it for $x$ in $t$. We then use substitution rules on terms to express computation, and this is where the real fun of $\lambda$ calculus begins.
+
+Terms of the $\lambda$ calculus can be applied arbitrarily to other terms, include the term itself. This distinguishes the view of functions in set theory, where it is impossible to consider a function application $f(f)$ without contradicting the axiom of regularity. Thus terms of the $\lambda$ calculus model something very different to standard set theoretic functions. To distinguish this form of the calculus from other formal systems where the operators have particular domains, we call this the {\bf untyped} version of the $\lambda$ calculus. Nonetheless, unrestricted application is not a deficiency in the calculus -- it has a reasonable interpretation in mathematics, which we will discuss later, and is required to construct the class of all computable functions.
+
+So lets define the terms of $\lambda$ calculus formally. First, we consider a symbol set consisting of variables, constants, the abstractor symbol $\lambda$, parenthesis, and a period as a separator. We define terms to be the smallest set of strings over these symbols such that
 %
-\[ (\forall x: \neg P(x) \vee Q(x)) \]
+\begin{itemize}
+    \item All variables and constant are terms.
+    \item If $M$ and $N$ are terms, then $(MN)$ are terms.
+    \item If $M$ is a term, and $x$ is a variable, then $(\lambda x.M)$ is a term.
+\end{itemize}
 %
-as a schema asserting the truth of infinitely many propositional statements $\neg P(s) \vee Q(s)$, where $s$ ranges over the objects of discussion. Combinatory logic instead thinks of the formula as asserting a single truth about an operator formed by composing the atomic operators $\neg$, $\vee$, $P$, and $Q$. Combinatory logic's first job is to design a formal system which focuses on the operators, rather than the objects themselves.
+If there are no constants, we call this a {\bf pure} version of the $\lambda$ calculus, because there are no constants, so every term of the calculus is a pure function. There is essentially no distinction between constants and variables in the $\lambda$ calculus, except that we can perform $\lambda$ abstraction on variables, so we won't consider constants in these notes.
 
-The importance of a substitution operator was discovered early on in the theory of combinatory logic. It is fundamental construction tool used to malleate the functions in a formal calculus. If we represent numbers as tallies, so that $1 = |$, $2 = ||$, $7 = |||||||$, then we can add 3 to any number by substituting it into the expression $``|||x''$ for $x$. Addition by a constant is a special case of substitution into a term, and we shall find that a more complicated specification of this process will suffice to represent any function.
+We introduce some shorthand to ensure we don't get overwhelmed by parenthesis. First, we let terms associate to the left, so that $N_1 \dots N_n$ is shorthand for the term $( \dots ((N_1 N_2) N_3) \dots ) N_n)$, and we write $(\lambda x_1 \dots x_n.M)$ for the term $(\lambda x_1.(\lambda x_2.(\dots(\lambda x_n.M)\dots)))$. This shorthand is meant to let of think of a series of $\lambda$ abstractions as representing a multidimensional function. This is the technique of Currying: we can think of a function which takes two arguments as a function which takes a single argument, and then returns a function which takes another argument to calculate the overall result!
 
-Combinatorial logic was initially designed to form a foundation for mathematical with a more simple set of logical connectives than in prepositional logic. Certain inference rules, like Modus Ponens, are fairly uncomplicated. It is easy to write a algorithm which takes two strings $P$ and $P \Rightarrow Q$, and to return $Q$. In contrast, rules like instantiation, which infer $P(s)$ from $(\forall x: P(x))$ seem much more complicated (we have to watch for bound variables, and ensure $s$ is safe to substitute for $x$). The operation of substitution plays a much more subtle role in the principle of instantiation, and it was this problem which encouraged Moses Sch\"{o}nfinkel to introduce substitution as an explicit connective in combinatory logic. This is a novel feature of his methods; there is no way to formalize substitution in terms of the standard operators of first order logic.
-
-One of the biggest problems we encounter in combinatory logic is that unrestricted substitution is an incredibly volatile operator. While the operator give the formal system incredible expressive power, it also opens the floodgates for paradoxes and inconsistency to enter the formal system. Indeed, substitution is key to various diagonalization paradoxes in informal mathematics, which can enter our formal system if we are not careful about our substitution system. Because of this, virtually all attempts to provide a universal foundation to mathematics through combinatory methods have failed. Initial systems, though powerful enough to express all required mathematics, are inconsistant. Once refined, these systems become consistant, but are not expressive enough to handle all of mathematics. Nonetheless, combinatory logic is sufficiently expressive to describe all realistic forms of computation, and is therefore incredibly useful to modern computer science. This is where combinatory logic has its most powerful applications.
-
-\chapter{The $\lambda$-Calculus}
-
-The $\lambda$-calculus is the most well known of the formalizations used to study combinatory logic. Every formula in the calculus represents an operator whose domain is the other formulas in the calculus. Since the operators are not restricted to a particular domain, this form of the $\lambda$ calculus is called {\bf untyped}. There are only two fundamental connectives to the $\lambda$ calculus. The first is {\bf function application}, which takes a function $f$ and applies it to an argument $a$, denoted $(f a)$. The second is {\bf function abstraction}, which transforms a term $t$ into a function $\lambda x.t$, which takes some argument $a$ and substitutes it for $x$ in $t$. Computation can be expressed via an equivalence of terms defined by subtitution, and this leads to the semantic theory through which we interpret the calculus, where the real func begins.
-
-Trying to interpret the terms of the $\lambda$ calculus as set-theoretic functions (subsets of tuples $(x,y)$ of elements in the domain and codomain) leads to failure. The axiom of regularity in set theory implies that no function can operate on itself, whereas every function of the $\lambda$ calculus can be applied to itself by a composition operation. Until the 1970s, the semantics of the $\lambda$ calculus were unclear, except as they pertained to the representation of arithmetic operations. For now, think of terms of the calculus not as `graphs', but as descriptions of the computing process through which we obtain the outcome of the function. The functions of set-theory are extensional, they are uniquely identified by their action on the domain, whereas the functions of $\lambda$ calculus are intensional, they are uniquely identified by their description (algorithms in computing science are intensional -- just because two algorithms solve the same problem does not imply the two algorithms are equal).
-
-The language of the $\lambda$-calculus is defined from a set $\mathbf{V}$ of variables, the abstractor symbol $\lambda$, parenthesis, and a separator $.$. The set $\mathbf{T}$ of $\lambda$ {\bf terms} is formed by the context free grammar
+On the set of terms of the $\lambda$-calculus, we introduce {\bf reduction rules}, which not only simplify formulas, but act as the formal model of computation required for the theory.
 %
-\[ \mathbf{T} \mapsto (\mathbf{T} \mathbf{T})\ |\ \mathbf{V}\ |\ (\lambda \mathbf{V} . \mathbf{T}) \]
-%
-This is the {\bf pure} version of the $\lambda$ calculus, because there are no constants (every element of the calculus is a function, so there are no `impurities'). The syntactic theory of the pure $\lambda$ calculus is essentially the same as the syntactic theory of the impure $\lambda$ calculus, so no distinction really needs to be made at this point. For shorthand, we assume terms associate to the left, so that $N_1 \dots N_n$ is short for the term $( \dots ((N_1 N_2) N_3) \dots ) N_n)$. We also write $(\lambda x_1 \dots x_n.s)$ for the term $(\lambda x_1.(\lambda x_2.(\dots(\lambda x_n.s)\dots)))$. This shorthand effectively describes the technique of currying, which enables us to represent functions which take more than one argument in the $\lambda$ calculus. A function which takes two arguments is really just a function which takes one argument, and then returns a function which takes another argument to calculute the overall result.
+\begin{itemize}
+    \item {\bf $\alpha$ reduction} is a safe way to rename variables. If $M$ is a term, and $y$ is a variable not occuring anywhere in $M$, then we have a one-step $\alpha$ reduction $(\lambda x.M) \rhd_{\alpha,1} (\lambda y.M[y/x])$. More generally, if $M$ contains a subterm of the form $(\lambda x.N)$, and if $M'$ is the operation formed by replacing an occurence of $(\lambda x.N)$, then we will let $M \rhd_{\alpha,1} M'$. The transitive closure of the $\rhd_{\alpha,1}$ relation will be denoted $\rhd_\alpha$.
 
-On the set of terms of the $\lambda$-calculus, we introduce {\bf reduction rules}, which not only simplify formulas, but act as the formal model of computation required for the theory. The simplest is {\bf $\alpha$ reduction}, which is essentially a safe way to rename variables. If $M$ is a term, and $y$ is a variable not occuring anywhere in $M$, then $(\lambda x.M)$ reduces to $(\lambda y.M[y/x])$, denoted as $(\lambda x.M) \rhd_\alpha (\lambda y.M[y/x])$, where $M[y/x]$ is the term obtained from $M$ by swapping every free occurence of $x$ with $y$. The second is {\bf $\beta$ reduction}, which not only provides a way to simplify formulae, but also a way to introduce a semantic computational step into the calculus. Given a term of the form $(\lambda x.M)N$, which is known as a {\bf $\beta$-redex}, we define $(\lambda x.M)N \rhd_\beta M[N/x]$ where $N$ `safe to substitute' for $x$ in $M$, in the sense that no free occurrence of $x$ in $M$ occurs in a subterm of the form $(\lambda y.M_0)$, where $y$ is a free variable in $N$ (note that this implies that $N$ is then safe to substitute for $x$ in any subterm of $M$). In general, we can perform $\beta$ and $\alpha$ reduction in sequence, obtaining a transitive relation $\rhd$. If we assume this relation also contains the {\bf $\xi$ rule}, that if $M \rhd N$, then $\lambda x.M \rhd \lambda x.N$ for any variables $x$, and also the composition rule that if $M_0 \rhd M_1$ and $N_0 \rhd N_1$, then $M_0N_0 \rhd M_1N_1$, then we obtain the general notion of reduction. The $\xi$ and composition rule imply that we can perform reductions over subterms, so that the sequence of reductions
+    \item {\bf $\beta$ reduction} introduces a semantic computational step into the calculus. Given a {\bf $\beta$ redex}, a term which can be written $(\lambda x.M)N$, we write $(\lambda x.M)N \rhd_{\beta,1} M[N/x]$, provided that $N$ is `safe to substitute' for $x$ in $M$. This means that every free occurrence of $x$ in $M$ occurs in a subterm of the form $(\lambda y.M_0)$, where $y$ is a free variable in $N$. Similarily, we will $\rhd_{\beta,1}$ be allowed on subterms of a general term, and the transitive closure will be denoted $\rhd_\beta$.
+
+    \item A relation $\rhd$ satisfies the {\bf $\xi$ rule} if $M \rhd N$ implies $\lambda x.M \rhd \lambda x.N$.
+
+    \item A relation $\rhd$ is closed under composition if $M_0 \rhd N_0$ and $M_1 \rhd N_1$ implies $(M_0 M_1) \rhd (N_0 N_1)$.
+\end{itemize}
 %
-\[ (\lambda yx.xy)xy \rhd_\alpha (\lambda y_0x_0.x_0y_0)xy \rhd_\beta (\lambda x_0.x_0x)y \rhd_\beta yx \]
+The general reduction relation, which we shall denoted by $\rhd$ or $\rhd_{\lambda}$, is the smallest transitive relation $\rhd$ containing $\alpha$ and $\beta$ reduction. It satisfies the $\xi$ rule, and is closed under composition, because $\alpha$ and $\beta$ reduction are allowed over subterms. Conversely, $\rhd$ is also the smallest transitive relation containing $\alpha$ and $\beta$ reduction {\it not} over subterms, closed under composition, and satisfying the $\xi$ rule. As an example, since
 %
-is valid (we shall denote a $\beta$ reduction on a subterm by $\rhd_\beta$, and a general $\alpha$ reduction by $\rhd_\alpha$). The string above tells us that $(\lambda yx.xy)xy \rhd yx$. If we enlarge reduction to be the smallest symmetric relation, we obtain the notion of equivalence of terms, which we write as $\lambda \vdash M = N$.
+\[ (\lambda yx.xy)xy \rhd_\alpha (\lambda y_0x_0.x_0y_0)xy \rhd_\beta yx \]
+%
+we find that $(\lambda yx.xy)xy \rhd yx$. If we enlarge reduction to be the smallest reflexive, symmetric relation, we obtain the notion of equivalence, which we write as $M =_\lambda N$, or if we want to emphasize the proof theoretic aspects, as $\lambda \vdash M = N$.
 
 As $\rhd$ is the smallest transitive relation containing $\alpha$ and $\beta$ reduction, we obtain an inductive method to prove that a property $R(x,y)$ over the terms of the $\lambda$ calculus satisfies $R(M,N)$ for any $M$ which reduces to $N$. It suffices to verify that
 %
@@ -1571,23 +1580,21 @@ As $\rhd$ is the smallest transitive relation containing $\alpha$ and $\beta$ re
     \item If $R(M,N)$ holds, then $R(\lambda x.M, \lambda x.N)$ holds.
 \end{itemize}
 %
-because then $R$ is a transitive relation containing $\alpha$ and $\beta$ reduction, and satisfying the $\xi$ and composition rule, hence $R$ contains the relation of reduction, and so if $M \rhd N$, then $R(M,N)$ necessarily holds.
+because then $R$ is a transitive relation containing $\alpha$ and $\beta$ reduction, and satisfying the $\xi$ and composition rule, hence $R$ contains the relation of reduction, and so if $M \rhd N$, then $R(M,N)$ necessarily holds. If $R$ is symmetric and reflexive, then we can also conclude that if $M =_\lambda N$, then $R(M,N)$ holds.
 
 It is important to consider how important it is that we only perform $\beta$ reduction on terms safe for substitution. If not, then we could conclude that
 %
 \[ (\lambda xy.x)y \rhd_\beta (\lambda y.y) \]
 %
-yet by applying $\alpha$ equivalences, we can also conclude
-%
 \[ (\lambda xy.x)y \rhd_\alpha (\lambda xy_0.x)y \rhd_\beta \lambda y_0.y \]
 %
-We would like to interpret reduction as defining an equivalence of two definitions of certain functions. However, the two functions above certainly should not be equivalent. Indeed, the first represents the identity function $f(x) = x$, and the second represents the constant function $g(x) = y$, for some $y$. Even without a semantic interpretation, we can further use these reductions to conclude that
+We would like to interpret reduction as contracting a function definition to a shorter definition which defines an equivalent function. However, the two functions above certainly should not be equivalent. Indeed, the first represents the identity function $f(x) = x$, and the second represents the constant function $g(x) = y$, for some $y$. Even without a semantic interpretation, we can further use these reductions to conclude that
 %
 \[ \lambda \vdash M = (\lambda y.y)M = (\lambda y_0.y)M = y \]
 %
-so we find that any two terms of the $\lambda$ calculus are equal, which is clearly not what we desire if we wish terms to be equal precisely when there function representations are equal.
+so we find that any two terms of the $\lambda$ calculus are equal. This is clearly not desirable in an actual theory for representing interesting classes of operators.
 
-We say a term $M$ is in {\bf $\beta$ normal form} if it contains no subterms which form a $\beta$ redex. This means exactly that there is no $N$ such that $M_0 \rhd_\beta N$, for any term $M_0$ such that $M \rhd_\alpha M_0$, so that $M$ is essentially an `end result' of the computation. Most terms have $\beta$ normal forms, which essentially represent algorithms which never halt (and this should hint at why determining whether a term has a $\beta$ normal form is undecidable).
+We say a term $M$ is in {\bf $\beta$ normal form} if it contains no subterms which form a $\beta$ redex. This means exactly that the only reductions possible from $M$ are $\alpha$ reductions: If $M \rhd N$, then $M \rhd_\alpha N$. Since $\alpha$ conversion isn't much of an interesting calculation, we view $\beta$ normal forms as forms which have been completely computed. We can then interpret $\beta$ normal forms as terms representing algorithms which eventually halt.
 
 \begin{example}
     The term $(\lambda x.(\lambda y.yx)z)a$ has normal form $za$, because
@@ -1601,31 +1608,78 @@ We say a term $M$ is in {\bf $\beta$ normal form} if it contains no subterms whi
     The term $\Omega = (\lambda x.xx)(\lambda x.xx)$ has no normal form, because $\alpha$ reduction only changes the term to $(\lambda y.yy)(\lambda z.zz)$, for some variables $y$ and $z$, and $\beta$ reduction on any term of this form results in $(\lambda z.zz)(\lambda z.zz)$. Thus the set of all compositions of terms of this form is closed under $\beta$ and $\alpha$ reduction, and all of them contain a $\beta$ redex, so we conclude that $\Omega$ has no normal form. It is singular because it is the only term up to $\alpha$ conversion which cannot be reduced to some other term.
 \end{example}
 
-Note that we can construct all normal forms $\mathbf{N}$ inductively by the context free grammar
+There is a more formal way to define the class of all normal forms. We take the following inductive definition:
 %
-\[ \mathbf{N} = (\mathbf{V}\mathbf{N}) | (\lambda x.\mathbf{N}) | \mathbf{V} \]
+\begin{itemize}
+    \item All variables are in normal form.
+    \item If $M$ is in normal form, and $x$ is a variable, then $xM$ is in normal form.
+    \item If $M$ is in normal form, then $\lambda x.M$ is in normal form.
+\end{itemize}
 %
-Surely any element of this grammar is in normal form. Conversely, if $xM$ is in normal form, then so too is $M$ because the subterms of $M$ cannot be $\beta$ redexes, and if $(\lambda x.M)$ is in normal form, then so too is $M$ because $M$ is in normal form.
+Surely any element of this grammar is in normal form. Conversely, if $xM$ is in normal form, then so too is $M$ because the subterms of $M$ cannot be $\beta$ redexes, and if $(\lambda x.M)$ is in normal form, then so too is $M$ because $M$ is in normal form. Thus the problem of deciding whether a term of the $\lambda$ calculus is in $\beta$ normal form can be expressed as a context free grammar, a computable operation. However, the problem of determining whether a term of the $\lambda$ calculus can be {\it reduced} to a term in $\beta$ normal form is undecidable. It is essentially the same problem as proving a Turing machine halts.
 
 \section{Consistency and Church-Rosser}
 
-Since the $\lambda$ calculus is equational, there is no way to talk about the standard consistency of the inference rules -- there is no such thing as a contradiction, because we don't necessarily have a negation connective. However, we can introduce something like consistency to the calculus. In standard logic, a contradiction implies that every statement can br proved. Since the only `predicates' we can discuss in the $\lambda$ calculus are the equality predicates $\lambda \vdash M = N$, we say the $\lambda$ calculus is consistent if not every equation is true. That is, $\lambda \vdash M \neq N$ for some $M$ and $N$.
+We can express the $\lambda$ calculus as an equational theory of logic. However, the theory is not a first order logic, because the terms of the calculus contain variables which may be bound, and this is not possible in vanilla first order logic. In order to get around this, we form a formal theory with only a single predicate, so that the propositions of the system are exactly of the form $M = N$, for some terms $M$ and $N$, and we consider the reduction rules as inferences from the basic equality axioms. Because the $\lambda$ calculus is not modelled as a first order theory, the model theory will have to be slightly different. The axioms of the system are
+%
+\begin{align*}
+    (\alpha)\ \ \ \ \ \ \ \lambda x.M = \lambda y.M[y/x]\\
+    (\beta)\ \ \ \ \ (\lambda x.M)N = M[N/x]\\
+    (\text{id}) \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ M = M
+\end{align*}
+%
+and the inference rules are
+%
+\begin{center}
+\begin{prooftree}
+\Hypo{M = N}
+\Infer1[($\mu$)]{LM = LN}
+\end{prooftree}
+\ \ \ \ \
+\begin{prooftree}
+\Hypo{ M = N }
+\Hypo{ N = L }
+\Infer2[($\tau$)]{ M = L }
+\end{prooftree}
+\ \ \ \ \
+\begin{prooftree}
+\Hypo{M = N}
+\Infer1[($\nu$)]{LM = LN}
+\end{prooftree}
+\end{center}
 
-The Church-Rosser theorem is the central result to proving the consistency of the $\lambda$ calculus. It is clear from the result that a $\beta$ normal form is unique up to $\alpha$ reduction. Thus if two terms $M$ and $N$ are in normal form, and cannot be $\alpha$ converted into one another, then $\lambda \vdash M \neq N$. We surely have two terms which are not $\alpha$ equivalent, we conclude that the $\lambda$ calculus is a consistent theory.
+\begin{center}
+\begin{prooftree}
+\Hypo{M = N}
+\Infer1[($\sigma$)]{N = M}
+\end{prooftree}
+\ \ \ \ \ \ \ \ \ \ \ \
+\begin{prooftree}
+\Hypo{ M = N }
+\Infer1[($\xi$)]{ \lambda x.M = \lambda x.N }
+\end{prooftree}
+\end{center}
+%
+An equation is provable in this axiom system if and only if the equation is true for the $\lambda$ terms.
+
+Since the $\lambda$ calculus is equational, there is no way to talk about the standard consistency of the inference rules -- there is no such thing as a contradiction, because we don't necessarily have a negation connective. However, the syntax does give rise to some predicates in the metalanguage, those being the equality predicates $\lambda \vdash M = N$. Since formal systems using classical logic are inconsistant precisely when every statement in the language can be proved, we will say that the $\lambda$ calculus is consistent if {\it not every} equation can be proved. That is, there is some $M$ and $N$ such that $M = N$ cannot be proved.
+
+The Church-Rosser theorem is the central result to proving the consistency of the $\lambda$ calculus. It is clear from the result that a $\beta$ normal form is unique up to $\alpha$ reduction. Thus if two terms $M$ and $N$ are in normal form, and cannot be $\alpha$ converted into one another, then we cannot prove that $M = N$. We surely have two terms which are not $\alpha$ equivalent, so we can conclude that the $\lambda$ calculus is a consistent theory, as a direct result.
 
 \begin{theorem}[Church-Rosser for $\rhd$]
     If $M \rhd M_0$ and $M \rhd M_1$, then there is a term $N$ such that $M_0 \rhd N$ and $M_1 \rhd N$.
 \end{theorem}
+\begin{proof}
+    Annoyingly technical, so I'll prove it some other time.
+\end{proof}
 
-% Include a diamond diagram here.
-
-This property of reduction in the $\lambda$ calculus is called {\bf confluence}, and can be summarized by a `reduction diamond'. There is an analogous result for equality of terms.
+The property that the Church-Rosser theorem proves for $\rhd$ is called {\bf confluence}. There is an analogous result for equality of terms. Note that for any symmetric relation, confluence is trivial, so the theorem has to be strightly stronger than this to be interesting.
 
 \begin{theorem}
     If $\lambda \vdash M = N$, then there is a term $L$ such that $M \rhd L$ and $N \rhd L$.
 \end{theorem}
 \begin{proof}
-    First, note that if $\lambda \vdash M = N$, then there is $L_1, \dots, L_n$ with $L_0 = M$, $L_n = N$, and either $L_k \rhd L_{k+1}$ or $L_{k+1} \rhd L_k$. We shall prove this theorem by induction on $n$. If $n = 1$, the theorem is trivial, because $M$ is syntactically equal to $N$. If $n = 2$, then either $M \rhd N$ or $N \rhd M$, and then the theorem is just the Church-Rosser theorem for $\rhd$. Otherwise, by induction, we may assume that there is $L$ with $L_1 \rhd L$ and $L_{n-1} \rhd L$. If $L_n \rhd L_{n-1}$, then $L_n \rhd L$, hence the theorem is complete. Thus we may assume $L_{n-1} \rhd L_n$. But then by applying Church-Rosser for $\rhd$, we conclude that there is $K$ such that $L \rhd K$ and $L_n \rhd K$, and this completes the proof, because $L_1 \rhd L \rhd K$.
+    First, note that if $\vdash M = N$, then there is $L_1, \dots, L_n$ with $L_0 = M$, $L_n = N$, and either $L_k \rhd L_{k+1}$ or $L_{k+1} \rhd L_k$. We shall prove this theorem by induction on $n$. If $n = 1$, the theorem is trivial, because $M$ is syntactically equal to $N$. If $n = 2$, then either $M \rhd N$ or $N \rhd M$, and then the theorem is just the Church-Rosser theorem for $\rhd$. Otherwise, by induction, we may assume that there is $L$ with $L_1 \rhd L$ and $L_{n-1} \rhd L$. If $L_n \rhd L_{n-1}$, then $L_n \rhd L$, hence the theorem is complete. Thus we may assume $L_{n-1} \rhd L_n$. But then by applying Church-Rosser for $\rhd$, we conclude that there is $K$ such that $L \rhd K$ and $L_n \rhd K$, and this completes the proof, because $L_1 \rhd L \rhd K$.
 \end{proof}
 
 Essentially, what we have proved is that if $R$ is any transitive confluent relation, and we take the smallest symmetric extension $R'$, then if $R'(x,y)$, then $R(x,z)$ and $R(y,z)$ for some $z$.
@@ -1638,30 +1692,87 @@ Essentially, what we have proved is that if $R$ is any transitive confluent rela
 \end{proof}
 
 \begin{corollary}
-    If $\lambda \vdash M = N$, and $M$ and $N$ are both in $\beta$ normal form, then $M$ and $N$ are $\alpha$ equivalent.
+    If $\lambda M = N$, and $M$ and $N$ are both in $\beta$ normal form, then $M$ and $N$ are $\alpha$ equivalent.
 \end{corollary}
 
-Terms without a normal form correspond to algorithms which don't terminate. Such terms are essentially meaningly in the $\lambda$ calculus. But the fact that a term has a normal form does not imply that subterms of the term have a normal form. For instance, $(\lambda x.y)\Omega$ has a normal form $y$, whereas we know $\Omega$ does not have a normal form. This means that a `meaningful' term may have meaningless subterms. This seems undesirable, so it is of interest to reduce the terms of the $\lambda$ calculus so that subterms of terms with normal forms have normal forms. Church found the system $\lambda I$ with this property. It is defined in essentially the same way as the standard $\lambda$ calculus except that $(\lambda x.M)$ is a term if and only if $x$ is a free variable in $M$. Thus we cannot consider projection functions
+Terms without a normal form correspond to algorithms which don't terminate. Such terms are essentially meaningly in the $\lambda$ calculus. But the fact that a term has a normal form does not imply that subterms of the term have a normal form. For instance, $(\lambda x.y)\Omega$ has a normal form $y$, whereas we know $\Omega$ does not have a normal form. This means that a `meaningful' term may have meaningless subterms. This seems undesirable, so it is of interest to reduce the terms of the $\lambda$ calculus so that subterms of terms with normal forms have normal forms. Church found the system $\lambda I$ with this property. It is defined in essentially the same way as the standard $\lambda$ calculus except that when forming the terms of the system, we only let $(\lambda x.M)$ be a term when $x$ is a free variable in $M$.
 
 
 
 \section{Combinators}
 
-An alternative formal system in which to discuss combinatory logic is the theory of combinators, which is essentially the theory of functions in the $\lambda$ calculus which forms closed terms. In the context of $\lambda$ calculus, this seems unreasonable, because $\lambda$ abstraction requires a term with free variables in order to form future functions. Suprisingly, it turns out that we can represent $\lambda$ abstraction as the composition of closed $\lambda$ terms, so that there is a formal system for combinatory logic with composition as the only connective.
+An alternative formal system in which to discuss combinatory logic is the theory of combinators. One can see this theory as the subtheory of the $\lambda$ calculus generated by the closed terms. Suprisingly, this subtheory turns out to be equivalent in expressive power to the entire $\lambda$ calculus theory. This may seem unreasonable in the context of $\lambda$ calculus, for we need free variable terms in order to form future functions. However, we can represent $\lambda$ abstraction via the composition of closed $\lambda$ terms, so that there is a formal system for combinatory logic with composition as the only connective. We will introduce variables into combinatory logic for convenience, but we note they are not required for most discussions of the calculus, and are much simpler than variables in the $\lambda$ calculus because there is no way to bind variables.
 
-Combinatory logic was invented a decade before the $\lambda$ calculus, and can be developed with no mention of Curry's theory at all. One starts with a base set $\mathbf{B}$ of combinators, and then one abstractly forms combinators by composition -- the set $\mathbf{C}$ of all combinators is generated by the context free grammar $\mathbf{C} = \mathbf{B} | (\mathbf{C} \mathbf{C})$. The reduction rules of the combinatory logic are generated by the base set of combinators. If $A$ is a combinator, then we associate with it a substitution rule of the form $Ax_1 \dots x_n = y_A$, where $y$ is obtained by composing some of the $x_i$ together. This isn't rigorous, but suffices for a first introduction. We can then define general reduction $\rhd$ as the smallest transitive extension of the basic reduction $CB_1 \dots B_n \rhd_C A[B_1/x_1,B_2/x_2, \dots, B_n/x_n]$, where $\rhd_C$ can also operate on subterms of the theory. Note that since the calculus does not contain any variables, the substitution operation requires no subtle exceptions. We say $CB_1 \dots B_n$ is a {\bf weak redex}, and if a term contains no weak redexes, we say it is in {\bf weak normal form}. There is a version of the Church Rosser theorem for reduction in combinatory logic, so that $\rhd$ is a confluent operation, and the system of combinatory logic is consistant.
+Combinatory logic was invented a decade before the $\lambda$ calculus, and can be developed with no mention of Curry's theory at all. One starts with a set of primitive combinators, and a set of variables, and inductively constructs the set of all combinators.
+%
+\begin{itemize}
+    \item Every primitive combinator and variable is a combinator.
+    \item If $A$ and $B$ are combinators, then $(AB)$ are combinators.
+\end{itemize}
+%
+Equivalence of terms is generated based on substitution rules for the primitive combinators. We associate with each base combinator $C$ a substitution rule of the form $Cx_1 \dots x_n \rhd_A A_C$, where $A_C$ is another term in the $\lambda$ calculus. We can then define one step reduction as the relation formed by the rules $CB_1 \dots B_n \rhd_{C,1} A_C[B_1/x_1, \dots, B_n/x_n]$, or more generally, if this reduction occurs in a subterm of a combinator. The union of all $\rhd_{C,1}$ is one step reduction $\rhd_1$, and the transitive closure is general reduction $\rhd$. We can then consider equivalences by taking the reflexive symmetric closure, and we denote this by $M =_{\text{CL}} N$, or $\text{CL} \vdash M = N$.
 
-Intuitively, any base term in combinatory logic can be modelled in the $\lambda$ calculus, and conversely, any $\lambda$ rule can be seen as the reduction rule for a base combinator. Thus if we consider the combinatory logic obtained by considering every possible base rule, then the $\lambda$ calculus is extensionally equivalent. Of course, any particular system of combinatory logic might not be equal in power to the $\lambda$ calculus, because we require sufficiently powerful combinator axioms in order to generate all possible functions in the $\lambda$ calculus. There is some standard notation for some particular combinators.
+\begin{example}
+    There are some classical combinators which are universally known.
+    %
+    \begin{center}
+    \begin{tabular}{ c c c }
+    $Ix \rhd x$ & $Bxyz \rhd x(yz)$ & $Sxyz \rhd xz(yz)$ \\ 
+    $Kxy \rhd x$ & $Cxyz \rhd xzy$ & $Wxy \rhd xyy$ \\  
+    $Mx \rhd xx$ & $B'xyz \rhd y(xz)$ & $Yx \rhd x(Yx)$
+    \end{tabular}
+    \end{center}
+    %
+    Note that all the combinators but the $Y$ combinator have axioms which are formed from the variables in the definition. We call these types of combinators {\bf proper combinators}, rather than {\bf improper combinators}.
+\end{example}
+
+Combinators can be classified by five features, based on how the substitution relations work. {\bf Identity combinators} are those which operate by reductions of the form $Cx_1 \dots x_n \rhd_C x_1 \dots x_n$. The classical $I$ combinator above is an identity combinator of arity one. The combinator $BI$ satisfies $BIxy \rhd_B I(xy) \rhd_I xy$, hence $BI$ acts as an identity combinator of arity two. An {\bf associator} is a combinator which groups the input terms. The $B$ combinator is an associator, and is the only non-trivial associator with arity three (the other associator would be $Bxyz \rhd (xy)z$, but this is just an identity combinator of arity three). An example of a more complicated combinator is a combinator $C$ with the axiom $Cxyzvw \rhd_C x((yz)vw)$. {\bf Cancellators} remove variables from an input, like $Kxy \rhd_K x$, and {\bf permutators} permutes arguments. Finally, {\bf duplicators}, as expected, duplicate arguments.
+
+Since combinatory logic is an equational theory, we can also talk about consistency. It is often useful to use a sequent calculus for describing the theory. The only new axiom is primitive reduction
+%
+\[ (\rho)\ \ \ \ \ CB_1 \dots B_n = A_C[B_1/x_1, \dots, B_n/x_n] \]
+%
+in addition to the axiom $M = M$. We then use the standard inference rules
+%
+\begin{center}
+\begin{prooftree}
+\Hypo{M = N}
+\Infer1[($\mu$)]{LM = LN}
+\end{prooftree}
+\ \ \ \ \
+\begin{prooftree}
+\Hypo{M = N }
+\Hypo{N = L }
+\Infer2[($\tau$)]{M = L }
+\end{prooftree}
+\ \ \ \ \
+\begin{prooftree}
+\Hypo{M = N}
+\Infer1[($\nu$)]{LM = LN}
+\end{prooftree}
+\end{center}
+\begin{center}
+\begin{prooftree}
+\Hypo{M = N}
+\Infer1[($\sigma$)]{N = M}
+\end{prooftree}
+\end{center}
+%
+One interesting difference between combinatory logic and the lambda calculus is that, because combinatory logic has no variable binding operations, the system can be formalized as a first order equational theory. This will have interesting consequences for the differences between the model theory of combinatory logic and the model theory of the $\lambda$ calculus.
+
+A {\bf weak redex} is a combinator of the form $AB_1 \dots B_n$, on which we can perform a reduction. If a term contains no weak redexes, we say it is in {\bf weak normal form}, which is essentially the end result of a calculation. There is a version of the Church Rosser theorem for reduction in combinatory logic, so that $\rhd$ is a confluent operation, and the system of combinatory logic is consistant. That is, weak normal forms are unique if they exist. Furthermore, if $M =_{\text{CL}} N$, there is a combinator $L$ such that $\text{CL} \vdash M \rhd L$ and $\text{CL} \vdash N \rhd L$.
+
+Intuitively, any base term in combinatory logic can be modelled in the $\lambda$ calculus, because the axioms for primitive combinatory logic are analogous to closed $\lambda$ abstractions. For instance, the standard combinator axioms
 %
 \begin{center}
 \begin{tabular}{ c c c }
  $Ix \rhd x$ & $Bxyz \rhd x(yz)$ & $Sxyz \rhd xz(yz)$ \\ 
  $Kxy \rhd x$ & $Cxyz \rhd xzy$ & $Wxy \rhd xyy$ \\  
- $Mx \rhd xx$ & $B'xyz \rhd y(xz)$ & $Jxyzv \rhd xy(xvz)$
+ $Mx \rhd xx$ & $B'xyz \rhd y(xz)$ & $Yx \rhd x(Yx)$
 \end{tabular}
 \end{center}
 %
-The analogous terms in the $\lambda$ calculus are
+are analogous to
 %
 \begin{center}
 \begin{tabular}{ c c c }
@@ -1671,114 +1782,211 @@ The analogous terms in the $\lambda$ calculus are
 \end{tabular}
 \end{center}
 %
-The nice part about the $\lambda$ calculus terms are that the name of the function describes what the function does, but this requires the introduction of free variables, at great cost to the convenience of the language.
+Conversely, any closed $\lambda$ term with all the $\lambda$ terms to one side is analogous to an axiom. The position of the $\lambda$ terms is important to the theory, which hints at why the syntactic theory of combinatory logic and the $\lambda$ calculus is different. However, we should expect that sufficiently powerful combinators should lead to a form of logic expressive enough to represent all substitution rules.
 
-Certainly any combinator can be represented by a closed term of the $\lambda$ calculus. On the other hand, every closed term of the $\lambda$ calculus can be represented by a combinator in {\it some} system of combinatory logic. If we include every possible combinator, we can encode the entire $\lambda$ calculus, but this requires infinitely many base combinators. An interesting question is the minimal number of combinators required to generate a complete extensional theory of functions. In this context, it is important to identify which combinators can be represented as the products of other combinators.
+We will say a combinatory logic is {\bf combinatorially complete} if, for any axiom rule of the form $Cx_1 \dots x_n = A_C$, there is a combinator $C'$ (not necessarily primitive) such that $C'B_1 \dots B_n \rhd A_C[B_1/x_1, \dots, B_n/x_n]$ for all combinators $B_i$ (we need only show this for a set of variables). The most well known combinatorially complete logic consists of the primitive combinators $\{ S, K \}$, but other combinatory basis, like $\{ I,B,C,W,K \}$ and $\{ I,J,K \}$, exist. We shall actually prove that $\{ S, K, I \}$ is combinatorially complete, rather than $\{ S, K \}$, but since $SKKx \rhd I$ for all combinators $x$, the combinatorial completeness of $\{ S, K, I \}$ implies the combinatorial completeness of $\{ S, K \}$. Our method to do this is to introduce a form of `lambda abstraction' which forms a part of the metatheoretic language to express all substitution rules.
+
+Given a variable $x$ and a combinator $M$, we shall define a combinator $[x].M$ such that $[[x].M]y \rhd M[y/x]$ for all combinators $y$. This will enable us to write arbitrary substitution rules in the calculus.
+%
+\begin{itemize}
+    \item If none of the $x$ occur in $M$, define $[x].M = KM$. Then $KMy \rhd M$, and $M = M[y/x]$, hence $[x].M$ satisfies the required property.
+
+    \item If none of the $x$ occur in $M$, defined $[x].Mx = M$. Then $My \rhd My$, and $My = [Mx][y/x]$. This is not necessary, because it is covered by other cases, but leads to a simple formula for $\lambda$ abstraction.
+
+    \item Let $[x].x = I$. Then $Iy \rhd y$, and $y = x[y/x]$.
+
+    \item Otherwise, let $[x].(MN) = S[[x].M][[x].N]$. Then by induction,
+    %
+    \[ S[[x].M][[x].N]y \rhd ([[x].M] y)([[x].N] y) \rhd M[y/x] N[y/x] \]
+    %
+    and $M[y/x] N[y/x] = (MN)[y/x]$.
+\end{itemize}
+%
+Note that $[x].M$ does not contain the variable $x$. Thus if we extend substitution multidimensionally, so that $[x_1, \dots, x_n].M$ is defined recursively as $[x_1].[[x_2, \dots, x_n].M]$. By induction, we find
+%
+\[ [[x_1, \dots, x_n].M] x_1 \dots x_n \rhd M \]
+%
+And because $[[x_1, \dots, x_n].M$ does not contain the variables $x_i$, we find by substitution that $[[x_1, \dots, x_n].M] y_1 \dots y_n \rhd M[y/x]$. This uses the general principle that if $M \rhd N$, then $M[y/x] \rhd N[y/x]$. So now, if we have an axiom of the form $Cx_1 \dots x_n \rhd_C A_C$, we let $B = [x].A_C$. Then we have shown that $By_1 \dots y_n \rhd A_c[y/x]$, hence $\{ K, S \}$ is combinatorially complete. Essentially, this is the main technique to proving a set of combinators is complete, albeit reducing the set to a basis which is already proved complete.
+
+Since we have a form of `lambda abstraction' for combinators, it is an interesting question to ask whether the $\xi$ rule holds in our calculus. That is, if $\vdash_{\text{CL}} M = N$, then does it necessarily hold that $\vdash_{\text{CL}} [x].M = [x].N$. One difference between combinatory logic and the lambda calculus is that the $\xi$ rule need not hold in combinatory logic.
 
 \begin{example}
-    For any term $x$, $SKKx \rhd_S Kx(Kx) \rhd_K x$, hence the combinator $SKK$ acts as the identity combinator $I$ in every respect, and if we are looking at the calculus {\it extensionally}, we would say $SKK = I$. Thus every version of combinatory logic containing the $S$ combinator and $K$ combinator must essentially contain an identity combinator.
+    If $M = Sxyz$ and $N = xz(yz)$, then $M \rhd_S N$, yet
+    %
+    \[ [x].M = S(S(S(KS)I)(Ky))(Kz) \]
+    %
+    \[ [x].N = S(SI(Kz))(S(Ky)(Kz)) \]
+    %
+    and both elements are in normal form, hence they cannot be $\text{CL}$ equivalent.
 \end{example}
 
-\begin{example}
-    For any terms $x,y$, and $z$,
-    %
-    \[ S(KS)Kxyz \rhd_S KSx(Kx)yz \rhd_K S(Kx)yz \rhd_S (Kx)z(yz) \rhd x(yz) \]
-    %
-    Thus $S(KS)S$ acts as $B$, which is essentially the `composition' operator, taking two functions $x$ and $y$, and returning the function $x \circ y$.
-\end{example}
-
-\begin{example}
-    For any $x,y$, and $z$,
-    %
-    \begin{align*}
-        S(BBS)(KK)xyz &\rhd_S BBSx(KKx)yz\\
-        &\rhd_B B(Sx)(KKx)yz\\
-        &\rhd_B Sx(KKxy)z\\
-        & \rhd_S xz(KKxyz)\\
-        &\rhd_K xz(Kyz)\\
-        &\rhd_K xzy
-    \end{align*}
-    %
-    so $S(BBS)(KK)$ acts as $C$. $C$ is a {\bf permutator}, a combinator which only permutes terms.
-\end{example}
-
-Thus it seems that having combinators representing $S$ and $K$ are sufficiently powerful to represent composition and permutation of terms.
-
-We will verify that if a combinatory logic contains $S$ and $K$, then it generates all possible functions represented in the $\lambda$-calculus, and therefore the combinatory logic generated by $S$ and $K$ is maximal. We will show this by providing a method for converting any closed term in the $\lambda$ calculus into an equivalent term formed by the composition of $\lambda xy.x$, which acts as $K$, and $\lambda xyz.xz(yz)$, which acts as $S$. Since the substitution of closed terms in $\lambda$ calculus is the same as subtitution of combinators, the theorys will be extensionally equivalent.
-
-First, note that if $M$ does not contain the free variable $x$, then $(\lambda x.M)$
-
-Combinatory logic is an alternative system to exploring the theory of functions. We assume the existence of two objects $\mathbf{K}$ and $\mathbf{S}$ satisfying
-%
-\[ \mathbf{K}XY \equiv X\ \ \ \ \ \mathbf{S}XYZ \equiv XZ(YZ) \]
-%
-The equivalence generated from these relations is sufficient to describe computation at the same power as $\lambda$ calculus, in the sense that combinatory logic and $\lambda \eta$ are equivalent. Suprisingly, it is not necessary to introduce variable bindings. This makes the proof theory much more elegant in some situations than the corresponding theory for the $\lambda$ calculus.
-
-Let's see how we `implement' the $\eta$ rule of abstraction in combinatory logic. Note that if $x$ is not a free variable in $t$, then $\mathbf{K}t \equiv \lambda x.t$, and $\mathbf{S}(\lambda x.t)(\lambda x.s) \equiv \lambda x.ts$. Thus each $\lambda$ term in a combinator in the $\lambda$ calculus can be reduced with a combinator in $\mathbf{S}$ and $\mathbf{K}$. For instance
-%
-\begin{align*}
-    \lambda xy.yx &\equiv \lambda x.\mathbf{S}(\lambda y.y)(\lambda y.x)\\
-    &\equiv \lambda x. \mathbf{S} \mathbf{I}(\mathbf{K} x)\\
-    &\equiv \mathbf{S}(\lambda x. \mathbf{S} \mathbf{I})(\lambda x. \mathbf{K} x)\\
-    &\equiv \mathbf{S}(\mathbf{K}(\mathbf{S} \mathbf{I}))(\mathbf{S} (\lambda x. \mathbf{K}) (\lambda x. x))\\
-    &\equiv \mathbf{S}(\mathbf{K}(\mathbf{S} \mathbf{I}))(\mathbf{S} (\mathbf{K} \mathbf{K})\mathbf{I})\\
-    &\equiv \mathbf{S}(\mathbf{K}(\mathbf{S} (\mathbf{S} \mathbf{K} \mathbf{K})))(\mathbf{S} (\mathbf{K} \mathbf{K})(\mathbf{S} \mathbf{K} \mathbf{K}))\\
-\end{align*}
-%
-This method allows us to define a standard translation between the $\lambda$ calculus and combinatory logic. However $\lambda$ calculus has a finer proof system. Indeed,
-%
-\[ \lambda \vdash \mathbf{S} \mathbf{K} \mathbf{K} \equiv \mathbf{S} \mathbf{K} \mathbf{S} \equiv \mathbf{I} \]
-%
-yet this cannot be proven in combinatory logic. Haskell Curry found a finite set of equations in combinatory logic which make $\lambda$ isomorphic to combinatory logic, and another set making the logic isomorphic to $\lambda \eta$.
+The lack of the $\xi$ rule is normally no problem, but sometimes it does cause issue, which means $\lambda$ calculus becomes a more applicable theory. Conversely, combinatory logic has a more elegant theory of substitution, so we must make a tradeoff between the two. The $\xi$ rule will return when we analyze the similarities between the formal theory of the $\lambda$ calculus and the formal theory of combinatory logic.
 
 \section{Extensionality}
 
-Consider the following derivation rule. If $x$ is a free variable of $st$, and $sx \equiv tx$, then $s \equiv t$. We call this rule $\mathbf{ext}$. An interesting question is how much more powerful $\mathbf{\lambda} + \mathbf{ext}$ is than $\mathbf{\lambda}$. An easy application is that $\mathbf{\lambda} + \mathbf{ext} \vdash \lambda x.tx \equiv t$. This is essentially the only difference. We define $\eta$ conversion rule to be $\lambda x.tx \equiv t$, provided $x$ is not a free variable in $t$. $\lambda \eta$ is the theory of $\lambda$ with $\eta$ included.
+An intensional process is one which is defined by its description, whereas an extensional process is one uniquely defined by its inputs and outputs. The functions of set theory are extensional, because two functions are equal if and only if they agree on all inputs. Conversely, the terms of the $\lambda$ calculus and the combinators of combinatory logic are viewed as intensional descriptions of processes, because they describe the process of substitution, and just because $Mx$ is equivalent to $Nx$ for all inputs $x$ does not imply that $M$ is equivalent to $x$. Algorithms in computing science are intensional, because two algorithms which solve the same problem are not necessarily viewed as equivalent, especially if the runtime of the algorithms is under scrutiny.
+
+It turns out that the theory of the $\lambda$ calculus is equivalent to combinatory logic as a formal system, provided we introduce extensionality to the system. Recall that a definition of function is extensional if functions are identified by their inputs and outputs, as in set theory. That is, if $fx = gx$ for all $x$, then $f = g$. The $\lambda$ calculus is an intensional theory because this need not hold. For instance, if $f = y$, and $g = (\lambda x.yx)$, then
+%
+\[ \lambda \vdash gx = (\lambda x.yx)x = yx = fx \]
+%
+yet we cannot prove that $g = f$ in the $\lambda$ calculus, since both terms are in normal form. Similar results hold for combinatory logic -- we can define two primitive terms with the same substitution rule, yet the two terms will be unequal in the theory.
+
+We extend the formal theory of the $\lambda$ calculus to be intensional by adding an additional inference scheme to the proof system. If $x$ is a variable, and $M$ and $N$ are terms not containing $x$ as a free variable, we add the rule
+%
+\begin{center}
+\begin{prooftree}
+\Hypo{Mx = Nx}
+\Infer1[($\zeta$)]{M = N}
+\end{prooftree}
+\end{center}
+%
+The extended theory is known as the $\lambda \zeta$ calculus, and we write $\lambda \zeta \vdash M = N$ for entailment of the equation theory. We can also consider adding the axiom
+%
+\[ (\eta)\ \ \ \ \ (\lambda x.Mx) = M \]
+%
+where $x$ is not a free variable of $M$, and we write $\lambda \eta \vdash M = N$ for this formal theory.
 
 \begin{theorem}
-    $\lambda \eta$ is equivalent in power to $\lambda + \mathbf{ext}$.
+    The inference rule $\zeta$ is correct in the $\lambda \eta$ theory, in the sense that if $\lambda \eta \vdash Mx = Nx$, and $M$ and $N$ do not contain $x$ as a free variable, then $\lambda \eta \vdash M = N$. Conversely, the axiom $\eta$ is derivable in the $\lambda \zeta$ theory.
 \end{theorem}
 \begin{proof}
-    Suppose $\lambda + \mathbf{ext} \vdash sx \equiv tx$, where $x$ is not free in $s$ or $t$. Then $\lambda x.sx \equiv \lambda x.tx$, and by applying $\mathbf{ext}$ we find $\lambda \eta \vdash s \equiv t$. Thus $\mathbf{ext}$ holds in $\lambda \eta$. We have already argued the converse.
+    The first part of the theorem is proved by the following sequent tree in the $\beta \eta$ calculus.
+    %
+    \begin{center}
+    \scalebox{0.8}{
+    \begin{prooftree}
+    \Hypo{(\lambda x.Mx) = M\ \ \ (\eta)}
+    \Infer1[($\sigma$)]{M = (\lambda x.Mx)}
+
+    \Hypo{Mx = Nx}
+    \Infer1[($\xi$)]{(\lambda x.Mx) = (\lambda x.Nx)}
+
+    \Hypo{(\lambda x.Nx) = N\ \ \ (\eta)}
+    \Infer2[($\tau$)]{(\lambda x.Mx) = N}
+
+    \Infer2[($\tau$)]{M = N}
+    \end{prooftree}
+    }
+    \end{center}
+    %
+    The second is a very simple derivation of the axiom $\eta$ in the $\beta \zeta$ calculus.
+    %
+    \begin{center}
+    \begin{prooftree}
+        \Hypo{(\lambda x.Mx)x = Mx\ \ \ (\beta)}
+        \Infer1[($\zeta$)]{(\lambda x.Mx) = M}
+    \end{prooftree}
+    \end{center}
+    %
+    Hence the $\beta \eta$ and $\beta \zeta$ systems have the same theorems. $\beta \eta \vdash M = N$ if and only if $\beta \zeta \vdash M = N$.
 \end{proof}
 
-The rule $\xi$ is very important to this equivalence, which is why $\xi$ is sometimes called the principle of weak extensionality.
+The $\xi$ rule is essential to proving that $\beta \zeta$ and $\beta \eta$ are equivalent systems, and this is one reason why $\xi$ is known as the principle of weak extensionality. Another reason is that $\xi$ becomes redundant in an extensional system, in the sense that it is provable in the $\beta \zeta$ if we remove the $\xi$ rule. Conversely, $\zeta$ is not provable if we remove the $\xi$ rule from the $\beta \eta$ formal system.
 
-\section{Consistency and Completeness}
-
-Two terms $t$ and $s$ are {\bf incompatible} if adding $t \equiv s$ makes $\lambda$ inconsistant. As an example, $\mathbf{K}$ is incompatible with $\mathbf{S}$, because if $\lambda xy.x \equiv \lambda xyz.xz(yz)$, then for any $s,t,w$,
-%
-\[ \lambda + \mathbf{S} \equiv \mathbf{K} \vdash sw \equiv sw(tw) \]
-%
-If we let $s = w = \mathbf{I}$, then we find $\lambda + \mathbf{S} \equiv \mathbf{K} \vdash \mathbf{I} \equiv t\mathbf{I}$. If we let $t = \mathbf{K}v$, then we find $\mathbf{I} \equiv v$, hence the two are incompatible.
-
-\section{Normal Forms}
-
-A term $s$ is a {\bf $\beta$-normal form} if $s$ has no subterm of the form $(\lambda x.t)w$. As an example $\mathbf{I}$ is a normal form and $\mathbf{K} \mathbf{I}$ is equivalent to the normal form $\lambda y.\mathbf{I}$, and therefore has a normal form. We will soon see that $(\lambda x.xx)(\lambda x.xx)$ has no normal form, so there is no way to `fully compute' the function. In the $\lambda \eta$ calculus, we can still `reduce' terms of the form $(\lambda x.ax)$, so we define a {\bf $\lambda \eta$ normal form} to be a term with no subterm of the form $(\lambda x.s)w$ or $(\lambda x.tx)$. The term $\lambda x.x(\lambda z.xz)$ is in $\beta$ normal form, but not in $\lambda \eta$ normal form, but can be converted in the $\lambda \eta$ calculus to the normal form $\lambda x.xx$.
-
-Normal forms are key to the proof of the consistency of $\lambda$ and $\lambda \eta$. With enough work, we can show that no two terms in normal form are equivalent, and since $\lambda$ and $\lambda \eta$ possess more than one term in normal forms, these terms cannot be proved equivalent. What's more, we can show in the $\lambda \eta$ calculus that two normal forms are incompatible, hence for terms having normal forms the theory $\lambda \eta$ is Hilbert-Post complete, in the sense that either two terms with normal forms are either provably convertible, or they are incompatible.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-\newpage
-
-The core problem with the $\lambda$ calculus is that it is too expressive in its full form. One result is the following paradox, known as the fixed point theorem.
+Since $\eta$ gives us an additional reductions $\rhd_\eta$ of the form $(\lambda x.Mx) \rhd_\eta M$, certain $\beta$ normal forms can be further reduced. The induced reduction operation is still confluent -- if $M \rhd M_0$ and $M \rhd M_1$, there is $N$ such that $M_0 \rhd N$ and $M_1 \rhd N$. A term is in $\beta \eta$ normal form if it is in $\beta$ normal form, and if there are no subterms of the form $(\lambda x.Mx)$, where $M$ does not contain $x$ as a free variable. This is essentially the termination point of computations in the $\beta \eta$ calculus. Since there is more than one $\beta$ $\eta$ normal form, even modulo $\alpha$ congruence, the $\beta \eta$ calculus is consistant.
 
 \begin{theorem}
-    For any term $f$, there is $M$ such that $\lambda \vdash fM = M$.
+    A term has a $\beta$ normal form iff it has a $\beta \eta$ normal form.
+\end{theorem}
+\begin{proof}
+    We use the inductive construction of $\beta$ normal forms to prove that every $\beta$ normal form has a $\beta$ $\eta$ normal form.
+    %
+    \begin{itemize}
+        \item If $M$ is a variable, then $M$ is already in $\beta \eta$ normal form.
+
+        \item If $M = xN$, and $N \rhd N_0$, where $N_0$ is in $\beta \eta$ normal form, then $M \rhd xN_0$, and $xN_0$ is in $\beta \eta$ normal form.
+
+        \item If $M = \lambda x.N$, and $N \rhd N_0$, where $N_0$ is in normal form, then $M \rhd \lambda x.N_0$, and either $\lambda x.N_0$ is in $\beta \eta$ normal form, or $N_0 = N_1x$, where $N_1$ is in $\beta \eta$ normal form, and $M \rhd \lambda x.N_0 \rhd_\eta N_1$, and so $M$ is reducable to $\eta$ normal form.
+    \end{itemize}
+    %
+    Essentially, $\eta$ reduction always reduces the complexity of a term, so the induction step works.
+\end{proof}
+
+By the same process, we find that if $M \rhd_{\beta \eta} N$, then $M \rhd_\beta M_0$, and $M_0 \rhd_\eta N$, so we can postpone $\eta$ reduction to the end of calculations.
+
+Combinatory logic is also a non-extensional system. For instance, two prime combinators may have equal axioms without being formally equal in the system. Remember that $\text{CL}$ does not satisfy the $\xi$ rule, and thus does not possess the principle of weak extensionality. There is no problem with adding the $\xi$ rule as an axiom, however.
+%
+\begin{center}
+\begin{prooftree}
+\Hypo{M = N}
+\Infer1[$(\xi)$]{[x].M = [x].N}
+\end{prooftree}
+\end{center}
+%
+What's more, we could think of adding the extensionality principles as axioms of $\text{CL}$.
+%
+\begin{center}
+\begin{prooftree}
+\Hypo{Mx = Nx}
+\Infer1[$(\xi)$]{M = N}
+\end{prooftree}
+\end{center}
+%
+\[ [x].Mx = M\ \ \ \ (\eta) \]
+%
+where $M$ and $N$ do not contain $x$ as a free variable. The formal theory of equality found by adding the $\xi$ rule is denoted $\text{CL} \xi$, and the theory of equality found by adding $\zeta$ is denoted $\text{CL} \zeta$.
+
+\begin{example}
+    In $\text{CL}$, we find that
+    %
+    \[ SKyx \rhd (Kx)(yx) \rhd x \]
+    %
+    for any combinator $y$. Therefore in $\text{CL} \zeta$, we conclude that $SKy = SKz$ for all combinators $y$ and $z$. Similarily, we find that $KIyx \rhd x$, hence $SKy = KIy$ in $\text{CL} \zeta$, hence $SK = KI$.
+\end{example}
+
+In $\lambda$ calculus, the $\xi$ rule was essential to proving that $\lambda \beta \eta$ was equivalent to $\lambda \beta \zeta$. This was not so important, because the $\xi$ rule was imbedded in the basic theory. Conversely, in combinatory logic the $\eta$ rule already holds by definition of the term $[x].Mx$. Using the same techniques as for the extensionality of the $\lambda$ calculus, we can therefore prove that $\text{CL} \zeta$ is an equivalent theory of equality to $\text{CL} \xi$. We remark that we could have left out the special case $[x].Mx$ in the definition of substitution, in which ase the $\eta$ rule would not hold by definition, and then $\text{CL} \xi$ would be a strictly weaker theory than $\text{CL} \zeta$. Various definitions of substitution, and the corresponding $\xi$ rules will result in different systems of equality.
+
+Now to prove the consistency of $\text{CL} \zeta$, we apply the standard technique: find a system of reduction which specifies the equality, prove confluence, and show that more than one normal form exists. We define {\bf strong reduction} $\rhd_s$ on combinators to be the standard theory of reduction, with an additional result that if $M \rhd_s N$, then $[x].M \rhd_s [x].N$ (and conversely, we sometime denote normal reduction as {\it weak reduction} $M \rhd_w N$). I know of no proof of the Church Rosser property for strong reduction which is directly proven from this definition. The main way that strong reduction is proved confluent is by relating the notion directly to the extensional $\lambda$ calculus. The normal forms here are called {\bf strongly irreducible}. We note, however, that strong reduction is very difficult to work with, which is one reason why little attention to it has been considered.
+
+\section{Equivalence of Combinatory Formal Systems}
+
+Both combinatory logic and the $\lambda$ calculus accurately model functions obtained by substituting terms. They seem to have very similar properties, albeit from a few small differences. The $\xi$ rule fails in Combinatory logic, whereas the $\eta$ rule fails in $\lambda$ calculus. It turns out that if we add these rules to the formal systems, thereby considering their extensional forms, the two systems will have very strong equivalence properties.
+
+First, we shall begin by considering a slight modification to the $\lambda$ calculus. The terms will not consist of strings of symbols, but rather an equivalence class of strings defined modulo $\alpha$ conversion. In this form of the $\lambda$ calculus, $\alpha$ reduction does not even need to be considered in the theory, because it is just equality in this modified system. We will let the set of equivalence classes of terms in this calculus be denoted by $\Lambda$.
+
+Now given a particular combinatory logic with combinators, with the same variable set as a corresponding $\lambda$ calculus we shall define a {\bf $\lambda$ transform} $M \mapsto M_\lambda$ which takes combinators in the logic to $\alpha$ identified terms in $\Lambda$ which preserves the operation of reduction. This will be the first form of equivalence. If a primitive combinator $C$ has the axiom $Cx_1 \dots x_n \rhd_C A_C$, then we shall define $C_\lambda = \lambda x_1 \dots x_n. A_C$. We can then define the transform of general combinators by letting $(MN)_\lambda = M_\lambda N_\lambda$. Each $M_\lambda$ is a {\bf closed} term of the $\lambda$ calculus, and we call such closed terms combinators, because of this. As a first result, we note that $[M[N/x]]_\lambda = M_\lambda [N_\lambda/x]$.
+
+\begin{lemma}
+    If $M \rhd_w N$ in $\text{CL}$, then $M_\lambda \rhd_\beta N_\lambda$. Thus if $M =_{\text{CL}} N$, then $M_\lambda =_\beta N$. Conversely, if $M =_{\text{CL} \zeta} N$, then $M_\lambda =_{\beta \zeta} N_\lambda$.
+\end{lemma}
+
+This is just proved by induction on the length of a proof of $M \rhd_w N$ and $M =_{\text{CL} \zeta} N$, and is left to the reader.
+
+To obtain an if and only if result, we require a combinatory logic with a basis of combinators expressive enough to represent all possible solutions in the $\lambda$ calculus. Thus from now on, we assume our combinatory logic contains only the primitive operators $S$, $K$, and $I$. We note that the $\lambda$ transform of this form of combinatory logic is specified by
+%
+\[ I_\lambda = (\lambda x.x)\ \ \ \ \ K_\lambda = (\lambda xy.x)\ \ \ \ \ S_\lambda = (\lambda xyz.xz(yz)) \]
+%
+We can then define $[x].M$ for any combinatory term $M$, and this allows us to form an inverse $\lambda$ transform. We define the $\text{CL}$ transform $M \mapsto M_{\text{CL}}$ of any term in $\Lambda$. We start by letting $x_{\text{CL}} = x$ for variables $x$, let $(MN)_{\text{CL}} = M_{\text{CL}} N_{\text{CL}}$, and let $(\lambda x.M)_{\text{CL}} = [x].[M_{\text{CL}}]$. Because $[x].[M_{\text{CL}}]$ does not contain any instances of the variable $x$, the term is well defined up to $\alpha$ congruence.
+
+\begin{lemma}
+    For any combinator $M$, $[M_\lambda]_{\text{CL}} = M$.
+\end{lemma}
+
+Thus the $\lambda$ transform has a left inverse. Note, however, that the $\text{CL}$ transform is not injective, because
+%
+\[ (\lambda x.yx)_{\text{CL}} = [x].yx = S(Ky)I \]
+%
+and
+%
+\[ [S(Ky)I]_\lambda = ((\lambda uvw.uw(vw)) ((\lambda uv.u)y))(\lambda u.u) \]
+%
+Though it is surjective.
+
+\begin{lemma}
+    If $M =_{\beta \zeta} N$, then $M_{\text{CL}} =_{\text{CL} \zeta} N_{\text{CL}}$.
+\end{lemma}
+
+As a corollary, we see that $M = N$ in $\text{CL} \zeta$ if and only if $M_\lambda = N_\lambda$ in the $\lambda \beta \zeta$ theory, and $M = N$ in the $\lambda \beta \zeta$ theory if $M_{\text{CL}} = N_{\text{CL}}$ in $\text{CL} \zeta$.
+
+We note that the correspondence for the reduction rules of $\text{CL}$ and $\lambda$ are nowhere near as elegant. It is easy to prove that if $M \rhd_{\beta \zeta} N$, then $M_{\text{CL}} \rhd_s N_{\text{CL}}$, but the converse does not hold. Since reduction is really only used to form an equivalence of terms, this isn't too much of an issue.
+
+\section{The Power of $\lambda$ calculus}
+
+The core problem with the $\lambda$ calculus, and a combinatorially complete combinatory logic, is that it is too expressive in its full form. One result is the following paradox, known as the fixed point theorem.
+
+\begin{theorem}
+    For any term $M$, there is a term $N$ such that $MN =_\lambda N$.
 \end{theorem}
 \begin{proof}
     Let $N = \lambda x.f(xx)$, and let $M = NN$. Then
@@ -1790,6 +1998,19 @@ The core problem with the $\lambda$ calculus is that it is too expressive in its
 
 If we are to interpret terms of the $\lambda$-calculus as real functions, we must be very careful, because otherwise this theorem would imply every theorem has a fixed point! This is clearly not true for all functions -- a particular example in logic is the negation operator, and this theorem would imply $\neg x = x$ for some $x$. We will address these problems once we have developed a syntax theory for the calculus.
 
+\section{Models of the $\lambda$ Calculus and Combinatory Logic}
+
+The formal theories of combinatorial logic are fun to play around with, but it is an interesting question what the theory actually {\it represents}. Combinatory logic is strange among formal systems in the sense that it has no immediate semantic interpretation, because it is immediately too powerful to be represented by set theoretic functions.
+
+Lambda abstraction is a difficult concept to try and model, so let's begin by focusing only on composition, via models of combinatory logic. We cannot model combinators as functions directly, but there is a common method in mathematics to apply elements of sets to the set themselves. For instance, in Hilbert space theory, we can associate with each point $x$ in the space the functional $\langle x |$, which operates on the space by the inner product. In the theory of groups, we can compose elements together by a multiplication operation. Thus we would expect a suitable environment to model combinatory logic as elements of a set $X$ together with a composition operation $X \times X \to X$. The composition operation will be written $(x,y) \mapsto xy$ except where this becomes ambiguous, and we assume terms are left associative, so we can consider products of the form $x_1 x_2 \dots x_n$ for $x_i \in X$. Another way of getting around the fact is to represent functions on $X$ as points $x \in X$. We shall let the function associated with $x \in X$ be denoted $f_x : X \to X$. We can then define composition of functions as $(f_x f_y) = f_{f_x(y)}$. This is essentially the same method as with the abstract composition operation, since by currying an association $F: X \to X^X$ of points with functions on sets naturally reduces to $F: X \times X \to X$. We shall call a set $X$ with a composition operation an {\bf applicative structure}.
+
+A function $f: X^n \to X$ is {\bf representable} on an applicative structure $X$ if there is an element $a \in X$, such that $f(x_1, \dots, x_n) = ax_1 \dots x_n$ for all $x_i \in X$. Just because we have an applicative structure on a set $X$, does not imply that {\it all} functions on the set are representable as elements of the set. In fact, we can guarantee that this does not occur, because Cantor proved that $X^X$ always has a cardinality strictly greater than $X$, so there cannot exist a surjective map $X \to X^X$. However, we shouldn't expect a model of combinatory logic to model all functions on a set, because one reason for combinatory logic's existence was to model only the {\it computable functions}.
+
+We shall define a model of combinatory logic with primitive combinators $\mathbf{B}$ to be an applicative structure $X$ with more than one element together with an association $\rho: \mathbf{B} \to X$, where we denote $\rho(C)$ as $x_C$. If a general combinator $C$ has free variables $y_1, \dots, y_n$, we will let $x_C[x_1/y_1, \dots, x_n/y_n]$ be the element of $X$ fromed by mapping $y_i$ to $x_i$, and then considering the term closed under composition. For a model of combinatory logic to be a true model, the association $x_Cx_1 \dots x_n = A_C[x_1/y_1, \dots, x_n/y_n]$ for any $x_i \in X$, where $C$ has a substitution axiom $C y_1 \dots y_n \rhd A_B$. Thus the composition rule of the applicative structure naturally represents the substitution rule for each primitive combinator. Now give a model $X$, and two terms $M$ and $N$ in combinatory logic, we write $X \vDash M = N$ if, for all choices of $x_i \in X$, $x_M[x_1/y_1, \dots, x_n/y_n] = x_N[x_1/y_1, \dots, x_n/y_n]$,  where the $y_i$ are free variables in $M$ and $N$. This gives us a semantic theory for combinatory logic.
+
+Note that what we have done is not really any more general than the model theory for first order logic, since we can write the terms of combinatory logic as terms of a first order system with a single equality predicate, where the primitive combinators are constants. A model is then just a set $X$ together with a map $f$ from the primitive combinators to $X$, and we can define an applicative structure on $X$ by taking the interpretation of composed terms in the first order logic.
+
+Two terms in $a,b \in X$ are {\bf extensionally equivalent} if $ax = bx$ for all $x \in X$, or equivalently, if $f_a = f_b$. An applicative structure $X$ is extensional if $f_a = f_b$ holds if and only if $a = b$. A model of extensional combinatory logic should naturally be an extensional applicative structure, and this is certainly true if we interpret a model of this logic as a normal model of the first order theory. By consistency, there exists a model of extensional combinatory logic.
 
 
 

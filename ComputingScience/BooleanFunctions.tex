@@ -17,41 +17,59 @@
 
 \section{Introduction}
 
-This course is about harmonic analysis over the domain $\mathbf{F}_2^n$, and the surprising applications of the field to computing science. It seems that whenever one wants to deal with a combinatorial problem dealing with the Hamming distance of two strings $x, y \in \mathbf{F}_2^n$, defined by
-%
-\[ \Delta(x,y) = \# \{ i : x^i \neq y^i \} \]
-%
-then Fourier analytic tools tend to come into play. Since any discrete structure can be encoded by binary inputs, where each bit represents a property of that discrete object, then these methods extend to attack problems on any discrete classes of mathematical objects which attempt to quantify properties of these objects in terms of small discrete differences. The methods are particularly applicable when these differences can be directly stated in terms of the binary representation of these objects.
+This course is about the theory of harmonic analysis, and how it applies to discrete, binary structures. The rough idea is that if we are trying to understand some set $X$ with a `binary representation', in the sense that it can be put into one to one correspondence with $\{ 0, 1 \}^n$, then the abelian group structure on $\{ 0, 1 \}^n$ induces a natural group structure on $X$, and we can obtain powerful results about $X$ provided the induced group operation is meaningful to the structure of $X$. In particular, if we want to obtain quantitative results about a function $f: X \to \mathbf{R}$ and its translation $(\sigma_y f)(x) = f(x + y)$ with respect to the group operation induced on $X$, then looking at the Fourier series of $f$ with respect to the group operation becomes interesting, because the characters of the group simulataneously diagonalize the operators $\sigma_y$.
 
-The direct relation of $\mathbf{F}_2$ to computing science should be apparent if you've ever learned a modern programming language, where we see the correspondence between $\mathbf{F}_2$ and the Boolean truth values $\top$ and $\bot$. The group structure on $\mathbf{F}_2$ induces a group structure on truth values, where addition corresponds to the exclusive-or operation
-%
-\[ A \xor B = \begin{cases} \top & A\ \text{is}\ \top\text{, or}\ B\ \text{is}\ \top\text{, but not both.}\\ \bot & \text{otherwise} \end{cases} \]
-%
-and multiplication corresponds to conjunction. Already we see the hamming distance come into play, because $A \xor B = \top$ if and only if $A \neq B$. We shall also consider a less obvious, but incredibly important correspondence between the additive structure of $\mathbf{F}_2$ and the multiplicative group $\{ -1, 1 \}$, mapping $0$ to $1$, and $1$ to $-1$. Initially, this is a very strange correspondence to pick, because we normally think of $1$ as being the value of `truth'. However, the correspondence does give an isomorphism between the two group structures, and fits with the general convention of performing harmonic analysis over the multiplicative group $\mathbf{T}^n$ where possible. Furthermore, it corresponds with the convention of performing harmonic analysis over subdomains of $\mathbf{T}$. If we wish to consider the Fourier transform of some $f: \mathbf{F}_2^n \to \mathbf{F}_2$, we require a representation of $\mathbf{F}_2$ in $\mathbf{T}$, and the only correspondence possible is with $\{ -1, 1 \}$.
+\begin{example}
+    The Hamming distance between two length $n$ binary strings $x$ and $y$ is the number of indices where the strings differ, which we denote by
+    %
+    \[ \Delta(x,y) = \# \{ i : x^i \neq y^i \} \]
+    %
+    Then $\Delta(x,y)$ is the $L^1$ norm, viewing elements of$ \{ 0, 1 \}^n$ as $\{ 0, 1 \}$ indicator functions on $[n]$. If we want to quantify $f(x) - f(y)$ in terms of $\Delta(x,y)$, for some $f: \{ 0, 1 \}^n \to \mathbf{R}$, then Fourier analysis becomes applicable, because $f(x) - f(y) = (\sigma_x - \sigma_y) f(0)$. Essentially all the problems and techniques considered in this book can be reduced to an analysis of the Hamming distance and its relation to some quantity under study.
+\end{example}
 
-The characters on the group $\mathbf{T}^n$ take the form of integer-valued monomials $z_1^{m_1} \dots z_n^{m_n}$. Because of the canonical embedding of $\{ -1, 1 \}^n$ in $\mathbf{T}^n$, every character on $\{ -1, 1 \}^n$ is the restriction of a character on $\mathbf{T}^n$, and can therefore be represented by a monomial. Since $x_i^2 = 1$ for all $x_i \in \mathbf{F}_2$, these monomials can be chosen with $m_i \in \{ 0, 1 \}$. Abstract harmonic analysis tells us that there are exactly $2^n$ characters on the group $\mathbf{F}_2^n$, so these are all the identifications we can make, and therefore the functions
+\begin{example}
+    A graph on $n$ vertices can be identified with a Boolean string of length $2^n$, where each bit represents whether a particular edge is in $G$. The Hamming distance between two graphs is then the number of edges upon which the graphs differ. We may want to consider how quantities on graphs change under this Hamming distance, such as the shortest path between points, or the minimum cut, and Fourier analysis indicates a basic set of techniques to quantify this change.
+\end{example}
+
+\begin{example}
+    A subset of a set with $n$ elements can be identified with a Boolean string of length $n$, which identifies which elements are present in the subset. The Hamming distance then measures the cardinality of the symmetric difference between two subsets, and this explains why Fourier analytic methods have applications in combinatorial problems in set theory.
+\end{example}
+
+\begin{example}
+    The truth values $\top$ and $\bot$ have an obvious relation to $\{ 0, 1 \}$, especially if you've used a modern programming language. The group operation on $\{ 0, 1 \}$ then induces an operation on $\top$ and $\bot$, which is the exclusive or operation
+    %
+    \[ A \xor B = \begin{cases} \top & A\ \text{is}\ \top\text{, or}\ B\ \text{is}\ \top\text{, but not both.}\\ \bot & \text{otherwise} \end{cases} \]
+    %
+    and where multiplication is conjunction. Given a property $P$ of elements of some set $X$, this relation is used to form the indicator $\mathbf{I}(P(x)): X \to \{ 0, 1 \}$, and then Fourier analytic methods can be used to analyze `true Boolean functions' $f: \{ \top, \bot \}^n \to \{ \top, \bot \}$.
+\end{example}
+
+The most important correspondence with the additive structure of $\{ 0, 1 \}$ in the general theory will be the multiplicative group $\{ -1, 1 \}$, where we map 0 to 1, and 1 to -1. Initially, this is a very strange correspondence to pick, because we normally think of $1$ as being the value of `truth'. However, the correspondence does give an isomorphism between the two group structures, and fits with the general convention of performing harmonic analysis over the multiplicative group $\mathbf{T}^n$ where possible. Rather than thinking of $\{ 0, 1 \}$ as the canonical group upon which we take the correspondence, we shall find that $\{ -1, 1 \}$ will become a much more central figure in the analysis.
+
+For instance, the characters on $\{ -1, 1 \}$ are notationally much more natural than the characters on $\mathbf{F}_2^n$. The characters on the group $\mathbf{T}^n$ take the form of integer-valued monomials $z_1^{m_1} \dots z_n^{m_n}$. Because $\{ -1, 1 \}^n$ embeds as a closed subgroup of $\mathbf{T}^n$, every character on $\{ -1, 1 \}^n$ is the restriction of a character on $\mathbf{T}^n$, and can therefore be represented by a monomial. Since $x_i^2 = 1$ for all $x_i \in \{ -1, 1 \}$, these monomials can be chosen with $m_i \in \{ 0, 1 \}$. Abstract harmonic analysis tells us that there are exactly $2^n$ characters on the group $\{ -1, 1 \}$, so these are all the identifications we can make, and therefore we conclude that the functions
 %
 \[ x^S = \prod_{i \in S} x^i \]
 %
-form the set of all characters on $\mathbf{F}_2^n$. Using functional notation and switching domains, we define the characters $\chi_S: \mathbf{F}_2^n \to \{ -1, 1 \}$ by
+form the set of all characters on $\{ -1, 1 \}$, for $S \subset [n]$. Using functional notation and switching domains, the characters on $\mathbf{F}_2^n$ are
 %
 \[ \chi_S(x) = (-1)^{\sum_{i \in S} x_i} \]
 %
-The basic theory of discrete abelian harmonic analysis tells us that the characters $x^S$ form an orthonormal basis for the Hilbert space of real-valued functions on $\mathbf{F}_2^n$, so for every function $f: \{ -1, 1 \}^n \to \mathbf{R}$ we have a unique expansion
+which isn't as natural a function.
+
+The basic theory of discrete abelian harmonic analysis tells us that the characters $x^S$ form an orthonormal basis for the Hilbert space of real-valued functions on $\mathbf{F}_2^n$, so every function $f: \{ -1, 1 \}^n \to \mathbf{R}$ has a unique expansion
 %
 \[ f(x) = \sum_{S \subset [n]} \widehat{f}(S) x^S \]
 %
-where $\widehat{f}(S) \in \mathbf{R}$ is the {\it Walsh-Fourier coefficient} corresponding to $S$. If we consider some index set other than $n$, that is, if we consider the Fourier transforms of functions on $\mathbf{F}_2^I$ for some arbitrary index set $I$, then we will obtain an expansion of the form
+where $\widehat{f}(S) \in \mathbf{R}$ is the {\it Walsh-Fourier coefficient} corresponding to $S$. It will also be natural to consider the Fourier transforms of functions on vector spaces $\mathbf{F}_2^I$, where $I$ is an arbitrary finite index set. The expansion will then take the form
 %
 \[ f(x) = \sum_{S \subset I} \widehat{f}(S) x^S \]
 %
 We will occassionally use this notation when it is more natural to do so.
 
-An easy way to find these coeffients, without any harmonic analysis, is to expand the any function $f: \{ -1, 1 \}^n \to \{ -1, 1 \}$ in its conjunctive normal form\footnote{If a property on $\{ -1, 1 \}^n$ is identified with it's indicator function valued on $\{ 0, 1 \}$, then the indicator function of $P \wedge Q$, for any two properties $P$ and $Q$, is obtained by multiplying together the corresponding indicator functions. Since the property $x_i = y_i$ has indicator function $\mathbf{I}(x_i = y_i) = (1/2)(1 + x_iy_i)$, then we see that the expansion obtained for general functions $f: \{ -1, 1 \}^n \to \{ 0, 1 \}$ is exactly the one induced by the canonical conjunctive form expression $P(x) = \bigvee_{P(y)} (y = x) = \bigvee_{P(y)} \left( \bigwedge_{i = 1}^n y_i = x_i \right)$.}, calculating
+An easy way to find these coeffients, without any harmonic analysis, is to expand the any function $f: \{ -1, 1 \}^n \to \{ -1, 1 \}$ in its conjunctive normal form\footnote{If a property on $\{ -1, 1 \}^n$ is identified with it's indicator function, then the indicator function of $P \wedge Q$, for any two properties $P$ and $Q$, is obtained by multiplying together the corresponding indicator functions. Since the property $x_i = y_i$ has indicator function $\mathbf{I}(x_i = y_i) = (1/2)(1 + x_iy_i)$, then we see that the expansion obtained for general functions $f: \{ -1, 1 \}^n \to \{ 0, 1 \}$ is exactly the one induced by the canonical conjunctive form expression $P(x) = \bigvee_{P(y)} (y = x) = \bigvee_{P(y)} \left( \bigwedge_{i = 1}^n y_i = x_i \right)$, and we have extended this representation to general functions $f: \{ -1, 1 \}^n \to \mathbf{R}$.}, calculating
 %
-\[ f(x) = \sum_y \mathbf{I}(x = y) f(y) = \frac{1}{2^n} \sum_y \left( \prod_{i = 1}^n 1 + x_iy_i \right) f(y) \]
+\[ f(x) = \sum_y \mathbf{I}(x = y) f(y) = \sum_y \frac{1}{2^n} \left( \prod_{i = 1}^n 1 + x_iy_i \right) f(y) \]
 %
-Using certain algebraic computations, we can use this formula to find a {\it particular} expansion of a function, and we now know that it is the {\it unique} expansion. This is essentially a binary equivalent to the technique used to find power series of holomorphic functions, combining well know expansions to form the expansion of a particular formula.
+This formula gives us a {\it particular} expansion of the function, and we know it must be the {\it unique} expansion. This is essentially a binary equivalent to the technique used to find power series of holomorphic functions, combining well know expansions to form the expansion of a particular formula.
 
 \begin{example}
     The maximum function $\max(x,y)$ on $\{ -1, 1 \}^2$ has an expansion
@@ -101,13 +119,13 @@ Note that the minimum and maximum functions on $n$ variables are $1/2^{n-1}$ clo
     %
     \[ \mathbf{P}(X_i = 1) - \mathbf{P}(X_i = -1) = 2 \mathbf{P}(X_i = 1) - 1 = \mu_i \]
     %
-    so $\mathbf{P}(X_i = 1) = \frac{1}{2} (\mu_i + 1) = P_i \in [0,1]$. Then we can write
+    so $\mathbf{P}(X_i = 1) = \frac{1}{2} (\mu_i + 1) = P_i \in [0,1]$. We then calculate
     %
     \begin{align*}
         f(x_1, \dots, x_n) &= \prod_{i = 1}^n \left[ P_i \mathbf{I}(x_i = 1) + (1 - P_i) \mathbf{I}(x_i = -1) \right]\\
-        &= \sum_a P^{\{ i : a_i = 1 \}} (1 - P)^{\{ i : a_i = -1 \}} \mathbf{I}(x = a)\\
-        &= \frac{1}{2^n} \sum_S \sum_a a^S P^{\{ i : a_i = 1 \}} (1 - P)^{\{ i : a_i = -1 \}} x^S\\
-        &= \frac{1}{2^n} \sum_S (2 P - 1)^S x^S\\
+        &= \sum_a \left( \prod_{a_i = 1} P_i \right) \left( \prod_{a_i = -1} (1 - P_i) \right) \mathbf{I}(x = a)\\
+        &= \frac{1}{2^n} \sum_S \sum_a a^S \left( \prod_{a_i = 1} P_i \right) \left( \prod_{a_i = -1} (1 - P_i) \right) x^S\\
+        &= \frac{1}{2^n} \sum_S \left( \prod_{i \in S} (2P_i - 1) \right) x^S\\
         &= \frac{1}{2^n} \sum_S \mu^S x^S
     \end{align*}
     %
@@ -115,33 +133,45 @@ Note that the minimum and maximum functions on $n$ variables are $1/2^{n-1}$ clo
 \end{example}
 
 \begin{example}
-    Consider the `inner product mod 2' function $f$ on $\mathbf{F}_2^n \times \mathbf{F}_2^n$ defined by
+    Define the `inner product' function $f$ on $\mathbf{F}_2^n \times \mathbf{F}_2^n$ by
     %
     \[ f(x,y) = (-1)^{\langle x, y \rangle} = \prod_{i = 1}^n (-1)^{x_iy_i} \]
     %
-    Then $f(x,y)$ measures the parity of the number of $x_i$ which are equal to $y_i$. For $n = 1$, we have
+    which is a bilinear map from $\mathbf{F}_2$ to $\{ -1, 1 \}$. This corresponds to the function $g$ on $\{ -1, 1 \}^n \times \{ -1, 1 \}^n$ defined by
     %
-    \[ f(x,y) = (-1)^{xy} = \begin{cases} -1 & x = y = 1 \\ \ \ \ 1 & \text{otherwise} \end{cases} \]
+    \[ g(x,y) = \prod_{i = 1}^n (-1)^{\mathbf{I}(x_i = y_i = -1)} \]
     %
-    Hence, if we view $f$ as a function on $\{ -1, 1 \}^2$, the induced function is just the $\max$ function on two variables, and has a Fourier representation
+    For $n = 1$, we have
     %
-    \[ f(x,y) = \frac{1}{2}(1 + x + y - xy) \]
+    \[ g(x,y) = \begin{cases} -1 & x = y = -1 \\ \ \ \ 1 & \text{otherwise} \end{cases} \]
     %
-    In general, any set $S$ corresponding to a set of indices on the functions of $f$ can be associated with a unique pair of $S_1, S_2 \subset [n]$, corresponding to the indices relating to $x$ on the left side of the function, and the indices relating to $y$ on the right side of the equation. Let $\alpha(S)$ be the cardinality of $S_1 \cap S_2$. Then we have
+    Hence $g(x,y)$ is just the $\max$ function on $\{ -1, 1 \}^2$, and we find
     %
     \begin{align*}
-        f(x,y) &= \frac{1}{2^n} \prod_{i = 1}^n (1 + x_i + y_i - x_i y_i)\\
+        g(x,y) &= (-1)^{\mathbf{I}(x = y = -1)} = \frac{1}{2} (1 + x + y - xy)
+    \end{align*}
+    %
+    In general, any subset of indices on $\{ 1, 2 \} \times [n]$ (this is the index set for $\{ -1, 1 \}^n \times \{ -1, 1 \}^n$) can be decomposed as $S = \{ 1 \} \times S_1 \cup \{ 2 \} \times S_2$, where $S_1, S_2 \subset [n]$. Let $\alpha(S)$ be the cardinality of $S_1 \cap S_2$. Then we have
+    %
+    \begin{align*}
+        g(x,y) &= \frac{1}{2^n} \prod_{i = 1}^n (1 + x_i + y_i - x_iy_i)\\
         &= \frac{1}{2^n} \sum_{S \subset [n]} (-1)^{|S|} (xy)^S (1 + x + y)^{S^c}\\
         &= \frac{1}{2^n} \sum_{S \subset [n]} (-1)^{|S|} \sum_{T \subset S^c} (xy)^S (x + y)^T\\
-        &= \frac{1}{2^n} \sum_{S \in [n]^2} (-1)^{\alpha(S)} x^S
+        &= \frac{1}{2^n} \sum_{S \subset \{ 1, 2 \} \times [n]} (-1)^{\alpha(S)} (x,y)^S
     \end{align*}
+    %
+    Note that
+    %
+    \[ g(x,x) = \frac{1}{2^n} \sum_S (-1)^{\alpha(S)} x^{S_1 \triangle S_2} \]
+    %
+    The number of $S_1 \triangle S_2 = [n]$ is exactly the number of partitions of $[n]$, which are $2^n$, and these partitions must be disjoint, hence the corresponding $\alpha(S)$ is always equal to 0, hence $x^{[n]}$ has a coefficient of 1. Conversely, if $T$ is a proper subset of $[n]$, not containing some element $x$, then the set of $S_1,S_2$ can be divided in half into the family such that $x \in S_1$ and $x \in S_2$ and the family such that $x \not \in S_1 \cup S_2$. The coefficient $(-1)^{\alpha(S)}$ on one family is the opposite of the coefficient of the other family, so when we sum over all possible coefficients, we find that the coefficient of $g(x,x)$ corresponding to $x^T$ is zero. This makes sense, since $g(x,x) = x^{[n]}$.
 \end{example}
 
 \begin{example}
-    The equality function $\text{eq}: \{ -1, 1 \}^n \to \{ 0, 1 \}$ returns 1 only if all $x_i$ are equal. Thus
+    The equality function $\text{Eq}$ returns 1 only if all $x_i$ are equal. Thus
     %
     \begin{align*}
-        \text{eq}(x) &= \mathbf{I}(x_1 = x_2 = \dots = x_n = 1) + \mathbf{I}(x_1 = x_2 = \dots = x_n = -1)\\
+        \text{Eq}(x) &= \mathbf{I}(x_1 = x_2 = \dots = x_n = 1) + \mathbf{I}(x_1 = x_2 = \dots = x_n = -1)\\
         &= \frac{1}{2^n} \sum_S (1 + (-1)^{|S|}) x^S = \frac{1}{2^{n-1}} \sum_{|S|\ \text{even}} x^S
     \end{align*}
     %
@@ -150,88 +180,140 @@ Note that the minimum and maximum functions on $n$ variables are $1/2^{n-1}$ clo
     \[ \text{Neq}(x) = 1 - \text{Eq}(x) = \left( 1 - \frac{1}{2^{n-1}} \right) - \sum_{\substack{|S|\ \text{even}\\S \neq \emptyset}} x^S \]
 \end{example}
 
-\section{Testing Linearity}
+\begin{example}
+    The sortedness function $\text{Sort} : \{ -1, 1 \}^4 \to \{ -1, 1 \}$ returns -1 if the bits in the input are monotonically increasing or monotonically decreasing. Since the function is even, all odd Fourier coefficients vanish. It will also help that $\text{Sort}$ is invariant under the coordinate permutation $(1 4)(2 3)$, hence the Fourier coefficients obtained by swapping these coordinates are equal. To calculate the coefficients, it will be helpful to switch to calculating the coefficients of $f = (1 - \text{Sort})/2$, which is now $\{ 0, 1 \}$ valued. $f(x) = 1$ if and only if $x$ is one of the following 8 bit strings
+    %
+    \[ (-1,-1,-1,-1), (-1,-1,-1,+1), (-1,-1,+1,+1), (-1,+1,+1,+1) \]
+    \[ (+1,+1,+1,+1), (+1,+1,+1,-1), (+1,+1,-1,-1), (+1,-1,-1,-1) \]
+    %
+    Hence the expected value of $f$ is $1/2$. We also calculate that
+    %
+    \[ \widehat{f}(\{1,2,3,4\}) = 0\ \ \ \ \ \widehat{f}(\{1,2\}) = \widehat{f}(\{3,4\}) = 1/4 \]
+    \[ \widehat{f}(\{ 1, 3 \}) = \widehat{f}(\{2,4\}) = 0\ \ \ \ \ \widehat{f}(\{1,4\}) = -1/4 \]
+    \[ \widehat{f}(\{2,3\}) = 1/4 \]
+    %
+    Thus $f(x) = (1/4)(2 + x_1x_2 + x_3x_4 + x_2x_3 - x_1x_4)$, and so
+    %
+    \[ \text{Sort}(x) = 1 - 2f(x) = (1/2)(x_1x_4 - x_1x_2 - x_2x_3 - x_3x_4) \]
+    %
+    The $x_1x_4$ term determines whether $x$ should be the constant $1$ or $-1$ term, and the rest offset the problem by pairwise comparisons.
+\end{example}
 
-A function $f: \{ -1, -1 \} \to \{ -1, 1 \}$ is $\mathbf{F}_2$ linear if and only if $f(xy) = f(x) f(y)$ for all $x,y \in \{ -1, 1 \}^n$, or equivalently, if there is $S \subset [n]$ such that $f(x) = x^S$. Given a general function $f$, there are effectively only two ways to explicitly check that the function is linear, we either check that $f(xy) = f(x) f(y)$ for all choices of the arguments $x$ and $y$, or check that $f(x) = x^S$ holds for some choice of $S$, over all choices of $x$. Even assuming that $f$ can be evaluated in constant time, both methods take exponential time in $n$ to compute\footnote{This is effectively guaranteed, because the description length of $f$ is always exponential in $n$, and if an algorithm determining linearity does not check the entire description of a linear function $f$, we can modify $f$ to a non-linear function on inputs that the linearity tester doesn't look at, at the algorithm will not be able to distinguish between these two inputs.}. The problem of testing linearity is a scenario in a family of problesm in the field of {\bf property testing}, which attempts to design efficient algorithms to determine whether a particular boolean-valued function satisfies a certain property.
+\begin{example}
+    The hemi-icosohedron function $HI: \{ -1, 1 \}^6 \to \{ -1, 1 \}$ takes a set of labels for the vertices of the hemi-icosohedron graph below, and returns the number of faces labelled $(1,1,1)$, minus the number of faces labelled $(-1,-1,-1)$, modulo 3 (TO DO: FIND PICTURE OF HEMIICOSOHEDRON, OR DRAW ONE)-. The graph is homogenous, in the sense that there is a graph isomorphism mapping a vertex to any other vertex. In fact, one can obtain all isomorphisms by choosing which face one face will be mapped to, and specifying where two of the vertices on that face will go in the new face.
 
-We might not be able to come up with a polynomial time algorithm to verify linearity, but we can make headway by considering the possiblity of coming up with an appropriate {\it randomized} algorithm which can verify linearity with high probability. The likely solution to the problem, given some function $f$, would to perform the linearity test for $f(XY) = f(X) f(Y)$ for a certain set of randomly chosen inputs $X$ and $Y$. If $f$ is non-linear, then $f(XY) \neq f(X) f(Y)$ with positive probability, and if we find this particular input we can guarantee the function is non-linear. If $f$ is linear, the test always passes. We shall find that the probability that the test fails directly relates to how similar a function is to a linear function.
+    For any $x$, if we consider $-x$, then any face labelled $(1,1,1)$ becomes a face labelled $(-1,-1,-1)$, and vice versa, so that $HI(-x) = - HI(x)$. Thus $HI$ is an odd function, and all even Fourier coefficients vanish. It will help to calculate $HI$ explicitly. Note that $HI(-1) = -1$, because all 10 faces are labelled $(-1,-1,-1)$, and $H(1) = 1$. If $x$ has a single $1$, then 5 of the faces are labelled $(-1,-1,-1)$, and none are labelled $(1,1,1)$, so $HI(x) = 1$. If $x$ has exactly 2 ones, then we see that only two faces are labelled $(-1,-1,-1)$, and none are labelled $(1,1,1)$, so $HI(x) = 1$. If $x$ has three ones arranged in a triangle on the hemi-icosohedron, then the hemi-icosohedron has one face labelled $(1,1,1)$, and none labelled $(-1,-1,-1)$, and hence $HI(x) = 1$. If $x$ does not have three ones arranged in a triangle, then we find it must have three negative ones arranged in a triangle, hence $HI(x) = -1$. Since $HI$ is odd, this calculates $HI$ explicitly for all values of $x$.
 
-To proceed along these lines, we must introduce the probabilistic interpretation of the Fourier expansion. The Fourier coefficients of $f: \mathbf{F}_2^n \to \mathbf{R}$ can, of course, be calculated as the inner product
-%
-\[ \widehat{f}(S) = \langle f, x^S \rangle = \frac{1}{2^n} \sum_x f(x) x^S \]
-%
-where the $2^n$ factor is included so that characters are normalized. We can also see this as a probabilistic statement, if we consider the uniform distribution on $\{ -1, 1 \}^n$, and consider the corresponding random variable $X$, then we can write
-%
-\[ \widehat{f}(S) = \mathbf{E}[f(X) X^S] \]
-%
-So that the Fourier coeffient measures the average value of $f$, relative to the parity over $S$. Note that this implies that a boolean-function $f: \{ -1, 1 \}^n \to \{ -1, 1 \}^n$ is {\it unbiased}, that is, it has an equal chance of taking $-1$ and $1$, if and only if $\widehat{f}(\emptyset) = 0$. Of course, we have Parseval's equality
-%
-\[ \mathbf{E}[f^2(X)] = \sum_S \widehat{f}(S)^2 \]
-%
-and so
-%
-\[ \mathbf{V}[f(X)] = \mathbf{E}[f^2(X)] - \mathbf{E}[f(X)]^2 = \sum_{S \neq \emptyset} \widehat{f}(S)^2 \]
-%
-and similarily,
-%
-\[ \text{Cov}[f(X),g(X)] = \sum_{S \neq \emptyset} \widehat{f}(S) \widehat{g}(S) \]
-%
-So that the Fourier coefficients efficiently measure probabilistic quantities.
+    Since there is an isomorphism mapping any vertex to any other vertex, the degree one Fourier coefficients of $HI$ are all equal, and we might as well calculate the coefficient corresponding to $x_1$. Now
+    %
+    \[ \widehat{HI}(1) = \mathbf{E}[HI(X)X_1] = \frac{\mathbf{E}[HI(X) | X_1 = 1] - \mathbf{E}[HI(X) | X_1 = -1]}{2} \]
+    %
+    Since $HI$ is odd,
+    %
+    \[ \mathbf{E}[HI(X) | X_1 = -1] = -\mathbf{E}[HI(-X) | X_1 = -1] = -\mathbf{E}[HI(X) | X_1 = 1] \]
+    %
+    hence $\widehat{HI}(1) = \mathbf{E}[HI(X) | X_1 = 1]$. If we let $Y$ be the random variable denoting the number of $x_i = 1$, for $i \neq 1$, then
+    %
+    \begin{align*}
+        \mathbf{E}[HI(X) | X_1 = 1] &= (1/32) \sum_{k = 0}^5 {5 \choose k} \mathbf{E}[HI(X)|X_1 = 1, Y = k]\\
+        &= (1/32) \left( {5 \choose 0} + {5 \choose 1} - {5 \choose 3} - {5 \choose 4} + {5 \choose 5} \right)\\
+        &= (1/32)(1 + 5 - 10 - 5 + 1) = -1/4
+    \end{align*}
+    %
+    since $\mathbf{E}[HI(X) | X_1 = 1, Y = 2] = (1/10)(5 - 5) = 0$. To simplify the calculation of coefficients of degree, note that we have graph isomorphisms mapping any triangle to any other triangle, hence the Fourier coefficients of degree 3 corresponding to a triangle are all equal. If $Y$ is the number of $x_i = 1$, for $i \neq 1,2,3$, then by applying the same technique as when we were calculating $\mathbf{E}[HI(X) | X_1 = 1]$, we find
+    %
+    \begin{align*}
+        \mathbf{E}[HI(X) | X_1 = +1, X_2 = +1, X_3 = +1] &= (1/8)(1 - 3 - 3 + 1) = -1/2\\
+        \mathbf{E}[HI(X) | X_1 = +1, X_2 = +1, X_3 = -1] &= (1/8)(1 + 1 - 2 - 3 - 1) = -1/2\\
+        \mathbf{E}[HI(X) | X_1 = +1, X_2 = -1, X_3 = -1] &=  -\mathbf{E}[HI(X) | X_1 = +1, X_2 = +1, X_3 = -1]\\
+        &= 1/2\\
+        \mathbf{E}[HI(X) | X_1 = -1, X_2 = -1, X_3 = -1] &= - \mathbf{E}[HI(X) | X_1 = +1, X_2 = +1, X_3 = +1]\\
+        &= 1/2
+    \end{align*}
+    %
+    We can then interpolate these results to find
+    %
+    \[ \widehat{f}(\{ 1, 2, 3 \}) = (-1/2 + 3/2 + 3/2 - 1/2)(1/8) = 1/4 \]
+    %
+    Now the sum of the squares of the Fourier coefficients we have calculated are $10(1/4)^2 + 6(1/4)^2 = 1$, so that all other Fourier coefficients are zero. Thus
+    %
+    \[ f(x) = 1/4(e_\Delta - e_1) \]
+    %
+    When $e_1$ is the first symmetric polynomial (the sum of all monomials of degree one), and $e_\Delta$ is the sum of all monomials which form triangles.
+\end{example}
 
-If $f$ and $g$ are {\it boolean-valued} maps $\mathbf{F}_2^n \to \{ -1 , 1 \}$, then
+\section{Fourier Analysis and Probability Theory}
+
+Many of the interesting results of Boolean Fourier analysis occur in the context of statistical problems over discrete domains. Thus it is of interest to interpret the main tools and results of probability theory in the context of Boolean analysis. Unless otherwise stated, the distributions of all results will be uniform. This means the probability theory rephrases combinatorial results, but it is still a useful source of intuition and elegant notation.
+
+First, note that we can define an inner product on Boolean functions by letting
 %
-\begin{align*}
-    \mathbf{E}[f(X)g(X)] &= \mathbf{P}(f(X) = g(X)) - \mathbf{P}(f(X) \neq g(X))\\
-    &= 1 - 2\mathbf{P}(f(X) \neq g(X))
-\end{align*}
+\[ \langle f, g \rangle = \frac{1}{2^n} \sum f(x)g(x) = \mathbf{E}[f(X)g(X)] \]
 %
-Note that $\mathbf{P}(f(X) \neq g(X))$ differs from the Hamming distance of $f$ and $g$ by a constant factor. We define $\mathbf{P}(f(X) \neq g(X))$ to be the relative hamming distance between $f$ and $g$, denoted $d(f,g)$. Since $f^2 = 1$, this implies $\| f \|_2 = 1$, and therefore
+The characters on $\{ -1, 1 \}^n$ form an orthonormal basis to this inner product, and it therefore follows that for any Boolean function $f$,
+%
+\[ \widehat{f}(S) = \mathbf{E}[f(X)X^S] \]
+%
+hence the Fourier coefficients of $f$ correspond to the average value of $f$ relative to the parity of $S$. For instance, a Boolean-valued function $f: \{ -1, 1 \}^n \to \{ -1, 1 \}$ is {\it unbiased}, that is, it takes values 1 and -1 with equal probability, if and only if $\widehat{f}(\emptyset) = 0$.
+
+The standard Hilbert space results give rise to probabilistic interpretations. Parseval's equality means
+%
+\[ \mathbf{E}[f(X)^2] = \sum \widehat{f}(S)^2 \]
+%
+which implies that
+%
+\[ \mathbf{V}[f(X)] = \mathbf{E}[f(X)^2] - \mathbf{E}[f(X)]^2 = \sum_{S \neq \emptyset} \widehat{f}(S)^2 \]
+%
+\[ \text{Cov}(f(X),g(X)) = \sum_{S \neq \emptyset} \widehat{f}(S) \widehat{g}(S) \]
+%
+Hence expectations, variances, and covariances are directly related to the Fourier coefficients of the Boolean function in question.
+
+If $f$ and $g$ are {\it Boolean-valued} maps, then we can write
+%
+\[ \mathbf{E}[f(X)g(X)] = \mathbf{P}(f(X) = g(X)) - \mathbf{P}(f(X) \neq g(X)) = 2\mathbf{P}(f(X) = g(X)) - 1 \]
+%
+Note that $\mathbf{P}(f(X) = g(X))$ differs from the Hamming distance of $f$ and $g$ by a constant. We define this value to be the {\bf relative Hamming distance} $d(f,g)$. Since $f^2 = g^2 = 1$, $\| f \|_2^2 = 1$, and this implies that
 %
 \begin{align*}
     \mathbf{V}(f) &= \mathbf{E}[f(X)^2] - \mathbf{E}[f(X)]^2\\
-    &= 1 - \mathbf{E}[f(X)]^2\\
-    &= 1 - (\mathbf{P}(f(X) = 1) - \mathbf{P}(f(X) = - 1))^2\\
-    &= 4 \mathbf{P}(f(X) = -1) \mathbf{P}(f(X) = 1) \in [0,1]
+    &= 1 - (\mathbf{P}(f(X) = 1) - \mathbf{P}(f(X) = -1))^2\\
+    &= 4d(f,1)d(f,-1)
 \end{align*}
 %
-so the variance of a boolean-valued function is very closely related to the degree to which the function is constant.
+Thus the variance of Boolean valued functions is very closely related to the degree to which the function is constant.
 
 \begin{lemma}
-    If $\varepsilon = \min[d(f,1), d(f,-1)]$, then $2 \varepsilon \leq \mathbf{V}(f) \leq 4 \varepsilon$.
+    If $\varepsilon = \min[d(f,1),d(f,-1)]$, then $2\varepsilon \leq \mathbf{V}(f) \leq 4\varepsilon$.
 \end{lemma}
 \begin{proof}
     We are effectively proving that for any $x \in [0,1]$,
     %
     \[ 2\min(x,1-x) \leq 4x(1-x) \leq 4\min(x,1-x) \]
     %
-    Since $4x(1-x) = 4\max(x,1-x)\min(x,1-x)$, we may divide by $4 \min(x,1-x)$ to restate the inequality as
-    %
-    \[ 1/2 \leq \max(x,1-x) \leq 1 \]
-    %
-    which is obvious.
+    Since $4x(1-x) = 4\max(x,1-x)\min(x,1-x)$, we divide by $4\min(x,1-x)$ and restate the inequality as $1/2 \leq \max(x,1-x) \leq 1$, which is obvious.
 \end{proof}
 
-This shows that if we have a sequence of functions $f_i: \{ -1, 1 \}^n \to \{ -1, 1 \}$, then $\varepsilon_i \sim x_i$ holds if and only if $\mathbf{V}(f) \sim x_i$. The minimum hamming distance to a constant value is asymptotically the same as the variation of the function. In general domains we intuitively view $\mathbf{V}(f)$ as a measure of how constant the function $f$ is, but for functions $\{ -1, 1 \}$ we have a precise, quantitative estimate.
+This shows that if we have a sequence of functions $f_n: \{ -1, 1 \}^n \to \{ -1, 1 \}$, then $\varepsilon_n \sim x_n$ holds if and only if $\mathbf{V}(f) \sim x_n$. The minimum hamming distance to a constant value is asymptotically the same as the variation of the function. In general domains we intuitively view $\mathbf{V}(f)$ as a measure of how constant the function $f$ is, but for functions $\{ -1, 1 \}$ we have a precise, quantitative estimate.
 
 \begin{example}
     Consider a function $f$ chosen uniformly randomly from the set of all Boolean functions on $\{ -1, 1 \}^n$. That is, for any function $g: \{ -1, 1 \}^n \to \{ -1, 1 \}$, the probability distribution gives $\mathbf{P}(f = g) = 1/2^{(2^n)}$. Since each Boolean function has a Fourier expansion, $f$ has a Boolean expansion
     %
     \[ f(x) = \sum \widehat{f}(S) x^S \]
     %
-    where each $\widehat{f}(S) \in \mathbf{R}$ is now a random variable. Now because we have a bijection amongst the set of all Boolean functions, mapping $g$ to $-g$, we find
+    where each $\widehat{f}(S)$ is now a real-valued random variable. Now because we have a bijection amongst the set of all Boolean functions, mapping $g$ to $-g$, we find
     %
     \begin{align*}
-        \mathbf{E}[\widehat{f}(S)] &= \sum \mathbf{P}(f = g) \widehat{g}(S) = \sum \mathbf{P}(f = g) \widehat{(-g)}(S)\\
-        &= - \sum \mathbf{P}(f = g) \widehat{g}(S) = -\mathbf{E}[\widehat{f}(S)]
+        \mathbf{E}[\widehat{f}(S)] &= \frac{1}{2^{2^n}} \sum_g \widehat{g}(S) = \frac{1}{2^{2^n}} \sum \widehat{(-g)}(S)\\
+        &= - \frac{1}{2^{2^n}} \sum \widehat{g}(S) = -\mathbf{E}[\widehat{f}(S)]
     \end{align*}
     %
-    Hence $\mathbf{E}[\widehat{f}(S)] = 0$. What's more,
+    Hence $\mathbf{E}[\widehat{f}(S)] = 0$. What's more, given that $X \neq Y$, the probability that $f(X) = f(Y)$ is independent of $X$ and $Y$, once we know $X \neq Y$, hence
     %
     \begin{align*}
         \mathbf{V}[\widehat{f}(S)] &= \mathbf{E}[\widehat{f}(S)^2] = \mathbf{E} \left[ \mathbf{E} \left( f(X) X^S \right)^2 \right]\\
         &= \mathbf{E}[f(X) f(Y) (XY)^S]\\
         &= \mathbf{P}(X = Y) + \mathbf{P}(X \neq Y) \mathbf{E}[f(X) f(Y) (XY)^S | X \neq Y]\\
-        &= \frac{1}{2^n} + \left( 1 - \frac{n}{4^n} \right) \left( 2\mathbf{P}(f(X) = f(Y) | X \neq Y) - 1 \right) \mathbf{E}[(XY)^S | X \neq Y]
+        &= \frac{1}{2^n} + \left( 1 - \frac{1}{2^n} \right) (2 \mathbf{P}(f(X) = f(Y)|X \neq Y) - 1) \mathbf{E}((XY)^S | X \neq Y)
     \end{align*}
     %
     For any particular $x \neq y$, $\mathbf{P}[f(x) = f(y)] = 1/2$, because $f$ is chosen uniformly from all functions, and for any function $g$, we have the function $g'$, such that $g'(z) = g(z)$ except when $z = x$, where $g'(z) = -g(x)$, and the association is a bijection. This implies that $\mathbf{P}(f(X) = f(Y) | X \neq Y) = 1/2$, hence the variation satisfies $\mathbf{V}[\widehat{f}(S)] = 1/2^n$. Thus functions on average have no Fourier coefficient on each $S$, and most functions have very small Fourier coefficient.
@@ -249,82 +331,99 @@ If $f$ is boolean-valued, then we can also define $\mathbf{W}^k(f) = \mathbf{P}(
 %
 which can be seen as a certain truncation estimate of $f$.
 
-The simplest version of linearity testing runs using one random query as a test -- it just takes one pair of inputs $(X,Y)$, and tests the linearity of this function against these inputs. This is known as the Blum-Luby-Rosenfeld algorithm, or BLR for short. It turns out that the sucess of this method is directly related to how linear a function is. Define a function to be {\bf approximately linear} if
+\section{Testing Linearity}
+
+A function $f: \{ -1, 1 \}^n \to \{ -1, 1 \}$ is linear if $f(xy) = f(x) f(y)$ for all $x,y \in \{ -1, 1 \}^n$, or equivalently, if there is $S \subset [n]$ such that $f(x) = x^S$. Given a general function $f$, there are effectively only two ways to explicitly check that the function is linear, we either check that $f(xy) = f(x) f(y)$ for all choices of the arguments $x$ and $y$, or check that $f(x) = x^S$ holds for some choice of $S$, over all choices of $x$. Even assuming that $f$ can be evaluated in constant time, both methods take exponential time in $n$ to compute. This is guaranteed, because the minimal description length of $f$ is always exponential in $n$, and if an algorithm determining linearity does not check the entire description of a linear function $f$, we can modify $f$ to a non-linear function on inputs that the linearity tester doesn't look at, at the algorithm will not be able to distinguish between these two inputs. The problem of testing linearity is a scenario in a family of problesm in the field of {\bf property testing}, which attempts to design efficient algorithms to determine whether a particular boolean-valued function satisfies a certain property.
+
+We might not be able to come up with a polynomial time algorithm to verify linearity, but we can make headway by considering the possiblity of coming up with a randomized algorithm which can verify linearity with high probability. The likely solution to the problem, given some function $f$, would to perform the linearity test for $f(XY) = f(X) f(Y)$ for a certain set of randomly chosen inputs $X$ and $Y$. If $f$ is non-linear, then $f(XY) \neq f(X) f(Y)$ with positive probability, and if we find this particular input we can guarantee the function is non-linear. If $f$ is linear, the test always passes. We shall find that the probability that the test fails directly relates to how similar a function is to a linear function.
+
+The simplest version of linearity testing runs using one random query as a test -- it just takes one pair of inputs $(X,Y)$, and tests the linearity of this function against these inputs. This is known as the Blum-Luby-Rosenfeld algorithm, or BLR for short. It turns out that the sucess of this method is directly related to how similar a function is to a linear character. There are two candidates to define what it means to be `approximately linear'.
 %
 \begin{itemize}
-    \item $f(x + y) = f(x) + f(y)$ for a large majority of inputs $x$ and $y$.
-    \item There is a linear functional $g: \mathbf{F}_2^n \to \mathbf{F}_2$ such that $f(x) = g(x)$ for a large number of inputs $x$.
+    \item $f(xy) = f(x) f(y)$ for a large majority of inputs $x$ and $y$. Essentially, this means exactly that $f(XY) = f(X)f(Y))$ with high probability, so the BLR test is accepted with high probability on input $f$.
+    \item There is a linear functional $g$ such that $f(x) = g(x)$ for a large number of inputs $x$. This means exactly that $d(f,g)$ is small.
 \end{itemize}
 %
-It is clear that the second property implies the first, but not that the first implies the second in a precise relationship. To be more precise, we say that $f$ is $\varepsilon$-close to being linear if there is a linear $g$ with $d(f,g) \leq \varepsilon$. What the analysis of BLR shows is that $f(X + Y) = f(X) + f(Y)$ holds with probability $\varepsilon$, then $f$ is $\varepsilon$ close to a linear function. Since we are applying Hamming distances in measuring how linear a function is, we can guess that the Harmonic analysis of boolean functions will come in handy.
+The two notions are certainly related, but a direct relation seems difficult to quantify. One way is easy to bound. If $g$ is linear, and $d(f,g) = \varepsilon$, then a standard union bound inequality guarantees that
+%
+\begin{align*}
+    \mathbf{P}[f(X) f(Y) = f(XY)] &\geq \mathbf{P}[f(X) = g(X), f(Y) = g(Y), f(XY) = g(XY)]\\
+    &\geq 1 - 3 \varepsilon
+\end{align*}
+%
+and we shall find that even tighter bounds hold. But just because $f(xy) = f(x)f(y)$ for a large number of $x,y$ doesn't seem to imply that $f$ is close to any {\it particular} linear function. For a subset $\mathcal{X}$ of Boolean-valued functions, we shall let $d(f,\mathcal{X}) = \inf_{g \in \mathcal{X}} d(f,g)$. If $\mathcal{C}$ is the set of characters, then we can state our problem as analyzing the relation between how the BLR test interacts with $f$, and the value of $d(f,\mathcal{C})$.
+
+Our analysis of the BLR test essentially shows that there is a very close relation between these two properties for the case of Boolean functions. Since we are applying Hamming distances in measuring how linear a function is, we can guess that the Harmonic analysis of boolean functions will come in handy.
 
 \begin{theorem}
-    Given a function $f: \mathbf{F}_2^n \to \mathbf{F}_2$, if the BLR algorithm accepts $f$ with probability greater than $1 - \varepsilon$, then $f$ is at least $\varepsilon$-close to being linear.
+    For any function $f: \{ -1, 1 \}^n \to \{ -1, 1 \}$, if $d(f,\mathcal{C}) \geq \varepsilon$, then the BLR algorithm rejects $f$ with probability greater than $\varepsilon$.
 \end{theorem}
 \begin{proof}
-    We switch to multiplicative notation, so that $f: \{ -1, 1 \}^n \to \{ -1, 1 \}$. Note that the probability that $f(XY) = f(X)f(Y)$ is the same as the probability that
+    Note that
     %
-    \[ \frac{1}{2} [1 + f(X)f(Y)f(XY)] = 1 \]
+    \[ \mathbf{I}[f(XY) \neq f(X)f(Y)] = \frac{1 - f(X)f(Y)f(XY)}{2} \]
     %
-    and if $f(XY) \neq f(X) f(Y)$, then
-    %
-    \[ \frac{1}{2} [1 + f(X)f(Y)f(XY)] = 0 \]
-    %
-    so that the function $g(x,y) = (1/2)[1 + f(x)f(y)f(xy)]$ is 0-1 valued, and
+    Hence
     %
     \begin{align*}
-        1 - \varepsilon &= \mathbf{P}[\text{BLR accepts}\ f]\\
-        &= \mathbf{E}[g(X,Y)]\\
-        &= \frac{1}{2} + \frac{1}{2} \mathbf{E}_X[f(X) \mathbf{E}_Y[f(Y) f(XY)]]\\
-        &= \frac{1}{2} + \frac{1}{2} \mathbf{E}_X[f(X) (f * f)(X)]\\
-        &= \frac{1}{2} + \frac{1}{2} \sum \widehat{f}(S)^3
+        \mathbf{P}[\text{BLR rejects}\ f] &= \mathbf{E} \left[ \frac{1 - f(X)f(Y)f(XY)}{2} \right]\\
+        &= \frac{1}{2} - \frac{1}{2} \mathbf{E}_X[f(X) \mathbf{E}_Y[f(Y) f(XY)]]\\
+        &= \frac{1}{2} - \frac{1}{2} \mathbf{E}_X[f(X) (f * f)(X)]\\
+        &= \frac{1}{2} - \frac{1}{2} \sum \widehat{f}(S)^3\\
+        &\geq \frac{1}{2} - \frac{1}{2} \max \widehat{f}(T) \sum \widehat{f}(S)^2\\
+        &= \frac{1}{2} - \frac{1}{2} \max \widehat{f}(T)
     \end{align*}
     %
-    and therefore
+    Now for each $S$, $\widehat{f}(S) = 1 - 2 d(f, x^S)$, so if $d(f,x^S) \geq \varepsilon$ for all $S$, we find $\widehat{f}(S) \leq 1 - 2 \varepsilon$, hence the probability that the BLR test rejects $f$ is greater than
     %
-    \[ 1 - 2 \varepsilon = \sum \widehat{f}(S)^3 \leq \| \widehat{f} \|_\infty \| f \|_2 = \| \widehat{f} \|_\infty \]
+    \[ \mathbf{P}[\text{BLR rejects}\ f] \geq \frac{1}{2} - \frac{1}{2} (1 - 2 \varepsilon) = \varepsilon \]
     %
-    Now $\widehat{f}(S) = 1 - 2 d(f, x^S)$, and since there is $S'$ with $\widehat{f}(S') \geq 1 - 2 \varepsilon$, this implies $d(f, x^{S'}) \leq \varepsilon$, and therefore $f$ is $\varepsilon$-close to the linear function $x^{S'}$.
+    and this completes the proof. The converse of this result is that if the BLR test accepts $f$ with probability $1 - \varepsilon$, then $f$ is $\varepsilon$ close to being linear, and so we have shown that $f(XY) = f(X)f(Y)$ holds with high probability if and only if $f$ is $\varepsilon$ close to being linear.
 \end{proof}
 
-Note that this algorithm, with only three evaluations of the function $f$, can determine with high accuracy that $f$ is not linear, if the function is far away from being non-linear to begin with, or, if we are wrong, then $f$ is very similar to a linear function in the first case. Yet given $f$, we cannot use this algorithm to determine the linear function $x^S$ which $f$ is similar to. Of course, for most $x$, $f(x) = x^S$. However, we cannot use this estimate to obtain accurate estimates in expectation for a fixed $x$, in the sense that there is no measure of the likelihood of the estimate being equal to the actual value. The problem is that $x$ is a fixed quantity, rather than varying over many values of the function, and is therefore our test is easy to break. Note, however, that $x^S(x) = x^S(xy)x^S(y)$, and if we let $y$ be a random quantity, then $x^S(xy)$ and $x^S(y)$ will likely be equal to $f(x + y)$ and $f(y)$ with a probability that is feasible to determine.
+Note that this algorithm, with only three evaluations of the function $f$, can determine with high accuracy that $f$ is not linear, if the function is far away from being non-linear to begin with, or, if we are wrong, then $f$ is very similar to a linear function in the first case. Yet given $f$, we cannot use this algorithm to determine the linear function $x^S$ which $f$ is similar to. Of course, for most $x$, $f(x) = x^S$, but we do not know for which $x$ this occurs. However, we cannot use this estimate to obtain accurate estimates in expectation for a fixed $x$, in the sense that there is no measure of the likelihood of the estimate being equal to the actual value. The problem is that $x$ is a fixed quantity, rather than varying over many values of the function, and is therefore our test is easy to break. Note, however, that $y^S = x^S (xy)^S$, and if we let $x$ be a random quantity, then $(xy)^S$ and $x^S$ will likely be equal to $f(xy)$ and $f(y)$ with a probability that is feasible to determine.
 
 \begin{theorem}
-    If $f: \mathbf{F}_2^n \to \{ -1, 1 \}$ is $\varepsilon$-close to $x^S$, then for any $y$,
+    If $d(f,x^S) = \varepsilon$, then for any $x$,
     %
-    \[ \mathbf{P}_X[f(X + y)f(X) = x^S(y)] \geq 1 - 2 \varepsilon \]
+    \[ \mathbf{P}[f(xY)f(Y) = x^S] \geq 1 - 2 \varepsilon \]
 \end{theorem}
 \begin{proof}
-    The probability that $f(X + y) \neq x^S(X + y)$ is less than $\varepsilon$, as is the probability that $f(X) \neq x^S(X)$. By the union bound, this implies that the probability of either occuring is less than or equal to $2\varepsilon$. But then the probability that both do not occur is greater than or equal to $1 - 2\varepsilon$, and when this occurs, we can guarantee that $f(X + y)f(X) = x^S(y)$, thus our estimate $f(X + y)f(X)$ is equal to $x^S(y)$ with probability $\geq 1 - 2 \varepsilon$.
+    We just apply a union bound to conclude
+    %
+    \[ \mathbf{P}(f(xY)f(Y) = x^S) \geq \mathbf{P}(f(xY) = x^SY^S, f(Y) = Y^S) \geq 1 - 2\varepsilon \]
+    %
+    and in this circumstance, we find $f(yX)f(X) = y^S$.
 \end{proof}
 
-Thus linear functions are {\it locally correctable}, in that we can correct small modifications to linear functions with high probability. This turns out to have vast repurcussions in complexity theory, which we will discuss later. One reason why these methods work is that the linear functions on $\mathbf{F}_2^n$ form a very discrete set. For $S \neq T$,
+Thus linear functions are {\it locally correctable}, in that we can correct small modifications to linear functions with high probability. This turns out to have vast repurcussions in the theory of property testing and complexity theory, which we will discuss later. One reason why these methods work is that the linear functions on $\mathbf{F}_2^n$ form a very discrete set. For $S \neq T$,
 %
 \[ d(x^S,x^T) = \mathbf{P}(x^S \neq x^T) = \mathbf{P}(x^{S \Delta T} = -1) = 1/2 \]
 %
-Thus characters are separated by a dimension-independant quantity.
+We find characters are separated by a dimension-independant quantity. If $d(f,x^T) \leq \varepsilon$ for some $T$, then $d(f,x^S) \geq 1/2 - \varepsilon$ for $S \neq T$, and therefore it is difficult to splice together two linear functions so that $f(XY) = f(X)f(Y)$ holds with high probability without $f$ being close to a particular linear function.
 
-To recapitulate why Fourier analysis applies to this problem in another light, the translation operators
+The inequality in our analysis of the BLR test is tight, provided that all $\widehat{f}(S)$ are reasonably equal to one another. Analyzing the gap in the inequality, we find
 %
-\[ (\sigma_y f)(x) = f(yx) \]
+\begin{align*}
+    \max \widehat{f}(T) \sum \widehat{f}(S)^2 - \sum \widehat{f}(S)^3 &= \sum \widehat{f}(S)^2 [\max \widehat{f}(T) - \widehat{f}(S)]\\
+    &\leq \max \widehat{f}(T) - \min \widehat{f}(S)
+\end{align*}
 %
-are diagonalized by the characters $x^S$, which form an orthogonal basis such that
-%
-\[ \sigma_y x^S = (yx)^S = y^S x^S \]
-%
-Thus the equation that $f(xy) = f(x)f(y)$ holds for all $x,y$ can be rephrased by the diagonalization argument that $\sigma_y f = \sigma_{f(y)} f$, and this holds only if $y^S \widehat{f}(S) = f(y) \widehat{f}(S)$, where $f(x) = \sum \widehat{f}(S) x^S$, so that $f(y) = y^S$ or $\widehat{f}(S) = 0$. We have $2d(f,g) = \| f - g \|_1$, so that $\| \widehat{f} - \widehat{g} \|_\infty = 2d(f,g)$. In a similar light, if a Boolean-valued function $f$ differs from a linear function $x^S$ with probability $\varepsilon$, the standard $L^1$-$L^\infty$ equivalence shows that
-%
-\[ | \widehat{f}(T) | \leq 2\varepsilon \]
-%
-for $T \neq S$, and $|\widehat{f}(S) - 1| \leq 2\varepsilon$, and the converse also holds provided we assume ahead of time that $f$ is Boolean valued. Using this, we can obtain a tighter bound on the converse of the statement, that for small enough $\varepsilon$, if a function $f$ is $\varepsilon$-close to some linear function $x^S$, then the BLR test accepts $f$ with probability greater than $1 - 3 \varepsilon + O(\varepsilon^2)$, and this bound is tight up to first order.
+If all Fourier coefficients are equal, then the inequality is an equality. Though this isn't strictly the spectra of a {\it Boolean-valued} function (it's the spectra of the indicator function $\mathbf{I}(x = 1)$), we can find Boolean functions $f$ whose Fourier coefficients are arbitrarily close to 0. For instance, the inner product function we considered above shows
+
+$\widehat{f}(S) = \widehat{f}(T)$ for all $S$ and $T$, then the inequality is an equality. Though this isn't the spectra of a {\it Boolean-valued} function (it is the spectra of the indicator function $\mathbf{I}(x = 1)$), we can find Boolean functions $f$ whose Fourier coefficients are arbitrarily close. Thus we have found the best dimension independant constant that holds over all functions $f$. However, if one of the $\widehat{f}(S)$ is much larger than the others, so $f$ is very close to $x^S$, then we can obtain a better bound.
 
 \begin{theorem}
-    If $f$ is $\varepsilon$-close to some linear function $x^S$, then the BLR test rejects $f$ with probability at least $3\varepsilon - 10 \varepsilon^2 + 8 \varepsilon^3$.
+    If $d(f,x^S) = \varepsilon$, then the BLR test rejects $f$ with probability at least $3\varepsilon - 10 \varepsilon^2 + 8 \varepsilon^3$.
 \end{theorem}
 \begin{proof}
     Note that
     %
     \[ \widehat{f}(S) = \mathbf{E}[f(X)X^S] = 1 - 2d(f,x^S) = 1 - 2\varepsilon \]
+    %
+    and also for $T \neq S$,
+    %
+    \[ \widehat{f}(T) = 1 - 2d(f,x^T) \leq 1 - 2(d(f,x^S) - d(x^T,x^S)) = 2 \varepsilon \]
     %
     Hence
     %
@@ -333,45 +432,34 @@ for $T \neq S$, and $|\widehat{f}(S) - 1| \leq 2\varepsilon$, and the converse a
         &= \frac{1}{2} - \frac{1}{2} \sum_{T \neq S} \widehat{f}(T)^3  - \frac{1}{2} \widehat{f}(S)^3\\
         &\geq \frac{1}{2}  - \varepsilon \sum_{T \neq S} \widehat{f}(T)^2 - \frac{1}{2} \widehat{f}(S)^3\\
         &= \frac{1}{2} - \varepsilon (1 - \widehat{f}(S)^2) - \frac{1}{2} \widehat{f}(S)^3\\
+        &= \frac{1}{2} - \varepsilon (1 - (1 - 2 \varepsilon)^2) - \frac{1}{2} (1 - 2\varepsilon)^3\\
         &=  3\varepsilon - 10 \varepsilon^2 + 8 \varepsilon^3
     \end{align*}
-    %
-    This is the best upper bound we can obtain, up to a first order. For each $n$, consider the function $g_n: \mathbf{F}_2^n \to \mathbf{F}_2$, with
-    %
-    \[ g_n(x) = \mathbf{I}(x = 1) \]
-    %
-    Let us count all instances when $g_n$ is rejected by the BLR test. There are three possibilities where $g_n(x + y) \neq g_n(x) + g_n(y)$:
-    %
-    \begin{itemize}
-        \item If $x = 1$ and $y \neq 1$.
-        \item If $x \neq 1$ and $y = 1$.
-        \item If $x \neq 1$ and $y \neq 1$, and $x + y = 1$.
-    \end{itemize}
-    %
-    There are $2^n - 1$ instances of the first and second rejection, and $2^n - 2$ instances of the third. Thus
-    %
-    \[ \mathbf{P}(\text{BLR rejects $g_n$}) = \frac{2(2^n - 1) + (2^n - 2)}{4^n} = \frac{3}{2^n} - \frac{4}{4^n} \]
-    %
-    and $g_n$ is $1/2^n$ close to $0$. If there was a lower bound of the form $C \varepsilon - O(\varepsilon^2)$, for $C > 3$, and if we write $1/2^n = \varepsilon$, then for big enough $n$ we find
-    %
-    \[ 3\varepsilon - 4\varepsilon^2 \geq (3 + \delta) \varepsilon \]
-    %
-    Hence
-    %
-    \[ -4\varepsilon \geq \delta \]
-    %
-    which is impossible since we can let $\varepsilon$ tend to zero.
 \end{proof}
 
-The converse of this statement is that if the BLR test accepts $f$ with probability greater than $1 - \varepsilon + O(\varepsilon^2)$, then $f$ is $\varepsilon/3$ close to being linear. Thus for small $\varepsilon$ the bound on similarity to a linear function is even more tight than we initially calculated.
+The converse of this statement is that if the BLR test accepts $f$ with probability greater than $1 - \varepsilon + O(\varepsilon^2)$, then $f$ is $\varepsilon/3$ close to being linear. Thus for small $\varepsilon$ the bound on similarity to a linear function is tighter than we initially calculated. This makes sense because, when $f$ is very close to a linear function, it seems intutitive that it is difficult for $f(xy) = f(x)f(y)$ {\it not} to hold.
+
+This is the best upper bound we can obtain, up to a first order. For each $n$, consider the function $g_n: \mathbf{F}_2^n \to \mathbf{F}_2$, with $g_n(x) = \mathbf{I}(x = 1)$. Let us count all instances when $g_n$ is rejected by the BLR test. There are three possibilities where $g_n(x + y) \neq g_n(x) + g_n(y)$:
+%
+\begin{itemize}
+    \item If $x = 1$ and $y \neq 1$.
+    \item If $x \neq 1$ and $y = 1$.
+    \item If $x \neq 1$ and $y \neq 1$, and $x + y = 1$.
+\end{itemize}
+%
+There are $2^n - 1$ instances of the first and second rejection, and $2^n - 2$ instances of the third. Thus
+%
+\[ \mathbf{P}(\text{BLR rejects $g_n$}) = \frac{2(2^n - 1) + (2^n - 2)}{4^n} = \frac{3}{2^n} - \frac{4}{4^n} \]
+%
+and $g_n$ is $1/2^n$ close to $0$. If there was a lower bound of the form $C \varepsilon - O(\varepsilon^2)$, for $C > 3$, and if we write $1/2^n = \varepsilon$, then for big enough $n$ we find $3\varepsilon - 4\varepsilon^2 \geq (3 + \delta) \varepsilon$, hence $-4\varepsilon \geq \delta$, which is impossible since we can let $\varepsilon$ tend to zero.
  
 \section{The Walsh-Fourier Transform}
 
-Historically, the study of the Fourier transform on $\mathbf{F}_2^n$ emerged from the Fourier theory of $L^2[0,1]$. Consider the product group $\mathbf{F}_2^\infty = \prod \mathbf{F}_2$, which is a compact abelian group. We have the standard projects $i_n: \mathbf{F}_2^n \to \mathbf{F}_2^\infty$, defined by $i_n(x_1, \dots, x_n) = (x_1, \dots, x_n, 0, 0, \dots)$. In addition, we have the projections $\pi_n(x_1, x_2, \dots) = (x_1, \dots, x_n)$. Given a character $f$ on $\mathbf{F}_2^\infty$, each $f \circ i_n$ is a character on $\mathbf{F}_2^n$, and can thus be written $\chi_{S_n}$ for some $S_n \subset [n]$. The sets $S_n$ defined must be increasing in $n$, and for $n \leq m$, satisfy $S_m \cap [n] = S_n$. For any $x = (x_1, x_2, \dots)$ in $\mathbf{F}_2^\infty$, the sequence $\pi_n(x)$ converges to $x$, and hence
+Historically, the study of the Fourier transform on $\mathbf{F}_2^n$ emerged from a novel analysis of the Fourier expansions of $L^2[0,1]$. In this section we consider this development for completeness. Consider the product group $\mathbf{F}_2^\infty = \prod \mathbf{F}_2$, which is a compact abelian group. We have the standard projections $i_n: \mathbf{F}_2^n \to \mathbf{F}_2^\infty$, defined by $i_n(x_1, \dots, x_n) = (x_1, \dots, x_n, 0, 0, \dots)$. In addition, we have the projections $\pi_n(x_1, x_2, \dots) = (x_1, \dots, x_n)$. Given a character $f$ on $\mathbf{F}_2^\infty$, each $f \circ i_n$ is a character on $\mathbf{F}_2^n$, and can thus be written $\chi_{S_n}$ for some $S_n \subset [n]$. The sets $S_n$ defined must be increasing in $n$, and for $n \leq m$, satisfy $S_m \cap [n] = S_n$. For any $x = (x_1, x_2, \dots)$ in $\mathbf{F}_2^\infty$, the sequence $\pi_n(x)$ converges to $x$, and hence
 %
 \[ f(x) = \lim \pi_n(x) = \lim x^{S_n} \]
 %
-If $\bigcup S_n$ is not a bounded subset of the integers, then the equation above says $f$ cannot be a continuous character on $\mathbf{F}_2^\infty$. Thus the characters on $\mathbf{F}_2^\infty$ correspond to finite subsets of positive integers, and are essentially the inductive limit of the character groups $(\mathbf{F}_2^n)^*$.
+If $S = \lim S_n$ is not a bounded subset of the integers, then the limit above can be allowed to oscillate infinitely between $-1$ and $1$, hence $f$ cannot be a {\it continuous} character on $\mathbf{F}_2^\infty$. We therefore find that characters on $\mathbf{F}_2^\infty$ correspond to finite subset of positive integers, and topologically is essentially the inductive limit of the character groups $(\mathbf{F}_2^n)^*$.
 
 An important link between probability theory and real analysis is that the binary expansion of real numbers on $[0,1]$,
 %
@@ -381,9 +469,7 @@ can be seen as defining a measure preserving map between $\mathbf{F}_2^\infty$ a
 %
 \[ (x_1, x_2, \dots) \mapsto \sum_{m = 1}^\infty \frac{x_m}{2^m} \]
 %
-which is injective almost everywhere. Thus we can find a uniform distribution over $[0,1]$ by taking the binary expansion obtained by flipping a fair coin infinitely many times.
-
-Returning to our interests, the Harmonic analysis of $\mathbf{F}_2^\infty$ gives rise to an expansion theory on $[0,1]$. In particular, we find that the characters $\chi_S$, which form an orthonormal basis for $L^2(\mathbf{F}_2^\infty)$ correspond to an orthonormal basis of functions on $L^2[0,1]$ of the form
+which is injective almost everywhere. Thus we can find a uniform distribution over $[0,1]$ by taking the binary expansion obtained by flipping a fair coin infinitely many times. Important to our work is that the harmonic analysis of $\mathbf{F}_2^\infty$ gives rise to an expansion theory on $[0,1]$. In particular, we find that the characters $\chi_S$, which form an orthonormal basis for $L^2(\mathbf{F}_2^\infty)$ correspond to an orthonormal basis of functions on $L^2[0,1]$ of the form
 %
 \[ w^S(x) = \chi_S(x_1, x_2, \dots) = \prod_{i \in S} (-1)^{x_i} = \prod_{i \in S} r_i(x) \]
 %
@@ -393,34 +479,34 @@ where $r_i(x) = (-1)^{x_i}$ is the $i$'th Rademacher function. Because integers 
 %
 and this is essentially where the beginnings of the study of Boolean expansions began, by Walsh in the 1920s. These expansions have very good $L^p$ truncations, but they are less used in modern mathematics because the functions $w_n$ are not smooth, and as such are not useful in the study of partial differential equations.
 
-For our purposes, we shall be interested in this system in order to come up with a computationally efficient way of computing the Walsh-Fourier expansion of a boolean valued function $f: \mathbf{F}_2^n \to \mathbf{R}$. For an integer $k$, define $k_n$ to be the coeffient in the binary expansion
+For the purposes of discrete Boolean analysis, we shall be interested in this system in order to come up with a computationally efficient way of computing the Walsh-Fourier expansion of a boolean valued function $f: \mathbf{F}_2^n \to \mathbf{R}$. For an integer $k$, define $k_n$ to be the coeffient in the binary expansion
 %
 \[ k = \sum k_n 2^n \]
 %
-First, note that there is a basis $\{ X_i \}$ of functions from $\mathbf{F}_2^n \to \mathbf{R}$ defined by
+First, note that there is a basis $\{ X_k \}$ of functions from $\mathbf{F}_2^n \to \mathbf{R}$ defined by
 %
 \[ X_k = \mathbf{I}(x_1 = k_1, \dots, x_n = k_n) \]
 %
-and a basis $\{ Y_i \}$ of elements of $\mathbf{R} \langle \mathbf{F}_2^* \rangle$ defined by
+and a basis $\{ Y_k \}$ of elements of functions from $\mathbf{F}_2^*$ to $\mathbf{R}$ defined by
 %
 \[ Y_k = \chi_{\{ i : k_i = 1 \}}  \]
 %
-Since the Walsh transform is effectively a map from $\mathbf{R}^{\mathbf{F}_2}$ to $\mathbf{R} \langle \mathbf{F}_2^* \rangle$, these bases induce a matrix representation of the transform. We have
+Since the Walsh transform $\mathcal{W}$ is effectively a map from $\mathbf{R}^{\mathbf{F}^n_2}$ to $\mathbf{R}^{(\mathbf{F}^n_2)^*}$, these bases induce a matrix representation $W$ of the transform. We have
 %
-\[ \mathcal{W}(X_n) = \frac{1}{2^n} \sum_S (-1)^{\sum_{m \in S} k_m} \chi_S \]
+\[ \mathcal{W}(X_l) = \frac{1}{2^n} \sum_S (-1)^{\sum_{m \in S} l_m} \chi_S = \frac{1}{2^n} \sum_k (-1)^{\sum l_i k_i} Y_k \]
 %
 Hence if we define the matrices
 %
-\[ H_1 = \begin{pmatrix} 1 \end{pmatrix} \]
-\[ H_{n+1} = \begin{pmatrix} H_n & H_n \\ H_n & -H_n \end{pmatrix} \]
+\[ H^1 = \begin{pmatrix} 1 \end{pmatrix} \]
+\[ H^{n+1} = \begin{pmatrix} H^n & H^n \\ H^n & -H^n \end{pmatrix} \]
 %
-Then the matrix representation of $\mathcal{W}$ is $H_n/2^n$, because, as can be proved by induction, the $(a,b)$'th entry of $H_n$ is $(-1)^{\sum a_i b_i}$. By a divide and conquer approach, if we write a vector in $\mathbf{R}^{\mathbf{F}_2^n}$ as $(v,w)$, where $v$ and $w$ split the space in half according to the basis defined above, then
+Then $W = H_n/2^n$, because, as can be proved by induction, $H^n_{ab} = (-1)^{\sum a_i b_i}$. By a divide and conquer approach, if we write a vector in $\mathbf{R}^{\mathbf{F}_2^n}$ as $(v,w)$, where $v$ and $w$ split the space in half according to the basis defined above, then
 %
 \[ H_{n+1}(v,w) = (H_nv + H_nw, H_nv - H_nw) \]
 %
-Using this approach, if $t_n$ is the number of additions and subtractions required to calculate the Walsh transform a $n$-dimensional Boolean function, then $t_{n+1} = 2t_n + 2n$, with $t_1 = 0$, then
+Using this approach, if $t_n$ is the maximum number of additions and subtractions required to calculate the Walsh transform a $n$-dimensional Boolean function, then $t_{n+1} \leq 2t_n + 2n$, with $t_1 = 0$, hence
 %
-\[ t_n = 2^{n+1} \sum_{k = 2}^n k \left(\frac{1}{2}\right)^{k} \leq n2^{n+1} \sum_{k = 2}^n \left( \frac{1}{2} \right)^k \leq n2^n \]
+\[ t_n \leq 2^{n+1} \sum_{k = 2}^n k \left(\frac{1}{2}\right)^{k} \leq n2^{n+1} \sum_{k = 2}^n \left( \frac{1}{2} \right)^k \leq n2^n \]
 %
 so the calculation is possible in $n2^n$ calculations, which looks bad, but the algorithm is polynomial in the size of the input, because an element of $\mathbf{R}^{\mathbf{F}_2^n}$ takes $m = 2^n$ numbers to specify, so the algorithm is $m \lg m$. This is essentially the fastest way to compute the Fourier coefficients of an arbitrary boolean function.
 
@@ -429,12 +515,14 @@ so the calculation is possible in $n2^n$ calculations, which looks bad, but the 
 
 \chapter{Social Choice Functions}
 
-In this chapter, we interpret boolean functions in the context of the theory of social choice. Here we think of a boolean function $f: \{ -1, 1 \}^n \to \{ -1, 1 \}$ as a voting rule; $n$ people choose between two candidates, labelled $-1$ and $1$, and the function $f$ determines the overall outcome of the vote. In this scenario is is natural to try and find fair voting rules, and this leads to classifications of Boolean functions by properties relating to voting principles, and we will find these properties naturally have interest in the harmonic analysis of boolean functions in other general contexts.
-
-The standard voting rule over an odd number of candidates is the Majority function $\text{Maj}_n: \{ -1, 1 \}^n \to \{ -1, 1 \}$, for $n$ odd, which choose the candidate with the majority of votes. A function over even $n$ is called a majority function if it always chooses the candidate with the majority of votes when possible. But there are certainly other voting rules which are applied in practice.
+We now interpret boolean functions in a particular non-abstract scenario in the theory of social choice. Here a Boolean function $f: \{ -1, 1 \}^n \to \{ -1, 1 \}$ is employed as a device in a two-candidate election. A group of $n$ people choose between two candidates, labelled $-1$ and $1$, which are fed into the function $f$ as a voting rule to determine the overall outcome of the vote. In this situation it is natural to find voting rules with various properties relavent to promoting a fair election, and these properties also have an interest in the general context of the harmonic analysis of Boolean functions.
 
 \begin{example}
-    The voting rule $\text{And}_n: \{ -1, 1 \}^n \to \{ -1, 1 \}$ corresponds to choosing candidate 1 unless every other person votes for candidate $-1$. The rule $\text{Or}_n: \{ -1, 1 \}^n \to \{ -1, 1 \}$ votes for candidate $-1$ unless everyone else votes against him.
+    The standard Boolean function used as a voting rule is the majority function $\text{Maj}_n: \{ -1, 1 \}^n \to \{ -1, 1 \}$, which outputs the candidate who got the majority of votes. This is always well defined with an odd number of voters, but there are issues with ties when an even number of voters is given. A function is called a majority function if it always chooses the candidate with the majority of votes where this step is well defined.
+\end{example}
+
+\begin{example}
+    The voting rule $\text{And}_n: \{ -1, 1 \}^n \to \{ -1, 1 \}$ chooses candidate 1 unless every other person votes for candidate $-1$. Similarily, the voting rule $\text{Or}_n: \{ -1, 1 \}^n \to \{ -1, 1 \}$ votes for candidate $-1$ unless everyone else votes against him.
 \end{example}
 
 \begin{example}
@@ -446,7 +534,7 @@ The standard voting rule over an odd number of candidates is the Majority functi
     %
     \[ f(x) = \text{sgn}(a_0 + a_1x_1 + \dots + a_nx_n) \]
     %
-    Thus each voter has a certain voting power, specified by the $a_i$, and there is an additional bias $a_0$. 
+    Thus each voter has a certain voting power, specified by the $a_i$, and there is an additional bias $a_0$ which pushes the vote in a certain candidate's favour.
 \end{example}
 
 \begin{example}
@@ -464,7 +552,7 @@ The standard voting rule over an odd number of candidates is the Majority functi
     %
     \[ \text{Tribes}_{ws}(x_1, \dots, x_s) = \text{Or}_s(\text{And}_w(x_1), \dots, \text{And}_w(x_s)) \]
     %
-    where each $x_i \in \{ -1, 1 \}^w$.
+    where each $x_i \in \{ -1, 1 \}^w$. The number of ways we can screw up each individual election is $(2^w - 1)$, so that $\mathbf{P}(\text{Tribes}_{ws} = 1) = (2^w - 1)^s/2^{sw} = (1 - 2^{-w})^s$, and so $\mathbf{E}[\text{Tribes}_{ws}] = 2(1 - 2^{-w})^s - 1$. If we control the size of $w$ and $s$, we can therefore get an unbiased education.
 \end{example}
 
 Any boolean function is a voting rule on two candidates, so the study of voting functions is really just a language for talking about general properties of boolean functions. However, it certainly motivates the development of certain contexts which will become very useful in the future. For instance, important properties of Boolean functions become desirable properties of voting rules. In particular,
@@ -523,9 +611,7 @@ The impartial culture assumption is not only for simplicity, in the face of no o
 \end{example}
 
 \begin{example}
-    The $i$'th index is pivotal for the $\text{And}_n$ function only at the points $1$ and $1^{\oplus i}$, so that
-    %
-    \[ \text{Inf}_i(\text{And}_n) = 2/2^n = 2^{1-n} \]
+    The $i$'th index is pivotal for $\text{And}_n$ only at the points $1$ and $1^{\oplus i}$, so that $\text{Inf}_i(\text{And}_n) = 2/2^n = 2^{1-n}$.
 \end{example}
 
 \begin{example}
@@ -568,7 +654,7 @@ Defining the $i$'th {\bf Laplacian} operator $L_i = x_i D_i$, we find
 %
 \[ (L_i f)(x) = \sum_{i \in S} \widehat{f}(S) x^S \]
 %
-Hence $L_i$ is a projection operator, satisfying $\text{Inf}_i(f) = \langle L_i f, L_i f \rangle = \langle f, L_i f \rangle$. Thus we have found a quadratic representation of $\text{Inf}_i(f)$.
+Hence $L_i$ is a projection operator, satisfying $\text{Inf}_i(f) = \langle L_i f, L_i f \rangle = \langle f, L_i f \rangle$. Thus we have found a quadratic representation of $\text{Inf}_i(f)$. This will have widespread influences throughout the theory. In particular, we can now already see that an index $i$ is nonessential if and only if $\widehat{f}(S) = 0$ for all sets $S$ such that $i \in S$.
 
 We shall dwell on the Laplacian for slightly longer than the other operators, since we will find it's generalization occuring in future discussion. As a projection operator, it has a complementary projection
 %
@@ -607,6 +693,19 @@ This inequality only becomes an equality when $f$ is always increasing in the $i
     Putting these equations together gives us the inequality.
 \end{proof}
 
+The second is that there are very few Boolean valued functions with Fourier coefficients bounded by degree one.
+
+\begin{lemma}
+    If $f: \{ -1, 1 \}^n \to \{ -1, 1 \}$ has $W^{\leq 1}(f) = 1$, then $f$ is either constant, or $\pm x^i$ for some $i \in [n]$.
+\end{lemma}
+\begin{proof}
+    Write $f(x) = a + \sum b_j x_j$. Then $(D_i f)(x) = b_i$. Because $f$ is Boolean valued,
+    %
+    \[ (D_i f)(x) = \frac{f(x^{i \to 1}) - f(x^{i \to -1})}{2} \in \{ 0, \pm 1 \} \]
+    %
+    Hence $b_i = 0$ or $b_i = \pm 1$. If all $b_i$ are equal to zero, then $f$ is constant. Otherwise, there is $b_i$ with $b_i^2 = 1$, and then all other coefficients must vanish, and so $f(x) = x_i$ or $f(x) = -x_i$.
+\end{proof}
+
 The {\bf total influence} of a boolean function $f: \{ -1, 1 \}^n \to \{ -1, 1 \}$, denoted $\mathbf{I}(f)$, is the sum of the influences $\text{Inf}_i(f)$ over each coordinate. It is not a measure of how powerful each voter is, but instead how chaotic the system is with respect to how any of the voters change their coordinates. For instance, constant functions have total influence zero, where no vote change effects the outcome in any way, whereas the function $x^{[n]}$ has total influence $n$, since every change in a voters choices flips the outcome of the vote. For monotone transitive symmetric voting rules, we already know the total influence is bounded by $\sqrt{n}$, and this is asymptotically obtained by the majority function.
 
 \begin{example}
@@ -615,6 +714,10 @@ The {\bf total influence} of a boolean function $f: \{ -1, 1 \}^n \to \{ -1, 1 \
     \[ \sqrt{2n/\pi} + O \left( \sqrt{1/n} \right) \]
     %
     which is the maximum total influence of any monotone transitive symmetric function.
+\end{example}
+
+\begin{example}
+    The tribes function
 \end{example}
 
 As a sum of quadratic forms, the total influence is also a quadratic form, but cannot be represented by a projection. Considering
@@ -643,7 +746,22 @@ Hence $(Lf)(x) = f(x) \text{sens}_f(x)$.
 
 There is also a combinatorial interpretation of the total influence. Each vertex has $n$ edges, and if we consider the probability distribution which first picks a point on the cube uniformly, and then an edge uniformly, then the resulting distribution will be the uniform distribution on edges. Since the expected number of {\bf boundary edges} (those $(x,y)$ for which $f(x) \neq f(y)$) eminating from a vertex is $\mathbf{I}(f)$, the chance that the edge we pick will be a boundary edge is $\mathbf{I}(f)/n$.
 
-Since $\mathbf{V}(f) = \sum_{k \neq 0} \mathbf{W}^k(f)$, and $\mathbf{I}(f) = \sum_{k \neq 0} k\mathbf{W}^k(f)$, it is fairly trivial to obtain the Poincare inequality $\mathbf{V}(f) \leq \mathbf{I}(f)$, which gives a strictly inequality unless $\mathbf{W}^{> 2}f = 0$. For Boolean valued functions, the only such functions are the singular characters $\pm x^i$ and the constant functions. Geometrically, the poincare inequality gives an edge expansion bound for functions on the Hamming cube. Given a subset $A$ of the $n$ dimensional Hamming cube with $m$ points, and if $\alpha = m/2^n$, then the `characteristic function' $I_f: \{ -1, 1 \}^n \to \{ -1, 1 \}$ has variation $4 \alpha (1 - \alpha)$, and therefore the fraction of edges in the cube which form a boundary edge is lower bounded by $4\alpha(1-\alpha)/n$. In particular, for the set $A$ corresponding to $x^{[n]}$, where $\alpha = 1/2$, we see this bound is tight, as for $\alpha = 0$ and $\alpha = 1$. However, for other values of $\alpha$ must better bounds can be obtained.
+Since $\mathbf{V}(f) = \sum_{k \neq 0} \mathbf{W}^k(f)$, and $\mathbf{I}(f) = \sum_{k \neq 0} k\mathbf{W}^k(f)$, it is fairly trivial to obtain the Poincare inequality $\mathbf{V}(f) \leq \mathbf{I}(f)$, which gives a strict inequality unless $\mathbf{W}^{> 2}f = 0$. If the low degree coefficients of the function vanish, then we can give an even sharper inequality -- if $\mathbf{W}^{< k}(f) = 0$, then $\mathbf{V}(f) \leq \mathbf{I}(f)/k$. Conversely, $\text{Inf}_i(f) \leq \mathbf{V}(f) \leq \mathbf{I}(f)$, so the variance is likely close to the total influence when the influence is concentrated on a single voter. For Boolean valued functions, the only such functions are the singular characters $\pm x^i$ and the constant functions. Geometrically, the poincare inequality gives an edge expansion bound for functions on the Hamming cube. Given a subset $A$ of the $n$ dimensional Hamming cube with $m$ points, and if $\alpha = m/2^n$, then the `characteristic function' $I_f: \{ -1, 1 \}^n \to \{ -1, 1 \}$ has variation $4 \alpha (1 - \alpha)$, and therefore the fraction of edges in the cube which form a boundary edge is lower bounded by $4\alpha(1-\alpha)/n$. In particular, for the set $A$ corresponding to $x^{[n]}$, where $\alpha = 1/2$, we see this bound is tight, as for $\alpha = 0$ and $\alpha = 1$. However, for other values of $\alpha$ must better bounds can be obtained.
+
+\begin{lemma}
+    If $f: \{ -1, 1 \}^n \to \{ -1, 1 \}$ is an unbiased Boolean function, then there is $i$ with $\text{Inf}_i(f) \geq 2/n - 4/n^2$.
+\end{lemma}
+\begin{proof}
+    Let $j$ be the index which maximizes $\text{Inf}_j(f)$. First, note that $\text{Inf}_j(f) \geq 1/n$, for if $\text{Inf}_i(f) < 1/n$, then we find $\mathbf{I}(f) < 1 = \mathbf{V}(f)$, which is impossible. Now, because $f$ is unbiased,
+    %
+    \[ \mathbf{I}(f) \geq \mathbf{W}^1(f) + 2(1 - \mathbf{W}^1) = 2 - \mathbf{W}^1(f) \]
+    %
+    Now we use the fact that $|\widehat{f}(i)| \leq \text{Inf}_i(f)$ to conclude that
+    %
+    \[ \mathbf{W}^1(f) = \sum \widehat{f}(i)^2 \leq n \text{Inf}_j(f)^2 \]
+    %
+    hence $n \text{Inf}_j(f) \geq \mathbf{I}(f) \geq 2 - n \text{Inf}_j(f)^2$. Rearranging, we can calculate that $\text{Inf}_j(f) \geq 2/n - \text{Inf}_j(f)^2$, hence the inequality is satisfied assuming that $\text{Inf}_j(f) \leq 2/n$. Thus we can assume that $\text{Inf}_j(f) \geq 2/n$, but then the inequality is trivial.
+\end{proof}
 
 Returning to our discussion of voting systems, an additional property to consider is the expected number of voters who agree with the outcome of the vote.
 
@@ -682,19 +800,19 @@ Returning to our discussion of voting systems, an additional property to conside
 
 In realistic voting systems, the inputs to voting systems are rarely the most reliable. Some voters don't even show up to voting booths to announce their choice of candidate, and errors in the recording of data mean that the input might not even be accurate to the choices of voters. It is important for a voting rule to remain stable under these pertubations, so that the outcome of the modifed vote is likely to be the same as the outcome of the original vote, if we had perfect knowledge of all voting choices.
 
-So our general rule with which we will define the {\bf stability} of a voting rule $f$, is to find the probability that $f(x) \neq f(y)$, where $y$ is obtained by a slight pertubation of $x$. We'll say two Boolean-valued random variables $X$ and $Y$ are $p$-correlated, for some $p \in [-1,1]$ if $\mathbf{E}[XY] = p$. This is equivalent to
+So our general rule with which we will define the {\bf stability} of a voting rule $f$, is to find the probability that $f(x) \neq f(y)$, where $y$ is obtained by a slight pertubation of $x$. We'll say two Boolean-valued random variables $X$ and $Y$ are $\rho$-correlated, for some $\rho \in [-1,1]$ if $\mathbf{E}[XY] = \rho$. This is equivalent to
 %
 \[ \mathbf{P}(Y = X) = \frac{1 + \rho}{2} \]
 %
-Given a random variable $X$, we can generate a random variable $Y$ which is $p$-correlated to $X$ by letting $Y = X$ with probability $p$, and otherwise choosing $Y$ uniformly randomly. We write $Y \sim N_p(X)$ is $Y$ is $p$-correlated to $X$. This is the sense with which we will need $p$-correlation, for $p$-correlation represents a certain value being randomly perturbed by a small quantity. Similarily, if $X$ and $Y$ are multidimensional Boolean-valued functions, we say $X$ is $p$-correlated to $Y$ if the coordinates of $X$ and $Y$ are independant, and each coordinate in $X$ is $p$-correlated to the corresponding coordinate in $Y$. We can now define the stability with respect to $p$ as
+Given a random variable $X$, we can generate a random variable $Y$ which is $\rho$-correlated to $X$ by letting $Y = X$ with probability $\rho$, and otherwise choosing $Y$ uniformly randomly. We write $Y \sim N_\rho(X)$ is $Y$ is $\rho$-correlated to $X$. This is the sense with which we will need $\rho$-correlation, for $\rho$-correlation represents a certain value being randomly perturbed by a small quantity. Similarily, if $X$ and $Y$ are multidimensional Boolean-valued functions, we say $X$ is $\rho$-correlated to $Y$ if the coordinates of $X$ and $Y$ are independant, and each coordinate in $X$ is $\rho$-correlated to the corresponding coordinate in $Y$. We can now define the stability with respect to $\rho$ as
 %
-\[ \text{Stab}_p(f) = \underset{Y \sim N_p(X)}{\mathbf{E}}[f(X)f(Y)] \]
+\[ \text{Stab}_\rho(f) = \underset{Y \sim N_\rho(X)}{\mathbf{E}}[f(X)f(Y)] \]
 %
 where $X$ is chosen uniformly. We of course find
 %
-\[\text{Stab}_p(f) = 2 \left( \underset{Y \sim N_p(X)}{\mathbf{P}} f(X) = f(Y)  \right) - 1 \]
+\[\text{Stab}_\rho(f) = 2 \left( \underset{Y \sim N_\rho(X)}{\mathbf{P}} f(X) = f(Y)  \right) - 1 \]
 %
-Thus if the voting system is modified by some small random quantity $p$, the chance that this will affect the outcome of the vote is $[1 + \text{Stab}_p(f)]/2$.
+Thus if the voting system is modified by some small random quantity $\rho$, the chance that this will affect the outcome of the vote is $[1 + \text{Stab}_\rho(f)]/2$.
 
 An alternate measure of the sensitivity of a function, which may be easier to reason with, is the probability that the vote is disrupted if we purposefully reverse each coordinate of $X$ independently with a small probability $\delta$, forming the random variable $Y$. Thus $\mathbf{P}(Y = X) = 1 - \delta$, hence $Y$ is $1 - 2\delta$-correlated to $X$. We define the {\bf noise sensitivity} based on this correlation to be
 %
@@ -726,28 +844,28 @@ So that there is a linear correlation between the two measures of stability.
     Hence the noise stability curves sharply near small and large values of $\rho$.
 \end{example}
 
-That noise stability is tightly connected to the Fourier coefficients of the function is one of the most powerful tools in Boolean harmonic analysis. As with the influence, we introduce an operator to provide us with a connection to the coefficients. We introduce the {\bf noise operator} with parameter $p$ as
+That noise stability is tightly connected to the Fourier coefficients of the function is one of the most powerful tools in Boolean harmonic analysis. As with the influence, we introduce an operator to provide us with a connection to the coefficients. We introduce the {\bf noise operator} with parameter $\rho$ as
 %
-\[ (T_p f)(x) = \underset{X \sim N_p(x)}{\mathbf{E}} f(X) \]
+\[ (T_\rho f)(x) = \underset{X \sim N_\rho(x)}{\mathbf{E}} f(X) \]
 %
-which `smoothes out' the function $f$ by a certain parameter $p$. $T_p$ is obviously linear, and
+which `smoothes out' the function $f$ by a certain parameter $\rho$. $T_\rho$ is obviously linear, and
 %
-\[ (T_p x^S) = \mathbf{E}[X^S] = \prod_{i \in S} \mathbf{E}[X^i] = \prod_{i \in S} \left( \left( \frac{1 + \rho}{2} \right) x^i - \left( \frac{1 - \rho}{2} \right) x^i \right) = \rho^{|S|} x^S \]
+\[ (T_\rho x^S) = \mathbf{E}[X^S] = \prod_{i \in S} \mathbf{E}[X^i] = \prod_{i \in S} \left( \left( \frac{1 + \rho}{2} \right) x^i - \left( \frac{1 - \rho}{2} \right) x^i \right) = \rho^{|S|} x^S \]
 %
 Hence the noise operator transforms the Fourier coeffients as
 %
-\[ (T_p f)(x) = \sum p^{|S|} \widehat{f}(S) x^S \]
+\[ (T_\rho f)(x) = \sum \rho^{|S|} \widehat{f}(S) x^S \]
 %
 The connection between the noise operator and the stability is that
 %
 \begin{align*}
-    \text{Stab}_p(f) &= \mathbf{E}[f(X)f(Y)] = \mathbf{E}[f(X)\mathbf{E}[f(Y) | X]]\\
-    &= \mathbf{E}[f(X) (T_pf)(X)] = \langle f, T_pf \rangle
+    \text{Stab}_\rho(f) &= \mathbf{E}[f(X)f(Y)] = \mathbf{E}[f(X)\mathbf{E}[f(Y) | X]]\\
+    &= \mathbf{E}[f(X) (T_\rho f)(X)] = \langle f, T_\rho f \rangle
 \end{align*}
 %
 Thus stability is a quadratic form, and so we find
 %
-\[ \text{Stab}_p(f) = \sum_p \rho^{|S|} \widehat{f}(S)^2 = \sum_k \rho^k \mathbf{W}^k(f) \]
+\[ \text{Stab}_\rho(f) = \sum_S \rho^{|S|} \widehat{f}(S)^2 = \sum_k \rho^k \mathbf{W}^k(f) \]
 %
 Correspondingly, we have
 %
@@ -759,12 +877,21 @@ Correspondingly, we have
 %
 Hence $\mathbf{NS}_\delta$ can also be represented as a quadratic form.
 
-The operators $T_\rho$ form a local one-parameter semigroup of the set of all operators on Boolean functions, because $T_\rho T_\mu = T_{\rho \mu}$. This essentially follows because if $X$ is $\mu$ correlation to the constant $x \in \{ -1, 1 \}$, and $Y$ is $\rho$ correlated to $X$, then $Y$ is $\rho \mu$ correlated to $x$, since
+That all the operators that we have found can be considered as a quadratic form should not be taken as a hint that all interesting operators in Boolean analysis are quadratic, just that the ones easiest to understand happen to be. And these operators are even more easy to understand because they are diagonalized by the characters $x^S$, which all happen to be Eigenvalues. And if that wasn't enough, all the eigenvalues are positive, which implies that the functionals are convex -- given a functional $F$ with $F(\sum a_S x^S) = \sum b_S a_S^2$, where $b_S \geq 0$, and given $f$ and $g$, using the convexity of $x^2$ we find
 %
 \begin{align*}
-    \mathbf{P}(Z = x) &= \left( \frac{1 + \mu}{2} \right) \mathbf{P}(Y = X) + \left( \frac{1 - \mu}{2} \right) \mathbf{P}(Y \neq X)\\
-    &= \left( \frac{1 + \mu}{2} \right) \left( \frac{1 + \rho}{2} \right) + \left( \frac{1 - \mu}{2} \right) \left( \frac{1 - \rho}{2} \right)\\
-    &= \frac{1 + \rho \mu}{2}
+    F(\lambda f + (1 - \lambda) g) &= \sum_S b_S \left[ \lambda \widehat{f}(S) + (1 - \lambda) \widehat{g}(S) \right]^2\\
+    &\leq \sum_S b_S \left[ \lambda \widehat{f}(S)^2 + (1 - \lambda) \widehat{g}(S)^2 \right]\\
+    &\leq \lambda F(f) + (1 - \lambda) F(g)
+\end{align*}
+%
+Thus these operators are incredibly applicable to understanding.
+
+The operators $T_\rho$ form a local one-parameter semigroup of the set of all operators on Boolean functions, because $T_\rho T_\mu = T_{\rho \mu}$. This essentially follows because if $X$ is $\mu$ correlated to the constant $x \in \{ -1, 1 \}$, and $Y$ is $\rho$ correlated to $X$, then $Y$ is $\rho \mu$ correlated to $x$, since
+%
+\begin{align*}
+    \mathbf{P}(Y = x) &= \mathbf{P}(X = x) \mathbf{P}(Y = X) + \mathbf{P}(X \neq x) \mathbf{P}(Y \neq X)\\
+    &= \left( \frac{1 + \mu}{2} \right) \left( \frac{1 + \rho}{2} \right) + \left( \frac{1 - \mu}{2} \right) \left( \frac{1 - \rho}{2} \right) = \frac{1 + \rho \mu}{2}
 \end{align*}
 %
 and this completes the argument. What's more, $T_\rho$ is a contraction on $L^q \{ -1,1 \}^n$ for all $q \geq 1$, because by Jensen's inequality, since $x \mapsto x^q$ is convex,
@@ -796,26 +923,43 @@ Using the Fourier representation, we can show that the dictator functions maximi
 \begin{proof}
     We write
     %
-    \[ \text{Stab}_p(f) = \sum p^{|S|} \widehat{f}(S)^2 \leq p \sum \widehat{f}(S)^2 = p \]
+    \[ \text{Stab}_\rho(f) = \sum \rho^{|S|} \widehat{f}(S)^2 \leq \rho \sum \widehat{f}(S)^2 = \rho \]
     %
     If this inequality is an equality, then $\mathbf{W}^{> 1}(f) = 0$, and it then follows that $f$ is either constant or a dictator function, and the constant functions are biased.
 \end{proof}
 
-Notice that $\text{Stab}_p(f)$ is a polynomial in $p$, with non-negative coefficients. It follows that the stability of a function increases as $p$ increases for positive $p$, and $\text{Stab}_0(f) = 1$. What's more, we find that, looking at the coefficients, that
+Notice that $\text{Stab}_\rho(f)$ is a polynomial in $\rho$, with non-negative coefficients. It follows that the stability of a function increases as $\rho$ increases for positive $\rho$, and $\text{Stab}_0(f) = 1$. What's more, we find that, looking at the coefficients, that
 %
-\[ \frac{d\text{Stab}_p(f)}{dp} = \sum_{S \neq \emptyset} |S| p^{|S| - 1} \widehat{f}(S)^2 \]
+\[ \frac{d\text{Stab}_\rho(f)}{d\rho} = \sum_{S \neq \emptyset} |S| \rho^{|S| - 1} \widehat{f}(S)^2 \]
 %
-Hence the derivative at $p = 0$ is $\mathbf{W}^1(f)$, and the derivative at $p = 1$ is $\mathbf{I}(f)$.
+Hence the derivative at $\rho = 0$ is $\mathbf{W}^1(f)$, and the derivative at $\rho = 1$ is $\mathbf{I}(f)$. We can also use this equation with the mean value theorem to determine a useful bound.
 
-We can incorporate stability into the concept of influence. For $p \in [0,1]$, define the {\bf $p$-stable influence}
+\begin{theorem}
+    For any Boolean function $f$,
+    %
+    \[ |\text{Stab}_\rho(f) - \text{Stab}_{\rho - \varepsilon}(f)| \leq \frac{\varepsilon}{1 - \rho} \mathbf{V}(f) \]
+\end{theorem}
+\begin{proof}
+    Using the mean value theorem, we can find $\eta \in (\rho - \varepsilon, \rho)$ such that
+    %
+    \[ \text{Stab}_\rho(f) - \text{Stab}_{\rho - \varepsilon}(f) = \varepsilon \frac{d \text{Stab}_\eta(f)}{d \eta} = \varepsilon \sum k \eta^{k - 1} \mathbf{W}^k(f) \]
+    %
+    Now we use the fact that $k \eta^{k-1} \leq 1/(1 - \eta)$ for all $0 \leq \eta \leq 1$, hence
+    %
+    \[ \varepsilon \sum k \eta^{k-1} \mathbf{W}^k(f) \leq \frac{\varepsilon}{1 - \eta} \mathbf{V}(f) \leq \frac{\varepsilon}{1 - \rho} \mathbf{V}(f) \]
+    %
+    Hence we have a Lipschitz inequality for $\text{Stab}_\rho(f)$ which explodes at the boundary, because the estimate $\sum x^k = 1/(1 - x)$ we used to establish this estimate breaks down at $\rho = 1$.
+\end{proof}
+
+We can incorporate stability into the concept of influence. For $\rho \in [0,1]$, define the {\bf $\rho$-stable influence}
 %
-\[ \text{Inf}_i^{(p)}(f) = \text{Stab}_p(D_i f) = \sum_{i \in S} \rho^{|S| - 1} \widehat{f}(S)^2 \]
+\[ \text{Inf}_i^{\ \rho}(f) = \text{Stab}_\rho(D_i f) = \sum_{i \in S} \rho^{|S| - 1} \widehat{f}(S)^2 \]
 %
 The {\bf total $p$-stable influence} is
 %
-\[ \mathbf{I}^{(p)}(f) = \sum \text{Inf}_i^{(p)}(f) = \sum_{i \in S} |S| \rho^{|S|-1} \widehat{f}(S)^2 \]
+\[ \mathbf{I}^{\rho}(f) = \sum \text{Inf}_i^{\ \rho}(f) = \sum_{i \in S} |S| \rho^{|S|-1} \widehat{f}(S)^2 \]
 %
-In this form, we see that $\mathbf{I}^{(p)}(f) = d\text{Stab}_p(f)/dp$, so that this $p$-stable influence measures the change in stability of a function with respect to $p$, but this isn't too useful, and there really isn't too much of a natural interpretation of the $p$-stable influences. Since $D_if$ measures if $f$ is pivotal at $f$, one intuitive idea of the $p$-stable influence is that it is a way of smoothening out how pivotal $D_if$ is; Though $D_if$ only measures the change in $f$ over the $i$'th coordinate, the $p$-stable influence now incorporates a small change in the other coordinates as well. Regardless of their interpretation, they will be technically very useful later on.
+In this form, we see that $\mathbf{I}^{\rho}(f) = d\text{Stab}_\rho(f)/d\rho$, so that this $\rho$-stable influence measures the change in stability of a function with respect to $\rho$. There isn't too much of a natural interpretation of the $\rho$-stable influences. Since $D_if$ measures if $f$ is pivotal at $f$, one intuitive insight about the $\rho$-stable influence is that it is a way of smoothening out how pivotal $D_if$ is; Though $D_if$ only measures the change in $f$ over the $i$'th coordinate, the $\rho$-stable influence now incorporates a slight change in the other coordinates as well. Regardless of their interpretation, they will be technically very useful later on.
 
 \begin{theorem}
     Suppose that a function $f$ satisfies $\mathbf{V}(f) \leq 1$. If $0 < \delta, \epsilon < 1$, then the number of indices $i$ for which $\text{Inf}^{(1 - \delta)}_i(f) \geq \varepsilon$ is less than or equal to $1/\delta\varepsilon$.
@@ -888,7 +1032,7 @@ It was Kenneth Arrow in the 1950s who found that there is always a chance that a
     The only voting rule $f: \{ -1, 1 \}^n \to \{ -1, 1 \}$ which always gives a Condorcet winner is the dictator functions $x^i$, or its negation.
 \end{theorem}
 \begin{proof}
-    If $f$ always gives a Condorcet winner, the chance of a winner is 1, hence rearranging the formula just derived, we find $\text{stab}_{-1/3}(f) = -1/3$. But then
+    If $f$ always gives a Condorcet winner, the chance of a winner is 1, hence rearranging the formula just derived, we find $\text{Stab}_{-1/3}(f) = -1/3$. But then
     %
     \[ \sum (-1/3)^k \mathbf{W}^k(f) = -1/3 \]
     %
@@ -978,7 +1122,7 @@ One way for a function to be `simple' is for its Fourier coeffients to be concen
 \end{proof}
 
 \begin{example}
-    The tribes function $\text{Tribes}_{w,2^w}$ has total influence $O(\log(w2^w)) = O(w)$, hence for any constant $c$, the tribes function is $c$-concentrated on degree up to $O(w)$.
+    The tribes function $\text{Tribes}_{w,2^w}$ has total influence $O(\log(n))$, hence for any constant $c$, the tribes function is $c$-concentrated on degree up to $O(\log(n))$.
 \end{example}
 
 Another estimate of the spectral concentration is obtained from the noise stability.
@@ -1038,7 +1182,7 @@ Using this lemma, since $\text{Inf}_i(f) = \mathbf{P}((D_if)(X) \neq 0)$, and if
     hence $\mathbf{I}(f)/2^{1-k} \leq k2^{k-1}$, and so $f$ is a $k2^{k-1}$ junta.
 \end{proof}
 
-The Friedgut Kalai Naor theorem is essentially a more robust version of this theorem, in the case where $k = 1$.
+The Friedgut Kalai Naor theorem is essentially a more robust version of this theorem, in the case where $k = 1$. What's more, we shall find that the next section gives us a reason why we can't improve this theorem by much more, because decision trees provide us with a method of constructing $\deg(f) \leq k$ functions which can access $k2^{k-1}$ coordinates.
 
 
 
@@ -1105,7 +1249,7 @@ Computational learning theory attempts to solve the following problem, motivated
     \item {\bf queries}, where we can request a specific value $x$ for any $x \in \{ -1, 1 \}^n$.
 \end{itemize}
 %
-The query method is at least as powerful as the random example method, because we can always randomly choose $x$ ourselves. After a certain number of steps, we are required to choose a {\bf hypothesis function} $h \in \mathcal{C}$. We say that an algorithm {\bf learns $\mathcal{C}$ with error $\varepsilon$} if for any $f \in \mathcal{C}$, the algorithm outputs a hypothesis function which is $\varepsilon$-close to $f$ with high probability. The particular accuracy probability baseline is irrelevant, since we can always adjust the baseline by introducing a polynomial number of steps.
+The query method is at least as powerful as the random example method, because we can always randomly choose $x$ ourselves. After a certain number of steps, we are required to choose a {\bf hypothesis function} $h \in \mathcal{C}$. We say that an algorithm {\bf learns $\mathcal{C}$ with error $\varepsilon$} if for any $f \in \mathcal{C}$, the algorithm outputs a hypothesis function (not necessarily in $\mathcal{C}$) which is $\varepsilon$-close to $f$ with high probability. The particular accuracy probability baseline is irrelevant, since we can always adjust the baseline by introducing a polynomial number of steps.
 
 As should be intuitive, the more `simple' the class $\mathcal{C}$ is, the faster it should be to recognize a hypothesis function. If $\mathcal{C}$ is suitably complex, then exponential running time may be necessary. Generalizing our definition of concentration of spectrum, we say $f$ is $\varepsilon$ concentrated on $\mathcal{F} \subset 2^{[n]}$ if 
 %
@@ -1268,11 +1412,183 @@ Then $|B_{k,S}| = 2^{n-k}$, the initial bucket is $B_{0,\emptyset}$, and any buc
 
 We now study property testing, probabilistically checkable proofs, and constraint satisfication problems. All our work is centered around {\it dictatorship testing} -- checking if an arbitrary boolean-valued function is a dictator. It turns out that being able to test if a certain function is a dictator is sufficient to test {\it any} property of boolean-valued functions, provided that the right `proof' is provided of the property.
 
-The field of property testing asks a simple problem. Given a collection $\mathcal{C}$ of $n$-bit Boolean-valued functions, and a function $f: \{ -1, 1 \}^n \to \{ -1, 1 \}$, how easy is to determine if $f \in \mathcal{C}$ using random examples or queries of the function. An {\bf $r$-query testing alogirhtm} for $\mathcal{C}$ is an algorithm which randomly chooses $r$ elements $x_1, \dots, x_n \in \{ 0, 1 \}^n$, queries $f(x_1), \dots, f(x_n)$, and decides deterministically whether $f \in \mathcal{C}$. A {\bf local tester} with rejection rate $\lambda > 0$ is an $r$-query tester which always accepts $f$ if $f \in \mathcal{C}$, and if $d(f,\mathcal{C}) > \varepsilon$, then the tester rejects $f$ with probability exceeding $\lambda \varepsilon$.
+The field of property testing asks a simple problem. Given a collection $\mathcal{C}$ of $n$-bit Boolean-valued functions, and a function $f: \{ -1, 1 \}^n \to \{ -1, 1 \}$, how easy is to determine if $f \in \mathcal{C}$ using (not necessarily uniformly) random examples or queries of the function. An {\bf $n$-query testing algorithm} for $\mathcal{C}$ is an algorithm which randomly chooses elements $x_1, \dots, x_n \in \{ 0, 1 \}^n$, queries $f(x_1), \dots, f(x_n)$, and decides deterministically whether $f \in \mathcal{C}$. An $n$-query {\bf local tester} with rejection rate $\lambda > 0$ is a test which always accepts $f$ if $f \in \mathcal{C}$, and if $d(f,\mathcal{C}) > \varepsilon$, then the tester rejects $f$ with probability exceeding $\lambda \varepsilon$. Taking the converse, we obtain our original property testing statements -- if $f$ is accepted with probability greater than $1 - \varepsilon$, then $d(f,\mathcal{C}) \leq \varepsilon/\lambda$.
 
 \begin{example}
-    The BLR test is a 3-query local tester with rejection rate 1 for the class of linear functions. Technically, the BLR test is really a family of testers for each dimension of Boolean function.
+    The BLR test is a 3-query local tester with rejection rate 1 for the class of linear functions (which acts like a 1/3 rejection rate for small enough $\varepsilon$). Technically, the BLR test is really a family of testers for each dimension of Boolean function, but we don't need to be that pedantic.
 \end{example}
+
+We could also consider adaptive testing algorithms, which allow us to choose each $x_i$ sequentially after viewing $f(x_1), \dots, f(x_{i-1})$, or we could consider local testors with more general rejection rates (quadratic or logarithmic instead of linear, for instance), and to allow the number of queries to depend on the error rate, but we'll focus on the current scenario for now.
+
+\section{Dictator Tests}
+
+Recall that a dictator function is a character $x^i$, for some $i \in [n]$, and we shall denote the set of dictators by $\mathcal{D}$. We shall find that the {\bf dictator testing} problem, which asks us to determine whether an arbitrary Boolean-valued function is a dictator, is one of the most important property testing problems there is.
+
+A dictator test could surely start by testing for linearity. Using a union bound, this would reduce the problem to testing whether an arbitrary character $x^S$ is a dictator. Classically, this was the method for constructing dictator tests. For instance, the dictators are the only characters which satisfy
+%
+\[ \text{and}(x^S, y^S) = \prod_{i \in S} \text{and}(x_i,y_i) \]
+%
+And so we can test whether this equation holds to determine whether we have a dictator. But using Arrow's theorem, and a bit of extra work, we can come up with a much more intelligent test.
+
+Given a Boolean-valued function $f$, take three random inputs $X,Y$, and $Z$ uniformly from the 6 possible random triples$(X,Y,Z)$ such that $\text{NAE}(X,Y,Z)$ holds, and compute $\text{NAE}(f(X),f(Y),f(Z))$. Accept $f$ if the outputs are not all equal. We have shown that if $f$ is accepted with probability $1 - \varepsilon$, then $\mathbf{W}^1(f) \geq 1 - (9/2) \varepsilon$, and the FKN theorem then implies that $f$ is $O(\varepsilon)$ close to a dictator or its negation. However, this isn't exactly a dictator test, and requires a very difficult theorem to obtain a guarantee on closeness. Fortunately, if we do a NAE test and a BLR test sequentially, then we obtain a 6 query $0.1$ rate dictator test, without using the FKN test.
+
+\begin{theorem}
+    Suppose that $f: \{ -1, 1 \}^n \to \{ -1, 1 \}$ passes both the BLR test and the NAE test with probability $1 - \varepsilon$.
+\end{theorem}
+\begin{proof}
+    We then know that $f$ passes the BLR test with at least probability $1 - \varepsilon$, hence $f$ is $\varepsilon$ close to some linear function $x^S$, and $f$ passes the NAE test with probability $1 - \varepsilon$, hence $\mathbf{W}^1(f) \geq 1 - (9/2) \varepsilon$. But if $S$ contains $k$ elements, then $\mathbf{W}^k(f) \geq \widehat{f}(S)^2 \geq (1 - 2\varepsilon)^2 = 1 - 4\varepsilon + 4\varepsilon^2$. If $k \neq 1$, then $2 + 4 \varepsilon^2 - (4 + 9/2) \varepsilon \leq 1$, which implies that $\varepsilon \geq 0.1$, and therefore $f$ is certainly $10 \varepsilon$ close to being linear. Otherwise, we find $f$ is $\varepsilon$ close to a linear function.
+\end{proof}
+
+We aren't that interested in finding a large rejection rate, but rather finding an algorithm that uses the least queries possible. There is a simple trick to reducing the number of queries of a property test, at the cost of rejection rate, when we perform multiple tests at once. Suppose we have a test consisting of consecutively performing multiple subtests with $q_1, \dots, q_n$ queries, then if we uniformly randomly choose {\it exactly one} test to do, then if our new algorithm is accepted with probability $1 - \varepsilon$, we can guarantee that every other test is accepted with probability $1 - n \varepsilon$, and we only do $\max(q_1, \dots, q_n)$ queries. For instance, we can modify our 6-query $0.1$-rate dictator test to a 3-query $0.05$-rate dictator test.
+
+One nice property of dictatorship testing is that we can use a dictatorship test to obtain a 3-query $0.01$ property test over any property $\mathcal{C} \subset \mathcal{D}$. We perform two tests on an input function $f$.
+%
+\begin{enumerate}
+    \item We perform a 3-query 0.1 rate dictatorship test on $f$.
+    \item Form the string $y$ by $y_i = -1$ if $x^i \in \mathcal{C}$, and $y_i = 1$ otherwise. Then $y^j = -1$ if and only if $x^j \in \mathcal{C}$. We perform local decoding on $f$ to calculate the value of $f$ if it was linear.
+\end{enumerate}
+%
+We only do one of these tests are random, so our test is 3-query. If the test is accepted on $f$ with probability $1 - \varepsilon$, then $f$ is accepted by the dictatorship test with probability $1 - 2\varepsilon$, hence $f$ is $20 \varepsilon$ close to some dictator $x^j$. Then we know that, if we perform local decoding, the chance of correctly calculating $x^j$ is at least $1 - 40 \varepsilon$. If $x^j \not \in \mathcal{C}$, this implies that we reject $f$ with probability at least $1 - 40 \varepsilon$, but we know that $f$ is accepted with probability at least $1 - 2 \varepsilon$, but then we can sum up and find $1 \geq 2 - 42 \varepsilon$, hence $\varepsilon \geq 1/42$, and we find our test rejects with a rate of $0.02$.
+
+\section{Probabilistically Checkable Proofs}
+
+We have shown that any subset of dictator functions has a 3 query proof. It turns out that testing over {\it any property} can be reduced to dictator testing, provided we have an appropriate `proof'. To see this, we must slightly generalize our notion of property testing. Rather than just considering families of functions $f: \{ -1, 1 \}^n \to \{ -1, 1 \}$ to test over, we will be testing over binary strings of a fixed length -- elements of $\{ 0, 1 \}^N$ for a fixed $N$. Rather than evaluated a function at positions, we get to randomly query certain bits of the string, and then choose to accept or reject the string. The rejection rates, query amount, and so on all generalize, because testing the value of a function at a certain point of the domain is equivalent to looking at a single bit of the binary string.
+
+\begin{example}
+    Consider testing whether a string is the all zero string. Given an input $x$, consider randomly selecting an index $i$, and then testing whether $x_i = 0$. If $x$ is accepted with probability $1 - \varepsilon$, then $1 - \varepsilon$ percent of the bits in the string $x$ are equal to $0$, hence $d(x,0) = \varepsilon$, so this is a test with rate 1, and with a single query.
+\end{example}
+
+\begin{example}
+    What about testing if the values of a string are all the same. The natural choice is two queries -- given $x$, we pick $i$ and $j$ and test whether $x_i = x_j$. If $\min(d(f,0), d(f,1)) = \varepsilon$, then
+    %
+    \begin{align*}
+        \mathbf{P}(f\ \text{is accepted}) &= \mathbf{P}(x_i = 0 | x_j = 0) \mathbf{P}(x_j = 0) + \mathbf{P}(x_i = 1 | x_j = 1) \mathbf{P}(x_j = 1)\\
+        &= d(f,0)^2 + d(f,1)^2\\
+        &= 1 - 2d(f,0)[1 - d(f,0)]
+    \end{align*}
+    %
+    and so the test is accepted with probability $1 - 2\varepsilon(1 - \varepsilon)$.
+\end{example}
+
+\begin{example}
+    Consider the property that a string has an odd number of 1s. Then the only local tester for this property must make all $n$ queries.
+\end{example}
+
+Now suppose that, in addition to $x \in \{ 0, 1 \}^n$, you are given some $\Pi \in \{ 0, 1 \}^m$ which is a `proof' that $x$ satisfies the required property. Then it might be possible to check both $x$ and $\Pi$ at the same time, {\it without ever having to trust the accuracy of $\Pi$}, and be able to obtain a higher rate algorithm that $x$ is accepted, assuming that $\Pi$ is the correct certificate. This is a {\bf probabilistically checkable proof of proximity}. Specifically, an $n$-query, length $m$ probabilisticlaly checkable proof of proximity system for a property $\mathcal{C}$ with rejection rate $\lambda$ is an $n$-query test, which takes a bit string $x$, and a proof $\pi \in \{ 0, 1 \}^m$, such that if $x \in \mathcal{C}$, there is a proof $\Pi$ such that $(x,\Pi)$ is always accepted, and if $d(x,\mathcal{C}) > \varepsilon$, then for {\it every} proof $\Pi$, if the test accepts with probability $1 - \varepsilon$, then $x$ must be $x/\lambda$ close to an element of $\mathcal{C}$. We normally care about reducing $n$ as much as possible, without regard to $m$ or $\lambda$.
+
+\begin{example}
+    The property $\mathcal{O}$ that a string has an odd number of 1s cannot be checked with few queries without a proof, but we have an easy 3-query PCPP system with proof length $n-1$, and rejection rate 1. We expect the proof string to contain the sums $\Pi_j = \sum_{i \leq j+1} x_i$ in $\mathbf{F}_2$. We randomly check that one of the following equation holds
+    %
+    \begin{itemize}
+        \item $\Pi_1 = x_1 + x_2$.
+        \item $\Pi_j = \Pi_{j-1} + x_{j+1}$.
+        \item $\Pi_{n-1} = 1$.
+    \end{itemize}
+    %
+    If $x \in \mathcal{O}$, then the test is accepted with probablity 1. If $x \not \in \mathcal{O}$, then $d(x,\mathcal{O}) = 1/n$, and at least one of these equations fails, hence the probability that $x$ is rejected is at least $1/n$.
+\end{example}
+
+\begin{theorem}
+    Any property over length $n$ bit strings has a 3-query PCPP tester with length-$2^{2^n}$ proofs and rejection rate $0.001$.
+\end{theorem}
+\begin{proof}
+    Let $\mathcal{C}$ be the required property to test, and consider a bijection $\pi: [N] \to \{ 0, 1 \}^n$, where $N = 2^n$. Then each element of $\{ 0, 1 \}^n$ corresponds to a dictator on $[N]$. Given an input $x$, we will interpret a proof as a function $\Pi: \{ 0, 1 \}^N \to \{ 0, 1 \}$ as a dictator corresponding to $x$. The test then becomes a dictator test, which we can already solve with three queries. Thus we consider two separate tests.
+    %
+    \begin{itemize}
+        \item Testing if $\Pi$ is a dictator, corresponding to an element of $\pi^{-1}(\mathcal{C})$
+        \item Assuming $\Pi$ is a dictator corresponding to an element $y \in \{ 0, 1 \}^n$, testing whether $y = x$.
+    \end{itemize}
+    %
+    It is clear that if $\Pi$ is a correct proof, and $x \in \mathcal{C}$, then the test will always be accepted. Otherwise, if $(x,\Pi)$ is accepted with probability $1 - \varepsilon$, then we conclude from the first test that $\Pi$ is $200 \varepsilon$ close to some dictator $\chi_\alpha$, which is an element of $\pi^{-1}(\mathcal{C})$.
+
+    Now we require a clever way of determining which element of $\{ 0, 1 \}^n$ $\Pi$ corresponds to, given that $\Pi$ is a dictator. Define $x^i \in \{ 0,1\}^N$ by $x^i_j = \pi(i)_j$. If $\Pi$ is a correct proof, then $\Pi(x^i) = \chi_\alpha(x^i)$ \dots finish later.
+\end{proof}
+
+The $2^{2^n}$ is a pretty bad estimate, but it is essentially required to be able to perform this test on all $2^{2^n}$ different properties on $\{ 0, 1 \}^n$. It should be reasonable to be able to identify better systems for `explicit' properties. This can be qualified by the complexity of the circuit whic can compute the indicator function for the property.
+
+A {\bf PCPP reduction} is an algorithm which takes a property as input, and outputs a PCPP system testing that property. The notions of proof length, query size, etc all transfer to the PCPP reduction. Essentially, a PCPP reduction gives a constructive proof limiting the ability to test general properties. We have proved that there exists a 3-query $2^{2^n}$ proof length PCPP reduction with rejection rate $0.001$. With a little work, we can improve this reduction to have proof length $2^{\text{poly}(C))}$, where the size of a property $C$ is the size of the circuit representing it. There is a much deeper and more dramatic improvement to this property.
+
+\begin{theorem}[PCPP]
+    There is a 3-query PCPP reduction with proof length polynomial in the size of $C$.
+\end{theorem}
+
+Though the $2^{2^n}$ PCPP reduction seems unnecessary after we have proved the PCPP theorem, the $2^{2^n}$ reduction is integral to the proof of the PCPP theorem, and is therefore important even if you want to understand the proof of the PCPP theorem.
+
+\section{Constraint Satisfaction and Property Testing}
+
+Recall that an $m$ arity $n$ contraint {\bf satisfaction problem} over a set $\Omega$ is defined by a finite set of predicates $f_1, \dots, f_n: \Omega^m \to \{ 0, 1 \}$. The goal is to find the elements of $\Omega^m$ which satisfy the most predicates. This is obviously NP complete, since the problem encompasses the SAT problem, so we instead try and find elements of $\Omega^m$ which satisfy the most predicates, or near to the most elements. We assume each $f_i$ is an $s$ junta, for some $s$.
+
+\begin{example}
+    The 3-SAT problem on $m$ variables is an $m$ arity constraint satisfaction problem, where each constraint is a 3 junta.
+\end{example}
+
+\begin{example}
+    The MAX-CUT problem on a graph with $n$ nodes and $m$ edges is to find a partition of the graph so that the most possible edges cross the partitions. A partition corresponds to an element of assignment $\{ 0, 1 \}^n$, and this partition is evaluated against the not equal constraints for any edge $(v,w)$.
+\end{example}
+
+\begin{example}
+    Given a system of linear equations in $\mathbf{F}_2$, each containing exactly 3 variabels, the MAX-E3-LIN problem asks to find an assignment satisfying as many of the constraints as possible.
+\end{example}
+
+String testing and constraint satisfaction are the same problem. Given a constraint instance over $\Omega^m$ with constraints $f_1, \dots, f_n$, and given a fixed solution $x \in \Omega^m$, consider the algorithm which randomly choosing $i \in [n]$ and accepts if $f_i(x) = 1$. The the probability the algorithm accepts $x$ is $\text{val}(f, x)$. Conversely, if we have a string testing problem on $\Omega^n$, with some randomized testing problem, then if we enumerate all random bits used in the algorithm, then each selection of random bits corresponds to a constraint where an element of $\Omega^n$ is tested, and the value of this constraint satisfaction problem gives the probability that the string testing algorithm is accepted.
+
+\section{Hastad's Hardness Theorem}
+
+The PCP theorem indicates that unless $P = NP$, it is impossible to approximate 3SAT to arbitrarily close constants. But we can find approximation algorithms for SAT for some constants. For instance, if each clause of MAX-E3SAT contains exactly 3 clauses (we call this subproblem MAX-E3SAT), then each clause is satisfied with probability $7/8$, hence in expectation a random assignment will satisfy $7/8$ of the clauses. There is a way to derandomize this algorithm to obtain a deterministic $7/8$ approximation algorithm. Though the approximation is trivial, Hastad's theorem says this is the best approximation possible.
+
+\begin{theorem}[Hastad]
+    For any $\delta > 0$, if there is an algorithm that returns a 3SAT assignment satisfying at least $7/8 + \delta$ clauses for MAX-E3SAT for all instances of the problem where it is possible to satisfy all clauses, then $P = NP$.
+\end{theorem}
+
+He also proved a similar optimal hardness of approximation for MAX-E3LIN, a result we will concentrate on for the rest of this section.
+
+\begin{theorem}[Hastad]
+    If there is $\delta > 0$, and an approximation algorithm for MAX-E3LIN such that if $1 - \delta$ of the equations can be satisfied, then the algorithm returns an instance satisfying $1/2 + \delta$ of the equations, then $P = NP$.
+\end{theorem}
+
+The idea of this theorem is that we can formalize a dictatorship test with a suitably high rejection rate by a reduction to an instance of MAX-E3LIN, and if this reduction was good enough then we would find that $P = NP$.
+
+We require some formalization to prove this theorem. Let $f_1, \dots, f_n$ be predicates over $\{ -1, 1 \}$. If $0 < \alpha < \beta \leq 1$, let $\lambda: [0,1] \to [0,1]$ satisfy $\lambda(\varepsilon) \to 0$ as $\varepsilon \to 0$. Suppose that for each $n$ there is a local tester for functions $f: \{ -1, 1 \}^n \to \{ -1, 1 \}$ such that
+%
+\begin{itemize}
+    \item If $f$ is a dictator, then the test accepts with probability at least $\beta$.
+    \item If $\text{Inf}_i^{1 - \varepsilon}(f) \leq \varepsilon$, then the test accepts with probability at most $\alpha + \lambda(\varepsilon)$.
+    \item The tester can be viewed as an instance of MAX-CSP$(f)$.
+\end{itemize}
+%
+Then we call this family an {($\alpha$, $\beta$) Dictator vs. No Notables Test usings the predicates $f$}. It is essential that $\lambda = o_\varepsilon(1)$, at a rate independent of $n$, but we care very little about the rate of convergence to zero.
+
+There is a Blackbox result which relates Dictator vs. No Notables to hardness of approximation results.
+
+\begin{theorem}
+    Fix a CSP over the domain $\{ -1, 1 \}$ with predicates $f_1, \dots, f_n$. Given an $(\alpha, \beta)$ dictator vs. no notables test using predicates $f_i$, then for all $\delta > 0$, either the universal game conjecture holds, or there is a $(\alpha + \delta, \beta - \delta)$ approximation for the CSP.
+\end{theorem}
+
+We rely on the following theorems, beyond our scope, to prove Hastad's theorem.
+
+\begin{theorem}
+    For any $0 < \delta < 1/8$, there is a $(7/8 + \delta,1)$ dictator vs no notables test which uses logical or functions on three literals as its predicates.
+\end{theorem}
+
+\begin{theorem}
+    For any $0 < \delta < 1/2$, there is a $(1/2, 1 - \delta)$ dictator vs no notables test using 3 variable $\mathbf{F}_2$ linear equations as its predicates.
+\end{theorem}
+
+The theorems, combined with the blackbox result above, imply a weak version of Hastad's unqiueness conjecture, in the sense that if there is an approximation, then the unique games conjecture holds, rather than $P = NP$.
+
+We cannot use the BLR test to find a $(1/2, 1 - \delta)$ dictator vs no notables test using 3 variable $\mathbf{F}_2$ linear equations, because  it doesn't accept functions with no notable coordinates with probability close to 1/2. The two problems are the constant 0 function and large parity functions. This is fixed by the odd BLR test. Given query access to $f: \{ -1, 1 \}^n \to \{ -1, 1 \}$, we pick $X,Y \in \{ -1, 1 \}^n$ randomly, find $z \in \{ -1, 1 \}$ randomly, and set $Z = XY(z,\dots,z)$. We then accept the test if $f(X) f(Y) f(Z) = z$. It is easy to show that
+
+\begin{theorem}
+    The odd BLR test accepts $f$ with probability
+    %
+    \[ \frac{1}{2} + \frac{1}{2} \sum_{|S|\ \text{odd}} \widehat{f}(S)^3 \leq \frac{1}{2} + \frac{1}{2} \max_{|S|\ \text{odd}} \widehat{f}(S) \]
+\end{theorem}
+%
+This means that the constant 1 function is ruled out. What remains is to deal with large parity functions. The trick to this is to add noise to the test. Given a small $\delta > 0$, we replace $Z$ with $Z' \sim N_{1 - \delta}(Z)$. If $f$ is a dictator, then there is only a $\delta/2$ chance this will affect the test. On the other hand, if $f$ is $x^S$, where $S$ is large, there is a high chance this will disturb the chance of passing the test.
+
+Thus Hastad's $\delta$ test takes $X,Y$, and $z$, sets $Z = b(XY)$, choses $Z' \sim N_{1 - \delta}(Z)$, and accept if $f(X)f(Y)f(Z') = z$. This is a $(1/2, 1 - \delta/2)$ dictator vs. no notables test.
+
+
 
 
 
