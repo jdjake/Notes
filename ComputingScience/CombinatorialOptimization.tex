@@ -1,9 +1,5 @@
 \input{../style.tex}
 
-\usepackage{amsmath}
-\usepackage{algorithm}
-\usepackage[noend]{algpseudocode}
-
 \DeclareMathOperator{\Dom}{Dom}
 \DeclareMathOperator{\delin}{\delta_{\text{in}}}
 \DeclareMathOperator{\delout}{\delta_{\text{out}}}
@@ -813,5 +809,145 @@ To prove Lovatz's theorem, consider the graph $G^{+v}$, for $v \in V$, obtained 
 \end{proof}
 
 So suppose $G$ is perfect. Let $x \in P_{\text{clique}}(G)$ be an extreme point. From what we know in class, we know $x \in \mathbf{Q}$. Thus there is an integer $\eta \neq 0$ such that $\eta x \in \mathbf{Z}$. So consider $H$, obtained by copying $G$ $\eta$ times, and then connecting all edges $(u_i,v_i)$, if $u = v$ or $(u,v)$ is an edge in the original graph. The lemma above implies $H$ is perfect. Let $C_H$ be a max clique in $H$, with $|C_H| = \omega(H)$.
+
+\chapter{Polynomials}
+
+In this chapter, we discuss various computational problems which occur in the theory of polynomials. We will begin with the algebraic operations of addition and multiplication of polynomials. The naive addition operation is asymptotically optimal, but nontrivial techniques in the harmonic analysis of abelian groups allow us to compute multiplication in a much faster way than the naive multiplication algorithm.
+
+First, we discuss the various ways we can represent polynomials computationally. The standard way to represent a degree $n$ polynomial $\sum a_k X^k$ is as a collection of $n+1$ numbers $a_0,a_1,\dots,a_n$
+
+As we are working over finite dimensional spaces, the Fourier transform can be given a matrix representation. First, note that there is a one to one correspondence between functions $a: \mathbf{Z}_n \to \mathbf{C}$, and polynomials $f(X) = (1/n) \sum_{k = 0}^{n-1} a(k) X^k \in \mathbf{C}[X]$ of degree $n-1$. If $z$ is a primitive $n$'th root of unity, then $f(z^{-l}) = (1/n) \sum_{k = 0}^{n-1} a(k) z^{-kl}$ gives the $l$'th Fourier coefficient of the function $a$. Thus the Fourier transform is just the values of the polynomial at the $n$'th roots of unity, and if we consider the Fourier transform with respect to the basis $1, X, X^2, \dots, X^{n-1}$, then the matrix representation of the transform is given by the Vandermonde matrix
+%
+\[ \begin{pmatrix} 1 & 1 & 1 & \dots & 1 \\ 1 & z^{n-1} & z^{n-2} & \dots & z \\ 1 & z^{n-2} & z^{n-4} & \dots & z^2 \\ \vdots & \vdots & \vdots & \ddots & \vdots \\ 1 & z & z^2 & \dots & z^{n-1} \end{pmatrix} \]
+%
+which is the standard trick to evaluate the polynomial as a matrix. The Fourier inversion formula tells us that the inverse of the Vandermonde matrix, which represents the matrix of the inverse Fourier transform, is
+%
+\[ (1/n) \begin{pmatrix} 1 & 1 & 1 & \dots & 1 \\ 1 & z & z^2 & \dots & z^{n-1} \\ 1 & z^2 & z^4 & \dots & z^{n-2} \\ \vdots & \vdots & \vdots & \ddots & \vdots \\ 1 & z^{n-1} & z^{n-2} & \dots & z \end{pmatrix} \]
+%
+Essentially, this implies that a slight modification of the fast Fourier transform obtained by swapping the root $\nu$ used to calculate the transform with $\nu^{-1}$ gives us the inverse Fourier transform, provided we multiply the result by $1/n$ at the end.
+
+Continuing with the computational aspect of discrete Fourier analysis, we now use the fast Fourier transform to multiply two polynomials $f(X) = \sum a_k X^k$ and $g(X) = \sum b_k X^k$, where $f(X)g(X) = \sum c_k X^k$. We can write $c_k = \sum a_i b_{k-i}$, and computing these values for all coefficients $c_k$ takes $O(n^3)$ operations, where $n$ is the degree of the polynomial. However, the definition of $c_k$ involves convolution, which tells us Fourier analysis is probably applicable. However, to employ the fast Fourier transform, we have to compute convolution in $\mathbf{Z}_m$, which is done via modulo arithmetic, the values of the polynomial are done via convolution over $\mathbf{N}$. The trick is that these two convolutions will be equal provided we set $m$ large enough, and pad the values of the polynomials with zeroes, so that $a_i = b_i = 0$ for $m > i > n$. Consider the convolution $\sum a_i b_{k-i}$, where $i$ and $k-i$ are taken as elements of $\mathbf{Z}_m$. Certainly every term defining $c_k$ occurs in this sum, so we need only choose $m$ such that we can add no additional terms, which will occur when $i > k$. These terms can be written as
+%
+\[ \sum_{i = k+1}^{m-1} a_i b_{k-i} = \sum_{i = 1}^{m-k-1} a_{k+i} b_{m-i} \]
+%
+where the right side sum now can be computed with considering any modulo tricks. If $a_{k + i} b_{m-i} \neq 0$, then $a_{k+i} \neq 0$, hence $0 \leq k+i \leq n$, and also $b_{m-i} \neq 0$, so $0 \leq m-i \leq n$. Adding together both these inequalities gives $0 \leq m+k \leq 2n$, hence $0 \leq m \leq 2n$. If we choose $m > 2n$, then this problem is avoided, and we can compute $c_k$ as convolution modulo $m$. Thus $c = a * b$, and since the Fourier transform of $a*b$ is the pointwise product $\hat{a} \hat{b}$, we can compute the fast Fourier transform of $a$ and $b$ in $O(m \log m)$ operations, multiply them together with $m$ operations, and then compute the inverse Fourier transform in $O(m \log m)$ operations, giving us the values of $c$ in $O(m \log m) = O(n \log n)$ operations.
+
+Another important use of the fast Fourier transform is to compute multiplication of two numbers. The naive algorithm runs in $O(\log^2 n)$ time, for numbers of size $\leq n$. However, we can use the fast Fourier transform to reduce the computation to $O(\log (n) \log \log (n) \log \log \log (n))$ (and all the logs are important, those the third iteration of the logarithm has almost no effect on the speed of the algorithm for the numbers we deal with (even $x = e^{1000000}$ has $\log \log \log x \leq 1$). Given two $n$ digit numbers $x$ and $y$, write
+%
+\[ x = \sum_{k = 0}^n a_k 2^k\ \ \ \ \ y = \sum_{k = 0}^n b_k 2^k \]
+%
+Then
+%
+\[ xy = \sum_{k = 0}^n \left( \sum_{i = 0}^k a_i b_{k-i} \right) 2^k \]
+%
+s
+
+\part{Approximation Algorithms}
+
+\chapter{Set Cover}
+
+In the set cover problem, we are given a particular set $X$, and a family of subsets $S_1, \dots, S_n$ whose union is $S$. Each set $S_i$ is associated a particular weight $w_i \geq 0$, and the goal is to find the cheapest family of subsets which cover $S$. The case where $w_1 = w_2 = \dots = w_n = 1$ is known as the unweighted version of the set cover problem. The problem is easily seen to be NP hard, because it generalizes the vertex cover problem, which asks, given a graph, to find a subset of vertices which contain one end to every edge.
+
+\section{Approximations Via Linear Programming}
+
+We cannot express the set cover problem as a linear program in polynomially many dimensions, because then we could solve the set cover program in polynomial time (using some linear program algorithm, like the ellipsoid method). However, we can express the set cover problem as a 0/1 {\it integer} linear program. Our choice of including $S_i$ in some solution to the set cover problem can be taken as some binary variable $x_i \in \{ 0, 1 \}$. The constraint that the union of the $S_i$ contain every element in $S$ can be expressed in terms of the $|S|$ constraints
+%
+\[ \sum_{s \in S_i} x_i \geq 1 \]
+%
+for each $x \in X$. We aim to choose a $\{ 0, 1 \}$ valued solution minimizing $\sum x_i w_i$. We can solve this problem by removing the $\{ 0, 1 \}$ integer constraint, and by adding the constraint that $0 \leq x_i \leq 1$ for each index $i$. This is known as the {\it relaxation} of the integer linear program. This gives a solution $x^*: I \to [0,1]$. While $\sum x^*_i w_i$ will certainly be a smaller quantity than the set cover instance, we cannot really interpret the solution $x^*$ of the LP as a solution of the original set cover problem. However, we would hope that $x^*$ gives an approximate solution to the problem, and by {\it rounding} this solution to an integer solution, we can obtain a bounded approximation to the original problem.
+
+In this case, we begin by setting $M$ to be the maximal number of sets which contain a particular element $x$, over all elements $x \in X$. To round $x^*$ to an integer valued solution, we define $x: I \to \{ 0, 1 \}$ by setting $x_i = 1$ if $x^*_i \geq 1/M$. Then $x$ gives values corresponding to a set cover, because since for each $s \in S$, $1 \leq \sum_{i \in s} x^*_i \leq M \max_{i \in s} x^*_i$, so that there is at least one index $i$ with $s \in S_i$ and $x_i = 1$. We claim that if $\text{OPT}$ gives the optimal value of set cover, then $\sum w_i x_i \leq M \cdot \text{OPT}$, implying that we have obtained an $M$-approximation algorithm for set cover. It is clear that $\sum w_i x^*_i \leq \text{OPT}$, because every solution to set cover can be interpreted to a solution of the set cover LP. Furthermore, we know that $M x^*_i \geq 1$ whenever $x_i = 1$, and therefore
+%
+\[ \sum w_i x_i \leq \sum_{i = 1}^n w_i (Mx^*_i) = M \sum w_i x^*_i \leq M \cdot \text{OPT} \]
+%
+This concludes the discussion of the algorithm. In the case of vertex cover, each edge is covered by two vertices, and therefore this algorithm gives a 2-approximation.
+
+Often, it is useful to use the dual of a linear program to verify how close we are to the original algorithm. In this case, the dual is to minimize $\sum_{i = 1}^n y_i - \sum_{s \in S} y_s$, such that $w_i + y_i \geq \sum_{s \in S_i} y_s$, and $y_s, y_i \geq 0$. In an optimal solution to this linear program, we may always assume $y_i = 0$, for if $y_i > 0$, we can always let $y_i \to 0$ while decreasing some $y_s$ with $y_s > 0$ without changing the value of the solution (and if we have no $y_s > 0$ for $s \in S_i$, then the solution cannot be optimal because we still have a solution obtained by setting $y_i = 0$, and changing none of the values $y_s$). Thus a dual linear program can be obtained by removing the variables $y_i$, and considering the linear program which maximizes $\sum_{s \in S} y_s$, such that $\sum_{s \in S_i} y_s \leq w_i$, with $y_s \geq 0$. The theory of dual linear programs implies that $\sum_{s \in S_i} y_s$ gives a lower bound for any feasible solution $y_s$. We can use it to obtain another approximation algorithm. Consider an optimal solution $y^*$ to the dual LP, and take a solution $x$ to the original LP, with $x_i = 1$ if the corresponding constraint in the dual LP is tight with respect to $y^*$. Now for every $s$, there must be an index $i$ such that $s \in S_i$, and $\sum_{s \in S_i} y_s = w_i$, hence $x_i = 1$, and so $s$ is covered. We claim that $x$ gives an $M$ approximation to the set cover problem, as for the original rounding solution to the linear program. The central idea is that if $S_i$ is in a cover, we `pay' for it by charging $y_s^*$ to each $s \in S_i$. Each element is charged at most once for each set that contains it, so the total cost is at most $M \sum y^*_s$. In detail, we find that $x_i = 1$ if and only if $w_i = \sum_{s \in S_i} y_s^*$, so
+%
+\[ \sum w_i x_i = \sum x_i \sum_{s \in S_i} y_s^* \leq M \sum_{s \in S} y_s^* \leq M \cdot \text{OPT} \]
+%
+hence we have an $M$-approximation.
+
+\section{Using Duals to Combinatorialize LP Approximations}
+
+The dual algorithm is actually always worse than the original LP approximation. We know that $\sum y_s \leq \sum w_i x_i$ for any feasible $y$ in the dual, and $x$ in the original LP. What's more, $\sum w_i x_i^* = \sum y_s^*$. Because of the theory of complementary slackness, we also know that $y_s^* > 0$ implies that $\sum_{s \in S_i} x_i^* = 1$, and whenever $x_i^* > 0$, then $\sum_{s \in S_i} y_s^* = w_i$. In the first algorithm, we include a set in our cover if $x_i^* \geq 1/M$, and complementary slackness implies that the set is included in the cover determined by the second algorithm. Thus the second algorithm is always at least as inefficient as the first.
+
+However, the dual LP is still useful, because we can use it in tandem with the original LP to obtain a combinatorial approximation algorithm for set cover. This is analogous to the combinatorial algorithms for bipartite matching and max flow, which can be obtained by combinatorializing the linear program formulations of the problem. The dual algorithm consists as follows: begin with some feasible solution $y$ to the dual program, and consider some family of sets $S_i$ such that the corresponding constraint to $S_i$ is tight. If this family is a set cover, then we are done. Otherwise, there is some $s \in S$ not covered by the family of sets, hence $y_s$ is not tight, and we may increase $y_s$ until it makes some dual constraint corresponding to some $S_j$ tight, and we add it to our family of sets. Eventually we obtain a set cover, and the same argument for the dual algorithm implies that this solution is also an $M$ approximation. We know from the last argument that this will always give worse results than the original algorithm, but it is likely much faster in practice to compute this solution than to optimize the LP formulation of set cover.
+
+\section{A Greedy Solution}
+
+We now present a natural greedy heuristic to set cover, which actually leads to a much better approximation to set cover. At each point in the algorithm, we have a partial set cover which covers some subset $T \subset S$ of all the points in the set. If $T \neq S$, then we add the set $S_i$ to the cover which maximizes the ratio $w_i|S_i - T|^{-1}$ of weight to the number of points which can be added to the existing solution. If $H_n = \sum_{k = 1}^n k^{-1}$ is the $n$'th {\it harmonic number}, then we claim this algorithm gives a $H_n$ approximation algorithm to the set cover problem. First, we note that given any $a_1, \dots, a_n > 0$ and $b_1, \dots, b_n > 0$,
+%
+\[ \min (a_i/b_i) \leq \frac{\sum a_i}{\sum b_i} \leq \max (a_i/b_i) \]
+%
+this follows by simple algebraic manipulations. Suppose the greedy algorithm takes $m$ iterations to form a cover. Let $n = n_1 > n_2 > \dots > n_m > n_{m+1} > 0$ be the number of uncovered elements on the beginning of the individual iterations of the algorithm, let $\emptyset T_1 \subsetneq T_2 \subsetneq \dots \subsetneq T_m \subsetneq S$ denote the set of covered elements, and for each $i$, let $S_i^k = S_i - T_k$ denote the number of unconvered elements in $S_i$ at the beginning of the $k$th iteration. The greedy algorithm takes $j$ which minimizes $w_j/|S_j^k|$ on the $k$'th iteration. We claim that for this $j$,
+%
+\[ w_j \leq \frac{n_k - n_{k+1}}{n_k} \cdot \text{OPT} \]
+%
+It then follows that for the solution we find corresponding to the indices $I$,
+%
+\begin{align*}
+    \sum_{i \in I} w_i &\leq \text{OPT} \sum_{k = 1}^m \frac{n_k - n_{k+1}}{n_k}\\
+    &\leq \text{OPT} \sum_{k = 1}^m \left( \frac{1}{n_k} + \frac{1}{n_k - 1} + \dots + \frac{1}{n_{k+1} + 1} \right)\\
+    &= \text{OPT} \sum_{i = 1}^n \frac{1}{i} = H_n \cdot \text{OPT}
+\end{align*}
+%
+Given us the desired approximation constant. To prove the minimization inequality, we first find that
+%
+\[ \min \left( \frac{w_j}{|S^k_j|} \right) \leq \frac{\min w_j}{\max |S^k_j|} \leq \frac{\text{OPT}}{n_k} \]
+%
+If we add $S_j$ to our set, then $n_{k+1} = n_k - |S^k_j|$, and so
+%
+\[ w_j \leq |S^k_j| \frac{\text{OPT}}{n_k} = \frac{n_k - n_{k+1}}{n_k} \text{OPT} \]
+%
+and this completes the argument.
+
+The theory of dual LPs allows us to slightly tighten the approximation ratio of set cover. Let $N$ be the maximum size of any $S_i$. Then we claim the greedy solution returns a set cover indexed by some $J$, then $\sum_{j \in J} w_j \leq H_N \text{OPT}_{\text{LP}}$, where $\text{OPT}_{\text{LP}}$ is the optimal value of the LP relaxation of the set cover problem. To find this solution, we use the technique of dual fitting. The idea is that if $\sum_{j \in J} w_j = \sum y_s$ for some infeasible solution $y$ to the dual of the set cover with $y/H_m$ a feasable solution, then by weak duality we find that $\sum_{j \in J} w_j = \sum y_s \leq H_m \text{OPT}_{\text{LP}}$, giving us the required bounds. To construct the infeasible solution $y$, we consider the iterations of the greedy algorithm. If we add the set $S_j$ on the $k$'th iteration, we let $y_s = w_j/|S_j^k|$ for each $s \in \smash{S_j^k}$. Then each $y_s$ is set exactly once, because it is contained in a particular set which is added to the cover, and is then covered for the rest of the algorithm. It is easy to see that $w_j = \sum y_s$ because of the way the weights are distributed over the LP. It remains to prove that $y/H_N$ is feasible. We must show that $\sum_{s \in S_i} y_s \leq H_N w_i$ for each index $i$. To see this, fix $i$, and let $a_k = |S_i^k|$ be the number of elements of $S_i$ uncovered in the $k$th iteration, and let $A_k$ be the set of elements covered in $i$ covered in the $k$th iteration, so that $|A_k| = a_k - a_{k+1}$. If $S_j$ is chosen in the $k$th iteration, then for each $s \in A_k$,
+%
+\[ \frac{y_s}{H_N} = \frac{w_j}{H_N |S_j^k|} \leq \frac{w_i}{H_N a_k} \]
+%
+Now we find that
+%
+\begin{align*}
+    \sum_{s \in S_i} \frac{y_s}{H_N} &= \sum_{k = 1}^n \sum_{s \in A_k} \frac{y_s}{H_N}\\
+    &\leq \sum_{k = 1}^n (a_k - a_{k+1}) \frac{w_i}{H_N a_k}\\
+    &= \frac{w_i}{H_N} \sum_{k = 1}^n \frac{a_k - a_{k+1}}{a_k} \leq \frac{w_j H_{|S_j|}}{H_N} \leq w_j
+\end{align*}
+%
+Giving us the required bounds and giving the approximation ratio for set cover.
+
+The $H_n$ algorithm is essentially an asymptotically optimal approximation algorithm for set cover. If we can prove that there is a $c \lg n$ approximation algorithm for set cover, for any $c > 0$, then there is an $O(n^{O(\log \log n)})$ time algorithm for any problem in NP, implying P = NP. What's more, we find that P = NP even if there is a $c \lg n$ approximation algorithm for the {\it unweighted} case of the set cover problem. The 2 approximation algorithm for vertex cover is the best known ratio, and assuming the unique games conjecture, there is no $\alpha$ approximation algorithm for any $\alpha < 2$.
+
+\section{Randomized Rounding}
+
+We now consider another technique for obtaining a solution to a combinatorial problem from an LP relaxation. Given an optimal solution $x^*$ to the LP, $0 \leq x_i^* \leq 1$, which we would like to interpret as a probability that we choose the set $i$ in a randomized solution strategy to the set cover. Choosing the $S_i$ independently with probability $x^*_i$ gives a randomized family of sets whose expected weight is $\text{OPT}_{\text{LP}}$. This is a great value to obtain, but unfortunately, it is likely the solutions we obtain will not be covers of the entire set. However, this calculation shows we can often obtain good approximation algorithms by this randomized rounding technique.
+
+For each $s$, the chance that $s$ is not covered by the randomized rounding algorithm is $\prod_{s \in S_i} (1 - x^*_i)$. Using the fact that $1 - x^*_i \leq e^{-x^*_i}$, we can bound the chance that $s$ is not covered by
+%
+\[ \prod_{s \in S_i} e^{-x^*_i} = e^{- \sum_{s \in S_i} x^*_i} \leq e^{-1} \]
+%
+because $\sum_{s \in S_i} x^*_i \geq 1$. Although $e^{-1}$ is only an upper bound on this probability, it is possible to take this bound arbitrarily closely, so in the worst case it is highly unlikely we will obtain a set cover instance.
+
+However, we can still use these ideas to obtain polynomial time algorithms whose chance of failure is $n^{-c}$, for any positive constant $c > 0$. This is known as an algorithm that works with high probability (even though this is really a family of algorithms, and we normally find that the speed of these algorithms increases as $c \to \infty$). If we can find a randomized procedure operating in polynomial time such that the probability that any $s$ is uncovered is bounded by $(1/n^c)$, then a union bound gives that the probability that a random choice is a set cover is $(1/n^{c-1})$, so we have obtained an algorithm that works with high probability. The idea is to consider $c \lg n$ Bernoulli trials which succeed with probability $x^*_i$, and to take a set $S_i$ in our cover if any of these trials pass. The probability that $S_i$ is not included is then $(1 - x_j^*)^{c \lg n}$, which is upper bounded by
+%
+\[ \prod_{s \in S_i} (1 - x^*_i)^{c \lg n} \leq \prod_{s \in S_i} e^{-x_i^* (c \lg n)} = e^{- (c \lg n) \sum_{s \in S_i} x^*_i} = \frac{1}{n^c} \]
+%
+Now we need only prove that this algorithm has a good expected value. Let $P_i(x_i^*) = 1 - (1 - x_i^*)^{c \lg n}$ be the probability that $S_i$ is included in our set. If $x_j^* \in [0,1]$, and $c \lg n \geq 1$, then
+%
+\[ P_i'(x_i^*) = (c \lg n) (1 - x_i^*)^{c \lg n - 1} \leq c \lg n \]
+%
+since $P_i(0) = 0$, we conclude that $P_i(x_i^*) \leq (c \lg n) x_i^*$. Let $X_i$ be the random variable with $X_i = 1$ if $S_i$ is included in our random set cover. Then the expected value of the given solution is then
+%
+\[ \mathbf{E} \left(\sum w_i X_i \right) = \sum w_i P_i(x_i^*) \leq w_i (c \lg n) x_i^* = (c \lg n) \text{OPT}_{\text{LP}} \]
+%
+However, it is more important to bound the expected value, given that the given family we obtain is a set cover. Let $A$ be the event that the $X_i$ give a valid set cover. Then $\mathbf{P}(A) \geq 1 - n^{c-1}$, and also that
+%
+\[ \mathbf{E} \left(\sum w_i X_i \right) = \mathbf{E} \left(\sum w_i X_i | A \right) \mathbf{P}(A) + \mathbf{E} \left(\sum w_i X_i | A^c \right) \mathbf{P}(A^c) \]
+%
+since $w_i, X_i \geq 0$, $\mathbf{E}(\sum w_i X_i | A^c) \geq 0$, and so
+%
+\[ \mathbf{E} \left( \sum w_i X_i | A \right) \leq \frac{\mathbf{E} \left( \sum w_i X_i \right)}{\mathbf{P}(A)} \leq \frac{(c \lg n)}{1 - n^{c-1}} \text{OPT}_{\text{LP}} \leq (2 c \lg n) \text{OPT}_{\text{LP}} \]
+%
+where we let $n,c \geq 2$.
 
 \end{document}
