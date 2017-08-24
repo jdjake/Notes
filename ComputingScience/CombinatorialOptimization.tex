@@ -658,14 +658,20 @@ We now describe the algorithm which gives us minimal cost arboresences. Note tha
 
 \chapter{Matroids}
 
-If you have a problem, and a matroid is involved, you can probably use a greedy algorithm to solve the problem. This is very useful, because greedy solutions are normally far faster than conservative methods. A matroid is a set of sets which can be `greedily expanded' without losing the properties defining a matroid. Formally, a matroid is a collection of subsets of some set $X$ containing the emptyset, closed under the subset relation, and such that if two sets $A$ and $B$ are in the matroid with $|A| < |B|$, there is $z \in B - A$ such that $A \cup \{ z \}$ is in the matroid.
+If you have a problem, and a matroid is involved, you can probably use a greedy algorithm to solve the problem. This is very useful, because greedy solutions are normally far faster than conservative methods.  Formally, a matroid is a collection of finite subsets of some set $X$ containing the empty set, closed under the subset relation, and satisfying the {\bf exchange property}:
+%
+\begin{itemize}
+    \item If two sets $A$ and $B$ are in the matroid with $|A| < |B|$, there is $z \in B - A$ such that $A \cup \{ z \}$ is in the matroid.
+\end{itemize}
+%
+A matroid is thus a set of sets which can be `greedily expanded' to obtain an optimal set. We shall call sets in a matroid {\bf independent sets}, to distinguish them from other subsets of $X$.
 
 \begin{example}
-    If $G$ is a graph, the set of edge subsets which contain no cycle forms a matroid. Certainly it contains the emptyset, and certainly a subset of edges with no cycle contains no cycle.
+    If $G$ is a graph with vertices $V$, the set of edge subsets which contain no cycle forms a matroid. Certainly it contains the empty set, and a subset of edges with no cycle contains no cycle. If $A$ and $B$ are subsets of edges with no cycle, and $|A| < |B|$, then $(V,A)$ has more connected components than $(V,B)$, so there must be an edge bridging two of the connected components of $(V,A)$, and this allows us to expand $A$ while making sure there are no cycles in the resulting graph. This verifies the exchange property.
 \end{example}
 
 \begin{example}
-    If $V$ is a vector space, the collection of linearly independant vector sets forms a matroid. Essentially, you can greedily expand vectors to form a basis.
+    If $V$ is a finite dimensional vector space, the collection of linearly independent vector sets forms a matroid. Essentially, you can greedily expand vectors to form a basis.
 \end{example}
 
 \begin{example}
@@ -684,34 +690,48 @@ If you have a problem, and a matroid is involved, you can probably use a greedy 
     Given a field extension $F \subset K$, the set of finite subsets $Y$ of $F$ with trancendence degree $|Y|$ forms a matroid, known as the algebraic matroid.
 \end{example}
 
-An independence oracle is an algorithm to decide whether an arbitrary subset is an element of a given matroid in polynomial time. This is key to having efficient algorithms for solving matroids.
+An independence oracle is a polynomial time computable algorithm to decide whether an arbitrary subset is an element of a given matroid. This is key to having efficient algorithms for solving matroids, because we will often form matroids over sets with exponentially many elements in order to solve a problem.
 
-A base of a matroid is a maximal set -- an element $B$ such that if $B \subset B'$, and $B'$ is in the matroid, then $B = B'$. If our matroid consists of finite sets, then two bases have the same cardinality. Indeed, if $|B| < |B'|$, there is $z \in B' - B$ such that $B + z$ is in the matroid, which cannot occur since this is an expansion of $B$.
+A {\bf base} of a matroid is a maximal set. Two bases in a matroid have the same cardinality, and this is essentially the defining feature of a matroid. Indeed, if $B$ and $B'$ are two bases with $|B| < |B'|$, there is $z \in B' - B$ such that $B + z$ is in the matroid, which cannot occur since this is an expansion of $B$. In the matroid of no cycle subsets of edges, a base is a spanning tree. In the matroid of linearly independent vectors over some vector space, a base is a basis for that vector space. It is a basis property of spanning trees that they all have $|V| - 1$ edges, and that every basis of a vector space has the same cardinality.
 
-The first algorithm we consider is to efficiently find a min weight base for a matroid over a set $X$, for some function $c: X \to \mathbf{R}$. This is a generalization of the minimum spanning tree problem. The algorithm to do this is to just greedily add the minimum element of $X$ to a set until we cannot anymore. The set $B$ we end up with is a base by construction, because the order we add elements is immaterial. To prove that $B$ is minimal, consider a minimal base $B^*$, and order the elements of both sets
+\section{Minimum Weight Bases}
+
+The first algorithm we consider in the theory of matroids is to efficiently find a minimum weight base for a matroid over a set $X$, given some cost function $c: X \to \mathbf{R}$. This is a generalization of the minimum spanning tree problem, and like the greedy solution to the minimum spanning tree problem, the algorithm to find a minimum weight base is to just greedily add the minimum element of $X$ to a set until we cannot anymore. The set $B$ we end up with is a base by construction, because the order we add elements is immaterial. To prove that $B$ is minimal, consider a minimal base $B^*$, and order the elements of both sets
 %
 \[ B = \{ x_1, \dots, x_n \}\ \ \ \ \ B^* = \{ x_1^*, \dots, x_n^* \} \]
 %
-We prove by induction that $w(x_i) \leq w(x_i^*)$. Indeed, consider the partial set $B_{i-1} \{ x_1, \dots, x_{i-1} \}$ and $B_i^* \{ x_1^*, \dots, x_i^* \}$. There is a minimal weight element $x_k^*$ of $B_i^*$ which is not in $B_{i-1}$, and can be safely added to $B$, and $w(x_i) \leq w(x_k^*)$. If $k \leq i$, this shows that $w(x_i) \leq w(x_i^*)$. (FIGURE THIS PROOF OUT LATER)
+in decreasing order of weight. We prove by induction that $w(x_i) \leq w(x_i^*)$. Indeed, consider the partial set $B_k = \{ x_1, \dots, x_k \}$, and $B_k^* = \{ x_1^*, \dots, x_k^* \}$. If $c(B) > c(B^*)$, there must be a smallest $k$ with $c(x_{i_k}) > c(x_{i_k}^*)$. Then $B_{k-1}$ contains fewer elements than $B_k^*$, so there is $x \in B_k^* - B_{k-1}$, where $B_{k-1} \cup \{ x \}$ is an independant set. But then $c(x_{i_k}^*) \geq c(x) \geq c(x_{i_k})$, which is a contradiction, proving the correctness of the algorithm.
 
-The {\bf rank} $r(A)$ of a subset $A$ of $X$, with respect to a matroid $M$ is the cardinality of the largest subset of $A$ in $M$. Then $r$ is order preserving, and $r(A) \leq |A|$. More interestingly,
+\section{Rank Functions}
+
+The {\bf rank} $r(A)$ of a subset $A$ of $X$, with respect to a matroid $M$ is the cardinality of the largest independent subset of $A$. Then $r$ is order preserving, and $r(A) \leq |A|$. More interestingly,
 %
 \[ r(A) + r(B) \geq r(A \cup B) + r(A \cap B) \]
 %
-To prove this, let $J$ be a maximal subset of $A \cap B$ in the matroid, $K \subset A - B$ a complementary set for $J$, so that $|K| + |J| = r(A)$. This is always possible because we can extend $J$ to a base in $A$. Do the same for $J$ in $B$, forming $L$ such that $|K| + |J| + |L| = r(A \cup B)$. By construction, $J \cup K$ is independant in $A$, and $L$ is independent in $B$. But then by maximality we obtain the bound above. It turns out that the rank function of a matroid uniquely determines the matroid, but we won't discuss that.
+To prove this, let $J$ be a maximal independent subset of $A \cap B$, with $K \subset A - B$ a complementary subset of $J$, so that $K \cup J$ is a maximal independent subset of $A$. Do the same for $J$ in $B$, forming the independet set $L$. Then
+%
+\[ r(A) = |K| + |J|\ \ \ \ r(B) = |K| + |L| \]
+\[ r(A \cap B) = |K|\ \ \ \ r(A \cup B) \leq |K| + |L| + |J| \]
+%
+where the last inequality follows because if $C$ is a maximal independent subset of $A \cup B$, then
+%
+\[ |C \cap (A-B)| \leq |K|\ \ \ |C \cap (B-A)| \leq |L|\ \ \ |C \cap (A \cap B)| \leq |J| \]
+%
+It turns out that the rank function of a matroid uniquely determines the matroid, but we won't need this property. This inequality is the {\bf submodularity} property of the rank function. This is equivalent to the statement if $B$ is a subset of $A$, and $x$ is not an element of $A$, then $r(B \cup \{ x \}) - r(B) \geq r(A \cup \{ x \}) - r(A)$, which is a kind of `dimiminishing retursn' property for the function $r$.
 
-A subset $C$ of $X$ is a {\bf circuit} if it is not independent, but removing any particular element of $C$ makes it independent. If $Y$ is any independent set, and $Y \cup \{ x \}$ is independent, then there is a unique circuit contained in $Y \cup \{ x \}$. We call this circuit $C(Y,x)$. To find this circuit, consider a minimal element of $Y \cup \{ x \}$ which is not independent. The hard part is showing this is the only circuit. Let $C_1$ and $C_2$ be two circuits. If $C_1 \neq C_2$, let $x \in C_1 \cap C_2$, and $y \in C_1 - C_2$ (without loss of generality). We will show there is a circuit contained in $(C_1 \cup C_2) - \{ x \}$ contains a circuit. Indeed, using submodularity we find
+A subset $C$ of $X$ is a {\bf circuit} if it is not independent, but removing any particular element of $C$ makes it independent. The circuits in a graph are exactly the circuits in the matroid of no-cycle edge sets. If $Y$ is any independent set, and $Y \cup \{ x \}$ is {\it not}   independent, then there is a unique circuit contained in $Y \cup \{ x \}$, and we denote this circuit by $C(Y,x)$. To find this circuit, consider a minimal element of $Y \cup \{ x \}$ which is not independent. It is easy to see that this set is a circuit. The hard part is showing this is the only circuit. Let $C_1$ and $C_2$ be two circuits. If $C_1 \neq C_2$, let $y \in C_1 - C_2$ (we know one circuit cannot be a proper subset of the other). What's more, $x \in C_1 \cap C_2$, because $Y$ is an independent set, and therefore contains no circuits. We will show there is a circuit contained in $(C_1 \cup C_2) - \{ x \} \subset Y$, contradicting the fact that $Y$ is an independent set. Indeed, using submodularity we find
 %
 \begin{align*}
-    |C_1| - 1 + r((C_1 \cup C_2) - \{ x, y \}) + |C_2| - 1 &= r(C_1) + r((C_1 \cup C_2) - \{ x, y \}) + r(C_2)\\
-    &\geq r(C_1) + r((C_1 \cup C_2) - \{ y \} ) + r(C_2 - \{ x \})\\
-    &\geq r(C_1 - \{ y \}) + r(C_1 \cup C_2) + r(C_2 - \{ y \})\\
-    &= |C_1| - 1 + r(C_1 \cup C_2) + |C_2| - 1
+    [|C_1| - 1]& + [|C_2| - 1] + r(C_1 \cup C_2 - \{ x, y \})\\
+    &= r(C_1) + r(C_2) + r(C_1 \cup C_2 - \{ x, y \})\\
+    &\geq r(C_1) + r(C_2 - \{ x \}) + r((C_1 \cup C_2) - \{ y \} )\\
+    &\geq r(C_1 - \{ y \}) + r(C_2 - \{ y \}) + r(C_1 \cup C_2)\\
+    &= [|C_1| - 1] + [|C_2| - 1] + r(C_1 \cup C_2)
 \end{align*}
 %
-The point of this calculation is that now we know $r(C_1 \cup C_2) = r((C_1 \cup C_2) - \{ x, y \})$, so that we cannot add $x$ or $y$ to any maximal independent set in $(C_1 \cup C_2) - \{ x, y \}$ while keeping it independant. In particular, $(C_1 \cup C_2) - \{ x \}$ is not independent, so there must be a circuit contained in the set.
+The point of this calculation is that now we know $r(C_1 \cup C_2) = r(C_1 \cup C_2 - \{ x, y \})$, so that every base in $C_1 \cup C_2 - \{ x, y \}$ is a base in $C_1 \cup C_2$. In particular, this means that $C_1 \cup C_2 - \{ x \}$ is not independent, so there must be a circuit contained in the set.
 
-That there is always a unique circuit `screwing us over' is very useful in analyzing the matroid intersection problem. Given two matroids $M$ and $N$ over a set $X$, the intersection problem aks us to find the maximal set which is contained in both matroids. Similarily, we may have a subset $Y$ independent in both $M$ and $N$, and we wish to know whether we can extend $Y$ while preserving independence. Consider the following algorithm: given $Y$, we construct a directed graph with nodes in $Y$ and $X - Y$, and directed edges $ab$ (for $a \in Y$, $b \in X - Y$) if $Y - a + b \in M$, and $ba$ if $Y - a + b \in N$. We find a shortest path from $Y_1$ to $Y_2$ where
+That there is always a unique circuit `screwing us over' is very useful in analyzing the problem of matroid intersection. Given two matroids $M$ and $N$ over a set $X$, the intersection problem aks us to find the maximal set which is contained in both matroids. Similarily, we may have a subset $Y$ independent in both $M$ and $N$, and we wish to know whether we can extend $Y$ while preserving independence in both sets. Consider the following algorithm: given $Y$, we construct a directed graph with nodes in $Y$ and $X - Y$, and directed edges $ab$ (for $a \in Y$, $b \in X - Y$) if $Y - a + b \in M$, and $ba$ if $Y - a + b \in N$. We find a shortest path from $Y_1$ to $Y_2$ where
 %
 \[ Y_1 = \{ x \in X - Y : Y + x \in M \}\ \ \ \ \ \ Y_2 = \{ x \in X - Y: Y + x \in N \} \]
 %
@@ -719,19 +739,9 @@ and we then augment along that path to find a better matroid. If there is no pat
 
 \section{Linear Programs for Matroids}
 
-Let $M$ be a matroid over a set $X$, together with a weight function $w: M \to \mathbf{R}$. We can formulate the maximum weight independent set problem over $X$ as a linear program. Specifically, we consider the space of functions in $\mathbf{R}^X$, and take the linear program
-%
-\begin{gather*}
-\max \quad\ \ \sum_{e \in X} w(e) x(e) \\
-\begin{aligned}
-\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textup{s.t.} \quad x(A) &\leq r(A)\ \ \ \ \forall A \subset X \\
-                  x &\geq 0
-\end{aligned}
-\end{gather*}
-%
-in particular, the constraints guarantee that $0 \leq x(e) \leq 1$ for all $e \in X$, so integral points correspond to indicator functions over $X$. What's more, integral points also correspond to independent sets in the matroid. If $x \in \chi_B$, then $B = x(B) \leq r(B) \leq B$, so $r(B) = B$, and so $B$ is independant.
+Let $M$ be a matroid over a set $X$, together with a weight function $w: M \to \mathbf{R}$. We can formulate the maximum weight independent set problem over $X$ as a linear program. Specifically, we consider the space of functions in $\mathbf{R}^X$, and take the polytope consisting of functions $x: X \to \mathbf{R}^+$ such that $x(A) \leq r(A)$ for each subset $A$ of $X$. Note that these conditions guarantee that $0 \leq x \leq 1$. The indicator function of every independent set is contained in this polytope, and correspondingly, 0-1 valued points correspond to independent sets in the matroid. If $x = \chi_B$, then $B = x(B) \leq r(B) \leq B$, so $r(B) = B$, and so $B$ is independent. We call this the matroid polytope.
 
-It turns out that (surprise surprise!) all extreme points are integral, so we can solve the problem in polynomial time. Our proof will use an interesting technique known as the uncrossing method, which `thins' the constraints of the LP so they correspond to a Laminar family (If we say $A$ and $B$ are crossed if $A \cap B \neq \emptyset$, then by breaking them into disjoint chains we have `uncrossed them'). First, we embed $2^X$ in $\mathbf{R}$ by mapping $A \subset X$ to the $0/1$ indicator function $\chi_A$. Then we let $\mathcal{C}$ to be the largest linearly ordered subset of $2^X$ (a {\it chain} in $2^X$) only containing subsets $A$ for which we have a tight constraint, $x(A) = r(A)$, and such that the $\chi_A$ are independent. We claim that the $\chi_A$ span $\mathbf{R}^X$.
+The maximum weight independent set asks us to maximize $\sum w(e) x(e)$ over integral points of the matroid polytope. It turns out that all extreme points of the matroid polytope are integral, so we can solve the problem in polynomial time. Our proof will use an interesting technique known as the uncrossing method, which `thins' the constraints of the LP so they correspond to a Laminar family (If we say $A$ and $B$ are crossed if $A \cap B \neq \emptyset$, then by breaking them into disjoint chains we have `uncrossed them'). First, we embed $2^X$ in $\mathbf{R}$ by mapping $A \subset X$ to the $0/1$ indicator function $\chi_A$. Then we let $\mathcal{C}$ to be the largest linearly ordered subset of $2^X$ (a {\it chain} in $2^X$) only containing subsets $A$ for which we have a tight constraint, $x(A) = r(A)$, and such that the $\chi_A$ are independent. We claim that the $\chi_A$ span $\mathbf{R}^X$.
 
 Next, note that the functionals $x \mapsto x(A)$ are essentially the duals of the characteristic function $\chi_A$, and since $2^X$ spans $\mathbf{R}^X$, the rows of the constraint matrix which $x$ satifies span $\mathbf{R}^X$. In particular, since $x$ is extreme, the set of tight constraints spans $\mathbf{R}^X$, and it suffices for us to prove that $\text{span}(\mathcal{C})$ contains all $\chi_A$ such that $x(A) = r(A)$. Suppose that $\chi_B$ was not in $\text{span}(\mathcal{C})$, where $r(B) = x(B)$. If such a $B$ exists, we may choose $B$ such that the number of elements is minimized
 %
@@ -846,108 +856,233 @@ s
 
 \chapter{Set Cover}
 
-In the set cover problem, we are given a particular set $X$, and a family of subsets $S_1, \dots, S_n$ whose union is $S$. Each set $S_i$ is associated a particular weight $w_i \geq 0$, and the goal is to find the cheapest family of subsets which cover $S$. The case where $w_1 = w_2 = \dots = w_n = 1$ is known as the unweighted version of the set cover problem. The problem is easily seen to be NP hard, because it generalizes the vertex cover problem, which asks, given a graph, to find a subset of vertices which contain one end to every edge.
+In the set cover problem, we are given a particular set $X$, and a family of subsets whose union is $X$, so that the sets {\it cover} $X$. Each set $S$ is associated a particular weight $w_S \geq 0$, and the goal is to find the cheapest family of subsets which cover $S$. The case where $w_S = 1$ for all sets $S$ is known as the unweighted version of the set cover problem. The problem is easily seen to be NP hard, because it generalizes the vertex cover problem, which asks, given a graph, to find a subset of vertices which contain one end to every edge. In this chapter, we consider the problem of finding good polynomial time computable heuristics to the set cover problem which give hard bounds on the approximation ratio of returned solutions.
 
 \section{Approximations Via Linear Programming}
 
-We cannot express the set cover problem as a linear program in polynomially many dimensions, because then we could solve the set cover program in polynomial time (using some linear program algorithm, like the ellipsoid method). However, we can express the set cover problem as a 0/1 {\it integer} linear program. Our choice of including $S_i$ in some solution to the set cover problem can be taken as some binary variable $x_i \in \{ 0, 1 \}$. The constraint that the union of the $S_i$ contain every element in $S$ can be expressed in terms of the $|S|$ constraints
-%
-\[ \sum_{s \in S_i} x_i \geq 1 \]
-%
-for each $x \in X$. We aim to choose a $\{ 0, 1 \}$ valued solution minimizing $\sum x_i w_i$. We can solve this problem by removing the $\{ 0, 1 \}$ integer constraint, and by adding the constraint that $0 \leq x_i \leq 1$ for each index $i$. This is known as the {\it relaxation} of the integer linear program. This gives a solution $x^*: I \to [0,1]$. While $\sum x^*_i w_i$ will certainly be a smaller quantity than the set cover instance, we cannot really interpret the solution $x^*$ of the LP as a solution of the original set cover problem. However, we would hope that $x^*$ gives an approximate solution to the problem, and by {\it rounding} this solution to an integer solution, we can obtain a bounded approximation to the original problem.
+Unless we doubt that $\mathbf{P} \neq \mathbf{NP}$, we should not hope to be able to express the set cover problem as a linear program in polynomially many dimensions, because then we could solve the set cover problem in polynomial time (using some linear programming algorithm, like the ellipsoid method). However, we can express the set cover problem as a 0-1 {\it integer} linear program. Theoretically, this is guaranteed, because the problem is $\mathbf{NP}$ complete, but we shall find a {\it natural} integer linear program for set cover which provides inspiration for approximations. Our choice of including $S$ in some solution to the set cover problem can be taken as some binary variable $x_S \in \{ 0, 1 \}$. The constraint that the union of the $S$ chosen contains every element in $S$ can be expressed that for each $a \in X$, $\sum_{a \in S} x_S \geq 1$. The value of such a cover will be $\sum x_S w_S$, and we aim to minimize this value. Thus we have reformulated the set cover problem as a particular instance of an integer linear program. This is, of course, impossible to solve in polynomial time unless $\mathbf{P} = \mathbf{NP}$.
 
-In this case, we begin by setting $M$ to be the maximal number of sets which contain a particular element $x$, over all elements $x \in X$. To round $x^*$ to an integer valued solution, we define $x: I \to \{ 0, 1 \}$ by setting $x_i = 1$ if $x^*_i \geq 1/M$. Then $x$ gives values corresponding to a set cover, because since for each $s \in S$, $1 \leq \sum_{i \in s} x^*_i \leq M \max_{i \in s} x^*_i$, so that there is at least one index $i$ with $s \in S_i$ and $x_i = 1$. We claim that if $\text{OPT}$ gives the optimal value of set cover, then $\sum w_i x_i \leq M \cdot \text{OPT}$, implying that we have obtained an $M$-approximation algorithm for set cover. It is clear that $\sum w_i x^*_i \leq \text{OPT}$, because every solution to set cover can be interpreted to a solution of the set cover LP. Furthermore, we know that $M x^*_i \geq 1$ whenever $x_i = 1$, and therefore
-%
-\[ \sum w_i x_i \leq \sum_{i = 1}^n w_i (Mx^*_i) = M \sum w_i x^*_i \leq M \cdot \text{OPT} \]
-%
-This concludes the discussion of the algorithm. In the case of vertex cover, each edge is covered by two vertices, and therefore this algorithm gives a 2-approximation.
+If we remove the constraint that $x_S \in \{ 0, 1 \}$, and instead add the constraint that $0 \leq x_S \leq 1$, then we can solve the program in polynomial time. This is known as the {\bf relaxation} of the program. However, the solutions we obtain will no longer be $\{ 0, 1 \}$ valued, and will therefore not correspond to solutions to the original set cover problem. There are many ways of interpreting these solutions, and they lead to many different techniques used in the theory of approximation algorithms. For now, we consider these solutions as approximations to actual solutions to the set cover. If we can `snap' the solution to a $\{ 0, 1 \}$ valued solution, while bounding the value of the solution in terms of the optimal solution to the linear program, then we obtain an approximation algorithm to the set cover problem, because the optimal solution to the relaxation of the linear program is always going to lower bound the optimal solution to the set cover problem. A technique of snapping a solution to a proper solution is known as a {\bf rounding algorithm}.
 
-Often, it is useful to use the dual of a linear program to verify how close we are to the original algorithm. In this case, the dual is to minimize $\sum_{i = 1}^n y_i - \sum_{s \in S} y_s$, such that $w_i + y_i \geq \sum_{s \in S_i} y_s$, and $y_s, y_i \geq 0$. In an optimal solution to this linear program, we may always assume $y_i = 0$, for if $y_i > 0$, we can always let $y_i \to 0$ while decreasing some $y_s$ with $y_s > 0$ without changing the value of the solution (and if we have no $y_s > 0$ for $s \in S_i$, then the solution cannot be optimal because we still have a solution obtained by setting $y_i = 0$, and changing none of the values $y_s$). Thus a dual linear program can be obtained by removing the variables $y_i$, and considering the linear program which maximizes $\sum_{s \in S} y_s$, such that $\sum_{s \in S_i} y_s \leq w_i$, with $y_s \geq 0$. The theory of dual linear programs implies that $\sum_{s \in S_i} y_s$ gives a lower bound for any feasible solution $y_s$. We can use it to obtain another approximation algorithm. Consider an optimal solution $y^*$ to the dual LP, and take a solution $x$ to the original LP, with $x_i = 1$ if the corresponding constraint in the dual LP is tight with respect to $y^*$. Now for every $s$, there must be an index $i$ such that $s \in S_i$, and $\sum_{s \in S_i} y_s = w_i$, hence $x_i = 1$, and so $s$ is covered. We claim that $x$ gives an $M$ approximation to the set cover problem, as for the original rounding solution to the linear program. The central idea is that if $S_i$ is in a cover, we `pay' for it by charging $y_s^*$ to each $s \in S_i$. Each element is charged at most once for each set that contains it, so the total cost is at most $M \sum y^*_s$. In detail, we find that $x_i = 1$ if and only if $w_i = \sum_{s \in S_i} y_s^*$, so
+Thus we consider an optimal solution $0 \leq x^* \leq 1$ to the relaxation of the set cover program. We begin by setting
 %
-\[ \sum w_i x_i = \sum x_i \sum_{s \in S_i} y_s^* \leq M \sum_{s \in S} y_s^* \leq M \cdot \text{OPT} \]
+\[ M = \max_{a \in X} |\{ S : a \in S \}| \]
 %
-hence we have an $M$-approximation.
+to be the maximal number of sets which contain a particular element $a$, over all elements $a \in X$. We note that since $\sum_{a \in S} x^*_S \geq 1$ for each $x$, then $\mathbf{E}[x^*_S | x \in S] \geq 1/M$, and so there must exist a set $S$ with $a \in S$, and $x^*_S \geq 1/M$ (there must exist a value in a list of values greater than the average value of the list). This implies that we can obtain a feasible solution $x$ to the $\{ 0, 1 \}$ valued program by setting $x_S = 1$ if $x^*_S \geq 1/M$. This gives a bounded approximation to the solution.
 
-\section{Using Duals to Combinatorialize LP Approximations}
+\begin{lemma}
+    $\sum w_S x_S \leq M \sum w_S x^*_S$.
+\end{lemma}
+\begin{proof}
+    If $x_S = 1$, then $x_S^* \geq 1/M$, and so $x_S \leq Mx_S^*$, and therefore
+    %
+    \begin{align*}
+        \sum w_S x_S \leq \sum w_S Mx_S^* = M \sum w_S x_S^*
+    \end{align*}
+    %
+    and this gives the required inequality.
+\end{proof}
 
-The dual algorithm is actually always worse than the original LP approximation. We know that $\sum y_s \leq \sum w_i x_i$ for any feasible $y$ in the dual, and $x$ in the original LP. What's more, $\sum w_i x_i^* = \sum y_s^*$. Because of the theory of complementary slackness, we also know that $y_s^* > 0$ implies that $\sum_{s \in S_i} x_i^* = 1$, and whenever $x_i^* > 0$, then $\sum_{s \in S_i} y_s^* = w_i$. In the first algorithm, we include a set in our cover if $x_i^* \geq 1/M$, and complementary slackness implies that the set is included in the cover determined by the second algorithm. Thus the second algorithm is always at least as inefficient as the first.
+It follows that this rounding algorithm produces an $M$ approximation algorithm to the set cover problem, since $\sum w_S x^*_S$ lower bounds the optimal solution to the set cover problem. In the case of vertex cover, each edge is covered by two vertices, so $M = 2$, and we obtain a 2-approximation algorithm. Assuming a result known as the Unique Games Conjecture, which is still an open problem in computing science, this is the best possible approximation we can achieve in polynomial time, unless $\mathbf{P} = \mathbf{NP}$.
 
-However, the dual LP is still useful, because we can use it in tandem with the original LP to obtain a combinatorial approximation algorithm for set cover. This is analogous to the combinatorial algorithms for bipartite matching and max flow, which can be obtained by combinatorializing the linear program formulations of the problem. The dual algorithm consists as follows: begin with some feasible solution $y$ to the dual program, and consider some family of sets $S_i$ such that the corresponding constraint to $S_i$ is tight. If this family is a set cover, then we are done. Otherwise, there is some $s \in S$ not covered by the family of sets, hence $y_s$ is not tight, and we may increase $y_s$ until it makes some dual constraint corresponding to some $S_j$ tight, and we add it to our family of sets. Eventually we obtain a set cover, and the same argument for the dual algorithm implies that this solution is also an $M$ approximation. We know from the last argument that this will always give worse results than the original algorithm, but it is likely much faster in practice to compute this solution than to optimize the LP formulation of set cover.
+\section{A Dual Formulation}
+
+Often, it is useful to consider the dual of a linear program to verify optimality. In particular, we can use it to help with constructing rounding algorithms. Given the linear program relaxation to set cover, one can calculate that the dual of the set cover is to maximize $\sum y_a$, such that for each set $S$, $\sum_{a \in S} y_a \leq w_S$. One can think of the values $y_a$ as assigning a `cost' to each element of the set we are attempting to cover, and not only can we conclude that $y_a \leq \min_{a \in S} w_S$, so that every partial cover of $X$ includes $a$ must cost at least $y_a$, but also every partial cover of $X$ containing a subset $T$ must cost at least $\sum_{a \in T} y_a$. In particular, the total sum $\sum y_a$ lower bounds the optimal set cover solution. The theory of LP duality tells us that if $y^*$ optimize the dual LP, then $\sum y^*_a = \sum x^*_S$, where $x^*$ optimizes the linear relaxation to set cover.
+
+Now consider the following algorithm. We construct an optimal solution $y^*$ to the dual program, and then construct a set cover $x$ where $x_S = 1$ if the dual constraint corresponding to $S$ is tight for $y^*$, i.e. $\sum_{a \in S} y^*_a = w_S$. In terms of our interpretation of the dual LP, we can interpreting this as choosing a set $S$ which gives us `the best deal for our money' relative to the costs $y^*$ for each element. It is a set $S$ such that $w_S$ is {\it exactly} the lowest cost cover of $S$. This gives us a set cover, because if $\sum_{a \in S} y^*_a < w_S$ for each set $S$ containing a particular element $b$, then we can increase $y^*_b$ while fixing all values, giving us a more optimal solution. What's more, it's weight is bounded.
+
+\begin{lemma}
+    $\sum w_S x_S \leq M \sum y_a^*$
+\end{lemma}
+\begin{proof}
+    Because each element $a$ is in at most $M$ sets $S$,
+    %
+    \[ \sum w_S x_S = \sum_S x_S \sum_{a \in S} y^*_a \leq M \sum y^*_a \]
+    %
+    and this is the lower bound required.
+\end{proof}
+
+As we have argued, $\sum y_a^*$ gives us the lower bound to the set cover problem, and therefore $x$ gives an $M$ approximation to the set cover problem.
+
+\section{Using Duals to Discretize LP Approximations}
+
+The dual algorithm is always worse than the original LP approximation. We know that $\sum y_a \leq \sum w_S x_S$ for any feasible $y$ in the dual, and $x$ in the original LP. What's more, $\sum w_i x_i^* = \sum y_x^*$. Because of the theory of complementary slackness, we also know that $y_a^* > 0$ implies that $\sum_{a \in S} x_S^* = 1$, and whenever $x_S^* > 0$, then $\sum_{a \in S} y_a^* = w_S$. In the first rounding algorithm we considered, we include a set in our cover if $x_S^* \geq 1/M$, and complementary slackness implies that the set is included in the cover determined by the second algorithm. Thus the second algorithm always contains the first algorithms solution as a subcover, and is guaranteed to be less optimal.
+
+However, the dual LP is still useful, because we can use it in tandem with the original LP to obtain a combinatorial approximation algorithm for set cover. These type of algorithms are known as {\bf dual primal algorithms}. This is analogous to the combinatorial algorithms for bipartite matching and max flow, which can be obtained by combinatorializing the linear program formulations of the problem. The algorithm consists as follows: begin with some feasible solution $y$ to the dual program, and consider some family of sets $S$ such that the corresponding constraint to $S$ is tight. If this family is a set cover, then we are done. Otherwise, there is some $a$ not covered by the family of sets, hence $y_a$ is not tight, and we may increase $y_a$ until it makes some dual constraint corresponding to some set $S$ tight, and we may add the set to our family of sets. Eventually we obtain a set cover, and the same argument for the dual algorithm implies that this solution is also an $M$ approximation (the argument depended very little on the fact that $y$ was optimal). We know from the last argument that this will always give worse results than the original algorithm, but it is likely much faster in practice to compute this solution than to optimize the LP formulation of set cover. What's more, we know of no better approximation bound for the other LP, so the other algorithm has no other guarantee of a `noticable' improvement asymptotically.
 
 \section{A Greedy Solution}
 
-We now present a natural greedy heuristic to set cover, which actually leads to a much better approximation to set cover. At each point in the algorithm, we have a partial set cover which covers some subset $T \subset S$ of all the points in the set. If $T \neq S$, then we add the set $S_i$ to the cover which maximizes the ratio $w_i|S_i - T|^{-1}$ of weight to the number of points which can be added to the existing solution. If $H_n = \sum_{k = 1}^n k^{-1}$ is the $n$'th {\it harmonic number}, then we claim this algorithm gives a $H_n$ approximation algorithm to the set cover problem. First, we note that given any $a_1, \dots, a_n > 0$ and $b_1, \dots, b_n > 0$,
+We now present a natural greedy heuristic to set cover, which actually leads to a much better approximation to set cover. At each point in the algorithm, we have a partial set cover which covers some subset $T \subset S$ of all the points in the set. If $T \neq S$, then we add the set $S$ to the cover which maximizes the ratio
 %
-\[ \min (a_i/b_i) \leq \frac{\sum a_i}{\sum b_i} \leq \max (a_i/b_i) \]
+\[ \frac{w_S}{|S - T|}  \]
 %
-this follows by simple algebraic manipulations. Suppose the greedy algorithm takes $m$ iterations to form a cover. Let $n = n_1 > n_2 > \dots > n_m > n_{m+1} > 0$ be the number of uncovered elements on the beginning of the individual iterations of the algorithm, let $\emptyset T_1 \subsetneq T_2 \subsetneq \dots \subsetneq T_m \subsetneq S$ denote the set of covered elements, and for each $i$, let $S_i^k = S_i - T_k$ denote the number of unconvered elements in $S_i$ at the beginning of the $k$th iteration. The greedy algorithm takes $j$ which minimizes $w_j/|S_j^k|$ on the $k$'th iteration. We claim that for this $j$,
+which is the `best value for the money' at the current point in time. If $H_n = \sum_{k = 1}^n k^{-1}$ is the $n$'th harmonic number, then we claim this algorithm gives a $H_n$ approximation algorithm to the set cover problem, where $n$ is the number of elements in $X$.
+
+\begin{lemma}
+    Given positive numbers $a_1, \dots, a_n$ and $b_1, \dots, b_n$,
+    %
+    \[ \min (a_i/b_i) \leq \frac{\sum a_i}{\sum b_i} \leq \max (a_i/b_i) \]
+\end{lemma}
+\begin{proof}
+    We note that since the minimum of a set of elements is upper bounded by the average of the elements, and the maximum is lower bounded by the average, we conclude that
+    %
+    \[ \min(a_i/b_i) \leq \frac{\min(a_i)}{\max(b_i)} \leq \frac{\sum a_i/n}{\sum b_i/n} = \frac{\sum a_i}{\sum b_i} \]
+    %
+    and
+    %
+    \[ \max(a_i/b_i) \geq \frac{\max(a_i)}{\min(b_i)} \geq \frac{\sum a_i/n}{\sum b_i/n} = \frac{\sum a_i}{\sum b_i} \]
+    %
+    and this gives the inequality.
+\end{proof}
+
+Suppose the greedy algorithm takes $m$ iterations to form a cover. Let
 %
-\[ w_j \leq \frac{n_k - n_{k+1}}{n_k} \cdot \text{OPT} \]
+\[ n = n_1 > n_2 > \dots > n_m > n_{m+1} > 0 \]
 %
-It then follows that for the solution we find corresponding to the indices $I$,
+be the number of uncovered elements at the beginning of the individual iterations of the algorithm, let
+%
+\[ \emptyset = T_0 \subsetneq T_1 \subsetneq T_2 \subsetneq \dots \subsetneq T_m = X \]
+%
+denote the set of covered elements. For each set $S$, let $S_k = S - T_k$ denote the number of unconvered elements in $S$ at the beginning of the $k$th iteration. On the $k$th iteration, the greedy algorithm therefore takes the set $S$ minimizing $w_S/|S_k|$.
+
+\begin{lemma}
+    If $\text{OPT}$ is the value of the optimal set cover solution, then
+    %
+    \[ w_S \leq \frac{n_k - n_{k+1}}{n_k} \cdot \text{OPT} \]
+\end{lemma}
+\begin{proof}
+    We first find that
+    %
+    \[ \min \left( \frac{w_S}{|S_k|} \right) \leq \frac{\sum w_S}{\sum |S_k|} \leq \frac{\text{OPT}}{n_k} \]
+    %
+    If we add $S$ to our set, then $n_{k+1} = n_k - |S_k|$, and so
+    %
+    \[ w_S \leq |S_k| \frac{\text{OPT}}{n_k} = \frac{n_k - n_{k+1}}{n_k} \text{OPT} \]
+    %
+    This gives the inequality.
+\end{proof}
+
+It then follows that the resulting solution we find satisfies
 %
 \begin{align*}
-    \sum_{i \in I} w_i &\leq \text{OPT} \sum_{k = 1}^m \frac{n_k - n_{k+1}}{n_k}\\
+    \sum w_S &\leq \text{OPT} \sum_{k = 1}^m \frac{n_k - n_{k+1}}{n_k}\\
     &\leq \text{OPT} \sum_{k = 1}^m \left( \frac{1}{n_k} + \frac{1}{n_k - 1} + \dots + \frac{1}{n_{k+1} + 1} \right)\\
     &= \text{OPT} \sum_{i = 1}^n \frac{1}{i} = H_n \cdot \text{OPT}
 \end{align*}
 %
-Given us the desired approximation constant. To prove the minimization inequality, we first find that
-%
-\[ \min \left( \frac{w_j}{|S^k_j|} \right) \leq \frac{\min w_j}{\max |S^k_j|} \leq \frac{\text{OPT}}{n_k} \]
-%
-If we add $S_j$ to our set, then $n_{k+1} = n_k - |S^k_j|$, and so
-%
-\[ w_j \leq |S^k_j| \frac{\text{OPT}}{n_k} = \frac{n_k - n_{k+1}}{n_k} \text{OPT} \]
-%
-and this completes the argument.
+And therefore we obtain the desired approximation constant.
 
-The theory of dual LPs allows us to slightly tighten the approximation ratio of set cover. Let $N$ be the maximum size of any $S_i$. Then we claim the greedy solution returns a set cover indexed by some $J$, then $\sum_{j \in J} w_j \leq H_N \text{OPT}_{\text{LP}}$, where $\text{OPT}_{\text{LP}}$ is the optimal value of the LP relaxation of the set cover problem. To find this solution, we use the technique of dual fitting. The idea is that if $\sum_{j \in J} w_j = \sum y_s$ for some infeasible solution $y$ to the dual of the set cover with $y/H_m$ a feasable solution, then by weak duality we find that $\sum_{j \in J} w_j = \sum y_s \leq H_m \text{OPT}_{\text{LP}}$, giving us the required bounds. To construct the infeasible solution $y$, we consider the iterations of the greedy algorithm. If we add the set $S_j$ on the $k$'th iteration, we let $y_s = w_j/|S_j^k|$ for each $s \in \smash{S_j^k}$. Then each $y_s$ is set exactly once, because it is contained in a particular set which is added to the cover, and is then covered for the rest of the algorithm. It is easy to see that $w_j = \sum y_s$ because of the way the weights are distributed over the LP. It remains to prove that $y/H_N$ is feasible. We must show that $\sum_{s \in S_i} y_s \leq H_N w_i$ for each index $i$. To see this, fix $i$, and let $a_k = |S_i^k|$ be the number of elements of $S_i$ uncovered in the $k$th iteration, and let $A_k$ be the set of elements covered in $i$ covered in the $k$th iteration, so that $|A_k| = a_k - a_{k+1}$. If $S_j$ is chosen in the $k$th iteration, then for each $s \in A_k$,
+\section{Dual Fitting}
+
+The $H_n$ algorithm is essentially an asymptotically optimal approximation algorithm for set cover in terms of the size of the input. If we can prove that there is a $c \lg n$ approximation algorithm for set cover, for any $c > 0$, then there is an $O(n^{O(\log \log n)})$ time algorithm for any problem in {\bf NP}, implying {\bf P} = {\bf NP}. However, we can actually show that in terms of another parameter related to the problem, the solution gives a better approximation than the bound we found above.
+
+The theory of dual LPs returns again to allow us to slightly tighten the approximation ratio of the set cover algorithm we considered just previously. If $N$ bounds the cardinality of each set $S$, we claim that the algorithm above gives a $H_N$ approximation. In particular, we show that
 %
-\[ \frac{y_s}{H_N} = \frac{w_j}{H_N |S_j^k|} \leq \frac{w_i}{H_N a_k} \]
+\[ \sum w_S \leq H_N \cdot \text{OPT}_{\text{LP}} \]
 %
-Now we find that
+where $\text{OPT}_{\text{LP}}$ is the optimal value of the LP relaxation of the set cover problem. To find this solution, we use the technique of dual fitting. The idea is that if $\sum w_S = \sum y_a$ for some {\it infeasible solution} $y$ to the dual of the set cover problem, but where $y/H_m$ {\it is} a feasable solution, then by weak duality we find that
+%
+\[ \sum_{S \in J} w_S = \sum y_a \leq H_m \cdot \text{OPT}_{\text{LP}} \]
+%
+giving us the required approximation bound. We construct the infeasible solution $y$ in this instance during the duration of the greedy algorithm. If we add the set $S$ on the $k$'th iteration, we set $y_a = w_S/|S_k|$ for each $a \in \smash{S_k}$. Then each $y_a$ is set exactly once. It is easy to see that if $S$ is added on the $k$'th iteration, then $w_S = \sum_{a \in S_k} y_a$ because of the way the weights are distributed over the LP. Now this implies that, unless $S_k = S$, that items will always `cost more' than they were meant.
+
+Fix a set $S$, and let $U_k = S_k - S_{k+1}$ be the set of elements in $S$ covered in the $k$'th iteration. If $S'$ is chosen in the $k$th iteration, then for each $a \in U_k$,
+%
+\[ y_a = \frac{w_{S'}}{|S'_k|} \leq \frac{w_S}{|S_k|} \]
+%
+This means that
 %
 \begin{align*}
-    \sum_{s \in S_i} \frac{y_s}{H_N} &= \sum_{k = 1}^n \sum_{s \in A_k} \frac{y_s}{H_N}\\
-    &\leq \sum_{k = 1}^n (a_k - a_{k+1}) \frac{w_i}{H_N a_k}\\
-    &= \frac{w_i}{H_N} \sum_{k = 1}^n \frac{a_k - a_{k+1}}{a_k} \leq \frac{w_j H_{|S_j|}}{H_N} \leq w_j
+    \sum_{a \in S} y_a &= \sum_{k = 1}^n \sum_{a \in U_k} y_a \leq \sum_{k = 1}^n \frac{w_S}{|S_k|} = w_S \sum_{k = 1}^n \frac{|U_k| - |U_{k+1}|}{|S_k|} \leq w_S H_{|S|}
 \end{align*}
 %
-Giving us the required bounds and giving the approximation ratio for set cover.
-
-The $H_n$ algorithm is essentially an asymptotically optimal approximation algorithm for set cover. If we can prove that there is a $c \lg n$ approximation algorithm for set cover, for any $c > 0$, then there is an $O(n^{O(\log \log n)})$ time algorithm for any problem in NP, implying P = NP. What's more, we find that P = NP even if there is a $c \lg n$ approximation algorithm for the {\it unweighted} case of the set cover problem. The 2 approximation algorithm for vertex cover is the best known ratio, and assuming the unique games conjecture, there is no $\alpha$ approximation algorithm for any $\alpha < 2$.
+It follows that $y/H_N$ is a feasible solution to the dual LP, and this gives the approximation ratio required.
 
 \section{Randomized Rounding}
 
-We now consider another technique for obtaining a solution to a combinatorial problem from an LP relaxation. Given an optimal solution $x^*$ to the LP, $0 \leq x_i^* \leq 1$, which we would like to interpret as a probability that we choose the set $i$ in a randomized solution strategy to the set cover. Choosing the $S_i$ independently with probability $x^*_i$ gives a randomized family of sets whose expected weight is $\text{OPT}_{\text{LP}}$. This is a great value to obtain, but unfortunately, it is likely the solutions we obtain will not be covers of the entire set. However, this calculation shows we can often obtain good approximation algorithms by this randomized rounding technique.
+We now consider another technique for obtaining a solution to a combinatorial problem from an LP relaxation. Given an optimal solution $x^*$ to the LP relaxation to set cover, rather than interpreting the solutions to the LP as approximations to the discrete solution set, we shall interpret the solution as a {\it superposition of discrete solutions}. Consider the random family of sets which takes a set $S$ independent of other sets with probability $x^*_S$. As once can verify from linearity of expectation, this gives `a set cover in expectation', and the expected value of such a family is equal to $\text{OPT}_{\text{LP}}$. This should be immediately suspicious, since $\text{OPT}_{\text{LP}}$ lower bounds {\it all} discrete solutions to the algorithm. Indeed, we find that even though the random family satisfies the inequalities in expectation, it need not satisfy the inequalities pointwise. In other words, a particular choice of sets given by the random family need not be a cover. Nonetheless, we can still obtain good random approximation algorithms by choosing the probability values more carefully, and with a more developed analysis.
 
-For each $s$, the chance that $s$ is not covered by the randomized rounding algorithm is $\prod_{s \in S_i} (1 - x^*_i)$. Using the fact that $1 - x^*_i \leq e^{-x^*_i}$, we can bound the chance that $s$ is not covered by
+For each element $a$, the chance that $a$ is not covered by the randomized rounding algorithm is
 %
-\[ \prod_{s \in S_i} e^{-x^*_i} = e^{- \sum_{s \in S_i} x^*_i} \leq e^{-1} \]
+\[ \prod_{a \in S} (1 - x^*_S) \]
 %
-because $\sum_{s \in S_i} x^*_i \geq 1$. Although $e^{-1}$ is only an upper bound on this probability, it is possible to take this bound arbitrarily closely, so in the worst case it is highly unlikely we will obtain a set cover instance.
+Using the fact that $1 - x^*_S \leq e^{-x^*_S}$, we can bound the chance that $x$ is not covered by
+%
+\[ \prod_{a \in S} e^{-x^*_S} = e^{- \sum_{a \in S} x^*_S} \leq e^{-1} \]
+%
+because $\sum_{a \in S} x^*_S \geq 1$. Although $e^{-1}$ is only an upper bound on the probability of failure, it is possible to find instances of set cover which take this bound arbitrarily closely, so in the worst case we have $\approx 36 \%$ chance of not finding a set cover solution.
 
-However, we can still use these ideas to obtain polynomial time algorithms whose chance of failure is $n^{-c}$, for any positive constant $c > 0$. This is known as an algorithm that works with high probability (even though this is really a family of algorithms, and we normally find that the speed of these algorithms increases as $c \to \infty$). If we can find a randomized procedure operating in polynomial time such that the probability that any $s$ is uncovered is bounded by $(1/n^c)$, then a union bound gives that the probability that a random choice is a set cover is $(1/n^{c-1})$, so we have obtained an algorithm that works with high probability. The idea is to consider $c \lg n$ Bernoulli trials which succeed with probability $x^*_i$, and to take a set $S_i$ in our cover if any of these trials pass. The probability that $S_i$ is not included is then $(1 - x_j^*)^{c \lg n}$, which is upper bounded by
+However, we can still use these ideas to obtain polynomial time algorithms whose chance of failure is $n^{-c}$, for any positive constant $c > 0$. This is known as an {\bf algorithm that works with high probability} (even though this is really a family of algorithms, and we normally find that the runtime of these algorithms increases as $c \to \infty$). If we can find a randomized procedure operating in polynomial time such that the probability that any $s$ is uncovered is bounded by $(1/n^c)$, then a union bound gives that the probability that a random choice is a set cover is $(1/n^{c-1})$, so we have obtained an algorithm giving a set cover with high probability. The idea is to consider $c \lg n$ Bernoulli trials which succeed with probability $x^*_S$, and to take a set $S$ in our cover if any of these trials pass. The probability that $S$ is not included is then $(1 - x_S^*)^{c \lg n}$, and therefore for each $a$,
 %
-\[ \prod_{s \in S_i} (1 - x^*_i)^{c \lg n} \leq \prod_{s \in S_i} e^{-x_i^* (c \lg n)} = e^{- (c \lg n) \sum_{s \in S_i} x^*_i} = \frac{1}{n^c} \]
+\[ \prod_{a \in S} (1 - x^*_S)^{c \lg n} \leq \prod_{a \in S} e^{-x_S^* (c \lg n)} = e^{- (c \lg n) \sum_{a \in S_i} x^*_S} \leq \frac{1}{n^c} \]
 %
-Now we need only prove that this algorithm has a good expected value. Let $P_i(x_i^*) = 1 - (1 - x_i^*)^{c \lg n}$ be the probability that $S_i$ is included in our set. If $x_j^* \in [0,1]$, and $c \lg n \geq 1$, then
+Now we need only prove that this algorithm has a good expected value. Let $P_S(x^*) = 1 - (1 - x_S^*)^{c \lg n}$ be the probability that $S$ is included in our set. Since $x_S^* \in [0,1]$, we conclude that
 %
-\[ P_i'(x_i^*) = (c \lg n) (1 - x_i^*)^{c \lg n - 1} \leq c \lg n \]
+\[ \frac{d P_S(x^*)}{d x^*_S} = (c \lg n) (1 - x_S^*)^{c \lg n - 1} \leq c \lg n \]
 %
-since $P_i(0) = 0$, we conclude that $P_i(x_i^*) \leq (c \lg n) x_i^*$. Let $X_i$ be the random variable with $X_i = 1$ if $S_i$ is included in our random set cover. Then the expected value of the given solution is then
+Furthermore, since $P_i(x^*) = 0$ if $x^*_S = 0$, we conclude that $P_S(x^*) \leq (c \lg n) x_S^*$. Let $X$ be the random variable with $X_S = 1$ if $S$ is included in our random set cover. Then the expected value of the given solution is
 %
-\[ \mathbf{E} \left(\sum w_i X_i \right) = \sum w_i P_i(x_i^*) \leq w_i (c \lg n) x_i^* = (c \lg n) \text{OPT}_{\text{LP}} \]
+\[ \mathbf{E} \left(\sum w_S X_S \right) = \sum w_S P_S(x^*) \leq w_i (c \lg n) x_S^* = (c \lg n) \cdot \text{OPT}_{\text{LP}} \]
 %
-However, it is more important to bound the expected value, given that the given family we obtain is a set cover. Let $A$ be the event that the $X_i$ give a valid set cover. Then $\mathbf{P}(A) \geq 1 - n^{c-1}$, and also that
+However, it is more important to bound the expected value, given that the given family we obtain is a set cover, because these are the actual feasible solutions we can output. Let $A$ be the event that the $X$ gives a valid set cover. Then $\mathbf{P}(A) \geq 1 - n^{c-1}$, and also
 %
-\[ \mathbf{E} \left(\sum w_i X_i \right) = \mathbf{E} \left(\sum w_i X_i | A \right) \mathbf{P}(A) + \mathbf{E} \left(\sum w_i X_i | A^c \right) \mathbf{P}(A^c) \]
+\[ \mathbf{E} \left(\sum w_S X_S \right) = \mathbf{E} \left(\sum w_S X_S | A \right) \mathbf{P}(A) + \mathbf{E} \left(\sum w_S X_S | A^c \right) \mathbf{P}(A^c) \]
 %
-since $w_i, X_i \geq 0$, $\mathbf{E}(\sum w_i X_i | A^c) \geq 0$, and so
+Since $w,X \geq 0$, and $\mathbf{E}(\sum w_S X_S | A^c) \geq 0$, we conclude that
 %
-\[ \mathbf{E} \left( \sum w_i X_i | A \right) \leq \frac{\mathbf{E} \left( \sum w_i X_i \right)}{\mathbf{P}(A)} \leq \frac{(c \lg n)}{1 - n^{c-1}} \text{OPT}_{\text{LP}} \leq (2 c \lg n) \text{OPT}_{\text{LP}} \]
+\[ \mathbf{E} \left( \sum w_S X_S | A \right) \leq \frac{\mathbf{E} \left( \sum w_S X_S \right)}{\mathbf{P}(A)} \leq \frac{(c \lg n) \cdot \text{OPT}_{\text{LP}}}{1 - n^{c-1}} \leq (2 c \lg n) \text{OPT}_{\text{LP}} \]
 %
-where we let $n,c \geq 2$.
+where we let $n,c \geq 2$. Though these types of randomized algorithms are not formally `approximation algorithms' in the sense of always giving an exact answer in a bounded, polynomial amount of time, these solutions are still practical in real life implementations of set cover approximations, and are also still interesting to consider.
+
+\chapter{Greedy Approximations}
+
+\section{Scheduling on a Single Machine}
+
+Scheduling is one of the main archetypes of problems considered in combinatorial optimization. We are given work to be done, some resources to do the work, and a schedule at which these problems can be done. We want to optimize the time it takes to finish the work done. We now considered one of the simplest formulations of this problem. We have a sequence of task, each with a certain start time $s_i$, a deadline $d_i$, and a runtime $r_i$. We are given a single `worker' with which to accomplish the task, which can only focus on a single task at one time, and must process the task to completion once it is started. If task $i$ is started at time $t$, it finishes at time $f_i = t + r_i$, and we want to minimize the maximum lateness of any task, where the lateness is $l_i = f_i - d_i$.
+
+This problem is NP hard, and even determining whether all jobs can be completed by their due date is NP hard. In the general case of the scheduling problem, we should not even expect an approximation algorithm to exist, because if we have an $f(n)$ approximation algorithm, then for any output which finishes all tasks before the deadline, the optimal output would be $0$, and our solution would output a solution of type $0 \cdot f(n) = 0$. However, if we assume that all deadlines are negative, so that we are late for every task, we can obtain a constant approximation algorithm. To introduce notation, for a subset $S$ of tasks, let $r(S) = \sum_{i \in S} r_i$ denote the minimum time to complete all tasks in $S$, $s(S) = \min_{i \in S} s_i$ the minimum time to start any of the tasks in $S$, and $d(S) = \max_{i \in S} d_i$ the latest deadline for any of the tasks. Let $\text{OPT}$ denote the value of the optimal solution to the scheduling problem.
+
+\begin{prop}
+    For any subset $S$ of tasks, $\text{OPT} \geq s(S) + r(S) - d(S)$.
+\end{prop}
+\begin{proof}
+    In any solution to the scheduling problem, we can only start a task in $S$ at a later time than $s(S)$, and therefore we can only finish all the tasks in $S$ by time $s(S) + r(S)$. Since these tasks should all be finished before time $d(S)$, the last task completed must be, and we encumber a penalty of at least $s(S) + r(S) - d(S)$ for the solution. But then the optimal solution must also encumber this penalty, and we obtain the bound above.
+\end{proof}
+
+The standard heuristic for a single person to complete a set of tasks in real life is, when starting a new task, to choose the one with the earliest deadline. This is a greedy strategy known as the {\it earliest due date rule},  and gives a 2-approximation to the scheduling problem. Consider the schedule produced by the earliest due date rule, and let $j$ be the job with maximal lateness, finishing at time $f_j$. Consider the first time $t$ in which the worker never has to wait for a new task to be startable, so that the worker is working constantly from time $t$ onwards. Let $S$ be the set of jobs processed in this interval. Then $r(S) = f_j - t$, $s(S) = t$, because otherwise we could start the jobs in $S$ earlier, and $d(S) = d_j$, because otherwise we would have started job $j$ before the other jobs in $S$, and therefore the lemma above gives $f_j - d_j \leq \text{OPT}$.
+
+\section{$K$ Center Problem}
+
+Consider the $K$ center problem, in which we are given a metric space $(X,d)$, and the goal is to partition $X$ into $K$ clusters, each with a center point, in such a way that the maximum radius of the clusters is minimized, where the radius of a cluster is the largest distance in the cluster of a point from the center point. Once centers are chosen, the optimal way to partition $X$ into clusters is to place each point into the cluster whose center is cloest to that paint, so we might as well forget the whole partitioning set, and concentrate on choosing $K$ center points for the clusters.
+
+We consider a greedy algorithm for this problem. We start by choosing an initial center arbitrarily. Then we pick the next point which lies furthest from this point, and then continuously choose a point whose distance from the current centers is maximized.
+
+TODO:
+
+\section{The Travelling Salesman Problem}
+
+We now consider the travelling salesman problem, which takes a finite metric space $X$, and asks to find the enumeration $\{ x_1, \dots, x_n \}$ of $X$ which minimizes $\sum d(x_i,x_{i+1})$, where indices are modulo $n$. The greedy heuristic for the travelling salesman problem begins by finding the two points $x$ and $y$ in $X$ closest together, and forming the cycle that goes from $x$ to $y$, and then from $y$ to $x$. Given the current development of the cycle, we consider the point $z$ not yet in the tour closest to some point $x$ in the tour. If the tour goes from $x$ to $y$, then remove this edge in the tour, and instead go from $x$ to $z$ to $y$. After all points are added, we have found a tour.
+
+It is clear that from the way that we have constructed the tour that this herustic has a relation to minimum spanning trees, since the growth of the tour is exactly the way that Prim's algorithm grows a minimum spanning tree. Consider the subsets $S_2, S_3, \dots, S_n$ of vertices identified in the tour successively, where $S_{k+1} = S_k \cup \{ x_k \}$, and where $S_2$ is the set of the first two vertices $x_1$ and $y_1$. If $y_k \in S_k$ is the closest vertex in $S_k$ to $x_k$, and $z_k$ is the vertex following $y_k$, then the difference in the length of the $k$'th and $k+1$'th tour is $d(x_k,y_k) + d(x_k,z_k) - d(y_k,z_k)$, and since the minimum spanning tree constructed by Prim's algorithm is $\sum d(x_k,y_k)$, we obtain that the length of $S_n$ is
+%
+\begin{align*}
+    2d(x_1,y_1) + \sum_{k = 2}^{n-1} d(x_k,y_k) + d(x_k,z_k) - d(y_k,z_k)
+\end{align*}
+%
+Using the triangle inequality, we find that $d(x_k,z_k) \leq d(x_k,y_k) + d(y_k,z_k)$, and as such the value above is bounded above by
+%
+\begin{align*}
+    2d(x_1,y_1) + \sum_{k = 2}^{n-1} 2d(x_k,y_k) = 2 \text{OPT}_{MST}
+\end{align*}
+%
+and we finish the algorithm by noting that $\text{OPT}_{MST} \leq \text{OPT}_{TSP}$, because if we remove a single edge from a tour, we obtain a minimum spanning tree. Thus we have a 2-approximation.
+
+An alternate view of this algorithm, because of our use of the triangle inequality over the minimum spanning tree, is to take a minimum spanning tree, double all edges in the tree, and then form an Eulerian tour. This gives the same approximation bound as above in a more elegant way, but the solution we constructed above is always more optimal than this formulation. This is known as the {\it double tree algorithm}. What's more, we can use this kind of method to form a $3/2$ approximation, via a method known as {\it Christofides' Algorithm}
+
+Consider the minimum spanning tree constructed above. Let $O$ be the set of points in the tree of odd degree. $O$ must contain an even number of points, because the sum of degrees of all nodes in a graph is always even (a consequence of the handshaking lemma). We can therefore compute a cheapest maximal matching of $O$ in polynomial time. If we add these edges to the minimum spanning tree, then we have an Eulerian graph, and we can therefore compute a tour on these edges, which is a feasible solution to the travelling salesman problem.
+
+To see this is a $3/2$ approximation, we need only prove that the minimum cost perfect matching is $(1/2) \cdot \text{OPT}_{TSP}$. This is surprisingly easy. First, note that there is a tour on $O$ with cost at most $\text{OPT}$, because we can just `shortcut' a tour on $X$. If we color the nodes in $O$ by alternating the color on the tour, and then consider the two matchings of $O$ obtained by matching same colors on the tour, or my matching alternating colors, then one of these matchings must have cost at most $(1/2) \cdot \text{OPT}_{TSP}$, but then there must exist a perfect matching with this cost, and therefore the perfect matching we computed must have this cost.
+
+Remarkably, this is the best known approximation ratio for the general metric travelling salesman problem. We only know that one cannot produce a better approximation ratio than $1.0045$, except if $\mathbf{P} = \mathbf{NP}$, so this is an open problem in theoretical computing science. Improvements for this problem have been constructed, including a $1 + \varepsilon$ ratio has been constructed in the case that our metric is embedable in the Euclidean plane. Because of this, we feel like more intelligent travelling salesman problem solutions exist.
 
 \end{document}

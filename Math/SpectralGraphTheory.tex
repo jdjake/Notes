@@ -1,0 +1,279 @@
+\input{../style.tex}
+
+\title{Spectral Graph Theory}
+\author{Jacob Denson}
+
+\begin{document}
+
+\pagenumbering{gobble}
+\maketitle
+\tableofcontents
+\pagenumbering{arabic}
+
+\chapter{Expander Graphs}
+
+{\it In this chapter, we assume all graphs are undirected, contain no loops, nor have any duplicate edges.}
+\\\\
+Given a graph $G$ containing some vertex $v$, we let $N(v)$ denote the set of all vertices in $G$ connected to $v$ by an immediate edge, and we call this set the {\bf neighbourhood} of $v$ in $G$. One can study the properties of the neighbourhood function via the {\bf adjacency operator} $A: \mathbf{C}^V \to \mathbf{C}^V$ given by
+%
+\[ (Af)(v) = \sum_{w \in N(v)} f(w) \]
+%
+With respect to the basis induced by the characteristic functions over the vertices of the graph, $A$ is represented in matrix form by the adjacency matrix of its graph.
+
+A graph isomorphism replaces an adjacency with a similar matrix, so the properties of the operator $A$ invariant under basis changes are isomorphism invariant. We shall find that in particular, the eigenvalues of $A$ give useful information about the graph $G$, especially if $G$ is a regular graph. As $G$ is undirected, $A$ is a self-adjoint operator, and therefore is diagonalizable, with $n$ real eigenvalues $\lambda_1 \geq \dots \geq \lambda_n$. We will write $\lambda_i(G)$ if the graph is not specified. The study of the relationship between a graph $G$ and the eigenvalues of the operator $A$ form the core study of spectral graph theory.
+
+\begin{example}
+    The invariant subspaces of $A$ correspond to the components of $G$. That is, if $H$ is a connected component of $G$, then the subspace of functions vanishing outside of $H$ is invariant under the action of $A$. On the other hand, if $G$ is a connected graph, then all the invariant subspaces of $A$ are trivial.
+\end{example}
+
+\begin{prop}
+    If $\Delta(G)$ denotes the maximum degree in a graph $G$, and $\delta(G)$ the minimum degree, then for any function $f \in \mathbf{C}^G$ with $L_0 \leq f \leq L_1$,
+    %
+    \[ \delta(G) L_0 \leq Af \leq \Delta(G) L_1 \]
+\end{prop}
+\begin{proof}
+    We find that for any vertex $v$
+    %
+    \[ \sum_{w \in N(v)} f(w) \leq \sum_{w \in N(v)} L_1 = |N(v)| L_1 \leq \Delta(G) L_1 \]
+    %
+    and the reverse direction gives
+    %
+    \[ \sum_{w \in N(v)} f(w) \geq \sum_{w \in N(v)} L_0 = |N(v)| L_0 \geq \delta(G) L_0 \]
+    %
+    This gives the required inequality.
+\end{proof}
+
+\begin{corollary}
+    For any eigenvalue $\lambda$ of $A$, $|\lambda| \leq \max(\delta(G), \Delta(G))$.
+\end{corollary}
+\begin{proof}
+    The spectral radius of $A$ is bounded by any of the matrix norms giving the space of operators a Banach algebra structure. In particular, the spectral radius is bounded by $\| A \|_\infty$, and the theorem above bounds the values of $\| A \|_\infty$ as required.
+\end{proof}
+
+\begin{example}
+    As a particular example of this, we find that for $K$ regular graphs, we find $-K \leq \lambda_n \leq \lambda_1 \leq K$, and we actually have $\lambda_1 = K$, because $A$ operates on constant functions by multiplication by $K$.
+\end{example}
+
+\begin{prop}
+    On a $K$ regular graph, $\lambda_2 = K$ iff $G$ is disconnected.
+\end{prop}
+\begin{proof}
+    If we break $G$ into two connected components $H_0$ and $H_1$, then the functions vanishing outside of $H_0$ and the functions outside of $H_1$ form two complementary invariant subspaces of $G$, and both of these subspaces contain eigenfunctions of eigenvalue 1. On the other hand, we show that if $G$ is connected, then every eigenfunction $f$ of eigenvalue $K$ is constant. Let $v^*$ maximize $f$ over all vertices in $v$. Then
+    %
+    \[ Kf(v^*) = \sum_{w \in N(v^*)} f(w) \leq Kf(v^*) \]
+    %
+    If $f(w) \neq f(v^*)$ for some $w \in N(v^*)$, the inequality above is strict, which is impossible. Thus if $v^*$ maximizes $f$, then all its neighbours maximize $f$. Since $G$ is connected, we conclude that $f$ is constant on $G$.
+\end{proof}
+
+\begin{lemma}
+    If $f$ is an eigenfunction of a $K$ regular graph with eigenvalue $\lambda \neq K$, then $\sum f(v) = 0$.
+\end{lemma}
+\begin{proof}
+    If $\sum f(v) \neq 0$, we may assume without loss of generality that $\sum f(v) = 1$. Then, if we take the sum of the adjacency of the operator over all vertices, we sum over each vertex $K$ times, and so
+    %
+    \[ K = K \sum_v f(v) = \sum_v \sum_{w \in N(v)} f(w) = \sum_v \lambda f(v) = \lambda \]
+    %
+    and this gives the required equality.
+\end{proof}
+
+\begin{example}
+    If $G$ is a $K$ regular graph, then $\lambda_n = -K$ if and only if $G$ has a bipartite connected component. Because of our discussion, we might as well assume $G$ is connected, because invariant subspaces contain all the eigenfunctions of an operator. If $G = H_0 \cup H_1$ is bipartite, the function $\chi_{H_0} - \chi_{H_1}$ has eigenvalue $-K$. On the other hand, if $f$ is an eigenfunction of $A$ with eigenvalue $-K$, we claim that $f$ must cycle over two distinct values, which are negations of each other. Let $v^*$ maximize $f$, and let $v_*$ minimize the function. We know that $f(v_*) < 0 < f(v^*)$. Since
+    %
+    \[ -Kf(v^*) = \sum_{w \in N(v^*)} f(w) \geq Kf(v_*) \]
+    %
+    We conclude that $f(v_*) \leq -f(v^*)$. The same argument applied to the neighbours of $v_*$ gives $-f(v_*) \leq f(v^*)$. Putting these two inequalities together gives $-f(v_*) = f(v^*)$. If $f(w) \neq f(v_*)$ for $w \in N(v^*)$, then the inequality above is strict, which is impossible. Similarily, we conclude that $f(w) = f(v^*)$ for each $w \in N(v_*)$. Since $v_*$ and $v^*$ were arbitrary vertices minimizing and maximizing $f$, every vertex takes one of these two values, and adjacent vertices have opposite values, so these two values give a bipartite structure on the given graph.
+\end{example}
+
+A $K$ regular graph $G$ is said to be an {\bf $\varepsilon$ expander} (one sided) if $\lambda_2 \leq (1 - \varepsilon)K$, and a {\it two sided} $\varepsilon$ expander if one also has $\lambda_n \geq -(1 - \varepsilon)K$. Every connected graph is an $\varepsilon$ expander for some $\varepsilon$, and a non bipartite graph is a two sided expander for some $\varepsilon$. Thus unless we want to perform analysis parameterized by $\varepsilon$, we are forced to look at `limits' of graphs which control their eigenvalues. A sequence of $K$ regular graphs is said to be an expander family if there is a $\varepsilon$ such that eventually the graphs are all $\varepsilon$ expanders.
+
+\begin{theorem}
+    Let $G$ be a $K$ regular graph on $n$ vertices. Then
+    %
+    \begin{itemize}
+        \item $\sum \lambda_i = 0$.
+        \item $\sum \lambda_i^2 = nK$.
+        \item $\max(|\lambda_2|,|\lambda_n|) \geq \sqrt{K} - o_K(1)$.
+    \end{itemize}
+    %
+    where $o_K(1)$ denotes a quantity tending to zero at a rate dependant on $K$.
+\end{theorem}
+\begin{proof}
+    In its adjacency matrix representation, the adjacency operator $A$ has no loops, hence its diagonal vanishes and so it has trace zero. It follows that the sum of the eigenvalues of $A$ is equal to zero. The sum of the squares of the eigenvalues is equal to the trace of $A^2$, which corresponds to a kind of `second order' adjacency operator. Since we have no multiedges,
+    %
+    \[ (A^2 \chi_v)(v) = \sum_{w \in N(v)} \sum_{u \in N(w)} \chi_v(u) = K \]
+    %
+    Hence, with respect to the canonical basis on the graph, $A^2$ has diagonal entries $K$, and hence has trace $Kn$. Finally, this shows that
+    %
+    \[ nK = \sum \lambda_i^2 = \sum |\lambda_i|^2 \leq 1 + (n-1) \max(|\lambda_2|^2, |\lambda_n|^2) \]
+    %
+    and therefore that
+    %
+    \[ \max(|\lambda_2|,|\lambda_n|) = \sqrt{\max(|\lambda_2|^2, |\lambda_n|^2)} \geq \sqrt{\frac{nK - 1}{n-1}} \]
+    %
+    and the last term is $\sqrt{K} - \sqrt{K} O(1/n) + K^2 O(1/n^2)$.
+\end{proof}
+
+This result places an upper bound on the rate of a two sided expansion for large graphs. A more sophisticated result sharpens the inequality to obtain the improvement
+%
+\[ \max(|\lambda_2|, |\lambda_n|) \geq 2\sqrt{K-1} - o_K(1) \]
+%
+Graphs with $\max(|\lambda_2|,|\lambda_n|) \leq 2 \sqrt{K-1}$ are known as Ramanujan graphs, and have connections to number theory.
+
+\begin{example}
+    For each $n$, let $G_n$ be the 2-regular graph whose vertex set is $\mathbf{Z}_n$, and such that the neighbours of $k$ are $k+1$ and $k-1$. Then the adjacency operator $A_n$ is really just the combination of shifts $L_1 + L_{-1}$ in disguise. Now if $\chi_1, \dots, \chi_n$ are the basis of $n$ characters on $\mathbf{Z}_n$, with $\chi_m(1) = e^{2 i \pi m/n}$, then
+    %
+    \begin{align*}
+        A_n(\chi_m)(k) &= \chi_m(k+1) + \chi_m(k-1)\\
+        &= (\chi_m(1) + \chi_m(-1)) \chi_m(k)\\
+        &= \cos(2 \pi m/n) \chi_m(k)
+    \end{align*}
+    %
+    As $n \to \infty$, the space of eigenvalues of $A_n$ becomes dense in $[-1,1]$, so this sequence of graphs cannot be an expander family for any $\varepsilon$.
+\end{example}
+
+\begin{example}
+    The complete graph $C_n$ on $n$ vertices, which is an $n-1$ regular graph, is an excellent example of an expander graph family. If $f$ is an eigenfunction of $A_n$ with eigenvalue $\lambda_i \neq n-1$, then $\sum f(v) = 0$, and so
+    %
+    \[ \lambda_i f(v) = \sum_{w \neq v} f(v) = -f(v) \]
+    %
+    so $\lambda_i = -1$, and the sequence of eigenvalues for $A_n$ is $1,-1, \dots, -1$. This shows that $C_n$ is a one-sided $1 + 1/(n-1)$ expander, and a $1 - 1/(n-1)$ two sided expander. The goal of the theory of expander graphs is to find sparse graphs with similar properties to complete graphs, and so we desire sparse expander graphs.
+\end{example}
+
+\begin{example}
+    If $G$ is a $K$ regular graph on $n$ edges, then the complement graph $G^c$ is an $n-K-1$ regular graph. If $A$ is the adjacency operator corresponding to $G$, and $B$ the operator corresponding to $G^c$, then $(A + B)(f)(v) = \sum f(w) - f(v)$. In particular, if $f$ is an eigenvector for $A$ with eigenvalue $\lambda_i \neq K$, then $\sum f(w) = 0$, and so $Bf = -(1+A)f = -(1 + \lambda_i)f$. If we assume $G$ is connected, then the sequence $K \neq \lambda_2 \geq \dots \geq \lambda_n$ gives the eigenvalues $-(1 + \lambda_2) \leq \dots \leq -(1 + \lambda_n)$. Since none of the eigenfunctions $f$ corresponding to the eigenvalues $\lambda_2, \dots, \lambda_n$ are constant, we find that $B$ has the additional eigenvalue $n-K-1$ corresponding to the constant function.
+\end{example}
+
+\begin{example}
+    Let $G$ be the complete bipartite graph between two sets of $n$ vertices. Then $\lambda_{2n} = -n$, because $G$ is bipartite. Note that for any function $f$, $Af$ is a function which is constant on each side of the bipartition, so for any eigenfunction $f$ with a nonzero eigenvalue $\lambda$, $f$ is constant on each side of the bipartition. But this means that if $f$ takes the value $x$ on one side of the bipartition, and $y$ on the other side, then $\lambda x = n y$, and $\lambda y = n x$. If $x = 0$, we find that $y = 0$. If $x \neq 0$, then $\lambda = ny/x$, and also $ny^2/x = nx$, so $y^2 = x^2$ implying that $y = \pm x$. These give the two eigenfunctions corresponding to the constant function with eigenvalue $n$ and the bipartite eigenfunction with eigenvalue $-n$. This tells us that the remaining eigenvalues $\lambda_2, \dots, \lambda_{2n-1}$ are all equal to zero.
+\end{example}
+
+Viewing a graph as the discrete version of a $K$ regular graph, and $f$ is a function on the graph, we can define the {\bf discrete gradient magnitude}
+%
+\[ |\nabla f|(v) = \sqrt{\sum_{w \in N(v)} |f(w) - f(v)|^2} \]
+%
+The classical Poincar\'{e} inequality in Euclidean space says that $\| f \|_2 \leq C \| \nabla f \|_2$. This inequality is actually connected to the theory of expanders, because a graph $G$ is a one sided $\varepsilon$ expander if and only if
+%
+\[ \| \nabla f \|_2^2 \geq 2K \varepsilon \| f \|_2^2 \]
+%
+for any mean zero function $f$. We may assume that $G$ is a connected graph to prove this theorem, for if $G$ is not connected it is not an expander for any $\varepsilon > 0$. We can write
+%
+\begin{align*}
+    \sum_v \sum_{w \in N(v)} |f(w) - f(v)|^2 &= \sum_v \sum_{w \in N(v)} |f(w)|^2 + |f(v)|^2 - 2 \Re[\overline{f}(v) f(w)]\\
+    &= 2K \| f \|_2^2 - 2 \Re \left( \sum_v \overline{f(v)} (Af)(v) \right)\\
+    &= 2K \| f \|_2^2 - 2 \Re \langle f, Af \rangle
+\end{align*}
+%
+If $f$ has mean zero, then we can write $f = \sum f_j$ for the decomposition of $f$ into the $j$'th eigenspace. Since $A$ is self adjoint, these eigenspaces are orthogonal, and so
+%
+\[ \langle f, Af \rangle = \sum \lambda_j \| f_j \|_2^2 \]
+%
+Since $\sum_v f_j(v) = 0$ for all $j > 1$, we find $0 = \sum_v f(v) = \mu_1 \sum_v f_1(v)$. Since $\sum_v f_1(v) \neq 0$, we find $\mu_1 = 0$. This means that
+%
+\[ \sum \lambda_i \| f_i \|_2^2 \leq \sum \lambda_2 \| f_i \|_2^2 = \lambda_2 \| f \|_2^2 \]
+%
+and this shows that
+%
+\[ \| \nabla f \|_2^2 \geq 2(K - \lambda_2) \| f \|_2^2 \]
+%
+and $K - \lambda_2$ gives the maximal value of $\varepsilon$ for which $G$ is a $\varepsilon$ expander.
+
+\section{Expanders and Edge Expansion}
+
+We now make the intuition about expander graphs having good `expansion properties' precise. Given two disjoint sets of vertices $V$ and $W$, we let $E(V,W)$ denote the set of edges between the two vertex sets. We find that
+%
+\[ |E(V,W)| = \langle A \chi_V, \chi_W \rangle \]
+%
+Given a vertex set $V$, we let $\delta(V)$ denote the set of edges leaving $V$. We define the {\bf edge expansion ratio}
+%
+\[ h(G) = \min_{|V| \leq n/2} \frac{|\delta(V)|}{|V|} = \min_{|V| \leq n/2} \frac{\langle A\chi_V, 1 - \chi_V \rangle}{|V|} \]
+%
+The choice that $|V| \leq n/2$ is done to avoid trivial values where we let $V$ be the set of all vertices in the graph, so that $\delta(V) = \emptyset$. The edge expansion ratio can be seen as a discrete isoperimetry bound for the graph, and as such it is often called the {\bf Cheeger constant} of the graph.
+
+\begin{prop}
+    $h(G) \neq 0$ if and only if $G$ is connected, and more generally, a family of $K$ regular graphs $G_i$ is an expander family if $h(G_i)$ is lower bounded.
+\end{prop}
+\begin{proof}
+    We may assume each graph is connected. Fix $\varepsilon > 0$ such that eventually $\lambda_2 \leq (1 - \varepsilon)K$. For any subset $V$ of edges in $G_i$, the projection of $\chi_V$ onto the first eigenspace is $|V|/n$, and so
+    %
+    \[ \langle A \chi_V, \chi_V \rangle \leq \frac{1}{n} K|V|^2 + (1 - \varepsilon) K \left\| \chi_V - \frac{|V|}{n} \right\|^2 \]
+    %
+    And
+    %
+    \begin{align*}
+        \left\| \chi_V - \frac{|V|}{n} \right\|^2 &= |V| \left( 1 - \frac{|V|}{n} \right)^2 + [n - |V|] \left( \frac{|V|}{n} \right)^2\\
+        &= |V| - \frac{1}{n}|V|^2
+    \end{align*}
+    %
+    Hence
+    %
+    \[ \frac{1}{n} K|V|^2 + (1 - \varepsilon) K \left\| \chi_V - \frac{|V|}{n} \right\|^2 \leq (1 - \varepsilon)K|V| - \frac{\varepsilon K |V|^2}{n} \leq (1 - \varepsilon/2) K |V| \]
+    %
+    Since $\langle A\chi_V, 1 \rangle = K |V|$, this shows that
+    %
+    \begin{align*}
+        h(G) &= \min_{|V| \leq n/2} \frac{|\delta(V)|}{|V|} = \min_{|V| \leq n/2} \frac{\langle A\chi_V, 1 - \chi_V \rangle}{|V|}\\
+        &= \min_{|V| \leq n/2} \frac{\langle A\chi_V, 1 \rangle}{|V|} - \frac{\langle A\chi_V, \chi_V \rangle}{|V|}\\
+        &\geq \min_{|V| \leq n/2} K - (1 - \varepsilon/2) K = (\varepsilon/2)K
+    \end{align*}
+    %
+    Another way to see this is that $\langle A\chi_V, \chi_V \rangle$ counts the number of edges between vertices in $V$, and since each vertex in $V$ is adjacent to exactly $K$ vertices, we conclude that the total number of edges leaving $V$ is exactly $K|V| - \langle A \chi_V, \chi_V \rangle$, which we have bounded below by $(\varepsilon/2)K|V|$.
+
+    The other direction is harder. The difficulty is that the lower bound $h(G) \geq c$ enables us to conclude that $\langle A\chi_V, \chi_V \rangle \leq (K - c) |V|$ for all vertex sets with $|V| \leq n/2$, whereas proving that $G$ is an expander requires us to understand $\langle Af, f \rangle$ for all functions $f$, because we know
+    %
+    \[ \lambda_2 = \sup_{\sum f(v) = 0} \frac{\langle Af, f \rangle}{\| f \|_2^2} \]
+    %
+    so it suffices to show $\langle Af, f \rangle \leq (1 - \varepsilon) K$ for all functions $f$ with mean zero and with $\| f \|_2 = 1$, for some $\varepsilon$ depending only on $K$ and $c$. Since $A$ is real, we may assume that $f$ is real. We will prove that if $f$ is non-negative, and is supported on a set of cardinality $n/2$, then $\langle Af, f \rangle \leq (1 - c)K \| f \|_2^2$. To see how this implies the main inequality, note that if we write $f = f_+ - f_-$, then
+    %
+    \[ \langle Af, f \rangle \leq \langle Af_+, f_+ \rangle + \langle Af_-, f_- \rangle \]
+    %
+    and $1 = \| f_+ \|_2^2 + \| f_- \|_2^2$. Either $f_+$ or $f_-$ is supported on a set of size less than or equal to $n/2$, and by symmetry we may assume this is $f_-$. Consider a small value $\sigma$, to be fixed later. If $\| f_- \|_2^2 \geq \sigma^2$, then applying the trivial bound $\langle Af_+, f_+ \rangle \leq K \| f_+ \|_2^2$
+    %
+    \[ \langle Af_+, f_+ \rangle + \langle Af_-, f_- \rangle \leq K \| f_+ \|_2^2 + (1-c)K \| f_- \|_2^2 \leq K(1 - \sigma^2) \| f \|_2^2 \]
+    %
+    TODO: FINISH BOUNDS LATER.
+\end{proof}
+
+\begin{example}
+    On the graph defined on $\mathbf{Z}_n$ we considered before, for $n > 2$, the set of points $\{ 1, \dots, n/2 \}$ has two boundary edges, between $0$ and $1$, and between $n/2$ and $n/2 + 1$. It follows that $h(G_n) \leq 4/n$, and this is an equality, because if $|V| \leq n/2$, then $\delta(V)$ contains at least two edges, so $\delta(V) \geq 2 \geq 4|V|/n$. This is another way to think about why the graphs are not a family of expander graphs.
+\end{example}
+
+\begin{example}
+    Every 2 regular graphs breaks down into connected components, which form loops in the graph. It follows that if $G$ is connected, it is isomorphic to $\mathbf{Z}_n$, and any family of such graphs which form an expander family must have bounded size.
+\end{example}
+
+A more precise relationship between the best value $\varepsilon$ that makes $G$ into a one sided expander and it's Cheeger constant. Namely,
+%
+\[ \frac{\varepsilon K}{2} \leq h(G) \leq \sqrt{2 \varepsilon} K \]
+%
+proved in the 1980s by Dodzuik and Alon-Milman.
+
+TODO: EXERCISES
+
+\section{Random Walks}
+
+We now discuss how the theory of expanders connects to the theory of convergence rates of random walks on graphs. Given a graph $G$ and an initial vertex $v_0$ (which can be randomly chosen), the random walk $v_0, v_1, v_2, \dots$ is chosen such that $v_{i+1}$ is obtained from $v_i$ by choosing a neighbour uniformly at random. We will let $\mu_i$ be the function on the vertices of $G$ such that $\mu_i(v) = \mathbf{P}(v_i = v)$. Then arguing by conditional probabilities, we find that $\mu_{i+1} = (A\mu_i)/K$. Provided our graph is connected and aperiodic, the corresponding Markov chain is ergodic, and the distributions $\mu_i$ will converge pointwise to an eigenfunction for the adjacency operator of highest eigenvalue. In particular, over a $K$ regular connected graph the distribution will eventually be indistinguishable from the uniform distribution.
+
+We can measure how fast $\mu_i$ converges to a constant distribution by quantifying $\| \mu_i - 1/n \|_2$. It is decreasing in $i$, because one calculates
+%
+\begin{align*}
+    \| A\mu_i/K - 1/n \|_2^2 - \| \mu_i - 1/n \|_2^2 &= \left[ \frac{\| A\mu_i \|_2^2}{K^2} - \frac{1}{n} \right] - \left[ \| \mu_i \|_2^2 - \frac{1}{n} \right]\\
+    &= \frac{\| A \mu_i \|_2^2}{K^2} - \| \mu_i \|_2^2
+\end{align*}
+%
+If $\mu_i$ has a decomposition as $\sum \mu_{ij}$ via its eigenspaces, then $\mu_{i1} = 1/n$, because $\sum \mu_i(v) = 1$, and so
+%
+\[ \| A \mu_i \|_2^2 \geq K^2 \| \mu_{i1} \|^2_2 = K^2 \]
+%
+Yet $\| \mu_i \|_2^2 = \sum \mu_i(v)^2 \leq \sum \mu_i(v) = 1$, so
+%
+\[ \frac{\| A\mu_i \|_2^2}{K^2} - \| \mu_i \|_2^2 \geq 1 - 1 = 0 \]
+%
+This is an equality only when  $\mu_i = 1/n$, so the function is decreasing everywhere else. The expansion properties are intricately tied to the expansion properties of the graphs.
+
+\begin{theorem}
+    Fix $\alpha > 1/2$. A sequence of $K$ regular graphs $G_n$ with $m_n$ vertices is a two-sided expander family if and only if there is $C > 0$ independent of $n$ such that for sufficiently large $n$, $\| \mu_i - m_n^{-1} \|_2 \leq m_n^{-\alpha}$ for all $i \geq C \log m_n$, and all choices of initial vertices $v_0$.
+\end{theorem}
+
+Note that the theorem holds for any initial probability distribution by an easy application of the Minkowski inequality. Thus from a dynamical systems point of view, the uniform distribution is a very strong attractor in the space of all probability distributions. Essentially, this theorem says that two sided expanders are those graphs such that random walks become close to uniform in $O(\log n)$ steps. On the other hand, the central limit theorem only implies that the walks $\mathbf{Z}_n$ become close to uniformly mixing only at time beyond $n^2$, as indicated by the central limit theorem (TODO: WHY?). This theorem is useful for generating near random distributions using little work by taking a random walk on some basic combinatorial structure.
+
+\end{document}
