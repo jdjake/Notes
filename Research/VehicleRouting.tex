@@ -470,15 +470,94 @@ Before we finish our discussion of prize collection, we note that the unsplit de
 
 \section{A $K$-VRP Approximation}
 
-To summarize, in terms of uniform Lagrangian penalties $\lambda$ in place of the variable $\pi$, we can find a VRP solution $(T,W)$ with $c(T) + 3 \pi(W^c) \leq 3 \text{OPT}_{\text{PCVRP}}(\lambda)$. As with the `standard' technique of forming $K$ VRPs, we find $\lambda_1 < \lambda_2$ infinitisimally close with corresponding tours $T_1,T_2$, with $|T_1| \leq K \leq |T_2|$. If $|T_1| = K$ or $|T_2| = K$, we obtain a $3$ approximation to VRP. Otherwise, we form the constants $\alpha_1$ and $\alpha_2$ like in the $K$ MST algorithm. As with the $K$ MST algorithm, $\alpha_1, \alpha_2 \geq 0$, and $\alpha_1 + \alpha_2 = 1$, $\alpha_1 |T_1| + \alpha_2 |T_2| = K$, and $\alpha_1 c(T_1) + \alpha_2 c(T_2) \leq (3 + \varepsilon) \text{OPT}$, where $\varepsilon$ depends in some way on how close we choose the values $\lambda_1$ and $\lambda_2$. If $\alpha_2 \geq 1/t$, we can simply choose $T_2$ as our output as a $t(3 + \varepsilon)$ approximation to the optimal solution. To obtain an alternative solution if $\alpha_2$ is small, we have to find a grafting strategy to place part of $T_2$ onto $T_1$. Choosing the shortest subpath fo the TSP component of $T_2$ (counting the refill parts included on the TSP component as part of the tour), and then adding two paths from the endpoints of the tour, which can each be assumed shorter than $\text{OPT}$, we obtain that the length of the shortest subpath is less than or equal to
-%
-\[ \frac{K - |T_1|}{|T_1| - |T_2|} (2 c(x^*) + \sum \frac{2}{C} x^*_{vw} D_wr_w) + \text{OPT} \leq \alpha_2 d(T_2) + \text{OPT} \]
-%
-and we conclude that
-%
-\[ d(T_1) + d(C) \leq d(T_1) + \alpha_2 d(T_2) + \text{OPT} \]
+To summarize, in terms of uniform Lagrangian penalties $\lambda$ in place of the variable $\pi$, we can find a VRP solution $T$ covering the vertices $W$ such that $c(T) + 3 \pi(W^c) \lambda \leq 3 \text{OPT}_{\text{VRP}}(\lambda)$, where $\text{OPT}_{\text{VRP}}(\lambda)$ denotes the value of the optimal prize collecting steiner tree with uniform penalties $\lambda$. Here we employ the `standard' technique of Lagrangifying a `$K$-subset problem' which asks to find the cheapest VRP solution satisfying exactly $K$ nodes. This has been employed most notably in the $K$-MST problem, where it yields a $5$ approximation \cite{MSTLPApprox}. Our ideas are essentially the same, but included in full for completeness. The only new idea is the way we graft two VRP solutions together to obtain an exact $K$ VRP solution.
 
-%\end{multicols}
+The main idea is to try and solve prize collecting vehicle routing problems with a uniform penalty $\pi_v = \lambda$ for a fixed $\lambda > 0$, while varying the $\lambda$ penalty so we obtain a solution with exactly $K$ nodes. If $\lambda$ is small, then the penalty for ignoring nodes is negligible, and we will obtain solutions with fewer than $K$ nodes. If $\lambda$ is large, then the penalty for ignoring vertices will be too strong, and we will obtain solutions with more than $K$ nodes. If we find $\lambda$ with exactly $K$ vertices, then we obtain a $K$ VRP solution. This will not always be possible, in which case we find ways of modifying solutions with `essentially' $K$ vertices to obtain better approximations. Define $\text{OPT}_K(\lambda) = \text{OPT}_{\text{VRP}}(\lambda) - \lambda (n - K)$, and $\text{OPT}_K$ to be the optimal cost of a $K$ VRP instance.
+
+\begin{lemma}
+    For any $\lambda > 0$, $\text{OPT}_K(\lambda) \leq \text{OPT}_K$.
+\end{lemma}
+\begin{proof}
+    Any $K$ VRP solution $T$ covering the $K$ vertices $W$ is feasible in $\text{OPT}_K(\lambda)$, and with respect to the $\text{PCVRP}$ problem with penalties $\lambda$, has value
+    %
+    \[ c(T) + \lambda |W^c| = c(T) + (n - K) \geq \text{OPT}_{\text{VRP}}(\lambda) \]
+    %
+    It follows that $c(T) \geq \text{OPT}_K(\lambda)$, and therefore that $\text{OPT}_K \geq \text{OPT}_K(\lambda)$.
+\end{proof}
+
+Using a binary search, we find $\lambda_1 < \lambda_2$ infinitisimally close with corresponding tours $T_1,T_2$ (covering the corresponding vertices $W_1,W_2$) obtained from the Lagrangian preserving approximation algorithm presented in the last section, with $|W_1| \leq K \leq |W_2|$. If $|W_1| = K$, we find that
+%
+\[ c(T_1) + 3 \lambda |W_1^c| = c(T_1) + 3 \lambda (n - K) \leq 3 \text{OPT}_{\text{VRP}}(\lambda) = 3 \text{OPT}_K(\lambda) + 3 \lambda(n - K) \]
+%
+Hence $c(T_1) \leq 3 \text{OPT}_K(\lambda) \leq 3 \text{OPT}_K$, and we obtain a $3$-approximation. The same holds true if $|W_2| = K$, so we may assume that we have the {\it strict} inequality $|W_1| < K < |W_2|$. Otherwise, we form the constants
+%
+\[ \alpha_1 = \frac{|W_2| - K}{|W_2| - |W_1|}\ \ \ \ \ \alpha_2 = \frac{K - |W_1|}{|W_2| - |W_1|} \]
+%
+These values work just as in the lagrangian $K$ MST approximation, and as in this case we immediately verify that $\alpha_1, \alpha_2 \geq 0$, and $\alpha_1 + \alpha_2 = 1$, so we can view the $\alpha$ values as defining a probability distribution over the two tours. It is also easy to see that $\alpha_1 |W_1| + \alpha_2 |W_2| = K$, so `on average', the random tour is a $K$ tour. The final property we need is that `on average', the random tour is also a good approximation.
+
+\begin{lemma}
+    $\alpha_1 c(T_1) + \alpha_2 c(T_2) \leq (3 + \varepsilon) \text{OPT}_K$, where $\varepsilon$ depends in some way on how close we choose the values $\lambda_1$ and $\lambda_2$.
+\end{lemma}
+\begin{proof}
+    Note that $\text{OPT}(\lambda_1) \leq \text{OPT}(\lambda_2)$, because the two problems have the exact same feasible solutions, except that the cost function of the second problem is always at least as large as the first. It follows that
+    %
+    \begin{align*}
+        \alpha_1 d(T_1) + \alpha_2 d(T_2) &\leq 3[\alpha_1 \text{OPT}(\lambda_1) - \lambda_1 \alpha_1 |W_1^c| + \alpha_2 \text{OPT}(\lambda_2) - \lambda_2 \alpha_2 |W_2^c|]\\
+        &\leq 3[(\alpha_1 + \alpha_2) \text{OPT}(\lambda_2) - \lambda_1 \alpha_1 |W_1^c| - \lambda_2 \alpha_2 |W_2^c|]\\
+        &\leq 3[\text{OPT}(\lambda_2) - \lambda_2(\alpha_1 |W_1^c| + \alpha_2 |W_2^c|) + (\lambda_2 - \lambda_1) \alpha_1 |W_1^c|]\\
+        &\leq 3[ \text{OPT}(\lambda_2) - \lambda_2(n-K) + (\lambda_2 - \lambda_1) \alpha_1 |W_1^c|]\\
+        &\leq 3 \text{OPT}_K(\lambda_2) + (\lambda_2 - \lambda_1) \alpha_1 |W_1^c|\\
+        &\leq (3 + \varepsilon) \text{OPT}_K
+    \end{align*}
+    %
+    We can choose $\lambda_2 - \lambda_1 \leq (2 \min_v r_v) (\varepsilon/3n)$, because $2 \min_v r_v \leq \text{OPT}_K$ (we may assume $\min_v r_v > 0$, for otherwise the problem is solvable exactly in polynomial time), and since we have the inequalities $\alpha_1 \leq 1$, $|W_1^c| \leq n$, we find
+    %
+    \[ (\lambda_2 - \lambda_1) \alpha_1 |W_1^c| \leq \frac{|W_1^c|}{n} (2 \min_v r_v) (\varepsilon/3) \leq (\varepsilon/3) \text{OPT}_K \]
+    %
+    It is also important to note that the binary search to find $\lambda_2$ and $\lambda_1$ therefore only takes $\approx -\lg[(2 \min_v r_v) (\varepsilon/3n)]$ queries, which is polynomial in the bit complexity of the radii $r_v$ and $n$. This completes the proof of the inequality.
+\end{proof}
+
+Now since $|W_2| \geq K$, we could simply return $T_2$ as our solution to the $K$ MST problem. The next lemma shows how good an approximation ratio this solution has.
+
+\begin{lemma}
+    $c(T_2) \leq \alpha_2^{-1}(3 + \varepsilon) \text{OPT}_K$.
+\end{lemma}
+\begin{proof}
+    $c(T_2) \leq \alpha_2^{-1}[\alpha_1 c(T_1) + \alpha_2 c(T_2)] \leq \alpha_2^{-1} (3 + \varepsilon) \text{OPT}_K$.
+\end{proof}
+
+This implies that if $\alpha_2$ is large, we obtain a good approximation to $K$ MST, since $T_2$ is an actual approximation. If $\alpha_2$ is small, then $T_1$ is very close to a $K$ MST tour, and we will use a grafting strategy to place part of the $T_2$ tour onto $T_1$. We consider the shortest subpath $C$ of the TSP component of $T_2$ containing $K - |T_1|$ vertices that are not on $T_1$ (counting the refill parts included on the TSP component as part of the cost of the subpath tour), and then adding two paths onto the endpoints of the subpath to connect them to $r$.
+
+\begin{lemma}
+    If we assume that the further vertex from $r$ in the graph is included in the $K$ VRP tour (which can be obtained by minimizing the algorithm over the furthest vertex), then
+    %
+    \[ d(T_1) + d(C) \leq [\alpha_1^{-1} (3 + \varepsilon) + 1] \text{OPT}_K \]
+\end{lemma}
+\begin{proof}
+    The cost of the optimal $K$ VRP solution must include the furthest node $v$ from $r$, and therefore $\text{OPT}_K \geq 2r_v \geq r_w + r_u$ for any two vertices $w$ and $u$ in the graph. This implies that the two edges used in the construction of $C$ to make the subpath into a cycle about $r$ add at most $\text{OPT}_K$ to the cost of the algorithm. Next, note that we are taking $K - |W_1|$ vertices in the tour $T_2$ out of the total $|W_2| - |W_1|$ new vertices in $T_2$, and therefore the shortest subpath has cost less than the average cost of a uniformly chosen subpath of length $K - |W_1|$, which is equal to
+    %
+    \[ \frac{K - |W_1|}{|W_2| - |W_1|} c(T_2) = \alpha_2 c(T_2) \]
+    %
+    In conclusion, this means that $c(C) \leq \text{OPT}_K + \alpha_2 c(T_2)$, and so
+    %
+    \begin{align*}
+        d(T_1) + d(C) &\leq d(T_1) + \alpha_2 d(T_2) + \text{OPT}_K\\
+        &\leq \alpha_1^{-1}[\alpha_1 d(T_2) + \alpha_2 d(T_2)] + \text{OPT}_K\\
+        &\leq [\alpha_1^{-1} (3 + \varepsilon) + 1] \text{OPT}_K
+    \end{align*}
+    %
+    This gives the required bound.
+\end{proof}
+
+For any two values of $\alpha_1$ and $\alpha_2$, we have constructed two approximations to the $K$ VRP problem, and therefore choosing the minimum of these two solution gives a
+%
+\[ \max_{0 \leq x \leq 1} \min \left( \frac{3 + \varepsilon}{x} + 1, \frac{3 + \varepsilon}{1 - x} \right) = \frac{7 + \sqrt{37}}{2} + O(\varepsilon) \approx 6.541 + O(\varepsilon) \]
+%
+approximation to $K$ VRP. Proceeding along the same as with the split case, we can also find an approximation to the $K$ unsplit vehicle routing problem, using the Lagrangian preserving $4$ approximation hinted at in the last section. The minimization here is a
+%
+\[ \max_{0 \leq x \leq 1} \min \left( \frac{4 + \varepsilon}{x} + 1, \frac{4 + \varepsilon}{1 - x} \right) = \frac{9 + \sqrt{65}}{2} + O(\varepsilon) \approx 8.531 + O(\varepsilon) \]
+%
+approximation to unsplit $K$ VRP.
 
 \begin{thebibliography}{9}
 
