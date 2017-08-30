@@ -369,68 +369,111 @@ Consider the following linear program for prize collecting vehicle routing with 
 
 \part{Metric Augmentation to Improve Vehicle Routing Approximations}
 
-\section{A Lagrangian Preserving VRP Algorithm}
-
-The most basic vehicle routing approximation is obtained from augmenting a travelling salesman tour with certain refill strategies. One problem with this augmentation is that it separates the {\it refill cost} of a solution from the {\it routing cost} from the tour. The optimal travelling salesman tour may provide a good bound on the routing cost, but it doesn't consider the refill cost in any way. One novel feature of our approach to the travelling salesman problems is that we are able to obtain a tour of nodes which takes the refill cost into account.
-
-A reliable strategy to augment a travelling salesman tour of the vertices $V$ to obtain a vehicle routing solution periodically returning to the root node $r$ is to being the tour with a random starting capacity, travelling along the tour completely satisfying the vertices it reaches until it runs out of capacity, in which case it returns to the starting depot, refills, and continues on the tour. The expected distance cost added by using this refueling strategy is given by
+One obtains the most basic vehicle routing approximation by augmenting near optimal TSP tours with a {\it refill strategy}, which adds to the length of the tour but ensures the capacity constraint of the TSP problem is satisfied so we can obtain a feasible solution to the vehicle routing problem. One reliable strategy is to follow the path taken by a given tour, satisfying each node sequentially with it's full demand, but periodically returning to the root node to refuel when the capacity is drained. We call this the {\it random refill} strategy if one begins the tour with a uniformly random starting capacity between $0$ and $C$. The expected total distance travelled during refueling is given by
 %
 \[ \text{LB} := \frac{2}{C} \sum_{v \in V} D_v r_v \]
 %
-where $D_v$ is the demand of the vertex $v$, and $r_v = c(r,v)$ the radius from the root node. It is well established in the literature (Gupta, Nagarajan, and Ravi's {\it Approximation Algorithms for VRP with Stochastic Demands} provides a readable analysis of this technique, as well as a good introduction to the travelling salesman tour in general) that $\text{LB}$ lower bounds the optimal cost of the vehicle routing tour on the vertices $V$. One disadvantage of this lower bound is that it doesn't depend on the travelling salesman tour chosen. However, if we consider the lower bound as a function of the vertex set $V$ chosen, then the function is linear, which implies that the lower bound may be a useful feature in a linear program used to find approximations to variants of the vehicle routing problem which only find tours over subsets of vertices. In this case, the tours we find will not only take the routing cost of the subset into consideration, but also the refill cost.
+where $D_v$ is the demand of the vertex $v$, and $r_v = c(r,v)$ the radius from the root node. It is well established in the literature that $\text{LB}$ lower bounds the optimal cost of the vehicle routing tour on the vertices $V$ \cite{RandomRefillPaper}. Because of this, if we have a $1 + \alpha$ approximation to TSP, we immediately obtain a $2 + \alpha$ approximation to vehicle routing. A slight modification to the random refueling policy in unsplit vehicle routing leads to a refueling strategy with expected cost $2 \text{LB}$, hence the technique yields $3 + \alpha$ approximations to unsplit vehicle routing as well.
 
-Currently, our knowledge of approximations for variants of the minimum spanning tree problem is much better than our knowledge for approximations for variants of the travelling salesman problem. For this reason, to construct our travelling salesman tours for use with a random refill strategy, we construct a tree, using the double and shortcutting edges technique to construct a Hamiltonian tour of the vertices using each edge on the tree at most twice. What's more, we will rely on a result of Bang-Jensen which reduces the construction of a tree to the construction of an appropriate preflow on the graph.
+One problem with existing refuelling strategy techniques is that they separate the {\it refill cost} of a solution from the {\it routing cost} of the tour. Standard approximation algorithms for TSP do not take the refill cost into account, so it is difficult to obtain efficient bounds on the refilling cost when using a near optimal TSP tour. We can see this in the $\text{LB}$ bound, which provides a tour independent bound on the cost of refueling, but also adds $+1$ to the approximation ratio of the algorithm, which isn't ideal. One feature of our approach to vehicle routing is that we attempt to take the refill cost into account when constructing our TSP tour. Though we do not find a new way to bound the refuelling cost, we use the $\text{LB}$ bound on variants of the vehicle routing problem to obtain novel approximation algorithms. With further work, we believe more sophisticated refueling bounds can be applied to the main vehicle routing problem, in which case our ideas may yield stronger approximations to vehicle routing.
 
-\begin{fact}[Bang-Jensen, {\it Preserving and Increasing Local Edge-Connectivity in Mixed Graphs},\\ I. Post and C. Samy, {\it Linear-programming based techniques for multi-vehicle minimum latency problems.}\\]
+One disadvantage of the $\text{LB}$
+
+
+ One disadvantage of this lower bound is that it doesn't depend on the travelling salesman tour chosen, so it cannot be used to choose a particular travelling salesman tour over the set of vertices. However, if we consider the lower bound as a function of the vertex set $V$ chosen, then the function is linear, which implies that the lower bound may be a useful feature in a linear program used to find approximations to variants of the vehicle routing problem which only find tours over subsets of vertices. In this case, the tours we find will not only take the routing cost of the subset into consideration, but also the refill cost.
+
+Currently, our knowledge of approximations for variants of the minimum spanning tree problem is much better than our knowledge for approximations for variants of the travelling salesman problem. For this reason, to construct our travelling salesman tours for use with a random refill strategy, we construct a tree, using the double and shortcutting edges technique to construct a Hamiltonian tour of the vertices using each edge on the tree at most twice. What's more, we will rely on a result of Bang-Jensen, Frank, and Jackson which reduces the construction of a tree to the construction of an appropriate preflow on the graph.
+
+\begin{fact}[\cite{FlowToTreeResult}, \cite{FlowToTreePolyTimeResult}]
     Let $x$ be a preflow on a directed graph. Then there exists a random $r$-rooted arboresence $A$ such that $\mathbf{P}(e \in A) \leq x(e)$, and $\mathbf{P}(v \in A)$ is equal to the max $r-v$ flow with respect to $x$, and we can compute this arboresence in polynomial time in the size of the graph.
 \end{fact}
 
+What remains is to construct a linear program which can find the appropriate preflows, which is fairly simple, given that flow problems have proven particularly applicable to LP solutions.
+
 \section{Prize Collecting Vehicle Routing}
 
-We begin with an analysis of the most basic `subset' variant of vehicle routing, the prize collecting vehicle routing problem. In this problem, we only need to find an optimum vehicle routing tour over a subset of vertices in the graph. However, for each vertex $v$ our optimum vehicle routing tour does not cover, we are given a penalty $\pi_v \geq 0$, which encourages us to take as many vertices as possible. Thus, if a given vehicle routing tour $T$ satisfies the vertices $W \subset V$, we assign it a value $c(T) + \pi(V - W)$, and we attempt to find a vehicle routing tour minimizing this value.
+We begin with an analysis of the most basic `subset' variant of vehicle routing, the prize collecting vehicle routing problem. In this problem, we only need to find an optimum vehicle routing tour over a subset of vertices in the graph. However, for each vertex $v$ our optimum vehicle routing tour does not cover, we are given a penalty $\pi_v \geq 0$, which encourages us to take as many vertices as possible. Thus, if a given vehicle routing tour $T$ satisfies the vertices $W \subset V$, we assign it a value $c(T) + \pi(V - W)$, and we attempt to find a vehicle routing tour minimizing this value. Since we intend to augment a travelling salesman tour with the random refill strategy, we design an LP which discourages choosing vertices with a high refill cost.
 
-and taking two constants $\alpha, \beta > 0$ to be chosen later, define an assymetric cost function $\vec{c}(v,w) = c(v,w) + \alpha (2/C) D_wr_w$, giving us a bidirected metric structure on the graph which takes the refill cost of a TSP augmentation into consideration. In order to obtain a Lagrangian preserving approximation for vehicle routing, we design an LP with the aim of constructing prize collecting minimum spanning trees which can be turned into TSP tours, and then successively turned into prize collecting vehicle routing solution. We rely on a result of Bang-Jensen, which says that one can separate preflows on a graph into a random set of trees which have a high probability of containing vertices with a high $r-v$ flow, and whose probability of containing a particular edge is lower bounded by the flow itself.
+Standard LP prize collection variants of graph problems introduce an extra set of variables $z \in [0,1]^V$ to designate whether a given vertex is included in a solution of not, which can then be used to specify . We also use this technique to consutrct LP using this technique for constructing a `prize collecting preflow' $x \in [0,1]^E$ for obtaining a prize collecting VRP solution. To ensure the vertex subset considered in the prefill takes the refill cost into account, we explicitly include it as a factor in the LP objective function. More specifically, we consider an LP over the variables $(x,z)$ given below:
+%
+\begin{equation*}
+\begin{aligned}
+& \text{minimize}
+& & c(x) + (1/2) \text{LB}(z) + (3/2) \pi(z)\\
+& & & = \sum c_ex_e + (1/C) \sum (1 - z_v) D_vr_v + 2\sum \pi_v z_v \\
+& \text{subject to} & & x(\delta^{\text{out}}(v)) \leq x(\delta^{\text{in}}(v)) \leq 1 - z_v, \; v \in V\\
+& & & x(\delta^{\text{in}}(S)) \geq 1 - z_v, \; v \in S \subset V\\
+& & & x(\delta^{\text{out}}(r)) = 1\\
+& & & x,z \geq 0
+\end{aligned}
+\end{equation*}
+%
+We let $(x^*,z^*)$ denote the optimal solution to the given LP.
 
-The result implies that we can obtain spanning trees rooted at $r$ by finding preflows with essentially the same required properties as required by the spanning tree. Since we intend to apply the random refill strategy to the tour obtained from doubling the spanning trees obtained from the preflows, we design an LP which discourages choosing vertices with a high refill cost.
+\begin{lemma}
+    For any subset of vertices $W \subset V$, let $T^*(W)$ denote the optimal VRP tour covering the nodes in $W$. Then
+    %
+    \[ c(x^*) + (1/2)\text{LB}(z^*) + 3\pi(z^*) \leq (3/2)[c(T^*(W)) + \pi(V-W)] \]
+\end{lemma}
+\begin{proof}
+    Because $T^*(W)$ can be considered a feasible solution to the LP above, we obtain that
+    %
+    \[ c(x^*) + (1/2) \text{LB}(z^*) + 3 \pi(z^*) \leq c(T^*(W)) + (1/2) \text{LB}(W) + (3/2) \pi(V - W) \]
+    %
+    where $\text{LB}(W) = (2/C) \sum_{w \in W} D_wr_w$ is the standard refill cost lower bound for the algorithm. Since $T^*(W)$ is the optimal VRP solution over the vertices $W$, we conclude from the standard refill cost lower bound that $\text{LB}(W) \leq c(T^*(W))$.
+\end{proof}
 
-Consider the LP for prize collecting unsplit vehicle routing\footnote{Note that this algorithm takes advantage of the unsplit vehicle routing optimum rather than the split vehicle routing optimum} which minimizes $\sum \vec{d}(e)x_e + \beta \sum \pi_v z_v$, where $x \geq 0$ is a preflow on the graph, that is, a function on edges satisfying $x(\delta^{\text{in}})(v) \geq x(\delta^{\text{out}}(v))$ for all non-root vertices $v$. We also add the constraints that $x(\delta^{\text{in}}(S)) + z_v \geq 1$ and $x(\delta^{\text{out}}(r)) = 1$. The variable $z \geq 0$ is designed to designate the vertices we ignore in our prize collecting solution. Let $(x^*, z^*)$ denote the optimal solution. Now for any subset $W \subset V$, the optimal VRP tour $T^*(W)$ satisfying all vertices in $W$ is a feasible solution to this LP, and since the VRP tour has no need to return to any non-root vertex more than once, since we must completely the vertex in one go in the unsplit problem, we conclude that
-%
-\begin{align*}
-    c(x^*) + \alpha \frac{2}{C} \sum_{vw} x^*_{vw} D_wr_w + \beta \pi(v^*) &\leq c(T^*(W)) + \alpha \text{LB}(T^*(W)) + \beta \pi(W^c)\\
-    &\leq (1 + \alpha) c(T^*(W)) + \beta \pi(W^c)
-\end{align*}
-%
-where we have used the lower bound inequality $\text{LB}(T^*(W)) \leq c(T^*(W))$ common to most vehicle routing lower analyses. Taking the inequality over all vertex sets $W$ and optimal VRP solutions $T^*(W)$,
-%
-\[ c(x^*) + \alpha \frac{2}{C} \sum_{vw} x^*_{vw} D_wr_w + \beta \pi(v^*) \leq \min_{W} c(T^*(W)) + \alpha \text{LB}(T^*(W)) + \beta \pi(W^c) \]
-%
-Using the result of Bang-Jensen, we now find a random arboresence $A$. This arboresence has the following useful properties:
+\begin{corollary}
+    If $W$ is the set of vertices covered by an optimum solution to the prize collecting VRP problem, we conclude that
+    %
+    \[ c(x^*) + (1/2) \text{LB}(z^*) + (3/2) \pi(z^*) \leq (3/2) \text{OPT}_{\text{PCVRP}} \]
+    %
+    a `Lagrangian Preserving Approximation' type bound for the LP.
+\end{corollary}
+
+Now employing the result of Bang-Jensen, we now use the preflow $x^*$ to find a random arboresence $A$. This arboresence has the following useful properties:
 %
 \begin{itemize}
-    \item Directly taking the promises of Bang-Jensen gives $\mathbf{E}(c(A)) \leq c(x^*)$.
+    \item Directly taking the promises of Bang-Jensen gives
+    %
+    \[ \mathbf{E}(c(A)) = \sum c_e \mathbf{P}(e \in A) \leq \sum c_e x_e = c(x^*) \]
 
-    \item The collection of constraints $x(\delta^{\text{in}}(S)) + z_v \geq 1$, for a fixed $v$, and letting $S$ range over all subsets of $V$ containing $v$, can be interpreted as saying that the max $r-v$ flow with respect to a feasible solution to the LP is lower bounded by $1 - z_v$. Thus $\mathbf{P}(v \in A) \geq 1 - z_v$.
+    \item We can interpret the subcollection of constraints $x(\delta^{\text{in}}(S)) + z_v \geq 1$, for a fixed $v$, as saying that the max $r-v$ flow with respect to a feasible preflow solution is lower bounded by $1 - z_v$. The constraint $x(\delta^{\text{in}}(v)) \leq 1 - z_v$ provides an instance of a min cut of value less than $1 - z_v$, so we conclude the min $r-v$ cut is precisely $1 - z_v$, and therefore the result of Bang-Jensen, Frank, and Jackson gives $\mathbf{P}(v \in A) = 1 - z_v$.
 
-    \item Applying a union bound gives $\mathbf{P}(v \in A) \leq \sum_{v \in e} \mathbf{P}(e \in A) \leq \sum_{v \in e} x^*(e)$.
+%    Noting that the arboresence includes a particular vertex $v$ if and only if it includes an edge attached to the vertex, we apply a union bound to conclude that $\mathbf{P}(v \in A) \leq \sum_{v \in e} \mathbf{P}(e \in A) \leq \sum_{v \in e} x^*_e$. (We needed this union bound when using the bidirected metric, but now it is unneeded because we can make the r-v cut have value precisely 1 - z_v).
 \end{itemize}
 
-Using the doubling and shortcutting technique, we can turn the random arboresence into a random tour covering the same vertices, using each edge at most twice. Furthermore, we can perform the random refill strategy on the tour to obtain a random vehicle routing solution, which, with respect to the prize collecting VRP problem, has expected cost upper bounded by
+Using the doubling and shortcutting technique, we can turn the random arboresence into a random tour covering the same vertices, using each edge at most twice. Furthermore, we can perform the random refill strategy on the tour to obtain a random vehicle routing solution $T$. We split the analysis of the expected routing cost, refill cost, and penalty cost of the solution.
 %
-\begin{align*}
-    2c(A) + \frac{2}{C} \sum_v \mathbf{P}(v \in A) D_vr_v + \pi(T^c) &\leq 2c(x^*) + \frac{2}{C} \sum_{vw} x^*_{wv} D_v r_v + \pi(z^*)
-\end{align*}
-%
-Choosing the constants $\alpha$ and $\beta$ carefully, we can turn this into a 3 Lagrangian preserving approximation for prize collecting TSP. In particular, setting $\alpha = 1/2$ and $\beta = 3/2$, and doubling the initial inequality with the optimal VRP tours considered just after forming the LP, we obtain
-%
-\[ 2c(x^*) + \frac{2}{C} \sum x^*_{vw} D_w r_w + 3 \pi(v^*) \leq 3 \min_W c(T^*(W)) + \pi(W^c) \]
-%
-and so to conclude, if we denote the random VRP solution by $T$, then we find that
-%
-\[ \mathbf{E}[c(T) + 3 \pi(T^c)] \leq 3 \min_W c(T^*(W)) + \pi(W^c) \leq 3 \text{OPT} \]
-%
-we will use this to form an approximation algorithm to the $K$ VRP problem.
+\begin{itemize}
+    \item The expected routing cost is easy to bound, because it is twice the expected routing cost of the random arboresence $A$, and thus bounded by $2c(x^*)$.
 
-NOTE: WE DIDN'T USE THE BIDIRECTED METRIC, BUT IT MIGHT DISCOURAGE UNSPLIT TOURS FROM TAKING THE SAME NODE TWICE. I DON'T KNOW WHETHER IT HAS A GOOD INTEGRALITY GAP FOR SPLIT TOURS.
+    \item The expected refill cost is equal to
+    %
+    \[ \frac{2}{C} \sum_v \mathbf{P}(v \in T) D_v r_v = \frac{2}{C} \sum_v (1 - z^*_v) D_vr_v = \text{LB}(z^*) \]
+
+    \item The expected penalty cost is equal to
+    %
+    \[ \sum \pi_v \mathbf{P}(v \not \in T) = \sum \pi_vz^*_v = \pi(z^*) \]
+\end{itemize}
+%
+We have thus obtained a random tour $T$ over a random collection of vertices $W$ such that
+%
+\[ \mathbf{E}[c(T) + 3\pi(V - W)] \leq 2c(x^*) + \text{LB}(z^*) + 3\pi(z^*) \]
+%
+Applying the corollary to Lemma (INSERT NUMBER HERE), and choosing the minimum value tour over all vertices, we obtain our final approximation to prize collecting vehicle routing.
+
+\begin{theorem}
+    In polynomial time, we can produce a vehicle routing tour $T$ over a collection of vertices $W$ such that
+    %
+    \[ c(T) + 3\pi(V - W^*) \leq 3 \text{OPT}_{\text{PCVRP}} \]
+    %
+    a Lagrangian preserving 3 approximation for prize collecting vehicle routing.
+\end{theorem}
+
+Before we finish our discussion of prize collection, we note that the unsplit demand prize collecting vehicle routing problem offers a similar approximation. One proceeds through the calculations, but using the double random refill strategy to simulate split demand refills through unsplit demand refills, and using the cost function $c(x) + \text{LB}(z) + 2 \pi(z)$ instead of $c(x) + (1/2) \text{LB}(z) + (3/2) \pi(z)$ in the LP, we can obtain a Lagrangian preserving 4 approximation to unsplit demand prize collecting vehicle routing.
+
+%NOTE: WE DIDN'T USE THE BIDIRECTED METRIC STRATEGY, BUT IT MIGHT DISCOURAGE UNSPLIT TOURS FROM TAKING THE SAME NODE TWICE. I DON'T KNOW WHETHER IT HAS A GOOD INTEGRALITY GAP FOR SPLIT TOURS.
 
 \section{A $K$-VRP Approximation}
 
@@ -441,5 +484,21 @@ To summarize, in terms of uniform Lagrangian penalties $\lambda$ in place of the
 and we conclude that
 %
 \[ d(T_1) + d(C) \leq d(T_1) + \alpha_2 d(T_2) + \text{OPT} \]
+
+\begin{thebibliography}{9}
+
+\bibitem{RandomRefillPaper}
+Anupam Gupta, Viswanath Nagarajan, R. Ravi
+\textit{Approximation Algorithms for VRP with Stochastic Demands.}
+
+\bibitem{FlowToTreeResult}
+Jorgen Bang-Jensen, Andr\'{a}s Frank, Bill Jackson
+\textit{Preserving and Increasing Local Edge Connectivity in Mixed Graphs.}
+
+\bibitem{FlowToTreePolyTimeResult}
+Ian Post, Chaitanya Swamy
+\textit{Linear-Programming Based Approximation Algorithms For Multi-Vehicle Minimum Latency Problems.}
+
+\end{thebibliography}
 
 \end{document}
