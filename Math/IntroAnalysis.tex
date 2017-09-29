@@ -10,6 +10,26 @@
 \tableofcontents
 \pagenumbering{arabic}
 
+\section{Differentiation under the Integral Sign}
+
+Under what conditions can we prove that
+%
+\[ \frac{d}{dt} \int_a^b \varphi(x,t) dx = \int_a^b \frac{\partial \varphi}{\partial t}(x,t)\ dx \]
+%
+Surely, for a fixed value $s \neq t$,
+%
+\[ \frac{\int_a^b \varphi(x,t)\ dx - \varphi(x,s)\ dx}{t - s}\ dx = \int_a^b \frac{\varphi(x,t) - \varphi(x,s)}{t - s}\ dx \]
+%
+Let us fix $t$, and let $s$ vary closer and closer to $t$. Then for each $s$ and $x$, there is a number $u(s,x)$ between $t$ and $s$ such that
+%
+\[ \frac{\varphi(x,t) - \varphi(x,s)}{t - s} = \partial_t \varphi(x,u(s,x)) \]
+%
+If we assume that $\partial_t \varphi(x,s) \to \partial_t \varphi(x,t)$ uniformly over $a \leq x \leq b$ as $s \to t$, then we see that
+%
+\[ \lim_{s \to 0} \int_a^b \frac{\varphi(x,t) - \varphi(x,s)}{t - s}\ dx = \lim_{t \to 0} \int_a^b \partial_t \varphi(x,u(s,x))\ dx = \int_a^b \partial_t \varphi(x,t)\ dx- \]
+%
+In particular, this occurs if $\partial_t \varphi$ is continuous.
+
 \chapter{Differential Equations}
 
 Here we describe some general techniques for solving differential equations. The goal is simple -- we are given an arbitrary vector field $v: \mathbf{R}^n \to \mathbf{R}^n$, and we must find the family of all curves $c$ for which $v \circ c = c'$ holds on the domain of the curve. More generally, we are given a function $F: \mathbf{R}^{n+1} \to \mathbf{R}^m$ (which can be seen as a system of $m$ equations), and we wish to find real-valued differentiable functions $f$ such that
@@ -150,19 +170,73 @@ If a differential equation
 %
 \[ a dx + b dy \]
 %
-is not exact, we may be able to find $f$ such that $f a dx + f b dy$ is exact. $f$ is known as an integrating factor for the equation.
+is not exact, we may be able to find $f$ such that $f a dx + f b dy$ is exact. $f$ is known as an integrating factor for the equation.--
 
-\section{Linear Equations}
+\section{Uniqueness of Differential Equations}
 
-Suppose that $v(x_0) = 0$. Then, locally around $x_0$, we may linearize, writing
-%
-\[ v_i(x - x_0) = \sum_{j = 1}^n \frac{\partial v_i}{\partial x_j} x_j \]
-%
-The resulting equation is the best linear approximation to $v$. For instance, linearize the pendulum equation $v(x) = - \sin x$ around a point $n \pi$ gives us the vector field $w(x - n \pi) = (-1)^{n+1} x $
+\begin{lemma}
+    If $v$ and $w$ are one dimensional vector fields with $v < w$ everywhere, and we have two integral curves $x$ and $y$ with $x_0 = y_0$ and $\dot{x} = v(x)$, $\dot{y} = w(y)$, then $x_t \leq y_t$ for $t \geq 0$, and $x_t \geq y_t$ for $t \leq 0$.
+\end{lemma}
+\begin{proof}
+    We prove the theorem for $t \geq 0$, and leave the case $t \leq 0$ to the reader. Let $T$ be the supremum of all $t$ such that $x \leq y$ on $[0,t]$. If $T < \infty$, then by continuity $x \leq y$ on $[0,T]$, but there are arbitrarily small $\varepsilon > 0$ such that $x(T+\varepsilon) > y(T+\varepsilon)$ and $x_T = y_T$. This implies that
+    %
+    \[ v(x_T) - w(y_T) = \dot{x}_T - \dot{y}_T = \lim_{\varepsilon \to 0^+} \frac{x(T+\varepsilon) - y(T+\varepsilon)}{\varepsilon} \geq 0 \]
+    %
+    which is impossible by assumption.
+\end{proof}
 
-$dy/dx = -\sin x$
-$dy = - \sin x dx$
-$y - y_0 = \cos(x) -$
+We would like to strengthen this theorem such that if $v \leq w$, then $x_t \leq y_t$ for $t \geq 0$ and $x_t \geq y_t$ for $t \leq 0$, but this cannot be true without additional regularity assumptions on $v$ and $w$, because if $v = w$, the theorem would easily imply the uniqueness of solutions to differential equations.
+
+\begin{theorem}
+    If $v$ is a differentiable vector field with $v(0) = 0$, then no curve can approach $0$ in finite time.
+\end{theorem}
+\begin{proof}
+    Let $c$ be a curve, and assume without loss of generality that $c_0 > 0$. We show that there is a value $A$ such that $c_t \geq c_0e^{-A|t|}$, which shows in particular that $c_t \neq 0$ for all $t$. To obtain the value $A$, find a value $A$ such that $|v(x)| < A|x|$ for $x \neq 0$ in $[-1,1]$. This is possible because $v$ is Differentiable at $0$, hence locally Lipschitz there. This implies that for $x > 0$, $-Ax < v(x) < Ax$. We then obtain the inequality by applying the last lemma to the two integral curves $c_0e^{At}$ and $c_0e^{-At}$ for the vector fields $Ax$ and $-Ax$.-
+\end{proof}
+
+Though we don't really need this theorem, we can apply what we know to prove the following:
+
+\begin{theorem}
+    Let $v \leq w$ be differentiable functions of a single variable. If $\dot{x} = v(x)$ and $\dot{y} = w(y)$, and $x_0 = y_0$, then $x_t \leq y_t$ for all $t \geq 0$, and $x_t \geq y_t$ for all $t \leq 0$.
+\end{theorem}
+\begin{proof}
+    Assume that $v$ and $w$ don't vanish anywhere. Note that $dx = vdx$ and $dy = vdy$. Let $x_0 = y_0 = a$, and suppose that $x_{t_0} = y_{t_1} = b$. If $b \geq a$, then
+    %
+    \[ t_0 = \int_a^b \frac{dx}{v(x)} \geq \int_a^b \frac{dy}{w(y)} = t_1 \]
+    %
+    we can only have an equality here if $v = w$ almost everywhere on $[a,b]$, otherwise $t_0 > t_1$ and we conclude that it takes $x$ longer to reach $b$ than it takes $y$. If $b \leq a$, then we conclude $t_0 < t_1$, unless $v = w$ on $[b,a]$. If $v$ and $w$ don't vanish anywhere, this proves the theorem in general. But then if $b \neq a$, then $v$ and $w$ cannot vanish between $a$ and $b$, because it takes infinite time to pass this point.
+\end{proof}
+
+Note that in general, this lemma cannot be used to prove the uniqueness of integral curves in any dimension, because in this case it is possible for us to `take a shortcut' in two or more dimensions. We leave this to the reader to formulate. However, we can use the problem to obtain one dimensional time dependent uniqueness, since the shortcut forming technique does not work if we are forced to proceed along a dimension at a uniform rate.
+
+\begin{lemma}
+    If $v(x,t)$ and $w(x,t)$ are one dimensional vector fields with $v < w$ everywhere, and we have two integral curves $x$ and $y$ with $x_0 = y_0$ and $\dot{x} = v(x,t)$, $\dot{y} = w(y,t)$, then $x_t \leq y_t$ for $t \geq 0$, and $x_t \geq y_t$ for $t \leq 0$.
+\end{lemma}
+
+\begin{theorem}
+    The differential equation $\dot{x} = v(x,t)$ has unique solutions.
+\end{theorem}
+\begin{proof}
+    Without loss of generality, consider initial conditions $x_0 = t_0 = 0$. Let $c$ be a curve with $\dot{c} = v(c,t)$, and consider the function $y(x,t) = x - c(t)$. Then $(y,t)$ form a coordinate system with $dy = dx - c'(t)dt$. In particular, the tangents to the curve $c$ satisfy $dx = v(x,t)dt$ and so $dy = [v(x,t) - c'(t)]dt = w(y,t)dt$. We have thus reduced our proof of uniqueness to a function $dy = w(y,t)dt$ with $w(0,t) = 0$ for all $t$.
+
+    Using Taylor's theorem, if $\partial_y w(0,0) = A$, and $w$ is $C^2$, we can write
+    %
+    \[ w(y,t) = Ay + t \int_0^1 (\partial_t w)(uy,ut)\ du + y \int_0^1 (\partial_y w)(uy,ut)\ du = Ay + tf(y,t) + yg(y,t) \]
+    %
+    Since $\partial_y w$ is continuous, it is bounded by a constant if we assume the values of $y$ and $t$ are bounded, and so on this interval $|g(y,t)| = O(1)$. Next, the function $F(y,t) = f(y,t)/y$ can be extended to a continuous function on the $x$ axis, because, since $w$ is $C_2$, we can conclude
+    %
+    \[ \lim_{(y,t) \to (0,t_0)} \frac{f(y,t)}{y} = \frac{\partial f}{\partial y}(0,t) = \int_0^1 \partial_{yt} w(0,ut_0)\ du \]
+    %
+    It follows that the function $F(y) = f(y,t)/y$ can be extended to a continuous function on the $y$ axis, and in particular in every bounded neighbourhood of the origin $|f(y,t)| = O(|y|)$. We conclude that for $t,y \neq 0$, there are constants such that $|w(y,t)| < A|y| + B|ty|$. Solving this equation, it follows that for any curve $y$ with initial conditions $(y_1,t_1)$, where $y_1, t_1 > 0$,
+    %
+    \[ -Ay - Byt < w(y,t) < Ay + Byt \]
+    %
+    and the resulting integral curves of the upper and lower bounds give a bound of the form
+    %
+    \[ y_t > y_1e^{A|t - t_1| -(B/2)|t-t_1|^2} = \Omega(e^{-(B/2)|t-t_1|^2}) \]
+    %
+    and so we cannot have $y_0 = 0$, though we can now approach slightly faster than inverse exponentially.
+\end{proof}
 
 \chapter{The Exponential Function}
 

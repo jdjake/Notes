@@ -13,15 +13,272 @@
 
 \pagenumbering{arabic}
 
+In the analysis of the motion of a particle under random, brownian motion, each possible motion of the particle can be represented as a point $\omega$ in some space $\Omega$. During the probability that the motion behaves in certain ways, like whether it is positive, can be reduced to measuring the size of an arbitrary subset of $\Omega$. These ideas are also covered by measure theory.
+
 \chapter{The Lebesgue Measure}
 
-Everyone knows that the area of a circle is proportional to the square of its radius. Similarily, the area of a rectangle is equal to the product of two sides. But it suddenly becomes very difficult to determine the area of shapes when we consider creations outside of the common realm of elementary school mathematics. For instance, take the set of all points in the unit circle whose coordinates are irrational numbers. What, say, is the area of this `shape'. Is there anything special about the shapes aforementioned that enables us to describe their area? One of the main goals of measure theory is to investigate the notion of `area', `volume', and `size' generalized from the restrictive values from planar geometry, and combatting the paradoxes that result.
+Area is one of the most primitive measurements in geometry. Every elementary school student knows that the area of a circle of radius $r$ is $\pi r^2$, and that the area of a rectangle is equal to the product of the lengths of its two distinct side lengths. But given a general shape in the plane, it suddenly becomes very difficult to determine a shape's area. In the work of the ancient Greeks, especially Archimedes, we find two methods of finding more complex areas:
+%
+\begin{itemize}
+    \item If a shape can be cut up into finitely many components, and then rearranged into the form of a different shape by a series of rigid motions, then the new shape has the same area as the old.
 
-In the early 1900s, the mathematicians Banach and Tarski proved a theorem defying physical law: by rotating segments of a sphere, we can orient the pieces in such a way that every point on the sphere is duplicated. By performing actions corresponding to natural motions in reality, we have seemingly managed to produce two equal things from nothing -- a feat not far from biblical miracle (though we may have to use oranges, instead of loaves and fishes). In duplicating the sphere, the mathematical duo defied seemingly obvious properties of surface area and volume. Most glaringly, the volume of an object should be the sum of its component parts.
+    \item We can obtain upper bounds on the area of the shape by enveloping the shape by another shape with an already known area, and lower bounds by finding shapes enclosed by the shape.
+\end{itemize}
+%
+But with the advent of Cartesian coordinates and the subsequent modern introduction of set theory, shapes are identified with subsets of $\mathbf{R}^2$, and it is no longer clear how to define the area of a general subset of $\mathbf{R}^2$. More generally, it isn't clear how to define the lengths of subsets of the real line $\mathbf{R}$, or volumes of general subsets of $\mathbf{R}^3$. These are all {\it measures} of size in their relative dimensions, and so we call the general study of these obects {\it measure theory}. In line with this unification, we will let $\mu(S)$ denote the length, area, and volume of a given shape $S$.
 
-The key idea of measure theory is that only certain `nice' subsets of space actually obey our intuitions about size. Stefan Banach and Alfred Tarski engineered the first partition which does not obey these principles -- it manifests as what we call an {\bf unmeasurable set}. We will normally try and restrict our discussion to {\bf measurable} subsets of space, and determining their properties.
+You might argue that these paradoxes are irrelevant in terms of any subset that occurs in modern mathematics, but this is not so. For instance, one often wants to measure the length of continuous curves in the plane, which can be considered another measure on space. In 1890, Peano constructed a continuous curve which covers the entire plane. The length of this curve is certainly suspect, because it is constructed as the limit of piecewise differentiable curves whose lengths tend to infinity. Modern developments even brought the ancient methods of area and volume into question. In 1924, Stefan Banach and Alfred Tarski showed that one can decompose a sphere into a finite number of components, which by a number of rigid motions can be rearranged into two copies of the original sphere! We seem to have produced two equal things from one thing -- a feat not far from biblical miracle (though we have to use oranges, not loaves and fishes). In duplicating the sphere, Banach and Tarski showed that even the old methods of area geometry do not stand up to the techniques of modern mathematics, and a reanalysis of the entire field was necessary.
 
-The defining principles of size will be discovered by constructing length on $\mathbf{R}$: a function $m$ defined on subsets of $\mathbf{R}$, with values in $\mathbf{R}^\infty$. This will be technical, but once done abstract properties may be studied in a much more elegant manner. First, we should agree that the length of an interval is the difference between the intervals ends. Thus $m((a,b)) = b - a$. More generally, we should be able to approximate the size of any other set by open segments of the form $(a,b)$.
+One key idea of measure theory is that the old methods of geometry continue to work, provided that we only concentrate on certain `nice' subsets of space which obey our intuitions about size. Stefan Banach and Alfred Tarski engineered one of the first partitions of space which do not obey geometric intuition -- we call these {\bf unmeasurable sets}, because trying to measure their size causes problems. The main theorems of measure theory only work when we work with {\bf measurable sets}. Indeed, we can reinterpret the methods of ancient geometry into two principles of measure theory:
+%
+\begin{itemize}
+    \item If a {\it measurable} set $S$ has a decomposition into disjoint, {\it measurable} subsets $S_1, \dots, S_n$, then $\mu(S) = \sum \mu(S_i)$, and if $S$ is mapped into a shape $T$ by a rigid motion, then $\mu(S) = \mu(T)$.
+
+    \item A set $S$ is measurable, then there is a sequence of shapes $S^*_1, S^*_2, \dots$ of measurable sets, each containing $S$, which each can be decomposed into a collection of intervals/squares/boxes with $\mu(S^*_i) \to \mu(S)$.
+\end{itemize}
+
+We will begin by extending the notion of sets to fairly general subsets of $\mathbf{R}^n$. We do this not only because this is classically how measure theory was introduced, but also because it brings to light the many intricate parts of the theory which we consider when we build measures on more general `measure spaces'. We recall that we shall use $\mu$ uniformly for the length of a subset of $\mathbf{R}$, the area of a subset of $\mathbf{R}^2$, the volume of a subset of $\mathbf{R}^3$, and higher dimensional variants.
+
+\section{Measuring Elementary Sets}
+
+Let's begin by using basic ideas of Euclidean geometry to find a basic class of sets which we can measure the size of without introducing paradoxes. The length of an {\bf interval} with start point $a$ and end point $b$, either closed, open, or half open, is $b-a$. We know from elementary geometry that the area of a rectangle is the product of the length of the intervals that define it, and we can generalize this to defining the measure of a general box, formed from the product of intervals. That is, the measure of $I_1 \times \dots \times I_n$, where $I_i$ is an interval starting at $a_i$ and ending at $b_i$ is
+%
+\[ (b_1 - a_1) \dots (b_n - a_n) = \mu(I_1) \dots \mu(I_n) \]
+%
+In general, the easiest sets to measure the area of are those covered by boxes, and we will show this leads to a system of area with a well defined theory.
+
+\begin{lemma}
+    If we decompose a box $R$ into the disjoint union of finitely many boxes $R_i$, then the measure of the box is the sum of the measures of the boxes in the decomposition, in the sense that $\mu(R) = \sum \mu(R_i)$
+\end{lemma}
+\begin{proof}
+    We proceed by a grid decomposition. Suppose first that the rectangular decomposition forms a grid, in the sense that we can index the decomposition as $R_{i_1 \dots i_n}$, where $R_{i_1 \dots i_n} = I^1_{i_1} \times \dots \times I^n_{i_n}$, and the endpoint of $I^k_{i_n}$ is the startpoint of $I^k_{i_n+1}$. Then
+    %
+    \begin{align*}
+        \sum_{i_1, \dots, i_n} \mu(R_{i_1 \dots i_n}) &= \sum_{i_1, \dots, i_n} \mu(I^1_{i_1}) \dots \mu(I^n_{i_n})\\
+        &= \prod_{k = 1}^n \sum_j \mu(I^k_j)
+    \end{align*}
+    %
+    and the theorem is implied in this case by showing that $\smash{\sum_j \mu(I^k_j) = \mu(I_k)}$, where $R = I_1 \times \dots \times I_n$. But this follows because the sum $\smash{\sum_j \mu(I^k_j)}$ is a telescoping sum, with the highest indexed interval's endpoint equal to the endpoint of $I_k$, and the lower indices startpoint equal to the startpoint of $I_k$. In general, it suffices to break a general decomposition into a further decomposition forming a grid, in such a way that the sum of the boxes in the first decomposition is equal to the sum of the boxes in the second. This is proven by forming the grid in each dimension, applying another telescoping sum type argument along each dimension.
+\end{proof}
+
+A similar grid decomposition like argument proves the following.
+
+\begin{lemma}
+    If a family of boxes $R_1, \dots, R_n$ {\it covers} $R$, then $\mu(R) \leq \sum \mu(R_i)$.
+\end{lemma}
+
+\begin{lemma}
+    If $R_1, \dots, R_n$ and $S_1, \dots, S_m$ are two disjoint families of boxess with $\bigcup R_i = \bigcup S_i$, then $\sum \mu(R_i) = \sum \mu(S_i)$.
+\end{lemma}
+
+Alternatively, these theorems can be shown using a discretization argument. We begin by showing that
+%
+\[ \mu(I) = \lim_{N \to \infty} \frac{|\mathbf{Z}/N \cap I|}{N} \]
+%
+From this, it is easy to argue that for any box $R$,
+%
+\[ \mu(R) = \lim_{N \to \infty} \frac{|\mathbf{Z}^n/N \cap R|}{N^n} \]
+%
+But now if we write $R = \cup R_i$ as the union of disjoint intervals, then
+%
+\[ \mu(R) = \lim_{N \to \infty} \frac{|\mathbf{Z}^n/N \cap R|}{N^n} = \sum_i \lim_{N \to \infty} \frac{|\mathbf{Z}^n/N \cap R_i|}{N^n} = \sum_i \mu(R_i) \]
+%
+and this proves the theorem. One might be tempted to define the measure of an arbitrary subset of $\mathbf{R}^n$ by the formula
+%
+\[ \mu(E) = \lim_{N \to \infty} \frac{|\mathbf{Z}^n/N \cap E|}{N^n} \]
+%
+however, this definition runs into problems. One can find sets where this limit doesn't exist, and even if the limit does exist, we might not even have translation invariance. For instance, with respect to this function $\mathbf{Q} \cap [0,1]$ has length 1, but $\mathbf{Q} + \sqrt{2}$ has length 0. The definition is valid for all {\it Jordan measurable sets}. A more suitable way to obtain a continuous measure from some kind of discrete measure is by the theory of Monte Carlo integration, which we won't cover here.
+
+%
+%If $I$ has start point $a$ and end point $b$, and contains $M$ points in $\mathbf{Z}/n$, then
+%
+%\[ \frac{M-1}{N} \leq b - a \]
+%
+%and so
+%
+%\[ \limsup_{N \to \infty} \frac{|\mathbf{Z}/N \cap I|}{N} \leq \limsup_{N \to \infty} \frac{N(b-a) + 1}{N} = b - a \]
+%
+%On the other hand, for any $\varepsilon > 0$, there is a rational number $m/n$ with $a + 1/n < m/n < a + \varepsilon$. Then $(m+k)/n < b$ if $0 \leq k < n(b-(a + \varepsilon))$, so
+%
+%\[ \frac{|\mathbf{Z}/n \cap I|}{n} \geq \frac{\lfloor n(b-a-\varepsilon) \rfloor}{n} \]
+%
+%Since $a + 1/n < m/n$, then for any $n' > n$, there is a rational number $m'/n'$ with $a < m'/n' < a + \varepsilon$, because there is an element of $\mathbf{Z}/n'$ in every interval of length $1/n'$, and $m/n - a > 1/n$, and then the same argument implies
+%
+%\[ \frac{|\mathbf{Z}/n \cap I|}{n} \geq \frac{\lfloor n(b-a-\varepsilon) \rfloor}{n} \]
+%
+%so
+%
+%\[ \liminf_{N \to \infty} \frac{|\mathbf{Z}/n \cap I|}{n} \geq \liminf_{N \to \infty} \frac{\lfloor n(b-a-\varepsilon) \rfloor}{n} = b - a - \varepsilon \]
+%
+%Letting $\varepsilon \to 0$, we obtain the limit theorem.
+
+%If we choose $n$ to be large enough that there is $m'$ with $a - \varepsilon < m'/n < a$, then
+%
+%\[ \frac{m + k}{n} = \frac{m}{n} + k \]
+
+%On the other hand, for any $\varepsilon > 0$, there are rational numbers $x_1$ and $x_2$ with $a - \varepsilon \leq x_1 \leq a \leq x_2 \leq a + \varepsilon$. Suppose we match denominators and write $x_1 = m_1/n$, $x_2 = m_2/n$.
+
+%This implies that for any box $R$,
+%
+%\[ \mu(R) = \lim_{N \to \infty} \frac{|\mathbf{Z}^n/N \cap R|}{N} \]
+
+The above lemmas guarantee that if $E \subset \mathbf{R}^n$ is the disjoint union of boxes $R_1, \dots, R_n$, then the definitions
+%
+\[ \mu(E) = \sum \mu(R_i) \]
+%
+is well defined. We call a set like $E$ an {\bf elementary set}. We shall find that the {\it algebraic structure} of the family of sets a measure is defined over is interesting. One often has to consider the areas of the set formed from the union of two sets, or the intersection, and it is useful to know that we can measure the size of a set if it is the union of measurable sets, or the intersection of measurable sets. The next lemma is very useful in that regard
+
+\begin{lemma}
+    If $R$ is the finite union of boxes, then $R$ is the finite union of {\it disjoint} boxes.
+\end{lemma}
+\begin{proof}
+    One can only prove this by a grid decomposition argument.
+\end{proof}
+
+Since the union of two sets which are finite unions of boxes is also a finite union of boxes, we conclude that the union of two elementary sets is also elementary.
+
+\begin{lemma}
+    The intersection of two box is a box.
+\end{lemma}
+\begin{proof}
+    Note first that if $I$ is an interval with start point $a$ and endpoint $b$, and $J$ is an interval with start point $c$ and endpoint $d$, then $I \cap J$ is either empty, or an interval with startpoint $\max(a,c)$, and endpoint $\min(b,d)$. But then give $R = I_1 \times \dots \times I_n$ and $S = J_1 \times \dots \times J_n$, then
+    %
+    \[ R \cap S = (I_1 \cap J_1) \times \dots \times (I_n \cap J_n) \]
+    %
+    which is a box.
+\end{proof}
+
+If $E = \bigcup R_i$ and $F = \bigcup S_i$ are elementary sets, then $E \cap F = \bigcup (R_i \cap S_j)$ is also an elementary set. Unfortunately, this family is not closed under the complement operation, because we do not allow unbounded intervals, but it is `almost' closed under the complement operation.
+
+\begin{lemma}
+    If $R$ and $S$ are boxes, then $R - S = R \cap S^c$ is a finite union of rectangles.
+\end{lemma}
+
+\begin{corollary}
+    If $E$ and $F$ are elementary sets, then $E - F$ is an elementary set.
+\end{corollary}
+\begin{proof}
+    \[ (R_1 \cup \dots \cup R_n) \cap (S_1 \cup \dots \cup S_m)^c = \cup (R_i \cap S_j) \]
+\end{proof}
+
+A family of sets is an {\bf algebra} if it is closed under the union and complement operation. It is easy to see that an algebra is closed under intersections because $E \cap F = (E^c \cup F^c)^c$, as well as the set subtraction operation. What we have just proven is that the set of elementary subsets contained in $[0,1]^n$ is an algebra. The fact that elementary sets are not an algebra is one of the reasons we have to enlarge the family of sets we measure the size of.
+
+Let's look at some elementary properties of the behaviour of $\mu$ on elementary sets:
+%
+\begin{itemize}
+    \item It is also easy to see that if $E_1, \dots, E_n$ are disjoint elementary sets, then $\mu(E_1 \cup \dots \cup E_n) = \sum \mu(E_i)$, so $\mu$ is {\it finitely additive} on elementary subsets.
+
+    \item For any elementary set $E$, $\mu(E + x) = \mu(E)$, so $\mu$ is {\it translation invariant}.
+
+    \item It follows that if $E$ and $F$ are elementary sets, with $E \subset F$, then $\mu(E) \leq \mu(F)$, because
+    %
+    \[ \mu(F) = \mu((F - E) \cup E) = \mu(F-E) + \mu(E) \geq \mu(E) \]
+    %
+    thus $\mu$ is a {\it monotone} function on sets.
+\end{itemize}
+%
+These properties uniquely define the function $\mu$ we constructed up to a scalar factor. Since all the properties are intuitive to us, this tells us we're going in the right direction!
+
+\section{Jordan Measurable Sets}
+
+In the last section, we constructed a consistant measure $\mu$ on the family of elementary sets. However, this family is certainly limited. We cannot even use this quantity to measure the area of a circle, or the volume of a sphere. However, we have really only applied the first ancient technique of measuring area, forming disjoint unions of simple shapes. We haven't used the method of approximating shapes by simple sets from above and below. If $E$ is an arbitrary set, and there is a constant $C \geq 0$ such that for all $\varepsilon$, there are $E_1 \subset E$ and $E \subset E_2$ with
+%
+\[ C - \varepsilon \leq \mu(E_1) \leq \mu(E_2) \leq C + \varepsilon \]
+%
+then it would be reasonable to define the area of $E$ to be $C$. We call such a set {\bf Jordan measurable}. More specifically, for any subset of $\mathbf{R}^n$, we define
+%
+\[ \mu_*(E) = \sup \{ \mu(E_1): E_1\ \text{elementary}, E_1 \subset E \} \]
+\[ \mu^*(E) = \inf \{ \mu(E_1): E_1\ \text{elementary}, E_2 \supset E \} \]
+%
+the {\bf inner} and {\bf outer} measures of the set $E$. We say a {\it bounded} set $E$ is Jordan measurable if $\mu_*(E) = \mu^*(E)$.
+
+\begin{theorem}
+    A set is Jordan measurable if and only if for every $\varepsilon > 0$, there is an elementary set $A$ with $\mu^*(A \bigtriangleup E) \leq \varepsilon$.
+\end{theorem}
+\begin{proof}
+    Consider a set $E$ satisfying the second condition. Then there is an elementary set $F$ with $A \bigtriangleup E \subset F$ and $\mu(F) \leq 2\varepsilon$, and so
+    %
+    \[ \mu^*(E) \leq \mu(A \cup F) \leq \mu(A) + \mu(F) \leq \mu(A) + 2\varepsilon \]
+    %
+    since $\mu_*(A \bigtriangleup E) \leq \mu^*(A \bigtriangleup E) \leq \varepsilon$, we can find $F \subset A \bigtriangleup E$ with $\mu(F) \leq \varepsilon$, and
+    %
+    \[ \mu_*(E) \geq \mu_*(A - F) \geq \mu_*(A) - \mu_*(F) \geq \mu_*(A) - \varepsilon \]
+    %
+    Then we let $\varepsilon \to 0$. Conversely, if $E$ is Jordan measurable, there are elementary sets $F_1, F_2$ with $F_1 \subset E \subset F_2$ and $\mu(F_2) - \mu(F_1) = \mu(F_2 - F_1) < \varepsilon$. Then
+    %
+    \[ \mu^*(F_2 \bigtriangleup E) = \mu^*(F_2 - E) \leq \mu^*(F_2 - F_1) \leq \varepsilon \]
+    %
+    This shows the condition holds, and also that we can choose the set $A$ to be a superset of $E$ in the proof above.
+\end{proof}
+
+Jordan measurable sets satisfy the same algebraic operations are the family of elementary sets.
+%
+\begin{itemize}
+    \item If $\mu^*(A - E), \mu^*(B - F) < \varepsilon$, then
+    %
+    \[ \mu^*((A \cap B) - (E \cap F)) \leq \mu^*(A - E) + \mu^*(B - F) \leq 2 \varepsilon \]
+    %
+    hence $E \cap F$ is measurable if $E$ and $F$ are measurable.
+
+    \item If $\mu^*(A - E), \mu^*(B - F) < \varepsilon$, then since
+    %
+    \[ (A \bigtriangleup B) \bigtriangleup (E \bigtriangleup F) = (A \bigtriangleup E) \bigtriangleup (B \bigtriangleup F) \subset (A \bigtriangleup E) \cup (B \bigtriangleup F) \]
+    %
+    Hence $\mu((A \bigtriangleup B) \bigtriangleup (E \bigtriangleup F)) \leq \varepsilon$, and the symmetric difference of two sets is measurable.
+
+    \item Since $E - F = (E \bigtriangleup F) \cap E$, the set theoretic minus of two Jordan measurable sets is Jordan measurable.
+
+    \item To prove $E \cup F$ is Jordan measurable, we can assume $E$ and $F$ are disjoint, because $(E \cup F) = (E \cap F) \cup (E - F) \cup (F - E)$. Note that in this case $\mu_*(E) + \mu_*(F) \leq \mu_*(E + F)$, because an interior estimate of $E$ and an interior estimate of $F$ combine as disjoint sets to give an interior estimate of $\mu_*(E + F)$. Now since $E$ and $F$ are measurable, for any $\varepsilon > 0$, we can find elementary sets $E \subset E^*$ and $F \subset F^*$ such that $\mu(E^*) \leq \mu_*(E) + \varepsilon$ and $\mu(F^*) \leq \mu_*(F) + \varepsilon$. But then
+    %
+    \[ \mu(E^* \cup F^*) \leq \mu(E^*) + \mu(F^*) \leq \mu_*(E) + \mu_*(F) + 2\varepsilon \leq \mu_*(E \cup F) + 2\varepsilon \]
+    %
+    This shows $E \cup F$ is Jordan measurable.
+\end{itemize}
+%
+hence, restricted to a particular bounded Jordan measurable set of space, the class of Jordan measurable sets is an algebra. Since $\mu^*(E \cup F) \leq \mu^*(E) + \mu^*(F)$ and $\mu_*(E \cup F) \geq \mu_*(E) + \mu_*(F)$ holds for all disjoint sets $E$ and $F$, we conclude that Jordan measurable sets have finite additivity. This implies monotonicity. The translation invariance of the measure follows from the translation invariance of the measure on elementary sets.
+
+\begin{example}
+    Let $R$ be a closed box in $\mathbf{R}^n$, and $f: R \to \mathbf{R}$ a continuous function. Then the graph $\Gamma(f)$ of $f$ in $\mathbf{R}^{n+1}$ is Jordan measurable, and has Jordan measure zero. This follows because, since $R$ is compact, $f$ is uniformly continuous, and therefore for any $\varepsilon$ there are finitely many disjoint boxes $S_1, \dots, S_m$ covering $R$ such that if two points $x$ and $y$ lie in the same box, $|f(x) - f(y)| < \varepsilon$. But this implies that if we fix a point $x_i$ in $S_1$, then the sets $S_i \times [x_i - \varepsilon, x_i + \varepsilon]$ cover the graph, and so
+    %
+    \[ \mu^*(\Gamma(f)) \leq \sum \mu(S_i \times [x_i - \varepsilon, x_i + \varepsilon]) \leq 2 \varepsilon \sum \mu(S_i) \leq 2\varepsilon \mu(R) \]
+    %
+    let $\varepsilon \to 0$ to obtain that $\Gamma(f)$ has upper measure zero, and thus lower measure zero. The set $X = \{ (x,t): 0 \leq f(x) \leq t \}$ is also Jordan measurable. Given the same $S_i$, the sets $S_i \times [0,x_i - \varepsilon)$ are contained in $X$, and $S_i \times [0,x_i+\varepsilon]$ contain $X$, and the difference between these two sets is exactly the sets we used to show the measure of the boundary is zero, hence $X$ is Jordan measurable because it can be approximated from above and below.
+\end{example}
+
+\begin{example}
+    A triangle is not an elementary set, but it is a Jordan measurable set. First, consider a right triangle with sides parallel to the $x$ and $y$ axis. Then, by a translation, we can write one point as $(x,0)$ and another as $(0,y)$. For each $N$, consider the disjoint sequence of rectangles
+    %
+    \[ [0,x/N) \times \{ 0 \} \cup [x/N, 2x/N) \times [0,y/N] \cup \dots \cup [\frac{N-1}{N} x, x] \times [0, \frac{N-1}{N}y] \]
+    %
+    These rectangles are contained in the triangle, and so
+    %
+    \[ \mu_*(T) \geq \sum_{i = 0}^{N-1} \frac{x}{N} \frac{iy}{N} = \frac{xy}{N^2} \frac{(N-1)N}{2} = \frac{N-1}{N} \frac{xy}{2} \]
+    %
+    Letting $N \to \infty$, we find $\mu_*(T) \geq xy/2$. On the other hand, consider the disjoint sequence of rectangles
+    %
+    \[ [0,x/N) \times [0,y/N] \cup [x/N, 2x/N) \times [0,2y/N] \cup \dots \cup [\frac{N-1}{N} x, x] \times [0, y] \]
+    %
+    which contains the triangle, so
+    %
+    \[ \mu^*(T) \leq \sum_{i = 1}^N \frac{x}{N} \frac{iy}{N} = \frac{N+1}{N} \frac{xy}{2} \]
+    %
+    Letting $N \to \infty$, we conclude $\mu^*(T) \geq xy/2$. Equating estimates, we determine the triangle is Jordan measurable with area $xy/2$. If only one of the sides is horizontal, we may split the triangle into two right triangles with the other side perpendicular to the $y$ axis, so this shape is measurable. If one coordinate is $(x,0)$, and the other
+\end{example}
+
+DO MORE EXERCISES FROM TAO'S BOOK
+
+The Jordan measure is intrinsically connected with the Riemann integral. Given an interval,
+
+TALK ABOUT RIEMANN INTEGRAL, SHOW SET IS JORDAN MEASURABLE IFF ITS BOUNDARY HAS MEASURE ZERO?
+
+\section{Lebesgue Measure}
+
+If we are able to stick with Jordan measurable sets, we should, because it is here that integration theory works in the best way. However, not all sets are Jordan measurable, and often when studying fractal sets one runs into unmeasurable sets. What's more, even if a set $E_1, E_2, \dots$ is Jordan measurable, their union $\bigcup E_i$ and their intersection $\bigcap E_i$ need not be measurable, even if these sets are bounded. In terms of Riemann integrability, this causes problems with understanding the pointwise limit of functions: A sequence of uniformly bounded Riemann integrable functions $f_n: [0,1] \to \mathbf{R}$ which converges pointwise to a bounded function $f: [0,1] \to \mathbf{R}$ need not be Riemann integrable. If we replace pointwise convergence with uniform convergence, then $f$ will be Riemann integrable, but this relates to the fact that uniform convergence allows one to conver $f$ with finitely many rectangles (ELABORATE HERE).
+
+To obtain a family of sets with a well defined measure theory which satisfies countable additivity, we must tinker with how we defined Jordan measure. Recall that to obtain Jordan measure, we took outer and inner estimates of arbitrary sets by covers of {\it finitely many} rectangles. We obtain Lebesgue integrability if we replace the finiteness with infinitely many rectangles. We consider the values
+%
+\[ \mu^*(E) = \inf \{ \sumcd \} \]
+
 %
 \begin{definition}
     If $A$ is a set of real numbers, then it's Lebesgue measure is

@@ -365,15 +365,15 @@ Consider a $1 + \alpha$ approximation algorithm for $K$-MST. For instance, Arora
 
 %\begin{multicols}{2}
 
-One obtains the most basic vehicle routing approximation by augmenting near optimal TSP tours with a {\it refill strategy}, which adds to the length of the tour but ensures the capacity constraint of the TSP problem is satisfied so we can obtain a feasible solution to the vehicle routing problem. A reliable strategy is to follow the path taken by a given tour, satisfying each node sequentially with it's full demand, but periodically returning to the root node to refuel when the capacity is drained. We call this the {\it random refill} strategy if one begins the tour with a uniformly random starting capacity between $0$ and $C$. The expected total distance travelled during refueling is given by
+One obtains the most basic vehicle routing approximation by augmenting near-optimal TSP tours with a {\it refill strategy}, which adds to the length of the tour but ensures the capacity constraint introduced in the VRP problem is satisfied so the solution is feasible. An obvious refill strategy is to follow the path taken by a given tour, satisfying each node sequentially with it's full demand, but periodically returning to the root node to refuel when the capacity is drained. We call this the {\it random refill} strategy if, less obviously, one begins the tour with a uniformly random starting capacity between $0$ and $C$. The expected total distance travelled during refueling using the random refill strategy is given by
 %
 \[ \text{LB} := \frac{2}{C} \sum_{v \in V} D_v r_v \]
 %
 where $D_v$ is the demand of the vertex $v$, and $r_v = c(r,v)$ the radius from the root node. It is well established in the literature that $\text{LB}$ lower bounds the optimal cost of the vehicle routing tour on the vertices $V$ \cite{RandomRefillPaper}. Because of this, if we have a $1 + \alpha$ approximation to TSP, we immediately obtain a $2 + \alpha$ approximation to vehicle routing. A slight modification to the random refueling policy in unsplit vehicle routing leads to a refueling strategy with expected cost $2 \text{LB}$, hence the technique yields $3 + \alpha$ approximations to unsplit vehicle routing as well.
 
-One problem with existing refuelling strategy techniques is that they separate the {\it refill cost} of a solution from the {\it routing cost} of the tour. Standard approximation algorithms for TSP do not take the refill cost into account (Optimal TSP tours need not consider the demand of the vertices they travel on), so it is difficult to obtain efficient bounds on the refilling cost when using a near optimal TSP tour. We can see this in the $\text{LB}$ bound we introduced above, which provides a tour independent bound on the cost of refueling, but also adds $+1$ to the approximation ratio of the algorithm, which isn't ideal. One feature of our approach to vehicle routing is that we attempt to take the refill cost into account when constructing our TSP tour. Though we do not find a new way to bound the refuelling cost, we use the $\text{LB}$ bound on variants of the vehicle routing problem to obtain novel approximation algorithms which do form TSP tours taking the refill bound into account. With further work, we believe more sophisticated refueling bounds can be applied to the main vehicle routing problem, in which case our ideas may yield stronger approximations to vehicle routing.
+A problem with existing refuelling strategy techniques is that they separate the {\it refill cost} of a solution from the {\it routing cost} of the tour. Standard approximation algorithms for the travelling salesman problem do not take the refill cost of the graph into account, since they just need to optimize total length of the tour. This makes it difficult to obtain efficient bounds on the refilling cost when using a near optimal TSP tour. We can see this in the $\text{LB}$ bound we introduced above, which provides a tour independent bound on the cost of refueling, but also adds $+1$ to the approximation ratio of the algorithm. One feature of our approach to vehicle routing is that we attempt to take the refill cost into account when constructing our TSP tour. Though we do not find a new way to bound the refuelling cost, we use the $\text{LB}$ bound on variants of the vehicle routing problem to obtain novel approximation algorithms which do form TSP tours taking the refill bound into account. With further work, we believe more sophisticated refueling bounds can be applied to the main vehicle routing problem, in which case our ideas may yield stronger approximations to vehicle routing.
 
-One disadvantage of the $\text{LB}$ bound is that it doesn't depend on the travelling salesman tour chosen, so it cannot be used to choose a particular travelling salesman tour over the set of vertices. However, if we consider the lower bound as a function of the vertex set $V$ chosen, then the function is linear, which implies that the lower bound may be a useful feature in a linear program used to find approximations to variants of the vehicle routing problem which only find tours over subsets of vertices. In this case, the tours we find will not only take the routing cost of the subset into consideration, but also the refill cost.
+One disadvantage of the $\text{LB}$ bound is that it doesn't depend on the travelling salesman tour chosen, so it cannot be used to choose a particular travelling salesman tour over the set of vertices. However, if we consider the lower bound as a function of the vertex set $V$ chosen to perform a VRP tour over, then the function is linear, which implies that the lower bound may be a useful feature in a linear program used to find approximations to variants of the vehicle routing problem which only find tours over subsets of vertices. In this case, the tours we find will not only take the routing cost of the subset into consideration, but also the refill cost. We apply this idea first to the prize collecting vehicle routing problem, and then to other variants.
 
 Currently, our knowledge of approximations for variants of the minimum spanning tree problem is much better than our knowledge for approximations for variants of the travelling salesman problem. For this reason, to construct our travelling salesman tours for use with a random refill strategy, we construct a tree, using the double and shortcutting edges technique to construct a Hamiltonian tour of the vertices using each edge on the tree at most twice. What's more, we will rely on a result of Bang-Jensen, Frank, and Jackson which reduces the construction of a tree to the construction of an appropriate preflow on the routing graph.
 
@@ -385,7 +385,7 @@ What remains is to construct a linear program which can find the appropriate pre
 
 \section{A Prize-Collecting Vehicle Routing LP}
 
-We begin with an analysis of the most basic `subset' variant of vehicle routing, the prize collecting vehicle routing problem. In this problem, we only need to find an optimum vehicle routing tour over a subset of vertices in the graph. However, for each vertex $v$ our optimum vehicle routing tour does not cover, we are given a penalty $\pi_v \geq 0$, which encourages us to consider whether it is worth pursuing this vertex. Thus, if a given vehicle routing tour $T$ satisfies the vertices $W \subset V$, we assign it a value $c(T) + \pi(V - W)$, and we attempt to find a vehicle routing tour minimizing this value. Since we intend to augment a travelling salesman tour with the random refill strategy, we design an LP which discourages choosing vertices with a high refill cost.
+We begin with an analysis of the most basic `subset' variant of vehicle routing, the prize collecting vehicle routing problem. In this problem, we only need to find an optimum vehicle routing tour over a subset of vertices in the graph. However, for each vertex $v$ our optimum vehicle routing tour does not cover, we are given a penalty $\pi_v \geq 0$, which encourages us to at least cover efficiently covered vertices. If a given vehicle routing tour $T$ satisfies the vertices $W \subset V$, we assign it a value $c(T) + \pi(V - W)$, and we attempt to find a vehicle routing tour minimizing this value. Since we intend to augment a travelling salesman tour with the random refill strategy, we design an LP which discourages choosing vertex subsets to cover with a high refill cost.
 
 Standard LP prize collection variants of graph problems introduce an extra set of variables $z \in [0,1]^V$ to designate whether a given vertex is included in a solution of not, which can then be used directly as input into the linear penalty function \cite{MSTLPApprox}. We also use this technique to construct LP using this technique for constructing a `prize collecting preflow' $x \in [0,1]^E$ for obtaining a prize collecting VRP solution. To ensure the vertex subset considered in the prefill takes the refill cost into account, we explicitly include it as a factor in the LP objective function. More specifically, we consider an LP over the variables $(x,z)$ given below:
 %
@@ -406,18 +406,22 @@ We let $(x^*,z^*)$ denote the optimal solution to the given LP.
 \begin{lemma}\label{thm:VRPTourBound}
     For any subset of vertices $W \subset V$, let $T^*(W)$ denote the optimal VRP tour covering the nodes in $W$. Then
     %
-    \[ c(x^*) + (1/2)\text{LB}(z^*) + 3\pi(z^*) \leq (3/2)[c(T^*(W)) + \pi(V-W)] \]
+    \[ c(x^*) + (1/2)\text{LB}(z^*) + (3/2) \pi(z^*) \leq (3/2)[c(T^*(W)) + \pi(V-W)] \]
 \end{lemma}
 \begin{proof}
-    Because $T^*(W)$ can be considered a feasible solution to the LP above, we obtain that
+    Assume first that $T^*(W)$ does not visit a node more than twice. Let $T^*(W)$ consist of the tour of vertices $v_1, \dots, v_m$. Consider the solution $(x,z)$ to the LP above with $x_{v_i v_{i+1}} = 1$, and $z_v = 1$ if $v \not \in W$, with all other values zero. Since the solution is a cycle, the $x$ values certainly give a preflow, and we may assume without loss of generality that $T^*(W)$ only passes through the vertices in $W$, which gives the bounds $x(\delta^{\text{in}}(v)) \leq 1 - z_v$ for each vertex $v$ (this is where we use the fact that $T^*(W)$ only visits a node once). Since the solution is feasible, we conclude that
     %
-    \[ c(x^*) + (1/2) \text{LB}(z^*) + 3 \pi(z^*) \leq c(T^*(W)) + (1/2) \text{LB}(W) + (3/2) \pi(V - W) \]
+    \begin{align*}
+        c(T^*(W)) &+ (1/2) \text{LB}(W) + (3/2) \pi(V-W)\\
+        &= c(x) + (1/2) \text{LB}(z) + (3/2) \pi(z)\\
+        &\geq c(x^*) + (1/2) \text{LB}(z^*) + (3/2) \pi(z^*)
+    \end{align*}
     %
-    where $\text{LB}(W) = (2/C) \sum_{w \in W} D_wr_w$ is the standard refill cost lower bound for the algorithm. Since $T^*(W)$ is the optimal VRP solution over the vertices $W$, we conclude from the standard refill cost lower bound that $\text{LB}(W) \leq c(T^*(W))$.
+    The only problem if $T^*(W)$ visits a node more tha once is that the constraint $x(\delta^{\text{in}}(v)) \leq 1 - z_v$ need not hold in the construction above. However, we can still obtain the inequality if we {\it shortcut} the tour $T^*(W)$ so each vertex is visited a single time. This only decreases the length of the tour, so the lower bound property still holds. Since $T^*(W)$ is the optimal VRP solution over the vertices $W$, we conclude from the standard refill cost lower bound that $\text{LB}(W) \leq c(T^*(W))$.
 \end{proof}
 
 \begin{corollary}
-    If $W$ is the set of vertices covered by an optimum solution to the prize collecting VRP problem, we conclude that
+    In the last lemma, if we take $W$ to be the set of vertices covered by an optimum solution to the prize collecting VRP problem, we conclude that
     %
     \[ c(x^*) + (1/2) \text{LB}(z^*) + (3/2) \pi(z^*) \leq (3/2) \text{OPT}_{\text{PCVRP}} \]
     %
@@ -470,7 +474,7 @@ Before we finish our discussion of prize collection, we note that the unsplit de
 
 \section{A $K$-VRP Approximation}
 
-To summarize, in terms of uniform Lagrangian penalties $\lambda$ in place of the variable $\pi$, we can find a VRP solution $T$ covering the vertices $W$ such that $c(T) + 3 \pi(W^c) \lambda \leq 3 \text{OPT}_{\text{VRP}}(\lambda)$, where $\text{OPT}_{\text{VRP}}(\lambda)$ denotes the value of the optimal prize collecting steiner tree with uniform penalties $\lambda$. Here we employ the `standard' technique of Lagrangifying a `$K$-subset problem' which asks to find the cheapest VRP solution satisfying exactly $K$ nodes. This has been employed most notably in the $K$-MST problem, where it yields a $5$ approximation \cite{MSTLPApprox}. Our ideas are essentially the same, but included in full for completeness. The only new idea is the way we graft two VRP solutions together to obtain an exact $K$ VRP solution.
+To summarize, in terms of uniform Lagrangian penalties $\lambda$ in place of the variable $\pi$, we can find a VRP solution $T$ covering the vertices $W$ such that $c(T) + 3 \pi(W^c) \lambda \leq 3 \text{OPT}_{\text{VRP}}(\lambda)$, where $\text{OPT}_{\text{VRP}}(\lambda)$ denotes the value of the optimal prize collecting steiner tree with uniform penalties $\lambda$. Here we employ the `standard' technique of Lagrangifying a `$K$-subset problem' which asks to find the cheapest VRP solution satisfying exactly $K$ nodes. This has been employed most notably in the $K$-MST problem, where it yields a $5$ approximation \cite{MSTLPApprox}. Our ideas are essentially the same, but included in full for completeness. The only new idea is the way we graft two VRP solutions together to obtain an exact $K$ VRP solution, which we can do more efficiently than in the $K$ MST problem, leading to a slightly improving approximation factor increase.
 
 The main idea is to try and solve prize collecting vehicle routing problems with a uniform penalty $\pi_v = \lambda$ for a fixed $\lambda > 0$, while varying the $\lambda$ penalty so we obtain a solution with exactly $K$ nodes. If $\lambda$ is small, then the penalty for ignoring nodes is negligible, and we will obtain solutions with fewer than $K$ nodes. If $\lambda$ is large, then the penalty for ignoring vertices will be too strong, and we will obtain solutions with more than $K$ nodes. If we find $\lambda$ with exactly $K$ vertices, then we obtain a $K$ VRP solution. This will not always be possible, in which case we find ways of modifying solutions with `essentially' $K$ vertices to obtain better approximations. Define $\text{OPT}_K(\lambda) = \text{OPT}_{\text{VRP}}(\lambda) - \lambda (n - K)$, and $\text{OPT}_K$ to be the optimal cost of a $K$ VRP instance.
 
@@ -526,7 +530,7 @@ Now since $|W_2| \geq K$, we could simply return $T_2$ as our solution to the $K
     $c(T_2) \leq \alpha_2^{-1}[\alpha_1 c(T_1) + \alpha_2 c(T_2)] \leq \alpha_2^{-1} (3 + \varepsilon) \text{OPT}_K$.
 \end{proof}
 
-This implies that if $\alpha_2$ is large, we obtain a good approximation to $K$ MST, since $T_2$ is an actual approximation. If $\alpha_2$ is small, then $T_1$ is very close to a $K$ MST tour, and we will use a grafting strategy to place part of the $T_2$ tour onto $T_1$. We consider the shortest subpath $C$ of the TSP component of $T_2$ containing $K - |T_1|$ vertices that are not on $T_1$ (counting the refill parts included on the TSP component as part of the cost of the subpath tour), and then adding two paths onto the endpoints of the subpath to connect them to $r$.
+If $\alpha_2$ is close to one, we obtain a good approximation to $K$ MST, since $T_2$ is an actual approximation. On the other hand, if $\alpha_2$ is small, then $T_1$ is very close to a $K$ MST tour, and we will use a grafting strategy to place part of the $T_2$ tour onto $T_1$. We consider the shortest subpath $C$ of the TSP component of $T_2$ containing $K - |T_1|$ vertices that are not on $T_1$ (counting the refill parts included on the TSP component as part of the cost of the subpath tour), and then adding two paths onto the endpoints of the subpath to connect them to $r$.
 
 \begin{lemma}
     If we assume that the further vertex from $r$ in the graph is included in the $K$ VRP tour (which can be obtained by minimizing the algorithm over the furthest vertex), then
@@ -542,7 +546,7 @@ This implies that if $\alpha_2$ is large, we obtain a good approximation to $K$ 
     %
     \begin{align*}
         d(T_1) + d(C) &\leq d(T_1) + \alpha_2 d(T_2) + \text{OPT}_K\\
-        &\leq \alpha_1^{-1}[\alpha_1 d(T_2) + \alpha_2 d(T_2)] + \text{OPT}_K\\
+        &\leq \alpha_1^{-1}[\alpha_1 d(T_1) + \alpha_2 d(T_2)] + \text{OPT}_K\\
         &\leq [\alpha_1^{-1} (3 + \varepsilon) + 1] \text{OPT}_K
     \end{align*}
     %
@@ -558,6 +562,10 @@ approximation to $K$ VRP. Proceeding along the same as with the split case, we c
 \[ \max_{0 \leq x \leq 1} \min \left( \frac{4 + \varepsilon}{x} + 1, \frac{4 + \varepsilon}{1 - x} \right) = \frac{9 + \sqrt{65}}{2} + O(\varepsilon) \approx 8.531 + O(\varepsilon) \]
 %
 approximation to unsplit $K$ VRP.
+
+\section{Orienteering}
+
+s
 
 \begin{thebibliography}{9}
 
@@ -575,7 +583,7 @@ Ian Post, Chaitanya Swamy
 
 \bibitem{MSTLPApprox}
 Avrim Blum, R. Ravi, Santosh Vempala
-\textit{A Constant-Factor Approximation Algorithm for the k-MST Problem}
+\textit{A Constant-Factor Approximation Algorithm for the k-MST Problem.}
 
 \end{thebibliography}
 

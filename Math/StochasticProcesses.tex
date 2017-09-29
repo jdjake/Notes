@@ -12,49 +12,36 @@
 
 \chapter{Stochastic Processes}
 
-The theory of dynamic systems allows us to determine the motions of objects under deterministic actions. Newton's theory of analytical mechanics shows that past and future can be predicted exactly from the infinitisimal information of a system at any specific time. It is here that the theory of Differential equations takes over, enabling one to describe these motions via the infinitisimal changes.
-
-In reality, one can never measure the data required to determine the state of a system in precision. Inexactnessshrouds the determinism of a system, which invalidates the application of Newton's model. Stochastic processes adds uncertainty to the mix. At each time epoch, we have a distribution over possible states rather than an evolutionary process, which we model as a random variable.
-
-\begin{definition}
-    A {\bf stochastic process} is a collection $\{ X_t \}_{t \in T}$ of random variables defined over the same probability space $\Omega$, with range in the same {\bf state space $S$}, indexed over a linearly ordered set $T$.
-\end{definition}
+The theory of dynamical systems allows us to determine the motions of objects under deterministic actions. In Newton's mechanics, past and future events can be predicted exactly from the position and velocity of all objects at a particular point in time. In reality, one can never measure the data required to determine the state of a system in precision. Inexactness shrouds the determinism of a system, which invalidates the application of Newton's model. Stochastic processes are the probabilistic variant of dynamical systems. Rather than a deterministic rule determining the evolution of a state over time, a stochastic rule is employed leading to a randomized state over time. Formally, a {\bf stochastic process} is a collection $\{ X_t \}$ of random variables defined over the same probability space $\Omega$, with range in the same {\bf state space $S$}, indexed over some linearly ordered set $T$.
 
 \begin{example}
-    To model the uncertainty of weather, we may take a stochastic process with state space $\mathcal{S} = \{ \textbf{sunny}, \textbf{rainy} \}$. For $i \in \mathbf{Z}$, we may model the weather by a random variable $X_i : \Omega \to \mathcal{S}$, modelling the weather of a certain day $i$. Then $\{ X_i : i \in \mathbf{Z} \}$ is a stochastic process.
+    To model the uncertainty of weather, we may take a stochastic process with state space $S = \{ \textbf{sunny}, \textbf{rainy} \}$. For $i \in \mathbf{Z}$, we may model the weather by a random variable $X_i : \Omega \to \mathcal{S}$, modelling the weather on a certain day $i$. Then $\{ X_i : i \in \mathbf{Z} \}$ is a stochastic process.
 \end{example}
 
 \begin{example}
-    To model stocks, we take $\mathcal{S} = \mathbf{R}$, and let $X_i$ be the value of a certain stock at time $i$, for $i \in \mathbf{R}$. This is a continuous time random process, into a continuous state space. We will study a generalization of this process, Brownian motion, in the sequel.
+    To model how the value of stocks change over time, we take $S$ to be the real numbers, and let $X_i$ be the value of a certain stock at time $i$, for $i \in \mathbf{R}$. This is a continuous time random process, because the values are indexed over time, and the states are also continuous. We will study a generalization of this process, Brownian motion, in the sequel.
 \end{example}
 
 \begin{example}
-    To estimate the CDF of an independant and identically distributed sample $X_1, \dots, X_n \sim F$. we take the estimate
+    To estimate the cumulative density function of an independant and identically distributed sample $X_1, \dots, X_n \sim F$. we can take the estimate
     %
     \[ \hat{F}(t) = \frac{\sum \mathbf{I}[X_i \leq t]}{n} \]
     %
-    Then, for a fixed $t$, $\hat{F}(t)$ is a random variable, determining a stochastic process. ordered over $t$ as $t$ ranges in $\mathbf{R}$.
+    For a fixed $t \in \mathbf{R}$, $\hat{F}(t)$ is a random variable, and considering $t$ as the time variable lets us view $\hat{F}$ as a stochastic process.
 \end{example}
 
 Every problem in probability theory involving collections of random variables can be formulated as a statement about stochastic processes. The right application of the theory of stochastic processes may shed a different light to a problem, giving an intuitive perspective to the problem. On the other hand, we can't say much about stochastic processses in general, because of how widely they can be applied. The fun of stochastic processes results when we add additional relationships between the random variables, and study the resultant properties.
 
-\begin{example}
-    The simplest example of a stochastic process is a random vector $(X_1, \dots, X_n)$. Any stochastic process over a finite index set can be considered a random vector.
-\end{example}
+In order to study the relations between a stochastic process $\{ X_t \}$ at different time points, it makes sense to consider the {\bf marginal distributions} of the random variables. For infinitely many random variables, the corresponding marginal distribution is very difficult to study, so we often focus on the marginal distribution given by a finite subset of time points $t_1 \dots, t_n$ of the process. On the other hand, we often want to generate a stochastic process from the finite dimensional marginal distributions. In the discrete setting, this is often easy to explicitly construct, but in the continuous setting the construction does not seem so easy. The Kolmogorov theorem tells us that this is a valid method of constructing a process.
 
-Any stochastic process can be visualized by its finite dimensional marginal distribution. Stochastic processes will often be specified by these finite dimensional marginal distributions, which will then be built up to the full process. The Kolmogorov theorem tells us that this a valid method of constructing a process.
-
-To introduce this theorem, we require some temporary notation. Fix some state space $\mathcal{X} \subset \mathbf{R}$, and index set $T$. Suppose that each finite subset $S \subset T$ determines a probability distribution $\mathbf{P}_S$ on the borel $\sigma$-algebra of $\mathcal{X}^S$. If $R \subset S \subset T$, then we have an embedding $\pi_{R \to S} : \mathcal{B}(\mathcal{X}^R) \to \mathcal{B}(\mathcal{X}^S)$, defined by
-%
-\[ \pi_{R \to S}(A) = \{ x \in \mathcal{X}^S : \{ x_i : i \in R \} \in A\ \text{and}\ x_j = \mathcal{X}\ \text{for}\ j \not \in R \} \]
-%
-A family of finite dimensional distributions $\{ \mathbf{P}_S : S \subset T, S\ \text{finite} \}$ is {\bf consistant} if $\mathbf{P}_S \circ \pi_{R \to S} = \mathbf{P}_R$ for any $R \subset S \subset T$.
+To introduce this theorem, we introduce some temporary notation. Consider a state space $S$, which forms a subset of the real numbers, and some index set $T$. Suppose that for each finite subset $R \subset T$ we have determined a probability distribution $\mathbf{P}_R$ over the borel $\sigma$-algebra of $S^R$. If $K \subset R \subset T$, then we have a projection map $\pi_{R \to K}: S^R \to S^K$, and we say that the family of probability distributions chosen over the index sets are {\bf consistant} if the projection maps are all measure preserving, in the sense that $\mathbf{P}_K(A) = \mathbf{P}_R(\pi^{-1}(A))$ for all Borel measurable $A$. If we want to construct a stochastic process whose finite dimensional marginal distributions are given by the $\mathbf{P}_K$, consistancy is a necessary requirement, but Kolmogorov's theorem shows that this condition is also sufficient.
 
 \begin{theorem}[Kolmogorov's extension theorem]
-    A consistant family of distributions on an index set $T$ determines a stochastic process $\{ X_i : i \in T \}$ for which $\{X_i : i \in S \} \sim \mathbf{P}_{S}$ for any finite $S \subset T$.
+    For any consistant family of distributions, there exists a stochastic process whose finite dimensional marginal distributions agree with the distribution family.
 \end{theorem}
-
-The proof uses the Hahn-Kolmogorov / Carath\"{e}odory extension theorem to construct a probability measure on $\mathcal{S}^T$, which can then be taken as the sample space of our random variables $X_i = \pi_i$. We leave the technical details to the reader. The proof should extend to any Polish (separable and completely metrizable) space, but this is not needed here. The random variables specified are not unique. We call any other solution a {\bf version} of the same stochastic process.
+\begin{proof}
+    The proof uses the Hahn-Kolmogorov / Carath\"{e}odory extension theorem to construct a probability measure on $\mathcal{S}^T$, which can then be taken as the sample space of our random variables $X_i = \pi_i$. We leave the technical details to the reader. The proof should extend to any Polish (separable and completely metrizable) space, but this is not needed here. The random variables specified are not unique. We call any other solution a {\bf version} of the same stochastic process.
+\end{proof}
 
 The Kolmogorov theorem is used to construct measures, most importantly when $T$ is uncountable. To gain intition, we will begin studying discrete time processes, for which most paradoxes is unavoidable. When $T = \mathbf{N}$, we need only specify consistant distributions on initial segments $\{ 0, 1, \dots, K \}$.
 
@@ -129,10 +116,10 @@ We can take $f$ to be any real-valued function on the state space of the process
 \begin{example}
     It is a useful simplification to assume that the probability of weather is time-homogenous. We might choose a transition matrix like the one below
     %
-    \[ \kbordermatrix{
+    \[ \begin{pmatrix}
     & {\bf sunny} & {\bf rainy} \\
     {\bf sunny} & 0.6 & 0.4 \\
-    {\bf rainy} & 0.8 & 0.2 }
+    {\bf rainy} & 0.8 & 0.2 \end{pmatrix}
     \]
     %
     One may also specify this process with a transition matrix
@@ -145,11 +132,11 @@ We can take $f$ to be any real-valued function on the state space of the process
 \begin{example}
     Consider a queueing system (for a phone-hold system, etc.) which can only hold 2 people at once. Every time epoch, there is a chance $p$ that a new caller will attempt to access the system, and a chance $q$ that we will finish with a person in the queue. Assuming these events are independent, we can model this as a time homogenous markov process with transition matrix
     %
-    \[ \kbordermatrix{
+    \[ \begin{pmatrix}
     & 0 & 1 & 2 \\
     0 & 1-p & p & 0\\
     1 & (1-p)q & (1 - q)(1 - p) + pq & p(1-q)\\
-    2 & 0 & q(1 - p) & (1 - q) + pq}
+    2 & 0 & q(1 - p) & (1 - q) + pq \end{pmatrix}
     \]
     %
     Given a large amount of time, it is of interest to the maker of the queing system to know the average number of people in the queue at a certain time.
@@ -728,66 +715,121 @@ We `slow' down the chain at certain points to make it reversible with respect to
 
 \section{Modern Conditional Expectation}
 
-Most properties of random processes are understand by the relationship of the process at different times. Once information is known, some component of the `randomness' of the process is reduced. For instance, if we know the current state of the markov chain, we can use the transition coefficients to look into the future. To fully describe processes on a larger variety of state spaces, we need a better definition of conditional expectation.
+Most of the theory of random processes is connected with understanding the relationship of the values of the process at different times in the theory. When studying Markov chains, we tried to understand the relationship between random variables by considering directly the processes' transition coefficients. We now understand random processes by looking at how the evolution of a stochastic process changes as we fix the state at certain time periods. The primary tools in our analysis will be {\bf conditional probabilities} and {\bf conditional expectations}, which allow us to quantify how the distribution of a random variable changes when we fix the value of another random variable.
 
-Normally, the conditional probability of an event $A$ given an event $B$ is defined by
-%
-\[ \mathbf{P}(A | B) = \frac{\mathbf{P}(A \cap B)}{\mathbf{P}(B)} \]
-%
-If $B$ is an event that will never happen, then the conditional probability is not well defined. However, we would like to define conditional expectations over random variables
-%
-\[ \mathbf{P}(X \in A | Y = y) \]
-%
-It is now no longer clear how to define conditional expectation, since, except in the case of discrete random variables, $\mathbf{P}(Y = y)$ almost always equals zero. In real life, we do see events of probability zero, and use the information to predict future events, so a model of this phenomenon is very useful.
+%\begin{example}
+%    Consider the stochastic process $X, Y_0, Y_1, \dots$, where $X$ takes the values $\{ 1/4, 3/4 \}$, and where $Y_1, Y_2, \dots$ is a $\mathbf{Z}$-valued random walk such that
+%    %
+%    \[ \mathbf{P}(Y_{i+1} - Y_i = 1 | X) = X\ \ \ \ \ \mathbf{P}(Y_{i+1} - Y_i = -1 | X) = 1 - X \]
+%    %
+%    An elementary calculation shows that $\mathbf{E}(Y_i) = 0$ for all $i$. However, if we instead fix the value of $X$, then we known $\mathbf{E}(Y_i|X = 3/4) \to \infty$ as $i \to \infty$, and $\mathbf{E}(Y_i|X=1/4) \to -\infty$. Thus, in this case, knowing the value of $X$ ahead of time is very useful to learning about the asymptotics of the Markov chain. This tells us that $X$ relates in a strong way to the overall dynamics of the stochastic process.
+%\end{example}
 
-It shall turn out that it is easier to define the conditional expectations $\mathbf{E}(Y | X = x)$, which can be interpreted as the average value of $Y$ given that we observe $X = x$. We can then define
-%
-\[ \mathbf{P}(X \in A | Y = y) = \mathbf{E}(\mathbf{I}(X \in A) | Y = y) \]
-%
-The key to defining conditional expectation is by noticing the map $x \mapsto \mathbf{E}(Y | X = x)$ can be viewed as a random variable, which we denote $\mathbf{E}(Y|X)$. Since we should interpret the expectation as being defined as soon as we know $X$ (it only uses the information contained in the value of $X$), we should be able to write $\mathbf{E}(Y|X) = f(X)$, for some Borel measurable function $f: \mathbf{R} \to \mathbf{R}$. Finally, the definition of conditional probabilities should hold over sets which do not have probability zero. That is, we can always define
-%
-\[ \mathbf{E}(Y | X \in A) = \int_A \mathbf{E}(Y | X = x) d \mathbf{P}(x) \]
-%
-and then enforce that if $\mathbf{P}(X \in A) > 0$,
-%
-\[ \mathbf{E}(Y | X \in A) = \int_{X \in A} Y = \mathbf{E}(\mathbf{I}(X \in A)\ Y) \]
-%
-Essentially, $\mathbf{E}(Y|X)$ is the random variable is the best function of $X$, which approximates $Y$ essentially wherever we define $X$.
+%In this example
 
-It is easier to discuss expectations more general than `functions of $X$'. This makes it easier to prove the existence of conditional expectation. The trick is noticing that the information contained in $X$ with respect to the information about $Y$ is really just the information contained by restricting the domain of the random variables which give the correct values of $X$. That is, the information gained from $X$ is really just information about the sigma algebra $\sigma(X)$ generated by sets of the form $X^{-1}(U)$, where $U$ is Borel measurable. An arbitrary `set of information' about a probability space is really a subalgebra of the $\sigma$ algebra defining the sample space. We say a random variable $X$ is {\bf adapted} to a $\sigma$-algebra $\Sigma$ if $X$ is measurable with respect to $\Sigma$. A random variable $Y$ is adapted with respect to $X$ if $Y$ is adapted to $\sigma(X)$. It is a theorem of Doob that if these random variables are real valued, this is equivalent to being able to write $Y = f(X)$, for some function $f$, though for a general range this need not be true.
+For discrete random variables $X$ and $Y$, we can calculate the conditional probabilities and expectations by
+%
+\[ \mathbf{P}(Y = y | X = x) = \frac{\mathbf{P}(Y = y, X = x)}{\mathbf{P}(X = x)}\ \ \ \ \ \mathbf{E}(Y|X = x) = \sum_y y \mathbf{P}(Y = y|X=x) \]
+%
+whenever $\mathbf{P}(X = x) \neq 0$, and for continuous random variables,
+%
+\[ \mathbf{P}(Y \in A | X = x) = \int_A \frac{f_{Y,X}(y,x)}{f_X(x)} dy\ \ \ \ \ \mathbf{E}(Y|X = x) = \int y \frac{f_{Y,X}(y,x)}{f_X(x)} dy \]
+%
+where $f_X(x) \neq 0$ is assumed. However, these two classical formulations are insufficient to cover condition expectations for the general random variables we will investigate in the study of stochastic processes. Kolmogorov, one of the founders of measure theoretic probability theory, found the most elegant way to define $\mathbf{P}(Y \in A | X = x)$ and $\mathbf{E}(Y|X=x)$ for the random variables we're interested in. We note that we will focus only on defining the conditional {\it expectations} $\mathbf{E}(Y|X=x)$, because we can then define $\mathbf{P}(Y \in A | X = x) = \mathbf{E}(\mathbf{I}(Y \in A)|X = x)$.
 
-Now we see what we need to do. Let $X$ be a random variable, and $\Sigma$ a $\sigma$-algebra. The expectation of $X$ with respect to $\Sigma$ is another random variable $\mathbf{E}(X|\Sigma)$, adapted to $\Sigma$, such that for any $A \in \Sigma$,
+The trick to Kolmogorov's method is to think of conditional values as `best guesses' of the values given some information about the system is known. Our first revelation is to think of $\mathbf{E}(Y|X)$ as a random variable on the same sample space as $X$ and $Y$, taking value $\mathbf{E}(Y|X=X(\omega))$ on input $\omega \in \Omega$. In both classical definitions, the conditional expectation possesses two important properties:
 %
-\[ \int_A \mathbf{E}(Y|\Sigma) = \int_A Y \]
-%
-It is the best approximation of $X$ we can do, given the information in $\Sigma$. The expectation of $Y$ with respect to $X$, denoted $\mathbf{E}(Y|X)$, is just $\mathbf{E}(Y|\sigma(X))$.
+\begin{itemize}
+    \item $\mathbf{E}(Y|X)$ is a function of the random variable $X$. That is, we only need to know $X(\omega)$ to predict the value $\mathbf{E}(Y|X)(\omega)$.
 
-It is not exactly clear that $\mathbf{E}(Y|\Sigma)$ is well defined. However, it's integrals are specified over every element of $\Sigma$ by the integrals of $Y$, so that the random variable is uniquely defined almost everywhere. It's existence is obtained by the Radon-Nikodym theorem. The measure
-%
-\[ E \mapsto \int_E Y d\mathbf{P} \]
-%
-on $\Sigma$ is absolutely continuous with respect to $\mathbf{P}$, so there is a $\Sigma$ adapted variable $Z$ such that
-%
-\[ \int_E Y d\mathbf{P} = \int_E Z \]
-%
-So conditional expectations always exist.
-
-\begin{example}
-    The basic definitions of conditional probabilities emerge from basic conditional expectation. Given a measurable set $A$, consider the $\sigma$-algebra $\Sigma = \{ \emptyset, A, A^c, X \}$. Every function measurable with respect to this $\sigma$ algebra can be written $a \mathbf{I}(A) + b \mathbf{I}(b)$, and so
+    \item For any subset of the sample space of the form $B = X^{-1}(A)$, where $A \subset \mathbf{R}$ is a set of real values, we have a measure theoretic integral
     %
-    \[ \mathbf{E}(X | \Sigma) = \frac{\left( \int_A X \right)}{\mathbf{P}(A)} \mathbf{I}(A) + \frac{\left( \int_{A^c} X \right)}{\mathbf{P}(A^c)} \mathbf{I}(A^c) \]
+    \[ \int_B \mathbf{E}(Y|X) d\mathbf{P} = \int_B Y d\mathbf{P} \]
     %
-    where we let $0/0 = 0$ (since indicators over sets of measure zero do not matter). Then we have $\mathbf{P}(B|A) = \mathbf{E}(\mathbf{I}(B)|\Sigma)$.
-\end{example}
+    For discrete random variables, this equation takes the form
+    %
+    \[ \sum_{a \in A} \mathbf{P}(X = a) \mathbf{E}(Y|X = a) = \sum_{a \in A} \sum y \mathbf{P}(X = a, Y = y) \]
+    %
+    and for continuous random variables,
+    %
+    \[ \int_A f_X(x) \mathbf{E}(Y|X=x)\ dx = \int_A \int y f_{X,Y}(x,y)\ dx dy \]
+    %
+    Note, in particular, that the equation for discrete random variables uniquely defines the conditional expectation whenever $\mathbf{P}(X = a) \neq 0$ by taking $A = \{ a \}$. In the case of continuous random variables, we can only conclude that $f_Y(y) \mathbf{E}(X|Y=y) = \int x f_{X,Y}(x,y)\ dx$ holds almost everywhere, and this defines $\mathbf{E}(X|Y=y)$ up to a set of measure zero if we ignore the values $y'$ where $f_Y(y') = 0$. If we are able to choose $\mathbf{E}(X|Y=y)$ to be continuous as a function of $y$, then it is the unique continuous function satisfying the integral.
+\end{itemize}
 
-Easy facts fall right out of the definition. Firstly, the expectation is a linear operator on the random variables. We have
+In general, we say a general random variable $\mathbf{E}(X|Y)$ is a {\it version} (it is not unique) of a {\bf conditional expectation} of $X$ with respect to $Y$ if the two conditions above are satisfied. However, we note that the definition can certainly be simplified by noting that once we consider $\mathbf{E}(X|Y)$ as a function on the sample space rather than on values of $Y$, the actual values of $Y$ are not actually important to the definition of conditional expectation, but rather the ways the values spread out over the sample space. The integration condition only depends on the subsets of $\sigma(X)$ that we use. It is a theorem of Doob that if these random variables are real valued, this is equivalent to being able to write $Y = f(X)$, for some function $f$ (the theorem is true for more general spaces, just not for arbitrary spaces).
+
+\begin{lemma}
+    A real-valued random variable $Y$ is $\sigma(X)$ measurable if and only if $Y = f(X)$ for some Borel-measurable $f: \mathbf{R} \to \mathbf{R}$.
+\end{lemma}
+\begin{proof}
+    Suppose that $Y$ is simple, with $Y(\omega) = \sum a_i \mathbf{I}(\omega \in A_i)$. Then $Y$ is $\sigma(X)$ measurable if and only if $A_i = X^{-1}(B_i)$ for some Borel measurable sets $B_i$. In this case, the $B_i$ are disjoint, and we can define a simple measurable function $f(t) = \sum a_i\mathbf{I}(t \in B_i)$ with $f(X) = Y$. Now if $Y$ is a general random variable, let $Y$ be the pointwise limit of simple $\sigma(X)$ random variables $Y_n = f_n(X)$, where the $f_n$ are Borel measurable, and can be chosen to be equal to zero outside the range of $X$. Then, the $f_n$ obviously converge pointwise outside the range of $X$, and for any sample point $\omega$,
+    %
+    \[ \lim_{n \to \infty} f_n(X(\omega)) = \lim_{n \to \infty} Y_n(\omega) = Y(\omega) \]
+    %
+    so the $f_n$ converge pointwise on the range of $X$, to some measurable function $f$ with $Y = f(X)$.
+\end{proof}
+
+The intuitive way we should think about the conditional values is as a `best guess' of the probability values given that some information is known about the system at some time. If we think of the information about the random variable $X$ being given by the $\sigma$-algebra $\sigma(X)$, then it isn't too much to consider arbitrary `sets of information' about a probability space to be a sub $\sigma$-algebra of the $\sigma$-algebra defining the space. We say a random variable $X$ is {\bf adapted} to a $\sigma$-algebra $\Sigma$ if $X$ is measurable with respect to $\Sigma$. A random variable $Y$ is adapted with respect to $X$ if $Y$ is adapted to the $\sigma$ algebra $\sigma(X)$ generated by $X$. With all this terminology, we can now make the general definition. For a given $\Sigma$ algebra and random variable $X$, a $\Sigma$ measurable random variable $\mathbf{E}(X|\Sigma)$ is a version of a conditional expectation if $\int_S \mathbf{E}(X|\Sigma) = \int_S X$ holds for any subset $S \subset \Sigma$. Despite the technical definition, the existence and uniqueness of conditional expectations is relatively easy to prove for any finitely integrable random variable.
+
+\begin{theorem}
+    If $\|X\|_1 < \infty$, then $\mathbf{E}(X|\Sigma)$ exists, $\| \mathbf{E}(X|\Sigma) \|_1 < \infty$, and is unique up to a set of measure zero.
+\end{theorem}
+\begin{proof}
+    First, assume $X \geq 0$. Then the map $S \mapsto \int_S X d \mathbf{P}$ is a {\it finite measure} over $\Sigma$ which is absolutely continuous with respect to $\mathbf{P}$, hence by the Radon-Nikodym theorem there exists a $\Sigma$ measurable function $Y$ such that for any set $S$, $\int_S Y d\mathbf{P} = \int_S X d\mathbf{P}$. Now it is easy to see that since $X \geq 0$, $Y \geq 0$ almost surely, and so
+    %
+    \[ \| Y \|_1 = \int |Y| d\mathbf{P} = \int Yd\mathbf{P} = \int Xd\mathbf{P} = \| X \|_1 < \infty \]
+    %
+    To see uniqueness, note that if $Y_0$ and $Y_1$ are both conditional expectations for $X$, then for any set $S \in \Sigma$, $\int_S (Y_0 - Y_1) = \int_S (X - X) = 0$, and this implies $Y_0 = Y_1$ almost surely.
+\end{proof}
+
+Note that since $\mathbf{E}(X|\Sigma)$ is unique up to a set of measure zero, and if $X$ and $Y$ agree almost everywhere, then $\mathbf{E}(X|\Sigma) = \mathbf{E}(Y|\Sigma)$, and so $\mathbf{E}(\cdot | \Sigma)$ can be viewed as an operator on $L^1(\Omega)$. By elementary linearity properties of the integral
 %
-\[ \mathbf{E}(aX + bY | \Sigma) = a \mathbf{E}(X | \Sigma) + b \mathbf{E}(Y | \Sigma) \]
+\begin{itemize}
+    \item $\mathbf{E}(aX + bY|\Sigma) = a \mathbf{E}(X|\Sigma) + b \mathbf{E}(Y|\Sigma)$
+    \item $\| \mathbf{E}(X|\Sigma) \|_1 = \| X \|_1$.
+    \item $\mathbf{E}(\mathbf{E}(X|\Sigma)) = \mathbf{E}(X)$, and if $\Gamma \subset \Sigma$, $\mathbf{E}(\mathbf{E}(X|\Sigma)|\Gamma) = \mathbf{E}(X|\Gamma)$.
+\end{itemize}
 %
-Finally, and most well known, is the law of iterated expectations:
+Since conditional expectations are defined with respect to the Lebesgue integral, we also get convergence results based on the main results of integration theory.
 %
-\[ \mathbf{E}(\mathbf{E}(X | \Sigma)) = \mathbf{E}(X) \]
-%
+\begin{itemize}
+    \item (Monotone Convergence) If $0 \leq X_1 \leq X_2 \dots \to X$, then $\mathbf{E}(X_i|\Sigma)$ converge pointwise monotonely almost everywhere to $\mathbf{E}(X|\Sigma)$.
+    \item (Fatou) If $X_n \geq 0$ then $\mathbf{E}((\liminf X_n)|\Sigma) \leq \liminf \mathbf{E}(X_n|\Sigma)$ a.s.
+    \item (Dominated Convergence) If $|X_n| \leq Y$, $\int Y < \infty$, and $X_n \to X$ pointwise a.s, then $\mathbf{E}(X_n|\Sigma) \to \mathbf{E}(X|\Sigma)$ pointwise almost surely.
+    \item (Jensen) If $f$ is a convex $L^1$ function then $\mathbf{E}(f(X)|\Sigma) \geq f(\mathbf{E}(X|\Sigma))$ almost surely. An important corollary of this is that $\| \mathbf{E}(X|\Sigma) \|_p \leq \| X \|_p$ for $p \geq 1$.
+\end{itemize}
+
+On another interesting thread, we can also prove the existence of conditional expectations for $L^2$ measurable functions, and we also note that $\mathbf{E}(X|\Sigma)$ is the best approximation of $X$ is the square mean, which explains why conditional expectations occur so often in applications to statistics.
+
+\begin{theorem}
+    If $\| X \|_2 < \infty$, then $\| \mathbf{E}(X|\Sigma) \|_2 < \infty$, and is the orthogonal projection of $X$ onto the subspace of $L^2$ functions which are $\Sigma$ measurable.
+\end{theorem}
+\begin{proof}
+    If we let $\mathbf{E}(X|\Sigma)$ be the orthogonal projection of $X$ onto the subspace of $L^2$ functions which are $\Sigma$ measurable, then orthogonality implies that for any $\Sigma$ measurable function $Y$,
+    %
+    \[ \int Y[\mathbf{E}(X|\Sigma) - X] = 0 \]
+    %
+    which can be rewritten as
+    %
+    \[ \int Y \mathbf{E}(X|\Sigma) = \int YX \]
+    %
+    and letting $Y$ be an indicator function over some element of $\Sigma$, we obtain easily that $\mathbf{E}(X|\Sigma)$ satisfies the properties of a conditional expectation, hence we have proven that the conditional expectation is square integrable.
+\end{proof}
+
+If $X$ is already $\Sigma$ measurable, then $\mathbf{E}(X|\Sigma) = X$. In particular, $\mathbf{E}(X|X) = X$. More generally, if $X$ is $\Sigma$ measurable, then $\mathbf{E}(XY|\Sigma) = X\mathbf{E}(Y|\Sigma)$, which follows from the next lemma.
+
+\begin{lemma}
+    For any $\Sigma$-measurable function $Y$, and $A \subset \Sigma$ for which the equation
+    %
+    \[ \int_A Y \mathbf{E}(X|\Sigma) = \int_A YX \]
+    %
+    makes sense, the equation holds.
+\end{lemma}
+\begin{proof}
+    By linearity, and splitting $X$ into its positive and negative parts, we may assume $X \geq 0$, and $\mathbf{E}(X|\Sigma) \geq 0$ a.e. The lemma is true if $Y$ is an indicator function by definition, and so by linearity, the lemma is also true if $Y$ is a simple function. Then we can prove the theorem if $Y \geq 0$ by the monotone convergence theorem, and then for all $Y$ by splitting $Y$ into its positive and negative parts.
+\end{proof}
+
 We say two sigma algebras $\Sigma$ and $\Delta$ are independent if $\mathbf{P}(A \cap B) = \mathbf{P}(A) \mathbf{P}(B)$, for any $A \in \Sigma$, $B \in \Delta$. This generalizes to an arbitrary family of $\sigma$ algebras (where we take arbitrary intersections), and a family of random variables $\{ X_\alpha \}$ are independent if and only if $\{ \sigma(X_\alpha) \}$ is independent. $X$ and $Y$ are independent with respect to $\Sigma$ if $\sigma(X) \cap \Sigma$ is independent of $\sigma(Y) \cap \Sigma$. If $X$ and $Y$ are independant with respect to $\Sigma$, then $\mathbf{E}(XY | \Sigma) = \mathbf{E}(X|\Sigma) \mathbf{E}(Y|\Sigma)$. Most importantly, if $X$ is independent with respect to $\Sigma$, then $\mathbf{E}(X|\Sigma) = \mathbf{E}(X)$.
 
 As a stochastic process evolves, we gain more and more information about the future of the process. This also needs to be modelled in a measure theoretic manner. An evolving system of information is known as a {\bf filtration}. Let $T$ be a linearly ordered set. A {\bf filtration} is an increasing family of $\sigma$ algebras. Precisely, a family $\{ \mathcal{F}_t \}$ of $\sigma$ algebras with respect to $T$ is a {\bf filtration} if $\mathcal{F}_t \subset \mathcal{F}_u$ for $t < u$. It is the measure theoretic equivalent of a topological filter.
