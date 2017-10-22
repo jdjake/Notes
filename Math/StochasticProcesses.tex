@@ -693,33 +693,60 @@ Even if a chain is recurrent, an invariant distribution may not exist, due to th
     This is infinite, so the process is null recurrent.
 \end{example}
 
-\section{Branching Processes}
+\chapter{Branching Processes}
 
-Victorian upper-class culture strongly valued history and heritage. It was therefore a concern to these people when it was noticed that venerable surnames were dying out. If a male dies without producing a male heir, then a branch disappears from the family tree. If no males produce an heir in a generation, then the name completely dies out. Some believed that the exceeding comfort of upper-class life encouraged sterility, and that soon lower-classes would dominate England. Worried about this problem, the polymath Francis Galton put up a bulletin in ``The Educational Times'', challenging mathematicians to determine the cause of the problem. The reverend Henry William Watson took him up on this offer, and together they attempted a probabilistic analysis of the problem.
+Victorian upper-class culture strongly valued history and heritage. It soon became a concern when it was noticed that venerable surnames were dying out. If a male dies without producing a male heir, then a branch disappears from a family tree. If no males produce an heir in a generation, then the name completely dies out. Some believed the exceeding comfort of upper-class life encouraged sterility, and that this would soon cause the lower-classes to dominate England. Worried about this problem, the polymath Francis Galton put up a bulletin in ``The Educational Times'', challenging mathematicians to determine the cause of the problem. The reverend Henry William Watson took him up on this offer, and together they attempted a probabilistic analysis of the problem.
 
-Galton and Watson represented the spread of families by a succeeding discrete number of generations $X_0, X_1, \dots$, where the initial generation $X_0$ produces the offspring $X_1$, which produces the offspring $X_2$, and so on, through the ages. Each time epoch will represent a generation of a species, so that at each time interval, offspring are generated, and the current population dies off. Though it may seem a simplification to assume that generations do not overlap, assuming that each offspring reproduces independently, one can just consider the process as a family tree, independent of time. $X_0$ just represents the initial roots of the tree, $X_1$ represents the offspring on the first layer of the tree, and so on and so forth, regardless of which order they came into being.
+Galton and Watson represented the spread of families by a succeeding discrete number of generations $X_0, X_1, \dots$, where the initial generation $X_0$ produces the offspring $X_1$, which produces the offspring $X_2$, and so on, through the ages. Each time epoch represents a generation of a species, so that at each time interval, offspring are generated, and the current population dies off. Though it may seem a simplification to assume that generations do not overlap, assuming that each offspring reproduces independently, one can just consider the process as a family tree, independent of time. $X_0$ just represents the initial roots of the tree, $X_1$ represents the offspring on the first layer of the tree, and so on and so forth, regardless of which order they came into being.
 
-We now make the assumption that each member of the species, regardless of which generation the species is in, has an equal chance of producing offspring, and that the population produces asexually and independantly -- considering only men as heirs to the family results in asexual reproduction. The first assumption is obviously not true over a long time period, but given that the probabilites do not seem to change too rapidly over direct successions, our results should not alter too much. These assumptions are equivalent to saying that $X_t$ is a Markov chain with a certain probability transition function, which we shall now define.
-
-\begin{definition}
-    Fix some distribution $p$ over $\mathbf{N}$, and initial population distribution $X_0$, also over $\mathbf{N}$. We define a stochastic process $\{ X_i \}$ by defining the transition probabilities
-    %
-    \begin{equation} \label{branch1} \mathbf{P}(X_{t+1} = m | X_t = n) = (p * p * \dots * p)(m) \end{equation}
-    %
-    Where $(p * p * \dots * p)$ is the $n$-fold convolution of $p$. More vicerally, one can define $n$ independant random variables $Y_1, \dots, Y_n \sim p$, and define
-    %
-    \begin{equation} \label{branch2} \mathbf{P}(X_{t+1} = m | X_t = n) = \mathbf{P}\left( \sum_{i = 1}^n Y_i = m \right) \end{equation}
-    %
-    The Markov chain created is known as a {\bf Branching Process}.
-\end{definition}
-
-We shall start by understanding the evolution of the mean size of the population. Let $\mu$ denote the mean offspring a single individual will possess. Then we conclude by $(\ref{branch2})$ that
+We now make the assumption that each member of the species, regardless of which generation the species is in, has an equal chance of producing offspring, and that the population produces asexually and independantly; considering only men as heirs to a family tree results in such an asexual process. These assumptions are equivalent to saying that $X_t$ is a Markov chain with a certain probability transition function, which we now define. Fix some distribution $\rho$ over $\mathbf{N}$, which represents the distribution of a particular person's children, and an initial probability distribution $X_0$, also over $\mathbf{N}$. We define a stochastic process $\{ X_i \}$ by considering the transition probabilities
 %
-\begin{equation} \label{branchcondexp} \mathbf{E}(X_{t+1} | X_t = k) = \mathbf{E}\left(\sum_{i = 1}^k Y_i\right) = \sum_{i = 1}^k \mathbf{E}(Y_i) = k \mu \end{equation}
+\[ \mathbf{P}(X_{t+1} = m | X_t = n) = (\rho * \rho * \dots * \rho)(m) \]
 %
-\begin{equation} \mathbf{E}(X_{t+1}) = \mathbf{E}[\mathbf{E}(X_{t+1} | X_t)] = \sum_{k = 0}^\infty \mathbf{P}(X_t = k) (k \mu) = \mu \mathbf{E}(X_t) \end{equation}
+Where $(\rho * \rho * \dots * \rho)$ is the $n$-fold convolution of $\rho$. More vicerally, we can construct $X$ by considering an infinite grid of independent and identically distributed random variables $Y_{ij} \sim \rho$, and defining
 %
-And therefore $\mathbf{E}(X_k) = \mu^k \mathbf{E}(X_0)$. We can already conclude from these calculations the intuitive fact that
+\[ X_{n+1} = \sum_{i = 1}^{X_n} Y_{in} \]
+%
+The resulting Markov chain is known as a {\bf Branching Process}.
+
+\section{The Distribution of the $n$'th Generation}
+
+One defining property of the random variables $X_n$ is that they are defined in terms of sums of {\it independent} random variables. This means that the random variable will probably behave well under certain Fourier transform methods, which utilize the exponential function to transform sums in an easy to control way. One probabilistic Fourier transform method is to calculate probability generating functions. Given $X_n$, we consider the analytic function
+%
+\[ G_n(t) = \mathbf{E} \left[ t^{X_n} \right] = \sum_{k = 0}^\infty \mathbf{P}(X_n = k) t^k \]
+%
+which is well defined and analytic for $0 \leq t \leq 1$. We can calculate
+%
+\begin{align*}
+    \mathbf{E} \left.\left[ t^{X_n} \right| X_{n-1} = i \right] &= \sum_{j = 0}^\infty t^j \mathbf{P}(X_n = j | X_{n-1} = i)\\
+    &= \sum_{j = 0}^\infty t^j (\rho * \dots * \rho)(j)
+\end{align*}
+%
+We note that the $k$ fold convolution $\rho * \dots * \rho$ is the distribution of a sum of $k$ independent random variables $Y_1, \dots, Y_k$ distributed according to $\rho$, and so by independence
+%
+\[ \sum_{j = 0}^\infty t^j (\rho * \dots * \rho)(j) = \mathbf{E} \left[ t^{\sum Y_i} \right] = \prod \mathbf{E} \left[ t^{Y_i} \right] = \mathbf{E} \left[ t^Y \right]^k = G(t)^k \]
+%
+where $G(t)$ is the probability generating function corresponding to $Y$ (this is a general consequence of the fact that Fourier methods turn convolution into multiplication). This implies that $\mathbf{E}[t^{X_n}|X_{n-1}] = G(t)^{X_{n-1}}$, and so if $G$ is the probability generating function corresponding to $Y$. Applying the tower formula, we conclude that
+%
+\[ G_n(t) = \mathbf{E} \left[ G(t)^{X_{n-1}} \right] = G_{n-1}(G(t)) \]
+%
+and so $G_n(t) = (G_0 \circ G^n)(t)$.
+
+\section{Mean Population Size}
+
+We shall start by understanding how the mean size of the evolution varies over time. Note that the power series representation of $G_n$ guarantees that
+%
+\[ G_n'(t) = \sum_{k = 0}^\infty k \mathbf{P}(X_n = k) t^{k-1} = \mathbf{E}[X_ne^{tX_n}] \]
+%
+which implies $G_n'(0) = \mathbf{E}[X_n]$, so $G_n$ can tell us the expectations of the functions $X_n$. The relation $G_{n+1}(t) = (G_n \circ G)(t)$ tells us that
+%
+\[ G_{n+1}'(t) = G'(t)(G_n' \circ G)(t) \]
+%
+and in particular, this means
+%
+\[ \mathbf{E}[X_{n+1}] = G_{n+1}'(0) = G'(0) G_n'(0) = \mu \mathbf{E}[X_n] \]
+%
+because $G'(0) = \mathbf{E}[Y]$, where $Y \sim \rho$. This means $\mathbf{E}[X_n] = \mu^n \mathbf{E}[X_0]$. We can already conclude from these calculations the intuitive fact that
 %
 \begin{enumerate}
     \item If $\mu < 1$, then the average population tends to extinction.
@@ -727,50 +754,247 @@ And therefore $\mathbf{E}(X_k) = \mu^k \mathbf{E}(X_0)$. We can already conclude
     \item If $\mu > 1$, the average population becomes unbounded.
 \end{enumerate}
 %
-It shall turn out that extinction is guarenteed even in the case that $\mu = 1$.
+It shall turn out that extinction is guaranteed even in the case that $\mu = 1$. The intuitive reason why is that even if the average population is maintained, eventually you will get unlucky and end up with a generation producing no offspring, which will end you entire family line.
 
-Regardless of your average population growth, provided $p_0 > 0$ there is a chance that the population will eventually become extinct.The problem in this section will be in deriving this probability in terms of the reproduction probabilities. Let $a_n(k)$ denote the probability of extinction after $n$ generations given that we start with $k$ individuals. Then, as we have derived above, the possibility of general extinction from $k$ individuals is $a(k)=\lim_{n \to \infty} a_n(k)$. Since all $k$ branches of the population act independantly, we have $a_n(k) = a_n(1)^k$, and it suffices to determine $a(1)$, which we shall denote by $a$. If we look one generation ahead, then
-%
-\begin{align} a &= \mathbf{P}(\text{extinction}|X_0 = 1)\\
-&= \label{branchgenfunction} \sum_{k = 0}^\infty \mathbf{P}(X_1 = k | X_0 = 1) \mathbf{P}(\text{extinction}| X_1 = k) = \sum_{k = 0}^\infty p_k a^k \end{align}
-%
-Thus $a = \varphi(a)$, where $\varphi$ is the generating function of $X_1$, assuming $X_0 = 1$. Since $z > 0$ implies
-%
-\[ \varphi'(z) = \sum_{k = 0}^\infty k p_k z^{k-1} > 0 \]
-%
-We know that $\varphi$ is monotonically increasing on the positive numbers. If we let $\varphi_n$ be the generating function of $X_n$, then
-%
-\begin{align*} \varphi_n(z) &= \sum_{k = 0}^\infty \mathbf{P}(X_n = k) z^k = \sum_{k = 0}^\infty \sum_{j = 0}^\infty \mathbf{P}(X_1 = j) \mathbf{P}(X_n = k | X_1 = j) z^k\\
-&= \sum_{j = 0}^\infty p_j \sum_{k = 0}^\infty \mathbf{P}(X_n = k | X_1 = j) z^k = \sum_{j = 0}^\infty p_j \sum_{k = 0}^\infty \mathbf{P}(X_{n-1} = k | X_0 = j) z^k \end{align*}
-%
-Now $\mathbf{P}(X_{n-1} | X_0 = j)$ is the distribution of the sum of $j$ independent random variables $Y_1, \dots, Y_j \sim \mathbf{P}(X_{n-1} | X_0 = 1)$, so that each has a generating function $\varphi_{n-1}$, and so, continuing the calculation
-%
-\begin{align}
-    \varphi_n(z) &= \sum_{j = 0}^\infty p_j \mathbf{E}(z^{X_{n-1}} | X_0 = j) = \sum_{j = 0}^\infty p_j \mathbf{E}(z^{X_{n-1}} | X_0 = 1)^j\\
-    &= \label{branchgencalculation} \sum_{j = 0}^\infty p_j \varphi_{n-1}(z)^j = \varphi(\varphi_{n-1}(j))
-\end{align}
-%
-Using (\ref{branchgencalculation}), we can recursively determine $a_n(1) = \mathbf{P}(X_n = 0 | X_0 = 1) = \varphi_n(0)$. We are now ready to show that $a$ is the smallest positive root of the equation $x = \varphi(x)$, assuming $a \neq 0$. Using (\ref{branchgenfunction}), we know $a$ is a root of this equation. Let $\hat{a}$ denote the least such positive root of the equation. We will verify that $a_n(1) \leq \hat{a}$. Certainly $a_0(1) = 0 \leq \hat{a}$. If $a_{n-1}(1) \leq \hat{a}$, then
-%
-\begin{equation} \label{branchinequality} a_n(1) = \varphi(\varphi_{n-1}(0)) = \varphi(a_{n-1}(1)) \leq \varphi(\hat{a}) = \hat{a} \end{equation}
-%
-Taking limits on (\ref{branchinequality}), we find $a \leq \hat{a}$. Thus, assuming $a > 0$, equality is obtained. We have deduced that
+\section{Probability of Extinction}
 
-\begin{theorem}
-    If $X_1, X_2, \dots$ is a branching process with reproduction probabilities $p$, and if $p_0 > 0$, then the extinction probability is the smallest positive root of $\varphi(z) = z$, where $\varphi(z) = \sum p_k z^k$.
-\end{theorem}
-
-Let's do some examples. Let $p_0 = 1/4$, and $p_2 = 3/4$. The extinction probability is the smallest positive root of $z = 1/4 + 3/4z^2$, which can be calculated by the quadratic formula to be $a = 1/3$. Let $p_0 = 1/2$, $p_1 = 1/4$, and $p_2 = 1/4$. The extinction probability is the smallest root of $z = 1/2 + 1/4 z + 1/4 z^2$. The roots of this equation are $1$ and $2$. Hence $a = 1$. We could have seen this from noticing the mean growth rate $\mu$ is less than one.
-
-When exactly is the population almost surely going to extinction ($a = 1$)? Suppose $\mu = 1$. Then, for any $0 < z < 1$,
+Regardless of your average population growth, provided $\rho(0) > 0$ there is a chance that the population will eventually become extinct. Indeed, $\mathbf{P}(X_{n+1} = 0|X_n = k) = \rho(0)^k > 0$. We now discuss the probability $\pi \in [0,1]$ that that extinction occurs. We calculate that
 %
-\begin{equation} \label{integralbound} 1 - \varphi(z) = \int_z^1 \varphi'(x) dx < \int_z^1 \varphi'(1) = \mu(1 - z) = 1 - z \end{equation}
+\[ \pi = \mathbf{P} \left( \liminf_{n \to \infty}\ \{ X_n = 0 \} \right) = \mathbf{P} \left( \lim_{n \to \infty} \{ X_n = 0 \} \right) = \lim_{n \to \infty} \mathbf{P}(X_n = 0) = \lim_{n \to \infty} \pi_n \]
 %
-Here we have used the monoticity of $\varphi$. From (\ref{integralbound}), we conclude $z < \varphi(z)$ on $[0,1)$. Assuming extinction is possible, we obtain the surprising result that extinction is guaranteed if the average number of descendents is less than or equal to one! Since the average population remains to be 1 though, we know that, if we are not extinct after a long time, then we will probably have a large population.
+where $\pi_n$ is the probability of extinction in $n$ steps. If $\mu < 1$, we know that processes almost surely become extinct, because we can apply Markov's inequality to conclude that
+%
+\[ \pi_n = \mathbf{P}(X_n = 0) = 1 - \mathbf{P}(X_n \geq 1) \geq 1 - \mathbf{E}(X_n) = 1 - \mu^n \mathbf{E}(X_0) \]
+%
+For $\mu < 1$, this value converges to 1 as $n \to \infty$. It is more difficult to calculate the extinction probability for $\mu \geq 1$, but the probability generating function provides a powerful tool to calculate this probability.
 
-Chinese surnames are ancient. Applying our model, we see that the names that have survived over the generations should be very prominant. There are approximately 3,000 Chinese last names in use nowadays, as compared to 12,000 in the past, even though there are far more Chinese people in the world than in the past. This is the reason Gatson and Walton concluded upper class surnames were going extinct in Victorian Britain. The elite few who had these names were in populations that were likely to die out very soon, whereas the common names are names which will last much longer.
+For now, we assume that $X_0 = 1$. It then follows that $G_0(t) = t$, so $G_n(t) = G^n(t)$. The generating function's construction implies
+%
+\[ \pi_n = G_n(0) = G(G_{n-1}(t)) = G(\pi_{n-1}) \]
+%
+allowing us to calculate $\pi_n$ recursively. Letting $n \to \infty$ on both sides of this equation, using the continuity of $G$ on $[0,1]$, gives $\pi = G(\pi)$. We calculate that
+%
+\[ G(0) = \rho(0) \geq 0 \]
+%
+\[ G(1) = \sum_{k = 0}^\infty \mathbf{P}(Y = k) = 1 \]
+%
+Since all the coefficients in the expansion of $G$ are positive, we know that $G'(x), G''(x) \geq 0$ for $x > 0$, so $G$ is convex and increasing in $(0,1)$. If $G'(x), G''(x)$ is {\it strictly} greater than zero on $(0,1)$, then we can conclude $G$ is {\it strictly convex}. This occurs except in the special case that $\rho(0) + \rho(1) = 1$, and in these cases we find $G(x) = \rho(0) + \rho(1) x$, so either
+%
+\begin{itemize}
+    \item $\rho(1) = 1$: population size stays constant at every generation, and so if $X_0 = 1$, $\pi = 0$.
 
-\section{Reversibility}
+    \item $\rho(0) > 0$: We calculate $\pi_{n+1} = G(\pi_n) = \rho(0) + \rho(1) \pi_n$, which gives
+    %
+    \[ \pi_n = \sum_{k = 0}^{n-1} \rho(1)^k \rho(0) = \frac{1 - \rho(1)^n}{1 - \rho(1)} \rho(0) = 1 - \rho(1)^n \]
+    %
+    and so we easily see that since $\rho(1) \neq 1$, $\pi_n \to 1$.
+\end{itemize}
+%
+The fact that $G$ is increasing and strictly convex implies $G(x) = x$ has {\it at most one} solution $x_0$ in $(0,1)$. If $x_0$ exists, then it follows that if $\pi_0 \leq x_0$, then $\pi_n \to x_0$, and if $\pi_0 > x_0$, then $\pi_0 \to 1$. In most cases, we assume that $X_0 = 1$, so that the extinction probability is always $x_0$.
+%
+\begin{itemize}
+    \item If $\mu \leq 1$, then because $G'' > 0$, we conclude $G'(x) < 1$ for all $x \in [0,1)$, which forces $x < G(x)$ for all $x \in [0,1)$. We conclude that $\pi_n \to 1$, so populations become extinct almost surely.
+
+    \item If $\mu > 1$, then the fact that $G'(x)$ decreases continuously, we can conclude that $y < G(y)$ in a suitably small neighbourhood of $1$. Since $G(0) = \rho(0) > 0$, we conclude by the intermediate value theorem that there is a point $x_0 \in (0,1)$ with $G(x_0) = x_0$, and this gives the convergence result considered above.
+\end{itemize}
+% TODO: INCLUDE COBWEB DIAGRAM?
+%
+The case where $\mu = 1$ has one of the most interesting features of our model. For $X_0 = 1$, we conclude that $\mathbf{E}[X_n] = 1$ for all $n$, but $X_n \to 0$ almost surely. We can infer from this that $\mathbf{E}[X_n|X_n \neq 0] = \mathbf{E}[X_n]/\pi_n \to \infty$, so that if a population has survived for a long time, and is not extinct, we can guarantee that it has a huge population. This has applications to the theory of surnames that Gatson and Walton were reasoning about. Chinese surnames are ancient. Applying our model, we see that the names that have survived over the generations should be very prominant. There are approximately 3,000 Chinese last names in use nowadays, as compared to 12,000 in the past, even though there are far more Chinese people in the world than in the past. This is the reason Gatson and Walton concluded upper class surnames were going extinct in Victorian Britain. The elite few who had these names were in populations that were likely to die out very soon, whereas the common names are names which will last much longer.
+
+\begin{example}
+    Suppose $\rho(0) = \rho(1) = 1/4$, $\rho(2) = 1/2$. Then the probability generating function is
+    %
+    \[ G(x) = \frac{2x^2 + x + 1}{4} \]
+    %
+    Solving the equation $G(x) = x$ gives $x = 1/2$, and this is the extinction probability of a branching process corresponding to $\rho$ with $X_0 = 1$.
+\end{example}
+
+If $X_0 = k$ for some $k > 0$, one can prove that $X$ is identically distributed to the sum of $k$ independent branching processes $Y^1, \dots, Y^k$, with $Y^i_0 = 1$. It then follows that if we denote the probability that a population becomes extinct in $n$ steps beginning with $k$ people by $\pi_n(k)$, then
+%
+\[ \pi_n(k) = \mathbf{P}(X_n = 0) = \mathbf{P}(Y^1_n = 0, \dots, Y^k_n = 0) = \prod \mathbf{P}(Y^i_n = 0) = \pi_n^k \]
+%
+Letting $n \to \infty$ gives $\pi(k) = \pi^k$. More generally, for any random variable $X_0$ the chance of dying is equal to $\mathbf{E}[\pi^{X_0}]$.
+
+\begin{example}
+    A simple variant of the branching process problem is to add the condition that some members of the population live on until the next generation to have more offspring. Thus we have a offspring distribution $\rho$, as well as some probability $q \in [0,1]$ of a particular individual dying at the end of each generation. If we assume the offspring production probabilities are independent of the probability that a member of the population dies off, then we can see this as just a case of the branching process with offspring distribution $\nu$, where
+    %
+    \[ \nu(k) = q\rho(k) + (1 - q)\rho(k-1) \]
+    %
+    If $\mu$ is the mean number of offspring given by $\rho$, then we find that if $Y \sim \nu$, then we find that the mean number of offspring given by $\nu$ is
+    %
+    \begin{align*}
+        \sum_{k = 0}^\infty k \nu(k) &= q \sum_{k = 0}^\infty k \rho(k) + (1 - q) \sum_{k = 1}^\infty k \rho(k-1)\\
+        &= q\mu + (1 - q) \sum_{k = 1}^\infty (k-1) \rho(k-1) + (1-q)\\
+        &= \mu + (1 - q)
+    \end{align*}
+    %
+    Thus if $\mu \leq q$, the population is guaranteed to become extinct, and if $\mu > q$, then the population can sustain itself indefinitely.
+\end{example}
+
+\section{Martingales and Branching Asymptotics}
+
+Using the Markov property of the branching process, we know that
+%
+\[ \mathbf{E}[X_{n+1}|X_1, \dots, X_n] = \mu X_n \]
+%
+If we define the process $M_n = X_n/\mu^n$ which in some sense measures the exponential growth of the process relative to $\mu$, then we find
+%
+\[ \mathbf{E}[M_{n+1}|M_1, \dots, M_n] = M_n \]
+%
+This means that $M_n$ is a {\it martingale} with respect to its natural filtration.
+
+Now we can calculate that
+%
+\[ \mathbf{E}[M_n] = \frac{\mathbf{E}[X_n]}{\mu^n} = \frac{\mu^n \mathbf{E}[X_0]}{\mu^n} = \mathbf{E}[X_0] \]
+%
+so provided that $\mathbf{E}[X_0] < \infty$, we can conclude that $M_n$ converges almost everywhere to an integrable random variable $M_\infty$. This means that for almost all $\omega$, we have $X_n(\omega) = [M_\infty(\omega) + o(1)] \mu^n$, so that the process essentially has exponential growth relative to $\mu^n$. We might be tempted to think that $M$ is now extended to be a martingale on $\{ 1, 2, \dots, \infty \}$, but we have to be a bit more careful. For instance, if $\mu \leq 1$, then extinction is almost sure to happen in a finite amount of time, and we can conclude that $M_\infty = 0$ almost everywhere (this implies $X_n(\omega) = o(1) \mu^n$ almost surely), whereas in all but the most trivial cases $\mathbf{E}[M_0] \neq 0$, so $\mathbf{E}[M_\infty] \neq \mathbf{E}[M_0]$. However, we can calculate that if $Y_1, Y_2, \dots$ are independent random variables distributed according to $\rho$, then provided $\rho$ has finite variance $\sigma^2$, we can conclude that
+%
+\[ \mathbf{E}[X_{n+1}^2|X_n] = \mathbf{E} \left( \sum_{i = 1}^{X_n} Y_i \right)^2 = \sum_{ij = 1}^{X_n} \mathbf{E}[Y_iY_j] = X_n^2 \mu^2 + X_n \sigma^2 \]
+%
+so
+%
+\[ \mathbf{E}[M_{n+1}^2|M_n] = \frac{\mathbf{E}[X_{n+1}^2|X_n]}{\mu^{2(n+1)}} = \frac{X_n^2 \mu^2 + X_n \sigma^2}{\mu^{2n+2}} = M_n^2 + \frac{\sigma^2}{\mu^{n + 2}} M_n \]
+%
+and in particular, this means
+%
+\[ \mathbf{E}[M_{n+1}^2] = \mathbf{E}[M_n^2] + \mathbf{E}[M_n] \frac{\sigma^2}{\mu^{n + 2}} \]
+%
+Reexpressing the reccurence gives
+%
+\[ \mathbf{E}[M_n^2] = \mathbf{E}[M_0^2] + \sum_{k = 0}^{n-1} \mathbf{E}[M_k] \frac{\sigma^2}{\mu^{k+2}} = \sum_{k = 0}^{n-1} \mathbf{E}[M_0] \frac{\sigma^2}{\mu^{k+2}} \]
+%
+This means that the martingale $M_n$ is bounded in $L^2(\Omega)$ if and only if $\mu > 1$ (except if $X_0 = 0$ of course). We may now apply Doob's $L^2$ convergence theorem to conclude that $M_n$ converges in the $L^2$ norm to $M_\infty$, so this gives that $M_n$ converges to $M_\infty$ in the $L^1$ norm. We can therefore conclude that
+%
+\[ \mathbf{E}[M_\infty] = \mathbf{E}[M_0] \]
+%
+which tells us that $X_n$ grows on average on the order of $\mu^n$. What's more, we can conclude the additional fact that
+%
+\begin{align*}
+    \mathbf{V}[M_\infty] &= \lim_{n \to \infty} \mathbf{V}[M_n] = \lim_{n \to \infty} \mathbf{E}[M_0^2] + \sum_{k = 0}^{n-1} \mathbf{E}[M_0] \frac{\sigma^2}{\mu^{k+2}} - \mathbf{E}[M_0]^2\\
+    &= \mathbf{V}[M_0] + \frac{\sigma^2}{\mu(\mu - 1)} \mathbf{E}[X_0]
+\end{align*}
+%
+So $M_\infty$ has low variance for large values of $\mu$, implying that the growth of $X_n$ is more steadily close to $\mu^n$.
+
+We can actually determine the distribution of $M_\infty$ {\it exactly}, by using Fourier transform techniques. Unfortunately, $M_n$ isn't defined over a discrete set, so the probability generating functions are no longer well defined, but we can consider the moment generating functions
+%
+\[ H_n(t) = \mathbf{E}[e^{tM_n}] = G_n(\exp(t \mu^{-n})) \]
+\[ H_\infty(t) = \mathbf{E}[e^{tM_\infty}] \]
+%
+If $t \leq 0$, then $e^{tM_n} \leq 1$, because $M_n$ is non-negative. We can therefore apply the dominated convergence theorem to conclude
+%
+\[ H_\infty(t) = \lim_{n \to \infty} H_n(t) \]
+%
+This allows us to compute $H_\infty$ on an interval, which by the analytic properties of the function will enable us, in theory, to calculate the distribution of $M_\infty$. In practice, however, this is only computable in the most basic of examples.
+
+We can derive a functional equation which will enable us to calculate $H_\infty$. Note that if $X_0 = 1$, then
+%
+\begin{align*}
+    H_{n+1}(\mu t) &= G_{n+1}(\exp(t \mu^{-n}))\\
+    &= G^{n+1}(\exp(t \mu^{-n}))\\
+    &= G(G^n(\exp(t \mu^{-n})) = G(H_n(t))
+\end{align*}
+%
+Letting $n \to \infty$ on both sides tells us that $H_\infty(\mu t) = G(H_\infty(t))$.
+
+\begin{example}
+    In the example $\rho(0) = \rho(1) = 1/4$, $\rho(2) = 1/2$, we conclude that for $t \leq 0$
+    %
+    \[ H_\infty(5t/4) = \frac{1 + H_\infty(t) + 2 H_\infty(t)^2}{4} \]
+    %
+    If we assume $H_\infty(-1) = \alpha$, then
+    %
+    \[ \alpha = \frac{1 + H_\infty(-4/5) + 2H_\infty(-4/5)^2}{4} \]
+    %
+    \[ 0 = \frac{1 - 4\alpha + H_\infty(-4/5) + 2H_\infty(-4/5)^2}{4} \]
+    %
+    \[ H_\infty(-4/5) = \frac{-1 + \sqrt{1 - 8(1 - 4\alpha)}}{4} = \frac{-1 + \sqrt{32\alpha - 7}}{4} \]
+    %
+    so $32\alpha \geq 8$, hence $\alpha \geq 1/4$. But it seems impossible to calculate the actual iterates of this map, so we can't calculate the actual distribution -- however, we can use a computer to approximate these limits, and then perform an inverse transform to calculate the distribution of $M_\infty$ approximately.
+\end{example}
+
+\begin{example}
+    About the only mathematically feasible example where we can compute the distribution is when the number of children have a geometric distribution $\rho(k) = pq^k$, for some $0 < p < 1$, $q = 1 - p$. One way to think about the geometric distribution is as the distribution of waiting times until we see a first success in a series of independent Bernoulli trials, each with a success probability $p$. Thus we can see this example as where people keep having children as many times as possible, until the first failure (a miscarriage?) which causes the generation to die off. Now we can check that the probability generating function of this distribution is
+    %
+    \[ G(t) = \sum_{k = 0}^\infty p(qt)^k = \frac{p}{1 - qt} \]
+    %
+    hence
+    %
+    \[ G'(t) = \frac{pq}{(1 - qt)^2} \]
+    %
+    and so
+    %
+    \[ \mu = G'(1) = \frac{pq}{(1 - q)^2} = \frac{q}{p} \]
+    %
+    we immediately see that if $q \leq p$ ($p \geq 1/2$), then the population is guaranteed to become extinct, and if $q > p$, then since
+    %
+    \[ G(p/q) = \frac{p}{1 - p} = p/q \]
+    %
+    we conclude the extinction probability is $p/q$. The nice fact about $G$ is that it is a rational function of $t$, represented by the M\"{o}bius transformation
+    %
+    \[ G(t) = \begin{pmatrix} 0 & p \\ -q & 1 \end{pmatrix}(t) \]
+    %
+    Thus
+    %
+    \[ G^n(t) = \begin{pmatrix} 0 & p \\ -q & 1 \end{pmatrix}^n(t) \]
+    %
+    and by diagonalization, we can calculate
+    %
+    \begin{align*}
+        \begin{pmatrix} 0 & p \\ -q & 1 \end{pmatrix}^n &= \frac{1}{q - p} \begin{pmatrix} 1 & p \\ 1 & q \end{pmatrix} \begin{pmatrix} p^n & 0 \\ 0 & q^n \end{pmatrix} \begin{pmatrix} q & -p \\ -1 & 1 \end{pmatrix}\\
+        &= \frac{1}{q - p} \begin{pmatrix} p^n & pq^n \\ p^n & q^{n+1} \end{pmatrix} \begin{pmatrix} q & -p \\ -1 & 1 \end{pmatrix}\\
+        &= \frac{1}{q - p} \begin{pmatrix} p^nq - pq^n & pq^n -p^{n+1} \\ p^nq - q^{n+1} & q^{n+1} - p^{n+1} \end{pmatrix}\\
+        &= \frac{p^{n+1}}{q - p} \begin{pmatrix} \mu - \mu^n & \mu^n - 1 \\ \mu - \mu^{n+1} & \mu^{n+1} - 1 \end{pmatrix}
+    \end{align*}
+    %
+    so that
+    %
+    \[ G^n(t) = \frac{p\mu^n(1 - t) + qt - p}{q \mu^n(1 - t) + qt - p} \]
+    %
+    If $\mu < 1$, $G^n(t) \to 1$, reflecting the fact that the process eventually dies out (the moment generating function of the dirac delta distribution is the constant 1 distribution). If $\mu = 1$, then this calculation doesn't quite work, but a modification shows $G^n(t) \to 1$ also. If $\mu > 1$, then we can calculate that
+    %
+    \begin{align*}
+        H_\infty(t) &= \lim_{n \to \infty} H_n(t) = \lim_{n \to \infty} G_n(\exp(-t/\mu^n))\\
+        &= \lim_{n \to \infty} \frac{p\mu^n(1 - e^{-t/\mu^n}) + qe^{-t/\mu^n} - p}{q\mu^n(1 - e^{-t/\mu^n}) + qe^{-t/\mu^n} - p}\\
+        &= \lim_{n \to \infty} \frac{pt + q - p + O(t/\mu^{n})}{qt + q - p + O(t/\mu^{n})} = \frac{pt + q - p}{qt + q - p}\\
+        &= \frac{\pi t + (1 - \pi)}{t + (1 - \pi)} = \pi + \frac{(1 - \pi)^2}{t + (1 - \pi)}\\
+        &= \pi + \int_0^\infty (1 - \pi)^2 e^{-tx}e^{-(1 - \pi)x} dx
+    \end{align*}
+    %
+    where $\pi = p/q$ is the extinction probability. It follows that $\mathbf{P}(M_\infty = 0) = \pi$, and on $(0,\infty)$, $M_\infty$ is a continous random variable with distribution function
+    %
+    \[ f_{M_\infty} = (1 - \pi)^2 e^{-(1 - \pi)x} \]
+    %
+    which is certainly an interesting result.
+
+    It turns out that, though $M_\infty = 0$ almost surely when $\mu \leq 1$, we can still determine interesting asymptotic results when $\mu < 1$. Indeed, we ask what the distribution of $M_n$ is, conditional on the fact that $M_n \neq 0$. Then
+    %
+    \[ \mathbf{E}[t^{X_n}|X_n \neq 0] = \frac{G_n(t) - G_n(0)}{1 - G_n(0)} = \frac{\alpha_n t}{1 - \beta_n t} \]
+    %
+    where
+    %
+    \[ \alpha_n = \frac{p-q}{p-q\mu^n}\ \ \ \ \ \beta_n = \frac{q(1 - \mu^n)}{p - q\mu^n} \]
+    %
+    so $0 < \alpha_n < 1$ and $\alpha_n + \beta_n = 1$. As $n \to \infty$, $\alpha_n \to 1 - \mu$, $\beta_n \to \mu$, so
+    %
+    \[ \lim_{n \to \infty} \mathbf{P}(X_n = k|X_n \neq 0) = (1 - \mu) \mu^{k-1} \]
+    %
+    so we see that the distribution grows asymptotically exponentially. If $\mu = 1$, then one can see by induction that
+    %
+    \[ G_n(t) = \frac{n - (n-1)t}{(n + 1) - nt} \]
+    %
+    and that
+    %
+    \[ \mathbf{E}(e^{-tX_n/n}|X_n \neq 0) \to \frac{1}{1 + t} \]
+    %
+    which corresponds to
+    %
+    \[ \mathbf{P}(X_n/n > x | X_n \neq 0) \to e^{-x} \]
+    %
+    so we get a form of logarithmic growht.
+\end{example}
+
+\chapter{Reversibility}
 
 Some Markov chains have a certain symmetry which enables us to easily understand them. If we watch the markov chain as it proceeds from state to state, it forms a kind of `movie'. A Markov chain is reversible if the markov chain has the same probability distribution when we watch the movie backwards. That is, if $X_0, X_1, \dots, X_n$ are the first few frames of the movie, then $(X_0, \dots, X_n)$ is distributed identically to $(X_n, \dots, X_0)$. We have
 %
@@ -842,99 +1066,186 @@ We `slow' down the chain at certain points to make it reversible with respect to
 
 
 
-\chapter{Martingales}
+\chapter{Conditional Expectations}
 
-\section{Modern Conditional Expectation}
+Most of the theory of random processes is connected with understanding how certain values of a process influence the process later on in time. When studying Markov chains, we tried to understand the relationship by directly considering the processes' transition coefficients. In the theory of martingales, we instead study random processes by looking at how the evolution of a stochastic process changes if we fix states to certain time points. The primary tools in our analysis will be {\bf conditional probabilities} and {\bf conditional expectations}, which allow us to quantify how the distribution of a random variable changes when we fix the value of another random variable. We find that the elementary definition of conditional expectations introduced in elementary probability theory breaks down when we begin to look at more general classes of random variables, and we introduce Kolmogorov's general definition of a conditional expectation with respect to a $\sigma$ algebra to compensate.
 
-Most of the theory of random processes is connected with understanding the relationship of the values of the process at different times in the theory. When studying Markov chains, we tried to understand the relationship between random variables by considering directly the processes' transition coefficients. We now understand random processes by looking at how the evolution of a stochastic process changes as we fix the state at certain time periods. The primary tools in our analysis will be {\bf conditional probabilities} and {\bf conditional expectations}, which allow us to quantify how the distribution of a random variable changes when we fix the value of another random variable.
+\begin{example}
+    Consider the Polya urn process. We start with one white ball and one black ball in an urn. At each time epoch, we draw a random ball from the urn, and put the ball back in addition to another ball of the same colour. Let $X_k$ be the number of white balls after drawing $k$ balls, and let $M_n = X_n / (n+2)$ be the relative proportion of white balls in the urn at a certain time. We can then calculate
+    %
+    \[ \mathbf{E}(M_n | M_{n-1}) = \frac{\mathbf{E}(X_n | X_{n-1})}{n+2} = \frac{1}{n+2} \left[ X_{n-1} + \frac{X_{n-1}}{n+1} \right] = \frac{X_{n-1}}{n+1} = M_{n-1} \]
+    %
+    This is the equation which we will see defines a martingale. Now we can calculate inductively that $\mathbf{P}(X_n = k) = (n + 1)^{-1}$ for all $1 \leq k \leq n + 1$, as $\mathbf{P}(X_0 = 1) = 1$, and
+    %
+    \begin{align*}
+        \mathbf{P}(X_n = k) &= \sum_{m = 1}^n \mathbf{P}(X_{n-1} = m) \mathbf{P}(X_n = k | X_{n-1} = m) \\
+        &= \mathbf{P}(X_{n-1} = k-1) \mathbf{P}(X_n = k | X_{n-1} = k-1)\\
+        &\ \ \ + \mathbf{P}(X_{n-1} = k) \mathbf{P}(X_n = k | X_{n-1} = k)\\
+        &= \frac{1}{n} \frac{k-1}{n+1} + \frac{1}{n} \frac{n + 1 - k}{n+1} = \frac{1}{n+1}
+    \end{align*}
+    %
+    This means that $M_n = (n+2)^{-1}X_n$ converges in distribution to a uniform distribution over $[0,1]$. On the other hand, suppose we start off with two white balls in the urn, and one black ball. Then we find $M_n = X_n/(n+3)$ still satisfies the martingale equation, but we find that for $2 \leq k \leq n + 2$,
+    %
+    \[ \mathbf{P}(X_n = k) = \frac{2(k-1)}{n(n+1)} \]
+    %
+    which in a sense says that $X_n$ is much more likely to be bigger than smaller. As $n \to \infty$, $M_n$ becomes much more concentrated at large values of $[0,1]$. In fact, one can calculate that $M_n$ converges in distribution to a $\beta$ distribution with parameters $\alpha = 2$ and $\beta = 1$. Thus changing the initial values of the process slightly caused an entirely different evolution of the process.
+\end{example}
 
-%\begin{example}
-%    Consider the stochastic process $X, Y_0, Y_1, \dots$, where $X$ takes the values $\{ 1/4, 3/4 \}$, and where $Y_1, Y_2, \dots$ is a $\mathbf{Z}$-valued random walk such that
-%    %
-%    \[ \mathbf{P}(Y_{i+1} - Y_i = 1 | X) = X\ \ \ \ \ \mathbf{P}(Y_{i+1} - Y_i = -1 | X) = 1 - X \]
-%    %
-%    An elementary calculation shows that $\mathbf{E}(Y_i) = 0$ for all $i$. However, if we instead fix the value of $X$, then we known $\mathbf{E}(Y_i|X = 3/4) \to \infty$ as $i \to \infty$, and $\mathbf{E}(Y_i|X=1/4) \to -\infty$. Thus, in this case, knowing the value of $X$ ahead of time is very useful to learning about the asymptotics of the Markov chain. This tells us that $X$ relates in a strong way to the overall dynamics of the stochastic process.
-%\end{example}
+\section{Classical Conditioning}
 
-%In this example
-
-For discrete random variables $X$ and $Y$, we can calculate the conditional probabilities and expectations by
+Recall that for discrete random variables $X$ and $Y$, we can calculate conditional probabilities and expectations by
 %
-\[ \mathbf{P}(Y = y | X = x) = \frac{\mathbf{P}(Y = y, X = x)}{\mathbf{P}(X = x)}\ \ \ \ \ \mathbf{E}(Y|X = x) = \sum_y y \mathbf{P}(Y = y|X=x) \]
+\[ \mathbf{P}(Y = y | X = x) = \frac{\mathbf{P}(Y = y, X = x)}{\mathbf{P}(X = x)} \]
+\[ \mathbf{E}(Y|X = x) = \sum_y y \mathbf{P}(Y = y|X=x) \]
 %
-whenever $\mathbf{P}(X = x) \neq 0$, and for continuous random variables,
+defined whenever $\mathbf{P}(X = x) \neq 0$. For continuous random variables, we can consider the joint densities $f_{X,Y}$, along with the individual densities $f_X$ and $f_Y$, and then define
 %
-\[ \mathbf{P}(Y \in A | X = x) = \int_A \frac{f_{Y,X}(y,x)}{f_X(x)} dy\ \ \ \ \ \mathbf{E}(Y|X = x) = \int y \frac{f_{Y,X}(y,x)}{f_X(x)} dy \]
+\[ \mathbf{P}(Y \in A | X = x) = \int_A \frac{f_{Y,X}(y,x)}{f_X(x)} dy \]
+\[ \mathbf{E}(Y|X = x) = \int y \frac{f_{Y,X}(y,x)}{f_X(x)} dy \]
 %
-where $f_X(x) \neq 0$ is assumed. However, these two classical formulations are insufficient to cover condition expectations for the general random variables we will investigate in the study of stochastic processes. Kolmogorov, one of the founders of measure theoretic probability theory, found the most elegant way to define $\mathbf{P}(Y \in A | X = x)$ and $\mathbf{E}(Y|X=x)$ for the random variables we're interested in. We note that we will focus only on defining the conditional {\it expectations} $\mathbf{E}(Y|X=x)$, because we can then define $\mathbf{P}(Y \in A | X = x) = \mathbf{E}(\mathbf{I}(Y \in A)|X = x)$.
+defined where $f_X(x) \neq 0$. However, these two classical formulations are insufficient to cover conditional expectations for the general random variables we encounter in the study of stochastic processes. Kolmogorov, one of the founders of measure theoretic probability theory, found the most elegant way to define $\mathbf{P}(Y \in A | X = x)$ and $\mathbf{E}(Y|X=x)$ which works for almost every random variable we encounter in practice, and also leads to the most elegant definitions in the theory of martingales.
 
-The trick to Kolmogorov's method is to think of conditional values as `best guesses' of the values given some information about the system is known. Our first revelation is to think of $\mathbf{E}(Y|X)$ as a random variable on the same sample space as $X$ and $Y$, taking value $\mathbf{E}(Y|X=X(\omega))$ on input $\omega \in \Omega$. In both classical definitions, the conditional expectation possesses two important properties:
+\section{Kolmogorov's Realization}
+
+Kolmogorov realized we can think of conditional values as `best guesses' of the values of a random variable given some known information about the system. Our first revelation is to think of $\mathbf{E}(Y|X)$ as a random variable on the same sample space as $X$ and $Y$, taking value $\mathbf{E}(Y|X=X(\omega))$ on input $\omega \in \Omega$. In both classical definitions, the conditional expectation possesses two important properties:
 %
 \begin{itemize}
     \item $\mathbf{E}(Y|X)$ is a function of the random variable $X$. That is, we only need to know $X(\omega)$ to predict the value $\mathbf{E}(Y|X)(\omega)$.
 
-    \item For any subset of the sample space of the form $B = X^{-1}(A)$, where $A \subset \mathbf{R}$ is a set of real values, we have a measure theoretic integral
+    \item For any subset of the sample space of the form $B = X^{-1}(A)$, we have the equations
     %
-    \[ \int_B \mathbf{E}(Y|X) d\mathbf{P} = \int_B Y d\mathbf{P} \]
-    %
-    For discrete random variables, this equation takes the form
-    %
-    \[ \sum_{a \in A} \mathbf{P}(X = a) \mathbf{E}(Y|X = a) = \sum_{a \in A} \sum y \mathbf{P}(X = a, Y = y) \]
-    %
-    and for continuous random variables,
+    \[ \sum_{a \in A} \mathbf{P}(X = a) \mathbf{E}(Y|X = a) = \sum_{a \in A} \sum_y y \mathbf{P}(X = a, Y = y) \]
     %
     \[ \int_A f_X(x) \mathbf{E}(Y|X=x)\ dx = \int_A \int y f_{X,Y}(x,y)\ dx dy \]
     %
-    Note, in particular, that the equation for discrete random variables uniquely defines the conditional expectation whenever $\mathbf{P}(X = a) \neq 0$ by taking $A = \{ a \}$. In the case of continuous random variables, we can only conclude that $f_Y(y) \mathbf{E}(X|Y=y) = \int x f_{X,Y}(x,y)\ dx$ holds almost everywhere, and this defines $\mathbf{E}(X|Y=y)$ up to a set of measure zero if we ignore the values $y'$ where $f_Y(y') = 0$. If we are able to choose $\mathbf{E}(X|Y=y)$ to be continuous as a function of $y$, then it is the unique continuous function satisfying the integral.
+    where $A \subset \mathbf{R}$ is a set of real values, which have a common measure-theoretic equation
+    %
+    \[ \int_B \mathbf{E}(Y|X) d\mathbf{P} = \int_B Y d\mathbf{P} \]
+    %
+    Note, in particular, that the equation for discrete random variables uniquely defines the conditional expectation whenever $\mathbf{P}(X = a) \neq 0$ by taking $A = \{ a \}$. In the case of continuous random variables, we can only conclude that $f_Y(y) \mathbf{E}(Y|X=x) = \int y f_{X,Y}(x,y)\ dy$ holds almost everywhere, and this defines $\mathbf{E}(Y|X=x)$ up to a set of measure zero, if we ignore the values $y$ where $f_Y(y) = 0$. In particular, if we can choose $\mathbf{E}(Y|X=x)$ to be a continuous function of $x$, then it is the unique continuous function satisfying the integral equation.
 \end{itemize}
 
-In general, we say a general random variable $\mathbf{E}(X|Y)$ is a {\it version} (it is not unique) of a {\bf conditional expectation} of $X$ with respect to $Y$ if the two conditions above are satisfied. However, we note that the definition can certainly be simplified by noting that once we consider $\mathbf{E}(X|Y)$ as a function on the sample space rather than on values of $Y$, the actual values of $Y$ are not actually important to the definition of conditional expectation, but rather the ways the values spread out over the sample space. The integration condition only depends on the subsets of $\sigma(X)$ that we use. It is a theorem of Doob that if these random variables are real valued, this is equivalent to being able to write $Y = f(X)$, for some function $f$ (the theorem is true for more general spaces, just not for arbitrary spaces).
+In general, for {\it any} two random variables $X$ and $Y$, we say a random variable $Z = f(X)$ is a {\it version} of $\mathbf{E}(Y|X)$ if the two conditions above are satisfied for $Z$. That is, if $Z$ can be expressed as a function of $X$ (the function $f$ in the definition), and if for any set $B = X^{-1}(A)$,
+%
+\[ \int_B Z d\mathbf{P} = \int_B X d\mathbf{P} \]
+%
+This can also be expressed as saying
+%
+\[ \int_A f(x) d\mathbf{P}_X(x) = \int_A f(x) d\mathbf{P}_X(x) \]
+%
+However, the definition can certainly be simplified by noting that once we consider $\mathbf{E}(X|Y)$ as a function on $\Omega$, rather than as a function of the values of $Y$, the actual values of $Y$ are not actually important to the definition of conditional expectation, but rather the ways the values spread out over the sample space. If we consider the $\sigma$ algebra $\sigma(X)$, then if we know the value of $\chi_E$ for each $E = X^{-1}(F)$, this should be sufficient knowledge to calculate the expectation $\mathbf{E}(Y|X)$, rather than knowing the actual values of $X$. The Doob-Dynkin lemma guarantees that if $X$ and $Y$ are real-valued, then $Y$ is a function of $X$ if and only if $Y$ is $\sigma(X)$ measurable. This means the first property of conditional expectation can be reduced to a statement about $\sigma$ algebras.
 
-\begin{lemma}
+\begin{lemma}[Doob-Dynkin]
     A real-valued random variable $Y$ is $\sigma(X)$ measurable if and only if $Y = f(X)$ for some Borel-measurable $f: \mathbf{R} \to \mathbf{R}$.
 \end{lemma}
 \begin{proof}
-    Suppose that $Y$ is simple, with $Y(\omega) = \sum a_i \mathbf{I}(\omega \in A_i)$. Then $Y$ is $\sigma(X)$ measurable if and only if $A_i = X^{-1}(B_i)$ for some Borel measurable sets $B_i$. In this case, the $B_i$ are disjoint, and we can define a simple measurable function $f(t) = \sum a_i\mathbf{I}(t \in B_i)$ with $f(X) = Y$. Now if $Y$ is a general random variable, let $Y$ be the pointwise limit of simple $\sigma(X)$ random variables $Y_n = f_n(X)$, where the $f_n$ are Borel measurable, and can be chosen to be equal to zero outside the range of $X$. Then, the $f_n$ obviously converge pointwise outside the range of $X$, and for any sample point $\omega$,
+    If $Y = \sum a_i \chi_{A_i}$ is a simple function, then $Y$ is $\sigma(X)$ measurable if and only if $A_i = X^{-1}(B_i)$ for some Borel measurable sets $B_i$. In this case, the $B_i$ are disjoint, and we can define a simple Borel measurable function $f = \sum a_i \chi_{B_i}$, and we find $Y = f(X)$. If $Y$ is a general non-negative $\sigma(X)$ random variable, we can consider an increasing sequence $Y_1, Y_2, \dots$ of non-negative simple $\sigma(X)$ random variables converging monotonely to $Y$. Applying the previous result, we can write $Y_i = f_i(X)$ for some Borel measurable functions $f_i$. If we consider any sample point $\omega$, then
     %
-    \[ \lim_{n \to \infty} f_n(X(\omega)) = \lim_{n \to \infty} Y_n(\omega) = Y(\omega) \]
+    \[ Y(\omega) = \lim Y_i(\omega) = \lim f_i(X(\omega)) \]
     %
-    so the $f_n$ converge pointwise on the range of $X$, to some measurable function $f$ with $Y = f(X)$.
+    Thus if we set $E$ to be the subset of points $x$ in $\mathbf{R}$ where $f_i(x)$ converges, then $X(\Omega) \subset E$. Since the set $E$ is Borel measurable, the functions $\chi_E f_i$ are Borel measurable, and converge everywhere to a Borel measurable function $f$, and it is easy to verify that $Y = f(X)$.
 \end{proof}
 
-The intuitive way we should think about the conditional values is as a `best guess' of the probability values given that some information is known about the system at some time. If we think of the information about the random variable $X$ being given by the $\sigma$-algebra $\sigma(X)$, then it isn't too much to consider arbitrary `sets of information' about a probability space to be a sub $\sigma$-algebra of the $\sigma$-algebra defining the space. We say a random variable $X$ is {\bf adapted} to a $\sigma$-algebra $\Sigma$ if $X$ is measurable with respect to $\Sigma$. A random variable $Y$ is adapted with respect to $X$ if $Y$ is adapted to the $\sigma$ algebra $\sigma(X)$ generated by $X$. With all this terminology, we can now make the general definition. For a given $\Sigma$ algebra and random variable $X$, a $\Sigma$ measurable random variable $\mathbf{E}(X|\Sigma)$ is a version of a conditional expectation if $\int_S \mathbf{E}(X|\Sigma) = \int_S X$ holds for any subset $S \subset \Sigma$. Despite the technical definition, the existence and uniqueness of conditional expectations is relatively easy to prove for any finitely integrable random variable.
+The intuitive way we should think about the conditional values is as a `best guess' of the probability values given that some information is known about the system at some time. If we think of the information about the random variable $X$ being given by the $\sigma$-algebra $\sigma(X)$, then it isn't too much to model arbitrary `sets of information' about a probability space by a sub $\sigma$-algebra $\Sigma$ of the $\sigma$-algebra defining the space. In this case, we should interpret $\mathbf{E}(X|\Sigma)$ as giving a best guess of the value of $X$, given that we know the value of all $\Sigma$ measurable functions ahead of time. We say a random variable $X$ is {\bf adapted} to a $\sigma$-algebra $\Sigma$ if $X$ is measurable with respect to $\Sigma$. This means, essentially, that we `know' the value of $X$ if we know the information contained in $\Sigma$.
+
+\section{General Conditional Expectations}
+
+With all this terminology set in stone, we can now formulate Kolmogorov's theory of conditional expectations. For a given $\Sigma$ algebra, and a random variable $X$, a random variable $\mathbf{E}(X|\Sigma)$ is a {\it version} of a {\bf conditional expectation} with respect to $\Sigma$ if it is adapted to $\Sigma$, and if
+%
+\[ \int_S \mathbf{E}(X|\Sigma) = \int_S X \]
+%
+for any $S \in \Sigma$. In a sense, $\mathbf{E}(X|\Sigma)$ is the best approximation to $X$, given that we know the information in $\Sigma$.
+
+\begin{example}
+    The $\sigma$ algebra $\Sigma = \{ \emptyset, \Omega \}$ is the smallest $\sigma$ algebra over $\Omega$, and represents a set of `no information at all'. If $X$ is any integrable random variable, then the constant function $\mathbf{E}(X)$ is a version of a conditional expectation for $X$, because
+    %
+    \[ \int_\emptyset \mathbf{E}(X) = 0 = \int_\emptyset X\ \ \ \ \ \ \int_\Omega \mathbf{E}(X) = \mathbf{E}(X) = \int_\Omega X \]
+    %
+    Thus, given the presense of no information at all, the best constant approximation we can have of $X$ is $\mathbf{E}(X)$.
+\end{example}
+
+Despite the technical definition, the existence and almost-sure uniqueness of conditional expectations is relatively easy to prove in $\mathcal{L}^1(\Omega)$, thanks to the Radon-Nikodym theorem in measure theory.
+
+% A simple argument shows that $\mathbf{E}(X|\Sigma)$ is a conditional expectation for $X$ given $\Sigma$ if and only if $\mathbf{E}(Y \mathbf{E}(X | \Sigma)) = \mathbf{E}(YX)$ for all $\Sigma$ measurable functions $Y$, and that we need only verify the condition for a $\pi$ system generating $\Sigma$ (provided the $\pi$ system contains $\Omega$).
 
 \begin{theorem}
-    If $\|X\|_1 < \infty$, then $\mathbf{E}(X|\Sigma)$ exists, $\| \mathbf{E}(X|\Sigma) \|_1 < \infty$, and is unique up to a set of measure zero.
+    If $X \in \mathcal{L}^1(\Omega)$, then $\mathbf{E}(X|\Sigma)$ exists in $\mathcal{L}^1(\Sigma)r$, and is unique up to a set of measure zero.
 \end{theorem}
 \begin{proof}
-    First, assume $X \geq 0$. Then the map $S \mapsto \int_S X d \mathbf{P}$ is a {\it finite measure} over $\Sigma$ which is absolutely continuous with respect to $\mathbf{P}$, hence by the Radon-Nikodym theorem there exists a $\Sigma$ measurable function $Y$ such that for any set $S$, $\int_S Y d\mathbf{P} = \int_S X d\mathbf{P}$. Now it is easy to see that since $X \geq 0$, $Y \geq 0$ almost surely, and so
+    First, assume $X \geq 0$. Then the map $\mathbf{P}_\Sigma: S \mapsto \int_S X d \mathbf{P}$ is a {\it finite measure} over $\Sigma$ which is absolutely continuous with respect to $\mathbf{P}$. The Radon-Nikodym theorem asserts that there is a $\Sigma$-adapted random variable $Y$ such that for any set $S$,
+    %
+    \[ \int_S Y d\mathbf{P}_\Sigma = \int_S X d\mathbf{P} \]
+    %
+    This shows exactly that $Y$ is a conditional expectation for $X$. It is easy to see that since $X \geq 0$, $Y \geq 0$ almost surely, and so
     %
     \[ \| Y \|_1 = \int |Y| d\mathbf{P} = \int Yd\mathbf{P} = \int Xd\mathbf{P} = \| X \|_1 < \infty \]
     %
-    To see uniqueness, note that if $Y_0$ and $Y_1$ are both conditional expectations for $X$, then for any set $S \in \Sigma$, $\int_S (Y_0 - Y_1) = \int_S (X - X) = 0$, and this implies $Y_0 = Y_1$ almost surely.
+    To verify uniqueness, note that if $Y_0$ and $Y_1$ are both conditional expectations for $X$, then for any set $S \in \Sigma$, $\int_S (Y_0 - Y_1) = \int_S (X - X) = 0$, and this implies $Y_0 = Y_1$ almost surely. If $X$ is not necessarily positive, then we can write $X = X^+ - X^-$, and it is simple to verify that $\mathbf{E}(X^+|\Sigma) - \mathbf{E}(X^-|\Sigma)$ is a conditional expectation for $X$.
 \end{proof}
 
-Note that since $\mathbf{E}(X|\Sigma)$ is unique up to a set of measure zero, and if $X$ and $Y$ agree almost everywhere, then $\mathbf{E}(X|\Sigma) = \mathbf{E}(Y|\Sigma)$, and so $\mathbf{E}(\cdot | \Sigma)$ can be viewed as an operator on $L^1(\Omega)$. By elementary linearity properties of the integral
+It is also easy to show that $\mathbf{E}(X|\Sigma)$ exists if $X \geq 0$, because we can write $X$ as the monotone limit of simple functions $X_n$, which are in $L^1(\Omega)$, and then we can apply the monotone convergence theorem to verify that the pointwise limit of the $\mathbf{E}(X_n|\Sigma)$ satisfy the required integral formulas. To verify uniqueness, we note that if $Y$ and $Z$ are versions of the conditional expectation of $X$, then we can apply the subtraction trick to conclude that $\mathbf{P}(Y \neq Z, Y < \infty) = 0$, $\mathbf{P}(Y \neq Z, Z < \infty) = 0$. But now the only set remaining to analyze is where $Y = Z = \infty$, and of course $\mathbf{P}(Y \neq Z, Y = Z = \infty) = 0$, so $Y$ and $Z$ are equal almost everywhere.
+
+\section{Properties of the Conditioning Operator}
+
+Since $\mathbf{E}(X|\Sigma)$ is unique up to a set of measure zero, and $X$ and $Y$ agree almost everywhere, then $\mathbf{E}(X|\Sigma) = \mathbf{E}(Y|\Sigma)$, and we can consider conditional expectation as an {\it operator} on $L^1(\Omega)$. In particular, it is easy to verify from properties of the Lebesgue integral that
 %
 \begin{itemize}
     \item $\mathbf{E}(aX + bY|\Sigma) = a \mathbf{E}(X|\Sigma) + b \mathbf{E}(Y|\Sigma)$
-    \item $\| \mathbf{E}(X|\Sigma) \|_1 = \| X \|_1$.
     \item $\mathbf{E}(\mathbf{E}(X|\Sigma)) = \mathbf{E}(X)$, and if $\Gamma \subset \Sigma$, $\mathbf{E}(\mathbf{E}(X|\Sigma)|\Gamma) = \mathbf{E}(X|\Gamma)$.
 \end{itemize}
 %
-Since conditional expectations are defined with respect to the Lebesgue integral, we also get convergence results based on the main results of integration theory.
+We also get variants of the standard convergence results of Lebesgue theory.
 %
 \begin{itemize}
-    \item (Monotone Convergence) If $0 \leq X_1 \leq X_2 \dots \to X$, then $\mathbf{E}(X_i|\Sigma)$ converge pointwise monotonely almost everywhere to $\mathbf{E}(X|\Sigma)$.
-    \item (Fatou) If $X_n \geq 0$ then $\mathbf{E}((\liminf X_n)|\Sigma) \leq \liminf \mathbf{E}(X_n|\Sigma)$ a.s.
-    \item (Dominated Convergence) If $|X_n| \leq Y$, $\int Y < \infty$, and $X_n \to X$ pointwise a.s, then $\mathbf{E}(X_n|\Sigma) \to \mathbf{E}(X|\Sigma)$ pointwise almost surely.
-    \item (Jensen) If $f$ is a convex $L^1$ function then $\mathbf{E}(f(X)|\Sigma) \geq f(\mathbf{E}(X|\Sigma))$ almost surely. An important corollary of this is that $\| \mathbf{E}(X|\Sigma) \|_p \leq \| X \|_p$ for $p \geq 1$.
+    \item (Monotone Convergence) If $0 \leq X_1 \leq X_2 \dots \to X$, then $\mathbf{E}(X_i|\Sigma)$ converges almost surely to $\mathbf{E}(X|\Sigma)$.
+    \item (Fatou) If $X_n \geq 0$ then $\mathbf{E}((\liminf X_n)|\Sigma) \leq \liminf \mathbf{E}(X_n|\Sigma)$ almost surely.
+    \item (Dominated Convergence) If $|X_n| \leq Y$, $\int Y < \infty$, and $X_n \to X$ pointwise almost surely, then $\mathbf{E}(X_n|\Sigma) \to \mathbf{E}(X|\Sigma)$ pointwise almost surely.
+    \item (Jensen) If $f$ is a convex function with $\| f(X) \|_1 < \infty$, then we can consider the function $\mathbf{E}(f(X)|\Sigma)$, and $f(\mathbf{E}(X|\Sigma)) \leq \mathbf{E}(f(X)|\Sigma)$ almost surely.
 \end{itemize}
+%
+The general idea is that the integral equations defining conditional expectation can be manipulated using the standard theorems of Lebesgue integrals.
 
-On another interesting thread, we can also prove the existence of conditional expectations for $L^2$ measurable functions, and we also note that $\mathbf{E}(X|\Sigma)$ is the best approximation of $X$ is the square mean, which explains why conditional expectations occur so often in applications to statistics.
+\begin{proof}
+    To prove the monotone convergence theorem, note that it is obvious that $\mathbf{E}(X_i|\Sigma)$ are increasing and non-negative almost everywhere, and therefore we can apply monotone convergence to conclude that for each set $S$,
+%
+\[ \int_S \mathbf{E}(X|\Sigma) = \int_S X = \lim_{n \to \infty} \int_S X_n = \lim_{n \to \infty} \int_S \mathbf{E}(X_n|\Sigma) \]
+%
+If we let $T = \{ \omega : \limsup \mathbf{E}(X_n|\Sigma)(\omega) \leq \mathbf{E}(X|\Sigma)(\omega) - \varepsilon \}$, then the reverse Fatou lemma gives
+%
+\[ \lim_{n \to \infty} \int_T \mathbf{E}(X_n|\Sigma) \leq \int_T \limsup \mathbf{E}(X_n|\Sigma) \leq \int_T \mathbf{E}(X|\Sigma) - \varepsilon = \int_T \mathbf{E}(X|\Sigma) - \mathbf{P}(T) \varepsilon \]
+%
+It follows that $\mathbf{P}(T) = 0$, and letting $\varepsilon \to 0$ shows that $\limsup \mathbf{E}(X_n|\Sigma) \geq \mathbf{E}(X|\Sigma)$ almost surely. Similar results show that $\liminf \mathbf{E}(X_n|\Sigma) \leq \mathbf{E}(X|\Sigma)$ almost surely, so that $\mathbf{E}(X_n|\Sigma) \to \mathbf{E}(X|\Sigma)$ almost surely. Now let's prove Fatou's theorem. If we set $Y_n = \inf_{k \geq n} X_k$, then $Y_n$ tends monotically to $\liminf X_n$, so
+%
+\[ \mathbf{E}(\liminf X_n|\Sigma) = \lim \mathbf{E}(Y_n|\Sigma) \]
+%
+and it suffices to show that $\lim \mathbf{E}(Y_n|\Sigma) \leq \liminf \mathbf{E}(X_n|\Sigma)$ almost surely. But this follows because $Y_n \leq X_n$, so $\mathbf{E}(Y_n|\Sigma) \leq \mathbf{E}(X_n|\Sigma)$, and we may then take limits, and liminfs. Verifying dominated convergence is easy. If $S \in \Sigma$ is given, then using the dominated convergence theorem gives
+%
+\[ \int_S \mathbf{E}(X_n|\Sigma) = \int_S X_n \to \int_S X = \int_S \mathbf{E}(X|\Sigma) \]
+%
+using the same techniques as in the theorems above, we can conclude that $\mathbf{E}(X_n|\Sigma) \to \mathbf{E}(X|\Sigma)$ almost surely. To verify Jensen's inequality, we can apply the standard Jensen's inequality to conclude
+%
+\[ \int_S \mathbf{E}(f(X)|\Sigma) = \int_S f(X) \geq f \left(\int_S X \right) = f \left( \int_S \mathbf{E}(X|\Sigma) \right) \]
+%
+and this implies the almost sure inequality.
+\end{proof}
+
+Here is a notable use of the conditional Jensen's inequality.
+
+\begin{prop}
+    If $X \in L^p(\Omega)$, then $\mathbf{E}(X|\Sigma) \in L^p(\Omega)$.
+\end{prop}
+\begin{proof}
+    Applying Jensen's inequality, using the fact that $x \mapsto |x|^p$ is convex, and $\mathbf{E}(|X|^p) < \infty$, we conclude that $|\mathbf{E}(X|\Sigma)|^p \leq \mathbf{E}(|X|^p|\Sigma)$, and so
+    %
+    \[ \| \mathbf{E}(X|\Sigma) \|_p^p = \int |\mathbf{E}(X|\Sigma)|^p \leq \int \mathbf{E}(|X|^p|\Sigma) = \int |X|^p = \| X \|_p^p < \infty \]
+    %
+    Thus conditional expectation is a contraction on each $L^p$ space.
+\end{proof}
+
+The conditional expectation of $L^2$ measurable functions has important orthogonality properties, which show $\mathbf{E}(X|\Sigma)$ is the best $\Sigma$ adapted approximation of $X$ in the square mean error, which explains why conditional expectations occur so often in statistical applications.
 
 \begin{theorem}
-    If $\| X \|_2 < \infty$, then $\| \mathbf{E}(X|\Sigma) \|_2 < \infty$, and is the orthogonal projection of $X$ onto the subspace of $L^2$ functions which are $\Sigma$ measurable.
+    If $X \in L^2(\Omega)$, then $\mathbf{E}(X|\Sigma)$ is the orthogonal projection of $X$ onto the subspace of $\Sigma$ adapted $L^2$ functions.
 \end{theorem}
 \begin{proof}
     If we let $\mathbf{E}(X|\Sigma)$ be the orthogonal projection of $X$ onto the subspace of $L^2$ functions which are $\Sigma$ measurable, then orthogonality implies that for any $\Sigma$ measurable function $Y$,
@@ -945,116 +1256,303 @@ On another interesting thread, we can also prove the existence of conditional ex
     %
     \[ \int Y \mathbf{E}(X|\Sigma) = \int YX \]
     %
-    and letting $Y$ be an indicator function over some element of $\Sigma$, we obtain easily that $\mathbf{E}(X|\Sigma)$ satisfies the properties of a conditional expectation, hence we have proven that the conditional expectation is square integrable.
+    Letting $Y$ be an indicator function over some element of $\Sigma$, we obtain easily that $\mathbf{E}(X|\Sigma)$ satisfies the properties of a conditional expectation, hence we have proven that the conditional expectation is square integrable.
 \end{proof}
 
-If $X$ is already $\Sigma$ measurable, then $\mathbf{E}(X|\Sigma) = X$. In particular, $\mathbf{E}(X|X) = X$. More generally, if $X$ is $\Sigma$ measurable, then $\mathbf{E}(XY|\Sigma) = X\mathbf{E}(Y|\Sigma)$, which follows from the next lemma.
+If $X$ is already $\Sigma$ measurable, then it is obviously true that $\mathbf{E}(X|\Sigma) = X$. In particular, $\mathbf{E}(X|X) = X$. More generally, we find that if $X$ is $\Sigma$ measurable, and in $L^p(\Omega)$, for $1 \leq p \leq \infty$, and if $Y$ is $\Sigma$ measurable, and in $L^q(\Omega)$, then $XY$ is in $L^1$, and $\mathbf{E}(XY|\Sigma) = X\mathbf{E}(Y|\Sigma)$. This follows from the next lemma.
 
 \begin{lemma}
-    For any $\Sigma$-measurable function $Y$, and $A \subset \Sigma$ for which the equation
+    If $X$ is in $L^p(\Omega)$, and $Y$ is in $L^q(\Omega)$, then for any set $S \in \Sigma$,
     %
-    \[ \int_A Y \mathbf{E}(X|\Sigma) = \int_A YX \]
+    \[ \int_S \mathbf{E}(X|\Sigma) Y = \int_S XY \]
     %
-    makes sense, the equation holds.
+    Similarily, if $X \geq 0$ and $Y \geq 0$ then the formula holds.
 \end{lemma}
 \begin{proof}
-    By linearity, and splitting $X$ into its positive and negative parts, we may assume $X \geq 0$, and $\mathbf{E}(X|\Sigma) \geq 0$ a.e. The lemma is true if $Y$ is an indicator function by definition, and so by linearity, the lemma is also true if $Y$ is a simple function. Then we can prove the theorem if $Y \geq 0$ by the monotone convergence theorem, and then for all $Y$ by splitting $Y$ into its positive and negative parts.
+    Assume first that $X \geq 0$, from which the general theorem will follow by taking $X = X^+ - X^-$. As we noted, if $Y$ is the indicator function of some element of $\Sigma$, the theorem is obvious by definition of conditional expectation. Applying linearity of the equation, this means that the equation holds if $Y$ is any simple function. If $Y \geq 0$ is the limit of simple functions $Y_1 \leq Y_2 \leq \dots$, monotone convergence implies
+    %
+    \[ \int_S \mathbf{E}(X|\Sigma) Y = \lim \int_S \mathbf{E}(X|\Sigma) Y_i = \lim \int_S XY_i = \int_S XY \]
+    %
+    and this proves the theorem. The proof for general positive random variables follows from monotone convergence.
 \end{proof}
 
-We say two sigma algebras $\Sigma$ and $\Delta$ are independent if $\mathbf{P}(A \cap B) = \mathbf{P}(A) \mathbf{P}(B)$, for any $A \in \Sigma$, $B \in \Delta$. This generalizes to an arbitrary family of $\sigma$ algebras (where we take arbitrary intersections), and a family of random variables $\{ X_\alpha \}$ are independent if and only if $\{ \sigma(X_\alpha) \}$ is independent. $X$ and $Y$ are independent with respect to $\Sigma$ if $\sigma(X) \cap \Sigma$ is independent of $\sigma(Y) \cap \Sigma$. If $X$ and $Y$ are independant with respect to $\Sigma$, then $\mathbf{E}(XY | \Sigma) = \mathbf{E}(X|\Sigma) \mathbf{E}(Y|\Sigma)$. Most importantly, if $X$ is independent with respect to $\Sigma$, then $\mathbf{E}(X|\Sigma) = \mathbf{E}(X)$.
+\section{Conditional Probabilities}
 
-As a stochastic process evolves, we gain more and more information about the future of the process. This also needs to be modelled in a measure theoretic manner. An evolving system of information is known as a {\bf filtration}. Let $T$ be a linearly ordered set. A {\bf filtration} is an increasing family of $\sigma$ algebras. Precisely, a family $\{ \mathcal{F}_t \}$ of $\sigma$ algebras with respect to $T$ is a {\bf filtration} if $\mathcal{F}_t \subset \mathcal{F}_u$ for $t < u$. It is the measure theoretic equivalent of a topological filter.
+We have only been discussing conditional expectation so far, but generalizing the formula $\mathbf{P}(E) = \mathbf{E}(\chi_E)$ tells us we should be able to define
+%
+\[ \mathbf{P}(E|\Sigma) = \mathbf{E}(\chi_E | \Sigma) \]
+%
+This means that $\mathbf{P}(E|\Sigma)$ is no longer a number, it is a random variable, like a number that can look `ahead of time' into the information contained in $\Sigma$ to randomly improve upon our approximation of the probability of an event happening. If $E_1, E_2, \dots$ are a countable sequence of disjoint events with union $E$, then $\chi_E = \sum \chi_{E_i}$, and applying monotone convergence we conclude that $\mathbf{P}(E|\Sigma) = \sum \mathbf{P}(E_i|\Sigma)$ almost everywhere. Thus in some sense, conditional probabilities follow the same rules as regular probabilities. However, if we consider the class of all measurable $E$, then we obtain a family of uncountable sets, and it doesn't seem quite as likely that the conditional expectations of indicators functions will always behave like probability distributions. We define a {\bf regular conditional probability} for a distribution $\mathbf{P}$ on an algebra $\Sigma$, with respect to a $\sigma$ algebra $\Delta$ as a map $\mathbf{P}(\cdot |\Delta): \Sigma \times \Omega \to [0,1]$ such that for ever $E \in \Sigma$, the map $\omega \mapsto \mathbf{P}(E|\Delta)(\omega)$ is a version of $\mathbf{P}(E|\Delta)$, and for each $\omega$, the map $E \mapsto \mathbf{P}(E|\Delta)(\omega)$ is a probability measure on $\Sigma$.
+
+\begin{example}
+    If $X$ and $Y$ are continuous random variables, then the density function $f_{X|Y} = f_{X,Y}/f_Y$ is the density for a regular conditional probability, because for any Borel set $B \subset \mathbf{R}$, the function
+    %
+    \[ \omega \mapsto \int_B f_{X|Z}(x|Z = Z(\omega)) dx \]
+    %
+    is a version of $\mathbf{P}(X \in B|Z)$, and it is easy to see that this defines a probability distribution if $\omega$ is fixed.
+\end{example}
+
+\begin{example}
+    Let $X$ and $Y$ be independent continuous random variables with a common distribution function $F$. Let's calculate $\mathbf{P}(X \leq t | Z)$, where $Z = \max(X,Y)$. If $Z \leq t$, then $X \leq t$ is guaranteed. On the other hand, if $Z > t$, then it is first necessary that $Y = Z$, which happens independently of $Z$ with probability $1/2$, and then we try to determine the chance that $X \leq t$, given that $X \leq Z$. This heuristically justifies that
+    %
+    \begin{align*}
+        \mathbf{P}(X \leq t | Z) &= \mathbf{I}(Z \leq t) + \mathbf{I}(Z > t) \frac{\mathbf{P}(X \leq t | X \leq Z)}{2} \\
+        &= \mathbf{I}(Z \leq t) + \mathbf{I}(Z > t) \frac{\mathbf{P}(X \leq t)}{2 \mathbf{P}(X \leq Z)}\\
+        &= \mathbf{I}(Z \leq t) + \mathbf{I}(Z > t) \frac{F(t)}{2 F(Z)}
+    \end{align*}
+    %
+    Lets verify this is formally a conditional expectation. It suffices to integrate this function over $Z \leq u$, where $u \leq \infty$, since this is a $\pi$ system, and in this case we need to verify that
+    %
+    \[ \mathbf{P}(Z \leq \min(t,u)) + \frac{F(t)}{2} \int_{t < Z \leq u} \frac{d\mathbf{P}}{F(Z)} = \mathbf{P}(X \leq t, Z \leq u) \]
+    %
+    If $u \leq t$, we reasoned above that $\mathbf{P}(X \leq t, Z \leq u) = \mathbf{P}(Z \leq u)$. On the other hand, since the distribution of $(X,Y)$ is a product measure, since $X$ and $Y$ are independant, we can apply Fubini's theorem, calculating
+    %
+    \begin{align*}
+        \int_{t < Z \leq u} \frac{d\mathbf{P}}{F(Z)} &= \int_{\substack{x \leq y\\t < y \leq u}} \frac{dF(x) dF(y)}{F(y)} + \int_{\substack{x > y\\t < x \leq u}} \frac{dF(y) dF(x)}{F(x)}= 2[F(u) - F(t)]
+    \end{align*}
+    %
+    \[ \mathbf{P}(X \leq t, Z \leq u) = \mathbf{P}(X \leq t, Y \leq u) = F(t)F(u) \]
+    \[ \mathbf{P}(Z \leq t) = \mathbf{P}(X \leq t, Y \leq t) = F(t)^2 \]
+    %
+    and the verification is complete. Note that the specification we have given induces a {\it regular} conditional probability distribution, because if $\omega$ is fixed, then $Z(\omega) = z$ is fixed, then provided $F(z) \neq 0$, the values
+    %
+    \[ \mathbf{P}(X \leq t|Z = z) = \mathbf{I}(z \leq t) + \mathbf{I}(z > t) \frac{F(t)}{2F(z)} \]
+    %
+    define a right countinuous function, non-decreasing of $t$ whose value at $-\infty$ is $F(-\infty)/2F(z) = 0$, and whose value at $\infty$ is $1$. Since $\mathbf{P}(F(Z) = 0)$ occurs with probability zero, we can edit the conditional probability function over this set so that we get a probability distribution everywhere.
+\end{example}
+
+Regular conditional probabilities exist on almost every space encountered in practice (for instance, they exist if $\Sigma$ is the Borel algebra on a {\it Lusin space} $\Omega$, that is, a space homeomorphic to a Borel subset of a compact metric space). (TODO: PROVE THIS).
+
+\begin{example}[Halmos, Dieudonn\'{e}, Andersen, Jessen]
+    Consider the probability space $[0,1]$ with the standard Borel $\sigma$ algebra and Lebesgue measure $\mu$. Using the axiom of choice, construct a set $A$ with inner Lebesgue measure 0 and outer Lebesgue measure 1 (so $A^c$ has outer Lebesgue measure 1 as well). Let $\Sigma$ be the $\sigma$ algebra generated from Borel sets and $A$. Then a typical element of $\Sigma$ can be written in the form
+    %
+    \[ B = (A \cap E) \cup (A^c \cap F) \]
+    %
+    where $E$ and $F$ are Borel sets. It follows then that $\mu^*(B \cap A) = \mu(E)$, and $\mu^*(B \cap A^c) = \mu(F)$. We can therefore define a probability measure on $\Sigma$ by setting
+    %
+    \[ \mathbf{P}(B) = \frac{\mu^*(B \cap A) + \mu^*(B^c \cap A)}{2} = \frac{\mu(E) + \mu(F)}{2} \]
+    %
+    We have essentially hid `two copies' of $[0,1]$ in itself. Assume that we have a conditional probability measure for $\mathbf{P}$ over Borel sets. If $B \in \Sigma$, and $E$ is Borel measurable, then
+    %
+    \begin{align*}
+        \int_E \mathbf{P}(A \cap B|B [0,1]) d\mathbf{P} &= \mathbf{P}(A \cap E \cap B)\\
+        &= \frac{\mu^*(A \cap E \cap B)}{2} = \frac{\mu^*(E \cap B)}{2} = \int_E \frac{\chi_B}{2} d\mathbf{P}
+    \end{align*}
+    %
+    Thus $\mathbf{P}(A \cap B|B[0,1]) = \chi_B/2$ almost surely for each set $B$. Since $B[0,1]$ is generated by a countable $\pi$ system, and the maps $B \mapsto \mathbf{P}(A \cap B|\Sigma)(\omega)$, $B \mapsto \chi_B(\omega)$ are both measures for every $\omega$, we have that $\mathbf{P}(A \cap B|B[0,1])(\omega) = \chi_B(\omega)/2$ for every Borel set $B$ if and only if $\mathbf{P}(A \cap B|B[0,1])(\omega) = \chi_B(\omega)/2$ for every element in the $\pi$ system, and so we conclude
+    %
+    \[ J = \left\{ \omega: \mathbf{P}(A \cap B|B[0,1])(\omega) = \frac{\chi_B(\omega)}{2}\ \text{for all Borel $B$} \right\} \]
+    %
+    is also Borel, and $\mathbf{P}(J) = 1$, since it is the countable intersection of probability one sets. This means that we may `plug $J$ into itself', ala Russell's paradox, so we conclude if $\omega \in J$, then $J - \{ \omega \}$ is also Borel, and so
+    %
+    \[ \mathbf{P}(A \cap J|B[0,1])(\omega) = \frac{\chi_J(\omega)}{2} \neq \frac{\chi_{J - \{ \omega \}}(\omega)}{2} = \mathbf{P}(A \cap [J - \{ \omega \}]|B[0,1])(\omega) \]
+    %
+    so that $A \cap J \neq A \cap [J - \{ \omega \}]$. This means $\omega \in A$, so $J \subset A$. But $A$ has inner Lebesgue measure zero, whereas $J$ has measure 1, which is impossible. Thus the conditional probability could never exist in the first place.
+\end{example}
+
+\section{Independence and Conditional Expectation}
+
+We know that a series of random variables $X_1, \dots, X_n$ is independent if
+%
+\[ \mathbf{P}(X_1 \in A_1, \dots, X_n \in A_n) = \mathbf{P}(X_1 \in A_1) \dots \mathbf{P}(X_n \in A_n) \]
+%
+for any Borel set $A_1, \dots, A_n$. This essentially means that the information in each random variables $X_k$ does not give any information about the other random variables. In this form, there seems there should be an obvious extension to $\sigma$ algebras. We say a family of sigma algebras $\Sigma_1, \dots, \Sigma_n$ is independent if
+%
+\[ \mathbf{P}(A_1 \cap \dots \cap A_n) = \mathbf{P}(A_1) \dots \mathbf{P}(A_n) \]
+%
+if $A_1 \in \Sigma_1, \dots, A_n \in \Sigma_n$, and an infinite family is independent if every finite family is independent. If $\Sigma$ contains no relevant information to $X$, then $\mathbf{E}(X|\Sigma)$ should essentially have no extra information to predict $X$, so we would have to conclude $\mathbf{E}(X|\Sigma) = \mathbf{E}(X)$. We prove this in a more general form below.
+
+\begin{theorem}
+    If $\Sigma$ is independent of $X$, then $\mathbf{E}[X|\Sigma] = \mathbf{E}[X]$.
+\end{theorem}
+\begin{proof}
+    If $X = \chi_A$, then $A$ is independent of any set in $\Sigma$, and so for any $B \in \Sigma$,
+    %
+    \[ \int_B \mathbf{P}(A) = \mathbf{P}(A) \mathbf{P}(B) = \mathbf{P}(A \cap B) = \int_B \chi_A = \int_B \mathbf{P}(A|\Sigma) \]
+    %
+    This means $\mathbf{P}(A) = \mathbf{P}(A|\Sigma)$. By linearity, the equation holds if $X$ is any simple function. If $X$ is positive, we can take limits, and then we can just let $X = X^+ - X^-$ to get the general result.
+\end{proof}
+
+\begin{corollary}
+    If $\Sigma$ is independent of $\sigma(\sigma(X), \Delta)$, then
+    %
+    \[ \mathbf{E}[X|\sigma(\Sigma,\Delta)] = \mathbf{E}[X|\Delta] \]
+\end{corollary}
+\begin{proof}
+    If $A \in \Delta$, and $B \in \Sigma$, then $X\chi_A$ is independent of $\Sigma$, and so by the last theorem,
+    %
+    \[ \int_{A \cap B} X = \int_B X\chi_A = \int_B \mathbf{E}[X\chi_A] = \mathbf{P}(B) \mathbf{E}[X\chi_A] \]
+    %
+    Now $\mathbf{E}[X|\Delta] \chi_A$ is also independent of $\Sigma$, so
+    %
+    \begin{align*}
+        \int_{A \cap B} \mathbf{E}[X|\Delta] &= \int_B \mathbf{E}[X|\Delta] \chi_A = \mathbf{P}(B) \mathbf{E}(\mathbf{E}[X|\Delta] \chi_A)\\
+        &= \mathbf{P}(B) \mathbf{E}(\mathbf{E}[X\chi_A|\Delta]) = \mathbf{P}(B) \mathbf{E}[X\chi_A]
+    \end{align*}
+    %
+    It follows by equating these two equations that $\mathbf{E}[X|\sigma(\Sigma,\Delta)] = \mathbf{E}[X|\Delta]$.
+\end{proof}
+
+\begin{example}
+    Consider a sequence of independent and identically distributed random variables $X_1, X_2, \dots$, and consider the partial sums $S_n$. Given that we know $S_n$, the best guess of each $X_i$ should be $n^{-1} S_n$. Define
+    %
+    \[ \Sigma_n = \sigma(S_n, S_{n+1}, \dots) = \sigma(S_n, X_{n+1}, \dots) \]
+    %
+    Note that $X_{n+1}, X_{n+2}, \dots$ is independent of $X_i, S_n$, so $\mathbf{E}[X_i|\Sigma_n] = \mathbf{E}[X_i|S_n]$. But if $F$ is the common distribution of each $X_i$, then for any set $A = \{ S_n \in B \}$, where $B$ is Borel, then $X(A)$ is symmetric in each variable (because the sum is symmetric), and so
+    %
+    \[ \int_A X_i d\mathbf{P} = \int_{X(A)} x_i dF(x_1) \dots dF(x_n) = \int_{X(A)} x_j dF(x_1) \dots dF(x_n) = \int_A X_j d\mathbf{P} \]
+    %
+    so $\mathbf{E}(X_i|S_n) = \mathbf{E}(X_j|S_n)$. Now, using the fact that $S_n = \sum \mathbf{E}(X_i|S_n) = n\mathbf{E}(X_i|S_n)$, and this completes the calculation. This calculation leads to a very nice proof of the strong law of large numbers, as we will soon see.
+\end{example}
+
+\chapter{Discrete Time Martingales}
+
+\section{Filtrations}
+
+As a stochastic process evolves, the values we observe give us more and more information into the future of the process. We can model this `increase' in information in a measure theoretic manner, by the object known as a filtration, which is just an increasing family of $\sigma$ algebras $\Sigma_0 \subset \Sigma_1 \subset \dots$, representing information at is available at a given time, which should increase over time as we learn more and more states of the process. It is the measure theoretic equivalent of a topological filter.
+
+\begin{example}
+    Let $X_0, X_1, \dots$ be a stochastic process. The {\bf natural filtration} corresponding to $X$ is the filtration $\Sigma_0 = X_0$, $\Sigma_1 = X_1, \dots$, which represents the increase in information over time if we only look at the values $X_i$.
+\end{example}
+
+\begin{example}
+    Suppose we have a random walk, where at each step we flip a coin $X \in \{ -1, +1 \}$ to decide which direction to travel, and then travel along this direction by the length of a Poisson distribution $Y \in \mathbf{Z}^+$. Then the natural information given to use after $n$ steps is the value of the first $n$ coin flips $X_1, \dots, X_n$ and the values of the first $n$ Poisson distributions $Y_1, \dots, Y_n$. The natural filtration to use in this example is $\Sigma_n = \sigma(X_1,Y_1, \dots,X_n,Y_n)$.
+\end{example}
+
+It is often interesting to define $\Sigma_\infty = \lim \Sigma_n$, which represents all the information we could ever obtain in a process.
 
 \section{Martingales}
 
-We wish to discuss a markov chain which represents a `fair bet'. Each point of time in the process represents the amount of   money in a gambler's pocket. if we have a certain amount of money at a time, and we watch the process evolve. We should expect us to find the same amount of money with us on average. This is where our new definition of expectation comes into play. A {\bf martingale} with respect to a filtration $\{ \mathcal{F}_t \}$ is a process $\{X_t\}$, with each $X_t \in L_1(\mathbf{P})$ such that, for $s < t$, $\mathbf{E}(X_t | \mathcal{F}_s) = X_s$. Normally, we will assume the filtration is $\mathcal{F}_t = \sigma(X_s : s \leq t)$.
+We wish to discuss stochastic processes $X_1, X_2, \dots$ representing a `fair bet'. Each point of time in the process represents the amount of money in a gambler's pocket. if we have a certain amount of money at a time, and we watch the process evolve, we should expect us to find the same amount of money with us on average, so that the bets we made were fair. This is where our new definition of expectation comes into play. A {\bf martingale} with respect to a filtration $\Sigma_0, \Sigma_1, \dots$ is a process $M_0, M_1, \dots$ consisting of integrable martingales such that, for $m < n$, $\mathbf{E}(M_n | \Sigma_m) = M_m$. More generally, we say $M$ is a {\bf submartingale} if $\mathbf{E}(M_n|\Sigma_m) \geq M_m$, and $M$ is a {\bf supermartingale} if $\mathbf{E}(M_n|\Sigma_m) \leq M_m$. A submartingale is a game that's in the player's favour, and a supermartingale is a game against the player (A su{\it b}martingale increases, and a su{\it p}ermartingale decreases). We need only verify the defining property for $\mathbf{E}(M_n|\Sigma_{n-1})$, because we can apply the tower rule to obtain the general property recursively. Though it is helpful to think of these processes as modelling gambling, they seem to crop up in almost every aspect of probability theory.
 
 \begin{example}
-    Let $\{ X_t \}$ be a sequence of independent, identically distributed random variables in $L_1(\mathbf{P})$ with average 0. Define $S_n = \sum X_k$ to be the average value of $X_t$. Then
+    Let $X_1, X_2, \dots$ be a sequence of independent, integrable random variables with mean zero. Define $S_n = X_1 + \dots + X_n$ to be the `random walk' with respect to these random variables, with $S_0 = 0$. Then
     %
     \begin{align*}
-        \mathbf{E}(S_n | S_k, \dots, S_0) &= \sum_{i \leq k} \mathbf{E}(X_i | S_0, \dots, S_k) + \sum_{k > i} \mathbf{E}(X_i | S_k, \dots, S_0)\\
-        &= \sum_{i \leq k} \mathbf{E}(S_{i} - S_{i-1} | S_0, \dots, S_k) + \sum_{k > i} \mathbf{E}(X_i | S_k, \dots, S_0)\\
-        &= S_k + \sum_{k > i} \mathbf{E}(X_i) = S_k
+        \mathbf{E}(S_n|X_1, \dots, X_{n-1}) &= X_1 + \dots + X_{n-1} + \mathbf{E}(X_n|X_1, \dots, X_{n-1})\\
+        &= S_{n-1} + \mathbf{E}(X_n) = S_{n-1}
     \end{align*}
     %
-    Each $S_k$ is in $L_1$, so the sequence $S_k$ is a martingale. In general, if $X_t$ has mean $\mu$, the $S_n - n \mu$ is a martingale -- the fairness of the bet is tipped on one side, so we need the other factor to rebalance it.
+    Thus $S_n$ is a martingale relative to the filtration induced by the stochastic sequence $X_1, X_2, \dots$. We can also show that it is a martingale relative to the filtration induced by $S_1, S_2, \dots$ itself. It is of interest to ask (ala the law of large numbers) if $S_n$ converges as $n \to \infty$ to some random variable $S_\infty$. We shall find martingale theory provides a framework in which these questions have easy answers.
 \end{example}
 
 \begin{example}
-    Let us consider an actual betting example. Let us flip a fair coin, determining a sequence of independant and identically distributed Bernoulli random variables $\{ X_n \}$, taking values in $\{ \pm 1 \}$. At each point in time, we make a bet $W_n$, in $L_1$ and adapted to $X_0, \dots, X_{n-1}$. The stochastic process we now observe is the accumlation of our winnings
+    As in the last example, consider a sequence of independent {\it non-negative} random variables $X_1, X_2, \dots$, but with mean 1. If we define $M_0 = 1$, $M_n = X_1 \dots X_n$, then if we set $\Sigma_n = \sigma(X_1, \dots, X_n)$, then
     %
-    \[ M_n = \sum_{k = 0}^n W_k X_k \]
+    \[ \mathbf{E}(M_{n+1}|\Sigma_n) = M_n \mathbf{E}(X_{n+1}|\Sigma_n) = M_n \mathbf{E}(X_{n+1}) = M_n \]
     %
-    Since
-    %
-    \[ \mathbf{E}(M_n | M_s, \dots, M_0) = \sum_{k = 0}^n \mathbf{E}(W_k X_k | M_s, \dots, M_0) = \sum_{k = 0}^s W_k X_k + \sum_{k = s+1}^n W_k \mathbf{E}(X_k) = M_s \]
-    %
-    Thus $M_n$ is a martingale.
+    so $M$ is a martingale, provided that each $M_n$ is in $L^1(\Omega)$. Again, an interesting question to ask is whether these values settle down to some random quantity $M_\infty$ as $n \to \infty$.
 \end{example}
-
-For discrete martingales, we need only verify that $\mathbf{E}(M_n | M_{n-1}) = M_{n-1}$, since then $\mathbf{E}(M_n | M_{n-2}) = \mathbf{E}(\mathbf{E}(M_n | M_{n-1}, M_{n-2}), M_{n-2}) = \mathbf{E}(M_{n-1} | M_{n-2}) = M_{n-2}$, and so on.
 
 \begin{example}
-    Consider the Polya urn model of the process. We start with one white ball and one black ball in an urn. At each time epoch, we draw a random ball from the urn, and put the ball back in addition to another ball of the same colour. Let $X_k$ be the number of white balls after drawing $k$ balls, and let $M_n = X_n / (n+2)$ be the relative proportion of white balls in the urn at a certain time. Then $M_n$ is bounded, hence in $L_1$, and
+    If $X$ is an integrable random variable, and $\Sigma$ is any filtration, then the tower law gives
     %
-    \[ \mathbf{E}(M_n | M_{n-1}) = \frac{\mathbf{E}(X_n | X_{n-1})}{n+2} = \frac{1}{n+2} [ X_{n-1} + \frac{X_{n-1}}{n+1} ] = \frac{X_{n-1}}{n-1} = M_{n-1} \]
+    \[ \mathbf{E}[\mathbf{E}[X|\Sigma_{n+1}]|\Sigma_n] = \mathbf{E}[X|\Sigma_n] \]
     %
-    We are therefore observing a Martingale.
+    so the process $\mathbf{E}[X|\Sigma_n]$ is a martingale with respect to $\Sigma_n$. Now it is natural to ask whether $\mathbf{E}[X|\Sigma_n]$ converges to $\mathbf{E}[X|\Sigma_\infty]$, so that in some sense, we steadily learn all there is to know about $X$ as $n$ increases, rather than having a `breakthrough' at $\infty$, where we can put all information together to learn $X$.
 \end{example}
 
-\section{The Optional Sampling Theorem}
+\section{Optional Stopping Theorem}
 
-Probability was created to analyze gambling games, to calculate the manner in which one may succeed. In the 18th century, a strategy was discovered which could be applied to `beat' certain gambling games. It became known as the martingale. The idea is simple -- consider the martingale $M_n = \sum_{k = 0}^n W_k X_k$ described above. Let $W_k = 2^k$. Let $\tau = \min \{ k : X_k = 1 \}$. Then
+We begin with an extension of the `gambling' concept of martingales.
+
+\begin{example}
+    We can consider a Martingale $M_n$ as the total amount you have made in a series of games, given that you have a `unit stake' on each interval. If we instead have a changing stake $C_1, C_2, \dots$ each game, then the total amount of money we make is
+    %
+    \[ (C \bullet M)_n = \sum_{k = 1}^n C_k(M_k - M_{k-1}) \]
+    %
+    It is easy to verify that, if each $C$ is constant, then $C \bullet M$ is also a Martingale, so changing our bets `doesn't make the system less fair'. More generally, if $C_1, C_2, \dots$ is a {\bf previsible process}, in the sense that each $C_n$ is $\Sigma_{n-1}$ measurable, and each $C$ is in $L^\infty(\Omega)$, then $C \bullet M$ is a Martingale, or if $C \in L^q(\Omega)$ where each $M_n - M_{n-1} \in L^p(\Omega)$. We call $(C \bullet M)$ the {\bf discrete It\^{o} integral}, or {\bf martingale Transform} of $C$ with respect to $M$, which reflects the continuous time integrals we will see later. If $M$ is only a (super/sub) martingale, then $(C \bullet M)$ will be a (super/sub) martingale as well.
+\end{example}
+
+Probability was created to analyze gambling games like the one above, and martingale theory was to analyze one particular area of gambling theory. In the 18th century, a strategy was discovered which could be applied to `beat' certain gambling games, guaranteeing a profit whenever it was applied. It became known as the martingale. Let's consider the strategy in it's simplest implementation, when gambling on a flip of a coin. We take a series of $\{ -1, 1 \}$ valued independent Bernoulli trials $X_1, X_2, \dots$, and define $M_n = X_1 + \dots + X_n$ to be the unit stakes turnout of a best against these coin flips. We then consider the martingale $C \bullet M$, where $M$ is a martingale, and when $C_k = 2^k$, so our bet `doubles' each time. If $X_n = 1$, then
 %
-\[ M_\tau = 2^\tau - \sum_{k = 1}^{\tau-1} 2^k = 2^\tau - (2^\tau - 1) = 1 \]
+\[ (C \bullet M)_n = \sum_{k = 1}^n 2^k X_k = 2^n + \sum_{k = 1}^n 2^k X_k \geq 1 \]
 %
-So we always come out of the bet with a profit on 1 unit of money, if we follow this strategy. The Martingale became all the rage in the 18th century. Casanova was one of many figures known to apply the strategy. The key problem with the strategy is that is that it assumes one is able to bet inevitably over and over again --  we assume we have an infinite amount of money to gamble with. When we have a finite amount of money, we're running a gambler's ruin -- we either bet until we run out of money, or gain a single unit of money. Thus the strategy is somewhat risky.
+Thus, if we bet along this strategy until the first time that $X_n = 1$, in which case we `stop' the betting process, we will always come out with at least a unit profit. More rigorously, if we define the `stopping time' $T = \inf \{ k : X_k = 1 \}$, then $\mathbf{P}(T < \infty) = 1$, and $(C \bullet M)_T \geq 1$, so we've found a guaranteed way to beat the system! The Martingale soon became all the rage in the 18th century. Casanova was one of many famous figures known to apply the strategy to his own games. The key problem with the strategy is that is that it assumes one is able to bet with an infinite amount of money. When we have a finite amount of money, we're running a gambler's ruin -- we either bet until we run out of money, or gain a single unit of money. Thus, if you don't have much cash, the strategy is somewhat risky, and if you have a lot of cash, you have a lot to lose if you stop betting.
 
-The martingale is one of the reasons casinos now put limits on the table. You can't bet an unbounded amount of money anymore. Effectively, the casino restricts the martingales you play on to a restricted family, upon which the martingale doesn't work anymore. The optional sampling theorem shows that no stopping time will enable us to gain an average profit. In fact, we will always end up with the same amount of money we started off with on average. First, a rigorous definition of a stopping time.
+At first, this seems to contradict the fact that for any series of previsible $L^1$ stakes $C$, $C \bullet M$ is a martingale. We can now define the stakes
+%
+\[ C^{(T)}_n = C_n \chi_{n \leq T} \]
+%
+which model the outcomes of the bet $n$ steps into the future, if we stop betting at time $T$. This is still a previsible process, because $C_n$ is $\Sigma_{n-1}$ adapted, and the event $\{ n \leq T \}$ is the complement of the event $\{ T < n \} = \{ T \leq n-1 \}$, which is $\Sigma_{n-1}$ adapted because it depends only on the values of the variables $X_1, \dots, X_{n-1}$. Since $\smash{C^{(T)}_n}$ is bounded by $C_n$, it is certainly integrable, and so we conclude that $C^{(T)} \bullet M$ is a martingale, so= that in particular, for each $n$,
+%
+\[ \mathbf{E}[(C^{(T)} \bullet M)_n] = \mathbf{E}[(C^{(T)} \bullet M)_0] = 0 \]
+%
+and therefore from the perspective of finite time, the bet is still `fair'. This argument shows that this remains true if $T$ is any $\{ 0, 1, \dots, \infty \}$ valued process such that the event $\{ T \leq n \}$ is $\Sigma_n$ adapted, and we call such a $T$ a {\bf stopping time}. We have the equality
+%
+\[ (C^{(T)} \bullet M)_n = (C \bullet M)_{T \wedge n} \]
+%
+which is essentially a calculation of the next result.
 
-\begin{definition}
-    A stopping time with respect to a process $\{ X_t \}$ and filtration $\mathcal{F}_t$ is a random variable $\tau$ mapping into time, such that for any time $t$, $\{ \omega : \tau(\omega) \leq t \} \in \mathcal{F}_t$.
-\end{definition}
-
-\begin{lemma}
-    If $\{ M_0, M_1, \dots \}$ is a discrete martingale with respect to $\mathcal{F}_n$, and $\tau$ is a bounded stopping time, then $\mathbf{E}(M_\tau) = \mathbf{E}(M_0)$.
-\end{lemma}
+\begin{theorem}
+    If $M$ is a (sub/super) martingale, and $T$ is a stopping time, then the {\bf stopped process} $M^T_n = M_{T \wedge n}$ is a (sub/super)martingale.
+\end{theorem}
 \begin{proof}
-    Let $\tau \leq K$. Then we may write $M_{\tau} = \sum_{k = 0}^K \mathbf{I}(\tau = k) M_k$. Then $\tau = K$ is measurable with respect ot $\mathcal{F}_{K-1}$, since the event $\tau = K$ is the same as $\tau > K-1$
-    %
-    \[ \mathbf{E}(M_\tau | \mathcal{F}_{K-1}) = \sum_{k = 0}^K \mathbf{E} (\mathbf{I}(\tau = k) M_k | \mathcal{F}_{K-1}) = \sum_{k = 0}^{K-2} \mathbf{I}(\tau = k) M_k + \mathbf{I}(\tau \geq K-1) M_{n-1} \]
-    %
-    Repeating this proof on $\mathcal{F}_{K-2}$, we obtain that $\mathbf{E}(M_\tau | \mathcal{F}_{K-2}) = \sum_{k = 0}^{K-3} M_k + \mathbf{I}(\tau \geq K - 2) M_{n-2}$. By induction, we determine that 
-    %
-    \[ \mathbf{E}(M_\tau | \mathcal{F}_0) = M_0 \]
-    %
-    and therefore, by iterated expectation,
-    %
-    \[ \mathbf{E}(M_\tau) = \mathbf{E}\mathbf{E}(M_\tau | \mathcal{F}_0) = \mathbf{E}(M_0) \]
+    $M^T = (C \bullet M)$, where $C = \chi_{n \leq T}$, and the last argument applies.
 \end{proof}
 
-We would like to conclude the same theorem for unbounded stopping times. Our idea is to approximate a proper stopping time by bounded stopping times. Let $\tau$ be a stopping time, and define $\tau_n = \min \{ \tau, n \}$. We may write
+So paradoxically, going back to the martingale it now seems like the betting strategy corresponding to $T$ and $C$ is fair, because at each finite time point, the average amount of money in the gambler's pocket is zero. The difference between these two calculation is if we now consider the limit
 %
-\[ M_\tau = M_{\tau_n} + \mathbf{I}(\tau > n) M_\tau - \mathbf{I}(\tau > n) M_n \]
+\[ \lim_{n \to \infty} (C^{(T)} \bullet M)_n = (C^{(T)} \bullet M)_\infty = (C \bullet M)_T \]
 %
-We would hope that the middle two factors do not contribute much to the process for large $n$. If $M_{\tau_n} \to M_\tau$ as $n \to \infty$, then $\mathbf{E}(M_0) = \mathbf{E}(M_{\tau_n}) \to \mathbf{E}(M_\tau)$. To obtain this, we require that the extraneous factors on the right vanish in expectation. The first extraneous factor is easy to remove, if $\mathbf{E}(|M_\tau|) < \infty$, then $\mathbf{E}(\mathbf{I}(\tau > n) M_\tau) \to 0$. The second factor dissapears if
-%
-\[ \lim_{n \to \infty} \mathbf{E}(|M_n| \mathbf{I}(\tau > n)) = 0 \]
-%
-and this provides the conditions for our theorem to hold.
-
-\begin{theorem}[Optional Stopping]
-    If $\{ M_n \}$ is a martingale, and $\tau$ a stopping time for which $M_\tau \in L_1(\mathbf{P})$, $\lim_{n \to \infty} \mathbf{E}(|M_n| \mathbf{I}(\tau > n)) = 0$, and $\mathbf{P}(\tau < \infty) = 1$. The $\mathbf{E}(M_\tau) = \mathbf{E}(M_0)$.
-\end{theorem}
+which exists pointwise because we almost surely stop betting at a finite amount of time (since $\mathbf{P}(T < \infty) = 1$), then we know $(C \bullet M)_T \geq 1$, so the process cannot be extended to be a martingale `at $\infty$'. There are many examples of stopping times upon which we cannot extend the stopped martingale at $\infty$.
 
 \begin{example}
-    Consider the fair Gambler's ruin problem, where we start with $M$ units of money, and play a fair game until we go bust, or we end up with $N$ units of money. Let $\tau = \min \{ X_k : X_k = 0\ \text{or}\ X_k = N \}$. Since $X_n$ is bounded, and $\mathbf{P}(\tau < \infty) = 1$, this process satisfies the optional stopping theorem, so
-    %
-    \[ N \mathbf{P}(X_\tau = N) = \mathbf{E}(M_\tau) = \mathbf{E}(X_0) = M \]
-    %
-    And therefore $\mathbf{P}(X_\tau = N) = M/N$.
+    Consider a simple reflecting random walk $M$ on $\mathbf{N}$ starting at 0. Then $M$ is a martingale. If we consider the stopping time $T = \inf \{ n: M_T = 1 \}$, then it is easy to see $\mathbf{P}(T < \infty) = 1$, and even though $\mathbf{E}(M^T_n) = \mathbf{E}(M^T_0) = 0$, we find $M_T = 1$.
 \end{example}
+
+The optional stopping theorem says that, provided we limit the behaviour of a martingale and its stopping time, the martingale still behaves well as a martingale in a limit, so that the bet is still fair asymptotically. One such limitation we can place on the theorem is that the variation of the martingale between steps is bounded. This is the reason why limits are put on poker and blackjack tables, so you can't bet an unbounded amount of money anymore. Effectively, the casino restricts the martingales you can choose to play, so that regardless of the `stopping time' you choose to play while gambling, the martingale strategy won't work. If we write $M_T = M_{T \wedge n} + \mathbf{I}(T > n) M_T - \mathbf{I}(T > n) M_n$, then we obtain the result provided that $\mathbf{I}(T > n) M_T$ and $\mathbf{I}(T > n) M_n$ both become suitably small in expectation. We can do this either by bounding $T$'s behaviour at $\infty$ or bounding $M$'s behaviour.
+
+\begin{theorem}[The Optional Stopping Theorem]
+    If $M$ is a supermartingale, and $T$ is a stopping time, then provided one of three conditions hold
+    %
+    \begin{itemize}
+        \item $T$ is bounded.
+        \item $M$ is bounded, and $T$ is almost surely finite.
+        \item $\mathbf{E}(T) < \infty$, and the Martingale increments are bounded, so that there is a universal $K$ such that $|M_{n+1} - M_n| \leq K$ almost surely.
+    \end{itemize}
+    %
+    Then $M_T \in L^1(\Omega)$ and $\mathbf{E}(M_T) \leq \mathbf{E}(M_0)$. If $M$ is a submartingale, then we find $\mathbf{E}(M_T) \geq \mathbf{E}(M_0)$, and if $M$ is a martingale, then $\mathbf{E}(M_T) = \mathbf{E}(M_0)$.
+\end{theorem}
+\begin{proof}
+    We know that $M_{T \wedge n}$ is integrable for all $n$, because
+    %
+    \[ \mathbf{E}(|M_{T \wedge n}|) = \mathbf{E}(\mathbf{E}(|M_{T \wedge n}| | T)) \]
+    %
+    and
+    %
+    \[ \mathbf{E}(|M_{T \wedge n}| | T = k) = \| M_{k \wedge n} \|_1 \leq \sup_{l \leq n} \| M_l \|_1 \]
+    %
+    is in $L^\infty(\Omega)$. If $T \leq N$, then $M_T = M_{T \wedge N}$ is part of the stopped process corresponding to $M$, and therefore the required result holds obviously. Otherwise, $M_T = \lim_{n \to \infty} M^T_n$, and since the values $M$ are bounded, we can apply the dominated convergence theorem to obtain the required property. For the third condition, we note that
+    %
+    \[ |M_{T \wedge n} - M_0| = \left| \sum_{k = 1}^{T \wedge n} (M_k - M_{k-1}) \right| \leq KT \]
+    %
+    so provided $\mathbf{E}(T) < \infty$, the dominated convergence result applies.
+\end{proof}
+
+\begin{example}
+    Consider the fair Gambler's ruin, where we start with $N_0$ units of money, and play a fair game until we go bust, or we end up with $N_1$ units of money. That is, we consider a martingale $M$ with $M_0 = N_0$, and consider the time $T$ as which we either first go broke, or exceed $N_1$ units of money, so $T = \inf \{ n: M_n \leq 0\ \text{or}\ M_n \geq N_1 \}$. Provided the increments of the martingale are bounded (which occurs in most realistic gambling scenarios), and the stopping time has $\mathbf{P}(T < \infty) = 1$, which occurs in practice almost always, we can apply the optional stopping theorem to conclude that
+    %
+    \[ N_1 \mathbf{P}(M_T = N_1) = \mathbf{E}(M_T) = \mathbf{E}(M_0) = N_0 \]
+    %
+    so $\mathbf{P}(M_T = N_1) = N_0/N_1$.
+\end{example}
+
+In the example above, it is normally very easy to argue that $\mathbf{P}(T < \infty) = 1$, using the principle that `whatever has a reasonable chance of happening, will almost surely happen'. The particular application is described in the next lemma.
+
+\begin{lemma}
+    Suppose $T$ is a stopping time such that for some integer $N$ and some $\varepsilon > 0$, we have $\mathbf{P}(T \leq n + N | \Sigma_n) > \varepsilon$ almost surely. Then $\mathbf{E}(T) < \infty$.
+\end{lemma}
+\begin{proof}
+    We calculate that
+    %
+    \begin{align*}
+        \mathbf{E}(T) &= \sum_{k = 0}^\infty \mathbf{P}(T > k) = \sum_{k = 0}^N \mathbf{P}(T > k) + \sum_{k = 1}^\infty [1 - \mathbf{E}[\mathbf{P}(T \leq k + N|\Sigma_k)]]\\
+        &\leq \sum_{k = 0}^N \mathbf{P}(T \leq k) + \sum_{k = 1}^\infty [1 - \varepsilon]
+    \end{align*}
+    %
+    TODO: finish this proof.
+\end{proof}
 
 There is a much easier condition, which allows us to conclude the consequences of the optional stopping theorem. Call a family $\mathcal{C}$ of random variables {\bf uniformly integrable} if, for any $\varepsilon$, there is $K$ such that for all $X \in \mathcal{C}$, $\mathbf{E}(|X| \mathbf{I}(X > K)) < \varepsilon$.
 
@@ -1064,18 +1562,496 @@ There is a much easier condition, which allows us to conclude the consequences o
 
 Now let $\{ M_n \}$ be a uniformly integrable martingale, and $\tau$ a stopping time for which $\mathbf{P}(\tau < \infty) = 1$. Then $\lim_{n \to \infty} \mathbf{E}(|M_n| \mathbf{I}(\tau > n)) = 0$, since $\mathbf{P}(\tau > n) \to 0$. Thus the optional stopping theorem holds for the $M_n$ and $\tau$, provided $\mathbf{E}(|M_\tau|) < \infty$.
 
-\section{Martingale Convergence}
+\section{Martingale Convergence Theorems}
 
-\begin{definition}
-    A {\bf submartingale} $\{ M_0, M_1, \dots \}$ with respect to a filtration $\{ \mathcal{F}_k \}$ is a process such that for $n < m$, $\mathbf{E}(M_m | \mathcal{F}_n) \geq M_n$. A {\bf supermartingale} satisfies $\mathbf{E}(M_m | \mathcal{F}_n) \leq M_n$.
-\end{definition}
+Given a process $M$, and $a \leq b$, consider a stopping time $U[a,b] = U(M,[a,b])$ which counts the number of `upcrossings' from $a$ to $b$. That is, $U_n[a,b] = m$ if there are $0 \leq t_1 < s_1 < \dots < t_n < s_n \leq n$ with $M_{t_i} < a$, $M_{s_i} > b$. The number of upcrossings of a stochastic process represents the amount of `variation' in your process between $a$ and $b$, and it turns out that the variation of martingales is essentially constant. The idea extends from showing that `buy low', `sell high' doesn't help you when you're gambling against an unfair system.
+
+\begin{theorem}[Doob's Upcrossing Lemma]
+    If $M$ is a supermartingale, then
+    %
+    \[ (b-a) \mathbf{E}(U_n[a,b]) \leq \mathbf{E}[(X_n - a)^-] \]
+    %
+    and if $M$ is a submartingale, then
+    %
+    \[ (b-a) \mathbf{E}(U_n[a,b]) \leq \mathbf{E}[(X_n - a)^+] \]
+    %
+    so that $n$ doesn't really impact the expected number of upcrossings.
+\end{theorem}
+\begin{proof}
+    Consider a previsible process $C$ which follows the following ruleset: We wait under $M_n < a$, and then we play unit stakes until $M_n > b$, in which case we stop playing and wait for $M_n$ to become less than $a$ again, in which case we start playing at unit stakes, rince and repeat. More rigorously, we define $C_1 = \mathbf{I}(X_0 < a)$, and then set
+    %
+    \[ C_n = \mathbf{I}(C_{n-1} = 1) \mathbf{I}(M_{n-1} \leq b) + \mathbf{I}(C_{n-1} = 0) \mathbf{I}(M_{n-1} < a) \]
+    %
+    Now $\| C_n \|_\infty \leq 1$ is bounded, and therefore $C \bullet M$ is a supermartingale. But
+    %
+    \[ (C \bullet M)_n \geq (b-a) U_n[a,b] - (M_n - a)^- \]
+    %
+    because we make at least $b-a$ at each `run' of unit betting, when $M_n$ rises to $a$, but lose at most $(M_n - a)^-$ because we start begging when $M_k < a$. We conclude that $\mathbf{E}((C \bullet M)_0) \leq \mathbf{E}((C \bullet M)_0) = 0$, and so
+    %
+    \[ (b-a) \mathbf{E}[U_n[a,b]] \leq \mathbf{E}[(M_n - a)^-] \]
+    %
+    and this is the required inequality. If $M$ is a submartingale, then we can consider the same betting strategy, but where we bet a negative stake rather than a positive stake, and we conclude that
+    %
+    \[ (C \bullet M)_n \leq (M_n - a)^+ -(b-a) U_n[a,b] \]
+    %
+    and so
+    %
+    \[ 0 \leq \mathbf{E}((C \bullet M)_n) \leq \mathbf{E}((M_n - a)^+) - (b-a) \mathbf{E}[U_n[a,b]] \]
+    %
+    giving us the other inequality.
+\end{proof}
+
+\begin{corollary}
+    Let $M$ be a (sub/super) martingale bounded in $L^1(\Omega)$. If $a < b$, and if we define $U_\infty[a,b] = \lim U_n[a,b]$, then $\mathbf{P}(U_\infty = \infty) = 0$.
+\end{corollary}
+\begin{proof}
+    Using the monotone convergence theorem, the upcrossing lemma provides a bound
+    %
+    \[ (b - a) \mathbf{E} U_\infty [a,b] = \lim_{n \to \infty} (b-a) U_n[a,b] \leq \sup \mathbf{E}[(X_n - a)^-] < |a| + \sup \| X_n \|_1 \]
+    %
+    and so $U_\infty[a,b] \in L^1(\Omega)$, hence $\mathbf{P}(U_\infty[a,b] = \infty) = 0$. The proof for submartingales is essentially the same.
+\end{proof}
+
+If we consider the countable set of all the pairs $p < q$, then we can conclude that $\mathbf{P}(\forall p < q \in \mathbf{Q}^+: U_\infty[p,q] = \infty) = 0$, and since every interval $[a,b]$ contains an interval of the form $[p,q]$, we conclude that almost surely, for all $a < b$, $U_\infty[a,b] \neq \infty$.
+
+\begin{theorem}[Doob's Martingale Convergence]
+    Let $M$ be a (sub/super) martingale bounded in $L^1(\Omega)$. Then almost surely, $M_\infty = \lim_{n \to \infty} M_n$ exists in $L^1(\Omega)$, and is finite. If we define, for definiteness,
+    %
+    \[ M_\infty = \limsup M_n \]
+    %
+    then $M_\infty$ will also be $\Sigma_\infty = \bigcup \Sigma_n$ measurable.
+\end{theorem}
+\begin{proof}
+    If $M_n(\omega)$ does not converge, then $\liminf M_n(\omega) < \limsup M_n(\omega)$. But this means we can find $a < b$ such that
+    %
+    \[ \liminf M_n(\omega) < a < b < \limsup M_n(\omega) \]
+    %
+    and $M_n$ must oscillate between $a$ and $b$ infinitely often, so $U_\infty[a,b](\omega) = \infty$. We have shown the set of all $\omega$ for which there exists $[a,b]$ with $U_\infty[a,b](\omega) = \infty$ is a set of probability 0, which means that $M_n$ converges almost surely. Fatou's lemma implies that
+    %
+    \[ \mathbf{E}|M_\infty| = \mathbf{E}(\liminf |M_n|) \leq \liminf_{n \to \infty} \mathbf{E} |M_n| \leq \sup \mathbf{E}|M_n| < \infty \]
+    %
+    So $M_\infty$ is finite almost surely.
+\end{proof}
+
+\begin{corollary}
+    If $M$ is a non-negative super martingale, then $M_\infty = \lim M_n$ exists almost surely.
+\end{corollary}
+\begin{proof}
+    If $M$ is a supermartingale, then
+    %
+    \[ \|M_n\|_1 = \mathbf{E}(M_n) = \mathbf{E}(\mathbf{E}(M_n|\Sigma_0)) \leq \mathbf{E}(M_0) = \|M_0\|_1 \]
+    %
+    so any such martingale is bounded.
+\end{proof}
+
+\begin{corollary}[L\'{e}vy's `Upward' Theorem]
+    If $M$ is a supermartingale bounded in $L^1(\Omega)$, then $M_n \to M_\infty$ in $L^1(\Omega)$ if and only if $M$ is uniformly integrable, and then $\mathbf{E}(M_\infty | \Sigma_n) \leq M_n$ almost surely. If $M$ is a uniformly integrable submartingale, then we also obtain $L^1$ convergence of $M_n$ to $M_\infty$, and $\mathbf{E}(M_\infty | \Sigma_n) \geq M_n$. For martingales, we find $\mathbf{E}(M_\infty | \Sigma_n) = M_n$. This means we can think of $M$ as being a martingale with time indices $\mathbf{N} \cup \{ \infty \}$.
+\end{corollary}
+\begin{proof}
+    We rely on the fact that for any stochastic process $X$, $X_n \to X$ in $L^1$ if and only if $X_n \to X$ in probability and $X_n$ is uniformly integrable. Since pointwise almost sure convergence implies convergence in probability, it suffices to show that if $\| M_n - M_\infty \| \to 0$, then $\mathbf{E}(M_\infty | \Sigma_n) \leq M_n$. We note that for $E \in \Sigma_n$,
+    %
+    \[ \int_E \mathbf{E}(M_m|\Sigma_n) d\mathbf{P} \leq \int_E M_n d\mathbf{P}  \]
+    %
+    We then let $m \to \infty$ to conclude
+    %
+    \[ \int_E \mathbf{E}(M_\infty|\Sigma_n) d\mathbf{P} \leq \int_E M_n d\mathbf{P} \]
+    %
+    And this shows $\mathbf{E}(M_\infty|\Sigma_n) \leq M_n$ almost surely. The same argument holds for submartingales.
+\end{proof}
+
+This proof leads to a simple proof of the 0-1 law, which is a foundational result in basic probability theory.
+
+\begin{corollary}[Kolmogorov's 0-1 Law]
+    Let $X_1, X_2, \dots$ be a sequence of independent random variables, and set $\Sigma_n = \sigma(X_{n+1}, X_{n+2}, \dots)$, and set $\Sigma_\infty = \lim \Sigma_n$. Then for any $E \in \Sigma_\infty$, $\mathbf{P}(E) = 0$ or $1$.
+\end{corollary}
+\begin{proof}
+    If $E \in \Sigma_\infty$, then $\chi_E, \chi_E, \dots$ is a martingale, because for any $n$,
+    %
+    \[ \mathbf{E}(\chi_E | \Sigma_n) = \chi_E \]
+    %
+    For each $n$, $\chi_E$ is independent of all of the $\sigma$ algebras $\Sigma_n$, because
+    %
+    \[ \{ F: F \in \sigma(X_n, X_{n+1}, \dots, X_N)\ \text{for some $N$} \} \]
+    %
+    form a $\pi$ system generating $\Sigma_n$, and $\sigma(X_n,X_{n+1}, \dots, X_N)$ and $\Sigma_{N+1}$ are independent, so $F$ is independent to $E$. But we know
+    %
+    \[ \chi_E = \mathbf{E}(\chi_E|\Sigma_\infty) = \lim_{n \to \infty} \mathbf{E}(\chi_E|\Sigma_n) = \lim_{n \to \infty} \mathbf{E}(\chi_E) = \mathbf{P}(E) \]
+    %
+    almost surely, and therefore $\mathbf{P}(E) = 0$ or $\mathbf{P}(E) = 1$.
+\end{proof}
+
+The next result is crucial for the theory of continuous time martingales, because it enables us to descend from discrete results about martingales to `limits' of discrete results. Rather than discussing the behaviour of martingales on $\mathbf{N}$ as they tend to $\infty$, we discuss the behaviour of martingales on $-\mathbf{N}$ as they go `back in time' to $-\infty$.
+
+\begin{theorem}[L\'{e}vy Doob Downward Theorem]
+    Consider a supermartingale $M_0, M_{-1}, \dots$ with respect to a filtration $\Sigma_0 \supset \Sigma_{-1} \supset \dots$. If we assume $\sup \mathbf{E}(M_n) < \infty$, then the process $M$ is uniformly integrable, the limit $M_{-\infty} = \lim M_n$ exists almost surely, we have convergence in $L^1(\Omega)$, and $\mathbf{E}(M_n|\Sigma_{-\infty}) \leq M_{-\infty}$ for all $n$, where $\Sigma_{-\infty} = \bigcap \Sigma_n$. Similar results for submartingales hold if $\inf \mathbf{E}(M_n) > -\infty$, and if $M$ is a martingale, provided $\inf \mathbf{E}(M_n)$ and $\sup \mathbf{E}(M_n)$ are both finite, we can conclude that $\mathbf{E}(M_n|\Sigma_{-\infty}) = M_{-\infty}$.
+\end{theorem}
+\begin{proof}
+    We first prove the uniform integrality property. Let $\varepsilon > 0$ be given. The supermartingale property implies that $\mathbf{E}(M_n) \leq \mathbf{E}(M_m)$ if $m \leq n$, so the expectation increases as $m$ decreases. Since $\sup \mathbf{E}(M_n) \to \infty$, the values $\mathbf{E}(M_n)$ decrease to some finite value as $n$ decreases, and we may assume that there is $k$ such that $\mathbf{E}(M_n) \leq \mathbf{E}(M_k) + \varepsilon$ for all $n \leq k$. But now this implies that for a fixed $\lambda$, using the supermartingale property, that
+    %
+    \begin{align*}
+        \int_{|M_n| > \lambda} |M_n| &= \mathbf{E}(M_n) - \int_{M_n < -\lambda} M_n - \int_{M_n \leq \lambda} M_n\\
+        &\leq [\mathbf{E}(M_k) + \varepsilon] - \int_{M_n < -\lambda} M_k - \int_{M_n \leq \lambda} M_k\\
+        &= \int_{|M_n| > \lambda} |M_k| + \varepsilon
+    \end{align*}
+    %
+    Since $M_k \in L^1(\Omega)$, there exists $\delta > 0$ such that if $\mathbf{P}(E) < \delta$, then $\int_E |M_k| < \varepsilon$. If we can prove that, uniformly in $n$, $\mathbf{P}(|M_n| > \lambda) < \delta$ for large enough $\lambda$ and $n$, then the proof will be complete. Applying Markov's inequality gives
+    %
+    \[ \mathbf{P}(|M_n| > \lambda) \leq \frac{\mathbf{E}|M_n|}{\lambda} = \frac{\mathbf{E}(M_n) + 2\mathbf{E}(M_n^-)}{\lambda} \leq \frac{\sup \mathbf{E}(M_n) + 2 \mathbf{E}(M_0^-)}{\lambda} \]
+    %
+    where we have used the fact that $M_n^-$ is a submartingale. Letting $\lambda$ be large enough gives the required result. Because $M_n$ is uniformly integrable, it is bounded in $L^1(\Omega)$, and essentially the same proof of convergence for supermartingales at $\infty$ works here, because we have the upcrossing result that
+    %
+    \[ (b - a)\mathbf{E}(U_\infty[a,b]) \leq \mathbf{E}[(M_0 - a)^-] \]
+    %
+    except that we no longer have any dependence on $M_n$ for large negative values of $n$, so no boundedness condition is required.
+\end{proof}
+
+The strong law of large numbers appears as an immediate corollary.
+
+\begin{corollary}
+    Let $X_1, X_2, \dots$ be i.i.d, integrable random variables of mean $\mu$. If $S_n$ denotes the sum of the first $n$ variables, then $n^{-1}S_n \to \mu$ almost surely and in $L^1(\Omega)$.
+\end{corollary}
+\begin{proof}
+    Set $\Sigma_n = \sigma(S_n,S_{n+1}, \dots) = \sigma(S_n, X_{n+1}, X_{n+2}, \dots)$. For any $m \leq n$, $\mathbf{E}(X_m|\Sigma_n) = n^{-1}S_n$. This is clear by Fubini's theorem, because if we consider the cumulative distributions $F_{X_1, \dots, X_n}$, then the variables $X_i$ all have a common cumulative distribution $F$, and $F_{X_1, \dots, X_n}(x) = F(x_1) F(x_2) \dots F(x_n)$. Since $S_n = \sum X_i$, we have
+    %
+    \[ \mathbf{P}(S_n \leq t) = \int_{\sum x_i \leq t} dF(x) \]
+    %
+    and so for each $t$, $i,j$, we find
+    %
+    \[ \int_{S_n \leq m} X_i = \int_{\sum x_i \leq m} x_i dF(x) = \int_{S_n \leq m} x_j dF(x) = \int_{S_n \leq m} X_j \]
+    %
+    and we therefore conclude $\mathbf{E}(X_i|\Sigma_n) = \mathbf{E}(X_j|\Sigma_{n})$ almost everywhere. We can then use the fact that $S_n = \sum X_i$ to conclude that $S_n = \mathbf{E}(S_n|\Sigma_{n}) = \sum \mathbf{E}(X_i|\Sigma_{n}) = n\mathbf{E}(X_i|\Sigma_{n})$. This means that for $m \leq n$,
+    %
+    \[ \mathbf{E}(m^{-1}S_m|\Sigma_n) = n^{-1}S_n \]
+    %
+    so if we invert time, and look at $m^{-1}S_m$ as indexed on $(\infty,0]$, then $m^{-1}S_m$ is a supermartingale relative to $\Sigma_m$. We calculate that $\mathbf{E}(m^{-1}S_m) = \mu < \infty$, so the last theorem implies that $A = \lim n^{-1}S_n$ exists almost surely and in $L^1(\Omega)$. If we define $S = \limsup n^{-1}S_n$, then $S \in \Sigma_\infty = \bigcap \Sigma_n \subset \bigcap \Delta_n$, where $\Delta_n = \sigma(X_n, \dots)$. By Kolmogorov's 0-1 law, we know that $\sum \mathbf{P}(S \in [n,n+1)) = 1$, so there is an interval $I_0$ of length $1$ such that $S \in I_0$ almost surely. If we break $I_0$ up into two intervals, we conclude that there is an interval $I_1$ of length $2^{-1}$ such that $S \in I_1$ almost surely. Performing this process repeatedly, we find a decreasing series of intervals $I_k$ of length $2^{-k}$ with $S \in I_k$ almost surely. This means $S \in \bigcap I_k$ almost surely, implying $\bigcap I_k$ is non-empty, and since the diameters of $I_k$ decrease to $0$, $\bigcap I_k$ can consist of only a single number $m$, so $S = m$ almost surely. But this means $m = \mathbf{E}(S) = \lim \mathbf{E}(S_m) = \mu$, so $S = \mu$ almost surely.
+\end{proof}
+
+\section{Martingale Inequalities}
+
+Doob's upcrossing lemma allows us to prove that Martingales do not really have `too much variation', and this gives convergence results at $\infty$ and $-\infty$. His further submartingale and $L^p$ inequalities enable us to prove that Martingales are also `essentially bounded'.
+
+\begin{theorem}[Doob's Submartingale Inequality]
+    Let $M$ be a submartingale. Then if $\lambda, n > 0$, then
+    %
+    \[ \lambda \mathbf{P} \left( \sup_{k \leq n} M_k \geq \lambda \right) \leq \int_{(\sup_{k \leq n} M_k) \geq \lambda} M_n \]
+\end{theorem}
+\begin{proof}
+    Let $E = \{ (\sup_{k \leq n} M_k) \geq \lambda \}$. Then we can write $E$ as a disjoint union of sets $E_0,E_1,\dots, E_n$, where $E_i = \{ M_0, \dots, M_{i-1} < \lambda, M_i \geq \lambda \}$. Now $E_k \in \Sigma_k$, and therefore
+    %
+    \[ \int_{E_k} M_n \geq \int_{E_k} M_k \geq \lambda \mathbf{P}(E_k) \]
+    %
+    and we may now sum over all $k$.
+\end{proof}
+
+\begin{corollary}
+    If $M$ is a {\it non-negative} submartingale, then we can conclude
+    %
+    \[ \lambda \mathbf{P} \left( \sup_{k \leq n} M_k \geq \lambda \right) \leq \mathbf{E}(M_n) \]
+\end{corollary}
+
+Notice that this result is independent of the step number $n$, which likely indicates we can obtain a uniform result when the $M_n$ are bounded in $L^1(\Omega)$.
+
+\begin{lemma}
+    If $M$ is a martingale, $c$ is convex, and $c(M_n) \in L^1(\Omega)$ for each $n$, then $c(M)$ is a submartingale.
+\end{lemma}
+\begin{proof}
+    Applying Jensen's inequality, we conclude that
+    %
+    \[ \mathbf{E}(c(M_n)|\Sigma_m) \geq c(\mathbf{E}(M_n|\Sigma_m)) = c(M_m) \]
+    %
+    We needed that $c(M_n) \in L^1(\Omega)$ to apply this result.
+\end{proof}
+
+\begin{lemma}
+    If $X$ and $Y$ and non-negative random variables such that for every $\lambda > 0$,
+    %
+    \[ \lambda \mathbf{P}(X \geq \lambda) \leq \int_{X \geq \lambda} Y \]
+    %
+    then for $p > 1$ with conjugate $q$, we have $\| X \|_p \leq q \|Y \|_p$.
+\end{lemma}
+\begin{proof}
+    Obviously, we can calculate that
+    %
+    \[ L = \int_0^\infty p\lambda^{p-1} \mathbf{P}(X \geq \lambda)d\lambda \leq \int_0^\infty p\lambda^{p-2} \int_{X \geq \lambda} Y d\mathbf{P} d\lambda = R \]
+    %
+    By Tonelli's theorem, we find
+    %
+    \[ L = \int_0^\infty p\lambda^{p-1} \mathbf{P}(X \geq \lambda) d\lambda = \int \int_0^X p\lambda^{p-1} = \int X^p = \mathbf{E}(X^p) \]
+    \[ R = \int_0^\infty p\lambda^{p-2} \int_{X \geq \lambda} Yd\mathbf{P} d\lambda = \int Y \int_0^X p\lambda^{p-2} = \int \frac{p}{p-1} YX^{p-1} = \mathbf{E}(qYX^{p-1}) \]
+    %
+    But now we apply Holder's inequality to conclude that
+    %
+    \[ \mathbf{E}(X^p) \leq \mathbf{E}(qYX^{p-1}) \leq q \| Y \|_p \| X^{p-1} \|_q = q \| Y \|_p \mathbf{E}(X^p)^{1/q} \]
+    %
+    Hence $\|X\|_p \leq q\|Y\|_p$.
+\end{proof}
+
+\begin{theorem}[Doob's $L_p$ inequality]
+    Let $p > 1$, and let $q$ denote it's conjugate. Let $M$ be a non-negative submartingale bounded in $L^p(\Omega)$. Then $M^* := \sup M \in L^p(\Omega)$, and $\| M^* \|_p \leq q \sup \| M_n \|_p$. Also $M_\infty$ is in $L^p(\Omega)$ and $M_n \to M_\infty$ in $L^p(\Omega)$. If $M = |N|$ for some martingale $N$ bounded in $L^p(\Omega)$, then $M_\infty = |N_\infty|$ almost surely.
+\end{theorem}
+\begin{proof}
+    Define $M_n^* = \sup_{k \leq n} M_n$. Now we can apply convexity to conclude that $M_n^p$ is a submartingale, and then Doob's submartingale inequality gives
+    %
+    \[ \lambda \mathbf{P}(M_n^* \geq \lambda) \leq \int_{M_n^* \geq \lambda} M_n \]
+    %
+    and the second lemma implies that $\| M_n^* \|_p \leq q \|M_n\|_p$. This implies the $M_n^*$ are bounded in $L^p(\Omega)$ also, and monotone convergence shows that $M^* \in L^p(\Omega)$, with the required inequality. Since $M_n$ is also bounded in $L^1(\Omega)$, we conclude that $M_\infty$ exists. Since the variables $M_n$ are bounded pointwise by $M^*$, we know that $M_\infty$ is also bounded by $M^*$ pointwise, and so
+    %
+    \[ |M_n - M_\infty|^p \leq 2^p|M^*|^p \]
+    %
+    we may apply dominated convergence to conclude that $M_\infty \in L^p(\Omega)$, so $\| M_\infty \|_p = \lim \| M_n \|_p$.
+
+    If $M_n = |N_n|$, then $N_n$ is a submartingale bounded in $L^p(\Omega)$, then $M_n$ is surely bounded in $L^p(\Omega)$, so $M_n \to M_\infty$ almost surely pointwise. But we can use L\'{e}vy's upward thoerem to conclude that $N_n \to N_\infty$ almost surely, and we therefore conclude by taking absolute values pointwise that $M_\infty = |N_\infty|$ almost surely.
+\end{proof}
+
+Doob's $L_p$ inequality shows that $L^p(\Omega)$ bounded martingales are restricted in motion incredibly well. This contrasts Brownian motion, where $\sup B_n = \infty$ almost surely; in this case, the $B_n$ are not bounded in any $L^p(\Omega)$, even in $L^1(\Omega)$.
+
+As in most of analysis, the nicest estimates we can get for martingales occur in the $L^2$ theory. We know that the conditional expectation operator is an orthogonal projection onto the subspace of measurable functions. If $M$ is an $L^2$ martingale, then
+%
+\[ \mathbf{E}(M_n - M_m | \Sigma_m) = 0 \]
+%
+so $M_n - M_m$ is perpendicular to the space of $\Sigma_m$ measurable functions for all $n \geq m$. This means that
+%
+\[ M_n = M_0 + \sum_{k = 1}^n (M_k - M_{k-1}) \]
+%
+expressed $M_n$ as the sum of orthogonal random variables, and so
+%
+\[ \mathbf{E}(M_n^2) = \mathbf{E}(M_0^2) + \sum_{k = 1}^n \mathbf{E}((M_k - M_{k-1})^2) \]
+%
+so the `quadratic variation' of the process directly measures the square sum of $M_n$.
 
 \begin{theorem}
-    If $M_n$ is a submartingale, for which there is $C$ such that $\mathbf{E}(\text{max}(M_n, 0)) \leq C < \infty$, then there is $M_\infty \in L_1(\mathbf{P})$ suc that $M_n \to M_\infty$ almost surely,
+    A martingale $M$ is bounded in $L^2(\Omega)$ if and only if
+    %
+    \[ \mathbf{E}(M_0^2) + \sum_{k = 1}^\infty \mathbf{E}((M_k - M_{k-1})^2) < \infty \]
+    %
+    and then $M_n \to M_\infty$ in $L^2(\Omega)$.
 \end{theorem}
 
+The next result says that an adapted process can be reduced to a process adapted `one step behind' if we subtract a martingale.
 
-\chapter{Continuous Markov Processes}
+\begin{theorem}[Doob Decomposition]
+    If $X_n$ is an adapted process of integrable random variables, then $X$ has a decomposition
+    %
+    \[ X_n = X_0 + M_n + A_n \]
+    %
+    where $M_n$ is a martingale null at zero, and $A$ is a previsible process null at zero. This decomposition is unique modulo indistinguishability. The process $X_n$ is a submartingale if and only if $A$ is an almost surely increasing process, and a supermartingale if $A$ is an almost surely decreasing process.
+\end{theorem}
+\begin{proof}
+    Assume without loss of generality that $X_0 = 0$. Note that if we had such a decomposition, then
+    %
+    \[ \mathbf{E}(X_1|\Sigma_0) = \mathbf{E}(M_1|\Sigma_0) + \mathbf{E}(A_1|\Sigma_0) = M_0 + A_1 = A_1 \]
+    %
+    so we can set $A_1 = \mathbf{E}(X_1|\Sigma_0)$ almost surely, and $M_1 = X_1 - A_1$. More generally, we find
+    %
+    \[ \mathbf{E}(X_{n+1}|\Sigma_n) = \mathbf{E}(M_{n+1}|\Sigma_n) + \mathbf{E}(A_{n+1}|\Sigma_n) = M_n + A_{n+1} \]
+    %
+    This allows us to recursively define $M_n$ and $A_{n+1}$ uniquely (almost surely). All that remains is to verify $M$ and $A$ have the required properties. It is clear that if $M_n$ is $\Sigma_n$ measurable, then $A_{n+1}$ is $\Sigma_n$ measurable, so $A_{n+1}$ is previsible, and this follows because $M_n = X_n - A_n$ is the sum of $\Sigma_n$ measurable variables. Next, we check the martingale property, verifying that
+    %
+    \[ \mathbf{E}(M_{n+1}|\Sigma_n) = \mathbf{E}(X_{n+1}|\Sigma_n) - \mathbf{E}(A_{n+1}|\Sigma_n) = \mathbf{E}(X_{n+1}|\Sigma_n) - A_{n+1} = M_n \]
+    %
+    and this completes the proof.
+\end{proof}
+
+There is a variant of this theorem in the theory of continuous time martingales, but it is much more difficult, allowing us to break submartingales into the sum of local martingales and previsible increasing processes. We will address it when we touch on the theory of stochastic integration theory.
+
+\section{Quadratic Variation}
+
+The ideas of quadratic variation, which we touched on in the $L^2$ theory of martingales, lead to a host of useful inequalities. Given a martingale $M$ in $L^2(\Omega)$ null at zero, then $M^2$ is a submartingale, and we can consider the Doob decomposition $M^2 = N + \langle M \rangle$, where $N$ is a martingale, and $\langle M \rangle$ is an increasing previsible process. We let $\langle M \rangle_\infty = \lim \langle M \rangle_n$. Since $\mathbf{E}(M_n^2) = \mathbf{E}(\langle M \rangle_n^2)$, we know that $M$ is bounded in $L^2(\Omega)$ if and only if $\mathbf{E}(\langle M \rangle_\infty) < \infty$, so on average $M$ has `finite quadratic variation'. What's more, since
+%
+\[ \langle M \rangle_{n+1} - \langle M \rangle_n \]
+
+\chapter{Continuous Time Regularity}
+
+The Daniell Kolmogorov theorem enables us to construct discrete time processes with any consistant distribution. While the theorem does enable us to construct distributions with any transition probability, in continuous time processes we require additional regularity hypotheses that the Daniell Kolmogorov theorem is unable to provide. Let's consider an example.
+
+\begin{example}
+    Let $T$ be a parameter set, $m: T \to \mathbf{R}$, and $V: T \times T \to \mathbf{R}$ a symmetric non-negative-definite function, such that for any function $f: S \to \mathbf{R}$, where $S$ is a finite subset of $T$,
+    %
+    \[ \sum_{r,s \in S} f(r) V(r,s) f(s) \geq 0 \]
+    %
+    The elentary theory of Gaussian distributions implies that for any finite subset $S$, there exists a unique measure $\mu_S$ such that
+    %
+    \[ \int_{\mathbf{R}^S} \exp \left( i \sum_{s \in S} \theta(s) f(s) \right) d\mu_S(f) = \exp \left( i \sum_{s \in S} \theta(r) m(r) - \frac{1}{2} \sum_{r,s \in S} \theta(r) V(r,s) \theta(s) \right) \]
+    %
+    We also know that the measures $\mu_S$ are compatible, and so the Daniell-Kolmogorov theorem enables us to construct the Gaussian process on the index set $T$ with mean $\mu$ and covariance function $V$. In particular, if $T = [0,\infty)$, $m(t) = 0$, and $V(s,t) = s \wedge t$, then we can construct a process which has the exact same finite dimensional distributions as Brownian motion should have, but we are unable to guarantee anything about the continuity properties of the paths of the process. Indeed, since $C[0,\infty)$ is not a Borel subset of $\mathbf{R}^{[0,\infty)}$, we cannot calculate the probability that a particular path of the process is continuous. Completion also won't help us here, because if $E \subset C[0,\infty)$ is a Borel measurable subset of $\mathbf{R}^{[0,\infty)}$, then we find that since the elements of $E$ can only be described at countably many points, that $E = \emptyset$, so $\mathbf{P}_*(C[0,\infty)) = 0$.
+\end{example}
+
+\begin{example}
+    If $\Omega$ is a $\sigma$ finite measure space with measure $\lambda$ over a $\sigma$ algebra $\Sigma$, such that every singleton is measurable. We would like to construct {\bf Poisson set functions}, which are `$\Sigma$ indexed' processes $\Lambda: \Omega^\Sigma \to \mathbf{Z}^+ \cup \{ \infty \}$, such that
+    %
+    \begin{itemize}
+        \item If $E \in \Sigma$, then $\Lambda(E)$ has a Poisson distribution with parameter $\lambda(B)$.
+        \item If $E_1, \dots, E_n \in \Sigma$ are disjoint, then $\Lambda(E_1), \dots, \Lambda(E_n)$ are independent random variables.
+        \item If $E$ and $F$ in $\Sigma$ are disjoint, then $\Lambda(E \cup F) = \Lambda(E) + \Lambda(F)$ almost surely.
+        \item For each $\omega$, $\Lambda(\cdot)(\omega)$ is a measure over $\Sigma$.
+    \end{itemize}
+    %
+    If $S$ is a finite subset of $\Sigma$, then we can easily specify the desired law defining $\{ \Lambda(E): E \in S \}$, and these are consistant, so that the Daniell Kolmogorov theorem guarantees the existence of a process satisfying the first three properties above. But the Daniell Kolmogorov theorem doesn't say anything about the fourth property, and so we need to do extra work to guarantee this property holds. This is because the law defining the property also doesn't say anything about where the probability that $\Lambda$ is a measure, because the subset of $\Omega^\Sigma$ of functions which define measures is not a measurable subset unless $\Sigma$ is countable, which only occurs in the most trivial of cases. Again, if we consider a measurable subset $E$ of $\Omega^\Sigma$ containing only measures, then we find that $E = \emptyset$, so we cannot complete the space to obtain good results.
+\end{example}
+
+One way to clarify this problem is to look at the ways that two stochastic processes with the same law can differ from one another. We say a process $X$ is a {\bf modification} of a process $Y$ if, for every fixed time $t \in T$, $X_t = Y_t$ almost surely. This means exactly that $X$ and $Y$ have the same finite distributions. We say $X$ and $Y$ are {\bf indistinguishable} if the inner probability of the set $A = \{ \omega: X_t(\omega) = Y_t(\omega)\ \text{for all}\ t \}$ is equal to 1, so $A$ is measurable in the completion of the $\Sigma$ algebra on $\Omega$, and $\mathbf{P}(A) = 1$ in the completion. Indistinguishability preserves the properties of stochastic processes we need in the theory of continuous time.
+
+\begin{example}
+    Suppose that a Brownian motion $B$ exists. Let $U$ be an independent random variable to $B$ uniformly distributed on $[0,1]$, and if we consider the set $A = \{ x : B_{U(\omega)} = 0 \}$, define
+    %
+    \[ \tilde{B_t}(\omega) = \begin{cases} B_t(\omega) & t \neq U \\ 1 & t = U, \omega \in A \\ 0 & \text{otherwise} \end{cases} \]
+    %
+    Then for a fixed $t$, $\mathbf{P}(\tilde{B_t} = B_t) \geq \mathbf{P}(t \neq U) = 1$, so $B$ and $\tilde{B}$ are modifications of one another, but $B$ and $\tilde{B}$ are not indistinguishable, because for any sample point $\omega$, our definition guarantees $\tilde{B}_{U(\omega)} \neq B_{U(\omega)}$. And we find that this modification doesn't preserve continuity, because the paths of $\tilde{B_t}$ are always discontinuous.
+\end{example}
+
+The indistinguishability problem only occurs in the continuous time setting, because it is easy to verify that countable processes are modifications of one another if and only if they are indistinguishable.
+
+\begin{lemma}
+    There exists a process $X$ into $E^T$ with law $\mathbf{P}$ such that $X(\omega) \in A$ for all $\omega$, for some subset $A \subset E^T$, if and only if $\mathbf{P}^*(A) = 1$.
+\end{lemma}
+\begin{proof}
+    We rely on the fact that if $\mathbf{P}^*(A) = 1$, then for any measurable set $E$, $\mathbf{P}^*(A \cap E) = \mathbf{P}(E)$, and the law defined over $E^T$ descends to a probability measure on $A$, with $\Sigma$ algebra consisting of sets of the form $A \cap E$, where $E$ is measurable. This means we can use $A$ as the sample space with which to construct our stochastic process, which is just given by the projection functions $\pi_t: A \to E$, for $t \in T$. On the other hand, if there is a process $X$ like above, and $A \subset F$, for some Borel measurable $F$, then $\mathbf{P}(F) = \mathbf{P}(X^{-1}(F)) = \mathbf{P}(\Omega) = 1$, so $\mathbf{P}^*(A) = 1$.
+\end{proof}
+
+We can never really calculate $\mathbf{P}^*(A)$ for any set $A$ independently of constructing a process like above, but the lemma has a relaxing quality. We shall find, however, that by making heavy use of the law defining certain stochastic processes, we can find modifications of a given process with nice properties, like the continuity of Brownian motion. This is what we set out to do in this chapter. Indeed, if we can modify a process on $[0,\infty)$ such that {\it all sample paths are right continuous}, then the modification/indistinguishibility problem disappears.
+
+\begin{theorem}
+    If $X$ and $Y$ are two right continuous processes with values in a Hausdorff space, then $X$ and $Y$ are modifications of one another if and only if they are indistinguishable.
+\end{theorem}
+\begin{proof}
+    The theorem essentially follows because
+    %
+    \[ \{ \omega:  X_t(\omega) = Y_t(\omega)\ \text{for all}\ t \} = \bigcap_{p \in \mathbf{Q}^+} \{ \omega: X_p(\omega) = Y_p(\omega) \} \]
+    %
+    because we can take limits from above to prove equality at all points if we have equality on rational points, and the right hand side is the countable intersection of sets we know to be measurable in $\Omega$, hence the left hand side is measurable in $\Omega$ also. If $X$ and $Y$ are modifications of one another, then each event in the intersection is a set of probability 1, so the countable intersection also has probability 1.
+\end{proof}
+
+\section{Regularity of Martingales}
+
+We recall that a {\bf continuous time martingale} on $[0,\infty)$ with respect to a filtration $\Sigma$ is a $\Sigma$ adapted process $X$ such that for $t \geq s$, $\mathbf{E}[X_t|\Sigma_s] = X_s$. We define continuous time supermartingales and submartingales in an analogous manner. The asymptotics of martingales will play a role in showing that the paths of the process $\{ X_p: p \in \mathbf{Q}^+ \}$ can be `regularized' to right continuous functions with left limits, or {\bf c\'{a}dl\'{a}g}, so that in the forthcoming analysis of continous time martingales, we can always assume martingales are regularized.
+
+Consider a (non-random) function $f: \mathbf{Q}^+ \to \mathbf{R}$. We start our analysis by considering the properties of $f$ which guarantee that we can extend $f$ to a right continuous function with left limits, in which case we call $f$ {\bf regularizable}. The trick is that if
+%
+\[ \lim_{p \downarrow t} f(p)\ \ \ \ \ \lim_{q \uparrow t} f(q) \]
+%
+exist for all real values $t \geq 0$, and are finite, we can define $g(t) = \lim_{p \downarrow t} f(p)$, and then $g$ will be right continuous with left limits. As with martingale convergence, we consider the upcrossing values $U_n[a,b]$ to be the maximum $n$ such that we can find rational numbers
+%
+\[ 0 \leq p_1 < q_1 < p_2 < \dots < p_n < q_n \leq n \]
+%
+where $f(p_i) < a$, $f(q_i) > b$. If the choice of $n$ is unbounded, we let $U_n[a,b] = \infty$.
+
+\begin{lemma}
+    $f$ is regularizable if and only if for any integer $n$ and rational numbers $a < b$, we have
+    %
+    \[ \sup \{ |f(q)|: q \in \mathbf{Q}^+ \cap [0,n] \} < \infty\ \ \ \ \ U_n[a,b] < \infty \]
+\end{lemma}
+\begin{proof}
+    TODO
+\end{proof}
+
+\begin{corollary}
+    If $\{ X_q : q \in \mathbf{Q}^+ \}$ is a real valued stochastic process, then
+    %
+    \[ E = \{ \omega: q \mapsto Y_q(\omega)\ \text{is regularizable} \} \]
+    %
+    is measurable.
+\end{corollary}
+\begin{proof}
+    We have exibited conditions such that $Y(E) \subset \mathbf{R}^{[0,\infty)}$ is described as a countable intersection of measurable cylinders in $\mathbf{R}^{[0,\infty)}$, which therefore are measurable, and this also means the inverse image of the set is measurable, which is $E$.
+\end{proof}
+
+\begin{lemma}
+    Let $X$ be a supermartingale, fix $t \in [0,\infty)$ and $q_1 > q_2 > \dots$ is a decreasing sequence of rationals which tend to $t$, then $X_{q_i}$ converges pointwise almost every and in the $L^1$ norm.
+\end{lemma}
+\begin{proof}
+    The sequence $X_{q_1}, X_{q_2}, \dots$ is a reverse supermartingale, and the expectation is upper bounded, because we calculate $\mathbf{E}(X_{q_i}) < \mathbf{E}(X_t)$, which immediately gives the result by the L\'{e}vy Doob downward theorem.
+\end{proof}
+
+If we vary the sequence of rationals in the above lemma to a new sequence $r_i$, then $Y_{q_i}$ and $Y_{r_i}$ will still tend to the same value because we can interlace the two sequences, and the lemma above still implies convergence.
+
+\begin{theorem}[Doob Regularity Theorem]
+    If $X$ is a supermartingale, then $X$ is regularizable almost surely, and if we define
+    %
+    \[ Y_t = \begin{cases} \lim_{q \downarrow t} X_q(\omega) & : q \mapsto X_q(\omega)\ \text{is regularizable} \\ 0 & : \text{otherwise} \end{cases} \]
+    %
+    Then $Y$ is a c\'{a}dl\'{a}g process.
+\end{theorem}
+\begin{proof}
+    We need only show that for a fixed $n$, $a < b \in \mathbf{Q}^+$, that
+    %
+    \[ \mathbf{P}(\sup \{ |X_q(\omega)|: q \in \mathbf{Q}^+ \cap [0,n] \} < \infty) = 1 \]
+    \[ \mathbf{P}(U_n[a,b] < \infty) = 1 \]
+    %
+    where $U_n[a,b]$ is the upcrossing lemma applied to $Y|_{\mathbf{Q}^+}$. If $D_1, D_2, \dots$ are a sequence of finite subsets of $\mathbf{Q}^+ \cap [0,n]$, each containing $0$ and $n$, and with $D_m \uparrow \mathbf{Q}^+ \cap [0,n]$, then for a fixed $\lambda$, we know that
+    %
+    \begin{align*}
+        \mathbf{P}(\sup & \{ |X_q|: q \in \mathbf{Q}^+ \cap [0,n] \} > 3 \lambda)\\
+        &= \lim \mathbf{P}(\sup \{ |X_q|: q \in D_m \})\\
+        &\leq \frac{4 \mathbf{E} |X_0| + 3 \mathbf{E} |X_n|}{\lambda}
+    \end{align*}
+    %
+    Letting $\lambda \to \infty$ gives the first result. By the upcrossing lemma, if $U^{D_m}_n[a,b]$ denotes the number of upcrossings just over the finite set $D_m$, we know
+    %
+    \[ \mathbf{E}[U_n[a,b]] = \lim_{m \to \infty} \mathbf{E}[U^{D_m}_n[a,b]] \leq \frac{\mathbf{E} |X_n| + |a|}{b-a} \]
+    %
+    This is where the step-independent result of the upcrossing lemma is {\it integral}, and therefore $U_n[a,b] \in L^1(\Omega)$, so $\mathbf{P}(U_n[a,b] < \infty) = 1$.
+\end{proof}
+
+You might think that we are done with the discussion, but there is one `irregularity' with the Doob regularity lemma.
+
+\begin{example}
+    Suppose $\Omega = \{ \pm 1 \}$, $\mathbf{P}( \pm 1) = 1/2$, and $\Sigma_t = \{ \emptyset, \Omega \}$ for $t \leq 1$, and $\Sigma_t = 2^\Omega$ for $t > 1$. Suppose that for $\omega \in \Omega$,
+    %
+    \[ X_t(\omega) = \omega \chi_{\{ t > 1 \}}(\omega) \]
+    %
+    Then $X$ is a martingale relative to the filtration $\Sigma_t$, and it's regularization is
+    %
+    \[ Y_t(\omega) = \omega \chi_{\{ t \geq 1 \}}(\omega) \]
+    %
+    Note that $Y_1$ is not $\Sigma_1$ measurable, so $Y$ cannot {\it possibly} still be a martingale relative the filtration. Moreover, $\mathbf{P}(X_1 = Y_1) = 0$, so $Y$ isn't a modification of $X$ either, so it seems the Doob's regularity theorem doesn't work!
+\end{example}
+
+The first problem we erase is that $Y$ might not be adapted to the required filtration. However, by it's construction, we can fix this by enlarging our filtrations `infinitisimally'. By construction, $Y_t$ will be adapted to the {\it partial augmentation}
+%
+\[ \Sigma_{t+} = \lim_{u \downarrow t} \Sigma_u \]
+%
+If we assume our filtration is right continuous, in the sense that $\Sigma_{t+} = \Sigma_t$ for all $t$, then the problem `almost' doesn't occur. The only non $\Sigma_t$-measurable set involved in the construction is the set
+%
+\[ \{ \omega: t \mapsto X_t(\omega)\ \text{is regularizable} \} \]
+%
+which is a subset of the $\sigma$ algebra $N(\Sigma_\infty)$ of $\Sigma_\infty$ measurable subsets with probability $0$ or $1$, we will also need to assume that $N(\Sigma_\infty) \subset \Sigma_t$ for each $t$. Thus it makes sense to define the {\it partial augmentation} $\Sigma'_t = \sigma(\Sigma_{t+},N(\Sigma_\infty))$.
+
+\begin{theorem}
+    The process $Y$ is a supermartingale relative to $\Sigma'$, and $Y$ is a modification of $X$ if and only if the map $t \mapsto Y_t$ is a right continuous map into $L^1(\Omega)$, in the sense that $\lim_{s \downarrow t} \| Y_t - Y_s \|_1 = 0$ for all $t \geq 0$.
+\end{theorem}
+\begin{proof}
+    Fix $0 \leq t < s$. Suppose $s > q_1 > q_2 > \dots \to t$. It is easy to verify that $\mathbf{E}(X_s|\Sigma_{q_n}) \leq X_{q_n}$, considering $Z_n = \mathbf{E}(X_s|\Sigma_{q_n})$ as a reverse {\it martingale}, the L\'{e}vy-Doob downward theorem for martingales allows us to conclude that $\mathbf{E}(X_s|\Sigma_{t+}) \leq Y_t$. Since $N(\Sigma_\infty)$ is independent of trivially independent of every other $\sigma$ algebra, we find $\mathbf{E}(X_s|\Sigma'_t) = \mathbf{E}(X_s|\Sigma_{t+}) \leq Y_t$. Now the Doob downward theorem guarantees that if we let $s$ be rational, and then let $s \downarrow t$, then the converge will be in $L^1(\Omega)$, and so
+    %
+    \[ \mathbf{E}(Y_s|\Sigma'_t) = \lim_{p \downarrow s} \mathbf{E}(X_p|\Sigma'_t) \leq Y_t \]
+    %
+    hence we have shown $Y_s$ is a supermartingale. It now follows from the convergence definition of $Y$ that $Y$ is right continuous in $L^1(\Omega)$, and since we know that if $q_n \downarrow t$ then $X_{q_n} \to Y_t$ in $L^1$, it follows that $X$ is a modification of $Y$ at $t$ if and only if $X$ is right continuous.
+\end{proof}
+
+Even with this theorem, we aren't exactly satisfied by the regularity theorem, because it turns out that the filtration $\Sigma'$ does not have rich enough class of stopping times for the continuous time theory. Thus we also suppose the {\it usual conditions}, which require that the $\sigma$ algebra over the probability space is complete, each $\Sigma_t$ contains all $\mathbf{P}$ null sets, and $\Sigma_t$ is right continuous. This subsumes the partial augmentation considered above. We let $\Sigma^*$ denote the smallest filtration larger than $\Sigma$ satisfying the usual conditions. It can be obtained by first enlarging the $\Delta$ sigma algebra over the sample space to a complete sigma algebra $\Delta^*$, set $N$ to be the class of null sets in $\Delta^*$ then setting
+%
+\[ \Sigma^*_t = \bigcap_{s > t} \sigma(\Sigma_s, N) = \sigma(\Sigma_{t+}, N) \]
+%
+Since $\Sigma'$ differs from the usual augmentation only by $\mathbf{P}$ null sets, the independence properties of conditional expectation guarantee that the theorem above still holds. To summarize our discussion, the regularity theorem guarantees that we take a supermartingale $X$ with respect to a filtration $\Sigma$, and {\it regularize} to a c\'{a}dl\'{a}g supermartingale $Y$ with respect to the filtration $\Sigma^*$.
+
+\begin{theorem}
+    If $\Omega$ with a filtration $\Sigma$ satisfying the usual conditions, and $X$ is a supermartingale, then $X$ has a c\'{a}dl\'{a}g modification $Y$ if and only if the map $t \mapsto \mathbf{E}(Y_t)$ from $[0,\infty)$ to $\mathbf{R}$ is right continuous, and then $Y$ is a c\'{a}dl\'{a}g supermartingale.
+\end{theorem}
+\begin{proof}
+    From the supermartingale property of $X$, we know that for $s > t$, $\mathbf{E}(X_s|\Sigma_t) \leq X_t$. Applying the regularity theory allows us to construct $Y$, which we know is also a supermartingale with respect to $\Sigma$, except that $Y$ might not be a version of $X$. Since $X_p \to Y_t$ in $L^1$ if $p \downarrow t$ in $L^1(\Omega)$, then we obtain
+    %
+    \[ Y_t = \mathbf{E}(Y_t|\Sigma_t) = \lim_{p \downarrow t} \mathbf{E}(X_p|\Sigma_t) \leq X_t \]
+    %
+    If the map $t \mapsto \mathbf{E}(X_t)$ is right continuous, then since $X_p \to Y_t$ in $L^1(\Omega)$, we conclude that $\mathbf{E}(Y_t) = \lim_{p \downarrow t} \mathbf{E}(X_p) = \mathbf{E}(X_t)$, and this shows $Y_t = X_t$ almost everywhere. On the other hand, if $X$ has a c\'{a}dl\'{a}g modification then it is trivial to verify the expectation is right continuous.
+\end{proof}
+
+\begin{lemma}
+    If $X$ is a right continuous supermartingale with respect to a filtration $\Sigma$, then $X$ is a supermartingale with respect to $\Sigma^*$.
+\end{lemma}
+\begin{proof}
+    TODO
+\end{proof}
+
+\chapter{Continuous Time Markov Processes}
 
 In some mathematical circumstances, we may approximate a continuous system by a simpler system, which enables us to derive approximate results more simply. For instance, we often replace a Newtonian system by its linear approximation, which enables us to use the fleshed-out theory of linear differential equations to obtain an analytic formula for how the system develops. Nonetheless, in some mathematical systems it is worthwhile keeping a continuous system, which leads to more precise and concise results.
 
@@ -1380,6 +2356,136 @@ Thus $P_tf$ is a solution to the {\it heat equation} for any sufficiently regula
 \[ \frac{\partial p_t}{\partial t} = \frac{1}{2} \frac{\partial^2 p_t}{\partial x^2} \]
 %
 We can interpret this as saying the heat equation models the averages of particle behaviour undergoing brownian motion over a time period. This connects the classical study of diffusion in physics with the study of diffusion in probability theory. However, whereas the study of diffusion in physics gives results about the average behaviour of particles over a long period of time, whereas probability theory gives much stronger results of the behaviour of {\it individual} particles.
+
+\chapter{Stochastic Calculus}
+
+Our goal in this chapter will be to make sense of the integral
+%
+\[ (H \bullet X)_t = \int_0^t H_s dX_s \]
+%
+where $H$, $X$, and $H \bullet X$ will all be continuous time stochastic proceses. This equation can also be written in the `differential form' $d(H \bullet X) = H dX$. The most well known integral of this form is known as the It\^{o} integral, after it's creator, and generalizes the martingale $(C \bullet M)$ we studied in the discrete time setting, which represented the overall profit of a series of bets, where the stakes can be adjusted given information available directly before the bet is placed. In the discrete case, $C$ was a previsible process, and $M$ was a martingale, a submartingale, or a supermartingale. In the continuous time case, $H$ will also be a previsible process, in the sense that we can determine the values of $H$ given knowledge known `infinitisimally before' each time step, and $X$ was be a semimartingale, which includes the class of continuous time, submartingales, martingales, and supermartingales. It models a totalling of a series of infinitisimal bets made against the given stakes $X$. Like for the Lebesgue integral, we shall build up the It\^{o} integral for the simplest class of integrands, and then construct the general integral by taking the appropriate limits.
+
+%Note: For technical reasons, we assume the filtrations under consideration always satisfy the usual conditions. This means we can also assume all martingales are c\'{a}dl\'{a}g, and that a process $(t, \omega) \mapsto X_t(\omega)$ is jointly measurable in $t$ and $\omega$. This is sufficent regularity to build the right theory.
+
+Given two stopping times $S \leq T$, and a bounded, $\Sigma_S$ measurable function $Z$, we will begin by constructing the integral of the function
+%
+\[ Z(S,T](t,\omega) = Z(\omega) \chi_{(S(\omega),T(\omega)]}(t) \]
+%
+For a fixed $\omega$, $Z$ is constant between any two stopping times, which represents a strategy which bets a constant amount between times $S$ and $T$, and so it makes sense to make the `obvious definition'
+%
+\[ \int_0^t Z(S,T] dX = Z(X_{T \wedge t} - X_{S \wedge t}) \]
+%
+for any given integrator $X$. The reason that we insist $S$ and $T$ are stopping times, and that $Z$ is bounded and $\Sigma_S$ measurable implies the following result.
+
+\begin{lemma}
+    If $M$ is a uniformly integrable c\'{a}dl\'{a}g martingale, then $Z(S,T] \bullet M$ is a uniformly integrable martingale.
+\end{lemma}
+\begin{proof}
+    TODO
+\end{proof}
+
+Essentially, stochastic integration theory consists of trying to extend this result to as general a class of functions as we can get, by exploiting the properties of continuous time martingales to their fullest extent.
+
+\section{Previsibility}
+
+Recall that in the discrete setting, we defined a betting scheme $C$ as a random variable adapted to one time step before the values of the bet are revealed. In continuous time, a process should therefore be previsible if it can be predicted `infinitisimally' into the past. A left continuous process is the perfect candidate for a process of this form, because we can take limits on the left to approximate the next bet `immediately' before the bet is revealed. The right definition makes sure that we have a suitable algebra of previsible processes. The {\bf previsible $\sigma$ algebra} on $(0,\infty) \times \Omega$ generated by $\Sigma$ is defined to be the smallest $\sigma$ algebra on $(0,\infty) \times \Omega$ such that every adapted c\'{a}gl\'{a}d process is measurable. A process on $(0,\infty)$ is called {\bf previsible} if it is measurable as a map from $(0,\infty) \times \Omega$ to $\mathbf{R}$.
+
+\begin{lemma}
+    If $S \leq T$ are stopping times, and $Z$ is a bounded $\Sigma_S$ measurable functions, then $Z(S,T]$ is a previsible process.
+\end{lemma}
+\begin{proof}
+    The process $Z(S,T]$ is certainly c\'{a}gl\'{a}d, so we need only verify that it is adapted to $\Sigma$. But now $Z(S,T] = \lim Z[S_n,T_n)$, where $S_n = S + n^{-1}$ and $T_n = T + n^{-1}$, and since $Z \in \Sigma_{S_n}$ because $S \leq S_n$, it suffices to prove that $Z[S_n,T_n)$ is adapted, and this follows because
+    %
+    \[ \{ Z[S_n,T_n)_t \in E \} = \{ Z \in E \} \cap \{ S_n \leq t \} \cap \{ T_n > t \} \]
+    %
+    and $\{ Z \in E \} \cap \{ S_n \leq t \}$ is in $\Sigma_t$, and $\{ T > t \}$ is $\Sigma_t$ measurable.
+\end{proof}
+
+We call any finite sum of processes of the form $Z(S,T]$ a {\it bounded elementary integrand}, a class often denoted by $b \mathcal{E}$. It is rather messy to show (combinatorially reordering the finite sums by taking mins and maxees) that any bounded elementary integrand $H$ may be written in the `increasing form' $Z_1(S_1,T_1] + \dots + Z_n(S_n,T_n]$ where $S_1 \leq T_1 \leq \dots \leq S_n \leq T_n$, and $Z_i \in b\Sigma_{S_i}$. Once we have written the theorem in this form, we can unambiguously define the integral
+%
+\[ \int_0^t HdX = \sum_{k = 1}^n Z_k[X_{T_k \wedge t} - X_{S_k \wedge t}] \]
+%
+The monotone class theorem will come in handy in extending this integral, and one fact that makes this easy is the following.
+
+\begin{lemma}
+    The smallest $\sigma$ algebra containing all bounded element functions is equal to the previsible $\sigma$ algebra.
+\end{lemma}
+\begin{proof}
+    It is obvious that each element of $b\mathcal{E}$ is previsible, so it remains to show every bounded c\'{a}gl\'{a}d adapted process $X$ is $\sigma(b\mathcal{E})$ measurable, and this follows because
+    %
+    \[ X = \lim_{k \to \infty} \lim_{n \to \infty} \sum_{i = 2}^{nk} X_{\frac{i-1}{n}} \left( \frac{i-1}{n}, \frac{i}{n} \right] \]
+    %
+    and if $X$ is also adapted, then $X_{(i-1)n^{-1}} \in b \Sigma_{(i-1)n^{-1}}$.
+\end{proof}
+
+We immediately infer the following monotone class theorem, which enables us to show that the It\^{o} integral is defined for all previsible processes.
+
+\begin{lemma}
+    If $V$ is a vector space of bounded processes with parameter set $(0,\infty)$, and
+    %
+    \begin{itemize}
+        \item Constant functions are in $V$.
+        \item If $H_n$ is a sequence of elements in $V$ which converge uniformly on $(0,\infty) \times \Omega$ to a function $H$, then $H$ is in $V$.
+        \item If $H_n$ is a uniformly bounded sequence of nonnegative elements of $V$ and $H_n \uparrow H$, then $H$ is in $V$.
+        \item $V$ contains every bounded elementary function.
+    \end{itemize}
+    %
+    Then $V$ contains every bounded previsible process.
+\end{lemma}
+
+By linearity, $H \bullet X$ is also a uniformly integrable martingale.
+
+\section{Finite Variation Processes}
+
+A {\bf finite variation process} null at zero is an adapted c\'{a}dl\'{a}g process $X$ such that each path $t \mapsto X_t(\omega)$ is of finite variation, and $X_0 = 0$. Thus for each $t$ and $\omega$, the variation
+%
+\[ V_X(t,\omega) = \int_{(0,t]} |dX_s(\omega)| = \sup \sum_{k = 1}^n |X_{s_k}(\omega) - X_{s_k - 1}(\omega)| \]
+%
+is finite, where the supremum is taken over all partitions $0 = s_0 < s_1 < \dots < s_n = 1$. We write $\text{FV}_0$ for the space of finite variation processes null at $0$. In this case, if $H$ is a bounded $B(0,\infty) \times \Sigma$ measurable process, then we can easily define
+%
+\[ \left( \int_0^t H dX \right)(\omega) = \int_0^t H(s,\omega) dX_s(\omega) \]
+%
+as the normal Lebesgue Stieltjes integral. An $\text{IV}_0$ process will be a $\text{FV}_0$ process $X$ such that $\| X \|_V = \mathbf{E} V_X(\infty,\omega) < \infty$.
+
+\begin{theorem}
+    If $H$ is a bounded, previsible process, and $M$ is a martingale in $\text{IV}_0$, then $H \bullet M$ is a martingale in $\text{IV}_0$.
+\end{theorem}
+\begin{proof}
+    TODO
+\end{proof}
+
+\section{Localization}
+
+The boundedness and integrality assumptions we used to conclude on the regularity of the integrals of finite variation processes is too stringent ot be practical. To obtain a more useful result, we must relax the hypothesis of that theorem to a `localize' version. Of course, then conclusion of the theorem then only holds locally, in some sense.
+
+Consider reducing a global equation $d(H \bullet X) = HdX$ on $(0,\infty)$ to the `local' equation, that $d(H \bullet X) = HdX$ on $(0,T]$, where $T$ is a stopping time (which we can view as `local time'). With this idea, given a stopping time $T$ and a process $H$ on $(0,\infty)$, it is natural to introduce the process $H(0,T]_t = \chi_{(0,T]}(t) H_t$ which represents the adjustment to the bet $H$ where we immediately stop betting at time $T$. Note that if $H$ is previsible, then so is $H(0,T]$. Similarily, if $X$ is a process on $[0,\infty)$, it is natural to introduce the process $X^T$ such that,
+%
+\[ X^T(t,\omega) = \begin{cases} X(t,\omega) & : 0 \leq t \leq T(\omega) \\ X(T(\omega), \omega) & : t > T(\omega) \end{cases} \]
+%
+which formally means that
+%
+\[ dX^T(t,\omega) = \begin{cases} dX(t,\omega) & : 0 \leq t \leq T(\omega) \\ 0 & : t > T(\omega) \end{cases} \]
+%
+so that we `close off all bets' at time $T$. We can now define localization as saying that the equation
+%
+\[ (H \bullet X)^T = H(0,T] \bullet X^T \]
+%
+holds for stopping time $T$. Note that now we are forced to view $X$ as a process, rather than just a `measure' $dX$.
+
+Let us begin by defining how we localize integrands. Let $\mathcal{L}$ be a family of previsible process with the property that if $H \in \mathcal{L}$, then $H(0,T]$ is in $\mathcal{L}$ for every stopping time $T$. We say a process $H$ on $(0,\infty)$ is in the localization $l\mathcal{L}$ of the vector space if there exists a sequence of stopping times $T_1 \leq T_2 \leq \dots$ with $T_i \uparrow \infty$ such that $H(0,T_n] \in \mathcal{L}$ (we say the $T_i$ `reduces' $H$ into $\mathcal{L}$). Then $l\mathcal{L}$ is a space stable under the localization $H \mapsto H(0,T]$. If $\mathcal{L}$ is the space of all bounded, previsible processes, then $l\mathcal{L}$ is called the space of all {\it locally bounded previsible processes}.
+
+\begin{lemma}
+    If $H$ is an adapted c\'{a}gl\'{a}d process with $\limsup_{t \downarrow 0} |H_t| < \infty$, then $H$ is a locally bounded previsible process.
+\end{lemma}
+\begin{proof}
+    Let $T_n = \inf \{ t: |H_t| > n \}$. Then $H(0,T_n]$ is c\'{a}gl\'{a}d and bounded, hence bounded and previsible.
+\end{proof}
+
+On the other hand, we now define the localization of integrators. Let $\mathcal{L}_0$ be a family of adapted, c\'{a}dl\'{a}g processes null at zero, such that if $X \in \mathcal{L}_0$, then $X^T \in \mathcal{L}_0$ for any stopping time $T$, and we then say $\mathcal{L}_0$ is stable under stopping. A process is in $\mathcal{L}_{0,\text{loc}}$ if there exists a sequence of stopping times $T_1 \leq T_2 \leq \dots$ with $T_n \to \infty$ such that for all $n$, $X^{T_n} \in \mathcal{L}_0$. As with integrands, we say the $T_i$ are a reducing sequence for $X$.
+
+\begin{example}
+    We let $\mathcal{M}_0$ denote the class of all martingales null at zero, $\text{UI} \mathcal{M}_0$ the class of uniformly integrable martingales null at zero, $\text{FV} \mathcal{M}_0$ the space of all finite variation martingales null at zero, and $\text{IV} \mathcal{M}_0$ the space of all integrable variation martingales null at zero. Each of these spaces are stable under stopping, and give us the corresponding spaces of {\bf local martingales}.
+\end{example}
 
 \end{document}
 

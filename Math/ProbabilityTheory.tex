@@ -1,16 +1,5 @@
 \input{../style.tex}
 
-\DeclareMathOperator{\Prob}{\mathbf{P}}
-\DeclareMathOperator{\Ber}{\text{Ber}}
-\DeclareMathOperator{\Bin}{\text{Bin}}
-\DeclareMathOperator{\Geo}{\text{Geo}}
-\DeclareMathOperator{\Poisson}{\text{Poisson}}
-\DeclareMathOperator{\Uni}{\text{Uni}}
-\DeclareMathOperator{\Multi}{\text{Multi}}
-\DeclareMathOperator{\Expect}{\mathbf{E}}
-\DeclareMathOperator{\Exp}{\text{Exp}}
-\DeclareMathOperator{\Beta}{\text{Beta}}
-
 \title{Probability Theory}
 \author{Jacob Denson}
 
@@ -23,155 +12,188 @@
 
 \chapter{Foundations}
 
-These notes outline the basics of probability theory, the framework which allows us to communicate that we are 80\% more likely to develop lung disease if you are a smoker rather than an average person, or that there is a 50/50 chance of rain today? But what is probability? What do we mean by these probabilistic statements? To a mathematicians, there need not be a rigorous interpretation -- probability theory is just a subfield of measure theory. To a natural scientist, probability theory is viewed in a different vein. In this chapter, we will explore the two major interpretations of probability theory in real life, each of which use the same underlying mathematical theory to make judgements about the world. After exploring these interpretations, we will make axiomatic definitions of probability (which hold regardless of which interpretation you have), and explore the basic consequences of the assumptions.
+These notes outline the basics of probability theory, the mathematical framework which allows us to interpret the statement that we are {\it 80\% more likely} to develop lung disease if you are smoker rather than if you are a non-smoker, or that there is a {\it 50-50 chance} of rain on Saturday? These statements seem intuitive, but there a couple difficulties. On Saturday, it will either rain, or not rain, so how can there be a `chance' of either event happening at all? To a mathematician, these statements have a rigorous interpretation in the language of measure theory. To a natural sciences, probability theory is viewed in a different vein. In this chapter, we will explore the two major interpretations of probability theory in real life, each of which use the same underlying mathematical theory to make judgements about the world. After exploring these interpretations, we will make axiomatic definitions of probability (which hold regardless of which interpretation you have), and explore the basic consequences of the assumptions.
 
 \section{Frequentist Probability}
 
-Classical probability theory was developed according to the intuitions of what is now known as the frequentist school of probability theory, and is the simplest interpretation of probability to understand. It is easiest to understand from the point of view of the scientific experiment. Suppose you are repeatedly performing some event, in a manner which is controlled well enough that the outcome of the experiment should be the same. Even under rigorously controlled conditions however, the experiment will not always result in the same outcome -- we instead have a range of outcomes which we may observe from a single result in an experiment. Nonetheless, some outcomes will occur more frequently than others. Let us perform an experiment as often as desired, obtaining an infinite sequence of outcomes
+Classical probability theory was developed according to the intuitions of what is now known as the frequentist school of probability theory, and is the simplest interpretation of probability to understand. It is easiest to understand from the point of view of a scientist. Suppose you are repeatedly performing some well-controlled experiment, in the sense that you do not expect the outcome of the experiment to change drastically between trials. Even under rigorously controlled conditions, the experiment will not always result in the same outcome. Slight experimental error results in slight changes in the outcome of the experiment. Nonetheless, some outcomes will occur more frequently than others. Let us perform an experiment as often as desired, obtaining an infinite sequence of outcomes
 %
 \[ \omega_1, \omega_2, \omega_3, \dots \]
 %
-Let $D$ be a proposition decidable from the outcome of the experiment (for instance $D$ may represent whether a flipped coin lands heads up or heads down in the experiment of flipping a coin). Mathematically, a proposition is just a subset of the set of all outcomes in an experiment -- the outcomes for which the proposition is true. We may then define the relative frequency of this proposition being true in $n$ trials to be
+Let $D$ be a certain question, or {\it proposition} about the outcome of the experiment (for instance, $D$ may ask whether a flipped coin lands heads up when flipping a coin repeatedly). Mathematically, we can represent the proposition as a subset of the set of all outcomes in an experiment -- the outcomes for which the proposition is true. We define the {\it relative frequency} of $D$ being true in $n$ trials by the equation
 %
 \[ P_n(D) := \frac{\# \{ k \leq n : \omega_k \in D \}}{n} \]
 %
-The key assumption of the frequentist school is that, if our experiments are suitably controlled, then regardless of the specific sequence of measured outcomes, our relative frequencies will always converge to a well defined invariant ratio, which we define to be the probability of a certain event:
+The key assumption of the frequentist school of probability is that, if our experiments are suitably controlled, then regardless of the specific sequence of measured outcomes, our relative frequencies will always converge to a well defined invariant ratio, which we define to be the probability of a certain event:
 %
-\[ \Prob(D) := \lim_{n \to \infty} P_n(D) \]
+\[ \prob(D) := \lim_{n \to \infty} P_n(D) \]
 %
-Let's explore some consequences of this doctrine. First, $0 \leq P_n(D) \leq 1$ is true for any $n$, so that $0 \leq \mathbf{P}(D) \leq 1$. If we let $\Omega$ denote the set of all possible outcomes to the experiment (a proposition true for all outcomes of the experiment), then
+Let's explore some consequences of this doctrine. First, $0 \leq P_n(D) \leq 1$ is true for any $n$, so that for any proposition $D$,
 %
-\[ P_n(D) = \frac{\# \{ k \leq n : \omega_k \in \Omega\}}{n} = \frac{\# \{ 1, 2, \dots, n \}}{n} = 1 \]
+\begin{equation}\label{prob0lessthan1} 0 \leq \mathbf{P}(D) \leq 1 \end{equation}
 %
-Thus $\Prob(\Omega) = 1$. If $A_1, A_2, \dots$ is a sequence of disjoint propositions (no more than one outcome is true for each outcome of the experiment), then
+If we let $\Omega$ denote the set of all possible outcomes to the experiment (a proposition true for all outcomes of the experiment), then
+%
+\[ P_n(\Omega) = \frac{\# \{ k \leq n : \omega_k \in \Omega\}}{n} = \frac{\# \{ 1, 2, \dots, n \}}{n} = 1 \]
+%
+Thus we conclude
+%
+\begin{equation}\label{probspace1} \prob(\Omega) = 1 \end{equation}
+%
+If $A_1, A_2, \dots$ is a sequence of disjoint propositions (no more than one outcome is true for each outcome of the experiment), then
 %
 \[ P_n \left( \bigcup_i A_i \right) = \frac{\# \{ k \leq n : \omega_k \in \bigcup A_i \}}{n} = \frac{\sum_i \# \{ k \leq n : \omega_k \in A_i \}}{n} = \sum_i P_n(A_i) \]
 %
-Hence, $\Prob(\bigcup_i A_i) = \sum_i \Prob(A_i)$. This will be true for an arbitrary family of disjoint propositions, provided we interpret the sum of the propositions as the supremum of all finite sums. There is no real generality here, because only countably many disjoint propositions can be true in the sequence of experimental outcomes (for only one proposition can be true for each of the experiments), hence the probability of only countably many propositions is nonzero.
+Hence,
+%
+\begin{equation}\label{countabledisjointsum} \prob \left(\bigcup_i A_i \right) = \sum_i \prob(A_i) \end{equation}
+%
+This equation still holds for an arbitrary family of disjoint propositions, provided we interpret the sum of the propositions as the supremum of all finite sums. There is no real generality here, because only countably many disjoint propositions can be true in the sequence of experimental outcomes (for only one proposition can be true for each of the experiments), hence the probability of only countably many propositions is nonzero. Rules (\ref{prob0lessthan1}), (\ref{countabledisjointsum}), and (\ref{probspace1}) turn out to be sufficient to describe all the mathematically important rules of frequentist probability. What's more, we can use these rules to {\it prove} that the probability of a sequence of controlled experiments eventually settles down, which justifies the thought process of the frequentist school in the first place.
 
 \section{Bayesian Probability}
 
-The frequentist school is sufficient to use probability theory to model scientific experiments, but our own use of probability is much more general. If you turn on the news, it's common to hear that ``there is an 80\% chance of downpour this evening''. It is difficult to interpret this as a frequentist. Even if we see each night's temperament as an experimental trial, it is hard to convince yourself that these experiments are controlled enough to converge to a probabilistic result. The Bayesian school of probability redefines probability theory to be attuned to a person's individual belief.
+The frequentist school is sufficient to use probability theory to model scientific experiments, but in everyday life we make a much greater use of probabilistic language. If you turn on the news, it's common to hear that ``there is an 80\% chance of downpour this evening''. It is difficult to interpret this result in the frequentist definition of probability. Even if we see each night's temperament as an experimental trial, it is hard to convince yourself that these experiments are controlled enough to converge to a probabilistic result. The Bayesian school of probability redefines probability theory to be attuned to a person's individual beliefs, so that we can interpret ``there is an 80\% chance of downpour this evening'' as an individual's belief that they think it will rain this evening rather than not rain, and that they're willing to bet on it as well!
 
-One problem with the Bayesian interpretation of probability theory is that there is no way to go out into the world and `learn probabilities' -- it's all based on a person's individual interpretation. The only constraint we have on the choice of probabilities is that they are `consistant'. Consistancy can be formulated in various ways, but my favourite is the Dutch book method, developed by the Italian probabilist Bruno de Finetti; if you assign to $D$ a probability $\Prob(D)$, then you are willing to play the following game: If $D$ does not occur, you lose $\Prob(D)$ dollars, but if $D$ occurs, you win $1 - \Prob(D)$ dollars. You {\it must} also be willing to play the game where you lose $1-\Prob(D)$ dollars if $D$ occurs, and gain $\Prob(D)$ dollars if $D$ odes not occur, so that you think the bets are `fair' to both sides. A person's probability function is inconsistant if it possible to make a series of bets that will guarantee a profit regardless of the outcome: a Dutch book.
+You might argue that, if probability is a personal belief in an unknown event, we can choose probabilities however we want, and this would break down the logical structural required for a mathematical theory of probability. However, the probabilities that the Bayesian school studies are forced to be `logically consistant'. Consistancy can be formulated in various ways, but my favourite is the dutch book method, developed by the Italian probabilist Bruno de Finetti; if you assign to a certain unknown event $D$ a probability $\prob(D)$, then you are willing to make a bet at $[\prob(D):1 - \prob(D)]$ odds, playing the following game: If $D$ occurs, you win $1 - \prob(D)$ dollars, but if $D$ does not occur, you have to pay up $\prob(D)$ dollars. You {\it must} also be willing to play the game where you lose $1 - \prob(D)$ dollars if $D$ occurs, and gain $\prob(D)$ dollars if $D$ does not occur, so that you think the bets are `fair' to both sides. For instance, you might be willing to bet a dollar against a dollar that a coin will turn up heads, which is $[1:1] = [1/2:1/2]$ odds, so we would assign the probability that a coin will turn up heads as $1/2$, because then we win or lose an equal amount depending on the outcome of the bet. A person's probability function is inconsistant if it possible to make a series of bets that will guarantee a profit regardless of the outcome; this is known as a dutch book.
 
-Here's an example of how the Dutch book method can be employed to obtain general rules of probability. We claim that for any $D$, $0 \leq \Prob(D) \leq 1$. If a person believed that $\Prob(D) < 0$, then I could make a bet that person that $D$ occured, and I would make money regardless of the outcome. Similar results occur from betting against $D$ if $\Prob(D) > 1$. It can be shown, via similar arguments, that the probability of the certain event is one, and if $\{ A_i \}$ is a countable collection of disjoint events, then $\Prob(\bigcup_i A_i) = \sum_i \Prob(A_i)$ (Definetti would have only accepted this statement for finite collections of events. Here, we allow one to make a countable number of bets at once, rather than only finitely many at any point - Allowing limit operations is too useful to ignore!)
-
-What we have shown is that consistant degrees of belief in the Bayesian system have similar properties of experimental frequencies to a frequentist. Regardless of which philosophy you agree with, you will eventually have to agree on the same fundamental principles of probability theory. Neither of these systems rest of mathematical foundations, so we need to make a rigorous model, from which we can avoid the philosophical controversies that arise. Just as the game of chess does not have to be about knights and castles, the game of probability theory does not have to be about frequencies nor degrees of belief, but can be played from the basic assumptions which define the theory. Note, however, that the interpretations of probabilities have significant effects on how one performs statistical inference.
+Here's an example of how the Dutch book method can be employed to obtain general rules of probability. We claim that for any event $D$, $0 \leq \prob(D) \leq 1$. If a person believed that $\prob(D) < 0$, then I could make a bet that person that $D$ occured, and I would make money regardless of the outcome. Similar results occur from betting against $D$ if $\prob(D) > 1$. It can be shown, via similar arguments, that $(\ref{prob0lessthan1})$, $(\ref{probspace1})$, and $(\ref{countabledisjointsum})$ hold for any logically consistant Bayesian choice of probabilities (Definetti would have only allowed finitely many bets at once, which means that he would only accent $(\ref{countabledisjointsum})$ for finite sums, but here we allow countably many bets to be made at once -- allowing limit operations is too useful to ignore!). What this means is that, regardless of whether you think that probabilities are a measure of `degrees of belief' in an event happening, or the experiment frequencies of an experiment, then you still believe in the same laws of probability. Regardless of which philosophy you agree with, the fundamental principles of probability theory remain the same. We shall take the three laws we derived, and use it to make a rigorous model so that we can avoid future philosophical controversies, and this is where mathematical probability theory takes its form.
 
 \section{Axioms of Probability}
 
-Mathematically rigorous probability theory is defined under the banner of measure theory. The framework enables us to avoid some paradoxes which can be found if we aren't careful when analyzing experiments with infinitely many outcomes. Note, however, that probability theorists study {\it concepts} that are true in these measure spaces, and the framework provides the formality to understand these concepts. A {\bf probability space} is a measure space $X$ with a positive measure $\mu$ such that $\mu(X) = 1$. $X$ is known as the {\bf sample space}, and $\mu$ is known as the {\bf probability distribution} or {\bf probability measure}. We interpret $X$ as the space of outcomes to some random phenomena, and $\mu$ measuring the likelyhood of each outcome happening. An arbitrary probability measure $\mu$ is often denoted $\Prob$, since we often only need to talk about one distribution (or the distributions are defined such that we can always determine which measure we are talking about with the notation $\Prob$), but this is not the only notation!
-
-If $X$ is countable, then a (complete) probability measure can be viewed a vector $v \geq 0$ in $\mathbf{R} \cdot X$ such that $\sum_{x \in X} v(x) = 1$ -- the $\sigma$ algebra of the measure space plays no real role in the theory.
+Mathematically ,rigorous probability theory is defined under the banner of measure theory. The framework enables us to avoid some paradoxes which can be found if we aren't careful when analyzing experiments with infinitely many outcomes. Note, however, that the focus of probability theory is on events and random quantities (what we will soon refer to as random variables), rather than on focusing on a particular measure space under questions. Probability theorists focus on studying these {\it concepts}, and the framework provides the formality to understand these concepts. A {\bf probability space} is a measure space $\Omega$ with a positive measure $\mathbf{P}$ such that $\mathbf{P}(\Omega) = 1$. To the non-initiated, this means that there is a function $\mathbf{P}$, mapping from subsets of $X$ to numbers in $[0,1]$, satisfying the properties $(\ref{prob0lessthan1})$, $(\ref{probspace1})$, and $(\ref{countabledisjointsum})$ defined above, except that only subsets of $\Omega$ in a given {\it $\sigma$ algebra} may have there probability measured. That is, we can only guarantee that we can measure the probability of $\Omega$ itself, that if we can measure the probability of some event $E$, then we can measure the probability of $E^c$, and that if we can measure the probability of $E_1, E_2, \dots$, then we can measure the probability of $\bigcup E_i$. The reason for this is that, in certain more complex spaces, especially those occuring in infinite spaces, paradoxes occur if we try and measure the probability of all subsets of the space at once. $\Omega$ is known as the {\bf sample space}, and $\mathbf{P}$ is known as the {\bf probability distribution} or {\bf probability measure}. We interpret $\Omega$ as the space of outcomes to some random phenomena, and $\mathbf{P}$ measuring the likelyhood of each outcome happening.
 
 \begin{example}
     Suppose we flip a coin. There is a certain chance of flipping a heads, or flipping a tails. Since the coin is essentially symmetric, we should expect that the chance of a heads is as equally likely as a chance of tails. We can encode the set of outcomes in the sample space $\{ H, T \}$, and then model the probability distribution as $\mathbf{P}(H) = \mathbf{P}(T) = 1/2$. More generally, if we have a finite sample space $S$, we can put a distribution on $S$ which considers all points equally known as the {\bf uniform distribution}, with distribution $\mathbf{P}(s) = 1/|S|$.
 \end{example}
 
 \begin{example}
-    If $x \in X$ is fixed, the {\bf point mass distribution} $\delta_x$ at $x$ is the probability distribution defined by
+    If $\omega \in \Omega$ is fixed, the {\bf point mass distribution} $\delta_\omega$ at $\omega$ is the probability distribution defined by
     %
-    \[ \delta_x(A) = \begin{cases} 1 & x \in A \\ 0 & x \not \in A \end{cases} \]
+    \[ \delta_\omega(E) = \begin{cases} 1 & \omega \in E \\ 0 & \omega \not \in E \end{cases} \]
     %
     The distribution represents an event where an outcome is certain to occur.
 \end{example}
 
-The first immediately obvious fact from the axioms of a probability space $X$ is that $\Prob(A^c) = 1 - \Prob(A)$, since $A$ and $A^c$ are disjoint events whose union is the whole space $X$. A similar discussion shows that
+\begin{example}
+    If $\Omega$ is a countable set, then every probability measure every subset of $\Omega$ (by completion of the underlying set), and we can view the probability measure as a member of the set
+    %
+    \[ \left\{ v \in [0,1]^\Omega: \sum_{\omega \in \Omega} v(\omega) = 1 \right\} \]
+    %
+    This can be viewed as a subset of the convex subset of the unit ball in $l^\infty(\Omega)$, and there is some interesting linear analysis in the theory of such sets. Most importantly, the $\sigma$ algebra plays no real role in the theory until later on, and need not be introduced until we study probability distributions over stranger spaces, like the uncountable unit interval $[0,1]$.
+\end{example}
+
+The first immediately obvious fact from the axioms is that
 %
-\[ \Prob(A \cup B) = \Prob(A) + \Prob(B) - \Prob(AB) \]
+\[ \prob(E^c) = 1 - \prob(E) \]
 %
-because $A \cup B$ can be written as the union of the three disjoint events $AB$, $AB^c$, and $A^cB$, and
+since $E$ and $E^c$ are disjoint events whose union is $\Omega$. A similar discussion shows that
 %
-\[ \Prob(A) = \Prob(AB) + \Prob(AB^c)\ \ \ \ \ \Prob(B) = \Prob(AB) \cup \Prob(A^c B) \]
+\[ \prob(E \cup F) = \prob(E) + \prob(F) - \prob(E \cap F) \]
+%
+because $E \cup F$ can be written as the union of the three disjoint events $E \cap F$, $E \cap F^c$, and $E^c \cap F$, and
+%
+\[ \prob(E) = \prob(E \cap F) + \prob(E \cap F^c)\ \ \ \ \ \prob(F) = \prob(E \cap F) \cup \prob(E^c \cap F) \]
 %
 This process can be generalized to unions of finitely many events. We have
 %
-\[ \Prob(A \cup B \cup C) = \Prob(A) + \Prob(B) + \Prob(C) - \Prob(AB) - \Prob(AC) - \Prob(BC) + \Prob(ABC) \]
+\[ \prob(E \cup F \cup G) = \prob(E) + \prob(F) + \prob(G) - \prob(E \cap F) - \prob(E \cap G) - \prob(F \cap G) + \prob(E \cap F \cap G) \]
 %
-which can be reasoned by looking at how many times elements of $A \cup B \cup C$ are `counted' on the right hand side. In general, we have
+which can be reasoned by looking at the number of times each element of $E \cup F \cup G$ is `counted' on the right hand side. In general, we have the inclusion-exclusion principle
 %
-\[ \Prob \left( \bigcup_{k = 1}^n A_k \right) = \sum_{S \subset \{ 1, \dots, k \}} (-1)^{|S|} A_S \]
+\[ \prob \left( \bigcup_{k = 1}^n E_k \right) = \sum_{S \subset \{ 1, \dots, k \}} (-1)^{|S|} \mathbf{P} \left( \bigcap_{k \in S} E_k \right) \]
 %
-where $A_S$ is the intersection of the $A_k$, with $k \in S$. This can be proven by a clumsy inductive calculation which we leave to the reader. Use of the formula is known as the inclusion-exclusion principle, because you are counting how many things occur in the inclusion of a set by counting certain exclusions.
+This can be proven by a clumsy inductive calculation. More interestingly, we often want to calculate the probability of an infinite union of sets $E_k$ occuring. The inclusion-exclusion principle can be taken `in the limit' to conclude that
+%
+\[ \prob \left(\bigcup_{k = 1}^\infty E_k \right) = \lim_{n \to \infty} \prob \left( \bigcup_{k = 1}^n E_k \right) = \sum_{\substack{S \subset \mathbf{N}\\|S| < \infty}} (-1)^{|S|} \prob \left( \bigcap_{k \in S} E_k \right) \]
+%
+where the sum on the right is taken as the limit of the partial sums where $S \subset \{ 1, \dots, n \}$ (the sum rarely convergences absolutely, so it is important to take the limit in this order).
 
-But we aren't normally limited to taking finite unions. We often want to calculate the probability of an infinite union of sets $A_i$. Now the monotone convergence theorem combined with the inclusion-exclusion principle implies that
+The inclusion-exclusion formula can be tricky to calculate in real examples, so we often rely on estimates to upper bound or lower the probability of a particular event occuring. The trivial {\bf union bound}
 %
-\[ \Prob \left(\bigcup_{i = 1}^\infty A_i \right) = \lim_{n \to \infty} \Prob \left( \bigcup_{i = 1}^n A_i \right) = \sum_{\substack{S \subset \mathbf{N}\\|S| < \infty}} (-1)^{|S|} \Prob(A_S) \]
+\[ \prob \left( \bigcup E_i \right) \leq \sum \prob(E_i) \]
 %
-where the sum on the right is taken as the limit of the partial sums where $S \subset \{ 1, \dots, n \}$ (the sum rarely convergences absolutely, so this is very important point). The inclusion-exclusion formula can be tricky to calculate in real examples, so we often rely on estimates. The trivial {\bf union bound}
-%
-\[ \Prob \left( \bigcup A_i \right) \leq \sum \Prob(A_i) \]
-%
-can be applied, and is tight provided that the $A_i$ are `nearly disjoint' (for instance, the bound is shockingly bad if all $A_i$ are equal).
+can be applied. This is a good inequality to apply if the $E_i$ are `nearly disjoint' (the bound is shockingly bad if all the $E_i$ are equal to one another), or if the event $E_k$ occur with such a small probability that we don't mind the resultant inaccuracy.
 
-Another useful fact is to notice that $\Prob(A_i) \to \Prob(A)$ if the sets $A_i$ `tend to' $A$ in some form of another. If the $A_i$ are an increasing sequence, whose union if $A$, then we can certainly conclude $\Prob(A_i) \to \Prob(A)$. Similarily, if $A_i$ is a decreasing sequence whose intersection is $A$, then $\Prob(A_i) \to \Prob(A)$. To obtain general results, we say that $A_i \to A$ if $\limsup A_i = \liminf A_i = A$, where
+Another useful fact to consider is that $\prob(E_k) \to \prob(E)$ if the sets $E_k$ `tend to' $E$ in one form of another. If the $E_k$ are an increasing sequence whose union is $E$, then we can certainly conclude $\prob(E_k) \to \prob(E)$. Similarily, if $E_k$ is a decreasing sequence whose intersection is $E$, then $\prob(E_k) \to \prob(E)$. To obtain general results, we say that $E_k \to E$ if $\limsup E_k = \liminf E_k = E$, where
 %
-\[ \limsup A_i = \bigcap_{i = 1}^\infty \bigcup_{j \geq i} A_j\ \ \ \ \ \liminf A_i = \bigcup_{i = 1}^\infty \bigcap_{j \geq i} A_j \]
+\begin{align*}
+    \limsup_{k \to \infty} E_k &= \bigcap_{n = 1}^\infty \bigcup_{k \geq n} E_k = \{ \omega : \omega \in E_k\ \text{for infinitely many $k$} \}\\
+    \liminf_{k \to \infty} E_k &= \bigcup_{n = 1}^\infty \bigcap_{k \geq n} E_k = \{ \omega: \omega \in E_k\ \text{for sufficiently large $k$} \}
+\end{align*}
 %
-we then conclude that $\Prob(A_i) \to \Prob(A)$. To see this, note that the sets $\bigcup_{j \geq i} A_j$ form a decreasing subsequence, and the $\bigcap_{j \geq i} A_j$ an increasing subsequence. Thus
+We can then conclude that $\prob(E_i) \to \prob(E)$, since once can show
 %
-\[ \Prob(A) = \Prob(\limsup A_i) = \lim_{n \to \infty} \Prob \left(\bigcup_{i \geq n} A_i \right) \geq \lim_{n \to \infty} \Prob(A_i) \]
-\[ \Prob(A) = \Prob(\liminf A_i) = \lim_{n \to \infty} \Prob \left( \bigcap_{i \geq n} A_i \right) \leq \lim_{n \to \infty} \Prob(A_i) \]
+\[ \limsup \prob(E_k) \leq \prob \left( \limsup E_k \right) \]
+\[ \liminf \prob(E_k) \geq \prob \left( \liminf E_k \right) \]
 %
-so the squeeze theorem applies.
+so we can apply the squeeze theorem. This already enables us to prove a very interesting theorem which can guarantee an event can `never occur'.
+
+\begin{lemma}[Borel-Cantelli Lemma]
+    If $E_1, E_2, \dots$ is a sequence of events with $\sum \prob(E_k) < \infty$, then $\mathbf{P} \left( \limsup E_k \right) = 0$. Thus none of the events $E_k$ can happen `infinitely often'.-
+\end{lemma}
+\begin{proof}
+    Note that because
+    %
+    \[ \prob \left( \bigcup_{k \geq n} E_k \right) \leq \sum_{k \geq n} \prob(E_k) \]
+    %
+    for any $\varepsilon > 0$ we can find an $N$ such that for $n \geq N$, $\prob \left( \bigcup_{k \geq n} E_k \right) < \varepsilon$. But for any $n$, $\limsup E_k \subset \bigcup_{k \geq n} E_k$, and so we conclude $\prob(\limsup E_k) < \varepsilon$. We then let $\varepsilon \to 0$ to conclude $\prob(\limsup E_k) = 0$.
+\end{proof}
 
 \section{Conditional Probabilities}
 
-In the Bayesian interpretation of probability theory, it is natural for probabilities to change over time as more information is gained about the system in question. That is, given that we know some proposition $B$ holds over the sample space, we obtain a new probability distribution over $X$, denoted $\Prob(D | B)$, which represents the ratio of winnings from the bet which is only played out if $B$ occurs. That is
+In the Bayesian interpretation of probability theory, it is natural for probabilities to change over time as more information is gained about the system in question. That is, given that we know some proposition $F$ holds over the sample space, we obtain a new probability distribution over $\Omega$, denoted $\prob( \cdot | F)$, which represents the ratio of winnings from the bet which is only played out if $F$ occurs. That is
 %
 \begin{itemize}
-    \item You win $1-\Prob(D|B)$ dollars if $D$ occurs, and $B$ occurs.
-    \item You lose $\Prob(D|B)$ dollars if $D$ does not occur, and $B$ occurs.
-    \item You do not lose or win money if $B$ does not occur.
+    \item You win $1-\prob(E|F)$ dollars if $E$ occurs, and $F$ occurs.
+    \item You lose $\prob(E|F)$ dollars if $E$ does not occur, and $F$ occurs.
+    \item No money exchanges hands if $F$ does not occur.
 \end{itemize}
 %
-It then follows by a dutch bet argument that
+It then follows from a dutch book argument that
 %
-\[ \Prob(B) \Prob(D | B) = \Prob(B \cap D) \]
+\[ \prob(F) \prob(E | F) = \prob(E \cap F) \]
 %
-Suppose instead  that $\Prob(B) \Prob(D|B) < \Prob(B \cap D)$. Bet on $B$ occuring, and also bet against $B \cap D$ occuring. Then
+TODO: Fillin this argument. In the emperical interpretation, $\prob(E | F)$ is the ratio of times that $E$ is true in experiments, where we only count experiments in which $F$ also occurs. That is, we define $\prob(E | F)$ as the limit of the ratios
 %
-\begin{itemize}
-    \item If $B$ does not occur, we gain $\Prob(B \cap D)$ dollars.
-    \item If $B \cap D$ occurs, we lose $1 - \Prob(B \cap D)$ dollars, and gain $1 - \Prob(B) \Prob(D | B)$ dollars.
-    \item If $B \cap D^c$ occurs, we gain $\Prob(B \cap D)$ dollars, and lose $\Prob(B) \Prob(D \ B)$ dollars.
-\end{itemize}
+\[ P_n(E|F) = \frac{\# \{ k \leq n: \omega_k \in E, \omega_k \in F \}}{\# \{ k \leq n: \omega_k \in F \}} \]
 %
-The inequality guarantees that we always make a profit on these bets. Similarily results happen if we assume the opposite inequality, so we must have equality.
+But it is easy to calculate, by dividing the numerator and denominator by $n$, that $P_n(E|F) = P_n(E \cap F)/P_n(F)$, so by taking limits, we find
+%
+\[ \prob(E|F) = \lim_{n \to \infty} \frac{P_n(E \cap F)}{P_n(F)} = \frac{\prob(E \cap F)}{\prob(F)} \]
+%
+which gives us the formula $\prob(F) \prob(E | F) = \prob(E \cap F)$. We must of course assume that $\prob(F) \geq 0$, since overwise we are almost certain that $F$ will never occur, and then we can almost guarantee that the limit of the values $P_n(E|F)$ does not exist.
 
-In the empirical interpretation, $\Prob(D | B)$ is the ratio of times that $D$ is true in experiments, where $B$ also occurs. That is, we define $\Prob(D | B)$ as the limit of the ratios
-%
-\[ \frac{\# \{ k \leq n : \omega_k \in B \}}{n} \frac{\# \{ k \leq n : \omega_k \in D, \omega_k \in B \}}{\# \{ k \leq n : \omega_k \in B \}} = \frac{\# \{ k \leq n : \omega_k \in D, \omega_k \in B \}}{n} \]
-%
-which gives us the formula $\Prob(B) \Prob(D | B) = \Prob(D \cap B)$. We must of course assume that $\Prob(B) \geq 0$, since overwise we are almost certain that $B$ will never occur, and we can therefore define $\Prob(D | B)$ arbitrarily (or not define it at all).
-
-Thus we have motivation to define conditional probabilities by the formula $\Prob(B) \Prob(D | B) = \Prob(D \cap B)$. It enables us to model the information gained by restricting our knowledge to a particular subset of sample space. In particular, we can use the definition to identify sets which do not give us any information about a particular event. We say two events $D$ and $B$ are independant, denoted $D \amalg B$, if $\Prob(D | B) = \Prob(D)$, or equivalently, if $\Prob(D \cap B) = \Prob(D) \Prob(B)$; knowledge of $B$ gives us no foothold over knowledge of the likelihood of $D$.
+Thus we have motivation to define conditional probabilities by the formula $\prob(F) \prob(E|F) = \prob(E \cap F)$, provided that $\prob(F) > 0$. It enables us to model the information gained by restricting our knowledge to a particular subset of sample space. In particular, we can use the definition to identify events which contain information `useless' to learning about another event. We say two events $E$ and $F$ are independant if $\prob(E \cap F) = \prob(E) \prob(F)$, or, provided $\prob(F) > 0$, $\prob(E | F) = \prob(F)$; knowledge of $F$ gives us no foothold over knowledge of the likelihood of $E$.
 
 \begin{example}
-    The Monty Hall problem is an incredible example of how paradoxical probability theory can seem. We are on a gameshow. Suppose there are three doors in front of you. A (brand new) car is placed uniformly randomly behind one of the doors. After we pick a door, the gameshow host then randomly opens one of the other doors which you didn't pick, revealing the car isn't behind the door (his intention). What is the chance that the door you picked has the brand new car? It we pick door $i$, then certainly
+    The Monty Hall problem is an incredible example of how paradoxical probability theory can seem. We are on a gameshow. Suppose there are three doors in front of you. A car (brand new!) is placed uniformly randomly behind one of the doors. After we pick a door (the first door, for instance), the gameshow host then opens the second door, which you didn't pick, revealing the car isn't behind the door. It is important to note that he picked randomly from the remaining doors which you didn't pick and don't have a car behind them. What is the chance that the door you picked has the brand new car? You likely would think the two doors have a 50-50 chance of containing the car given this info, but you'd be wrong. Let $X \in \{ 1, 2, 3 \}$ denote the door chosen uniformly at random where the car lies, and let $Y \in \{ 1, 2, 3 \}$ denote the door that the host randomly chose to open. We know $Y \neq 1$, because the gameshow host would never open the door we picked; that would give the game away! If $X = 1$, then $Y$ is picked from $\{ 2, 3 \}$ with uniform possibility. However, if $X = 2$, something interesting occurs -- the gameshow is forced to open door number $3$, because that's the only door that (he thinks) won't give any information to the player, and similarily, if $X = 3$, then $Y = 2$. Now we know that since $X$ is chosen uniformly at random $\mathbf{P}(X = k) = 1/3$ for each $k$. Similarily, we know that $Y$ is then chosen uniformly at random from $\{ 2, 3 \}$, given that $X = 1$, so assuming $X$ and $Y$ are independent, we conclude
     %
-    \[ \mathbf{P}(i\ \text{has a car}) = 1/3 \]
+    \[ \mathbf{P}(X = 1, Y = 2) = \mathbf{P}(X = 1) \mathbf{P}(Y = 2) = 1/6 \]
+    \[ \mathbf{P}(X = 1, Y = 3) = 1/6 \]
     %
-    Yet this implies, by symmetry, that for any $j \in \{ 2, 3 \}$,
+    But we also know that if $X = 2$, then $Y = 3$, so
+    %
+    \[ \mathbf{P}(X = 2, Y = 3) = \mathbf{P}(X = 2) = 1/3 \]
+    \[ \mathbf{P}(X = 3, Y = 2) = \mathbf{P}(X = 3) = 1/3 \]
+    %
+    It follows that
     %
     \begin{align*}
-        1/3 &= \sum_{j = 1}^3 \mathbf{P}(i\ \text{has a car} | \text{door $j$ is opened}) \mathbf{P}(\text{door $j$ is opened})\\
-        &= 2(1/6 + 1/3) \mathbf{P}(i\ \text{has a car} | \text{door $j$ is opened})
+        \prob(\text{door}\ &1\ \text{has a car} | \text{door}\ 2\ \text{was opened})\\
+        &= \frac{\prob(\text{door}\ 1\ \text{has a car}, \text{door}\ 2\ \text{was opened})}{\prob(\text{door 2 was opened})}\\
+        &= \frac{\mathbf{P}(\{ (X = 1,Y = 2) \})}{\mathbf{P}( \{ (X = 1,Y = 2), (X = 3,Y = 2) \} )} = \frac{1/6}{1/6 + 1/3} = 1/3
     \end{align*}
     %
-    Dividing out, the probability that our door is correct is $1/3$, so we should definitely switch to obtain our best chance of success.
-
-    The argument above causes a great media uproar when it was published in 1990 in a popular magazine, because of how convincing the fallacious argument below is. The sample space of the problem can be described by the tuple $(j,k)$, where $j$ is where the car is, and $k$ is a door we open. We can explicitly enumerate the sample space as
+    This means we should definitely change our minds about which door we were going to pick! The argument above causes a great media uproar when it was published in 1990 in a popular magazine, because of how convincing the fallacious argument below is. The total number of possibilities is
     %
-    \[ (1,2),(1,3),(2,3),(3,2) \]
+    \[ (X = 1,Y = 2),(X = 1,Y = 3),(X = 2,Y = 3),(X = 3,Y = 2) \]
     %
-    and the car is seen to be in our door half of the time.
+    and the car seems to be in door one half of the possibilities. However, these events do not have the same probability of occuring. However, if the host changes his strategy, the conditional probabilities fall more in line with intuition -- if the host always picks door number 2 to open if door number 1 was picked and had the car behind it, then the two remaining doors have an equal chance of being picked.
 \end{example}
 
-We end this chapter with a final probability rule which is important in statistical analysis. If $B$ is partitioned into a finite sequence of disjoint events $A_1, \dots, A_n$, then we have the formula $\Prob(B) = \sum_i \Prob(B | A_i) \Prob(A_i)$. This easily gives us Bayes rule
+We end this chapter with a final probability rule which is important in statistical analysis. If $B$ is partitioned into a finite sequence of disjoint events $A_1, \dots, A_n$, then we have the formula $\prob(B) = \sum_i \prob(B | A_i) \prob(A_i)$. This easily gives us Bayes rule
 %
-\[ \Prob(A_j | B) = \frac{\Prob(B | A_j)}{\sum_i \Prob(B | A_i) \Prob(A_i)} \]
+\[ \prob(A_j | B) = \frac{\prob(B | A_j)}{\sum_i \prob(B | A_i) \prob(A_i)} \]
 %
 If we view $A_j$ as a particular hypothesis from the set of all hypotheses, and $B$ as some obtained data, then Bayes rule enables us to compute the probability that $A_j$ is the true hypothesis from the probability that $B$ is the data generated given the hypothesis is true. This is incredibly important if you can interpret these probabilities correctly (if you are a Bayesian), but not so useful if you are an empiricist (in which case we assume there is a `true' result we are attempting to estimate from trials, so there is no probability distribution over the correctness hypothesis, other than perhaps a point mass, in which case Bayes rule gives us no information). We reiterate that Bayes rule is a theorem of probability theory, so is true in any interpretation, but can be used by Bayesians in a much more applicable way to their statistical analysis.
 
@@ -215,7 +237,7 @@ as the supremum of step functions. In particular, if we take the step function $
 \begin{theorem}[Markov's Inequality]
     If $X$ has finite mean $\mu$, then
     %
-    \[ \Prob(X \geq x) \leq \frac{\mathbf{E}(X)}{x} \]
+    \[ \prob(X \geq x) \leq \frac{\mathbf{E}(X)}{x} \]
 \end{theorem}
 
 The bound is trivial, and is therefore very rough. Nonetheless, it suffices for many purposes. One can obtain better estimates by taking a more detailed step function bounded by $X$, but the payoff isn't normally that great. We obtain a somewhat sharper estimate if $X$ has a finite variance $\sigma$.
@@ -223,23 +245,23 @@ The bound is trivial, and is therefore very rough. Nonetheless, it suffices for 
 \begin{theorem}[Chebyshev's Inequality]
     If $X$ has mean $\mu$ and variance $\sigma^2$, then
     %
-    \[ \Prob(|X - \mu| \geq x) \leq \frac{\sigma^2}{x^2} \]
+    \[ \prob(|X - \mu| \geq x) \leq \frac{\sigma^2}{x^2} \]
     %
     If $Z = (X - \mu)/\sigma$, then
     %
-    \[ \Prob(|Z| \geq x) \leq \frac{1}{x^2} \]
+    \[ \prob(|Z| \geq x) \leq \frac{1}{x^2} \]
 \end{theorem}
 \begin{proof}
     Applying Markov's inequality, we find
     %
-    \[ \Prob(|X - \mu| \geq x) = \Prob(|X - \mu|^2 \geq x^2) \leq \frac{\mathbf{E}|X - \mu|^2}{x^2} = \frac{\sigma^2}{x^2} \]
+    \[ \prob(|X - \mu| \geq x) = \prob(|X - \mu|^2 \geq x^2) \leq \frac{\mathbf{E}|X - \mu|^2}{x^2} = \frac{\sigma^2}{x^2} \]
     %
     We obtain the inequality for $Z$ by carrying out coefficents and applying Chebyshev's inequality.
 \end{proof}
 
 We can continue this process. When $X$ has an $n$'th moment, then
 %
-\[ \Prob(|X - \mu| \geq x) \leq \frac{\mathbf{E}|X - \mu|^n}{x^n} \]
+\[ \prob(|X - \mu| \geq x) \leq \frac{\mathbf{E}|X - \mu|^n}{x^n} \]
 %
 which shows that the existence of moments guarantees the decay of $X$. It is often difficult to calculate high degree moments, however, so this inequality does not occur as often.
 
@@ -248,9 +270,9 @@ which shows that the existence of moments guarantees the decay of $X$. It is oft
     %
     \[ \widehat{p} = \frac{X_1 + \dots + X_n}{n} \]
     %
-    which has a binomial distribution. We measure the utility of $\widehat{p}$ by minimizing the probability that $\widehat{p}$ deviates far from the mean. That is, $\Prob(|\widehat{p} - p| \geq x)$ is small for large values of $x$. We find $\widehat{p}$ has mean $p$ and variance $p(1-p)/n$, so we may apply Chebyshev's inequality to conclude
+    which has a binomial distribution. We measure the utility of $\widehat{p}$ by minimizing the probability that $\widehat{p}$ deviates far from the mean. That is, $\prob(|\widehat{p} - p| \geq x)$ is small for large values of $x$. We find $\widehat{p}$ has mean $p$ and variance $p(1-p)/n$, so we may apply Chebyshev's inequality to conclude
     %
-    \[ \Prob(|\widehat{p} - p| \geq x) \leq \frac{p(1-p)}{nx^2} \leq \frac{1}{4nx^2} \]
+    \[ \prob(|\widehat{p} - p| \geq x) \leq \frac{p(1-p)}{nx^2} \leq \frac{1}{4nx^2} \]
     %
     so even for the worst possible choice of $p$, we still obtain inversely linear decay; not great, but still enough to guarantee that $\widehat{p}$ converges in distribution to the point mass measure at $p$ as $n \to \infty$. This is the weak law of large numbers for the Bernoulli distribution.
 \end{example}
@@ -266,14 +288,14 @@ Hoeffding's inequality is similar to Markov's inequality, but is generally much 
 \begin{theorem}[Hoeffding's Inequality]
     Let $X_1, \dots, X_n$ be centrally distributed i.i.d random variables, with $a_i \leq X_i \leq b_i$, then for any $t > 0$,
     %
-    \[ \Prob \left( \sum X_i \geq x \right) \leq e^{-tx} \prod_{i = 1}^n e^{t^2 (b_i - a_i)^2/8} \]
+    \[ \prob \left( \sum X_i \geq x \right) \leq e^{-tx} \prod_{i = 1}^n e^{t^2 (b_i - a_i)^2/8} \]
 \end{theorem}
 \begin{proof}
     For any $t > 0$, Markov's inequality implies
     %
     \begin{align*}
-        \Prob \left( \sum X_i \geq x \right) &= \Prob \left( t \sum X_i \geq tx \right)\\
-        &= \Prob \left( e^{t \sum X_i} \geq e^{tx} \right)\\
+        \prob \left( \sum X_i \geq x \right) &= \prob \left( t \sum X_i \geq tx \right)\\
+        &= \prob \left( e^{t \sum X_i} \geq e^{tx} \right)\\
         &\leq e^{-tx} \prod \mathbf{E}[e^{t X_i}]
     \end{align*}
     %
@@ -303,9 +325,9 @@ Hoeffding's inequality is similar to Markov's inequality, but is generally much 
 \begin{example}
     If $\widehat{p} \sim \Bin(n,p)$, and we take $X_i = (\widehat{p} - p)/n$, then $\mathbf{E}(X_i) = 0$, and $-p/n \leq X_i \leq 1/n-p/n$, and since $\sum X_i = \widehat{p} - p$, we find
     %
-    \[ \Prob(\widehat{p} - p \geq x) \leq e^{t^2/8n - tx} \]
+    \[ \prob(\widehat{p} - p \geq x) \leq e^{t^2/8n - tx} \]
     %
-    For $t = 4nx$, we find $\Prob(\widehat{p} - p \geq x) \leq e^{-2nx^2}$. By symmetry, we can calculate the absolute deviance as $\Prob(|\widehat{p} - p| \geq x) \leq 2e^{-2nx^2}$. This gives us a much sharper rate of convergence than our last result.
+    For $t = 4nx$, we find $\prob(\widehat{p} - p \geq x) \leq e^{-2nx^2}$. By symmetry, we can calculate the absolute deviance as $\prob(|\widehat{p} - p| \geq x) \leq 2e^{-2nx^2}$. This gives us a much sharper rate of convergence than our last result.
 \end{example}
 
 \section{Subgaussian Random Variables}
@@ -486,9 +508,9 @@ Suppose we have a decision procedure which attempts to distinguish between event
 \begin{example}
     The uniform distribution works well in modelling a fair coin, but what if we are flipping an unfair coin? The Bernoulli distribution assigns a probability of $p$ to getting a heads, and $1-p$ to getting a tails, for some parameter $p$. We write $\mu \sim \Ber(p)$ for this distribution. We normally rename the elements of the sample space by letting $\text{Heads} = 1$ and $\text{Tails} = 0$, so that the probability distribution counts the number of heads and tails from one coin flip. This permits an easy generalization to the Binomial distribution $\Bin(n,p)$, which counts the number of times we get a head in $n$ coin flips from a $\Ber(p)$ distribution. It is defined on $\mathbf{Z}$ by letting
     %
-    \[ \Prob(m) = \binom{n}{m} p^m (1-p)^{n-m} \]
+    \[ \prob(m) = \binom{n}{m} p^m (1-p)^{n-m} \]
     %
-    for $0 \leq m \leq n$, and $\Prob(m) = 0$ otherwise. If $\mu \sim \Bin(n,p)$, then we have a representation $\mu = \nu * \dots * \nu$ as an $n$-ary convolution, where $\nu \sim \Ber(p)$. In general, if $\mu$ and $\nu$ are probability measures on a group $G$, then $\mu * \nu$ is a probability measure, since
+    for $0 \leq m \leq n$, and $\prob(m) = 0$ otherwise. If $\mu \sim \Bin(n,p)$, then we have a representation $\mu = \nu * \dots * \nu$ as an $n$-ary convolution, where $\nu \sim \Ber(p)$. In general, if $\mu$ and $\nu$ are probability measures on a group $G$, then $\mu * \nu$ is a probability measure, since
     %
     \[ (\mu * \nu)(X) = \int_{X^2} d\mu(x)\ d\nu(y) = \int_X d\mu(x) \ \int_X d\nu(Y) = 1 \]
     %
@@ -524,7 +546,7 @@ To obtain measures on uncountable sample spaces, we rely on integration theory.
 The method in the last example gives us a number of canonical distributions, giving us a wide number of examples. A theorem of measure theory (the Radon-Nikodym theorem) tells us why almost all the important probability distributions can be given by integration (or summation, those measure theory tells us these are essentially the same processes).
 
 \begin{example}
-    We would like to have a probability distribution which models picking a point `uniformly' from an interval $[a,b]$. What we really mean is that the probability measure is translation invariant, in the sense that $\Prob(A + t) = \Prob(A)$, for all $A$ and $t$ for which this should be reasonably defined. What we are looking for is exactly the normalized Lebesgue measure restricted to $[0,1]$, which is rigorously defined in measure theory. We take the lebesgue measure $dx$, and then normalize to obtain a probability measure $dx/(b-a) \sim \Uni(a,b)$. It seem paradoxical that the probability that any particular point is chosen is zero, yet in an experiment we must choose a particular point. However, to obtain probabilities we take the limit of ratios over an infinite number of experiments, and it is entirely possible for the limit of the ratios to converge to zero, even if a point is chosen in some experiment.
+    We would like to have a probability distribution which models picking a point `uniformly' from an interval $[a,b]$. What we really mean is that the probability measure is translation invariant, in the sense that $\prob(A + t) = \prob(A)$, for all $A$ and $t$ for which this should be reasonably defined. What we are looking for is exactly the normalized Lebesgue measure restricted to $[0,1]$, which is rigorously defined in measure theory. We take the lebesgue measure $dx$, and then normalize to obtain a probability measure $dx/(b-a) \sim \Uni(a,b)$. It seem paradoxical that the probability that any particular point is chosen is zero, yet in an experiment we must choose a particular point. However, to obtain probabilities we take the limit of ratios over an infinite number of experiments, and it is entirely possible for the limit of the ratios to converge to zero, even if a point is chosen in some experiment.
 \end{example}
 
 \begin{example}
@@ -532,7 +554,7 @@ The method in the last example gives us a number of canonical distributions, giv
     %
     \[ f(x) = \frac{1}{\sigma \sqrt{2\pi}} e^{-\frac{(x - \mu)^2}{2\sigma^2}} \]
     %
-    the integral of this function over $\mathbf{R}$ is one, and is proved in multivariate calculus courses. The probability measure generated by $f$ is known as the {\bf normal distribution} with mean $\mu$ and standard deviation $\sigma$. We write $\Prob \sim N(\mu, \sigma^2)$ if $\Prob$ for such a measure.
+    the integral of this function over $\mathbf{R}$ is one, and is proved in multivariate calculus courses. The probability measure generated by $f$ is known as the {\bf normal distribution} with mean $\mu$ and standard deviation $\sigma$. We write $\prob \sim N(\mu, \sigma^2)$ if $\prob$ for such a measure.
 \end{example}
 
 \begin{example}
