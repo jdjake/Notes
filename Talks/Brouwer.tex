@@ -1,17 +1,17 @@
 \documentclass{article}
 
 \usepackage{graphicx}
-
 \usepackage{amsmath}
-
 \usepackage{amsthm}
+\usepackage{float}
+
 \theoremstyle{plain}
 \newtheorem{theorem}{Theorem}
 \newtheorem{lemma}[theorem]{Lemma}
 \newtheorem{corollary}[theorem]{Corollary}
 \newtheorem{prop}[theorem]{Proposition}
 
-\title{Applications of Homology Theory}
+\title{Vector Fields and Hex: Applications of Homology}
 \author{Jacob Denson}
 \date{March 17th, 2016}
 
@@ -19,54 +19,52 @@
 
 \maketitle
 
-\section{Brouwer's Fixed Point Theorem}
+In this talk, we discuss one of the most important applications of basic algebraic topology, the Brouwer fixed point theorem. It is fairly magical, because it tells us of the existence of something which isn't immediately obvious. Brouwer's theorem says that if we have a continuous map $f: \mathbf{D}^n \to \mathbf{D}^n$, then there exists a point $x \in \mathbf{D}^n$ with $f(x) = x$. The planar version, stated in Eastern European terms, the theorem says that if we are in a helicopter, flying above Poland, and we drop a map of Poland, then, wherever the map falls, there will be a point on the map that falls at exactly the point the map references.
 
-Brouwer's Fixed Point theorem is fairly magical, because it tells us something that defies what we think should happen. Suppose we deform the unit disk according by some continuous vector field $v$, in such a way $x + v(x) \in \mathbf{D}^n$ for each $x \in \mathbf{D}^n$. What Brouwer realized is that somewhere in this vector field, there is a point at which the vector field is zero.
+\section{Vector Fields and Brouwer's Theorem}
 
+Brouwer's theorem is most naturally realized in the theory of vector fields. If $v$ is a vector field on some open subset $U$ of Euclidean space, it locally defines an evolution system $\phi_t: U \to U$ which warps space over time at a rate defined by the vector field. If $v$ is the vector field, then the evolution system is the unique solution to the equation
+%
+\[ \frac{d\phi_t(x)}{dt} = v(x) \]
+%
+The evolution system is normally only defined locally, because points may `blow up' by travelling outside of the set $U$. However, if we have some growth condition bounding the growth of the vector field near the boundary of $U$, then we can usually define the vector field at all time points. In particular, if $U$ is the unit disk $\mathbf{D}^n$, and if the vector field $v$ on $B$ is defined such that the endpoint of each vector in the field lies in $\mathbf{D}^n$, then the vector field exists at all timepoints. If $v(x) = 0$, then we say $x$ is a {\bf fixed point} of the vector field, and the evolution $\phi_t$ fixes $x$ over time.
+
+%\begin{figure}[H]
+%\centering
 \begin{center}
-\includegraphics[scale=0.4]{vectorField.jpg}
+\fbox{\includegraphics[width=0.3\textwidth]{vectorfield.jpg}}
 \end{center}
+%\caption{This Vector Field Has Four Fixed Points.}
+%end{figure}
 
-% Draw pretty picture of vector field
-
-The reason why this is true is fairly clever. Since $x + v(x) \in \mathbf{D}^n$, $v$ cannot grow too fast at the boundary, and so we may watch $v$ evolve for a small amount of time. Since no point is fixed, this tears a hole in the disk. But this evolution continuously deforms the disk, and continuous maps cannot tear holes.
+Given some continuous function $f: \mathbf{D}^n \to \mathbf{D}^n$, we can associate with it the vector field $v: \mathbf{D}^n \to \mathbf{D}^n$ defined by $v(x) = f(x) - x$, which, in terms of arrows, is the vector field from the arrow beginning at $x$ and ending at $f(x)$. In particular, $v$ maps the disk to itself. The idea behind the proof of the Brouwer fixed point theorem is rather clever -- if $v$ had no fixed points, then the disk would have too much turbulance which would tear a hole in the disk. But the evolution corresponding to a vector field continuously deforms the disk, and continuous maps cannot tear holes in the disk. The proof of the Brouwer theorem just exaggerates this evolution to push all points to the boundary of the disk.
 
 \begin{theorem}
     Any map $f: \mathbf{D}^n \to \mathbf{D}^n$ has a fixed point.
 \end{theorem}
 \begin{proof}
-Define the map $F(x,y)$ of two variables on the unit disk, which projects $x$ and $y$ to the point on the boundary of the disk obtained by following the arrow between $x$ and $y$. This is well defined and continuous for $x \neq y$. Let $f$ be a continous function such that $f(x) \neq x$ in $\mathbf{D}^n$. Then, consider the map
-%
-\[ F(x,f(x)) \]
-%
-This is a retraction of $\mathbf{D}^n$ onto $S^{n-1}$, for if $x \in S^{n-1}$, then we may let $\lambda = 0$. We prove on the homework that this induces an injective homomorphism from $H(\mathbf{S}^{n-1})$ to $H(\mathbf{D}^n)$. But since $\mathbf{D}^n$ is contractible, this would imply that the homology of $\mathbf{S}^{n-1}$ is trivial, and we know this not to be true.
+    Define the map $F: \mathbf{D}^n \times \mathbf{D}^n \to \mathbf{S}^{n-1}$ by projection $(x,y)$ to the point on the boundary of the disk obtained by following the arrow between $x$ and $y$. This is well defined and continuous for $x \neq y$. Let $f$ be a continuous function such that $f(x) \neq x$ in $\mathbf{D}^n$. Then, consider the map $r(x) = F(x,f(x))$, which exaggerates the evolution of the vector field $v(x) = f(x) - x$. This is a continuous retraction of $\mathbf{D}^n$ onto $\mathbf{S}^{n-1}$. This induces an injective homomorphism from $H(\mathbf{S}^{n-1})$ to $H(\mathbf{D}^n)$. But since $\mathbf{D}^n$ is contractible, this would imply the homology of $\mathbf{S}^{n-1}$ is trivial, and we know this not to be true.
 \end{proof}
 
-\section{Applications to Hex}
+\section{The Fixed Point Theorem and Hex}
 
-The fixed point theorem has suprising applications in odd little corners of mathematics, such as game theory, mathematical finance, differential equations (as we have seen), matrix theory, etc. Some applications actually give us some insight back into the theorem, and we will show one here, which shows the fixed point theorem from combinatorially.
-
-Hex is a two player game played with each player placing pieces of their color on a board of hexagonal tiles, like so
+The fixed point theorem has suprising applications in various odd corners of mathematics, such as game theory, mathematical finance, differential equations, and matrix theory. Some applications actually give us some insight back into the theorem, and we will show an example here, which proves the fixed point theorem using combinatorial reasoning. Hex is a two player game played on a hexagonal tile board, with each player placing pieces of their color on a board of hexagonal tiles, like the 11 by 11 board below.
 %
 \begin{center}
-\includegraphics[scale=0.4]{hex.png}
+\includegraphics[scale=0.4]{hex.jpg}
 \end{center}
 %
-The aim of the game is to build a path from one of your diagonal sides to your other. It's become famous among mathematicians, like the snake lemma has, because it's been in a movie. But what's a board game doing in my talk? What does the game of Hex have to do with homology theory? The trick is to take the adjacency graph on which we are {\it really} playing the game, giving us the lattice
-
+The aim is for one player to beat the other to connect their designated side of the board to the opposite side by placing down tiles. It's become famous among mathematicians, like the snake lemma has, because it's featured in a movie. But what's a board game doing in a talk about algebraic topology? What does the game of Hex have to do with homology theory? The idea is to take the adjacency graph on which we are {\it really} playing the game of hex, giving us the lattice
+%
 \begin{center}
-\includegraphics[scale=0.4]{lattice.png}
+\includegraphics[scale=0.4]{lattice.jpg}
 \end{center}
+%
+Notice this graph gives a {\it triangulation} of a square, which is homeomorphic to the unit disk. Thus facts about the combinatorial nature of the unit disk should give us insight into hex, and insight into hex gives us insight into the topology of the unit disk.
 
-Notice that this graph gives us a {\it triangulation} of the hex board, which is homeomorphic to the unit disk. Thus facts about the combinatorial nature of the unit disk should give us insight into hex, and insight into hex might give us insight into the topology of the unit disk.
+Hex was invented by John Nash when he was bored in his university dorm one night. Thus the game is also known as Nash, or John, also called that because the first few games of Hex were played on the mosaic of the dorm's bathroom floor. But John managed to turn his game into actual research, by proving the seemingly trivial theorem that {\it no Hex game can end in a draw}. That is, if every tile on a hex board is filled with black or white pieces, then there is either a winning black path, or a winning white path.
 
-Hex was invented by John Nash when he was bored in his university dorm one night. Thus the game is also known as Nash, or John, also called that because the first few games of Hex were played on the mosaic of the dorm's bathroom floor. But John managed to turn his game into actual research, by proving the seemingly trivial theorem
-
-\begin{theorem}
-    No game of Hex can end in a draw. That is, if every tile on a hex board is filled with black or white pieces, then there is either a winning black path, or a winning left path.
-\end{theorem}
-
-If we see the game board as a river, then the only way to block a river is to build a dam between the rivers edges, so if the river does not flow through the dam, then there must be a path from one side of the river to the other. We will show that this theorem is in fact equivalent to the fixed point theorem. What's more, since this theorem will relate to the combinatorial nature of the unit disk rather than the singular nature, it will give us a constructive method to find the fixed point of the map.
+If we see the game board as a river, then the only way to block a river is to build a dam between the rivers edges, so if the river does not flow through the dam, then there must be a path from one side of the river to the other. We will show that this theorem is in fact equivalent to the fixed point theorem. What's more, since this theorem will relate to the combinatorial nature of the unit disk rather than the singular nature, it will give us a constructive method to find the fixed point of the map. Here is a proof of the planar fixed point theorem, using the fact that no game of hex can end in a draw.
 
 \begin{theorem}
     Each map $f: I^2 \to I^2$ has a fixed point.
@@ -75,8 +73,11 @@ If we see the game board as a river, then the only way to block a river is to bu
     The domain is compact, so it suffices to prove that for each $\varepsilon$, there is $x$ such that $\| f(x) - x \| < \varepsilon$. $f$ is also uniformly continuous, so there is $\delta$ such that if $\| x - y \| < \delta$, $\| f(x) - f(y) \|_1 < \varepsilon$. Consider the Hex board with $k^2$ tiles, where $1/k < \delta$, labelled $(1,1)$ to $(k,k)$. Let $f = (f_1, f_2)$. Place black stones on tiles $z$ where $| f_1(z/k) - z_1/k | > \varepsilon$, and white stones on tiles $z$ where $| f_2(z/k) - z_2/k | > \varepsilon$. Label the stones with positive values if $f_i(z/k) - z_i/k$ is positive, else label them with negative values. We must prove these sets are not a cover of the board. By uniform continuity, positive stones are never adjacent to negative stones of the same color. What's more, there are no positive black stones on the east side of the board, and no negative black stones on the west side of the board. If $(x_1, \dots, x_n)$ was a path of black stones from east to west, then we have argued it either has only positive stones or only negative stones. But then the path cannot meet both east and west. Similarily, there is no winning path of white stones, so Nash's theorem implies that the stones do not cover the board -- i.e. there is a point $z$ such that $\| f(z/k) - z/k \| \leq 2 \varepsilon$.
 \end{proof}
 
-This proof is easily generalize to higher dimensions by taking finer tilings. Now let us show no hex game ends in a draw.
+This proof is easily generalize to higher dimensional lattices by taking finer tilings, but requires an introduction of some technical notation. Now let's see how the fixed point theorem implies no Hex game can end in a draw.
 
+\begin{theorem}
+    No game of Hex can end in a draw. That is, if every tile on a hex board is filled with black or white pieces, then there is either a winning black path, or a winning left path.
+\end{theorem}
 \begin{proof}
     Consider any map $f$ from the tiles of a hex board to $\mathbf{R}^2$. Then this map extends to a continuous map on $I^2$, by taking linear combinations of the function on the simplices. In barycentric coordinates,
     %
@@ -99,10 +100,14 @@ This proof is easily generalize to higher dimensions by taking finer tilings. No
 
 \section{The Jordan Curve Theorem}
 
-As with the fixed point theorem, the proof the Jordan Curve Theorem also pops out of nowhere, after a bit of fairly abstract nonsense.
+The Jordan curve theorem is a seemingly trivial theorem, which says that a closed curve separates the plane into an inside and an outside. It is deviously difficult to prove, however, and we will only prove it using some fairly abstract nonsense.
 
 \begin{theorem}
-    If $X \subset S^n$ is homeomorphic to $S^k$, for $k < n$, then $\widetilde{H_{n-k-1}}(S^n - X) = \mathbf{Z}$, and is zero otherwise.
+    If $X \subset S^n$ is homeomorphic to $S^k$, for $k < n$, then 
+    %
+    \[ \widetilde{H}_{n-k-1}(S^n - X) = \mathbf{Z} \]
+    %
+    and is zero otherwise.
 \end{theorem}
 \begin{proof}
     We prove by induction on $k$. If $k = 0$, then $S^n - X$ is homeomorphic to $\mathbf{R}^n - \{ 0 \}$ homotopic to $S^{n-1}$, and $H'_{n-1}(S^{n-1}) = \mathbf{Z}$, and is zero everywhere else. Otherwise write $X = A \cup B$, where $A$ is the upper hemisphere of $S^k$, and $B$ the lower hemisphere (so $A \cap B$ is homeomorphic to $S^{k-1}$). Then $C = A \cap B$ is homeomorphic to $S^{k-1}$. We then apply Mayer Vietoris, for $M = S^n - A$, $N = S^n - B$, where
@@ -120,14 +125,12 @@ As with the fixed point theorem, the proof the Jordan Curve Theorem also pops ou
     So $H'_i(S^n - X) = \mathbf{Z}$ for $i+1 = n-(k-1)-1$, which occurs when $i = n-k-1$, and is zero otherwise.
 \end{proof}
 
-Thus we now need to prove
+The next lemma makes intuitive sense, for if we remove a set $X$ which behaves like a point from $S^n$, then it makes sense that $S^n - X$ behaves like $\mathbf{R}^n$.
 
 \begin{lemma}
     If $X \subset S^n$ is homeomorphic to $I^k$, then $H'_i(S^n - X) = 0$ for all $i$.
 \end{lemma}
 \begin{proof}
-    Remark: The theorem makes intuitive sense, for if we remove a set $X$ which behaves like a point from $S^n$, then it makes sense that $S^n - X$ behaves like $\mathbf{R}^n$.
-
     We prove by induction. For $k = 0$, $X$ is a point, and $S^n - X$ is homeomorphic to $\mathbf{R}^n$, which contracts to a point. Otherwise, let $A \subset X$ correspond to the lower half of the $k$-cube, and $B$ the upper half. $C = A \cap B$ is then homeomorphic to $I^{k-1}$. If we let $M = S^n - A$, $N = S^n - B$, then
     %
     \[ M \cap N = S^n - X\ \ \ \ \ M \cup N = S^n - C \]
@@ -143,8 +146,10 @@ Thus we now need to prove
     which converge to a set of the form $S^n - Y$, where $Y$ is homeomorphic to a slit $I^{k-1}$. We know that $\alpha = d \beta$ for some $\beta$ by induction. $\beta$ is a finite combination of simplices which do not come close to the slit. Since the image of the simplices does not touch $Y$, and the union of the images are compact, we see that $\beta$ is a chain in some $S^n - X_k$, contradicting that $\alpha$ is not homologous to zero.
 \end{proof}
 
+The Jordan curve theorem falls out of these computations rather easily.
+
 \begin{corollary}
-    If $X \subset \mathbf{R}^{n+1}$ is homeomorphic to $S^n$, then it separates $n+1$ space into two components, and $X$ is the boundary of both.
+    If $X \subset \mathbf{R}^{n+1}$ is homeomorphic to $S^n$, then it separates $n+1$ dimensional space into two components, and $X$ is the boundary of both.
 \end{corollary}
 \begin{proof}
     The number of components of the one point compactification of $X$ in $\mathbf{R}^{n+1}$ is equal to the number of components in the one-point compactification $S^n$, since the point at infinity has a connected neighbourhood which does not intersect $X$. Thus the number of components is the rank of $H_0'(S^{n+1} - X)$ plus one, and $H_0'(S^{n+1} - X) = \mathbf{Z}$, so there are two components in the space.
