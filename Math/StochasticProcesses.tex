@@ -3372,43 +3372,79 @@ Thus $P_tf$ is a solution to the {\it heat equation} for any sufficiently regula
 %
 We can interpret this as saying the heat equation models the averages of particle behaviour undergoing brownian motion over a time period. This connects the classical study of diffusion in physics with the study of diffusion in probability theory. However, whereas the study of diffusion in physics gives results about the average behaviour of particles over a long period of time, whereas probability theory gives much stronger results of the behaviour of {\it individual} particles.
 
-\chapter{Stochastic Calculus}
+\chapter{The It\^{o} Integral}
 
 Our goal in this chapter will be to make sense of a stochastic integral
 %
 \[ (H \bullet X)_t = \int_0^t H_s dX_s \]
 %
-where $H$, $X$, and $H \bullet X$ will all be stochastic proceses on $(0,\infty)$. This equation can also be written in the `differential form' $d(H \bullet X) = H dX$. We shall take $\Sigma$ as the underlying filtration, which we will assume satisfies the usual conditions, so that all martingales can be assumed \cadlag (which we do from now on, unless otherwise started), and we have a sufficiently large family of stopping times.
+where $H$ is a stochastic process indexed on $(0,\infty)$, and $X$, $H \bullet X$ will be stochastic processes on $[0,\infty)$. This equation can also be written in the differential form
+%
+\[ d(H \bullet X) = H dX \]
+%
+We recall our notation of taking $\Sigma$ to be the underlying filtration of our setup, which we will assume satisfies the usual conditions, so that all regularizable classes of processes (martingales, supermartingales, submartingales, and finite variation processes) can be assumed \cadlag, and we have a sufficiently large family of stopping times (and unless otherwise stated, we shall assume all processes we consider have already be regularized). Furthermore, we will assume our processes are jointly measurable with respect to time and space.
 
-The most used interpretation of the stochastic integral is known as the It\^{o} integral, after it's creator, generalizing the discrete time process
-%
-\[ (H \bullet X)_n(\omega) = \sum_{k = 1}^n H_k(\omega) [X_k(\omega) - X_{k-1}(\omega)] \]
-%
-which represents the amount of money made after $n$ discrete games, where the value obtain for a unit bet is given by the discrete $X_k(\omega) - X_{k-1}(\omega)$. In the discrete case, this process was most interesting if the `integrand' $H$ was previsible, and $X$ was a martingale, a submartingale, or a supermartingale. In the continuous time case, $H$ will also be a previsible process, under a suitable continuous reformulation of the previsibility condition, and $X$ will be a semimartingale, which includes the class of all continuous time sub, super, and just plain martingales. We note that the stochastic processes which form our integrands will, unlike in the basic analysis of continuous time martingales, be indexed on $(0,\infty)$.
+\begin{example}
+    The easiest integral to interpret is an ordinary integral, with the integrand stochastic. For instance, if $B$ is a one dimensional Brownian motion, then for any bounded measure $\mu$, the Lebesgue (of even Riemann) integral
+    %
+    \[ X^\mu = \int_0^1 B_s d\mu(s) \]
+    %
+    is defined at almost all points for almost all paths of Brownian motion, because $B_s$ is Brownian motion. If $\mu_1, \dots, \mu_n$ is a finite set of measures, then $(X^{\mu_1}, \dots, X^{\mu_n})$ is Gaussian distributed, because by continuity, we have an almost sure pointwise convergence of the form
+    %
+    \[ X^\mu = \lim_{n \to \infty} \sum_{k = 0}^{n-1} B_{k/n}\ \mu \left( \frac{k}{n}, \frac{k+1}{n} \right] = \lim_{n \to \infty} \sum_{k = 0}^{n-1} (B_{k/n} - B_{k+1/n}) \mu (0, k+1/n] \]
+    %
+    and so for any $\xi \in \mathbf{R}^n$, if, for convinence of notation, we let $\mu = (\mu_1, \dots, \mu_n)$ denote a vector-valued measure, then
+    %
+    \[ \varphi_{X^\mu}(\xi) = \mathbf{E}[e^{i \xi \cdot X^\mu}] = \mathbf{E} \left[ \lim_{n \to \infty} \exp \left( \sum_{k = 0}^{n-1} i (B_{k/n} - B_{k+1/n}) \left( \xi \cdot \mu(0,k+1/n] \right) \right) \right] \]
+    %
+    The dominated convergence theorem applies, and so this is equal, by also using the independence properties of $B_s$, to
+    %
+    \begin{align*}
+        \lim_{n \to \infty} \prod_{k = 0}^{n-1} & \varphi_{N(0,1/n)} \left(\xi \cdot \mu \left(0, \frac{k+1}{n} \right] \right) = \lim_{n \to \infty} \prod_{k = 0}^{n-1} \exp \left( - \frac{1}{2n} \left(\xi \cdot \mu \left(0, \frac{k+1}{n} \right] \right)^2 \right)\\
+        &= \exp \left( \frac{-1}{2} \lim_{n \to \infty} \frac{1}{n} \sum_{k = 0}^{n-1} \xi^T \mu \left(0, \frac{k+1}{n} \right] \mu \left(0, \frac{k+1}{n} \right]^T \xi \right)\\
+        &= \exp \left( \frac{-1}{2} \xi^T \left( \lim_{n \to \infty} \frac{1}{n} \sum_{k = 0}^{n-1} \mu \left(0, \frac{k+1}{n} \right] \mu \left(0, \frac{k+1}{n} \right]^T \right) \xi \right)
+    \end{align*}
+    %
+    Which is the characteristic function of a Gaussian distribution. Looking at the limit, we find that the random variable has mean zero, and using Fubini's theorem, covariance
+    %
+    \begin{align*}
+        \mathbf{E}[X^\mu X^\nu] &= \mathbf{E} \left[ \int_{[0,1]^2} B_sB_t d(\mu \otimes \nu)(s,t) \right]\\
+        &= \int_{[0,1]^2} (s \wedge t) d(\mu \otimes \nu)(s,t)\\
+        &= \int_0^1 \mu(s,1] \nu(s,1] ds
+    \end{align*}
+    %
+    If $\mu$ is distributed mainly at $\mu = 1$, $X^\mu$ has high variance, which reflects the fact that Brownian motion has higher variance as time increases.
+\end{example}
 
-The discrete time formula is most easily generalized if the integrand- is constant over a certain interval. If $Z$ is a random variable, and $S \leq T$ are stopping times, we define
+The most used interpretation of the stochastic integral is known as the It\^{o} integral, after it's creator, generalizing the discrete time betting process
 %
-\[ Z(S,T](t,\omega) = Z(\omega) \chi_{(S(\omega), T(\omega)]}(t) \]
+\[ (H \bullet X)_n = \sum_{k = 1}^n H_k [X_k - X_{k-1}] \]
 %
-which represents a continuous bet of value $Z(\omega)$ made starting just after time $S(\omega)$, and ending at time $T(\omega)$ (the intervals chosen are made in order to make $Z(S,T]$ \caglad, which will be important later). In order for this random variable to `not cheat', we should know the value of $Z$ at time $S$. That is, $Z$ should be a $\Sigma_S$ measurable random variable, where $X$ is $\Sigma$ adapted. If the It\^{o} integral correctly modelled a continuous time bet, it should be true that
+which represents the amount of money made after $n$ discrete bets, where the value obtained for a unit bet is given by the discrete $X_k - X_{k-1}$. In the discrete case, this process was most interesting if the `integrand' $H$ was previsible, and $X$ was a martingale, a submartingale, or a supermartingale. In the continuous time case, $H$ will also be a previsible process, under a suitable continuous reformulation of the previsibility condition, and $X$ will be a semimartingale, which includes the class of all continuous time sub, super, and just plain martingales.
+
+The discrete time formula is most easily generalized if the integrand is constant over a certain interval. If $Z$ is a random variable, and $S \leq T$ are stopping times, we define the process
 %
-\[ \int_0^t Z(S,T]_s dX_s = Z \int_{S \wedge t}^{T \wedge t} dX_s = Z [X_{T \wedge t} - X_{S \wedge t}] \]
+\[ Z(S,T](t) = Z \chi_{(S,T]}(t) \]
+%
+which represents a continuous bet of value $Z$ starting just after time $S$, and ending at time $T$; the intervals chosen are made in order to make $Z(S,T]$ \caglad, which will be important later. In order for this random variable to `not cheat', we should know the value of $Z$ at time $S$. That is, $Z$ should be a $\Sigma_S$ measurable random variable, where $X$ is $\Sigma$ adapted. If the It\^{o} integral correctly modelled a continuous time bet, it should be true that
+%
+\[ \int_0^t Z(S,T] dX = Z \int_{S \wedge t}^{T \wedge t} dX_s = Z [X_{T \wedge t} - X_{S \wedge t}] \]
 %
 and we take this as a {\it definition} of the It\^{o} integral in this very simple case.
 
 \begin{lemma}
-    If $M$ is a UI martingale, and $Z$ is bounded and $\Sigma_S$ measurable, then the integral $Z(S,T] \bullet M$ is a UI martingale.
+    If $M$ is a UI martingale, and $Z$ is bounded and $\Sigma_S$ measurable, then $Z(S,T] \bullet M$ is a UI martingale null at zero.
 \end{lemma}
 \begin{proof}
-    By the definition of $Z(S,T] \bullet M$, it suffices to show that for each stopping time $R$, $Z[M_T - M_S]_R = Z[M_{T \wedge R} - M_{S \wedge R}]$ is integrable and has mean zero. The fact this random variable is integrable follows from the fact that $\| Z \|_\infty < \infty$, and because each $M_{T \wedge R}$ and $M_{S \wedge R}$ is integrable by the optional stopping theorem. Now we know
+    Recall that a uniformly integrable martingale is exactly a martingale $X$ on $[0,\infty]$ such that for any stopping time $U$, $X_U$ is an integrable random variable, and $\mathbf{E}[X_U] = 0$. By definition of $Z(S,T] \bullet M$, it suffices to show that
+    %
+    \[ Z [M_{T \wedge U} - M_{S \wedge U}] \]
+    %
+    is integrable and has mean zero. The fact this random variable is integrable follows from the fact that $\| Z \|_\infty < \infty$, and because each $M_{T \wedge U}$ and $M_{S \wedge U}$ is integrable by the optional stopping theorem. Now we know
     %
     \[ \mathbf{E}[M_\infty | \Sigma_{T \wedge R}] = M_{T \wedge R}\ \ \ \ \mathbf{E}[M_\infty | \Sigma_{S \wedge R}] = M_{S \wedge R} \]
     %
-    If $E \in \Sigma_S$, the function
-    %
-    \[ T_E(\omega) = \begin{cases} T(\omega) & \omega \in E \\ \infty & \text{otherwise} \end{cases}\ \ \ \ \ S_E(\omega) = \begin{cases} S(\omega) & \omega \in E \\ \infty & \text{otherwise} \end{cases} \]
-    %
-    is a stopping time, and
+    If $E \in \Sigma_S$, and we define $T_E$ and $S_E$ to be equal to $T$ and $S$ on $E$, and equal to $\infty$ on $E^c$, then $T_E$ and $S_E$ are stopping times, and
     %
     \[ \mathbf{E}(M_{T_E \wedge R} - M_{S_E \wedge R}) = \mathbf{E}(M_{T \wedge R} - M_{S \wedge R}; E) \]
     %
@@ -3416,21 +3452,21 @@ and we take this as a {\it definition} of the It\^{o} integral in this very simp
     %
     \[ \mathbf{E}(M_{T_E \wedge R} - M_{S_E \wedge R}) = \mathbf{E}[M_0 - M_0] = 0 \]
     %
-    Thus $\mathbf{E}[M_{T \wedge R} - M_{S \wedge R} | \Sigma_S] = 0$, and by the monotone class theorem, for any bounded, $\Sigma_S$ measurable function $Z$,
+    Thus $\mathbf{E}[M_{T \wedge R} - M_{S \wedge R} | \Sigma_S] = 0$, and so
     %
-    \[ \mathbf{E}(Z[M_{T \wedge R} - M_{S \wedge R}]) = 0 \]
+    \[ \mathbf{E}[Z(M_{T \wedge R} - M_{S \wedge R})] + \mathbf{E}[Z \mathbf{E}[M_{T \wedge R} - M_{S \wedge R} | \Sigma_S] ] = 0 \]
     %
-    and this completes the proof.
+    This completes the proof.
 \end{proof}
 
-Stochastic integration theory essentially generalizes this lemma using the techniques of monotone class methods and localization, in tandem with using this lemma to extend the stochastic integral to a {\it much} larger family of integrands and integrals.
+The basic construction of the stochastic integral uses sequential generalizations of this lemma, in tandem with monotone class methods and localization techniques, to obtain the definition on a much larger family of integrands and integrals.
 
 \section{Previsibility}
 
 Recall that in the discrete setting, we defined a betting scheme $C$ as a random variable adapted one time step before the values of the bet are revealed. In continuous time, a process should therefore be previsible if it can be predicted `infinitisimally' into the past. A left continuous process is the perfect candidate for a process of this form, because we can take limits on the left to approximate the next bet `immediately' before the bet is revealed. The right definition enlarges this definition only slightly. The {\bf previsible $\sigma$ algebra} on $(0,\infty) \times \Omega$ generated by $\Sigma$ is defined to be the smallest $\sigma$ algebra on $(0,\infty) \times \Omega$ such that every adapted c\'{a}gl\'{a}d process is measurable. A process on $(0,\infty)$ is called {\bf previsible} if it is measurable as a map from $(0,\infty) \times \Omega$ to $\mathbf{R}$ with respect to the previsible sigma algebra.
 
 \begin{lemma}
-    If $S \leq T$ is a stopping times, and $Z$ is bounded and $\Sigma_S$ measurable, then $Z(S,T]$ is a previsible process.
+    If $S \leq T$ is a stopping time, and $Z$ is bounded and $\Sigma_S$ measurable, then $Z(S,T]$ is a previsible process.
 \end{lemma}
 \begin{proof}
     The process $Z(S,T]$ is certainly c\'{a}gl\'{a}d, so we need only verify that it is adapted to $\Sigma$. Now for each $t$, and for each Borel $E \subset \mathbf{R}$, if $0 \not \in E$,
@@ -3451,7 +3487,7 @@ Recall that in the discrete setting, we defined a betting scheme $C$ as a random
     the first set is $\Sigma_t$ measurable, and the other sets are also easily verified to be $\Sigma_t$ measurable by their relation to stopping times.
 \end{proof}
 
-We can obtain a more general class of previsible processes by taking finite sums of these basic betting strategies. The set of finite sums of these processes will be known as the set of {\bf bounded elementary integrands}, which we will sometimes denote by $\mathcal{E}$.
+We can obtain a more general class of previsible processes by taking finite sums of these basic betting strategies. The set of finite sums of these processes will be known as the set of {\bf bounded elementary integrands}.
 
 \begin{lemma}
     Any bounded elementary integrand can be written as
@@ -3503,23 +3539,32 @@ Once we have written a bounded elementary integrand $H$ in the form $Z_1(S_1,T_1
 %
 \[ \int_0^t HdX = \sum_{k = 1}^n \int_0^t Z_k(S_k,T_k] dX = \sum_{k = 1}^n Z_k[X_{T_k \wedge t} - X_{S_k \wedge t}] \]
 %
-This is because if $Z_1(S_1,T_1] + \dots + Z_n(S_n,T_n] = 0$, then because each $(S_i,T_i]$ is a disjoint interval, we conclude $Z_1 = \dots = Z_n = 0$. By linearity, is $H$ is a bounded elementary integrand, and $M$ is a uniformly integrable martingale, then $H \bullet M$ is also a uniformly integrable martingale. The monotone class theorem will come in handy in extending this integral to all previsible processes, and one fact that makes this easy is the following.
+This is because if $Z_1(S_1,T_1] + \dots + Z_n(S_n,T_n] = 0$, then because each $(S_i,T_i]$ is a disjoint interval, we conclude $Z_1 = \dots = Z_n = 0$. By linearity, if $H$ is a bounded elementary integrand, and $M$ is a uniformly integrable martingale, then $H \bullet M$ is also a uniformly integrable martingale. The monotone class theorem will come in handy in extending this integral to all previsible processes, and one fact that makes this easy is the following.
 
 \begin{lemma}
     The smallest $\sigma$ algebra on $(0,\infty) \times \Omega$ such that all bounded elementary functions are measurable is equal to the previsible $\sigma$ algebra.
 \end{lemma}
 \begin{proof}
-    Let $\Pi$ be the smallest $\sigma$ algebra on $(0,\infty) \times \Omega$ such that all bounded elementary functions are measurable. It is obvious that each bounded elementary integrand is previsible, so it remains to show every bounded c\'{a}gl\'{a}d adapted process is measurable with respect to the, and this follows because
+    Let $\Pi$ be the smallest $\sigma$ algebra on $(0,\infty) \times \Omega$ such that all bounded elementary functions are measurable. It is obvious that each bounded elementary integrand is previsible, so it remains to show every bounded c\'{a}gl\'{a}d adapted process is measurable with respect to $\Pi$, and this follows because
     %
     \[ X = \lim_{k \to \infty} \lim_{n \to \infty} \sum_{i = 2}^{nk} X_{\frac{i-1}{n}} \left( \frac{i-1}{n}, \frac{i}{n} \right] \]
     %
     and this gives the required result.
 \end{proof}
 
-The following expresses the MCT using the result above.
+A consequence is a reexpression of the MCT.
 
 \begin{corollary}
-    If $V$ is a subspace of bounded functions jointly measurable on $(0,\infty) \times \Omega$ which contains constant processes and all bounded elementary integrands, is closed under uniform convergence, and closed under monotone convergence, in the sense that if the $H_n$ are uniformly bounded and non-negative, and $H_n \uparrow H$, then $H$ is in $V$. Then $V$ contains every bounded previsible process on $(0,\infty) \times \Omega$.
+    If $V$ is a subspace of bounded functions jointly measurable on $(0,\infty) \times \Omega$ such that
+    %
+    \begin{itemize}
+        \item $V$ contains all constant processes.
+        \item $V$ contains all bounded elementary integrands.
+        \item If some $H_n \in V$ converge uniformly to $H$, then $H \in V$.
+        \item If some $H_n \in V$ are uniformly bounded and non-negative, and $H_n \uparrow H$, then $H$ is in $V$.
+    \end{itemize}
+    %
+    Then $V$ contains every bounded previsible process on $(0,\infty) \times \Omega$.
 \end{corollary}
 
 Here is a simple, but important, corollary, which should be intuitive.
@@ -3545,42 +3590,55 @@ Here is a simple, but important, corollary, which should be intuitive.
     so each term in the sum is $\Pi$ measurable, hence the sum is $\Pi$ measurable, and then $\chi_E(S,T]$ is the limit of $\Pi$ measurable functions. We then apply the monotone class theorem to conclude that $Z(S,T]$ is $\Pi$ measurable for all bounded $\Sigma_S$ measurable $Z$.
 \end{proof}
 
+\begin{corollary}
+    The previsible $\sigma$ algebra is the smallest such that $(T,\infty)$ is measurable for all stopping times $T$.
+\end{corollary}
+\begin{proof}
+    Consider some set $(t,\infty) \times E$ with $E \in \Sigma_t$. The consider the random variable $T$ equal to $t$ on $E$, and equal to $\infty$ outside of $E$. Then $T$ is a stopping time, because
+    %
+    \[ \{ T \leq s \} = \begin{cases} \emptyset & : s < t \\ E & : t \leq s < \infty \end{cases} \]
+    %
+    and this is $\Sigma_s$ measurable in each case. but now $(t,\infty) \times E$ is the inverse image of $[0,t]$, and this shows $(t,\infty) \times E$ is measurable in the algebra generated by the $(T,\infty)$.
+\end{proof}
+
 \section{Finite Variation Processes}
 
-A {\bf finite variation process} is an adapted process $X$ such that each path $t \mapsto X_t(\omega)$ is of finite variation. Thus for each $t$ and $\omega$, the variation
+A {\bf finite variation process} is an adapted, right continuous process $X$ such that each path $t \mapsto X_t(\omega)$ is of finite variation. This automatically implies $X$ is a \cadlag process. Thus for each $t$, the variation
 %
-\[ V_X(t,\omega) = \int_{(0,t]} |dX_s(\omega)| = \sup \sum_{k = 1}^n |X_{s_k}(\omega) - X_{s_k - 1}(\omega)| \]
+\[ V_X(t) = \int_0^t |dX_s| = \sup \sum_{k = 1}^n |X_{s_k} - X_{s_k - 1}| \]
 %
-is finite, where the supremum is taken over all finite partitions of $[0,1]$. If, in addition, the integrated variation norm
+is finite, where the supremum is taken over all finite partitions of $[0,t]$. It is measurable for a fixed $t$, because by right continuity the supremum needs only be taken over rational partitions. Since $t \mapsto V_X(t)$ is \cadlag, this means that $V_X$ is jointly measurable over $[0,\infty) \times \Omega$. If, in addition, the integrated variation norm
 %
 \[ \| X \|_V = \mathbf{E}(V_X(\infty)) = \lim_{t \to \infty} \mathbf{E}(V_X(t)) < \infty \]
 %
-we say $X$ has {\bf integrable variation}. In the case $X$ is a finite variation process, it follows that for any $H$, it makes sense to define
+we say $X$ has {\bf integrable variation}. In the case that $X$ is a finite variation process, it makes sense to define
 %
-\[ \int_0^t H_s dX_s \]
+\[ \int_0^t H dX \]
 %
-pointwise, for each sample point, as the Lebesgue Stieltjes integral.
+pointwise, for each sample point, as the Lebesgue-Stieltjes integral.
 
 \begin{theorem}
-    If $H$ is a bounded, previsible process, and $M$ is a martingale with integrable variation, null at zero, then $H \bullet M$ is a martingale with integrable variation.
+    If $H$ is a bounded, previsible process, and $M$ is a martingale with integrable variation, then $H \bullet M$ is a martingale with integrable variation.
 \end{theorem}
 \begin{proof}
     Let $V$ be the class of all bounded previsible processes $H$ such that $H \bullet M$ is a martingale. Since we have
     %
-    \[ \sup_{t \in (0,\infty)} \left| \int_0^t H_s dM_s \right| \leq \int_0^\infty |H_s\ dM_s| \leq \| H \|_\infty V_M(0,\infty) \]
+    \[ \sup_{t \in (0,\infty)} \left| \int_0^t H_s dM_s \right| \leq \int_0^\infty |H_s\ dM_s| \leq \| H \|_\infty V_M(\infty) \]
     %
-    we have bounded $H \bullet M$ pointwise by an integrable random variable, and so $H \bullet M$ is uniformly integrable for all bounded $H$. It is automatically because of it's definition in terms of a Stieltjes integral. We also have shown that $V$ contains all the bounded elementary functions. If $H$ is a constant, then
+    we have bounded $H \bullet M$ pointwise by an integrable random variable, and so $H \bullet M$ is uniformly integrable for all bounded $H$. It is closed under monotone convergence by definition of the Stieltjes integral. We have also shown that $V$ contains all the bounded elementary functions, because the Stieltjes integral agrees with the It\^{o} definition we gave before. If $H$ is a constant, then
     %
-    \[ \int_0^t H_s dM_s = H \int_0^t dM_s = H(M_t - M_0) \]
+    \[ \int_0^t H dM_s = H \int_0^t dM_s = H(M_t - M_0) \]
     %
-    so $H \bullet M$ is obviously a martingale as a difference of two martingales. Suppose that $H_n$ is a uniformly bounded sequence of elements of $V$, with $H_n \to H$ pointwise. Then the dominated convergence theorem implies that for each fixed $t$, $(H_n \bullet M)_t \to H \bullet M$ in $L^1(\Omega)$, and it follows from this that $H \bullet M$ is a martingale, by the regularity of conditional expectations under $L^1$ convergence. In follows from the monotone class variant we established for bounded previsible processes that $H \bullet M$ is a martingale for all bounded, previsible $H$.
+    so $H \bullet M$ is obviously a martingale as a difference of two martingales. Suppose that $H_n$ is a uniformly bounded sequence of elements of $V$, with $H_n \to H$ pointwise. Then the dominated convergence theorem implies that for each fixed $t$,
+    %
+    \[ \int_0^t H_n dM \to \int_0^t H dM \]
+    %
+    in $L^1(\Omega)$, and it follows from this that $H \bullet M$ is a martingale, by the regularity of conditional expectations under $L^1$ convergence. In follows from the monotone class variant we established for bounded previsible processes that $H \bullet M$ is a martingale for all bounded, previsible $H$.
 \end{proof}
 
 \section{Localization}
 
-The boundedness and integrality assumptions we used to conclude on the regularity of the integrals of finite variation processes is too stringent to be practical for the processes we encounter in practice. Brownian motion is almost surely never of finite variation, and we often want to consider integrals $\int_0^t X_s dB_s$, so more work is needed.
-
-To begin, we must relax the hypothesis of that theorem to a `localized' version, in the sense of locally integrable functions. Of course, then the conclusion of the theorem above will only hold locally. Consider reducing a global equation $d(H \bullet X) = HdX$ on $(0,\infty)$ to the `local' equation, that $d(H \bullet X) = HdX$ on $(0,T]$, where $T$ is a stopping time, which we can view as a `local time' which stops before the condition becomes too erratic. Given a stopping time $T$ and a process $H$ on $(0,\infty)$, it is natural to introduce the process $H(0,T]$ which represents the adjustment to the bet $H$ where we immediately stop betting at time $T$. Note that if $H$ is previsible, then so is $H(0,T]$. Similarily, if $X$ is a process on $[0,\infty)$, it is natural to consider the stopped process $X^T$. We can interpret this formally as saying $dX^T_t = \chi_{(0,T]} dX_t$, so that we `close off all bets' at time $T$ -- surely, for all the integrands we have considered,
+The boundedness and integrality assumptions we used to conclude on the regularity of the integrals of finite variation processes is too stringent to be practical for the processes we encounter in practice. Brownian motion is almost surely never of finite variation, and we often want to consider integrals with respect to Brownian motion, so more work is needed. To begin, we must relax our requirements from integrating uniformly integrable martingales to a suitably `localized' condition, in the sense of locally integrable functions. Of course, then the conclusion of the theorem above will only hold locally. Consider reducing a global equation $d(H \bullet X) = HdX$ on $(0,\infty)$ to the `local' equation, that $d(H \bullet X) = HdX$ on $(0,T]$, where $T$ is a stopping time, which we can view as a `local time' which stops before the condition becomes too erratic. Given a stopping time $T$ and a process $H$ on $(0,\infty)$, it is natural to introduce the process $H(0,T]$ which represents the adjustment to the bet $H$ where we immediately stop betting at time $T$. Note that if $H$ is previsible, then so is $H(0,T]$. Similarily, if $X$ is a process on $[0,\infty)$, it is natural to consider the stopped process $X^T$. We can interpret this formally as saying $dX^T_t = \chi_{(0,T]} dX_t$, so that we `close off all bets' at time $T$. Surely, for all the integrands we have considered,
 %
 \[ \int_0^t H_s dX^T_s = \int_0^t \chi_{(0,T]} H_s dX_s \]
 %
@@ -3588,7 +3646,7 @@ We then say the differential equation $d(H \bullet X) = HdX$ holds on $(0,T]$ if
 %
 \[ (H \bullet X)^T = H(0,T] \bullet X^T \]
 %
-Given some family $\Gamma$ of processes, such that if $H \in \Gamma$, then $H(0,T] \in \Gamma$ for all stopping times $T$, then we say another process $H$ is {\bf locally} in $\Gamma$ if there is a sequence of almost surely increasing stopping times $T_1, T_2, \dots$ such that $T_k \to \infty$ almost surely, and $H(0,T_n] \in \Gamma$ for all $n$. We say the $T_n$ {\bf reduces} $H$ into $\Gamma$. The most important example occurs when $\Gamma$ is the space of bounded previsible processes, in which we say a process locally in $\Gamma$ is a {\bf locally bounded and previsible} process.
+Given some family $\Gamma$ of processes, such that if $H \in \Gamma$, then $H(0,T] \in \Gamma$ for all stopping times $T$, then we say another process $H$ is {\bf locally} in $\Gamma$ as an integrand if there is a sequence of almost surely increasing stopping times $T_1, T_2, \dots$ such that $T_k \to \infty$ almost surely, and $H(0,T_n] \in \Gamma$ for all $n$. We say the $T_n$ {\bf reduces} $H$ into $\Gamma$. The most important example occurs when $\Gamma$ is the space of bounded previsible processes, in which we say a process locally in $\Gamma$ is a {\bf locally bounded and previsible} process.
 
 \begin{lemma}
     If $H$ is an adapted \caglad process with $\limsup_{t \downarrow 0} |H_t| < \infty$ almost surely, then $H$ is a locally bounded previsible process.
@@ -3597,21 +3655,36 @@ Given some family $\Gamma$ of processes, such that if $H \in \Gamma$, then $H(0,
     Let $T_n = \inf \{ t > 0: |H_t| \geq n \}$. Then $T_n$ is a $\Sigma_t$ adapted stopping time (with $\Sigma_0 = \lim \Sigma_t$), and the growth condition on $H$ near $0$ shows that for any sample point $\omega$, $\limsup_{ t \downarrow 0} |H_t(\omega)| = \alpha < \infty$, so if $n > \alpha$, $T_n(\omega) \neq 0$, and if $T_n(\omega) \to \beta > 0$ as $n \to \infty$, then we can find $u_n \geq T_n(\omega)$ with $u_n - T_n(\omega) \leq 1/n$ and $|H_{u_n}(\omega)| > n$, and then $u_n \to \beta$, hence the sequence either contains a left or right convergent subsequence, and this subsequence breaks the \caglad property of $H$. Thus $T_n \to \infty$.
 \end{proof}
 
-We note that if $H$ is locally, locally in a family $\Gamma$, in the sense that there are $T_i \uparrow \infty$ with $H(0,T_i]$ locally in $\Gamma$, then we can find $\lim_{j \to \infty} U_{ij} \to \infty$ with $H(0,T_i](0,U_{ij}] = H(0,T_i \wedge U_{ij}]$ in $\Gamma$. If we set choose $k(n)$ such that 
-%
-\[ \mathbf{P}(U_{nk(n)} \wedge T_n \geq T_n - 2^{-n}) = \mathbf{P}(U_{nk(n)} \geq T_n - 2^{-n}) \geq 1 - 2^{-n} \]
-%
-and then let $R_n = \inf \{ U_{mk(m)}: m \geq n \}$. Since
-%
-\[ \sum_{n = 1}^\infty \mathbf{P}(T_n \wedge U_{nk(n)} \wedge T_n < T_n - 2^{-n}) < \infty \]
-%
-the Borel-Cantelli theorem implies that, almost surely, for large enough $n$ we have $T_n \wedge U_{nk(n)} \geq T_n - 2^{-n}$, so almost surely, for large enough $n$ we find
-%
-\[ R_n \geq \inf \{ T_m - 2^{-m}: m \geq n \} \geq \inf \{ T_m : m \geq n \} - 2^{-n} \]
-%
-so $R_n \to \infty$ almost surely, and localize $H$ into $\Gamma$. We never need to consider second order locality, because this reduces into first order locality.
+The next theorem says that `second order locality' is not an interesting 
 
-On the other hand, we can also localize integrators. Let $\Gamma$ be a family of adapted processes, such that $\Gamma$ is stable under stopping, in the sense that if $X \in \Gamma$, $X^T \in \Gamma$ for every stopping time $T$; we say a process $X$ is locally in $\Gamma$ if there is an almost surely increasing family $T_1, T_2, \dots$ with $T_i \to \infty$ almost surely such that $X^{T_n} \in \Gamma$ for all $n$. The most important versions of this process is where $\Gamma$ is the family of all martingales, in which case we say $X$ is a {\bf local martingale}. Similarily, we can define locally uniform integrable martingales, local integrable variation martingales, and locally finite variation martingales. Since the condition of having finite variation is a local condition, we find that the class of locally finite variation processes are just processes with finite variation. First, of course, we must prove that these spaces are stable under stopping.
+\begin{theorem}
+    If $H$ is locally, locally in a family $\Gamma$, in the sense that there are $T_i \uparrow \infty$ with $H(0,T_i]$ locally in $\Gamma$, then $H$ is locally in $\Gamma$.
+\end{theorem}
+\begin{proof}
+    We can find $U_{ij}$ with $\lim_{j \to \infty} U_{ij} = \infty$ and
+    %
+    \[ H(0,T_i](0,U_{ij}) = H(0,T_i \wedge U_{ij}] \in \Gamma \]
+    %
+    If we choose $k(n)$ such that 
+    %
+    \[ \mathbf{P}(T_n \wedge U_{nk(n)} \geq T_n - 2^{-n}) = \mathbf{P}(U_{nk(n)} \geq T_n - 2^{-n}) \geq 1 - 2^{-n} \]
+    %
+    and then let $R_n = \inf \{ U_{mk(m)}: m \geq n \}$. Since
+    %
+    \[ \sum_{n = 1}^\infty \mathbf{P}(T_n \wedge U_{nk(n)} < T_n - 2^{-n}) < \infty \]
+    %
+    the Borel-Cantelli theorem implies that, almost surely, for large enough $n$ we have $T_n \wedge U_{nk(n)} \geq T_n - 2^{-n}$, so almost surely, for large enough $n$ we find
+    %
+    \[ R_n \geq \inf \{ T_m - 2^{-m}: m \geq n \} \geq \inf \{ T_m : m \geq n \} - 2^{-n} \]
+    %
+    so $R_n \to \infty$ almost surely. The $R_n$ localize $H$ into $\Gamma$, because $R_n \leq U_{nk(n)}$, so
+    %
+    \[ H(0,R_n] = H(0,T_n \wedge U_{nk(n)}](0,R_n] \in \Gamma \]
+    %
+    So $H$ is locally in $\Gamma$.
+\end{proof}
+
+On the other hand, we can also localize integrators. Let $\Gamma$ be a family of adapted processes, such that $\Gamma$ is stable under stopping, in the sense that if $X \in \Gamma$, $X^T \in \Gamma$ for every stopping time $T$; we say a process $X$ is locally in $\Gamma$ if there is an almost surely increasing family $T_1, T_2, \dots$ with $T_i \to \infty$ almost surely such that $X^{T_n} \in \Gamma$ for all $n$. The most important versions of this process is where $\Gamma$ is the family of all martingales, in which case we say $X$ is a {\bf local martingale}. Note that we do not explicitly say which form of localization is used here, but safe to say, localization is done for integrators to make them more like a martingale, whereas localization is done for integrands to make them like a previsible process, so it is normally possible to tell which localization is done from the context. Thus we can define locally uniform integrable martingales, local integrable variation martingales, and locally finite variation martingales. Since the condition of having finite variation is a local condition, we find that the class of locally finite variation processes are just processes with finite variation. First, of course, we must prove that these spaces are stable under stopping.
 
 \begin{lemma}
     If $U,V$ are bounded stopping times, and $M$ is a martingale, then $\mathbf{E}[M_U|\Sigma_V] = M_{U \wedge V}$.
@@ -3630,7 +3703,7 @@ On the other hand, we can also localize integrators. Let $\Gamma$ be a family of
 \begin{proof}
     Fix some stopping time $T$. Since $X^T$ is a martingale if $X$ is, this shows the space of martingales is stable under stopping. If $X$ is uniformly integrable, then $X^T_t = \mathbf{E}[X^T_\infty|\Sigma_t]$ is uniformly integrable as $t$ ranges. If $X$ has finite variation, it is trivial to see that $X^T$ has finite variation because the paths of $X^T$ are just the paths of $X$ cut short, so
     %
-    \[ V_{X^T}(0,t) = V_X(0, T \wedge t) \leq V_X(t,\omega) \]
+    \[ V_{X^T}(t) = V_X(t \wedge T) \leq V_X(t) \]
     %
     This is also sufficient to show that integrable variation martingales are stable under stopping.
 \end{proof}
@@ -3643,18 +3716,22 @@ On the other hand, we can also localize integrators. Let $\Gamma$ be a family of
     %
     \[ M^k_t = M_{t \wedge k} = \mathbf{E}[M_k|\Sigma_{t \wedge k}] \]
     %
-    and it is easy to see this is uniformly integrable. For the second case, because of the first case, we may prove that every {\it uniformly integrable} finite variation martingale locally has integrable variation. Let $V_M(t)$ denote the variation of $M$ on $(0,t]$. Define $T_n = \inf \{ t > 0 : V_M(t) > n \}$. Then $T_n$ is the first entry time into an open set of an adapted process, so it is a stopping time, and
+    and it is easy to see this is uniformly integrable. For the second case, because of the first case, we may prove that every {\it uniformly integrable} finite variation martingale locally has integrable variation. Define
+    %
+    \[ T_n = \inf \{ t > 0 : V_M(t) > n \} \]
+    %
+    Then $T_n$ is the first entry time into an open set of a right continuous process, so it is a stopping time, and
     %
     \[ V_M(T_n) \leq n + |M(T_n) - M(T_n-)| \leq n + |M(T_n)| + |M(T_n-)| \]
     %
-    But $|M(T_n-)| \leq n$, and $\mathbf{E} |M(T_n)| = \mathbf{E} |M(\infty)|$, because of the optional sampling theorem, so $M^{T_n}$ has integrable variation.
+    But $|M(T_n-)| \leq n$, and $\mathbf{E} |M_{T_n}| = \mathbf{E} |M_\infty|$, because of the optional sampling theorem, so $M^{T_n}$ has integrable variation.
 \end{proof}
 
 \section{Stochasting Integration By Localization}
 
 Let's summarize our setup so far. We have a family $\Lambda$ of integrands, and a collection $\Gamma$ of integrals, and we want to find a map $(H,X) \mapsto H \bullet X$ into some space $\Theta$ which represents the stochastic integral. The main result is that if $\Gamma$ and $\Theta$ are stable under stopping, and $\Lambda$ is stable under bet stopping, and we know ahead of time that
 %
-\[ \int_0^T H_s dX_s = \int_0^\infty H(0,T]_s dX^T_s \]
+\[ \int_0^T H dX = \int_0^\infty H(0,T] dX^T \]
 %
 In our first case, $\Gamma$ is the set of bounded, previsible processes, and $\Lambda$ and $\Theta$ the set of martingales with integral variation, in which the local equation obviously holds pointwise. If $H$ is a process which is only locally in $\Lambda$, and $X$ is only locally in $\Gamma$, then we can find a sequence of stopping times $T_n$ which simulatenously reduce $H$ and $X$, and we can consider the integrals $H(0,T_n] \bullet X^{T_n}$. We can then {\it define} the process $H \bullet X$ such that
 %
@@ -3670,13 +3747,15 @@ so the stopping time integrals agree with one another, and if $S_1 \leq S_2 \dot
 %
 and this means exactly that the two definitions agree with one another. As long as the integral we began with was bilinear, it is obvious that the new locally defined integral we have here is also bilinear.
 
-In the first case we considered, $H \bullet X$ is just the stochastic Lebesgue-Stieltjes integral, because the local definition agrees with the normal stochastic Lebesgue-Stieltjes integral. Since every locally finite variation process also locally has integrable variation, then our reasoning implies the following result.
+In the first case we considered, $H \bullet X$ is just the stochastic Lebesgue-Stieltjes integral defined locally, because stopping times commute with the stochastic Stieltjes integral, which is defined pointwise. Since every locally finite variation process also locally has integrable variation, then our reasoning implies the following useful result.
 
 \begin{theorem}
-    If $H$ is locally bounded and previsible and $M$ is locally a finite variation martingale, and $H \bullet M$ is the Stieltjes integral, then $H \bullet M$ locally has finite variation.
+    If $H$ is locally bounded and previsible and $M$ is a finite variation local martingale, and $H \bullet M$ is the Stieltjes integral, then $H \bullet M$ is a finite variation local martingale.
 \end{theorem}
 
-Frequently, we can only define $H$ up to indistinguishable. This could potentially cause problems with stochastic integration theory. We say that a process is {\bf evanescent} if, for almost all sample points, for every $t$, $X_t = 0$. Provided that we can show that all evanescent processes are able to be integrated, and if $H$ is evanescent, then the stochastic integral of $H \bullet X$ is evanescent, then our stochastic integrals can be defined up to indistinguishability, and so this will cause no problems.
+\section{Evanescense}
+
+Frequently, we can only define $H$ up to indistinguishability. This could potentially cause problems with stochastic integration theory. We say that a process is {\bf evanescent} if, for almost all sample points, for every $t$, $X_t = 0$. Provided that we can show that all evanescent processes can be integrands, and if $H$ is evanescent, then the stochastic integral of $H \bullet X$ is evanescent, then our stochastic integrals can be defined up to indistinguishability, and so this will cause no problems. This is analogous to Lebesgue integration on $L^1$, which is a family of equivalence classes of functions.
 
 \section{Local Martingales}
 
@@ -3734,9 +3813,9 @@ where $M$ is a local martingale null at zero, and $A$ is a process null at 0 wit
 %
 \[ \int_0^t H_s dX_s = \int_0^t H_s dM_s + \int_0^t H_s dA_s \]
 %
-where the last integral is just the stochastic Stieltjes integral. Deliberately avoiding the discussion of uniqueness, the problem of defining the integral of semimartingales requires us only to define the integral of local martingales. We shall find that if $X$ is a semimartingale, and $H$ is locally bounded and previsible, then $H \bullet X$ is also a semimartingale. What's more, if $f \in C^\infty(\mathbf{R}^n)$, and $X$ is a supermartingale in $\mathbf{R}^n$, in the sense that each $X^i$ is a semimartingale, then $f(X)$ is also a semimartingale. Even better, almost every process you encounter in practice is a semimartingale, so the fact that we can treat these processes as integrands is the best feature of the integration theory.
+where the last integral is just the stochastic Stieltjes integral. Deliberately avoiding the discussion of uniqueness, the problem of defining the integral of semimartingales requires us only to define the integral of local martingales. We shall find that if $X$ is a semimartingale, and $H$ is locally bounded and previsible, then $H \bullet X$ is also a semimartingale. What's more, if $f \in C^\infty(\mathbf{R}^n)$, and $X$ is a supermartingale in $\mathbf{R}^n$, in the sense that each $X^i$ is a semimartingale, then $f(X)$ is also a semimartingale.
 
-Semimartingales are about the most general process we can consider as integrands, because of the following result. Call a process $X$ an {\bf integrator} if the following condition holds: For any sequence $H_n = \sum Z^n_i (S^n_i, T^n_i]$ of bounded, elementary integrands with $\| H_n \|_\infty \to 0$, then for all $t$, the random variables
+Even better, almost every process you encounter in practice is a semimartingale, so the fact that we can treat these processes as integrands is the best feature of the integration theory. Semimartingales are about the most general process we can consider as integrands, because of the following result. Call a process $X$ an {\bf integrator} if the following condition holds: For any sequence $H_n = \sum Z^n_i (S^n_i, T^n_i]$ of bounded, elementary integrands with $\| H_n \|_\infty \to 0$, then for all $t$, the random variables
 %
 \[ \sum Z^n_i \left( X_{T^n_i} - X_{S^n_i} \right) \]
 %
@@ -3746,15 +3825,13 @@ converges to 0 in probability. This is about the weakest result we could use to 
     $X$ is an integrator if and only if $X$ is a semimartingale.
 \end{theorem}
 
-So let's get going with defining the integrals of semimartingales!
+The theorem is a satisfying closure to the problem of extending the stochastic integral, since definining semimartingale integration completes the definition as much as is possible. However, we do not prove it here, proceeding to define the stochastic integral adhoc rather than by using methods of the theory of vector-valued measures.
 
 \section{Stochastic Integration in $L^2$}
 
-If a process $N$ is of finite variation, it is easy to define the stochastic integral with respect to $dN$. However, almost all interesting stochastic processes are not of finite variation, and we can use randomness to show that integrals of certain simple functions converge {\it in probability} to a random variable, and the nicest place that this theory operates is in the space of martingales which are bounded in $L^2$.
+If a process $N$ is of finite variation, it is easy to define the stochastic integral with respect to $dN$. However, almost all interesting stochastic processes are not of finite variation, and we can use randomness to show that integrals of certain simple functions converge {\it in probability} to a random variable, and the nicest place that this theory operates is in the space of martingales which are bounded in $L^2$, where we can use Hilbert space techniques.
 
-We let $M^2$ denote the vector space of martingales which are bounded in the $L^2$ norm. Then Doob's $L^2$ convergence theorem guarantees that $M^2$ is in bijection with the square integrable $\Sigma_\infty$ measurable functions by the map $M \mapsto M_\infty$, since we can recover a process $M$ from $M_\infty$ by the conditional expectations $M_t = \mathbf{E}[M_\infty|\Sigma_t]$. We use this correspondence to establish a topological structure on $M^2$, which makes $M^2$ into a Hilbert space.
-
-Suppose $M^k$ is a Cauchy sequence in $M^2$, so that $M^k_\infty$ is Cauchy in the square integrable norm. Because $M^k_\infty \to M_\infty$ in the $L^2$ norm, we find $M^k_t = \mathbf{E}[M^k_\infty|\Sigma_t]$ converges in $L^2$ to $M_t = \mathbf{E}[M_\infty|\Sigma_t]$. Now $M^k_t - M_t$ is a martingale bounded in $L^2$, and so Doob's $L^2$ inequality implies
+We let $M^2$ denote the vector space of martingales which are bounded in the $L^2$ norm, and $M^2_0$ the space which are null at 0. Then Doob's $L^2$ convergence theorem guarantees that $M^2$ is in bijection with the square integrable $\Sigma_\infty$ measurable functions by the map $M \mapsto M_\infty$, since we can recover a process $M$ from $M_\infty$ by the conditional expectations $M_t = \mathbf{E}[M_\infty|\Sigma_t]$. We use this correspondence to establish a topological structure on $M^2$, which makes $M^2$ into a Hilbert space. Suppose $M^k$ is a Cauchy sequence in $M^2$, so that $M^k_\infty$ is Cauchy in the square integrable norm. Because $M^k_\infty \to M_\infty$ in the $L^2$ norm, we find $M^k_t = \mathbf{E}[M^k_\infty|\Sigma_t]$ converges in $L^2$ to $M_t = \mathbf{E}[M_\infty|\Sigma_t]$. Now $M^k_t - M_t$ is a martingale bounded in $L^2$, and so Doob's $L^2$ inequality implies
 %
 \[ \mathbf{E}[[(M^k - M)^*_\infty]^2] \leq 4 \mathbf{E}[(M^k_\infty - M_\infty)^2] \]
 %
@@ -3776,13 +3853,13 @@ We say two processes $M,N \in M^2$ are {\bf weakly orthogonal} if they are ortho
     This is trivial by the characterization of UI martingales as progressive martingales for which $\mathbf{E}[M_T N_T] = 0$.
 \end{proof}
 
-A subspace of $M^2$ is known as {\bf stable} if it is closed and stable under stopping. For instance, $cM^2$ and $M^2_0$ are both stable under stopping. We are going to decompose every martingale in $M_0^2$ into a continuous martingale in $cM_0^2$ and a martingale in the complement of the direct sum, $dM_0^2$ (it's discontinuous part). This follows from the next theorem.
+A subspace of $M^2_0$ is known as {\bf stable} if it is closed and stable under stopping. For instance, the space of continuous martingales is stable, because an $L^2$ convergent process has a subsequence which converges uniformly almost surely. We are going to decompose every martingale in $M^2_0$ into a continuous martingale in $cM^2_0$ and a martingale in the complement of the direct sum, $dM^2$, it's discontinuous part. This follows from the next theorem.
 
 \begin{theorem}
-    If $N_0$ is a stable subspace of $M^2_0$, then the space $N_0^\perp$ is a stable subspace of $M^2_0$ and every $Z \in N_0^\perp$ is strongly orthogonal to every $N \in N_0$, and every $M \in M_0^2$ decomposes uniquely as $M = N + Z$, with $N \in N_0$ and $Z \in N_0^\perp$.
+    If $N_0$ is a stable subspace of $M^2_0$, then the space $N_0^\perp$ is stable subspace of $M^2_0$ and every $Z \in N_0^\perp$ is strongly orthogonal to every $N \in N_0$, and every $M \in M_0^2$ decomposes uniquely as $M = N + Z$, with $N \in N_0$ and $Z \in N_0^\perp$.
 \end{theorem}
 \begin{proof}
-    $N_0^\perp$ is trivially closed. Now suppose $Z \in N_0^\perp$. For each stopping time $T$, we want to show $\mathbf{E}[Z_T N_\infty) = 0$ for every $N \in N_0$. Now $N^T \in N_0$, so $\mathbf{E}[Z_\infty N^T] = 0$. But now
+    $N_0^\perp$ is trivially closed. Now suppose $Z \in N_0^\perp$. For each stopping time $T$, we want to show $\mathbf{E}[Z_T N_\infty] = 0$ for every $N \in N_0$. Now $N^T \in N_0$, so $\mathbf{E}[Z_\infty N^T] = 0$. But now
     %
     \begin{align*}
         \mathbf{E}[Z_\infty N_T] &= \mathbf{E}[\mathbf{E}[Z_\infty N_T|\Sigma_T]] = \mathbf{E}[N_T \mathbf{E}[Z_\infty | \Sigma_T]]\\
@@ -3792,13 +3869,13 @@ A subspace of $M^2$ is known as {\bf stable} if it is closed and stable under st
     which has proven the claim.
 \end{proof}
 
-Given a martingale $M$, we let $M = M^c + M^d$, where $M^c \in cM^2_0$ and $M^d \in dM^2_0$. We note that using similar techniques to above, we can show that for any stopping time $T$, $(M^T)^c = (M^c)^T$.
+Since $cM^2_0$ is stable, it has an orthogonal complement, denoted $dM^2_0$, which is stable, and strongly orthogonal to $cM^2_0$. Given a martingale $M$, we let $M = M^c + M^d$ be it's decomposition into it's continuous and purely discontinuous parts.
 
 \begin{theorem}
     For any stopping time $T$, $(M^T)^c = (M^c)^T$.
 \end{theorem}
 \begin{proof}
-    TODO
+    If $M = M^c + M^d$, then $M^T = (M^c)^T + (M^d)^T$. Since $cM^2_0$ and $dM^2_0$ are stable under stopping, $(M^c)^T \in cM^2_0$, and $(M^d)^T \in dM^2_0$, so these are exactly the purely continuous and discontinuous parts of the process $M^T$.
 \end{proof}
 
 \begin{example}
@@ -3826,27 +3903,80 @@ The ideas above will generalize to the more general class of stochastic integral
     %
     where $0 \leq T_0 \leq T_1 \leq T_2 \leq \dots$, and $\sup |Z_k| \leq C$. If we define $H \bullet M$ in the obvious fashion, then $H \bullet M \in M^2_0$, and
     %
-    \[ \mathbf{E} (H \bullet M)^2_\infty \leq C^2 \mathbf{E}[M^2_\infty] \]
+    \[ \mathbf{E}[(H \bullet M)_\infty^2] = \sum \mathbf{E}[Z_{i-1}^2[M_{T_i} - M_{T_{i-1}}]^2] \]
 \end{lemma}
 \begin{proof}
-    TODO
+    Note that since the family
+    %
+    \[ Z_{k-1} [M_{t \wedge T_k} - M_{t \wedge T_{k-1}}] \]
+    %
+    is orthogonal to one another, and
+    %
+    \[ \sum_{k = 1}^\infty \mathbf{E}[Z_{k-1}^2 [M_{t \wedge T_k} - M_{t \wedge T_{k-1}}]^2] \leq C^2 \lim_{n \to \infty} \mathbf{E}[M_{T_k}^2] \]
+    %
+    Since $M$ is a martingale, $M^2$ is a submartingale, and Doob's optional sampling theorem guarantees that $\mathbf{E}[M_{T_k}^2] \leq \mathbf{E}[M_\infty^2]$ is uniformly bound, so that the finite sums of
+    %
+    \[ \sum_{k = 1}^\infty \int Z_{k-1} (T_{k-1}, T_k] dM \]
+    %
+    converge in $M^2$ to a well defined stochastic process which we can interpret as the stochastic integral $H \bullet M$. Note though, that, except by considering a subsequence, we do not necessarily have pointwise convergence of integrals, though we can restrict to a subsequence to get this, or even uniform convergence by our previous discussion.
 \end{proof}
 
+We now introduce a useful tool, which we will find can be generalized to a much nicer family of processes, but is easiest to discover in the $L^2$ case. It is easy to extend the definition to processes which are locally in $M^2_0$, but we shall find that $[M]$ exists for the class of local martingales as well. For a \cadlag $f$, we define $\Delta f(t) = f(t) - f(t-)$, and we can extend this pointwise for a \cadlag process.
+
 \begin{theorem}
-    Let $M \in M^2_0$. Then there is a unique increasing process $[M]$, known as the {\bf quadratic variation}, null at 0, such that
+    Let $M \in M^2_0$. Then there is a unique increasing \cadlag process $[M]$, known as the {\bf quadratic variation}, null at 0, such that
     %
     \begin{itemize}
         \item $M^2 - [M]$ is a uniformly integrable martingale.
         \item $\Delta [M] = (\Delta M)^2$.
     \end{itemize}
     %
-    If we set $4[M,N] = [M + N] - [M - N]$, then $[M,N]$ is the unique finite variation process null at 0 such that $MN - [M,N]$ is a UI martingale, and $\Delta [M,N] = (\Delta M)(\Delta N)$. We call $[M,N]$ the {\bf quadratic covariation}.
+    If we set $4[M,N] = [M + N] - [M - N]$, ala the polarization identity, then $[M,N]$ is the unique finite variation process null at 0 such that $MN - [M,N]$ is a uniformly integrable martingale, and $\Delta [M,N] = (\Delta M)(\Delta N)$. We call $[M,N]$ the {\bf quadratic covariation} of the two processes.
 \end{theorem}
 \begin{proof}
-    TODO
+    By localization, assume that $M$ is bounded. For each $n$, define
+    %
+    \[ T^n_0 = 0\ \ \ \ \ T^n_{k+1} = \inf \{ t > T^n_k : |M_t - M_{T^n_k}| > 2^{-n} \} \]
+    %
+    Write $t^n_k$ for $t \wedge T^n_k$. Then
+    %
+    \[ M_t^2 = 2 \sum_{k \geq 1} M(t^n_{k-1}) (M(t^n_k) - M(t^n_{k-1})) + \sum_{k \geq 1} (M(t^n_k) - M(t^n_{k-1}))^2 \]
+    %
+    if $H^n = M(T^n_{k-1})(T^n_{k-1}, T^n_k]$, then the first term on the right of this equation is $2 H^n \bullet M$, so if we put
+    %
+    \[ A^n_t = \sum (M(t^n_k) - M(t^n_{k-1}))^2 \]
+    %
+    Then
+    %
+    \[ M_t^2 = 2(H^n \bullet M)_t + A^n_t \]
+    %
+    Notice that
+    %
+    \[ \sup |H^n_t - H^{n+1}_t| \leq 2^{-n-1}\ \ \ \sup |H^n_t - M_t| \leq 2^{-n} \]
+    %
+    so if we define $J_n = \{ T^n_k : k \geq 0 \}$, then $J_n \subset J_{n+1} \subset \dots$, and we obtain the equation $A^n(T^n_k) \leq A^n(T^n_{k+1})$. Now we know
+    %
+    \[ \mathbf{E}((H^n \bullet M - H^{n+1} \bullet M)_\infty^2) \leq 4^{-n-1} \mathbf{E}(M_\infty^2) \]
+    %
+    This means that the $H^n \bullet M$ converge uniformly almost surely to some martingale $N$. Consequently, so too do the processes $A^n$, and $M_t^2 = 2N_t + A_t$. But we have verified from $A(T^n_k) \leq A(T^n_{k+1})$ that the process $A$ is increasing, at least on the closure $J$ of $\bigcup J_n$. If $I$ is an open interval in the complement of $J$, then no $T^n_k$ lies in $I$, so $M$ is constant throughout $I$, and hence the same must be true of $A$. This means $A$ is increasing and continuous everywhere. Uniqueness follows from the next lemma, which gives the space of continuous local martingales a rigid structure unlike anything found in the theory of smooth functions, random or nonrandom.
 \end{proof}
 
-We shall find that this is true for all local martingales locally bounded in $L^2$, which will enable us to construct a stochastic integral for a more general class of integrands, such as Brownian motion. For now, we construct the stochastic integral in $L^2$. Let $M \in M^2$. If $H = \sum Z_{i-1} (T_{i-1},T_i]$, the $H \bullet M$ is an $L^2$ bounded martingale. Since $M^2 - [M]$ is a uniformly integrable martingale, then for any stopping times $S \leq T$,
+\begin{lemma}
+    If $M$ is a continuous local martingale null at 0, and has finite variation paths, then $M_t = 0$ for all $t$.
+\end{lemma}
+\begin{proof}
+    If we stop $M$ at the entry time of $t \mapsto V_m(t)$ into $(n, \infty)$, then we may assume $M$ is a bounded continuous martingale with paths of bounded variation. But with the $A^n_t$ defined in the last proof, we find
+    %
+    \begin{align*}
+        A^n_t &= \sum (M(t^n_k) - M(t^n_{k-1}))^2\\
+        &\leq 2^{-n} \sum |M(t^n_k) - M(t^n_{k-1})|\\
+        &= 2^{-n} V_M(t)
+    \end{align*}
+    %
+    and this tends to 0 as $n \to \infty$. Thus the process $A$ constructed is identically zero, and $M^2$ is a martingale. But $M_0 = 0$, implying $M_t = 0$ for all $t$.
+\end{proof}
+
+Now we construct the stochastic integral in $L^2$. Let $M \in M^2$. If $H = \sum Z_{i-1} (T_{i-1},T_i]$, the $H \bullet M$ is an $L^2$ bounded martingale. Since $M^2 - [M]$ is a uniformly integrable martingale, then for any stopping times $S \leq T$,
 %
 \[ \mathbf{E}[(M_T - M_S)^2|\Sigma_S] = \mathbf{E}[M_T^2 - M_S^2 | \Sigma_S] = \mathbf{E}([M]_T - [M]_S | \Sigma_S) \]
 %
@@ -3854,11 +3984,11 @@ So we obtain the crucial identity
 %
 \[ \mathbf{E} \left( \left( \int_0^\infty H_s dM_s \right)^2 \right) = \mathbf{E} \left( \sum Z_{i-1}^2 ([M]_{T_i} - [M]_{T_{i-1}}) \right) = \mathbf{E} \int_0^\infty H_s^2 d[M]_s \]
 %
-We define the $L^2$ norm on previsible processes with respect to $M$ by the norm
+We define a norm on previsible processes by
 %
 \[ \| H \|_M = \left( \mathbf{E} \int_0^\infty H_s^2 d[M]_s \right)^{1/2} \]
 %
-The space $L^2(M)$ of $H$ with $\| H \|_M < \infty$ is of course, a Hilbert space containing the bounded elementary functions. The map $I$ mapping a bounded elementary $H$ to $(H \bullet M)_\infty$ given by stochastic integration is therefore an isometry. This means that stochastic integration extends uniquely to be an isometry on the vector space all processes approximatable in the $L^2(M)$ norm by bounded elementary integrands. But one verifies that this class satisfies the monotone class theorem, which is the family of all bounded previsible processes. Thus we obtain the It\^{o} integral for all such processes. We summarize this in a theorem.
+which is well defined because $[M]$ is increasing, with $[M]_\infty < \infty$ almost surely, hence of finite variation. The space $L^2(M)$ of $H$ with $\| H \|_M < \infty$ is of course, a Hilbert space (after identifying processes modulo those with $\| H \|_M = 0$) containing the bounded elementary functions, by a pointwise application of the Cauchy-Schwarz inequality. The map $I$ mapping a bounded elementary $H$ to $(H \bullet M)_\infty$ given by stochastic integration is therefore an isometry from $L^2(M)$ to $M^2$. This means that stochastic integration extends uniquely to be an isometry on the vector space of all processes approximatable in the $L^2(M)$ norm by bounded elementary integrands. But one verifies by the monotone class theorem that this is all bounded previsible processes. Thus we obtain the It\^{o} integral for all such processes. We summarize this in a theorem.
 
 \begin{theorem}[Kunita, Watanabe]
     Let $M \in M_0^2$, and $H \in L^2(M)$. Then the It\^{o} integral $H \bullet M$ is the isometry of $L^2(M)$ into the space of square integrable $\Sigma_\infty$ measurable functions, obtained from extending the isometry on basic elementary integrands, and in particular,
@@ -3866,38 +3996,246 @@ The space $L^2(M)$ of $H$ with $\| H \|_M < \infty$ is of course, a Hilbert spac
     \[ \mathbf{E} \left[ \left( \int_0^\infty H_s dM_s \right)^2 \right] = \mathbf{E} \left[ \int_0^\infty H_s^2 d[M]_s \right] \]
 \end{theorem}
 
-We can further extend the integral by applying localization theory, in the way we already mentioned.
+Now we can extend by localization.
 
 \begin{theorem}
     Fix $M \in M^2$. Then all bounded previsible processes are in $L^2(M)$, and for any $H \in L^2(M)$ and stopping time $T$,
     %
     \begin{itemize}
-        \item $(H \bullet M)^T = H(0,T) \bullet M = H \bullet M^T$
-        \item $\left( \int_0^t H dM \right)^2 - \int_0^t H_s^2 d[M]_s$ is a uniformly integrable martingale.
-        \item If $H$ and $K$ are bounded previsible processes, then $H \bullet (K \bullet M) = (HK) \bullet M$.
-        \item $\Delta(H \bullet M) = H \Delta M$.
-        \item If $M$ is continuous, $H \bullet M$ is also continuous.
+        \item[(i)] $(H \bullet M)^T = H(0,T) \bullet M = H \bullet M^T$
+        \item[(ii)] $\left( \int_0^t H dM \right)^2 - \int_0^t H^2 d[M]$ is a uniformly integrable martingale.
+        \item[(iii)] $\Delta(H \bullet M) = H \Delta M$.
+        \item[(iv)] If $M$ is continuous, $H \bullet M$ is also continuous.
+        \item[(v)] If $H$ and $K$ are bounded previsible processes, then $H \bullet (K \bullet M) = (HK) \bullet M$.
     \end{itemize}
+    %
+    The points (ii) and (iii) imply that $[H \bullet M] = H^2 \bullet [M]$.
 \end{theorem}
 \begin{proof}
-    TODO
+    Consider the 3 operators
+    %
+    \[ \mathbf{E}_T: L^2(\Sigma_\infty) \to L^2(\Sigma_\infty) \]
+    %
+    \[ f: L^2(M) \to L^2(M)\ \ \ \ \ g: L^2(M) \to L^2(M^T) \]
+    %
+    given by $\mathbf{E}_T(X) = \mathbf{E}(X|\Sigma_T)$, $f(H) = H(0,T]$, and $g(H) = H$. These maps are all contractions on the relative Hilbert spaces. If $I(H) = \int_0^\infty H dM$, and $I^T(H) = \int_0^\infty H dM^T$, then
+    %
+    \[ \mathbf{E}_T \circ I\ \ \ \ I \circ f\ \ \ \ \ I^T \circ g \]
+    %
+    all agree for the bounded, elementary integrands, and are continuous linear operators, so they are equal everywhere on $L^2(M)$, so for any $H \in L^2(M)$,
+    %
+    \[ \mathbf{E} \left( \int_0^\infty H_s dM_s | \Sigma_T \right) = \int_0^\infty H(0,T] dM = \int_0^\infty H dM^T \]
+    %
+    This gives us (i). It will help to notice that, since $H \bullet M$ is bounded in $L^2$, it is uniformly integrable martingale, and so the left hand integral is equal to $(H \bullet M)^T_\infty$ by the optional stopping theorem. Now we verify (ii). Let
+    %
+    \[ N_t = \left( \int_0^t H dM \right)^2 - \int_0^t H^2 d[M] \]
+    %
+    Then $N$ is certainly uniformly integrable, because by Doob's $L^2$ inequality, the first integral is dominated by $[(H \bullet M)_\infty^*]^2$, which is finitely integrable, and by assumption, we know that $\int_0^\infty H^2 d[M]$ has finite expectation. To verify $N_t$ is a martingale, it therefore suffices to show that for any stopping time $T$,
+    %
+    \[ \mathbf{E} \left[ \left( \int_0^T H dM \right)^2 - \int_0^T H_s^2 d[M]_s \right] = 0 \]
+    %
+    But by (i), this expectation is equal to
+    %
+    \[ \mathbf{E} \left[ \left( \int_0^\infty H(0,T] dM \right)^2 - \int_0^\infty H(0,T]^2 d[M] \right] \]
+    %
+    and this follows from the isometry property of the integral. To verify (iv), we note that it is immediate if $H$ is bounded and elementary, because, in the most basic case where $H = Z(S,T]$, then
+    %
+    \[\Delta (H \bullet M)(t) = H \left[ \left( M_{t \wedge T} - M_{t \wedge S} \right) - \left( M_{(t \wedge T)-} - M_{(t \wedge S)-} \right) \right] \]
+    %
+    only possible when $S \leq t \leq T$. If $S < t$, the value is
+    %
+    \[ H ( M_t - M_S - M_{t-} + M_S ) = H \Delta M(t) \]
+    %
+    and if $S = t$, the value is checked equal to 0. Next, suppose $H \in L^2(M)$, and $H_n$ is a sequence of bounded elementary functions which converge to $H$ in $L^2(M)$. Then $H_n \bullet M \to H \bullet M$ in $M^2_0$, so that, in a suitable subsequence, and avoiding sample points on a suitable null set, we know $H_n \bullet M \to H \bullet M$ uniformly on $[0,\infty]$ and
+    %
+    \[ \int_0^\infty (H_n - H)^2 d[M] \to 0 \]
+    %
+    Now at any point $s$ where $M$ is continuous, $H_n \bullet M$ is continuous by definition, so that $H \bullet M$ is continuous at $s$. If $\Delta M(s) \neq 0$, then
+    %
+    \[ \Delta [M](s) = (\Delta M)^2(s) > 0 \]
+    %
+    so from the convergence in $L^2(M)$, $H_n(s) \to H(s)$, and so
+    %
+    \[ H \Delta M(s) = \lim H_n \Delta M(s) = \lim \Delta (H_n \bullet M)_s \]
+    %
+    and since $H_n \bullet M$ converges uniformly, then the limit on the right converges to $\Delta (H \bullet M)(s)$. (iv) follows trivially from (iii). The identity (v) is obvious if $H$ and $K$ are bounded elementary integrands, because if $H = \sum Z_i (S_i,T_i]$, and $K = \sum Z_i' (S_i',T_i']$, then
+    %
+    \begin{align*}
+        \int_0^t H_s d \left( \int_0^s K_u dM_u \right) &= \sum Z_i \int_{t \wedge S_i}^{t \wedge T_i} K_u dM_u\\
+        &= \sum Z_iZ_j'[M_{t \wedge T_i \wedge T_i'} - M_{t \wedge T_i \wedge S_i'} - M_{t \wedge S_i \wedge T_i'} + M_{t \wedge S_i \wedge S_i'}]\\
+        &= \int_0^t HK(S_i \vee S_i', T_i \wedge T_i'] dM
+    \end{align*}
+    %
+    In general, for a bounded previsible $K$, find a uniformly bounded sequence $K_n$ of bounded elementary processes approximating $K$ in $L^2(M)$. If $H$ is bounded and elementary, then
+    %
+    \begin{align*}
+        \mathbf{E} \left( \left( H \bullet (K \bullet M) - H \bullet (K_n \bullet M) \right)^2_\infty \right) &= \mathbf{E} \int_0^\infty H^2 d[(K - K_n) \bullet M]\\
+        &= \mathbf{E} \int_0^\infty H^2 (K - K_n) d[M]
+    \end{align*}
+    %
+    This converges to 0 by Cauchy Schwarz. But $HK_n \to HK$ in $L^2(M)$, again by Cauchy Schwarz, and so the identity extends to $H$ bounded and elementary, and $K$ bounded and previsible. We can then perform the space approximation to get the theorem for all bounded previsible $H$.
 \end{proof}
 
-Because of this lemma, if $H$ is locally bounded and previsible, and $M$ is locally in $M^2$, then we can define $H \bullet M$, which is also locally in $M^2_0$. Furthermore, if $M$ is also continuous, then $H \bullet M$ is continuous. It is not at all clear that this agrees with the stochastic finite variation integral, though we will have to wait some time before we can do this This isn't really important to the theory we develop, however.
+Because of this lemma, if $H$ is locally bounded and previsible, and $M$ is locally in $M^2$, then we can define $H \bullet M$, which is also locally in $M^2_0$. Furthermore, if $M$ is also continuous, then $H \bullet M$ is continuous. It is not at all clear that this agrees with the stochastic finite variation integral, though we will have to wait some time before we can do this. This isn't really important to the theory we develop right now, however.
 
 \section{The Kunita Watanabe Inequalities}
 
 The construction of the stochastic integral constructed above is the preferred one, because it is a good starting point for stochastic calculus theory. Nonetheless, it is not as elegant as prior definitions. The Kunita-Watanabe theory of $L^2$ integrals relates to the following inequalities.
 
 \begin{theorem}
-    s
+    Let $M,N \in M^2$, and suppose that $H$ and $K$ are measurable processes. Then, almost surely,
+    %
+    \[ \left( \int_0^\infty |HK| d[M,N] \right)^2 \leq \int_0^\infty H^2 d[M] \int_0^\infty K^2 d[N] \]
+    %
+    and therefore
+    %
+    \[ \mathbf{E} \left( \int_0^\infty |HK| d[M,N] \right) \leq \left( \mathbf{E} \int_0^\infty H^2 d[M] \right)^{1/2} \left( \mathbf{E} \int_0^\infty K^2 d[N] \right)^{1/2} \]
+    %
+    These are called the Kunita Watanabe inequalities.
 \end{theorem}
+\begin{proof}
+    TODO
+\end{proof}
 
 \begin{theorem}
     Let $M$ be a square integrable martingale, and let $M \in L^2(M)$. The $\int_0^\infty H_s dM_s$ is the unique square integrable $\Sigma_\infty$ random variable such that for every $N \in M^2$,
     %
     \[ \mathbf{E} \left( N_\infty \int_0^\infty H dM \right) = \mathbf{E} \left( \int_0^\infty H d[M,N] \right) \]
+    %
+    and moreover, up to evanescence, we have an equality
+    %
+    \[ [H \bullet M, N] = H \bullet [M,N] \]
 \end{theorem}
+\begin{proof}
+    TODO
+\end{proof}
+
+\section{Integration of Continuous Semimartingales}
+
+We now come to one of the most important definitions of stochastic integrals, that of the continuous semimartingales because it supports the integration of Brownian motion and other diffusion processes. The reason we can perform an integration here is because the integrals localize very strongly.
+
+\begin{lemma}
+    Let $M$ be a continuous local martingale. If
+    %
+    \[ T_n = \inf \{ t : |M_t| > n \} \]
+    %
+    then $M^{T_n}$ is a bounded martingale.
+\end{lemma}
+\begin{proof}
+    If $S_k$ reduces $M$, and $s < t$, then
+    %
+    \[ M(T_n \wedge S_k \wedge s) = \mathbf{E}[M(T_n \wedge S_k \wedge t) | \Sigma_s] \]
+    %
+    As $k \uparrow \infty$, uniform boundedness implies $L^1$ convergence of $M_{T_n \wedge S_k \wedge s}$ to $M_{T_n \wedge s}$, so that $M_{T_n \wedge s} = \mathbf{E}[M(T_n \wedge t)|\Sigma_s]$, and so $T_n$ reduces $M$.
+\end{proof}
+
+This means, in particular, that all local elements of $M_0$ are also locally in $cM^2_0$, so the stochastic integral can be defined for local martingales. Once we have proved that every continuous semimartingale $X$ can be written {\it uniquely} as $X_0 + M + A$, where $M$ is a continuous local martingale, and $A$ is a continuous finite variation process, both null at zero, then we will have defined the integral for all continuous semimartingales.
+
+\begin{theorem}
+    If $M$ is a continous local martingale null at 0, then there exists a unique continuous increasing process $[M]$, call the quadratic variation of $M$, such that $M^2 - [M]$ is a continuous local martingale null at zero, and we can define the quadratic covariation process similarily.
+\end{theorem}
+\begin{proof}
+    If $T_n = \inf \{ t : |M_t| > n \}$, then if $[M]_t = [M^{T_n}|$ for $0 \leq t \leq T_n$, this definition is consistant with all $T_n$, since $[M^{T_n}]^{T_{n-1}} = [M^{T_{n-1}}]$.
+\end{proof}
+
+\begin{theorem}
+    If $M$ is a continuous local martingale null at 0, and $H$ is a previsible process such that, almost surely, for all $t$,
+    %
+    \[ \int_0^t H_s^2 d[M]_s < \infty \]
+    %
+    Then $H \bullet M$ may be defined, and is a continuous local martingale.
+\end{theorem}
+\begin{proof}
+    Let $U_n = \inf \{ t : |M_t| > n$, and $V_n = \inf \{ t : \int_0^t H_s^2 d[M]_s > n \}$. Then $T_n = U_n \wedge V_n$ is defined such that $M^{T_n}$ is in $cM^2_0$, and $H^{T_n}$ in $L^2(M^{T_n})$. This means the integral $H^{T_n} \bullet M^{T_n}$ exists and is a continuous $L^2$ bounded martingale. We can then define $H \bullet M$ consistently with respect to these stopping times, such that $H^{T_n} \bullet M^{T_n} = (H \bullet M)^{T_n}$, and we get a continuous local martingale.
+\end{proof}
+
+\section{Time Transformations of Integrals}
+
+TODO
+
+\section{Continuous Semimartingale Decomposition}
+
+s
+
+\chapter{A Respite From Technicality: Stochastic Calculus}
+
+The It\^{o} integral is defined in such a clumsy way that it isn't effective at all in calculating anything in practice. The Lebesgue integral is also defined by a technical limiting operation, but when we look at an integral in real life, we use mechanical techniques to manipulate the integral in such a way we already understand. As before, we study the properties for bounded continuous processes before extending the techniques by localization.
+
+\begin{lemma}
+    Let $M$ be a bounded continuous martingale null at 0, and let $V$ be a continuous adapted process of bounded variation null at 0. Then
+    %
+    \[ M_t^2 = \int_0^2 2M_s dM_s + [M]_t \]
+    %
+    which we can write by saying $dM_t^2 = 2M_t dM_t + d[M]_t$. Next, we have
+    %
+    \[ M_t V_t = \int_0^t M_s dV_s + \int_0^t V_s dM_s \]
+    %
+    so $d(M_t V_t) = M_t dV_t + V_t dM_t$.
+\end{lemma}
+\begin{proof}
+    We constructed $[M]$ as a uniform limit of the processes $A^n_t = M_t^2 - 2 (H^n \bullet M)_t$. Thus $H^n \to M$ in $L^2(M)$, and so $H^n \bullet M$ converges to $M \bullet M$ uniformly in $L^2$, and we get the equation as an immediate consequence. TODO the rest
+\end{proof}
+
+\begin{theorem}
+    If $X$ and $Y$ are continuous semimartingales, then
+    %
+    \[ X_tY_t - X_0Y_0 = \int_0^t X_s dY_s + \int_0^t Y_s dX_s + [X,Y]_t \]
+    %
+    so $d(X_tY_t) = X_t dY_t + Y_t dX_t + d[X,Y]_t$. The quadratic covariation thus acts as a `second order' differential term in the calculus.
+\end{theorem}
+\begin{proof}
+    TODO
+\end{proof}
+
+\begin{theorem}[It\^{o}'s Formula]
+    If $f: \mathbf{R}^n \to \mathbf{R}$ is $C^2$, and $X_t$ is a continuous semimartingale in $\mathbf{R}^n$, then
+    %
+    \[ f(X_t) - f(X_0) = \int_0^t D_i f(X_s) dX^i_s + \frac{1}{2} \int_0^t D_{ij} f(X_s) d[X^i,X^j]_s \]
+    %
+    or $df(X_t) = f_i(X_t) dX^i_t + \frac{1}{2} f_{ij}(X_t) d[X^i,X^j]_s$.
+\end{theorem}
+
+\section{Applications of It\^{o}'s Formula}
+
+\begin{theorem}[L\'{e}vy, Kunita-Watanabe]
+    If $B$ is a continuous local martingale in $\mathbf{R}^n$ such that $B_0 = 0$ and $[B^i,B^j]_t = \delta_{ij} t$, then $B$ is a Brownian motion.
+\end{theorem}
+\begin{proof}
+    The process $(B,t)$ is a continuous semimartingale, since $t$ has finite variation. Because $t$ has finite variation, and $B$ is a continuous semimartingale, $[B_t^j,t] = 0$ for all coordinates $j$. For a fixed $\theta$, consider the function
+    %
+    \[ f(x,t) = \exp(i (\theta \cdot x) + |\theta|^2 t/2) \]
+    %
+    Then
+    %
+    \[ \partial_j f(x,t) = i \theta_j f(x,t)\ \ \ \ \ \partial_t f(x,t) = (|\theta|^2/2) f(x,t) \]
+    \[ \partial_{jj} f(x,t) = - |\theta|^2 f(x,t)\ \ \ \ \ \partial_{tj} = i \theta_j |\theta|^2/2 \]
+    %
+    and so It\^{o}'s formula guarantees that
+    %
+    \begin{align*}
+        df(B_t,t) &= \sum_j i \theta_j f(B_t,t) dB_t^j + (|\theta|^2/2) f(B_t,t) dt - \sum_j (\theta_j^2/2) f(B_t,t) dt\\
+        &= \sum_j i \theta_j f(B_t,t) dB_t^j
+    \end{align*}
+    %
+    But then $f(B_t,t)$ is the sum of a stochastic integral with respect to a continuous local martingale, and so $f(B_t,t)$ is a continuous local martingale. Since $|M_t^\theta| \leq \exp(|\theta|^2 t/2) < \infty$ for all $t$, $M^\theta$ is actually a martingale. But now for $s < t$,
+    %
+    \[ \mathbf{E} \left[ \exp(i (\theta \cdot (B_t - B_s))) | \Sigma_s \right] = \exp(-1/2 (t - s) |\theta|^2) \]
+    %
+    from which we conclude that the analysis of the characteristic function of $B_t - B_s$ gives $B_t - B_s$ a Gaussian distribution with variance $t - s$, and the fact that the expectations are independent of $\Sigma_s$ shows $B_t - B_s$ is independent of $\Sigma_s$. Thus $B_t$ is just a Brownian motion.
+\end{proof}
+
+s
+
+
+
+
+
+
+
+
+
+
+
 
 
 

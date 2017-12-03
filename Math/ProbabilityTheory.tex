@@ -129,7 +129,7 @@ We can then conclude that $\prob(E_i) \to \prob(E)$, since once can show
 so we can apply the squeeze theorem. This already enables us to prove a very interesting theorem which can guarantee an event can `never occur'.
 
 \begin{lemma}[Borel-Cantelli Lemma]
-    If $E_1, E_2, \dots$ is a sequence of events with $\sum \prob(E_k) < \infty$, then $\mathbf{P} \left( \limsup E_k \right) = 0$. Thus none of the events $E_k$ can happen `infinitely often'.-
+    If $E_1, E_2, \dots$ is a sequence of events with $\sum \prob(E_k) < \infty$, then $\mathbf{P} \left( \limsup E_k \right) = 0$. Thus none of the events $E_k$ can happen infinitely often.
 \end{lemma}
 \begin{proof}
     Note that because
@@ -137,6 +137,40 @@ so we can apply the squeeze theorem. This already enables us to prove a very int
     \[ \prob \left( \bigcup_{k \geq n} E_k \right) \leq \sum_{k \geq n} \prob(E_k) \]
     %
     for any $\varepsilon > 0$ we can find an $N$ such that for $n \geq N$, $\prob \left( \bigcup_{k \geq n} E_k \right) < \varepsilon$. But for any $n$, $\limsup E_k \subset \bigcup_{k \geq n} E_k$, and so we conclude $\prob(\limsup E_k) < \varepsilon$. We then let $\varepsilon \to 0$ to conclude $\prob(\limsup E_k) = 0$.
+\end{proof}
+
+\begin{exercise}[Tao]
+    If $p_1, p_2, \dots$ are given with $\sum p_i = \infty$, then show there are events $E_1, E_2, \dots$ with $\mathbf{P}(E_k) = p_k$, such that almost surely infinitely many of the $E_n$ occur. Thus the hypothesis $\sum \mathbf{P}(E_k) < \infty$ cannot be relaxed without further analysis of the events $E_k$ beyond their probabilities.
+\end{exercise}
+\begin{proof}
+    Take the Haar measure measure on $\mathbf{T} = \mathbf{R}/\mathbf{Z}$. If we define $s_n = \sum_{k = 1}^n p_k$, and then set $E_k = [s_k, s_{k+1}]$, then because $p_k \in [0,1]$, $\mathbf{P}(E_k) = p_k$, and each point in $\mathbf{T}$ is covered by infinitely many of the $E_k$, because the $p_k$ do not converge, so the sets wrap around $\mathbf{T}$ infinitely many times.
+\end{proof}
+
+\begin{exercise}[Tao]
+    If $E_1, E_2, \dots$ are events with $\inf \mathbf{P}(E_k) > 0$, then infinitely many of the $E_i$ occur at once with positive probability.
+\end{exercise}
+\begin{proof}
+    The event that infinitely many of the $E_1, E_2, \dots$ occur is the complement of the event that all but finitely many of the $E_i$ {\it do not} occur, i.e. $\liminf E_i^c$, and it suffices to show $\mathbf{P}(\liminf E_i^c) < 1$. But by Fatou's lemma,
+    %
+    \[ \mathbf{P} \left(\inf_{k \geq n} E_k^c \right) \leq \inf_{k \geq n} \mathbf{P}(E_k^c) = 1 - \sup_{k \geq n} \mathbf{P}(E_k) \leq 1 - \delta \]
+    %
+    and so, letting $n \to \infty$, we conclude $\mathbf{P}(\liminf E_k^c) \leq 1 - \delta$. Alternatively, if we consider the functions $S_n = \chi_{E_1} + \dots + \chi_{E_n}$, then
+    %
+    \[ S_n \leq m \mathbf{I}(S_n \leq m) + n \mathbf{I}(S_n > m) = m + (n - m) \mathbf{I}(S_n > m) \]
+    %
+    so if $\delta = \inf \mathbf{P}(E_i)$, then
+    %
+    \[ \delta n \leq \mathbf{E}(S_n) \leq m + (n - m) \mathbf{P}(S_n > m) \]
+    %
+    which leads to the upper bound
+    %
+    \[ \mathbf{P}(S_n > m) \geq \frac{\delta n - m}{n - m} \]
+    %
+    As $n \to \infty$, the events on the left hand side increasing to $\mathbf{P}(S_\infty > m)$, where we define $S_\infty$ as the sum of all $\chi_{E_k}$. Thus
+    %
+    \[ \mathbf{P}(S_\infty > m) \geq \limsup_{n \to \infty} \frac{\delta n - m}{n - m} = \delta \]
+    %
+    But we can then let $m \to \infty$ to conclude that $\mathbf{P}(S_\infty = \infty) = \delta$.
 \end{proof}
 
 \section{Conditional Probabilities}
@@ -223,6 +257,20 @@ The irony of introducing the sample space is unfortunate, because while the spac
         &= \int_0^\infty y d\mathbf{P}_*(y) = \mathbf{E}[X]
     \end{align*}
 \end{proof}
+
+\section{Distributions}
+
+Given a random variable $X$ into $\mathbf{R}$. Then $X$ induces a pushforward measure on the Borel $\sigma$ algebra of $\mathbf{R}$, which we call the {\bf law}, or {\bf distribution} of $X$, denoted $\mu_X$. By definition, this means that
+%
+\[ \mu_X(E) = \mathbf{P}(X \in E) \]
+%
+The distribution captures the size and shape of the random variable, but not it's relation to other random variables. As examples, we note that if $X$ is uniformly distributed on $[0,1]$, then $\mu_X$ is the Lebesgue measure on $[0,1]$, and if $X$ is a {\it discrete random variable}, in the sense that the range of $X$ takes on only countably many values, then $\mu_X$ is a discrete measure with $\mu_X(\{ a \}) = \mathbf{P}(X = a)$.
+
+We say two random variables $X$ and $Y$ are {\bf identically distributed}, sometimes written
+%
+\[ X \overset{(d)}{=} Y \]
+%
+if $\mu_X = \mu_Y$. Note that $X$ and $Y$ need not even be defined on the same sample space, let alone be actually equal to one another. For instance, if $\Omega = \{ 0, \dots, 6 \}^2$, with the uniform measure, and $X$ and $Y$ are random variables with $X(a,b) = a$ and $Y(a,b) = b$, then $X$ and $Y$ are identically distributed, but they are not equal to one another.
 
 \chapter{Inequalities}
 
@@ -494,6 +542,161 @@ The Kullback Leibler distance gives us certain bounds which are essential to inf
 \end{theorem}
 
 Suppose we have a decision procedure which attempts to distinguish between events in probability distributions. If we choose an event $A$ upon which the decision procedure fails to make the correct decision on the measure $\mu$, and $A^c$ measures the decision to fail under the measure $\nu$, then the bound above shows the decision procedure cannot work reliably on both $\mu$ and $\nu$.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\chapter{Appendix: Uniform Integrability}
+
+Uniform integrability provides stronger conditions on controlling convergence in the $L^1$ norm. For $p > 1$, inequalities often have `smoothing' properties that are not apparent for the $p = 1$ case, so uniform integrability provides particular techniques to help us. We start with a basic result in measure theory, specialized to probabilistic language.
+
+\begin{lemma}
+    If $X \in L^1(\Omega)$ is a random variable, then for any $\varepsilon > 0$, there is $\delta > 0$ such that for any event $E$ with $\mathbf{P}(E) \leq \delta$,
+    %
+    \[ \int_E |X| < \varepsilon \]
+\end{lemma}
+\begin{proof}
+    Suppose that there exists some $\varepsilon$, and events $E_1, E_2, \dots$ with $\mathbf{P}(E_k) \leq 1/2^k$ but with
+    %
+    \[ \int_{E_k} |X| \geq \varepsilon \]
+    %
+    By taking successive unions, we may assume the $E_i$ are a decreasing family of sets, and then
+    %
+    \[ \int_{\bigcap_{k = 1}^\infty E_k} |X| = \lim_{k \to \infty} \int_{E_k} |X| \geq \varepsilon \]
+    %
+    and $\mathbf{P}(\bigcap E_k) = 0$, which is impossible.
+\end{proof}
+
+\begin{corollary}
+    If $X \in L^1(\Omega)$, and $\varepsilon > 0$, then there is $K \in [0,\infty)$ with
+    %
+    \[ \int_{|X| > K} |X| < \varepsilon \]
+\end{corollary}
+
+A family of random variables $\{ X_\alpha \}$ is called {\bf uniformly integrable} if given $\varepsilon > 0$, there is $K \in [0,\infty)$ such that
+%
+\[ \int_{|X_\alpha| > K} |X_\alpha| < \varepsilon \]
+%
+so that we can uniformly control the integral of $X_\alpha$ over large sets. We note that
+%
+\[ \mathbf{E} |X_\alpha| = \int_{|X_\alpha| > K} |X_\alpha| + \int_{|X_\alpha| \leq K} |X_\alpha| \leq \varepsilon + K \]
+%
+so a family of uniformly integrable random variables is automatically in $L^1(\Omega)$, and {\it bounded} in $L^1(\Omega)$. However, a family of random variables bounded in $L^1(\Omega)$ is {\it not} necessarily uniformly integrable.
+
+\begin{example}
+    Let $\Omega$ be $[0,1]$ together with the Lebesgue measure. Let $E_n = (0,1/n)$, and set $X_n = n \chi_{E_n}$. Then the $X_n$ are bounded in $L^1(\Omega)$, but for $n \geq K$,
+    %
+    \[ \int_{X_n > K} X_n = 1 \]
+    %
+    and so the random variables are not uniformly integrable.
+\end{example}
+
+These `concentrating bumps' are essentially the only reason why we cannot always exchange expectations and limits, and require the application of the dominated convergence theorem. The condition of uniform integrability removes the ability for concentrating bumps to hide within the expectation of a family of random variables, and we find it also gives us conditions that guarantee we can exchange limits with integration. First, note that if we take a concentrated bump function $X = n \chi_{E_n}$, then $\mathbf{E}|X| = 1$ is bounded uniformly over $n$, but $\mathbf{E}|X|^{1+\varepsilon} = n^\varepsilon$ is unbounded, reflecting the fact that boundedness in $L^p(\Omega)$ for $p > 1$ removes concetrated bump functions by magnifying their effect.
+
+\begin{theorem}
+    Suppose that $\{ X_\alpha \}$ is a class of random variables bounded in $L^p$ for $p > 1$, then $\{ X_\alpha \}$ is uniformly integrable.
+\end{theorem}
+\begin{proof}
+    Consider some $A \in [0,\infty)$ which gives a uniform bound $\mathbf{E} |X_\alpha|^p < A$. Applying H\"{o}lder's inequality, we conclude
+    %
+    \[ \int_{|X_\alpha| > K} |X_\alpha| \leq \int_{|X_\alpha| > K} \frac{|X_\alpha|^p}{K^{p-1}} \leq \frac{A}{K^{p-1}} \]
+    %
+    This is a uniform bound, and we may let $K \to \infty$ to let the bound go to zero. Thus the family $\{ X_\alpha \}$ is uniformly integrable.
+\end{proof}
+
+\begin{corollary}
+    If $|X_\alpha| \leq Y$ is a uniform bound over a family $\{ X_\alpha \}$ of random variables, where $Y \in L^1(\Omega)$, then $\{ X_\alpha \}$ is uniformly integrable.
+\end{corollary}
+\begin{proof}
+    We find
+    %
+    \[ \int_{|X_\alpha| > K} |X_\alpha| \leq \int_{|X_\alpha| > K} Y \leq \int_{Y > K} Y \]
+    %
+    and as $K \to \infty$, $\mathbf{P}(Y > K) \to 0$, and we can apply the continuity result to conclude that
+    %
+    \[ \int_{Y > K} Y \to 0 \]
+    %
+    and so we obtain a uniform bound.
+\end{proof}
+
+We recall that a sequence $X_1, X_2, \dots$ of random variables {\bf converges in probability} to a random variable $X$ if, for every $\varepsilon$, $\mathbf{P}(|X_n - X| > \varepsilon) \to 0$. If $X_i \to X$ almost surely, then $X_i \to X$ in probability, because we can apply the reverse Fatou lemma to conclude
+%
+\begin{align*}
+    0 &= \mathbf{P} \left( \liminf_{n \to \infty} |X_n - X| > \varepsilon \right)\\
+    &= \mathbf{P} \left( \limsup \{ |X_n - X| > \varepsilon \} \right) \geq \limsup \mathbf{P}(|X_n - X| > \varepsilon)
+\end{align*}
+%
+Hence $\mathbf{P}(|X_n - X| > \varepsilon) \to 0$. The bounded convergence theorem links $L^1$ convergence to convergence in probability using uniform integrability.
+
+\begin{theorem}
+    If $X_n$ is a sequence of bounded random variables which tend to a random variable $X$ in probability, then $X_n \to X$ in the $L^1$ norm.
+\end{theorem}
+\begin{proof}
+    Let us begin by proving that if $|X_n| \leq K$, then $|X| \leq K$ almost surely. This follows because for any $k$,
+    %
+    \[ \mathbf{P}(|X| > K + 1/k) \leq \mathbf{P}(|X - X_n| > 1/k) \to 0 \]
+    %
+    so $\mathbf{P}(|X| > K + 1/k) = 0$, and letting $k \to \infty$ gives $\mathbf{P}(|X| > K) = 0$. Let $\varepsilon > 0$ be given. Then if we choose $n$ large enough that
+    %
+    \[ \mathbf{P}(|X_n - X| > \varepsilon) \leq \varepsilon \]
+    %
+    then
+    %
+    \begin{align*}
+        \mathbf{E}|X_n - X| &= \int_{|X_n - X| > \varepsilon} |X_n - X| + \int_{|X_n - X| \leq \varepsilon} |X_n - X|\\
+        &\leq 2K\varepsilon + \varepsilon
+    \end{align*}
+    %
+    we can then let $\varepsilon \to 0$ to obtain $L^1$ convergence.
+\end{proof}
+
+All this discussion concludes with a sufficient condition for $L^1$ convergence, showing that uniform integrability is really the right condition which removes the pathologies which prevent us from exchanging expectation with pointwise limits.
+
+\begin{theorem}
+    Let $X_n$ be a sequence of integrable random variables, and $X$ is another integrable random variable. Then $X_n \to X$ in the $L^1$ norm if and only if $X_n \to X$ in probability, and $\{ X_n \}$ is uniformly integrable.
+\end{theorem}
+\begin{proof}
+    Fix $K > 0$, and consider
+    %
+    \[ f_K(x) = \begin{cases} K &: x > K \\ x & :|x| \leq K\\ -K & x < -K \end{cases} \]
+    %
+    Then for every $\varepsilon > 0$, we can choose $K$ such that $\| f_K(X_n) - X_n \|_1 \leq \varepsilon$, $\| f_K(X) - X \|_1 \leq \varepsilon$ {\it uniformly across n} (adding a single variable to a uniformly integrable random variable keeps it uniformly integrable). But it is easy to see that $f_K(X_n) \to f_K(X)$ in probability also, so by the bounded dominated convergence theorem, we conclude that $\| f_K(X_n) - f_K(X) \| \to 0$. A triangle inequality result gives the general result because the behaviour of $X$ for large values is bounded by the uniform integrability.
+
+    To verify the reverse condition, note that if $\mathbf{E}|X_n - X| \to 0$, then Markov's inequality gives
+    %
+    \[ \mathbf{P}(|X_n - X| \geq K) \leq \frac{\mathbf{E}|X_n - X|}{K} \to 0 \]
+    %
+    to obtain uniform integrability, note that for each $n$, $\{ X_1, \dots, X_n, X \}$ is uniformly integrable, then for each $\varepsilon > 0$, there is $\delta$ such that if $\mathbf{P}(E < \delta)$,
+    %
+    \[ \int_E |X_n| < \varepsilon\ \ \ \ \ \int_E |X| < \varepsilon \]
+    %
+    Since the entire set of $X_n$ are bounded in $L^1(\Omega)$, we can choose $K$ such that $\sup \mathbf{E} |X_k| < \delta K$, and then for $m > n$, $\mathbf{P}(|X_m - X| > K) < \delta$, and so
+    %
+    \[ \int_{|X_m| > K} |X_m| \leq \int_{|X_m| > K} |X| + \mathbf{E}|X - X_m| \leq 2\varepsilon \]
+    %
+    where we assume we have chosen $n$ large enough that $\mathbf{E}|X - X_m| \leq \varepsilon$. The fact that for $m \leq n$,
+    %
+    \[ \int_{|X_m| > K} |X_m| \leq \varepsilon \]
+    %
+    follows from uniform integrability of the family $\{ X, X_1, \dots, X_n \}$, so we have shown the entire infinite sequence is uniformly integrable.
+\end{proof}
+
 
 \begin{thebibliography}{10}
     \bibitem{intro} Larry Wasserman,

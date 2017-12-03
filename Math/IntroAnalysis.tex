@@ -10,7 +10,7 @@
 \tableofcontents
 \pagenumbering{arabic}
 
-\section{Differentiation under the Integral Sign}
+\chapter{Differentiation under Integrals}
 
 Under what conditions can we prove that
 %
@@ -613,5 +613,93 @@ The proof would be complete, but it's hard to limit the right hand side, so we a
     %
     \[ \mathbf{E}[f(X)] \geq f(y) + \alpha(\mathbf{E}[X] - y) = f(y) = f(\mathbf{E}X) \]
 \end{proof}
+
+\chapter{Vector Calculus}
+
+\section{The Laplacian}
+
+Almost definitely the most important operator is the {\bf Laplacian}
+%
+\[ \Delta = \sum \frac{\partial^2}{\partial x_i^2} = \nabla \cdot \nabla \]
+%
+It occurs in almost all physical contexts with spatial invariance. One way to interpret the value $\Delta f(x)$ is as the average differences $f(x+y) - f(x)$ in an infinitisimal neighbourhood of $x$.
+
+\begin{theorem}
+    If $f$ is twice differentiable at $x$, then
+    %
+    \[ \fint_{B_r} [f(x+y) - f(x)]\ dy = \frac{\Delta f(x)}{2(d+2)} r^2 + o(r^2) \]
+\end{theorem}
+\begin{proof}
+    Suppose $f$ is twice differentiable at $x$. Then Taylor's theorem implies
+    %
+    \[ f(x + y) = f(x) + \nabla f(x) \cdot y + \frac{1}{2} Hf(x)(y) + \sum o(y_iy_j) \]
+    %
+    where $Hf(x)(y) = \sum f_{ij}(x) y_iy_j$. Now we calculate
+    %
+    \begin{align*}
+        \fint_{B_r} &[f(x + y) - f(x)]\ dy\\
+        &= \fint_{B_r} \nabla f(x) \cdot y\ dy + \sum \frac{f_{ij}(x)}{2} \fint_{B_r} y_iy_j\ dy + \sum \fint_{B_r} o(y_iy_j)\ dy
+    \end{align*}
+    %
+    The first integral vanishes because the function is odd in every direction. The second integrals vanish for $i \neq j$ because the functions are odd in directions $i$ and $j$. Next,
+    %
+    \[ \fint_{B_r} o(y_iy_j)\ dy = \frac{1}{r^d |B_1|} \int_{B_r} o(y_iy_j) dy = \fint_{B_1} o(r^2 y_iy_j)\ dy = o(r^2) \]
+    %
+    This means the integral is equal to
+    %
+    \[ \frac{\Delta f(x)}{2} \fint_{B_r} y_i^2\ dy + o(r^2) \]
+    %
+    Now
+    %
+    \[ \fint_{B_r} y_1^2\ dy = \frac{1}{r^d |B_1|} \int_{B_r} y_1^2\ dy = \frac{r^2}{|B_1|} \int_{B_1} y_1^2\ dy = r^2 \frac{|B_1^{d-1}|}{|B_1^d|} \int_{-1}^1 s^2 (1 - s^2)^{\frac{d-1}{2}}\ ds \]
+    %
+    and
+    %
+    \[ |B_1^d| = \int_{B_1^d} dx = |B_1^{d-1}| \int_{-1}^1 (1 - s^2)^{\frac{d-1}{2}} \]
+    %
+    and so
+    %
+    \begin{align*}
+        \fint_{B_r} y_1^2\ dy &= r^2 \left( \int_{-1}^1 (1 - s^2)^{\frac{d-1}{2}}\ ds \right)^{-1} \left( \int_{-1}^1 s^2 (1 - s^2)^{\frac{d-1}{2}}\ ds \right)\\
+        &= r^2 \left( \frac{\Gamma( \frac{d+1}{2} )}{\Gamma ( \frac{d + 2}{2} )} \sqrt{\pi} \right)^{-1} \left( \frac{\Gamma( \frac{d+1}{2} )}{\Gamma( \frac{d + 4}{2} )} \frac{\sqrt{\pi}}{2} \right) = \frac{r^2}{2} \frac{\Gamma( \frac{d+2}{2})}{\Gamma( \frac{d+4}{2} )} = \frac{r^2}{d + 2}
+    \end{align*}
+    %
+    and so we conclude that
+    %
+    \[ \fint_{B_r} [f(x+y) - f(x)] = \frac{\Delta f(x)}{2(d+2)} r^2 + o(r^2) \]
+    %
+    so the Laplacian measures the second order difference of the average of the function on balls around a point.
+\end{proof}
+
+\begin{theorem}
+    If $f(x) = g(r)$ is radially invariant, then
+    %
+    \[ \Delta f(x) = \frac{d - 1}{r} g'(r) + g''(r) \]
+    %
+    Which we can write as
+    %
+    \[ \Delta = \frac{d-1}{r} \partial_r + \partial_{rr} \]
+\end{theorem}
+\begin{proof}
+Suppose $f(x) = g(r)$ is radially invariant, and twice differentiable at the origin. We calculate that since $r^2 = \sum x_i^2$, so
+%
+\[ \frac{\partial r}{\partial x_i} = \frac{x_i}{r} \]
+%
+so $f_i(x) = g'(r) (x_i/r)$, and so
+%
+\[ f_{ii}(x) = \left( \frac{1}{r} - \frac{x_i^2}{r^3} \right) g'(r) + \frac{x_i^2}{r^2} g''(r) \]
+%
+The Laplacian formula is then obvious.
+\end{proof}
+
+\section{Integration by Parts for Divergence}
+
+Let $f$ be a vector-valued function, and $\psi$ scalar-valued. We then find that we have a product rule
+%
+\[ \nabla \cdot (f \psi) = \sum \frac{\partial f_i \psi}{\partial x_i} = \sum \frac{\partial f_i}{\partial x_i} \psi + f_i \frac{\partial \psi}{\partial x_i} = (\nabla \cdot f) \psi + f \cdot \nabla \psi \]
+%
+This implies an `integration by parts' type result for the divergence, using the divergence theorem, because now
+%
+\[ \int_\Omega \psi (\nabla \cdot f) = \int_\Omega \nabla \cdot (f \psi) - \int_\Omega f \cdot \nabla \psi = \int_{\partial \Omega} \psi(f \cdot \nu) d\sigma - \int_\Omega f \cdot \nabla \psi \]
 
 \end{document}
