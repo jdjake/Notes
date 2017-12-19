@@ -17,15 +17,44 @@
 
 \part{Classical Fourier Analysis}
 
-Deep mathematical knowledge often arises hand in hand with the recognition of symmetry. Nowhere is this more clear than in the foundations of harmonic analysis, where we attempt to understand `oscillating' mathematical objects, in their various forms. In the mid 18th century, problems in mathematical physics led D. Bernoulli, D'Alembert, Lagrange, and Euler to consider functions representable as a trigonometric series
+Deep mathematical knowledge often arises hand in hand with the recognition of symmetry. Nowhere is this more clear than in the foundations of harmonic analysis, where we attempt to understand `oscillating' mathematical objects, in their various forms. More particularly, we attempt to find transformations on certain classes of functions which are well behaved under linear shifts $f(x) \mapsto f(x + a)$. In the mid 18th century, problems in mathematical physics led D. Bernoulli, D'Alembert, Lagrange, and Euler to consider functions representable as a trigonometric series
 %
-\[ f(t) = a_0 + \sum_{n = 1}^\infty a_n \cos(nt) + b_n \sin(kt) \]
+\[ f(t) = A + \sum_{n = 1}^\infty B_n \cos(nt) + C_n \sin(kt) \]
 %
 In 1811, Joseph Fourier has the audacity to announce that {\it all} functions were representable in this form. His conviction is the reason the classical theory of harmonic analysis is often named Fourier analysis, where we analyze the degree to which Fourier's proclamation holds. In the 1820s, Poisson, Cauchy, and Dirichlet all attempted to form rigorous proofs that `Fourier summation' holds for all functions. Their work is responsible for most of the modern subject of analysis we know today. The biggest question we will ask is how we interpret the convergence of Fourier series. Pointwise convergence is not enough to justify most analytic techniques, and what's more, under pointwise convergence, the representation of a function by Fourier series need not be unique. Uniform convergence is useful, but too hopeful to obtain for all functions, and need not even hold for continuous functions. This means we must introduce more subtle methods like Fey\'{e}r and Abel convergence.
 
 \chapter{Springs, Strings, and Symmetry}
 
 \section{The Wave Equation}
+
+Fourier's main contribution to the foundation of harmonic analysis, namely, the existence of an expansion
+%
+\[ f(t) = A + \sum_{n = 1}^\infty B_n \cos(nt) + C_n \sin(kt) \]
+%
+for $2\pi$ periodic functions on the real line, originated in the theory of waves. Physical considerations lead Fourier to believe that the partial differential equation defining wave propogation is given by
+%
+\[ \Delta u = \frac{\partial^2 u}{\partial t^2} \]
+%
+where $u(t,x)$ gives the amplitude of the wave at some spatial point $x$ and time $t$. The easiest version of this equation to solve is where we analyze a string tethered down between two endpoints, so that the wave propogation is one dimensional, where the partial differential equation can be written as
+%
+\[ \frac{\partial^2 u}{\partial x^2} = \frac{\partial^2 u}{\partial t^2} \]
+%
+We assume, by reparameterization, that $u$ is tethered down at $x = 0$ and $x = \pi$, so that we try and find solutions $u: [0,\pi] \times \mathbf{R} \to \mathbf{R}$ with $u(x,t) = 0$. As can be observed  in real life, strings can undergo harmonic motion, oscillating back and forth. Mathematically, this type of motion can be modelled by writing $u(x,t) = f(x) g(t)$, where $f(x)$ gives the initial profile of the string, and $g(t)$ is some oscillatory motion factor with $g(0) = 1$. Under this {\it variable separation}, the partial differential equation becomes an ordinary differential equation $f''(x) g(t) = f(x) g''(t)$. Unless $f$ or $g$ are equal to zero across the whole domain, this means there exists a value $\lambda$ such that $f''(x) = - \lambda^2 f(x)$, $g''(x) = - \lambda^2 g(x)$ (the constant value must be negative in order for $g$ to have oscillatory behaviour). It is easy to solve these equations, writing
+%
+\[ f(x) = f(0) \cos(\lambda x) + \frac{f'(0)}{\lambda} \sin(\lambda x) \]
+\[ g(t) = g(0) \cos(\lambda t) + \frac{g'(0)}{\lambda} \sin(\lambda t) \]
+%
+Since we assume $f(0) = f(\pi) = 0$, we must have $\sin(\lambda \pi) = 0$, so that $\lambda$ is an integer $m$. In conclusion, this means that $u$ is a constant multiple of
+%
+\[ \sin(mx)[\cos(mt) + f'(0) \sin(mt)] \]
+
+which for $f(x) \neq 0$ can be solved to give
+%
+\[ g(t) = Ae^{\alpha t} + (1-A)e^{\beta t} \]
+%
+where $\alpha$ is a choice $\sqrt{f''(x)/f(x)}$. In
+
+from oscillations of strings in real life, under certain situations standing waves can appear in oscillations: these are characterized by some initial profile $f(x)$,
 
 Let's begin by taking a look at the problem which inspired Fourier and the mathematicians of his time to consider Fourier summation. Consider the physical problem of determining the motion of a spring undergoing simple harmonic motion, whose acceleration can be described by the differential equation $\ddot{x} = -k^2x$ for some $k > 0$. It is well known that solutions of this equation are oscillating vibrations of the form
 %
@@ -585,7 +614,7 @@ which we can think of smoothing $g$ by taking it's averages in a neighbourhood o
     \[ |((f - f_k) * g)(t)| = \frac{1}{2\pi} \left| \int (f - f_k)(s) g(t-s) \right| \leq \frac{1}{2\pi} \| g \|_\infty \| f - f_k \|_1 \]
     \[ |f_k * (g - g_k)| = \frac{1}{2\pi} \left| \int f_k(t-s) (g - g_k)(s) \right| \leq \frac{1}{2\pi} \| f_k \|_\infty \| g - g_k \|_1 \leq \frac{1}{2\pi} \| f \|_\infty \| g - g_k \|_1 \]
     %
-    so we see $f_k * g_k$ converges uniformly to $f * g$. But since each $f_k * g_k$ is continuous, this means $f * g$ must also be continuous. 
+    so we see $f_k * g_k$ converges uniformly to $f * g$. But since each $f_k * g_k$ is continuous, this means $f * g$ must also be continuous.
 
     To obtain the product identity for the Fourier series, we can apply Fubini's theorem to write
     %
@@ -902,7 +931,7 @@ s
     %
     taking limits of both sides, we find
     %
-    \[ \lim_{x \to \infty}  \int_{g(x)}^{f(x)} h \leq \int_{-\infty}^\infty h \] 
+    \[ \lim_{x \to \infty}  \int_{g(x)}^{f(x)} h \leq \int_{-\infty}^\infty h \]
     %
     Similarily, if we take $x$ big enough that $N \leq f(x)$, $g(x) \leq -N$, then
     %
@@ -993,7 +1022,7 @@ and is an automorphism of the vector space. We have the basic properties
 \end{proof}
 
 \begin{corollary}
-    Given $f \in C^1[a,b]$ with $\int_a^b f(t)\ dt = 0$, 
+    Given $f \in C^1[a,b]$ with $\int_a^b f(t)\ dt = 0$,
     %
     \[ \int_a^b |f(t)|^2 dt \leq \left(\frac{b-a}{\pi}\right)^2 \int_a^b |f'(t)|^2\ dt \]
 \end{corollary}
@@ -1714,7 +1743,7 @@ Before we continue, we briefly mention that integration theory is particularly n
 
 First, suppose that $f \in L^1(G \times G)$. Then the essential support of $f$ is contained within countably many components of $G \times G$ (which are simply products of components in $G$). Thus $f$ is supported on a $\sigma$ compact subset of $G \times G$ (as a locally compact topological group, each component of $G \times G$ is $\sigma$ compact), and we may apply Fubini's theorem on the countably many components (the countable union of $\sigma$ compact sets is $\sigma$ compact). The functions in $L^p(G)$, for $1 \leq p < \infty$, also vanish outside of a $\sigma$ compact subset (for if $f \in L^p(G)$, $|f|^p \in L^1(G)$ and thus vanishes outside of a $\sigma$ compact set). What's more, all finite sums and products of functions from these sets (in either variable) vanish outside of $\sigma$ compact subsets, so we almost never need to explicitly check the conditions for satisfying Fubini's theorem, and from now on we apply it wantonly.s
 
-Now suppose $\mu$ and $\nu$ are both Radon measures, with $\nu \ll \mu$, and $\nu$ is $\sigma$-finite. By inner regularity, the support of $\nu$ is a $\sigma$ compact set $E$. By inner regularity, $\mu$ restricted to $E$ is $\sigma$ finite, and so we may find a Radon Nikodym derivative on $E$. This derivative can be extended to all of $G$ because $\nu$ vanishes on $G$. 
+Now suppose $\mu$ and $\nu$ are both Radon measures, with $\nu \ll \mu$, and $\nu$ is $\sigma$-finite. By inner regularity, the support of $\nu$ is a $\sigma$ compact set $E$. By inner regularity, $\mu$ restricted to $E$ is $\sigma$ finite, and so we may find a Radon Nikodym derivative on $E$. This derivative can be extended to all of $G$ because $\nu$ vanishes on $G$.
 
 Finally, we note that $L^\infty(X) = L^1(X)^*$ can be made to hold if $X$ is not $\sigma$ finite, but locally compact and Hausdorff, provided we are integrating with respect to a Radon measure $\mu$, and we modify $L^\infty(G)$ slightly. Call a set $E \subset X$ {\bf locally Borel} if $E \cap F$ is Borel whenever $F$ is Borel and $\mu(F) < \infty$. A locally Borel set is {\bf locally null} if $\mu(E \cap F) = 0$ whenever $\mu(F) < \infty$ and $F$ is Borel. We say a property holds {\bf locally almost everywhere} if it is true except on a locally null set. $f: X \to \mathbf{C}$ is {\bf locally measurable} if $f^{-1}(U)$ is locally Borel for every borel set $U \subset \mathbf{C}$. We now define $L^\infty(X)$ to be the space of all functions bounded except on a locally null set, modulo functions that are locally zero. That is, we define a norm
 %
@@ -2312,7 +2341,7 @@ There is a more austere explanation, which results from the fact that, with resp
     %
     \[ \left| \int f(xy) d\mu_i(x) \right| \leq \| f \|_1 \| \mu_i \| \]
 
-    If $i$ is taken large enough that 
+    If $i$ is taken large enough that
 \end{proof}
 
 If $\phi_\alpha \to \phi$, in the sense that $\phi_\alpha(x) \to \phi(x)$ for all $x \in G$, then, because $\| \phi_\alpha(x) \| = 1$ for all $x$, we can apply the dominated convergence theorem on any compact subset $K$ of $G$ to conclude
