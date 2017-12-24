@@ -25,6 +25,10 @@ Area is one of the most primitive measurements in geometry. Every elementary sch
 %
 With the advent of Cartesian coordinates and the subsequent modern introduction of set theory, shapes are identified with subsets of $\mathbf{R}^2$, and one can obtain strange subsets of $\mathbf{R}^2$ for which these methods begin to break down -- for instance, what is the `area` of the set of all points in the unit circle whose coordinates are rational numbers -- every circle, or finite union of rectangles containing these points has area $\pi$, yet the set seems to have too many `holes` to have this area. More generally, it isn't clear how to define the lengths of subsets of the real line $\mathbf{R}$, or volumes of general subsets of $\mathbf{R}^3$. These are all {\it measures} of size in their relative dimensions, and so we call the general study of these objects {\it measure theory}. In line with this unification, we will let $|S|$, or $\mu(S)$ denote the length, area, and volume of a given shape $S$ in $\mathbf{R}^d$, regardless of the dimension.
 
+\begin{remark}
+Even simple shapes may require approximation techniques rather than just employing the first. The Bolyai-Gerwien theorem says that if $P$ and $Q$ are polytopes with the same area in the plane, then one can cut up $P$ into finitely many polytopes, which can be individually rotated and translated to form $Q$. Dehn proved that this theorem fails in dimensions three or higher, which means we need approximation techniques to measure area.
+\end{remark}
+
 These problems are essentially irrelevant in the classical theory of analysis before the 20th century, where functions and sets are specified by analytical formulas in terms of a few basic operations, which are almost certainly continuous, except at a mild set of points, and are essentially guaranteed to be infinitely differentiable. Nonetheless, near the end of the 19th century the mathematical problems of the era prompted the need to measure the volume of general sets.
 %
 \begin{itemize}
@@ -145,9 +149,9 @@ The above lemmas guarantee that if $E \subset \mathbf{R}^d$ is the disjoint unio
 %
 \[ |E| = \sum |R_i| \]
 %
-is well defined, and fairly unarguably {\it the} choice for the volume of this family of sets. We call such a set $E$ an {\bf elementary set}. To obtain the measure of arbitrary sets, we will approximate them by families of elementary sets.
+is well defined, and fairly unarguably {\it the} choice for the volume of this family of sets. We call such a set $E$ an {\bf elementary set}. We will use the unambiguous measure of elementary sets to approximate the measure of arbitrary subsets of the plane.
 
-But first, let's discuss the algebraic structure of the family, which is a way of measuring the `power` of measurement that a particular measurement of size has.  One often has to consider the areas of the set formed from the union of two sets, or the intersection, and it is useful to know that we can measure the size of a set if it is the union of measurable sets, or the intersection of measurable sets. Before we move on to measuring the size of more advanced sets, let's dwell on the algebraic power of the family of elementary sets.
+But first, let's discuss an important structure of the family of elementary sets -- it's invariance under certain set theoretic operations. This is a way of measuring the `power' of measurement that the family has. One often has to consider the areas of the set formed from the union of two sets, or the intersection, and it is useful to know that we can measure the size of a set if it is the union of measurable sets, or the intersection of measurable sets. Before we move on to measuring the size of more advanced sets, let's dwell on the algebraic power of the family of elementary sets.
 
 \begin{theorem}
   Let $R$ and $S$ denote boxes, and $E$ and $F$ denote elementary sets.
@@ -157,7 +161,7 @@ But first, let's discuss the algebraic structure of the family, which is a way o
       \item[(b)] The intersection of two boxes is a box, and the intersection of two elementary sets is an elementary set.
       \item[(c)] $R-S$ is an elementary set, and so the difference of two elementary sets is an elementary set. The family of elementary sets is not closed under the complement operation, but this proposition says the family is `almost` closed under this operation.
       \item[(d)] $x + E$ is an elementary set, so the family of elementary sets is translation invariant.
-      \item[(e)] The symmetric difference $E \Delta F = (E - F) \cup (F - E)$ is an elementary set.
+      \item[(e)] The symmetric difference $E \bigtriangleup F = (E - F) \cup (F - E)$ is an elementary set.
       \item[(f)] If $E \subset \mathbf{R}^d$ and $F \subset \mathbf{R}^s$, then $E \times F$ is an elementary subset of $\mathbf{R}^{d+s}$, and $|E \times F| = |E||F|$.
   \end{enumerate}
 \end{theorem}
@@ -173,7 +177,7 @@ But first, let's discuss the algebraic structure of the family, which is a way o
     which is the union of elementary sets, hence $E - F$ is elementary. (d) is trivial, and is left to the reader. If $E = \bigcup E_i$ and $F = \bigcup S_i$, then $E \times F = \bigcup E_i \times S_j$, and each $E_i \times S_j$ is a disjoint box, proving (e), once we note that $|R \times S| = |R||S|$ for any two boxes $R$ and $S$.
 \end{proof}
 
-A family of sets is an {\bf algebra} if it is closed under the union and complement operations. The reason for the name is that, if we view the operation $\Delta$ as a commutative addition operation on the family, and the intersection as a commutative multiplication operation, then this turns the family into an algebra over $\mathbf{F}_2$. What we have just proven is that the set of elementary subsets contained in any bounded box, like, for instance, $[0,1]^n$, is an algebra. The fact that elementary sets are not an algebra is one of the reasons we have to enlarge the family of sets we can measure.
+A family of sets is an {\bf algebra} if it is closed under the union and complement operations. The reason for the name is that, if we view the operation $\bigtriangleup$ as a commutative addition operation on the family, and the intersection as a commutative multiplication operation, then this turns the family into an algebra over $\mathbf{F}_2$. What we have just proven is that the set of elementary subsets contained in any bounded box, like, for instance, $[0,1]^n$, is an algebra. The fact that elementary sets are not an algebra is one of the reasons we have to enlarge the family of sets we can measure.
 
 The measure of size we have constructed on the family of elementary sets also have certain relations which are very important. First, we not that because of the corresponding property for the measure of boxes, if $E = \bigcup E_i$ is the union of disjoint elementary sets, then
 %
@@ -187,11 +191,190 @@ The measure is also {\it translation invariant}, in the sense that $|E + x| = |E
 %
 \[ |F| = |E| + |F - E| \geq |E| \]
 %
-so the measure is {\it monotone}. These properties uniquely define the measure of a set up to a scalar factor. Since all the properties are intuitive to us, this tells us that our construction is going in the right direction!
+so the measure is {\it monotone}. We also have the {\it inclusion-exclusion principle}
+%
+\[ |E \cup F| = |E| + |F| - |E \cap F| \]
+%
+which holds for any not necessarily disjoint $E$ and $F$, which holds because
+%
+\[ |E| = |E - F| + |F| = |E - (E \cap F)| + |F| = |E| - |E \cap F| + |F| \]
+%
+Note that this equation holds with any `measure' on any family of sets which has finite additivity. These properties uniquely define the measure of a set up to a scalar factor. Since all the properties are intuitive to us, this tells us that our construction is going in the right direction!
 
 \section{Jordan Measurable Sets}
 
-In the last section, we constructed a consistant measure on the family of elementary sets. However, this family is certainly limited. We cannot even use this quantity to measure the area of a circle, or the volume of a sphere. However, we have really only applied the first ancient technique of measuring area, forming disjoint unions of simple shapes. We haven't used the method of approximating shapes by simple sets from above and below. The next two theorems say that the family of elementary sets is large in the family of open sets, which are the next family we set are eyes on measuring the size of.
+In the last section, we constructed a consistant measure on the family of elementary sets. However, this family is certainly limited. We cannot even use this quantity to measure the area of a circle, or the volume of a sphere. However, we have really only applied the first ancient technique of measuring area, forming disjoint unions of simple shapes. We haven't used the method of approximating shapes by simple sets from above and below.
+
+The work of Newton improved on the methods of approximation by Archimedes to measure the area of certain sets by taking Riemann integrals, and applying the fundamental theorem of calculus. Recall that if $f$ is a bounded function on a box $R$, then we lower and upper bound the integral by partitions $P$ of the box into subboxes, setting
+%
+\[ I_*(P,f) = \sum_{S \in P} |S| \inf_{x \in S} f(x)\ \ \ \ \ I^*(P,f) = \sum_{S \in P} \sup_{x \in S} f(x) \]
+%
+and we say $f$ is Riemann integrable if, as $P$ becomes suitably fine, $I_*(P,f)$ and $I^*(P,f)$ converge to a common value, which we call the Riemann integral of $f$, and denote by $\int_R f(x)\ dx$. If $E$ is a bounded set, contained in some box $R$, then the area of $E$ can be measured by the formula
+%
+\[ |E| = \int_R \chi_E(x)\ dx \]
+%
+provided the integral on the right exists, in which case we say $E$ is {\bf Jordan measurable}, and we call $|E|$ the Jordan measure of the set. No unbounded set is Jordan measurable.
+
+Of course, the full definition of the Riemann integral is overkill to define the Jordan measure of a set. Given some partition $P$ of $R$ into boxes, we can write
+%
+\[ I_*(P,\chi_E) = \sum_{\substack{S \in P\\S \subset E}} |S|\ \ \ \ \ \ \ \ I^*(P,\chi_E) = \sum_{\substack{S \in P\\E \cap S \neq \emptyset}} |S| \]
+%
+From this formula, we see that the Jordan measure is really just obtained by approximating sets from above and below by elementary sets. Thus we can define the inner and outer Jordan measures
+%
+\[ J_*(E) = \sup \{ |F| : F \subset E, F\ \text{elementary} \} \]
+\[ J^*(E) = \inf \{ |F| : E \subset F, F\ \text{elementary} \} \]
+%
+and a bounded set $E$ is Jordan measurable precisely when $J_*(E) = J^*(E)$, and this common value is then the measure of the set. This is equivalent to the existence of elementary sets $E_1 \subset E \subset E_2$ with $|E_2 - E_1| < \varepsilon$, for any $\varepsilon > 0$. It is easy to see that $J_*$ and $J^*$ are both monotone, and therefore the Jordan measure is monotone when it exists. Furthermore, $J^*$ is subadditive -- for any two sets $E$ and $F$, regardless of whether they are Jordan measurable or not, we conclude $J^*(E \cup F) \leq J^*(E) + J^*(F)$. The next theorem also offers another important criterion for Jordan measurability.
+
+\begin{theorem}
+    A bounded set $E$ is Jordan measurable if and only if for every $\varepsilon > 0$, there is an elementary set $F$ with $J^*(E \bigtriangleup F) \leq \varepsilon$.
+\end{theorem}
+\begin{proof}
+  Suppose $E$ is Jordan measurable. Then there are elementary sets $E_1$ and $E_2$, with $E_1 \subset E \subset E_2$, with $|E_2 - E_1| \leq \varepsilon$. But $E_2 - E \subset E_2 - E_1$, and so the monotonicity of $J^*$ allows us to conclude that
+  %
+  \[ J^*(E \bigtriangleup E_2) = J^*(E_2 - E) \leq |E_2 - E_1| \leq \varepsilon \]
+  %
+  Conversely, suppose $E$ is a bounded set, and for any $\varepsilon$, we can find an elementary set $F$ with $J^*(E \bigtriangleup F) \leq \varepsilon$. This means that we can find an elementary set $L$ covering $E \bigtriangleup F$ with $|L| \leq 2\varepsilon$, and then $F - L \subset E \subset F \cup L$, and
+  %
+  \[ |(F \cup L) - (F - L)| = |F \cup L| - |F - L| \leq |F| + 2\varepsilon - |F| \leq 2\varepsilon \]
+  %
+  taking $\varepsilon$ to zero, we conclude $E$ is Jordan measurable.
+\end{proof}
+
+\begin{theorem}
+  If $E$ and $F$ are Jordan measurable subsets of $\mathbf{R}^n$, then
+  %
+  \begin{enumerate}
+      \item[(a)] $E \cup F$ is Jordan measurable.
+      \item[(b)] $E \cap F$ is Jordan measurable.
+      \item[(c)] $F - E$ is Jordan measurable. If $E \subset F$, then $|F-E| = |F| - |E|$.
+      \item[(d)] $E \bigtriangleup F$ is Jordan measurable.
+      \item[(e)] Jordan measure is finitely additive, and if $T$ is an invertible linear transformation, then $|E| = |\det(T)| |T^{-1}(E)|$. In particular, if $|\det(T)| = 1$ (if $T$ is a rotation, for instance), then $|E| = |T^{-1}(E)|$.
+  \end{enumerate}
+\end{theorem}
+\begin{proof}
+  To prove (a), note that if there are elementary sets $E_1$ and $F_1$ with $J^*(E_1 \bigtriangleup E), J^*(F_1 \bigtriangleup F) \leq \varepsilon$, then
+  %
+  \[ (E \cup F) \bigtriangleup (E_1 \cup F_1) \subset (E \bigtriangleup E_1) \cup (F \bigtriangleup F_1) \]
+  %
+  so $J^*((E \bigtriangleup E_1) \cup (F \bigtriangleup F_1)) \leq J^*(E \bigtriangleup E_1) + J^*(F \bigtriangleup F_1) \leq 2\varepsilon$. To prove (b), if $E_1 \subset E \subset E_2$ and $F_1 \subset F \subset F_2$ are given with $|E_2 - E_1|, |F_2 - F_1| \leq \varepsilon$, then
+  %
+  \[ E_1 \cap F_1 \subset E \cap F \subset E_2 \cap F_2 \]
+  %
+  and
+  %
+  \[ (E_2 \cap F_2) - (E_1 \cap F_1) \subset (E_2 - E_1) \cup (F_2 - F_1) \]
+  %
+  so $|E_2 \cap F_2 - E_1 \cap F_1| \leq 2\varepsilon$. If $E \subset F$ then $\chi_{F-E} + \chi_E = \chi_F$, and the additivity of the Riemann integral gives that $F - E$ is Jordan measurable and $|F| = |E| + |F-E|$. In general, $F - E = F - (E \cap F)$, so $F - E$ is Jordan measurable in general. (d) is then obvious. Finite additivity can be obtained by a similar Riemann integration trick, from the fact that if $E$ and $F$ are disjoint, then $\chi_E + \chi_F = \chi_{E \cup F}$. The fact that the area of Jordan measurable sets are invariant follows from the change of variables formula from calculus, because if $T$ is a linear transformation, and $E$ is Jordan measurable, then
+  %
+  \begin{align*}
+    |E| &= \int \chi_E(x)\ dx = \int \chi_E(Tx) |\det(T)|\ dx = \chi_{T^{-1}(E)}(x) |\det(T)|\ dx\\
+    &= |\det(T)| |T^{-1}(E)|
+  \end{align*}
+  %
+  which proves the theorem.
+\end{proof}
+
+Thus Jordan measurability has all the properties we liked about the measure of elementary sets, like that the family of Jordan measurable sets form an algebra over every bounded box. Before we move on, we note a theorem of the Riemann integral which makes the identification of Jordan measurable sets elementary. We say a subset $E$ has {\it measure zero} if, for every $\varepsilon > 0$, there exists a {\it countable} family of boxes $R_1, R_2, \dots$ covering $E$ with
+%
+\[ \sum_{i = 1}^\infty |R_i| < \varepsilon \]
+%
+Thus a measure zero subset can be very efficiently covered by measure zero sets. The next theorem shows that determining if a set is Jordan measurable reduces to showing that the boundary of the set has measure zero.
+
+\begin{theorem}
+  A bounded function $f: R \to \mathbf{R}$ on a box $R$ is Riemann integrable if and only if the set of discontinuity points of $f$ has measure zero.
+\end{theorem}
+\begin{proof}
+  Define the {\bf oscillation} of $f$ at a point $x$ to be
+  %
+  \[ \text{osc}(f,x) = \lim_{r \to 0} \sup_{y \in B_r(x)} |f(x) - f(y)| \]
+  %
+  For each $r$, the function $\text{osc}(f,x,r) = \sup_{y \in B_r(x)} |f(x) - f(y)|$ is a continuous function of $x$, so $\text{osc}(f,x) = \inf_{r \to 0} \text{osc}(f,x,r)$ is an {\it upper semicontinuous} function, in the sense that $\limsup_{y \to x} \text{osc}(f,y) \leq \text{osc}(f,x)$ for each point $x \in R$. It follows that for each $\varepsilon > 0$ the sets
+  %
+  \[ A_\varepsilon = \{ x: \text{osc}(f,x) \geq \varepsilon \} \]
+  %
+  are closed and bounded, and therefore compact, sets. Any covering of $A_\varepsilon$ has a finite subcovering, and since the discontinuities of $f$ are a set of measure zero, there exist finitely many open boxes $R_1, \dots, R_N$ covering $A_\varepsilon$ with $|R_1| + \dots + |R_N| \leq \varepsilon$. Now $K = (R_1 \cup \dots \cup R_n)^c$ is compact, and every point $x \in K$ has $\text{osc}(f,x) < \varepsilon$, so there is an open rectangle around $x$ such that for any $y$ in the set, $|f(y) - f(x)| \leq \varepsilon$. These rectangles cover $K$, so we can select finitely many $R_{N+1}, \dots, R_M$ covering $K$. By dividing these rectangles suitably, these rectangles correspond to some partition $P$ of $R$, and we have
+  %
+  \begin{align*}
+    U(f,P) - L(f,P) &= \sum_{k = 1}^M |R_i| \left[ \sup_{x \in R_i} f(x) - \inf_{x \in R_i} f(x) \right]\\
+    &\leq \sum_{k = 1}^N |R_i| 2 \| f \|_\infty + \sum_{k = N+1}^M |R_i| \varepsilon\\
+    &\leq (2 \| f \|_\infty + |R|) \varepsilon
+  \end{align*}
+  %
+  and by taking $\varepsilon \to 0$, we obtain suitably fine partitions showing that $f$ is Riemann integrable. Conversely, note that if $E_1, E_2, \dots$ all have measure zero, then $\bigcup E_i$ has measure zero, because if we find covers $U_{ij}$ of $E_j$ with $\sum_i |U_{ij}| \leq \varepsilon/2^n$, then $\sum_{ij} |U_{ij}| \leq \varepsilon$ and covers $\bigcup E_i$. Thus, given a Riemann integrable function $f$, it suffices to prove that $A_\varepsilon$ has measure zero for each $\varepsilon > 0$, for the set of discontinuities of $f$ is $\bigcup A_{1/n}$. But if we find a partition $P$ with $U(f,P) - L(f,P) < \varepsilon$. $P$ corresponds to a sequence of boxes $R_1, \dots, R_N$ with
+  %
+  \[ \sum |R_i| \left[ \sup_{x \in R_i} f(x) - \inf_{x \in R_i} f(x) \right] \leq \varepsilon \]
+  %
+  But then using a Markov type inequality, we conclude that if $S$ is the set of indices $i$ with $\sup_{x \in R_i} f(x) - \inf_{x \in R_i} f(x) \geq \delta$, then
+  %
+  \[ \sum_{i \in S} |R_i| \leq \varepsilon / \delta \]
+  %
+  But the $R_i$, for $i \in S$, are a cover of $A_\delta$, so taking $\varepsilon \to 0$, we conclude that $A_\delta$ is a set of measure zero.
+\end{proof}
+
+\begin{example}
+    Let $R$ be a closed box in $\mathbf{R}^n$, and $f: R \to \mathbf{R}$ a continuous function. Then the graph $\Gamma(f)$ of $f$ in $\mathbf{R}^{n+1}$ is Jordan measurable, and has Jordan measure zero. This follows because, since $R$ is compact, $f$ is uniformly continuous, and therefore for any $\varepsilon$ we can partition $R$ into finitely many almost disjoint boxes $S_1, \dots, S_N$ covering $R$ such that if two points $x$ and $y$ lie in the same box, then $|f(x) - f(y)| < \varepsilon$. But this implies that if we fix $x_i$ in $S_1$, then the sets $S_i \times [x_i - \varepsilon, x_i + \varepsilon]$ cover the graph, and so
+    %
+    \[ J^*(\Gamma(f)) \leq \sum |S_i \times [x_i - \varepsilon, x_i + \varepsilon]| = 2 \varepsilon \sum |S_i| = 2\varepsilon |R| \]
+    %
+    If we let $\varepsilon \to 0$, we obtain that $\Gamma(f)$ has upper measure zero, and thus lower measure zero. The set $X = \{ (x,t) \in R \times \mathbf{R}: 0 \leq f(x) \leq t \}$ is also Jordan measurable. Given the same $S_i$, the sets $S_i \times [0,x_i - \varepsilon)$ are contained in $X$, and $S_i \times [0,x_i+\varepsilon]$ contain $X$, and the difference between these two sets is exactly the sets we used to show the measure of the boundary is zero, hence $X$ is Jordan measurable because it can be approximated from above and below, and
+    %
+    \[ |X| = \int f^+(x)\ dx \]
+    %
+    where $f^+(x) = \max(f(x),0)$.
+\end{example}
+
+\begin{example}
+  In the theory of elementary sets, we couldn't even measure the area of a triangle in the plane. Let $P$ be a parallelogram in the plane. By translation invariance, we may assume one of the vertices lies at the origin. We can then describe the vertices by $\{ 0, x, y, x+y \}$. The linear transformation
+  %
+  \[ T = \begin{pmatrix} x_1 & x_2 \\ y_1 & y_2 \end{pmatrix} \]
+  %
+  maps the unit square to $P$, and therefore
+  %
+  \[ |P| = |\det(T)| = |x_1y_2 - x_2y_1 \]
+  %
+  If $T$ is a triangle defined by three vertices $\{ 0, x, y \}$, then one verifies that $T$ is exactly half of the parallelogram $\{ 0, x, y, x+y \}$, and therefore
+  %
+  \[ |T| = \frac{|x \times y|}{2} \]
+  %
+  Alternatively, if we assume that one of the edges of the triangle is vertical, then one can directly estimate the edges of the triangle by taking squares overapproximating and underapproximating the triangle, just as if we were directly calculating the Riemann integral by sums. We can then split a triangle up into two vertical triangles.
+\end{example}
+
+\begin{example}
+  A closed convex polytope is an intersection of finitely many closed half spaces, of the form
+  %
+  \[ \mathbf{H}(y,a) = \{ x: x \cdot y \leq a \} \]
+  %
+  and is compact if it is bounded. Every compact closed convex polytope is Jordan measurable. One way to see this directly is to note that by continuity,
+  %
+  \[ \partial \mathbf{H}(y,a) = \{ x: x \cdot y = a \} \]
+  %
+  and then
+  %
+  \[ \partial \left(\bigcap \mathbf{H}(y,a)\right) \subset \bigcup \partial \mathbf{H}(y,a) \]
+  %
+  and the right hand side is a finite union of planes, which are a set of measure zero. Alternatively, if a compact polytope $P$ is non-empty, pick some $x \in P$. If $P = \bigcap \mathbf{H}(y_n,a_n)$, then for each $n$, consider the convex hull $P_n$ obtained from connecting the convex set $S_n = P \cap \partial \mathbf{H}(y_n,a_n)$ to the point $x$. Then $P_n \subset P$, and in fact, $P = \bigcup P_n$, because if $y \in P$ is any point, then the line generated from $x$ to $y$ must eventually hit the boundary of some half plane, because the set is compact, and then this point lies in some $P \cap \partial \mathbf{H}(y_n,a_n)$. It suffices to show that $P_n$ is Jordan measurable. By a rotation and translation, we may assume that $y_n = e_1$ and $a_n = 0$, so $S_n$ lies on the half plane $\{ x : x_1 = 0 \}$. Consider the barycentric coordinate change
+  %
+  \[ g(\lambda, \gamma) = \gamma (\lambda, 0) + (1 - \gamma) x \]
+  %
+  for $\gamma \in \mathbf{R}$, $\lambda \in \mathbf{R}^{n-1}$. Then
+  %
+  \[ Dg(\lambda, \gamma) = \begin{pmatrix} \gamma I_{n-1} & 0 \\ \lambda - (x_1,\dots,x_{n-1}) & -x_n \end{pmatrix} \]
+  %
+  where we assumed by induction that since $S_n$ is a compact, convex polytope, hence it was Jordan measurable.
+\end{example}
+
+\begin{example}
+  If $B_r$ is a ball of radius $r$, then $|B_r| = r^n |B_1|$. This follows because the linear transformation $T(x) = rx$ has $|\det T| = r^n$ and $T^{-1}(B_r) = B_1$. If $x \in B_1$, then $|x_i| \leq |x| \leq 1$, so $B_1$ is contained in the square $[-1,1]^d$. Similarily, if $|x_i| \leq 1/\sqrt{d}$ for each $i$, then $|x| \leq 1$, so $[-1/\sqrt{d},1/\sqrt{d}] \subset B_1$. This yields the bounds
+  %
+  \[ \left( \frac{2}{\sqrt{d}} \right)^d \leq |B_1| \leq 2^d \]
+  %
+  These bounds are pretty crude, however, and are on the order of $2\pi^{d/2}/d \Gamma(d/2)$, which at least for even $n$ is equal to $2\pi^{d/2}/d (d/2)!$.  
+\end{example}
+
+One problem with the Jordan measure is it is too connected to the topology of the underlying space $\mathbf{R}^d$. In particular, one can easily verify that for any set $E$, $J^*(E) = J^*(\overline{E})$, and $J_*(E) = J_*(E^\circ)$. It follows that $E = \mathbf{Q} \cap [0,1]$ isn't a Jordan measurable set, because the set is dense in $[0,1]$, but has empty interior, so $J^*(E) = |[0,1]| = 1$, but $J_*(E) = J_*(\emptyset) = 0$. Another way to see this is to note that $\partial E = [0,1]$, which is a large set. Because of the connection between Jordan measurable sets and topology, it follows that sets with `too many holes' cannot be Jordan measurable. To assigns these sets a reasonable notion of measure, we require the development of the full theory of Lebesgue measure.
+
+\section{Lebesgue Measure}
 
 \begin{theorem}
   Every open subset of $\mathbf{R}$ can be uniquely written as the countable union of disjoint open intervals.
@@ -219,93 +402,9 @@ The volume of the boundary of a box should be equal to zero, because it is suffi
 %
 Though this is intuitive, it is not immediately obvious that this definition is independent of the decomposition of $U$ into the $R_i$, though this identity will hold for the definition we construct.
 
-In calculus, the Riemann integral was used to measure the area under certain curves in space. Recall that if $f$ is a bounded function on a box $R$, then we lower and upper bound the integral by partitions $P$ of the box into subboxes, setting
-%
-\[ I_*(P,f) = \sum_{S \in P} |S| \inf_{x \in S} f(x)\ \ \ \ \ I^*(P,f) = \sum_{S \in P} \sup_{x \in S} f(x) \]
-%
-and we say $f$ is Riemann integrable if, as $P$ becomes suitably fine, $I_*(P,f)$ and $I^*(P,f)$ converge to a common value, which we call the Riemann integral of $f$, and denote by $\int_R f(x)\ dx$. If $E$ is a bounded set, contained in some box $R$, then the area of $E$ can be measured by the formula
-%
-\[ |E| = \int_R \chi_E(x)\ dx \]
-%
-provided the integral on the right exists, in which case we say $E$ is {\bf Jordan measurable}, and we call $|E|$ the Jordan measure of the set. No unbounded set is Jordan measurable.
+MERGE LAST AND NEW
 
-Of course, the full definition of the Riemann integral is overkill to define the Jordan measure of a set. Given some partition $P$ of $R$ into boxes, we can write
-%
-\[ I_*(P,\chi_E) = \sum_{\substack{S \in P\\S \subset E}} |S|\ \ \ \ \ \ \ \ I^*(P,\chi_E) = \sum_{\substack{S \in P\\E \cap S \neq \emptyset}} |S| \]
-%
-From this formula, we see that the Jordan measure is really just obtained by approximating sets from above and below by elementary sets. Thus we can define the inner and outer Jordan measures
-%
-\[ J_*(E) = \sup \{ |F| : F \subset E, F\ \text{elementary} \} \]
-\[ J^*(E) = \inf \{ |F| : E \subset F, F\ \text{elementary} \} \]
-%
-and a bounded set $E$ is Jordan measurable precisely when $J_*(E) = J^*(E)$, and this common value is then the measure of the set. Note that it is easy to see that $J_*$ and $J^*$ are both monotone, and therefore the Jordan measure is monotone when it exists. Furthermore, $J^*$ is subadditive -- for any two sets $E$ and $F$, regardless of whether they are Jordan measurable or not, we conclude $J^*(E \cup F) \leq J^*(E) + J^*(F)$. The next theorem also offers another important criterion for Jordan measurability.
-
-\begin{theorem}
-    A bounded set $E$ is Jordan measurable if and only if for every $\varepsilon > 0$, there is an elementary set $F$ with $J^*(E \Delta F) \leq \varepsilon$.
-\end{theorem}
-\begin{proof}
-  Suppose $E$ is Jordan measurable. Then there are elementary sets $E_1$ and $E_2$, with $E_1 \subset E \subset E_2$, with $|E_2 - E_1| \leq \varepsilon$. But $E_2 - E \subset E_2 - E_1$, and so the monotonicity of $J^*$ allows us to conclude that
-  %
-  \[ J^*(E \Delta E_2) = J^*(E_2 - E) \leq |E_2 - E_1| \leq \varepsilon \]
-  %
-  Conversely, suppose $E$ is a bounded set, and for any $\varepsilon$, we can find an elementary set $F$ with $J^*(E \Delta F) \leq \varepsilon$. This means that we can find an elementary set $L$ covering $E \Delta F$ with $|L| \leq 2\varepsilon$, and then $F - L \subset E \subset F \cup L$, and
-  %
-  \[ |(F \cup L) - (F - L)| = |F \cup L| - |F - L| \leq |F| + 2\varepsilon - |F| \leq 2\varepsilon \]
-  %
-  taking $\varepsilon$ to zero, we conclude $E$ is Jordan measurable.
-\end{proof}
-
-This theorem can be used to show easily that $E$ and $F$ are Jordan measurable sets, then $E \cup F$ and $E \cap F$ are Jordan measurable, since if there are elementary sets $E_1$ and $F_1$ with $J^*(E_1 \Delta E), J^*(F_1 \Delta F) \leq \varepsilon$, then
-%
-\[ (E \cup F) \Delta (E_1 \cup F_1) \subset (E \Delta E_1) \cup (F \Delta F_1) \]
-%
-and $J^*((E \Delta E_1) \cup (F \Delta F_1)) \leq J^*(E \Delta E_1) + J^*(F \Delta F_1) \leq 2\varepsilon$. If $E_1 \subset E \subset E_2$ and $F_1 \subset F \subset F_2$ are given with $|E_2 - E_1|, |F_2 - F_1| \leq \varepsilon$, then
-%
-\[ E_1 \cap F_1 \subset E \cap F \subset E_2 \cap F_2 \]
-%
-and
-%
-\[ (E_2 \cap F_2) - (E_1 \cap F_1) \subset (E_2 - E_1) \cup (F_2 - F_1) \]
-%
-so $|E_2 \cap F_2 - E_1 \cap F_1| \leq 2\varepsilon$. Elementary properties of the Riemann integral guarantee that if $E$ and $F$ are two disjoint Jordan measurable sets, then $E \cup F$ is Jordan measurable, and $|E \cup F| = |E| + |F|$. Similarily, if $E \subset F$ are both Jordan measurable, then $F - E$ is Jordan measurable, and $|F - E| = |F| - |E|$. Thus we have {\it finite additivity}. If $E \subset F$, then $|E| \leq |F|$, because $\chi_E \leq \chi_F$. We also fairly easily see we have translation invariance. Thus Jordan measurability has all the properties we liked about the measure of elementary sets, and the family of Jordan measurable sets form an algebra over every {\it bounded} subset of space.
-
-\begin{example}
-    Let $R$ be a closed box in $\mathbf{R}^n$, and $f: R \to \mathbf{R}$ a continuous function. Then the graph $\Gamma(f)$ of $f$ in $\mathbf{R}^{n+1}$ is Jordan measurable, and has Jordan measure zero. This follows because, since $R$ is compact, $f$ is uniformly continuous, and therefore for any $\varepsilon$ there are finitely many disjoint boxes $S_1, \dots, S_m$ covering $R$ such that if two points $x$ and $y$ lie in the same box, $|f(x) - f(y)| < \varepsilon$. But this implies that if we fix a point $x_i$ in $S_1$, then the sets $S_i \times [x_i - \varepsilon, x_i + \varepsilon]$ cover the graph, and so
-    %
-    \[ \mu^*(\Gamma(f)) \leq \sum \mu(S_i \times [x_i - \varepsilon, x_i + \varepsilon]) \leq 2 \varepsilon \sum \mu(S_i) \leq 2\varepsilon \mu(R) \]
-    %
-    let $\varepsilon \to 0$ to obtain that $\Gamma(f)$ has upper measure zero, and thus lower measure zero. The set $X = \{ (x,t): 0 \leq f(x) \leq t \}$ is also Jordan measurable. Given the same $S_i$, the sets $S_i \times [0,x_i - \varepsilon)$ are contained in $X$, and $S_i \times [0,x_i+\varepsilon]$ contain $X$, and the difference between these two sets is exactly the sets we used to show the measure of the boundary is zero, hence $X$ is Jordan measurable because it can be approximated from above and below.
-\end{example}
-
-\begin{example}
-    A triangle is not an elementary set, but it is a Jordan measurable set. First, consider a right triangle with sides parallel to the $x$ and $y$ axis. Then, by a translation, we can write one point as $(x,0)$ and another as $(0,y)$. For each $N$, consider the disjoint sequence of rectangles
-    %
-    \[ [0,x/N) \times \{ 0 \} \cup [x/N, 2x/N) \times [0,y/N] \cup \dots \cup [\frac{N-1}{N} x, x] \times [0, \frac{N-1}{N}y] \]
-    %
-    These rectangles are contained in the triangle, and so
-    %
-    \[ \mu_*(T) \geq \sum_{i = 0}^{N-1} \frac{x}{N} \frac{iy}{N} = \frac{xy}{N^2} \frac{(N-1)N}{2} = \frac{N-1}{N} \frac{xy}{2} \]
-    %
-    Letting $N \to \infty$, we find $\mu_*(T) \geq xy/2$. On the other hand, consider the disjoint sequence of rectangles
-    %
-    \[ [0,x/N) \times [0,y/N] \cup [x/N, 2x/N) \times [0,2y/N] \cup \dots \cup [\frac{N-1}{N} x, x] \times [0, y] \]
-    %
-    which contains the triangle, so
-    %
-    \[ \mu^*(T) \leq \sum_{i = 1}^N \frac{x}{N} \frac{iy}{N} = \frac{N+1}{N} \frac{xy}{2} \]
-    %
-    Letting $N \to \infty$, we conclude $\mu^*(T) \geq xy/2$. Equating estimates, we determine the triangle is Jordan measurable with area $xy/2$. If only one of the sides is horizontal, we may split the triangle into two right triangles with the other side perpendicular to the $y$ axis, so this shape is measurable. If one coordinate is $(x,0)$, and the other
-\end{example}
-
-DO MORE EXERCISES FROM TAO'S BOOK
-
-The Jordan measure is intrinsically connected with the Riemann integral. Given an interval,
-
-TALK ABOUT RIEMANN INTEGRAL, SHOW SET IS JORDAN MEASURABLE IFF ITS BOUNDARY HAS MEASURE ZERO?
-
-\section{Lebesgue Measure}
-
-If we are able to stick with Jordan measurable sets, we should, because it is here that integration theory works in the best way. However, not all sets are Jordan measurable, and often when studying fractal sets one runs into unmeasurable sets. What's more, even if a set $E_1, E_2, \dots$ is Jordan measurable, their union $\bigcup E_i$ and their intersection $\bigcap E_i$ need not be measurable, even if these sets are bounded. In terms of Riemann integrability, this causes problems with understanding the pointwise limit of functions: A sequence of uniformly bounded Riemann integrable functions $f_n: [0,1] \to \mathbf{R}$ which converges pointwise to a bounded function $f: [0,1] \to \mathbf{R}$ need not be Riemann integrable. If we replace pointwise convergence with uniform convergence, then $f$ will be Riemann integrable, but this relates to the fact that uniform convergence allows one to conver $f$ with finitely many rectangles (ELABORATE HERE).
+If we are able to stick with Jordan measurable sets, we should, because it is here that integration theory works in the best way. However, not all sets are Jordan measurable, and often when studying fractal sets one runs into unmeasurable sets. As we have seen, Jordan measurable sets are precisely those whose boundaries are very small -- for sets with lots of `holes', the boundaries can be rather large, and in these situations we still need a well defined notion of measure. Algebraic, even if a sequence of sets $E_1, E_2, \dots$ is Jordan measurable, their union $\bigcup E_i$ and their intersection $\bigcap E_i$ need not be measurable, even if these sets are bounded. In terms of Riemann integrability, this causes problems with understanding the pointwise limit of functions: A sequence of uniformly bounded Riemann integrable functions $f_n: [0,1] \to \mathbf{R}$ which converges pointwise to a bounded function $f: [0,1] \to \mathbf{R}$ need not be Riemann integrable. If we replace pointwise convergence with uniform convergence, then $f$ will be Riemann integrable, but this relates to the fact that uniform convergence allows one to conver $f$ with finitely many rectangles (ELABORATE HERE).
 
 To obtain a family of sets with a well defined measure theory which satisfies countable additivity, we must tinker with how we defined Jordan measure. Recall that to obtain Jordan measure, we took outer and inner estimates of arbitrary sets by covers of {\it finitely many} rectangles. We obtain Lebesgue integrability if we replace the finiteness with infinitely many rectangles. We consider the values
 %
