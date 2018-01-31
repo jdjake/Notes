@@ -24,77 +24,51 @@
 
 \title{Proofs in Three Bits or Less}
 \author{Jacob Denson}
-\date{November 24rd, 2017}
 
 \begin{document}
 
 \maketitle
 
-% Abstract: In the mid 1980s, cryptographers revolutionized how we think about mathematical arguments, which still impacts our understanding of how complex mathematical proofs can be. And it's all based on a simple childhood game!
-
 % Next time your professor asks to submit your homework in Latex, just ask them if you can give an interactive proof instead.
 
+% Some witty joke about jam?
+
+{\Large In the mid-80s, cryptographers revolutionized how we think about mathematical arguments, which still impacts our understanding of the complexity of mathematical processes. And it's all based on a childhood game!}
+
 \begin{multicols}{2}
-John von Neumann is reported to have said ``if people do not believe that mathematics is simple, it is only because they do not realize how complicated life is''. But some mathematics is labyrinthian! Andrew Wiles's proof of Fermat's last theorem is 109 pages long. And don’t remind me of those gigabyte-long computer-made proofs! Realizing my discontent, a friend referred me to a radically concise method of argument, known as an {\it interactive proof}, which has revolutionized our understanding of the complexity of mathematical proofs.
+John von Neumann is reported to have said ``If people don't believe that mathematics is simple, it is only because they don't realize how complicated life is''. But some proofs are labyrinthian! The proof of Fermat's last theorem is 109 pages long. And don’t remind me of those gigabyte-long computer-made proofs! {\it Interactive proofs} provide a radically concise method to describing proofs and their complexity.
 
-Think of the way your most irritating classmate follows a proof; every 30 to 40 seconds they're popping in with suspected flaws in your teacher's argument. Like your classmate, in interactive proofs an {\it interrogator} asks a series of yes/no questions to a {\it prover} who attempts to demonstate some claim. After a fixed number of questions, the interrogator decides whether they're convinced by the answer's recieved. The fewer questions, the more comprehensible the proof!
+Think of the way your most irritating classmate follows a proof; every minute they're popping in with suspected flaws in your teacher's argument. Like your classmate, in interactive proofs an {\it interrogator} asks a series of yes/no questions to a {\it prover} who attempts to demonstrate some claim. After a fixed number of questions, the interrogator decides whether they're convinced by the answer's received. The fewer questions, the more comprehensible the proof!
 
-%One drastic measure might be to place some legal legislation on the size of proofs -- one 140 characters or less! There's no way to get lost in a proof that size, and because there are about $26^{140}$ sequences of characters we can make in 140 characters or less, and at least some portion of this sequence will form mathematical proofs, mathematicians will be busy for quite some time.
+Your classmate interrupts your teacher because she thinks a simple mistake has been made. From cryptography's point of view, where interactive proofs originate, a prover might lie to trick the interrogator into believing a false claim. In either perspective, the interrogator must ask {\it checkable} questions to ensure responses are correct.
 
-From your classmate's perspective, your teacher is probably just making an mistake. From cryptography's point of view, where interactive proofs originated, a prover might lie maliciously to trick the interrogator into believing a false claim. From either perspective, the interrogator must ask `checkable' questions so they can be sure responses are correct. It is mathematically interesting to attempt to minimize the number of questions while preserving several criteria:
-%
-\begin{itemize}
-    \item {\it Perfect Completeness}: For a true statement, there exists a series of answers to our questions which will convince us the statement is correct.
+It is mathematically interesting to minimize the number of questions the interrogator asks while preserving several criteria. An interactive proof of a family of statements is {\it complete} if every true statement has answers which will convince the interrogator the statement is correct, and {\it sound} if no series of answers to a false claim will convince the interrogator the statement is false. The cost of perfection is efficiency. There are many short statements taking thousands of pages to prove.
 
-    \item {\it Perfect Soundness}: For a false statement, no series of answers to our questions will convince us the statement is true.
-\end{itemize}
-%
-The cost of perfection is efficiency. The statement
-%
-\begin{center} `` This statement can't convince a perfect prover in fewer than a googolplex questions '' \end{center}
-%
-is true (how could it be false?) but is {\it very} slow to check.
-% Incredibly short statements can have arbitrarily long proofs
-The main improvement interactive proofs give us is the ability to weaken our requirements. If the interrogator chooses their questions randomly over a distribution of possible question, we can introduce weaker constraints:
-%
-\begin{itemize}
-    \item {\it Imperfect Completeness}: For a true statement, there exists a series of answers to our randomly chosen questions which convince the prover with probability $\geq 1/2$.
+The main innovation interactive proofs give is the ability to weaken our requirements on a rigorous proof. If the interrogator chooses a {\it random} set of questions to ask, they now have a {\it probability} of being convinced by a proof. An interactive proof has {\it imperfect completeness} if every true statement has answers which will convince the interrogator the statement is correct with probability $\geq 1/2$, and {\it imperfect soundness} if every sequence of answers to a false statement will fail to convince the interrogator with probability $\geq 1 - \varepsilon$. This relaxation abbreviates proofs considerably.
 
-    \item {\it Imperfect Soundness}: For a false statement, every answer to the prover's questions fail to convince the prover with probability $\geq 1 - \varepsilon$.
-\end{itemize}
+\begin{example}
+    An {\it isomorphism} between two graphs $G_0$ and $G_1$ is a bijection between their vertices preserving adjacency. Consider proving two graphs $G_0$ and $G_1$ with $n$ nodes are {\it not} isomorphic to one another. While proving two graphs {\it are} isomorphic is easy (just give an isomorphism), it is not easy to show that graphs are not isomorphic, a problem familiar to anyone who's had the headache of proving two groups aren't isomorphic. However, we can provide a one question interactive proof. To choose our question, we fix an index $i \in \{ 0, 1 \}$, and a permutation $\nu \in S_n$, both uniformly at random. We form the graph $\nu(G_i)$ by permuting the indices of the nodes of the graph $G_i$, and ask the `0/1' valued question:
 %
-Here's an example of an imperfect interactive proof. Given two graphs $G_0$ and $G_1$, an {\it isomorphism} is a map between their vertices preserving adjacency of vertices. Consider determining whether two graphs $G_0$ and $G_1$ with $n$ nodes are {\it not} isomorphic to one another. While proving two graphs {\it are} isomorphic is easy (just give me an isomorphism!), it is {\it not} easy to show that two graphs are not isomorphic (a problem familiar to anyone who's had the headache of proving two groups aren't isomorphic). However, we provide an interactive proof which asks only a single random question. Given $H$ isomorphic either to $G_0$ or $G_1$, we ask a `0/1' question of the form
+\begin{center}
+    ``Output the index $j$ such that $\nu(G_i) \cong G_j$''
+\end{center}
 %
-\begin{center} ``If $H$ is isomorphic to $G_0$, output zero.\\
-If $H$ is isomorphic to $G_1$, output  one.'' \end{center}
-%
-To choose our question, we fix an index $i \in \{ 0, 1 \}$, and a permutation $\nu \in S_n$, chosen uniformly at random. We form the graph $\nu(G_i)$ by permuting the indices of the nodes of the graph $G_i$. Now we ask the question above for $H = \nu(G_i)$. The prover should give the answer $i$, since $H$ is isomorphic to $G_i$, and if the prover fails to give this answer, we remain unconvinced of the claim. If the graphs are not isomorphic, and the prover always answers correctly, we will always be convinced, implying perfect completeness. On the other hand, if the graphs are isomorphic, the random graph $\nu(G_i)$ we obtain is independent of the index $i$, and so for any answer the prover gives, there is a 50\% chance of being caught out, giving imperfect soundness.
+The prover should give the index $i$, and this is sufficient to convince us of the claim. If the graphs are not isomorphic, and the prover always answers correctly, we will always be convinced, implying perfect completeness. On the other hand, if the graphs are isomorphic, the random graph $\nu(G_i)$ obtained is independent of the index $i$, and so for any answer the prover gives, there is a 50\% chance of being caught out, giving imperfect soundness.
+\end{example}
 
-If we are willing to forgive some margin of error, we obtain a most magical result from the mathematical field of complexity theory, whose goal is to analyze the difficulty of mathematical problems.
+If we forgive a margin of error, there is a magical result saying interactive proofs are efficient as can be.
 
 \begin{theorem}[The PCP Theorem]
-    For $\varepsilon > 0$, every feasibly checkable\footnote{In the language of complexity theorem, this means the theorem is $\in {\bf NP}$} theorem is checkable with imperfect soundness and imperfect completeness in only 3 questions!
+    For some $\varepsilon > 0$, every feasibly checkable theorem is checkable with imperfect soundness and imperfect completeness in only 3 questions!
 \end{theorem}
 
-Here's some examples of this remarkable theorem at work. Pick your favourite integer with 100 prime factors, and give me a {\it proof} that the integer has 100 prime factors. Giving the prime factorization is sufficient, because an interrogator can check that multiplying the prime factors together gives your original number. But the PCP theorem guarantees that you can give me a `random' argument that's only three bits long. It shows that languages are incredibly efficient at communicating true or false facts. But make sure you understand the limitations of the theorem: I won't be able to know {\it what} the factorization is, just that such a factorization is.
+Consider proving an integer has 1000 prime factors, or showing a graph is three colourable. The canonical proof of these claims (giving the prime decomposition, or giving the three colouring) is rather large. The PCP theorem claims there is a randomized 3-bit encoding of the proof!
 
-Here's a more colorful example. A graph is a collection of dots connected by lines. The three coloring problems asks whether we can color the dots of a graph with three different colors, so no two adjacent dots have the same color. It seems that for a large graph, a proof that a graph is three colorable is quite large. But the PCP theorem says that you can communicate that you have found a three coloring on the graph (but not {\it the} three coloring) in three questions or less!
+ One way to think of this is that the PCP theorem says most {\it local} errors can be globalized. A graph can fail to be three colourable in a single pair, so we would have to check all pairs to determine if a graph is correctly three colourable. Similarily, a proof can have a single bug, which causes the entire proof to fail. The PCP theorem says that we can encode the graph and it's colouring, or the proof of a theorem, as a randomized set of questions, such that any three questions chosen have a large chance of showing any errors -- local errors have been encoded globally!
 
-The theorem is remarkable. The main way the theorem is useful 
+Irit Dinur gave a good analogy of this globalization process. Imagine trying to determine if a slice of toast has jam on it, purely by tasting three bite sized pieces of the toast. With only a small amount of jam, three random bites are unlikely to taste the jam. The encoding process of the PCP theorem can be compared to taking a knife, and smothering it over the piece of toast. If there is any jam on the bread, then the knife smothers jam all over the bread, and so a single bite will be able to determine if there was any jam on the bread to begin with (but not where the jam was in the first place).
 
-(and this is one of the nice cases pure mathematics actually having {\it some} application to real life, since people have been discussing using PCP technologies to simplify transaction verification in certain digital currencies, like Bitcoin).
-
-It says that languages provide a way to efficiently encode {\it local} properties of mathematical objects {\it globally}, where they can be easily checked, and I'm sure these ideas can be made useful in a large number of mathematical areas.
-
-An interesting way to view the problem is that certain `local' properties of mathematical objects can be encoded in such a way that these local properties become global. Here is an analogy from Dinur's talk on the subject. Imagine if we have a piece of toast, and, by sampling three points at random on the piece of toast, we want to determine whether the toast has jam on it. The encoding process as above can be compared to taking a knife, and smothering it all over the piece of toast, not looking at the bread. If there is any jam on the bread, then the knife will smother the jam all over the piece of toast, and after this, if we have any local jam on the piece of toast, it will now become a global property of the bread, and this can be very easily obtained by sampling three points on the piece of toast.
-
-\begin{example}
-    Three colorability of graphs is a very local property. In particular, a graph can appear to be three colorable, but fail to be three colorable at a single position. If someone said to us they had a three coloring of a graph, and we could only ask them the color of individual vertices, then it would take $|V|$ questions to determine whether the person actually had a three coloring. If you had access to the entire three coloring, it would only take you $O(|V| + |E|)$ steps to check whether a given coloring was actually a three coloring, so the problem of checking a three coloring is computationally feasible, and the PCP theorem guarantees that we can select three questions at random about the prover's proof of the three colorability of the graph, and to a high degree of accuracy, determine whether the prover's proof given is false, or whether the proof is correct. Note that ``Do you have a three coloring'', is NOT a good question to ask in this context, because we have no reason to trust the prover, and if he said ``Yes'' we have no information about his proof. Thus there is a way of encoding the three colorability of a graph in such a way that the local property of failing to be three colorable becomes global.
-\end{example}
-
-\begin{example}
-    The mathematical proof of a mathematical theorem is a {\it very} local property. Proofs can seem correct, but have a single `bug' at a single location which invalidates the entire proof. The PCP theorem says that there is a new way of encoding these proofs such that bugs are globally expressed, and become easy to find.
-\end{example}
+The PCP theorem is a remarkable fact, but it's ideas have yet to gestate outside the field of complexity theory it was invented in. It says that languages provide a way to efficiently encode {\it local} properties of mathematical objects {\it globally}, where they can be easily checked, and I'm sure these ideas can be made useful in a large number of mathematical areas. I wrote this article because I'm sure there's another mathematical corner where some jam spreading is useful!
 \end{multicols}
     
 \end{document}
