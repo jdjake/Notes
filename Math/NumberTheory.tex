@@ -191,4 +191,226 @@ On the other hand, most irrational numbers cannot be approximated to a rational 
     and so the Borel-Cantelli lemma implies that the set $E = \limsup I_{p/q}$ is a set of measure zero, and this is precisely the set of 3-approximatible numbers.
 \end{proof}
 
+\part{Analytic Number Theory}
+
+The main paradigm to analytic theory is that one may obtain much about the asymptotic properties of a sequence of numbers
+%
+\[ a_1, a_2, \dots \]
+%
+You may have already encountered the power series $\sum a_n z^n$. The identity
+%
+\[ \left( \sum_{n = 0}^\infty a_n z^n \right) \left( \sum_{n = 0}^\infty b_n z^n \right) = \sum_{n = 0}^\infty \left( \sum_{m = 0}^n a_m b_{n-m} \right) z^k \]
+%
+establishes a relation between products of power series and {\it additive convolutions} of the coefficient. This indicates that power series will yield information about sequences with good additive structure. A series you may have encountered less in other areas of analysis is the Dirichlet series
+%
+\[ \sum_{n = 1}^\infty a_n n^{-s} \]
+%
+where $s$ is a complex number (In the analysis of Dirichlet series, we often assume the strange notation that a general complex variable is written as $s = \sigma + it$). We expect, at least formally, for
+%
+\[ \left( \sum_{n = 1}^\infty a_n n^{-s} \right) \left( \sum_{n = 1}^\infty b_n  \right) = \sum_{n,m} a_n b_m (nm)^{-s} = \sum_{n = 1}^\infty \left( \sum_{mk = n} a_m b_k \right) n^{-s} \]
+%
+Thus we should expect Dirichlet series to give lots of information for arithmetic functions which behave well multiplicatively under the {\it Dirichlet convolution}, defined for two functions $f,g: \mathbf{N} \to \mathbf{C}$ by $(f * g)(n) = \sum_{mk = n} f(m) g(k)$. The study of the analytic functions that relate to the theory of numbers is known as the field of {\it analytic number theory}.
+
+\chapter{Basic Properties of Dirichlet Series}
+
+Having motivated the importance that Dirichlet series play in understanding multiplicative functions, we now establish their analytic properties, which are the analogies of the analytic properties of power series. We begin by recalling a fundamental trick which we will use again and again, known as partial summation. Consider any two sequences of complex numbers
+%
+\[ a_1, \dots, a_N\ \ \ \ b_1, \dots, b_N \]
+%
+If we let $A_n = \sum_{m \leq n} a_m$, $B_n = \sum_{m \leq n} b_m$, then for any $M$,
+%
+\[ \sum_{n = M}^N a_nb_n = a_N B_N - a_M B_{M-1} - \sum_{n = M}^{N-1} (a_{n+1} - a_n) B_n \]
+%
+this is often used when we consider the pointwise product of two series, where one has an explicit summation formula. It is an analogy of the integration by parts. If you're familiar with Riemann-Stieltjes integration, then the summation really is integration by parts, since
+%
+\[ \sum_{n = M}^N a_nb_n = \int_{M-}^N a_t dB_t = \left. a_tB_t \right|_{M^-}^N - \int_{M-}^N B_t da_t = \left. a_tB_t \right|_{M^-}^N - \sum_{n = M}^{N-1} B_n (a_{n+1} - a_n) \]
+%
+Often this formula is useful when $a_t$ is differentiable in $t$, in which case $da_t = a'_t dt$, and so the right hand side has a normal integral, which is normally easier to estimate than a discrete series.
+
+\begin{theorem}
+    If $\alpha(s) = \sum a_n n^{-s}$ converges pointwise as $s = s_0$, and $H > 0$, then $\alpha(s)$ is uniformly convergent in the section
+    %
+    \[ S = \{ s: \sigma \geq \sigma_0, |t - t_0| \leq H(\sigma - \sigma_0) \} \]
+    %
+    Taking $H \to \infty$, we see $\alpha$ converges locally uniformly for all $s$ with $\sigma > s_0$ to an analytic function.
+\end{theorem}
+\begin{proof}
+    Let
+    %
+    \[ R(u) = \sum_{n > u} a_n n^{-s_0} \]
+    %
+    be the remainder of higher order terms of $\alpha(s_0)$. Note that $a_n = (R(n-1)-R(n))n^{s_0}$, which means that
+    %
+    \begin{align*}
+        \sum_{n = M+1}^N a_n n^{-s} &= - \int_M^N x^{s_0-s} dR(x) = \int_M^N R(x) dx^{s_0 - s} + M^{s_0 - s} R(M) - N^{s_0 - s} R(N)\\
+        &= (s_0 - s) \int_M^N R(x) x^{s_0 - s - 1} du + M^{s_0 - s} R(M) - N^{s_0 - s} R(N)
+    \end{align*}
+    %
+    If $R(u) \leq \varepsilon$ for all $u \geq M$, then this implies
+    %
+    \[ \left| \sum_{n = M+1}^N a_n n^{-s} \right| \leq \varepsilon |s_0 - s| \int_M^N x^{\sigma_0 - \sigma - 1} + \varepsilon M^{s_0 - s} - N^{s_0 - s} R(N) = \varepsilon \left( \frac{|s_0 - s|}{\sigma - \sigma_0} + 2 \right) \]
+    %
+    Since $|s_0 - s| \leq |t_0 - t| + |\sigma_0 - \sigma|$, these terms are uniformly small if $|t_0 - t| \leq H |\sigma_0 - \sigma|$ for a fixed $H$.
+\end{proof}
+
+An immediate corollary is that the points where $\alpha$ converges lie in a half plane, which we denote by $\sigma = \sigma_c$, where $\sigma_c \in \mathbf{R} \cup \{ \pm \infty \}$ is known as the {\it abscissa of convergence}. Another corollary is that we know $\alpha$ is complex analytic for $\sigma > \sigma_c$, and therefore the $\alpha'$ is given by the Dirichlet series
+%
+\[ \alpha'(s) = - \sum_{n = 1}^\infty \log n\ a_n n^{-s} \]
+%
+which is locally uniformly convergent for $\sigma > \sigma_c$, since if $\sum_{n = 1}^\infty a_n n^{-\sigma_0}$ converges, then for $\varepsilon > 0$,
+%
+\[ \sum_{n = 1}^\infty a_n \log n\ n^{-s-\varepsilon} = \sum_{n = 1}^\infty a_n n^{-s} \frac{\log n}{n^\varepsilon} \]
+%
+converges locally uniformly in $s$ and $\varepsilon$ by a variant of Dirichlet's test, using the partial summation formula, since $n^{-1} \log n$ is decreasing for $n \geq 2$.
+
+\begin{theorem}
+    Let $A(x) = \sum_{n \leq x} a_n$. If $\sigma_c < 0$, then $A(x)$ is bounded, and
+    %
+    \[ \alpha(s) = \sum_{n = 1}^\infty a_n n^{-s} = s \int_1^\infty A(x) x^{-s-1}\ dx \]
+    %
+    for $\sigma > 0$. If $\sigma_c \geq 0$, then
+    %
+    \[ \limsup_{x \to \infty} \frac{\log |A(x)|}{\log x} = \sigma_c \]
+    %
+    and the integral formula holds for $\sigma > \sigma_c$.
+\end{theorem}
+\begin{proof}
+    Using Riemann Stieltjes integration, we find
+    %
+    \[ \sum_{n = 1}^N a_n n^{-s} = \int_{1^-}^N x^{-s} dA(x) = N^{-s} A(N) + s \int_1^N A(x) x^{-s-1} dx \]
+    %
+    Let $\gamma$ denote the limsup in the theorem. Then for $u > \gamma$, $A(x) = O(x^u)$, and so if $\sigma > u$, the integral converges absolutely as $N \to \infty$. Since $\sigma > 0$, $N^{-s} A(N) = O(N^{u-\sigma})$ tends to zero, we conclude that $\alpha(s)$ converges pointwise and is given by the formula in the theorem. If $\sigma_c < 0$, then $\alpha(0)$ is well-defined, hence $A(x)$ is bounded, and so $\gamma = 0$, implying the equation above holds for all $\sigma > 0$. We know $\gamma \geq \sigma_c$, and the only remaining part of the theorem is to show that if $\sigma_c \geq 0$, then $\gamma \leq \sigma_c$. So suppose $\sigma_0 > \sigma_c$. Then, using the calculations with the remainder term $R$ in the last theorem for $s = 0$ and $M = 0$, we conclude
+    %
+    \[ A(N) = -R(N)N^{\sigma_0} + \sigma_0 \int_0^N R(u) u^{\sigma_0 - 1} \]
+    %
+    Since the remainder term is bounded, this implies $A(N) = O(N^{\sigma_0})$, hence $\gamma \leq \sigma_0$. Since $\sigma_0$ was arbitrary, we conclude that $\gamma \leq \sigma_c$.
+\end{proof}
+
+\begin{remark}
+    This is the first example of a case where the analytic properties of some function give us information about a given sequence of numbers. In this case, the convergence properties of the Dirichlet series give us
+
+    Thus we see that understanding the analytic properties of a Dirichlet series begins to give us information about the original series, in this case, about the growth rate of the partial sums.
+\end{remark}
+
+Despite both having the property of analyticity, Dirichlet series and power series have differing analytic properties. For instance, power series always converge absolutely within their domain of definition, and converge rapidly to their value, whereas Dirichlet series are more resistant to convergence. One result of this is that a Dirichlet series may not converge absolutely within it's abcissa of convergence.
+
+\begin{example}
+The series
+%
+\[ \sum_{n = 1}^\infty (-1)^{n-1} n^{-s} \]
+%
+converges for all real valued $s > 0$, by Leibnitz's convergence test. But our discussion implies the series converges for all $s > 0$. On the other hand, taking absolute values of the terms, the series
+%
+\[ \sum_{n = 1}^\infty n^{-s} \]
+%
+cannot converge for $\sigma < 1$, since the harmonic series $\sum_{n = 1}^\infty 1/n$ diverges.
+\end{example}
+
+For any Dirichlet series, taking absolute values of terms gives another Dirichlet series, hence another abcissa of convergence, and we let $\sigma_a$ denote the abcissa on the right of which the series converges absolutely. Thus for the series above, we know that $\sigma_a = 1$, yet $\sigma_c \leq 0$, so there can be a `gap' between absolute convergence and pointwise convergence. This is as big a gap as we can get, however.
+
+\begin{theorem}
+    $\sigma_c \leq \sigma_a \leq \sigma_c + 1$.
+\end{theorem}
+\begin{proof}
+    The first inequality is trivial. To prove the second inequality, we note that if $\sum a_n n^{-\sigma}$ converges, then $|a_n| = O(n^\sigma)$, hence
+    %
+    \[ \sum |a_n| n^{-\sigma-1-\varepsilon} = O \left(\sum n^{-1-\varepsilon} \right) < \infty \]
+\end{proof}
+
+Often, we will want to bound a term in terms of the absolute value $|t|$ of the complex part. However, when we want this bound to work uniformly for small $|t|$ and for large $|t|$, we have to shift $t$ by some constant, for otherwise $|t| \to 0$. For arcane reasons, the standard is to bound the term above by $\tau := |t| + 4$.
+
+\begin{theorem}
+    Suppose $\alpha(s) = \sum a_n n^{-s}$ has abcissa of convergence $\sigma_c$. Then
+    %
+    \[ \alpha(s) \ll \tau^{1 - \delta + \varepsilon} \]
+    %
+    uniformly for $\sigma \geq \sigma_c + \delta$, if $0 < \varepsilon < \delta < 1$., where the constant depends on the coefficients $a_n$, $\delta$, and $\varepsilon$
+\end{theorem}
+\begin{proof}
+    Let $s$ be a number with $\sigma \geq \sigma_c + \delta$. With $s_0 = \sigma_c + \varepsilon$, applying the remainder term calculations from our first theorem, and then letting $N \to \infty$, we conclude
+    %
+    \[ \alpha(s) = \sum_{n = 1}^M a_n n^{-s} + R(M) M^{\sigma_c + \varepsilon - s} + (\sigma_c + \varepsilon - s) \int_M^\infty R(u) u^{\sigma_c + \varepsilon - s - 1} \]
+    %
+    The series converges, so $a_n = O(n^{\sigma_c + \varepsilon})$, and $R(u) = o(1)$, thus
+    %
+    \[ \alpha(s) = O \left( \sum_{n = 1}^M n^{\varepsilon - \delta} + M^{\sigma - \delta} + \frac{|\delta_c + \varepsilon - s|}{\delta - \delta_c - \varepsilon} M^{\sigma_c + \varepsilon - \delta} \right) \]
+    %
+    and
+    %
+    \[ \sum_{n = 1}^M n^{\varepsilon - \delta} < \int_0^M u^{\varepsilon - \delta} du = \frac{M^{1 + \varepsilon - \delta}}{1 + \varepsilon - \delta} = O \left( M^{1 + \varepsilon - \delta} \right) \]
+    %
+    Taking setting $M = \tau + O(1)$ gives the theorem.
+\end{proof}
+
+We can now use this fact to show that Dirichlet expansions of a function are unique. Note, however, that not all analytic functions have Dirichlet expansions. This is a very strong property of certain analytic functions.
+
+\begin{theorem}
+    If $\sum a_n n^{-s} = \sum b_n n^{-s}$ in some half plane, then $a_n = b_n$ for all $n$.
+\end{theorem}
+\begin{proof}
+    It suffices to prove this is true if $\sum c_n n^{-s}$ vanishes in the half plane $\sigma > \sigma_0$. Let $c_N$ be the first non-zero coefficient of the series. Then
+    %
+    \[ c_N = - \sum_{n > N} c_n (N/n)^\sigma \]
+    %
+    This series is absolutely convergent for $\sigma > \sigma_0 + 1$. But the terms on the right hand side converge pointwise to zero as $\sigma \to \infty$, which means $c_N = 0$, a contradiction which shows the uniqueness of the expansion.
+\end{proof}
+
+Another point on which the two series differ is that, whereas on the boundary of convergence a power series always has a singularity, a Dirichlet series need not have a singularity at the boundary. It does not take much to prove that the Dirichlet series
+%
+\[ \sum_{n = 1}^\infty (-1)^{n-1} n^{-s} \]
+%
+corresponds to the holomorphic function $(1 - 2^{1-s}) \zeta(s)$, which is entire (the proof of this involves Poisson summation, and we delay this to a later point). However, if the terms of a Dirichlet series are positive, we can guarantee the existence of a singularity at the boundary.
+
+\begin{theorem}[Landau]
+    Let $\alpha(s) = \sum a_n n^{-s}$ be a Dirichlet series with finite abcissa of convergence $\sigma_c$. If $a_n \geq 0$ for all $n$, then the point $\sigma_c$ is the singularity of the function $\alpha(s)$.
+\end{theorem}
+\begin{proof}
+    Without loss of generality, we may assume $\sigma_c = 0$. Suppose $\alpha(s)$ is analytic at $s = 0$, and therefore extendable to a holomorphic function in a disk $D$ of radius $\delta$ around the origin. We write
+    %
+    \[ \alpha(s) = \sum_{k = 0}^\infty c_k (s - 1)^k \]
+    %
+    as a power series at $s = 1$, which converges in a disk at least of radius $\sqrt{1 + \delta^2}$, since the nearest non-holmorphic point is $i \delta$. The coefficients of the power series expansion are
+    %
+    \[ c_k = \frac{\alpha^{(k)}(1)}{k!} = \frac{1}{k!} \sum_{n = 1}^\infty \frac{a_n (- \log n)^k}{n} \]
+    %
+    Thus
+    %
+    \[ \alpha(s) = \sum_{k = 0}^\infty \frac{(1 - s)^k}{k!} \sum_{n = 1}^\infty a_n (\log n)^k n^{-1} \]
+    %
+    If $s < 1$, all terms are non-negative, we may interchange summation and write
+    %
+    \[ \alpha(s) = \sum_{n = 1}^\infty \frac{a_n}{n} \sum_{k = 0}^\infty \frac{(1 - s)^k}{k!} (\log n)^k = \sum_{n = 1}^\infty \frac{a_n}{n} \exp((1 - s) \log n) = \sum_{n = 1}^\infty a_n n^{-s} \]
+    %
+    and the left hand sum is finite for $s < \sqrt{1 + \delta^2} - 1$, a contradiction completing the proof.
+\end{proof}
+
+\section{Dirichlet Convolutions and Euler Products}
+
+The most basic and fundamental Dirichlet series is the Riemann zeta function
+%
+\[ \zeta(s) = \sum_{n = 1}^\infty \frac{1}{n^s} \]
+%
+We know it converges absolutely for $\sigma > 1$, and has a signularity at $\sigma = 1$. Euler established a fundamental connection between this function and the primes, establishing that for $\sigma > 1$,
+%
+\[ \zeta(s) = \prod_p \left( 1 - p^{-1} \right)^{-1} \]
+%
+where the product is taken over {\it prime numbers}. One can see it as an analytic variant of the fundamental theorem of arithmetic. In this section we will prove this representation, as well as other representations for more general Dirichlet series.
+
+We have brashly reasoned that Dirichlet series work well to understand multiplicative functions. Here we establish a first relation between multiplication of Dirichlet series and the multiplicativity of the series' coefficients.
+
+\begin{theorem}
+    Let $\alpha(s) = \sum a(n) n^{-s}$ and $\beta(s) = \sum b(n) n^{-s}$ be two Dirichlet series, and set $\gamma(s) = \sum (a * b)(n) n^{-s}$, where $a * b$ is the {\it Dirichlet convolution} of the two series. Then whenever $\alpha$ and $\beta$ are both absolutely convergent, so too is $\gamma$, and $\gamma(s) = \alpha(s) \beta(s)$.
+\end{theorem}
+\begin{solution}
+    
+\end{solution}
+
+\begin{theorem}
+    If $\alpha(s) = \sum a(n) n^{-s} < \infty$, where $a$ is a multiplicative function, then
+    %
+    \[ \alpha(s) = \prod_p \left( 1 + a(p) p^{-s} + a(p^2) p^{-2s} + \dots \right) \]
+\end{theorem}
+
+
+
 \end{document}
