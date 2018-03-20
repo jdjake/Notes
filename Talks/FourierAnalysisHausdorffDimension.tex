@@ -1,0 +1,356 @@
+\documentclass{article}
+
+%% for editing
+%\usepackage{changes}
+%\usepackage[final]{changes} %% comment above line and uncomment this line to see final copy without markup
+%\setremarkmarkup{~(#2)}
+\usepackage{color}
+
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{multicol}
+%\usepackage[margin=1in]{geometry}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usepackage{hyperref}
+\usepackage{mathabx}
+\usepackage{comment}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{prop}[theorem]{Proposition}
+
+\theoremstyle{remark}
+\newtheorem*{example}{Example}
+\newtheorem*{proof*}{Proof}
+
+\theoremstyle{definition}
+\newtheorem*{defi}{Definition}
+\newenvironment{definition}
+    {\begin{samepage}\begin{framed}\begin{defi}}
+    {\end{defi}\end{framed}\end{samepage}}
+
+\title{Radon Transforms and Exceptional Projections}
+\author{Jacob Denson}
+
+\begin{document}
+
+\begin{comment}
+
+I propose to write a term report comparing and contrasting two methods to prove a theorem related to the theory of projections and Hausdorff dimension. The following is a brief discussion of the problem I wish to discuss, which we will take from Oberlin's paper ``Restricted Radon Transforms and Projections of Planar Sets''. If $L$ is an arbitrary line in Euclidean space, and $A$ is a Euclidean set, let $P_L(A)$ denote the projection of $A$ onto the line $L$. Recall Marstrand's projection theorem.
+
+\begin{theorem}
+	If $A$ is a Borel Euclidean set, then
+	%
+	\begin{itemize}
+		\item If $\dim A \leq 1$, then for a.e. $L$, $\dim P_L(A) = \dim A$ has dimension $d$.
+		\item If $\dim A > 1$, then for a.e. $L$, $P_L(A)$ has positive Lebesgue measure.
+		\item If $\dim A > 2$, then for a.e. $L$, $P_L(A)$ has nonempty interior.
+	\end{itemize}
+	%
+	so thick sets are likely to project down to thick sets.
+\end{theorem}
+
+One theme we explored in the class is that Hausdorff dimension provides a `higher order' estimate on the size of certain sets of the plane, providing more information than just the fact that a set has zero measure. It is therefore natural to extend Marstrand's projection theorem by asking how large the dimension of the set of `exceptional lines' is for which the properties of Marstrand's projection theorem fails to hold. For instance, we could ask the dimension of the set of lines $L$ for which $\dim P_L(A) < \dim A$, or the dimension of the set of lines for which $\dim P_L(A)$ has zero Lebesgue measure. Marstrand's results generalize, with some technical details, to show that the Hausdorff dimension of these sets decreases linearly with respect to the Hausdorff dimension. But Bourgain and Oberlin, in two separate papers, explored a much more powerful result in the plane.
+
+\begin{theorem}
+	If $A$ is a Borel subset of the plane, then
+	%
+	\[ \dim \{ e \in S^1 : \dim P_e(A) \leq \dim A/2 \} = 0 \]
+\end{theorem}
+
+Oberlin's proof is more modern, avoiding the deep discretized results in arithmetic combinatoric required for Bourgain's proof, relying on results about the interpolation theory of functions in Besov spaces. I'll elaborate on the terse proof that Oberlin gives in his paper, as well as discussing the basic results on the interpolation theory of Besov spaces required in the proof, using Giovanni Leoni's book "A First Course in Sobolev Spaces".
+
+\section{Marstrand's Projection Theorem}
+
+The aim of Marstrand's projection theorem is to show that projections of fat sets remain fat, except in certain quantifiable `exceptional situations'. For instance, the line $l$ in $\mathbf{R}^d$, for $d \geq 2$ projects onto a line on any $d-1$ dimensional hyperplane, except if the hyperplane is perpendicular to $l$, in which case the projection in a point. But notice that the space of hyperplanes in $\mathbf{R}^d$ is $2d-2$ dimensional, whereas the space of hyperplanes parallel to a line $l$ is $1$ dimensional, which is a negligible set. Thus for `almost every' hyperplane, the dimension is maintained under projection.
+
+Given $e \in S^{d-1}$, we let $P_e: \mathbf{R}^d \to \mathbf{R}$ be defined by setting $P_e(x) = e \cdot x$ denote orthogonal projection. Since $P_e$ is Lipschitz, $\dim(P_e(E)) \leq \dim E$. We begin with the first result of Marstrand projection.
+
+\begin{theorem}
+	Let $E$ be an $\alpha$ dimensional Borel set in $\mathbf{R}^d$. Then for almost every $e \in S^{d-1}$,
+	%
+	\begin{itemize}
+		\item If $\alpha \leq 1$, $\text{dim}(P_e(E)) = \alpha$.
+		\item If $\alpha > 1$, the Lebesgue measure of $P_e(E)$ is positive.
+		\item If $\alpha > 2$, $P_e(E)$ has nonempty interior.
+	\end{itemize}
+\end{theorem}
+\begin{proof}
+	Fix $\mu \in M(E)$. Given $e \in S^{d-1}$, we define the measure $\mu_e = (P_e)_*(\mu)$ to be the pushforward measure of $\mu$. Then
+	%
+	\[ \widehat{\mu_e}(\xi) = \int_{-\infty}^\infty e^{- i \xi x} d\mu_e(x) = \int_{\mathbf{R}^d} e^{- i \xi (x \cdot e)} d\mu(x) = \widehat{\mu}(\xi e) \]
+	%
+	Thus
+	%
+	\[ I_\alpha(\mu_e) = \int_{-\infty}^\infty |\widehat{\mu_e}(\xi)|^2 |\xi|^{\alpha - 1}\; d\xi = \int_{-\infty}^\infty |\widehat{\mu}(\xi e)|^2 |\xi|^{\alpha - 1}\; d\xi  \]
+	%
+	This implies that, switching out of polar coordinates,
+	%
+	\begin{align*}
+		\int_{S^{d-1}} I_\alpha(\mu_e)\; d\sigma(e) &= \int_{S^{d-1}} \int_{-\infty}^\infty |\widehat{\mu}(\xi e)|^2 |\xi e|^{\alpha - 1} d\sigma(e)\\
+		&\propto_d \int_{\mathbf{R}^d} |\widehat{\mu}(x)|^2 |x|^{\alpha - n} = I_\alpha(\mu)
+	\end{align*}
+	%
+	Using Fubini's theorem, if $I_\alpha(\mu) < \infty$, then $I_\alpha(\mu_e) < \infty$ for almost every $e$, and now choosing countably many $\alpha$ approaching the Hausdorff dimension of $E$ from below, we conclude that $\text{dim}_{\mathbf{H}}(P_e(E)) \geq \alpha$ almost surely, and we obtain inequality from the standard Lipschitz upper bound.
+
+	If $\alpha > 1$, then $I_1(\mu_e) < \infty$ for almost all $e \in S^{n-1}$, hence
+	%
+	\[ \int_{-\infty}^\infty |\widehat{\mu}(x)|^2\; dx < \infty  \]
+	%
+	But this implies $\mu_e \in L^2(\mathbf{R})$, hence $\mu_e$ is absolutely continuous with respect to the Lebesgue measure. But then
+	%
+	\[ 0 < \mu(E) = \mu_e(P_e(E)) = \int_{-\infty}^\infty \frac{d\mu_e}{dx}\; dx \]
+	%
+	and this implies $|P_e(E)| > 0$.
+\end{proof}	
+
+\end{comment}
+
+\maketitle
+
+Recall the most basic form of the Marstrand projection theorem.
+
+\begin{theorem}
+	Let $E$ be a Borel Euclidean set. Then, for almost every $e \in S^{n-1}$,
+	%
+	\[ \dim_{\mathbf{H}} P_e(E) = \min(\dim_{\mathbf{H}} E, 1) \]
+	%
+	In other words, we rarely lose dimension when projecting onto lines.
+\end{theorem}
+
+If we wish to add depth to our understanding of projections, there are two natural directions we could proceed down:
+%
+\begin{itemize}
+	\item Can we still obtain Marstrand-like projection theorems if we restrict the lines we project onto? How does the dimension of a smooth submanifold of lines affect the Hausdorff dimension of projections? For instance, in $\mathbf{R}^3$, we can try projecting onto lines in the plane, and we find that almost surely we only lose at most one unit of dimension in the projection, i.e. $\dim_{\mathbf{H}}(P_e(E)) \geq \min(1, \dim_{\mathbf{H}}(E) - 1)$. One can proceed analogously into the analysis of projections in the Grassmanian manifolds $G(n,m)$.
+
+	\item One theme we've explored in this semester's harmonic analysis class is that the theory of Hausdorff dimension provides a `second order' estimate on the size of a set. It allows us to distinguish between those sets of dimension zero, which have a density behaving like discrete point sets, and sets of dimension one, which, though they have measure zero, have a density much closer to a linear continuum. Marstrand's result says that the set of `singular' directions $e$ for which $\dim_{\mathbf{H}} P_e(E) < \min(\dim_{\mathbf{H}} E, 1)$ has measure zero. A natural extension to the theorem is to understand the Hausdorff dimension of the singular directions upon which Marstrand's theorem fails.
+\end{itemize}
+%
+In this paper we concentrate on the second point. Using the capacity techniques we learned in class (the proof is in the book), it is fairly easy to prove that
+
+\begin{theorem}
+	If $E \subset \mathbf{R}^n$ has dimension $\alpha \leq 1$, then for all $\beta \leq \alpha$.
+	%
+	\[ \dim \{ e \in S^{n-1}: \dim(P_e(E)) < \beta \} \leq (n - 2) + \beta \]
+\end{theorem}
+
+The main result we discuss shows that, at least in two dimensions, this result is not sharp -- an incredibly sparse set of directions reduces the dimension by more than a half.
+
+\begin{theorem}
+	If $E \subset \mathbf{R}^2$ has dimension $\alpha \leq 1$, then for all $\beta \leq \alpha$,
+	%
+	\[ \dim_{\mathbf{H}} \{ e \in S^{n-1}: \dim_{\mathbf{H}} P_e(E) < \min(\dim_{\mathbf{H}}(E)/2,1) \} = 0 \]
+\end{theorem}
+
+The main ideas behind this proof will be to prove estimates for a `unit length' variant of the Radon transform in the plane, which in some way reflects how our estimates for the restriction conjecture allow us to prove results about the dimensions of Kakeya sets.
+
+Before we begin, let's understand why Radon transforms appear in the understanding of projective sets. One key idea in Marstrand and Kaufman's approach to their projection theorem is that if we project a measure $\mu$ onto a line generated by $e$, then $\widehat{\mu_e}(\xi) = \widehat{\mu}(\xi e)$. If anyone's seen the Radon transform before, this should be ringing bells. Recall that given a function $f$ on $\mathbf{R}^d$, then the Radon transform $Rf$ is defined on the space of hyperplanes $\Sigma$ in $\mathbf{R}^d$, defined by
+%
+\[ (Rf)(\Sigma) = \int_\Sigma f(x)\; dx \]
+%
+One can parameterize the family of hyperplanes in $\mathbf{R}^d$ by $e \in S^{d-1}$ and $s \in \mathbf{R}$ via the family of locii $e \cdot x = s$. If $\Sigma$ is the hyperplane orthogonal to $e$, then we obtain a partial family of functions $R_ef$ on $\mathbf{R}$ defined by
+%
+\[ (R_ef)(s) = \int_\Sigma f(se + x)\; dx \]
+%
+To understand the Radon transform, the standard approach is to use the Fourier transform, which tells us $\widehat{f}(\xi e) = \widehat{R_e f}(\xi)$. This is exactly the equation for the relation of the Fourier transform of the measure $\mu_e$ with the transform of $\mu$. This makes sense, since if $\mu = f dx$, then one finds $\mu_e = (Rf)_e dx$. Thus projections of measures is a generalization of Radon transforms of functions, and so it makes sense that the Radon transform should play a key role in the further analysis of Marstrand like projection results.
+
+\section{Overview of Proof}
+
+The main tool of Oberlin's proof relies on the following tool, which we now motivate. As with Frostman's lemma, we require some form of energy integrals. However, rather than considering the Riesz kernel on $\mathbf{R}^n$, we require a bounded variant, expressed as
+%
+\[ K_\alpha(x) = \frac{\chi_{B(0,R)}(x)}{|x|^\alpha} \]
+%
+where $R$ is a fixed radius. If $\alpha < \beta$, and $\mu$ is measure supported on a $\beta$ dimensional subset of $\mathbf{R}^n$, we find that $K_\alpha * \nu$ is bounded, since the control on the singular part of $\nu$ cancels out the singular part of $K_\alpha$. In particular, we know $\mu(B_r(x)) \lesssim r^{\alpha + \varepsilon}$, so applying a Lebesgue Stieltjes intergral, setting $F_\nu(r) = \nu(B_r(x))$, we find
+%
+\begin{align*}
+	(K_\alpha * \nu)(x) &= \int_{B_r(x)} \frac{d\nu(y)}{|x - y|^\alpha} = \int_0^R \frac{dF_\nu(r)}{r^\alpha} \\
+	&= \left. \frac{F_\nu(r)}{r^\alpha} \right|_0^R + \alpha \int_0^R \frac{F_\nu(r)}{r^{\alpha + 1}}\; dr\\
+	&= \frac{\nu(B_R(x))}{R^\alpha} + \alpha \int_0^R \frac{\nu(B_r(x))}{r^{\alpha + 1}}\; dr \lesssim 1 + \alpha \int_0^R \frac{1}{r^{1 - \varepsilon}}\; dr
+\end{align*}
+%
+So we conclude $\mu * K_\alpha \in L^\infty(\mathbf{R}^d)$. If $\alpha < d$,
+%
+\begin{align*}
+	\int\displaylimits_{\mathbf{R}^d} (K_\alpha * \nu)(x) &= \int\displaylimits_{\mathbf{R}^d} \frac{\nu(B_R(x))}{R^{\alpha}} \; dx + \alpha \int\displaylimits_{\mathbf{R}^d} \int_0^R \frac{\nu(B_r(x))}{r^{\alpha + 1}}\; dr\; dx\\
+	&\leq V_d R^{d-\alpha} \| \nu \|_1 + V_d \alpha \| \nu \|_1 \int_0^R r^{d - \alpha - 1}\; dr\\
+	&= V_d \| \nu \|_1 \left( R^{d- \alpha} + \frac{\alpha R^{d-\alpha}}{d - \alpha} \right) < \infty
+\end{align*}
+%
+Thus $\mu * K_\alpha \in L^1(\mathbf{R}^d)$. This fact doesn't depend on any properties of $\mu$ except it's boundedness; rather, the important thing here is that our Riesz kernel is now bounded. Interpolating, we find $\mu * K_\rho \in L^p(\mathbf{R}^d)$ if $\rho < \alpha + (d - \alpha)/p$. TODO: WHY DOES INTERPOLATION WORK THIS WAY? We rely on a converse statement of this, which can be viewed as an interpolation friendly version of Frostman's lemma.
+
+\begin{prop}
+	Let $E$ be a Borel set, and suppose $\mu$ is a Radon measure supported on $E$, and there is $p > 1$ with $\mu * K_\alpha \in L^p(\mathbf{R}^d)$. If
+	%
+	\[ \beta = \frac{\alpha}{1 - 1/p} - \frac{d}{p-1} \]
+	%
+	Then for every $\varepsilon > 0$, $\mu$ is absolutely continuous with respect to the $\beta - \varepsilon$ dimensional Hausdorff measure, and so the support of $\mu$ has Hausdorff dimension at least $\alpha$.
+\end{prop}
+
+The proof relies on the theory of Besov spaces, which we probably won't have time to get to in this talk. Essentially, the proof replaces the energy integrals of a measure in Frostman's original proof with Besov capacities over a set, which in a certain sense measures the ability for us to construct a bump function covering the set out of small Fourier frequencies. To use this proposition, we will show that for an $\alpha$ dimensional measure $\mu$ and a $\beta$ dimensional measure $\lambda$ supported on the unit circle, for appropriately choosen $p$, $q$, and $\gamma$,
+%
+\[ \int_{S^1} \| \mu_e * K_\gamma \|_p^q\; d\lambda(e) < \infty \]
+%
+The proposition will then imply that for $\lambda$ almost every direction $e$, the Hausdorff dimension exceeds $\alpha/2 - \varepsilon$, and since $\lambda$ is $\beta$ dimensional, we conclude that the exceptional set of directions $e$ with $\dim_{\mathbf{H}}(P_e(E)) < \dim_{\mathbf{H}}(E)/2$ has Hausdorff dimension $< \beta$. We then take $\beta \to 0$, completing the proof. TODO: MORE DETAIL HERE.
+
+\section{Bounds on the Radon Transform}
+
+The mixed norm bound we required in the last section forces us to consider integral bounds of the form
+%
+\[ \int_{S^1} \| \mu_e * K_\gamma \|_p^q\; d\lambda(e) < \infty \]
+%
+If $R$ is chosen large enough, depending on the support of $\mu$, we find that, with a constant independent of $e$, TODO: WHY?
+%
+\[ (\mu_e * K_{\alpha - 1})(t) \lesssim \int_{-R}^R (\mu * K_\alpha)(t e + s e^\perp)\; ds \]
+%
+Thus a second order goal is to prove estimates for values of the form
+%
+\[ \int_{S^1} \left\| \int_{-R}^R (\mu * K_{\gamma+1})(te + se^\perp)\; ds \right\|_p^q d\lambda(e) < \infty \]
+%
+This is an estimate for a slight modification to the {\it Radon transform} in the plane, where the averages are now restricted only to perpendicular values on a line with length $R$ in each direction. Once we rescale our radius $R$ to a unit value, we can consider a unit length Radon transform
+%
+\[ (R_e f)(t) = \int_{-1}^1 f(te + se^\perp)\; ds \]
+%
+Since we will know in advance that $\mu * K_\alpha \in L^p$ for a certain $p$, for our purposes it will suffice for us to construct {\it mixed norm} bounds of the form
+%
+\[ \left( \int \| R_e f \|_s^q\; d\lambda(e) \right)^{1/q} = \left( \int \left( \int |(R_e f)(t)|^s\; dt \right)^{q/s} d\lambda(e) \right)^{1/q} \lesssim \left( \int |f(x)|^p\; dx \right)^{1/p} \]
+%
+where $\lambda$ is an $\alpha$ dimensional probability measure. To understand what relations are expected of $p,q$, and $s$ in order for this inequality to hold, we now compute some examples.
+
+\begin{example}
+	Let $f = \chi_{B(0,\delta)}$. Drawing a picture of this scenario immediately says
+	%
+	\[ (R_e f)(t) = \begin{cases} 2 \sqrt{\delta^2 - t^2} &: 0 \leq t < \delta \\ 0 &: t > \delta \end{cases} \]
+	%
+	Thus
+	%
+	\[ \| R_e f \|_s^s = 2 \int_0^\delta (\delta^2 - t^2)^{s/2}\; dt \]
+	%
+	If $t = \delta \sin u$, then $dt = \delta \cos u$, and so this integral is
+	%
+	\[ 2 \delta^{s+1} \int_{-\pi/2}^{\pi/2} (1 - \sin^2 u)^{s/2} \cos u\; du = \Theta_s(\delta^{s+1}) \]
+	%
+	Thus the left hand side of the mixed norm bound is $\Theta_s(\delta^{1+1/s})$. But
+	%
+	\[ \| f \|_p = (\pi \delta^2)^{1/p} = \Theta_p(\delta^{2/p}) \]
+	%
+	We therefore conclude that if the bound holds, then $2/p \leq 1 + 1/s$.
+\end{example}
+
+\begin{example}
+	If there is $e_0 \in S^1$ with $\lambda(B_\delta(e_0)) \gtrsim \delta^\alpha$ for small enough $\delta$, then $f$ to be the characteristic function of 1 by $\delta$ rectangles facing the direction $e_0^\perp$, we find that for $t \leq \delta$, and $e$ in a $\delta$ neighbourhood, $(R_ef)(t) \gtrsim 1$, hence $\| R_e f \|_s \gtrsim \delta^{1/s}$, and hence
+	%
+	\[ \left( \int \| R_e f \|_s^q\; d\lambda(e) \right)^{1/q} \gtrsim (\delta^{q/s} \delta^\alpha)^{1/q} = \delta^{1/s + \alpha/q} \]
+	%
+	Whereas $\| f \|_p = \delta^{1/p}$, so if the bound holds, $1/p \leq 1/s + \alpha/q$.
+\end{example}
+
+\begin{example}
+	If the Lebesgue measure in $S^1$ of the $\delta$ neighbourhood in $S^1$ of the support of $\lambda$ is $\lesssim \delta^{1-\alpha}$, then if we let $f$ denote the characteristic function of the unions of 1 by $\delta$ rectangles orthogonally to the directions of the support of $\lambda$, then $\| f \|_p \lesssim \delta^{(1 - \alpha)/p}$, and $(R_e f)(t) = 1$ for $t \leq 1$ and $e$ in the support of $\lambda$, hence $\| R_e f \|_s \gtrsim \delta^{1/s}$, and
+	%
+	\[ \left( \int \| R_e f \|_s^q d\lambda(e) \right)^{1/q} \gtrsim \delta^{1/s} \]
+	%
+	This gives another bound, $\frac{1 - \alpha}{p} \leq \frac{1}{s}$.
+\end{example}
+
+These examples provide all the cases at the boundary of where the inequality fails to hold. These three inequalities give precisely the requirements ensuring the bound will hold, if we interpret the inequalities as strict ones.
+
+\begin{theorem}
+	If $2/p < 1 + 1/s$, $1/p < 1/s + \alpha/q$, and $(1-\alpha)/p < 1/s$, then
+	%
+	\[ \left( \int \left( \int |(R_e f)(t)|^s\; dt \right)^{q/s} d\lambda(e) \right)^{1/q} \lesssim \left( \int |f(x)|^p\; dx \right)^{1/p} \]
+\end{theorem}
+\begin{proof}
+	The values close to the boundary  occur when $(p,q,r)$ is close to $(1 + \alpha, 1 + \alpha, (1 + \alpha)/(1 - \alpha))$. Using interpolation arguments and estimates (is this like Kakeya discretization), it suffices to prove this theorem assuming $f = \chi_E$ and $(p,q,r)$ are arbitrarily close to $(1 + \alpha, 1 + \alpha, (1 + \alpha)/(1 - \alpha))$. We can further reduce this to showing $(R_e \chi_E)(t) \geq \mu$ for $e \in A$, $t \in B(e)$, where there is some $B$ such that $B \leq m_1(B(e))$
+\end{proof}
+
+\section{Completing Oberlin's Proof}
+
+Let $(p,q,s)$ approach $(1 + \alpha, 1 + \alpha, (1 + \alpha)/(1 - \alpha))$ from below. For any $\varepsilon > 0$, we find
+%
+\[ \int_{S^1}  \| \mu_e * K_{(1 - \alpha + \alpha \beta)/(1 + \alpha) - \varepsilon} \|_{(1 + \alpha - \varepsilon)/(1 - \alpha)}^{1 + \alpha - \varepsilon} < \infty \]
+%
+This shows that the support of $\mu_e$ is $\lambda$ almost surely
+%
+\begin{align*}
+	\beta &= \frac{(1 - \alpha + \alpha \beta) - \varepsilon(1 + \alpha)}{(1 + \alpha)(1 - (1 - \alpha)/(1 + \alpha - \varepsilon))} - \frac{1}{(1 + \alpha - \varepsilon)/(1 - \alpha) - 1}\\
+	&= (1 + \alpha - \varepsilon) \frac{(1 - \alpha + \alpha \beta) - \varepsilon(1 + \alpha)}{(1 + \alpha)(2\alpha - \varepsilon)} - \frac{1 - \alpha}{2\alpha - \varepsilon}
+\end{align*}
+%
+dimensional. Taking $\varepsilon \to 0$, we conclude that the support of $\mu_e$ is $\lambda$ almost surely
+%
+\[ \frac{1 - \alpha + \alpha \beta}{2\alpha} - \frac{1 - \alpha}{2\alpha} = \beta / 2 \]
+%
+dimensional. This completes the calculation which allows us to prove the dimension bound.
+
+\section{Future Work}
+
+A natural conjecture following from this work is that if $\alpha \leq \beta \leq 1$, then
+%
+\[ \dim \{ e \in S^1: \dim_{\mathbf{H}} P_e(E) < (\alpha + \beta)/2 \} \leq \alpha \]
+%
+Which relates in some sense to Furstenberg's conjecture, though I know nothing about this.
+
+\begin{comment}
+
+\section{Besov Spaces}
+
+Recall the Schwarz function $\varphi$ used to prove the Mihlin multiplier theorem. We now define functions $\varphi_k$ such that
+%
+\[ \widehat{\varphi_n}(\xi) = \varphi(2^{-n} \xi)\ \ \ \ \ \ \ \ \widehat{\psi}(\xi) = 1 - \sum_{n = 1}^\infty \varphi(2^{-n} \xi) \]
+%
+Thus $\varphi_n$ essentially covers the annulus $2^{n-1} \leq |\xi| \leq 2^{n+1}$, and the function $\psi$ covers the remaining low frequency parts covered in the frequency ball of radius 2. We have
+%
+\[ \varphi_n(\xi) = \widecheck{\varphi_{2^{-n}}}(\xi) = 2^{dn} \widecheck{\varphi}(2^n \xi) \]
+%
+Given $s \in \mathbf{R}$, and $1 \leq p, q \leq \infty$, we write
+%
+\[ \| f \|_{pq}^s = \| \psi * f \|_p + \left( \sum_{n = 1}^\infty (2^{sn} \| \varphi_k * f \|_p)^q \right)^{1/q} \]
+%
+The convolution $\varphi_n * f$ essentially captures the portion of $f$ whose frequencies lie in the annulus $2^{n-1} \leq |\xi| \leq 2^{n+1}$
+
+\end{comment}
+
+\begin{thebibliography}{9}
+
+\bibitem{obrerlin}
+    M. Oberlin,
+    \emph{Restricted Radon Transforms and Projections of Planar Sets},
+    Canadian Mathematical Bulletin,
+    2012.
+
+\bibitem{besov}
+    Giovanni Leoni,
+    \emph{A First Course in Sobolev Spaces},
+    Springer,
+    2017.
+
+\bibitem{kaufman}
+	Robert Kaufman,
+	\emph{On Hausdorff Dimension of Projections},
+	1968.
+
+\bibitem{matilla}
+	Pertti Matilla,
+	\emph{Fourier Analysis and Hausdorff Dimension},
+	2015.
+
+\end{thebibliography}
+
+\end{document}
+
+%Bourgain. On the Erd ̈os–Volkmann and Katz–Tao ring conje
+%ctures,
+%Geom. Funct. Anal.
+%13
+%(2003), 334–365.
+%[B4]    J. Bourgain. The discretized sum-product and projection the
+%orems,
+%J. Anal. Math.
+%112
+%(2010),
+%193–236.
