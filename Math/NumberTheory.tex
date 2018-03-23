@@ -428,6 +428,35 @@ We have brashly reasoned that Dirichlet series work well to understand multiplic
     \[ \alpha(s) = \prod_p \left( 1 + a(p) p^{-s} + a(p^2) p^{-2s} + \dots \right) \]
 \end{theorem}
 
+\chapter{Arithmetic Progressions, Analytically}
+
+\section{Characters}
+
+We begin by describing a certain arithmetic trick. Suppose we are considering a generating function $f(z) = \sum_{n = 0}^\infty a_n z^n$ for a certain sequence $a_n$. Plugging in $-z$ into the function rather than $z$, we obtain that
+%
+\[ \frac{f(z) + f(-z)}{2} = \sum_{n = 0}^\infty a_n (z^n + (-z)^n) = \sum_{n = 0}^\infty [1 + (-1)^n] a_n z^n = 2 \sum_{n\ \text{even}} a_n z^n \]
+\[ \frac{f(z) - f(-z)}{2} = \sum_{n\ \text{odd}} a_n z^n \]
+%
+More generally, let $\zeta$ denote an $N$'th root of unity. Then if $\zeta \neq 1$,
+%
+\[ \sum_{n = 0}^{N-1} \zeta^n = \frac{\zeta^N - 1}{\zeta - 1} = 0 \]
+%
+and if $\zeta = 1$, the sum is $N$. Thus if $\zeta$ is a primitive root of unity,
+%
+\[ \sum_{n \in \mathbf{Z}_N} \zeta^{-na} \zeta^{nm} = \sum_{n \in \mathbf{Z}_N} (\zeta^m/\zeta^a)^n = \begin{cases} N &: m \equiv a \pmod N \\ 0 &: m \not \equiv a \pmod N \end{cases} \]
+%
+Thus, with respect to the inner product $\langle f, g \rangle = N^{-1} \sum_{n \in \mathbf{Z}_N} f(n) \overline{g}(n)$, the functions $\chi_n(m) = \zeta^{nm}$ are orthonormal, and therefore form a basis for the $N$ dimensional space of all $N$ periodic arithmetic sequences. Thus for any $N$ periodic function $f$, we find
+%
+\[ f(m) = \sum_{m \in \mathbf{Z}_N} \langle f, \chi_n \rangle \chi_n(m) \]
+%
+The values $\widehat{f}(n) = \langle f, \chi_n \rangle$ are known as the {\bf finite Fourier coefficients} of the function $f$, and the function $\widehat{f}$ is known as the finite Fourier transform of $f$. Again, linear algebra tells us
+%
+\[ \frac{1}{N} \sum_{n \in \mathbf{Z}_N} |f(n)|^2 = \sum_{n \in \mathbf{Z}_N} |\widehat{f}(n)|^2 \]
+%
+
+
+Suppose we have a power series $f(z) = \sum_{n = 0}^\infty a_n z^n$. Then a linear combination of shifts able us to 
+
 \section{Smooth Numbers}
 
 Let $\psi(x,y)$ denote the number of $y$-smooth integers up to $x$, i.e.
@@ -584,11 +613,102 @@ if $\chi \neq \chi_0$. $f_x(\alpha)$ is periodic of period 1, we can compute it'
 %
 We could have obtained Polya Vinogradov by estimating this sum. Now if $\chi$ is primitive modulo $q$, then
 %
-\[ \sum_{0 < n \leq q/2} \chi(n) = \begin{cases} 0 & : \text{if $\chi$ is even} \\ (2 - \chi(2)) \frac{\tau(\chi)}{\pi i} L(1,\overline{\chi}) &: \tex{$\chi$ odd}\end{cases} \]
+\[ \sum_{0 < n \leq q/2} \chi(n) = \begin{cases} 0 & : \text{if $\chi$ is even} \\ (2 - \chi(2)) \frac{\tau(\chi)}{\pi i} L(1,\overline{\chi}) &: \text{$\chi$ odd} \end{cases} \]
 %
 In particular, if $d < 0$ is a fundamental discriminant, then
 %
 \[ \sum_{0 < n \leq q/2} \left( \frac{d}{n} \right)_K > 0 \]
 %
+
+\section{March Twenty First}
+
+In order to do our work today, we require an understanding of the Gamma function, which is defined, for $\sigma > 0$, by
+%
+\[ \Gamma(s) = \int_0^\infty e^{-x} x^{s-1}\; dx \]
+%
+Note this is an additive character convolved with a multiplicative character. First year calculus tells us that $\Gamma(1) = 1$. Integrating by parts, we find
+%
+\[ \Gamma(s+1) = \int_0^\infty e^{-x} x^s\; dx = \left. e^{-x}x^s \right|_\infty^0 + s \int_0^\infty e^{-x} x^{s-1} = \Gamma(s) \]
+%
+Note that we can also go backwards, setting $\Gamma(s) = \Gamma(s+1)/s$. This allows us to analytically continue the gamma function meromorphically to the entire complex plane, with poles at $s = 0, -1, -2 ,\dots$. An alternate definition for the gamma function is
+%
+\[ \Gamma(s) = \lim_{N \to \infty} \frac{N^s N!}{s(s+1) \dots (s+N)} \]
+%
+A consequence is that
+%
+\begin{align*}
+    \Gamma(s)\Gamma(1-s) &= \lim_{N \to \infty} \left( \frac{N^s}{s} \prod_{n = 1}^N \right) \left( \frac{N^{1-s}}{1 + s/n} \prod_{n = 1}^N \frac{1}{1 + (1-s)/n} \right)\\
+    &= \lim_{N \to \infty} \frac{N}{s(N+1-s)} \prod_{n = 1}^N \frac{1}{1 - (s/n)^2}\\
+    &= \frac{\pi}{\pi s} \prod_{n = 1}^\infty \frac{1}{1 - (\pi s / \pi k)^2} = \frac{\pi}{\sin(\pi s)}
+\end{align*}
+%
+This is the reflection formula for the gamma function. One can then show that
+%
+\[ \Gamma(s) \Gamma(s + 1/2) = \Gamma(2s) \sqrt{\pi} 2^{1-s} \]
+%
+A third definition of the gamma function is
+%
+\[ \Gamma(s) = \frac{1}{se^{C_0 s}} \prod_{n = 1}^\infty \frac{e^{s/n}}{1 + s/n} \]
+%
+This reflects the general desire of writing a meromorphic function on the complex plane as a product over zeroes and poles of the function.
+
+\begin{remark}
+    If we wanted a meromorphic function with poles at $0, -1, \dots$, we might consider the infinite product
+    %
+    \[ \prod_{n = 1}^\infty \frac{1}{1 + s/n} \]
+    %
+    Unfortunately, except for $s = 0$, this function does not converge. On the other hand, it doesn't hurt us to introduce exponentials to make the convergence work, leading to the product
+    %
+    \[ \prod_{n = 1}^\infty \frac{e^{s/n}}{1 + s/n}  \]
+    %
+    Since
+    %
+    \[ \frac{e^{s/n}}{1 + s/n} = \frac{1 + s/n + O(|s|^2/n^2)}{1 + s/n} = 1 + O \left( \frac{|s|^2}{n^2} \right) \]
+\end{remark}
+
+Another function which will be of interest to us is the classical theta function. For $\alpha \in \mathbf{R}$ and $z \in \mathbf{C}$ with $\Re(z) > 0$, Poisson summation implies
+%
+\[ \sum_{n = -\infty}^\infty e^{- \pi (n + \alpha)^2 z} = z^{-1/2} \sum_{n = -\infty}^\infty e(n\alpha) e^{\pi n^2/z} \]
+%
+differentiating term by term, we find
+%
+\[ \sum_{n = -\infty}^\infty (n + \alpha) e^{- \pi  (n + \alpha)^2 z} = - iz^{-3/2} \sum_{n = -\infty}^\infty n e(n\alpha) e^{- \pi n^2/z} \]
+%
+Define $\theta(u) = \sum_{n = -\infty}^\infty e^{- \pi n^2 u} = 1 + 2 \sum_{n = 1}^\infty e^{- \pi n^2 u}$. The $\alpha = 0$ case of Poisson summation gives $\theta(u) = u^{-1/2} \theta(1/u)$. Now
+%
+\[ \Gamma(s/2) = \int_0^\infty e^{-x} x^{s/2 - 1}\; dx = n^s \pi^{s/2} \int_0^\infty e^{- \pi n^2 u} u^{s/2 - 1}\; du \]
+%
+So for $\sigma > 1$,
+%
+\begin{align*}
+    \zeta(s) \Gamma(s/2) \pi^{-s/2} &= \sum_{n = 1}^\infty n^{-s} \Gamma(s/2) \pi^{-s/2} = \sum_{n = 1}^\infty \int_0^\infty e^{- \pi n^2 u} u^{s/2 - 1}\; du\\
+    &= \int_0^\infty \frac{\theta(u) - 1}{2} u^{s/2 - 1}\; du\\
+    &= \frac{1}{2} \int_1^\infty (\theta(1/v) - 1) v^{-1-s/2}\; dv\\
+    &= \frac{1}{2} \int_1^\infty (v^{1/2} \theta(v) - 1) v^{-1-s/2}\; dv
+\end{align*}
+%
+Note: This calculation didn't quite work, and Greg got frustrated, so he just told us we were meant to show
+%
+\[ \zeta(s) \Gamma(s/2) \pi^{-s/2} = \frac{1}{s - 1} - \frac{1}{s} + \frac{1}{2} \int_1^\infty (\theta(u) - 1)(u^{s/2 - 1} + u^{(1-s)/2 - 1})\; du \]
+%
+But the right hand side is symmetric with respect to $s \mapsto 1 - s$, so we find
+%
+\[ \zeta(s) \Gamma(s/2) \pi^{-s/2} = \zeta(1 - s) \Gamma((1 - s)/2) \pi^{(s-1)/2} \]
+%
+We can use this to define the $\zeta$ function for $\sigma \leq 0$.
+
+\begin{corollary}
+    The `completed zeta function'
+    %
+    \[ \xi(s) = \frac{s(s-1)}{2 \pi^{s/2}} \zeta(s) \Gamma(s/2) \]
+    %
+    is entire, and satisfies $\xi(s) = \xi(1-s)$.
+\end{corollary}
+
+\begin{remark}
+    Modern number theorists like to say that there is an extra `prime at $\infty$', and the other factor added to the $\zeta$ function can be seen as the factor corresponding to the prime at $\infty$.
+\end{remark}
+
+
 
 \end{document}
