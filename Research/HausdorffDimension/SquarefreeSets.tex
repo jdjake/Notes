@@ -1,8 +1,10 @@
-\documentclass{article}
+\documentclass{report}
 
 \usepackage{amsthm}
 \usepackage{amsmath}
 \usepackage{multicol}
+\usepackage{amssymb}
+\usepackage{mathabx}
 
 \theoremstyle{plain}
 \newtheorem{lemma}{Lemma}
@@ -30,38 +32,36 @@
 
 \newpage
 
-\section{Difference Sets Without Squares}
+\chapter{Background}
 
-Recall that if $X$ and $Y$ are subsets of integers, we let
+\section{Rusza: Difference Sets Without Squares}
+
+In this section, we describe the work of Ruzsa on the discrete squarefree difference problem, which provides inspiration for our speculated results for the squarefree subset problem in the continuous setting. Recall that if $X$ and $Y$ are subsets of integers, we let
 %
 \[ X \pm Y = \{ x \pm y: x \in X, y \in Y, x \pm y > 0 \} \]
 %
-The differences of a set $X$ are elements of $X - X$. The {\it difference set problem} asks to consider how large a subset of the integers whose differences do not contain the square of any positive integer can be. We let $D(N)$ denote the maximum number of integers which can be selected from $[1,N]$ whose differences do not contain a square.
+The {\it differences} of a set $X$ are elements of $X - X$. The {\it difference set problem} asks to consider how large a subset of the integers can be, whose differences do not contain the square of any positive integer. We let $D(N)$ denote the maximum number of integers which can be selected from $[1,N]$ whose differences do not contain a square.
 
 \begin{example}
     The set $X = \{ 1, 3, 6, 8 \}$ is squarefree, because $X - X = \{ 2, 3, 5, 7 \}$, and none of these elements are perfect squares. On the other hand, $\{ 1, 3, 5 \}$ is not a squarefree subset, because $5 - 1 = 4$ is a perfect square.
 \end{example}
 
-It is easily to greedily construct fairly large subsets of the integers by a `sieve'-type algorithm. We start by writing out a large sequence of integers
+It is easily to greedily construct fairly large subsets of the integers by applying a sieve. We start by writing out a large list of integers $1,2,3,4,\dots,N$. Then, while we still have numbers to pick, we greedily select the smallest number $x_*$ we haven't crossed out of the list, add it to our set $X$ of squarefree numbers, and then cross out all integers $y$ such that $y - x_*$ is a positive square. Thus we cross out $x_*$, $x_* + 1$, $x_* + 4$, and so on, all the way up to $x_* + m^2$, where $m$ is the largest integer with $x_* + m^2 \leq N$. This implies $m \leq \sqrt{N - x_*} \leq \sqrt{N-1}$, hence we cross out at most $\sqrt{N-1} + 1$ integers whenever with add a new element $x_*$ to $X$. When the algorithm terminates, all integers must be crossed out, and if the algorithm runs $n$ iterations, a union bound gives that we cross out at most $n[\sqrt{N-1} + 1]$ integers, hence $n[\sqrt{N-1} + 1] \geq N$. It follows that the set $X$ we end up with satisfies
 %
-\[ 1, 2, 3, 4, \dots, N \]
+\[ |X| \geq \frac{N}{\sqrt{N-1} + 1} = \Omega(\sqrt{N}) \]
 %
-between 1 and $N$. Then, while we still have numbers to pick, we greedily select the smallest number $x_*$ we haven't crossed out of the list, cross it out, and then cross out all integers $y$ such that $y - x_*$ is a positive square. Since we cross out $x_*, x_* + 1, x_* + 4, \dots, x_* + m^2$, where $m$ is the largest integer with $x_* + m^2 \leq N$, we find $m \leq \sqrt{N - x_*} \leq \sqrt{N-1}$, hence we cross out at most $\sqrt{N-1} + 1$ integers. When the algorithm terminates, all integers must be crossed out, and if the algorithm runs $n$ iterations, a union bound gives that we cross out at most $n[\sqrt{N-1} + 1]$ integers, hence $n[\sqrt{N-1} + 1] \geq N$. It follows that we construct a squarefree subset of the integers with at least
-%
-\[ \frac{N}{\sqrt{N-1} + 1} = \Omega(\sqrt{N}) \]
-%
-elements. What's more, this algorithm generates an increasing family of squarefree subsets of the integers as $n$ increases, so we may take the union of these subsets over all $N$ to find an infinite squarefree subset $X$ with $|X \cap [1,N]| = \Omega(\sqrt{N})$.
+What's more, this algorithm generates an increasing family of squarefree subsets of the integers as $n$ increases, so we may take the union of these subsets over all $N$ to find an infinite squarefree subset $X$ with $|X \cap [1,N]| = \Omega(\sqrt{N})$.
 
-In 1978, S\'{a}rk\"{o}zy proved an upper bound on the size of squarefree subsets of the integers, showing $D(N) = O(N (\log N)^{-1/3 + \varepsilon})$ for every $\varepsilon > 0$. This shows that $D_N$ grows at most slightly slower than linearly. In particular, this proves a conjecture of Lov\'{a}sz that every infinite squarefree subset has density zero, because if $X$ is any infinite squarefree subset, then
+In 1978, S\'{a}rk\"{o}zy proved an upper bound on the size of squarefree subsets of the integers, showing $D(N) = O(N (\log N)^{-1/3 + \varepsilon})$ for every $\varepsilon > 0$. In particular, this proves a conjecture of Lov\'{a}sz that every infinite squarefree subset has density zero, because if $X$ is any infinite squarefree subset, then
 %
 \[ \frac{|X \cap [1,N]|}{N} \leq \frac{D(N)}{N} = O(\log(N)^{-1/3 + \varepsilon}) = o(1) \]
 %
-S\'{a}rk\"{o}zy even conjectured that $D(N) = O(N^{1/2 + \varepsilon})$ for all $\varepsilon > 0$, which essentially says that the greedy technique of selecting squarefree subsets of the integers is asymptotically optimal. This is incredibly pessimistic, because the sieve selection method doesn't depend on any properties of the set of square integers. In general, if $X = \{ x_1 < x_2 < \dots \}$ is any sequence of positive integers, the sieve strategy on $[1,N]$ produces a set containing no `$X$ differences' with at least $N (1 + K(N))^{-1}$ elements, where $K(N)$ is the greatest integer with $x_{K(N)} \leq N - 1$. Ruzsa's paper provides some refreshing optimisim, showing we can take advantages of the structure of perfect suqares to obtain quadratically better squarefree subsets of the integers, constructing an infinite squarefree subset $X$ with $|X \cap [1,N]| = \Omega(N^{0.73})$. The method reduces the problem to maximizing squarefree subsets modulo a squarefree integer $m$.
+S\'{a}rk\"{o}zy even conjectured that $D(N) = O(N^{1/2 + \varepsilon})$ for all $\varepsilon > 0$. This effectively implies the greedy sieve technique of selecting squarefree subsets of the integers is asymptotically optimal. Since the Sieve method doesn't depend on any properties of the set of perfect squares\footnote{In general, if $S = \{ x_1 , x_2 < \dots \}$ is a sequence of positive integers, the sieve strategy on $[1,N]$ products a set containing no `$S$ differences' with at least $N(1 + K(N))^{-1}$ elements, where $K(N)$ is the greatest integer with $x_{K(N)} \leq N-1$}, this is incredibly pessimistic. Ruzsa's paper shows we should be more optimistic, taking advantage of the structure of perfect suqares to obtain infinite squarefree subsets $X$ with $|X \cap [1,N]| = \Omega(N^{0.73})$. The method reduces the problem to a finitary problem of maximizing squarefree subsets modulo a squarefree integer $m$.
 
 \begin{theorem}
     If $m$ is a squarefree integer, then
     %
-    \[ D(N) \geq m^{-1} n^{\gamma_m} \]
+    \[ D(N) \geq \frac{n^{\gamma_m}}{m} = \Omega_m(n^{\gamma_m}) \]
     %
     where
     %
@@ -71,7 +71,7 @@ S\'{a}rk\"{o}zy even conjectured that $D(N) = O(N^{1/2 + \varepsilon})$ for all 
     %
     \[ \gamma_m = \frac{1}{2} \left( 1 + \frac{\log 7}{\log 65} \right) = 0.733077 \dots \]
     %
-    which is the required result. For $m = 2$, we find $D(N) \geq \sqrt{N}/2$, which is only slightly worse than the sieve result.
+    and therefore $D(N) = \Omega(n^{0.7})$. For $m = 2$, we find $D(N) \geq \sqrt{N}/2$, which is only slightly worse than the sieve result.
 \end{theorem}
 
 \begin{remark}
@@ -86,7 +86,7 @@ we claim that $A$ is squarefree. Suppose that we can write
 %
 \[ \sum (r_k - r_k') m^k = N^d \]
 %
-Set $s$ to be the smallest index with $r_s \neq r_s'$. Then
+Let $s$ to be the smallest index with $r_s \neq r_s'$. Then
 %
 \[ (r_s - r_s') m^s + M m^{s+1} = N^d \]
 %
@@ -120,7 +120,7 @@ This completes Rusza's construction. Thus we have proved a more general result t
     where $\gamma(d,m) = 1 - 1/d + \log_m |R^*|/d$, and $R^*$ is the largest subset of $[1,m]$ containing no $d$'th powers modulo $m$.
 \end{theorem}
 
-For $m = 65$, the group $\mathbf{Z}_{65} \cong \mathbf{Z}_{5} \times \mathbf{Z}_{13}$ has a set of squarefree residues of the form $\{ (0,0), (0,2), (1,8), (2,1), (2,3), (3,9), (4,7) \}$, which gives the required result. Rusza believes that we cannot choose $m$ to construct squarefree subsets of the integers growing better than $\Omega(n^{3/4})$, and he claims to have proved this assuming $m$ is squarefree and consists only of primes congruent to 1 modulo 4. Looking at some sophisticated papers in number theory (I forgot to write down these papers while I was looking them up), it seems this is nowadays quite easy to prove. Thus expanding on Rusza's result in the discrete case requires a new strategy, or perhaps Rusza's result is the best possible...
+For $m = 65$, the group $\mathbf{Z}_{65}^* \cong \mathbf{Z}_{5}^* \times \mathbf{Z}_{13}^*$ has a set of squarefree residues of the form $\{ (0,0), (0,2), (1,8), (2,1), (2,3), (3,9), (4,7) \}$, which gives the required value for $\gamma_{65}$. Rusza believes that we cannot choose $m$ to construct squarefree subsets of the integers growing better than $\Omega(n^{3/4})$, and he claims to have proved this assuming $m$ is squarefree and consists only of primes congruent to 1 modulo 4. Looking at some sophisticated papers in number theory (Though I forgot to write down the particular references), it seems that using modern estimates this is quite easy to prove. Thus expanding on Rusza's result in the discrete case requires a new strategy, or perhaps Rusza's result is the best possible.
 
 Let $D(N,d)$ denote the largest subset of $[1,N]$ containing no $d$th powers of positive integer. The last part of Rusza's paper is devoted to lower bounding the polynomial growth of $D(N,d)$ over asymptotically with respect to $N$. Rusza proves
 
@@ -138,7 +138,7 @@ Let $D(N,d)$ denote the largest subset of $[1,N]$ containing no $d$th powers of 
     %
     \[ \limsup_{N \to \infty} \frac{\log D(N,d)}{\log n} \geq 1 - \frac{1}{d} + \frac{\log_m |R^*|}{d} \]
     %
-    The claim is then proven by the following lemma.
+    The claim is then completed by the following lemma.
 \end{proof}
 
 \begin{lemma}
@@ -176,17 +176,236 @@ Let $D(N,d)$ denote the largest subset of $[1,N]$ containing no $d$th powers of 
 \begin{corollary}
     In the special case of avoiding squarefree numbers, we find 
     \[ \limsup \frac{\log D(N)}{\log N} \geq \frac{1}{2} + \frac{\log_5 2}{2} = 0.71533\dots \]
+    %
+    which is only slightly worse than the bound we obtain with $m = 65$.
 \end{corollary}
 
 Rusza's leaves the ultimate question of whether one can calculate
 %
 \[ \alpha = \lim_{N \to \infty} \log D(N) / \log N \]
 %
-or even whether it exists at all. The consequence of this would essentially solve the squarefree integers problem, since it would give the exact growth of $D(N) \sim N^\alpha$ in terms of a monomial. Of course, because of how conclusive this problem is, it is much more nontrivial than the work of Rusza's paper.
+or even whether it exists at all. The consequence of this would essentially solve the squarefree integers problem, since it would give the exact growth of $D(N) \sim N^\alpha$ in terms of a monomial. Because of how conclusive this problem is, we should not expect to find a nontrivial way to calculate this constant.
+
+
+
+
+
+
+
+
+
+
+
+\section{Keleti: Translate Avoiding Sets}
+
+Keleti's two page paper constructs a full dimensional subset $X$ of $[0,1]$ such that $X$ intersects $t + X$ in at most one place for each $t \in \mathbf{R}$. Malabika has adapted this technique to construct high dimensional subsets avoiding nontrivial solutions to differentiable functions, and she thinks we can further exploit these ideas to obtain dimension one squarefree sets. The basic, but fundamental idea of Keleti is to introduce memory into Cantor set type constructions so the sets avoid progressions, and have dimension one. At each point in the process, he constructs a nested family of sets $X_0 \supset X_1 \supset \dots$, each set $X_n$ a union of disjoint intervals of the same length $l_n$. It will be the set $X = \lim X_n$ which avoids translates. Initially, $X_0 = [0,1]$ is the unit interval. To aid in this process, Keletti considers a queue $Q$ with a history of all intervals created from the start to the end of the process, so $Q$ initially just contains $[0,1]$. We then perform the following procedure repeatedly:
+%
+\begin{itemize}
+    \item Take an interval $I$ off the front of the queue $Q$.
+    \item Let $X_{n+1}$ be formed by taking $N_{n+1}$ intervals of length $l_{n+1}$ from each interval $J$ in $X_n$, with the startpoints of each separated by a value $\varepsilon_{n+1}$. The intervals start directly at the beginning of the interval $J$, except in the case where $J \subset I$, where we shift the intervals to begin at a distance $\Delta_n$ from the startpoint.
+\end{itemize}
+%
+In order for this process to be well defined, we must have $l_0 = N_0 = 1$, and
+%
+\[ \Delta_{n+1} + (N_{n+1} - 2) \varepsilon_{n+1} + N_{n+1} l_{n+1} \leq l_n \]
+%
+Of course, we must also have $l_n \to 0$, for otherwise we have no fractal structure in our sets. We then obtain a set $X$ which has Hausdorff dimension one. For completeness, and to introduce readers to the methods of calculating Hausdorff dimension, we will prove this explicitly.
+
+\begin{lemma}
+    The set $X = \lim X_n$ has Hausdorff dimension one.
+\end{lemma}
+\begin{proof}
+Recall Frostman's lemma, which says that $\dim_{\mathbf{H}}(X) \geq s$ if and only if there is a finite positive Borel measure $\mu$ supported on $X$ with $\mu(B_r(x)) \lesssim r^s$, for a universal constant depending only on $\mu$. We can construct a probability measure on our set $X$ with the required properties fairly simply, using what is called the {\it mass distribution principle}. For each $n$, we construct a probability measure $\mu_n$ supported on $X_n$ by letting $\mu_0$ by the uniform measure over $X_0 = [0,1]$, and then, recursively, let $\mu_{n+1}$ be defined from $\mu_n$ by uniformly distributing the mass of each interval $J$ in $X_n$ uniformly over the intervals in $X_{n+1}$ formed from the parts of $J$. The probability measures $\mu_n$ weakly converge to a probability measure $\mu$ supported on $X$, because the distribution functions of the $\mu_n$ converge uniformly to $\mu$. If $I$ is an interval in $X_n$, and $J$ is an interval in $X_{n-1}$ with $J \subset I$, then we know that
+%
+\[ \mu(J) = \mu_{n}(J) = \frac{\mu_{n-1}(I)}{N_n} = \frac{\mu(I)}{N_n} \]
+%
+and so by induction, we find
+%
+\[ \mu(J) = \prod_{m = 1}^n \frac{1}{N_m} \]
+%
+If $J$ is any interval of length $l_n$, then $\mu(J)$ can intersect at most two intervals of length $l_n$ in $X_n$, and so we obtain the general bound
+%
+\[ \mu(J) \leq 2 \prod_{m = 1}^n \frac{1}{N_m} \]
+%
+Now fix $\varepsilon > 0$, and let $I$ be any interval with $l_{n+1} \leq |I| \leq l_n$. Then $I$ can be covered by as few as $|I|l_{n+1}^{-1}$ intervals of length $l_{n+1}$, and so
+%
+\[ \mu(I) \leq 2|I|l_{n+1}^{-1} \prod_{m = 1}^n \frac{1}{N_m} = \left( 2l_n^\varepsilon l_{n+1}^{-1} \prod_{m = 1}^n \right) |I|^{1 - \varepsilon} \]
+%
+We see that it suffices to pick the constants $l_n$ and $N_n$ so there is a constant $C_\varepsilon$ depending only on $\varepsilon$ with
+%
+\[ 2 \frac{l_n^\varepsilon}{l_{n+1}} \prod_{m = 1}^n \frac{1}{N_m} \leq C_\varepsilon \]
+%
+which effectively says that $l_{n+1}$ is proportional to the total number of intervals at step $X_n$, if we weaken the inequality by the $l_n^\varepsilon$ term. This is satisfied by the choice of constants we give at the end of the section (skip to the end and come back if you wish to check). Frostman's lemma then implies $\dim_{\mathbf{H}}(X) \geq 1 - \varepsilon$, and we can then let $\varepsilon \to 0$ to conclude $\dim_{\mathbf{H}}(X) = 1$.
+\end{proof}
+
+We claim that, with another appropriate choice of parameters, $X$ is a set avoiding translates. In this section, and in the sequel, we shall find it is most convenient to avoid certain configurations by expressing them as a particular equation, whose properties we can then exploit.
+
+\begin{lemma}
+    A set $X$ avoids translates if and only if there do not exists values $x_1 < x_2 \leq x_3 < x_4$ in $X$ with $x_2 - x_1 = x_4 - x_3$.
+\end{lemma}
+\begin{proof}
+
+    Suppose $t + X \cap X$ contains two points $a < b$. Without loss of generality, we may assume that $t > 0$. If $a \leq b - t$, then the equation
+    %
+    \[ a - (a - t) = t = b - (b - t) \]
+    %
+    satisfies the constraints, since then $a - t < a \leq b - t < b$ are all elements of $X$. We also have
+    %
+    \[ (b - t) - (a - t) = b - a \]
+    %
+    which satisfies the constraints if $a - t < b - t \leq a < b$. This covers all possible cases. Conversely, if there are $x_1 < x_2 \leq x_3 < x_4$ in $X$ with $x_2 - x_1 = t = x_4 - x_3$, then $X + t$ contains $x_2 = x_1 + (x_2 - x_1)$ and $x_4 = x_3 + (x_4 - x_3)$.
+\end{proof}
+
+To determine the further properties of the constants $l_n, N_n, \varepsilon_n$, and $\Delta_n$ which prevent translation avoidance, we suppose there are $x_1 < x_2 \leq x_3 < x_4 \in X$ with $x_2 - x_1 = x_4 - x_3$. Since $l_n \to 0$, we know that eventually $x_1$ is contained in an interval $J$ that $x_2,x_3$, and $x_4$ are not contained in. If we follow the procedure to a suitable depth $N$, when the interval $J$ is taken off the front of the queue $Q$, the intervals containing $x_1$ are shifted, whereas the intervals for $x_2,x_3$, and $x_4$ are not shifted. To understand what this means, we find the startpoints $x_1^\circ, x_2^\circ$, $x_3^\circ$, and $x_4^\circ$ to the length $l_N$ intervals containing $x_1$, $x_2$, $x_3$, and $x_4$. Thus $0 \leq x_n - x_n^\circ \leq l_N$. If we choose our constants such that the startpoints $x_1^\circ, \dots, x_4^\circ$ all lie at integer multiples of $l_N + \varepsilon_N$, and $4l_N \leq l_N + \varepsilon_N$, i.e. $3l_N \leq \varepsilon_N$, then the equation $x_2 - x_1 = x_4 - x_3$ forces the discrete equation $x_2^\circ - x_1^\circ = x_4^\circ - x_3^\circ$. Now if we also force $x_2^\circ, x_3^\circ, x_4^\circ$ to lie at even multiples of $M_N$, and $x_1^\circ$ to lie at an odd multiple of $M_N$ (possible by the shifting in the procedure), then it is impossible for this equation to hold, so by contradiction, $X$ must be translation invariant.
+
+\begin{remark}
+    Can we adopt Ruzsa's squarefree discrete strategy combined with Keleti's approach to find a high dimensional continuous squarefree set? NOTE: We tried this but could only get a dimension 1/2 set, which is only slightly better than a dimension 1/3 set which exists from the general results given by Math\'{e}'s result, or Pramanik and Fraser's result, and is much less than the dimension 1 set that Malabika expects.
+\end{remark}
+
+To summarize, in order for $X$ to be translation invariant, we require $3l_n \leq \varepsilon_n$, for the nonshifted startpoints of $X_n$ to lie at even multiples of $M_n$, and for the shifted startpoints to lie at odd multiples. This will be satisfied if
+%
+\[ M_n \divides M_{n-1}, \varepsilon_n, \Delta_n\ \ \ 2M_n \divides M_{n-1}, \varepsilon_n\ \ \ 2M_n \not \divides \Delta_n \]
+%
+In Keleti's paper, he chooses
+%
+\[ N_n = n\ \ \ l_n = 1/6^{n-1}n!\ \ \ M_n = 3l_n\ \ \ \Delta_n = 3l_n\ \ \ \varepsilon_n = 5l_n \]
+%
+As an exercise, go back and check these constants give the required bounds for the Hausdorff dimension. We have avoided giving these constants until the end to emphasize {\it why} Keleti needed to choose these particular constants. Once they are chosen, we end up with a Hausdorff dimension one set. In Keleti's paper, he also remarks that by replacing the 6 in $l_n$ with a slowly increasing set of even numbers, one can obtain a Hausdorff dimension one set which is linearly independant over the rational numbers.
+
+
+
+
+
+
+
+
+
+\section{Pramanik/Fraser: Extending Keleti Translation to any Smooth Function}
+
+Inspired by Keleti's result, Pramanik and Fraser obtained a generalization of the queue method which allows one to find sets avoiding solutions to {\it any} smooth function satisfying suitably mild regularity conditions. To do this, rather than making a linear shift in one of the intervals we avoid as in Keleti's approach, one must use the smoothness properties of the function to find large segments of an interval avoiding solutions to another interval.
+
+\begin{theorem}
+    Suppose that $f: \mathbf{R}^d \to \mathbf{R}$ is a $C^1$ function, and there are sets $T_1, \dots, T_d \subset [0,1]$, which each $T_n$ a union of almost disjoint closed intervals of length $1/M$ such that $A \leq |\partial_d f(x)|$ and $|\nabla f(x)| \leq B$ for $x \in T_1 \times \dots \times T_d$. There there exists a rational constant $c$ and arbitrarily large integers $N \in M \mathbf{Z}$ for which there exist subsets $S_n \subset T_n$ such that
+    %
+    \begin{itemize}
+        \item[(i)] $f(x) \neq 0$ for $x \in S_1 \times \dots \times S_d$.
+
+        \item[(ii)] For each $n \neq d$, If we split each interval $T_n$ into $1/N$ intervals, then $S_n$ contains an interval of length $cN^{1-d}$ of each of these intervals.
+
+        \item[(iii)] If we split $T_d$ into $1/N$ intervals, then $S_d$ contains a length $c/N$ portion of at least a fraction $1 - 1/M$ of the total number of these intervals (but this portion need not be a complete interval, like in the last property).
+    \end{itemize}
+\end{theorem}
+\begin{proof}
+    Choosing the sets $S_n$ for $n \neq d$ is easy. We split the intervals $T_n$ into length $1/M$ segments, and define $S_n$ as the union of the first $cN^{1-d}$ portion of them. This satisfies property (ii) of the theorem automatically. Now if $a \in \mathbf{R}^{d-1}$ is chosen, with each $a_k \in T_k$, then the total number of points $x \in T_d$ for which $f(a,x) = 0$ is $M$. This follows from the fact that $T_d$ can contain at most $M$ intervals of length $1/M$, and as we vary $x$, because the partial derivative $\partial_d f(a,x)$ is non-vanishing on the interval, the function is monotone on this interval. Define
+    %
+    \[ \mathbf{A} = \{ a: a_n\ \text{is a startpoint of a length $1/N$ segment in $T_n$} \} \]
+    %
+    Then $|\mathbf{A}| \leq N^{d-1}$, since $T_n$, contained in $[0,1]$, can contain at most $N$ almost disjoint intervals of length $1/N$. This means that if
+    %
+    \[ \mathbf{B} = \{ x \in T_d: \text{there is}\ a \in \mathbf{A}\ \text{such that}\ f(a,x) = 0 \} \]
+    %
+    is the set of `bad points' in $T_d$, then $|\mathbf{B}| \leq MN^{d-1}$. Now we filter out a subcollection of intervals $I$ if $|\mathbf{B} \cap I| \leq M^3N^{d-2}$. Then we throw away at most $MN^{d-1}/M^3N^{d-2} = N/M^2$ intervals. Thus we keep $N/M - N/M^2 = N/M(1 - 1/M)$ intervals, which is $1 - 1/M$ of the total number of intervals in the decomposition of $T_d$.
+
+    Now we split each interval $I$ into intervals of length $C_0c / N^{d-1}$. If we use the constant $C_0$ obtained from the lemma below, and we now discard any interval that intersects $\mathbf{B}$, or is adjacent to an interval intersecting $\mathbf{B}$. Since $\mathbf{B} \cap I$ has at most $M^3N^{d-2}$ points, and $I$ is decomposed into $N^{d-2}/C_0c$ intervals, what remains is $N^{d-2}/C_0c - 3M^3N^{d-2} = (1/C_0c - 3M^3)N^{d-2}$ intervals, which in total has length
+    %
+    \[ (C_0c/N^{d-1}) (1/C_0c - 3M^3)N^{d-2} = (1 - 3M^3 C_0c) N \]
+    %
+    Choosing $c$ such that $3M^3C_0c < 1 - c$ completes the proof.
+\end{proof}
+
+\begin{lemma}
+    For any $f$ and $T_1, \dots, T_d$, and $C$, there exists a constant $C_0$ depending on these quantities, such that for the choice of $S_1, \dots, S_{d-1}$, for any choice $x_1, \dots, x_{n-1}$ in each of the sets $S_n$, if $f(x_1, \dots, x_{n-1}, x_n) = 0$, then $d(x_n, \mathbf{B}) \leq C_0C/N^{d-1}$.
+\end{lemma}
+\begin{proof}
+    Let $J$ be a $d$ dimensional cube with sidelengths $1/M$ intersecting the zero set of $f$. The implicit function theorem can then be applied to conclude that, if we write $J = J' \times I$, where $J_1$ is a cube in $\mathbf{R}^{d-1}$ and $I$ is an interval, that there is a function $g: J' \to \mathbf{R}$ such that $f(x,y) = 0$ for $(x,y) \in J$ if and only if $y = g(x)$. We know that $|\nabla g| \leq C/\sqrt{d}$, because if $h(x) = f(x,g(x))$, then
+    %
+    \[ 0 = \partial_i h(x) = \partial_i f (x,g(x)) + \partial_d f (x, g(x)) \partial_i g(x) \]
+    %
+    Hence for $x \in T_1, \dots, T_{d-1}$ with $g(x) \in T_d$,
+    %
+    \[ |(\nabla g)(x)| \leq \frac{|(\nabla f)(x)|}{|(\partial_d f)(x,g(x))|} \leq \frac{B}{A} \]
+    %
+    In particular, if $g(x) \in S_d$, then there is $a \in \mathbf{A}$ with
+    %
+    \[ |x-a| \leq \sum |x_n - a_n| \leq \frac{C \sqrt{d}}{N^{d-1}} \]
+    %
+    and now we know
+    %
+    \[ |g(x) - g(a)| \leq \| \nabla g \|_\infty |x - a| \leq \frac{BC \sqrt{d}}{A N^{d-1}} \]
+    %
+    and so $g(a) \in \mathbf{B}$, and we can set $C_0 = \lceil BC \sqrt{d}/A \rceil$.
+\end{proof}
+
+\begin{remark}
+    In the paper, the authors state that the $N^{1-d}$ bound for all but the last variable means we cannot get a Hausdorff dimension one set in the process. In certain cases where we can use properties of a particular function $f$, we can choose much larger sets and get a much better Hausdorff dimension bound. This is what we attempt to do with our strategies.
+\end{remark}
+
+How do we use this lemma to construct a set avoiding solutions to $f$? We form an infinite queue which will eventually filter out all the possible zeroes of the equation. Divide the interval $[0,1]$ into $d$ intervals, and consider all orderings of $d - 1$ subsets of these intervals, and add them to the queue. Now on each iteration $N$ of the algorithm, we have a set $X_N \subset [0,1]$. We take a particular sequence of intervals $T_1, \dots, T_d$ from the queue, and then use the lemma above to dissect the $X_N \cap T_n$, which are unions of intervals, into sets avoiding solutions to the equation, and describe the remaining points as $X_{N+1}$. We then add all possible orderings of $d$ intervals created into the end of the queue, and rinse and repeat. The set $X = \lim X_n$ then avoids all solutions to the equation with distinct points.
+
+What remains is to bound the Hausdorff dimension of $X$ by constructing a probability measure supported on $X$ with suitable decay. Since every interval is covered by a fixed number of intervals in some dyadic decomposition, we can focus on the intervals in our decomposion. To construct our probability measure, we begin with a uniform measure on the interval, and then, whenever our interval is refined, we uniformly distribute the volume on that particular interval uniformly over the new refinement. Let $\mu$ denote the weak limit of this sequence of probability distributions.
+
+\begin{lemma}
+    Let $I$ be an interval of length $1/M$ in a certain iteration of the construction, and $J$ an interval of length $1/N$ which contains an interval in the next iteration. Then $\mu(I)/|I| \leq \mu(J)/|J| \leq 2 \mu(I)/|I|$
+\end{lemma}
+\begin{proof}
+    We subdivide $I$ into $N |I|$ intervals of length $1/N$, and we know at least a fraction $1 - 1/M$ contain a union of smaller intervals with measure at least $c/N$ contained in the next iteration. Enumerate these unions as $K_1, \dots K_L$, where $L \geq N|I|(1 - 1/M)$. Then
+    %
+    \[ \mu(K_n) = \frac{|K_n|}{\sum_{n = 1}^L |K_n|} \mu(I) \leq \frac{|K_n|}{Lc/N} \mu(I) \leq \frac{|K_n|}{c(1 - 1/M)} \frac{\mu(I)}{|I|} \]
+    %
+    and if $K_n \subset J$, then $\mu(J) = \mu(K_n)$ and $|K_n| \geq c|J|$, from which we obtain that
+    %
+    \[ \frac{\mu(J)}{|J|} \leq \frac{1}{(1 - 1/M)} \frac{\mu(I)}{|I|} \leq 2 \frac{\mu(I)}{|I|} \]
+    %
+    where the last point followed because we know $M \leq 1/2$, since we subdivide our intervals right at the beginning of the algorithm at least in two.
+
+    \newpage
+
+    The interval $I$ decomposes into $|I|/|J|$ intervals of length $|J|$, and we know at least $1 - |I|$ of them contain a portion $c|J|$ of the length $|J|$. Thus
+    %
+    \[ \mu(I) \geq (1 - |I|) \frac{|I|}{|J|} \mu(J) \]
+    %
+    and so, since $|I| \leq 1/2$ after the first division
+    %
+    \[ \frac{\mu(J)}{|J|} \leq \frac{1}{1 - |I|} \frac{\mu(I)}{|I|} \leq \frac{2 \mu(I)}{|I|} \]
+    %
+    The obvious bound of $|I|/|J|$ intervals implies
+    %
+    \[ \mu(I) \leq (|I|/|J|) \mu(J) \]
+    %
+    which implies the lower bound
+    %
+    \[ \frac{\mu(I)}{|I|} \leq \frac{\mu(J)}{|J|} \]
+    %
+    so the ratios are comparable to one another.
+\end{proof}
+
+Applying this result iteratively, if we let $l_n$ denote the lengths of the intervals on the $n$'th iteration, and we let $N_n$ denote the value we use to divide division. Then if we have a nested family of intervals $J_1, \dots, J_N$ formed by the $1/N_n$ partitions of $I_1, \dots, I_N$, then
+%
+\[ \frac{\mu(J_N)}{|J_N|} \leq 2 \frac{\mu(I_{N-1})}{|I_{N-1}|} = \frac{2|J_{N-1}|}{|I_{N-1}|} \frac{\mu(J_{N-1})}{|J_{N-1}|} = \frac{2}{l_{N-1} N_{N-1}} \frac{\mu(J_{N-1})}{|J_{N-1}|} \]
+
+Applying this result iteratively, we find that if we have a family of nested family of intervals $I_1, \dots, I_N$, then we can apply the lemma above iteratively to find
+%
+\[ \frac{\mu(J_N)}{|J_N|} \leq \frac{2}{l_{N-1} N_{N-1}} \frac{\mu(J_{n-1})}{|J_{n-1}|} \leq \dots \leq 2^N \prod_{n = 1}^{N-1} \frac{1}{l_nN_n} \]
+%
+Now
+
+
+
+
+
+
+
+
+
+
+
+
+
+\chapter{Ideas for New Work}
 
 \section{Ideas For New Work}
 
-A continuous formulation of the squarefree difference problem is not so clear to formulate, because every positive real number has a square root. Instead, we consider a problem which introduces a similar structure to avoid in the continuous domain rather than the discrete. Unfortunately, there is no direct continuous anology to the squarefree subset problem on the interval $[0,1]$, because there is no canonical subset of $[0,1]$ which can be identified as `perfect squares', unlike in $\mathbf{Z}$. If we only restrict ourselves to perfect squares of a countable set, like perfect squares of rational numbers, a result of Kaletti gives us a set of full Hausdorff dimension avoiding this set. Thus, instead, we say a set $X \subset [0,1]$ is (continuously) {\bf squarefree} if there are no nontrivial solutions to the equation $x - y = (u - v)^2$, in the sense that there are no $x,y,u,v \in X$ satisfying the equation for $x \neq y, u \neq v$. In this section we consider some blue sky ideas that might give us what we need.
+A continuous formulation of the squarefree difference problem is not so clear to formulate, because every positive real number has a square root. Instead, we consider a problem which introduces a similar structure to avoid in the continuous domain rather than the discrete. Unfortunately, there is no direct continuous anology to the squarefree subset problem on the interval $[0,1]$, because there is no canonical subset of $[0,1]$ which can be identified as `perfect squares', unlike in $\mathbf{Z}$. If we only restrict ourselves to perfect squares of a countable set, like perfect squares of rational numbers, a result of Keleti gives us a set of full Hausdorff dimension avoiding this set. Thus, instead, we say a set $X \subset [0,1]$ is (continuously) {\bf squarefree} if there are no nontrivial solutions to the equation $x - y = (u - v)^2$, in the sense that there are no $x,y,u,v \in X$ satisfying the equation for $x \neq y, u \neq v$. In this section we consider some blue sky ideas that might give us what we need.
 
 How do we adopt Rusza's power series method to this continuous formulation of the problem? We want to scale up the problem exponentially in a way we can vary to give a better control of the exponentials. Note that for a fixed $m$, every elements $x \in [0,1]$ has an essentially unique $m$-ary expansion
 %
@@ -213,7 +432,7 @@ which are considered modulo $m$. The topology of the $p$-adic numbers induces a 
 
 The problem with the squarefree subset problem is that we are trying to optimize over two quantities. We want to choose a set $X$ such that the number of distinct differences $x - y$ as small as possible, while keeping the set as large as possible. This double optimization is distinctly different from the problem of finding squarefree difference subsets of the integers. Perhaps a more natural analogy is to fix a set $V$, and to find the largest subset $X$ of $[0,1]$ such that $x - y = (u - v)^2$, where $x \neq y \in X$, and $u \neq v \in V$. Then we are just avoiding subsets of $[0,1]$ which avoid a particular set of differences, and I imagine this subset has a large theory. But now we can solve the general subset problem by finding large subsets $X$ such that $(X - X)^2 \subset V$ and $X$ containing no differences in $V$. Does Rusza's method utilize the fact that the problem is a single optimization? Can we adapt Rusza's method work to give better results about finding subsets $X$ of the integers such that $X - X$ is disjoint from $(X - X)^2$?
 
-\section{Modulus Techniques For Finding High Dimensional Continuous Squarefree Sets}
+\section{Squarefree Sets Using Modulus Techniques}
 
 We now try to adapt Ruzsa's idea of applying congruences modulo $m$ to avoid squarefree differences on the integers to finding high dimensional subsets of $[0,1]$ which satisfy a continuous analogy of the integer constraint. One problem with the squarefree problem is that solutions are non-scalable, in the sense that if $X \subset [N]$ is squarefree, $\alpha X$ may not be squarefree. This makes sense, since avoiding solutions to $\alpha (x - y) = \alpha^2 (u - v)^2$ is clearly not equivalent to the equation $x - y = (u - v)^2$. As an example, $X = \{ 0, 1/2 \}$ is squarefree, but $2X = \{ 0, 1 \}$ isn't. On the other hand, if $X$ avoids squarefree differences modulo $N$, it {\it is} scalable by a number congruent to 1 modulo $N$. More generally, if $\alpha$ is a rational number of the form $p/q$, then $\alpha X$ will avoid nontrivial solutions to $q (x - y) = p (u - v)^2$, and if $p$ and $q$ are both congruent to 1 modulo $N$, then $X$ is squarefree, so modulo arithmetic enables us to scale down. Since the set of rational numbers with numerator and denominator congruent to 1 is dense in $\mathbf{R}$, {\it essentially} all scales of $X$ are continuously squarefree. Since $X$ is discrete, it has Hausdorff dimension zero, but we can `fatten' the scales of $X$ to obtain a high dimension continuously squarefree set. To initially simplify the situation, we now choose to avoid nontrivial solutions to $y - x = (z - x)^2$, removing a single degree of freedom from the domain of the equation.
 
@@ -291,69 +510,13 @@ and if we then set $X_n$ to be the set of startpoints of the intervals in $E_n$,
 %
 Then $\bigcap E_n$ is a continuously squarefree subset. But what is it's dimension?
 
-\section{Kaletti's Translate Avoiding Sets}
+\section{Idea; Delaying Swaps}
 
-Kaletti's two page paper constructs a full dimensional subset $X$ of $[0,1]$ such that $X$ intersects $t + X$ in at most one place for each $t \in \mathbf{R}$. Malabika has adapted this technique to construct high dimensional subsets avoiding nontrivial solutions to differentiable functions, and she thinks we can further exploit these ideas to obtain dimension one squarefree sets. The basic, but fundamental idea of Kaletti is to introduce memory into the Cantor set constructions so the sets avoid progressions, and have dimension one. He starts by creating an initial set of disjoint intervals $X_0 = \{ [0,1] \}$, and we let $Q$ be a queue with a history of all intervals created, from left to right, so $Q$ is initially $\{ [0,1] \}$. We then perform the following procedure repeatedly, forming a decreasing family of subsets $X_0 \supset X_1 \supset \dots$, each $X_k$ a union of intervals of length $l_k$:
-%
-\begin{itemize}
-    \item Take an interval $I$ off the front of $Q$.
-    \item For each interval $J \in X_n$, partition $J$ into $N_n$ intervals of length $l_n$, with the startpoints of each interval separated by $\varepsilon_n \geq l_n$. The intervals start at the beginning of $J$, except in the case where $J \subset I$, in which case we shift the intervals, placing the initial interval $\Delta_n$ from the startpoint. In order to avoid overlap, we must have $N_n \varepsilon_n + \Delta_n \leq |J| = l_{n-1}$. If $J \subset I$, then we shift the initial startpoint by $\Delta_n$.
-\end{itemize}
-%
-We claim that $X = \lim X_n$ is a set avoiding translates, which we reduce to showing that the sets avoid a particular equation.
+By delaying the removing in the pattern removal queue, we may assume in our dissection methods that we are working with sets with certain properties, i.e. we can swap an interval with a dimension one set avoiding translates.
 
-\begin{lemma}
-    A set $X$ avoids translates if and only if there do not exists $x_1 < x_2 \leq x_3 < x_4$ in $X$ with $x_2 - x_1 = x_4 - x_3$.
-\end{lemma}
-\begin{proof}
-\end{proof}
+\section{Squarefree Subsets Using Interval Dissection Methods}
 
-First, note that if $X$ intersected $a + X$ in two places $x = a + x'$ and $y = a + y'$, then we would find $x' - x = y' - y$. We may assume $a \leq 0$ by symmetry, so that $x' \leq x$ and $y' \leq y$. We may 
-
-TODO: ELABORATE ON KELETI'S METHOD.
-
-\section{Pramanik and Fraser's Extension of Kaletti Translation to $C^1$ functions}
-
-\begin{lemma}
-    For any $f$, $M$, and $T_1, \dots, T_d$, there exists a constant $C$ depending on these quantities, such that
-\end{lemma}
-\begin{proof}
-    Let $J$ be a cube with sidelengths $1/M$ intersecting the zero set of $f$. The implicit function theorem can then be applied to conclude that, if we write $J = J' \times I$, where $J_1$ is a cube in $\mathbf{R}^{d-1}$ and $I$ is an interval, that there is a function $g: J' \to \mathbf{R}$ such that $f(x,y) = 0$ for $(x,y) \in J$ if and only if $y = g(x)$.
-\end{proof}
-
-\begin{theorem}
-    Suppose that $f: \mathbf{R}^d \to \mathbf{R}$ is a $C^1$ function, and there are sets $T_1, \dots, T_d \subset [0,1]$, which each $T_k$ a union of almost disjoint closed intervals of length $1/M$ such that $A \leq |\partial_d f(x)|$ and $|\nabla f(x)| \leq B$ for $x \in T_1 \times \dots \times T_d$. There there exists a rational constant $C$ and arbitrarily large integers $N \in M\mathbf{Z}$ for which there exist subsets $S_k \subset T_k$ such that
-    %
-    \begin{itemize}
-        \item[(i)] $f(x) \neq 0$ for $x \in S_1 \times \dots \times S_d$.
-
-        \item[(ii)] For each $k \neq d$, If we split each interval $T_k$ into $1/N$ intervals, then $S_k$ contains an interval of length $CN^{1-d}$ of each of these intervals.
-
-        \item[(iii)] If we split $T_d$ into $1/N$ intervals, then $S_d$ contains a length $C/N$ portion of at least a fraction $1 - 1/M$ of the total number of these intervals (but this portion need not be a complete interval, like in the last property).
-    \end{itemize}
-\end{theorem}
-\begin{proof}
-    Choosing the sets $S_k$ for $k \neq d$ is easy. We split the intervals $T_k$ into length $1/M$ segments, and define $S_k$ as the union of the first $CN^{1-v}$ portions of them. This satisfies property (ii) of the theorem automatically. Now if $a \in \mathbf{R}^{d-1}$ is chosen, with each $a_k \in T_k$, then the total number of points $x \in T_d$ for which $f(a,x) = 0$ is $M$. This follows from the fact that $T_d$ can contain at most $M$ intervals of length $1/M$, and as we vary $x$ in the equation, because the partial derivative $\partial_d f(a,x)$ is non-vanishing on the interval, the function is either increasing or decreasing on this interval. Define
-    %
-    \[ \mathbf{A} = \{ a: a_k\ \text{is a startpoint of a length $1/N$ segment in $T_k$} \} \]
-    %
-    Then $|\mathbf{A}| \leq N^{d-1}$, since $T_k$, contained in $[0,1]$, can contain at most $N$ almost disjoint intervals of length $1/N$. This means that if
-    %
-    \[ \mathbf{B} = \{ x \in T_d: \text{there is}\ a \in \mathbf{A}, f(a,x) = 0 \} \]
-    %
-    is the set of `bad points' in $T_d$, then $|\mathbf{B}| \leq MN^{d-1}$. We now pick to include a portion of a length $N$ interval $I$ in $T_d$ in the set $S_d$ if it intersects relatively few bad points, i.e. $\# (\mathbf{B} \cap I) \leq M^3 N^{d-2}$. Each interval we don't pick has more than $M^3 N^{d-2}$ bad points, and since there can only be $MN^{d-1}$ bad points, this means that we do not pick at most $MN^{d-1}/M^3N^{d-2} = N/M^2$ intervals. Since there are at most $N/M$ intervals in $T_d$, this implies that we are picking a fraction $1 - 1/M$ of the total number of intervals in $T_d$. Now we split each interval $I$ picked into intervals of length $D/N^{d-1}$, for some integer $D$ to be chosen later. Assume $N$ is large enough that $N^{d-2}/D$ is an integer. All intervals in this division that intersect $\mathbf{B}$ are discarded, and the remaining intervals form the set $S_d$. The total length of the discarded intervals is $2DM^3N^{d-2}/N^{d-1} = 3M^3D/N$, and so provided
-
-
-    Since there are at most $N^{d-1}$ choices for $a$, where each $a_k$ is the beginning of an interval of length $1/N$, it follows that there are at most $MN^{d-1}$ choices of $x$ for which there is a 
-\end{proof}
-
-How do we use this lemma to construct a set avoiding solutions to $f$? We set
-%
-\[ I_k[0] = \left[ (k-1) \frac{\eta}{\nu}, \frac{k \eta}{\nu} \right] \]
-
-\section{Full Dimensional Squarefree Subsets Using Interval Dissection Methods}
-
-The main idea of the last section was that, for a function $f$, given a method that takes a sequence of disjoint unions of sets $J_1, \dots, J_N$, each a union of almost disjoint closed intervals of the same length, and gives large subsets $J_n' \subset J_n$, each a union of almost disjoint intervals of a much smaller length, such that $f(x_1, \dots, x_n) \neq 0$ for $x_n \in J_n'$. Then one can find high dimensional subsets $K$ of the real line such that $f(x_1, \dots, x_n) \neq 0$ for a sequence of distinct $x_1, \dots, x_n \in K$. The larger the subsets $J_n'$ are compared to $J_n$, the higher the Hausdorff dimension of $K$. We now try and apply this method to construct large subsets avoiding solutions to the equation $f(x,y,z) = (x - y) - (x - z)^2$. In this case, since solutions to the equation above satisfy $y = x - (x-z)^2$, given $J_1, J_2, J_3$, finding $J_1', J_2', J_3'$ as in the method above is the same as choosing $J_1'$ and $J_3'$ such that the image of $J_1' \times J_3'$ under the map $g(x,z) = x - (x-z)^2$ is small in $J_2$. We begin by discretizing the problem, splitting $J_1$ and $J_3$ into unions of smaller intervals, and then choosing large subsets of these intervals, and finding large intervals of $J_2$ avoiding the images of the startpoints to these intervals.
+The main idea of Keleti's proof was that, for a function $f$, given a method that takes a sequence of disjoint unions of sets $J_1, \dots, J_N$, each a union of almost disjoint closed intervals of the same length, and gives large subsets $J_n' \subset J_n$, each a union of almost disjoint intervals of a much smaller length, such that $f(x_1, \dots, x_n) \neq 0$ for $x_n \in J_n'$. Then one can find high dimensional subsets $K$ of the real line such that $f(x_1, \dots, x_n) \neq 0$ for a sequence of distinct $x_1, \dots, x_n \in K$. The larger the subsets $J_n'$ are compared to $J_n$, the higher the Hausdorff dimension of $K$. We now try and apply this method to construct large subsets avoiding solutions to the equation $f(x,y,z) = (x - y) - (x - z)^2$. In this case, since solutions to the equation above satisfy $y = x - (x-z)^2$, given $J_1, J_2, J_3$, finding $J_1', J_2', J_3'$ as in the method above is the same as choosing $J_1'$ and $J_3'$ such that the image of $J_1' \times J_3'$ under the map $g(x,z) = x - (x-z)^2$ is small in $J_2$. We begin by discretizing the problem, splitting $J_1$ and $J_3$ into unions of smaller intervals, and then choosing large subsets of these intervals, and finding large intervals of $J_2$ avoiding the images of the startpoints to these intervals.
 
 So suppose that $J_1,J_2$, and $J_3$ are unions of intervals of length $1/M$, for which we may find subsets $A,B \subset [M]$ of the integers such that
 %
@@ -433,7 +596,58 @@ Regardless of whether the lemma above actually holds through, we describe an asy
 %
 \[ \Psi(N,N^{1/u}) = N \rho(u) + O \left( \frac{u N}{\log N} \right) \]
 %
-This is essentially linear for a fixed $u$, which could show the set of $(q,r)$ is $\Omega_\varepsilon(N)$, which is what we want.
+This is essentially linear for a fixed $u$, which could show the set of $(q,r)$ is $\Omega_\varepsilon(N)$, which is what we want. Additional information can be obtained from Hildebrand and Tenenbaum's survey paper ``Integers Without Large Prime Factors''.
+
+\section{A Better Approach}
+
+Remember that we can write a general value in our set as
+%
+\[ x = \frac{-2(a-b)m}{NM^2} + \frac{q}{NM^2} + \frac{Q}{NM^2} + \frac{R}{N^{3/2} M^2} + \frac{r^2}{N^2M^2} \]
+%
+with the hope of guaranteeing the existence of many points, rather than forcing $R$ to be small, we now force $R$ to be close to some scaled value of $\sqrt{N}$, 
+%
+\[ |R - n \varepsilon \sqrt{N}| = \delta \sqrt{N} \leq \varepsilon \sqrt{N} \]
+%
+Then
+%
+\[ x = \frac{-2(a-b)m + q + Q + n\varepsilon + \delta}{NM^2} + \frac{r^2}{N^2M^2} \]
+%
+So
+%
+\[ d \left( x, \mathbf{Z}/NM^2 + n\varepsilon / NM^2 \right) \leq \frac{\varepsilon}{NM^2} + \frac{1}{4NM^2} = \frac{\varepsilon + 1/4}{NM^2} \]
+%
+By the pidgeonhole principle, since $R < \sqrt{N}$, there are $1/\varepsilon$ choices for $n$, whereas there are
+
+
+The choice has the benefit of automatically possessing a lot of points by the pidgeonhole principle,
+
+\section{Boosting the Dimension of Pattern Avoiding Sets by Low Rank Coordinate Changes}
+
+We now consider finding subsets of $[0,1]$ avoiding solutions to the equation $y = f(Tx)$, where $T: \mathbf{R}^n \to \mathbf{R}^m$ is a rank $k$ linear transformation with integer coefficients with respect to standard coordinates. Fix a constant $A$ bounding the operator norm of $T$, in the sense that $\| Tx \|_\infty \leq A \| x \|_\infty$ for all $x \in \mathbf{R}^n$. If we fix sets $T_1, \dots, T_n, S \subset [0,1]$, which are unions of intervals of length $1/M$, with startpoints lying on integer multiples of $1/M$. Split each interval of $T_a$ into length $1/N$ intervals, and then set
+%
+\[ \mathbf{A} = \{ x : x_a\ \text{is a startpoint of a $1/N$ interval in $T_a$} \} \]
+%
+Since the startpoints of the intervals are integer multiples of $1/N$, $T(\mathbf{A})$ is contained with a rank $k$ sublattice of $(\mathbf{Z}/N)^m$. The operator norm also guarantees $T(\mathbf{A})$ is contained within $[-A,A]^m$. Because of the lattice structure of the image, $\| x - y \| \geq 1/N$ for each distinct pair $x,y \in T(\mathbf{A})$. Furthermore, since $\text{Im}(T)$ is $k$ dimensional, we can cover $\text{Im}(T) \cap [-A,A]^m$ by $(4AN)^k = O_{A,k}(N^k)$ cubes of size $1/2N$, and so there are at most $O_{A,k}(N^k)$ points in $T(\mathbf{A})$. If we define the set of `bad points' to be
+%
+\[ \mathbf{B} = \{ y \in [0,1] : \text{there is $x \in \mathbf{A}$ such that $y = f(T(x))$} \} \]
+%
+Then
+%
+\[ |\mathbf{B}| = |f(T(\mathbf{A}))| \leq |T(\mathbf{A})| = (4A)^k N^k = O_{A,k}(N^k) \]
+%
+We can now split $S$ into $O_{A,k}(N^k)$ intervals of length $O_{A,k}(1/MN^k)$ intervals, and because of the bounds on $|\mathbf{B}|$, at least one of these intervals must avoid elements of $\mathbf{B}$. Using the regularity of $f$, we can now thicken $\mathbf{B}$ to find sets $T_1', \dots, T_n'$ and $S'$, where $S'$ contains no points of the form $f(x')$, with $x' \in T_1' \times \dots \times T_n'$. This should give a Hausdorff dimension $1/k$ set avoiding solutions to the equation.
+
+\begin{remark}
+    If $T$ is a rank $k$ linear transformation with rational coefficients, then there is some integer $\lambda$ such that $\lambda T$ has integer coefficients, and then the equation $y = f(Tx)$ is the same as the equation $y = f'((\lambda T)(x))$, where $f'(x) = f(x)/\lambda$. Since $f'$ satisfies the same required regularity conditions that $f$ does in the proof above, we conclude that we still get the dimension $1/k$ bound if $T$ has rational rather than integral coefficients.
+\end{remark}
+
+\begin{remark}
+    In Malabika's argument, she used the following approach:
+    
+    ``We now fix an integer $C$ depending only on $A$ and $k$, and $M$, and split $S$ into length $1/N$ subintervals $I$ such that $|\mathbf{B} \cap I| \leq N^{k-1}/C$. In this step, we throw away at most $C(4A)^k N = O_{A,k,M}(N)$ intervals. Since $|T_a| \geq 1/M$, $T_a$ contains at least $N/M$ intervals, and so if we choose $C$ small enough that $C(4A)^k \leq 1/M$, then there is at least one interval in $T_a$ that we keep. If we now split the remaining intervals into $2N^{k-1}/C$ intervals, which will have length $C/2N^k$,$\dots$''
+
+    But I don't think this is necessary in the current proof. Is this method important when we look at higher dimensions, or is this a universal simplification?
+\end{remark}
 
 \begin{thebibliography}{9}
 
