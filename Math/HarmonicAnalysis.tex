@@ -549,7 +549,7 @@ The easiest place to verify convergence is in the space of continuously differen
     This means $\widehat{f}(n) = O(n^{-2})$. Every series that is $O(n^{-2})$ converges absolutely by the comparison test, and so the corresponding Fourier series converges uniformly. But this means that it converges to a continuous function, and so it must converge to $f$.
 \end{proof}
 
-More generally, if $f \in C^k(\mathbf{T})$, then $\widehat{f}(n) = O(n^{-k})$. Later on, we will show that we obtain uniform convergence even in $C^1(\mathbf{T})$, and even if $f$ is just H\"{o}lder continuous for $\alpha > 1/2$, in the sense that there is a constant $C$ such that for any $t,s$,
+More generally, if $f \in C^k(\mathbf{T})$, then $\widehat{f}(n) = O(n^{-k})$. This is a general idea relating to the fact that the smoothness of $f$ relates to the decay of it's Fourier series. More generally, this is an instance of the general phenomenon that local properties of $f$ represent themselves as coarse properties of it's Fourier series, and vice versa. Later on, we will show that we obtain uniform convergence even in $C^1(\mathbf{T})$, even if $f$ is just H\"{o}lder continuous for $\alpha > 1/2$, in the sense that there is a constant $C$ such that for any $t,s$,
 %
 \[ |f(t) - f(s)| \leq C|t - s|^\alpha \]
 %
@@ -1017,9 +1017,33 @@ Conversely, if the partial derivatives of a function are nice enough that we can
 converge in $L^1$ to $D_k f$. Note that $D_k f$ might not always agree with the usual partial derivative in pathological cases, but does agree if $f$ is continuously differentiable and has compact support.
 
 \begin{theorem}
-	If $f$ has a partial derivative $D_k f$ in $L^1$, then
+	If $f$ has compact support, and is $C^1$, then $f$ has a partial derivative $D_k f$ in $L^1$.
+\end{theorem}
+\begin{proof}
+	Because $f$ has compact support, $D_k f$ is uniformly continuous. Then for each $\varepsilon > 0$, there is $\delta$ such that $|(D_k f)(x) - D_k(f)(y)| < \varepsilon$ if $|x - y| < \delta$. The mean value theorem implies that for any $h$, there exists $s$ between $0$ and $h$ with
 	%
-	\[ \widehat{D_k f}(\xi) = 2 \pi i \xi_k \widehat{f}(\xi) \]
+	\[ (\Delta_h f)(x) = \frac{f(x + he_k) - f(x)}{h} = (D_k f)(x + se_k) \]
+	%
+	It follows that if $|h| < \delta$, then
+	%
+	\[ |(\Delta_h f)(x) - (D_k f)(x)| = |(D_k f)(x + se_k) - (D_k f)(x)| < \varepsilon \]
+	%
+	Thus if $f$ is supported on a compact set $E$, then $\| \Delta_h f - D_k f \|_1 < \varepsilon |E|$.
+\end{proof}
+
+\begin{remark}
+	If $f$ no longer has compact support, but $D_k f$ vanishes rapidly at infinity, then we can normally still establish that $D_k f$ is the derivative of $f$ in $L^1(\mathbf{R}^n)$. Indeed, suppose $|(D_k f)(x)| \leq g(|x|)$, where $g$ is an increasing function with $\int_0^\infty t^{n-1} g(t) < \infty$, then surely $\Delta_h f$ converges to $D_k f$ in $L^1$ on any compact set, which implies that for any $M$, using the mean value theorem again,
+	%
+	\begin{align*}
+		\int_{\mathbf{R}^n} &|(\Delta_h f)(x) - D_k f(x)|\; dx \leq o_M(1) + \int_{|x| > M} |(\Delta_h f)(x)| + |D_k f(x)| \\
+		&\leq o_M(1) + O \left( \int_{|x| > M} g(|x| + |h|)\; dx \right) = o_M(1) + O \left( \int_M^\infty t^{n-1}g(t)\; dt \right)\\
+	\end{align*}
+	%
+	If we choose $M$ large enough that the big $O$ term is $\leq \varepsilon$, then we find $\| \Delta_h f - D_k f \|_1 \leq \varepsilon + o_M(1)$, and taking $\varepsilon \to 0$ shows the convergence. This shows the derivatives exist if, for instance, $f$ is a Schwarz function, since then $|D_k f(x)| \lesssim 1/(1 + |x|^{n+1})$.
+\end{remark}
+
+\begin{theorem}
+	If $f$ has a partial derivative $D_k f$ in $L^1$, then $\widehat{D_k f}(\xi) = 2 \pi i \xi_k \widehat{f}(\xi)$.
 \end{theorem}
 \begin{proof}
 	It suffices to note that
@@ -1029,7 +1053,7 @@ converge in $L^1$ to $D_k f$. Note that $D_k f$ might not always agree with the 
 	Since $\Delta_h f \to f$ in $L^1$, $\widehat{\Delta_h f} \to \widehat{D_k f}$ uniformly, and in particular, converges to $\widehat{D_k f}$ pointwise, and the $\widehat{\Delta_h f}$ converge pointwise to $2 \pi i \xi_k \widehat{f}(\xi)$.
 \end{proof}
 
-These theorems have obvious extensions. If $P(X_1, \dots, X_n)$ is a polynomial in $n$ variables, then we let $P(D)$ denote $P(D_1, \dots, D_n)$. We therefore find that if $P(D)(f)$ exists in $L^1$, then
+These theorems have obvious extensions. If $P(X_1, \dots, X_n)$ is a polynomial in $n$ variables, then we let $P(D)$ denote the differential operator $P(D_1, \dots, D_n)$. We therefore find that if $P(D)(f)$ exists in $L^1$, then
 %
 \[ (P(D)(f))^\ft = P(2 \pi i \xi) \widehat{f} \]
 %
@@ -1268,7 +1292,11 @@ A simple corollary to the Fourier inversion theorem is that the Fourier transfor
 	%
 	\[ \int_{-\infty}^\infty g_\xi(x - iy)\; dx = 4 \pi (1 - \xi) \]
 	%
-	and putting this all together, we conclude that $\widehat{F}(\xi) = 1 - \xi$. It is interesting in this particular case to note that
+	and putting this all together, we conclude that $\widehat{F}(\xi) = 1 - \xi$. It is obviously true that $\int \widehat{F}(\xi) = 1$, because the graph of this function is just a triangle with a baselength 2 and heigh 1, so we obtain that for any $f \in L^1(\mathbf{R})$, $S_\delta(f)$ converges to $f$ in the $L^1$ norm, and since the Fourier transform has compact support, it is easy to see it is an approximation to the identity, so that for any $x$ in the Lebesgue set of $f$,
+	%
+	\[ f(x) = \lim_{\delta \to 0} \int \widehat{f}(\xi) e(\xi \cdot x) \left( \frac{\sin(\delta \xi)}{\delta \xi} \right)^2\; dx \]
+	%
+	It is interesting in this particular case to note that
 	%
 	\begin{align*}
 		\int_{-1}^1 (1 - |\xi|) e^{2 \pi i\xi x}\; d\xi &= 2 \int_0^1 (1 - \xi) \cos(2 \pi \xi x)\; d\xi\\
@@ -1282,13 +1310,17 @@ A simple corollary to the Fourier inversion theorem is that the Fourier transfor
 \begin{example}
 	The Gauss kernel $\Phi_\delta$ on $\mathbf{R}^n$ is obtained from the initial function $\Phi(x) = e^{-\pi |x|^2}$. Since this function breaks onto products of exponentials over each coordinate, it suffices to calculate the Fourier transform in one dimension, from which we can obtain the general transform by taking products. In the one dimensional case, since $\Phi'(x) = -2 \pi x e^{- \pi x^2}$ is integrable, we conclude that $\widehat{\Phi}$ is differentiable, and
 	%
-	\[ (- 2 \pi \xi) \widehat{\Phi}(\xi) = \widehat{\Phi'}(\xi) = (\widehat{\Phi})'(\xi) \]
+	\[ (\widehat{\Phi})'(\xi) = (- 2 \pi i \xi \Phi)^\ft(\xi) = i (\Phi')^\ft(\xi) = i (2 \pi i \xi) \widehat{\Phi}(\xi) = - 2 \pi \xi \widehat{\Phi}(\xi) \]
 	%
 	The uniqueness theorem for ordinary differential equations says that since
 	%
 	\[ \widehat{\Phi}(0) = \int_{-\infty}^\infty e^{- \pi x^2} = 1 = \Phi(0) \]
 	%
-	We must have $\widehat{\Phi} = \Phi$. But this means that in all dimensions, $\Phi(x) = e^{- \pi |x|^2}$, then $\widehat{\Phi} = \Phi$. We also find that because of this,
+	We must have $\widehat{\Phi} = \Phi$. But this means that in all dimensions, $\Phi(x) = e^{- \pi |x|^2}$, then $\widehat{\Phi} = \Phi$. Since the Gauss kernel is one of the most well known approximations to the identity, we find that $G_\delta(f) \to f$ in $L^1$ for all $f \in L^1(\mathbf{R}^n)$, and for all $x$ in the Lebesgue set of $f$,
+	%
+	\[ f(x) = \int \widehat{f}(\xi) e(\xi \cdot x) e^{- \pi |\xi|^2}\; d\xi \]
+	%
+	The scaling properties of the Fourier transform imply that
 	%
 	\[ \widehat{\Phi_\delta}(\xi) = \widehat{\Phi}(\delta \xi) = e^{- \delta^2 \pi |\xi|^2} \]
 	%
@@ -1296,26 +1328,32 @@ A simple corollary to the Fourier inversion theorem is that the Fourier transfor
 \end{example}
 
 \begin{example}
+
 	The Abel kernel $A_\delta$ on $\mathbf{R}^n$ is obtained from the initial function $A(x) = e^{-2 \pi |x|}$. The calculation of the Fourier transform of this function indicates a useful principle in Fourier analysis: one can reduce expressions involving $e^{-x}$ into expressions involving $\smash{e^{-x^2}}$ using the subordination principle. In particular, for $\beta > 0$ we have the formula
 	%
 	\[ e^{-\beta} = \int_0^\infty \frac{e^{-u}}{\sqrt{\pi u}} e^{-\beta^2/4u}\; du \]
 	%
-	Because using the theory of residues,
+	We establish this by letting $v = \sqrt{u}$, so
 	%
-	\begin{align*}
-		e^{-\beta} &= \frac{2}{\pi} \int_0^\infty \frac{\cos \beta x}{1 + x^2} = \frac{1}{\pi} \int_{-\infty}^\infty \frac{e^{\beta i x}}{1 + x^2}\; dx\; du\\
-		&= \frac{1}{\pi} \int_{-\infty}^\infty e^{\beta i x} \int_0^\infty e^{-u} e^{-ux^2}\; du\; dx\\
-		&= \frac{1}{\pi} \int_0^\infty e^{-u} \int_{-\infty}^\infty e^{-ux^2} e^{\beta i x}\; dx\; du\\
-		&= \frac{1}{\pi} \int_0^\infty \sqrt{\pi/u} e^{-u} e^{-\beta^2/4u}\; du
-	\end{align*}
+	\[ \int_0^\infty \frac{e^{-u}}{\sqrt{\pi u}} e^{-\beta^2/4u}\; du = \frac{2}{\sqrt{\pi}} \int_0^\infty e^{-v^2 - \beta^2/4v^2}\; dv = \frac{2e^{-\beta}}{\sqrt{\pi}} \int_0^\infty e^{-(v - \beta/2v)^2}\; dv \]
+	%
+	But the map $v \mapsto v - \beta/2v$ is measure preserving by Glasser's master theorem, so this integral is
+	%
+	\[ \frac{2e^\beta}{\sqrt{\pi}} \int_0^\infty e^{-v^2}\; dv = e^\beta \]
+	%Because using the theory of residues,
+	%
+	%\begin{align*}
+	%	e^{-\beta} &= \frac{2}{\pi} \int_0^\infty \frac{\cos \beta x}{1 + x^2} = \frac{1}{\pi} \int_{-\infty}^\infty \frac{e^{\beta i x}}{1 + x^2}\; dx\; du\\
+	%	&= \frac{1}{\pi} \int_{-\infty}^\infty e^{\beta i x} \int_0^\infty e^{-u} e^{-ux^2}\; du\; dx\\
+	%	&= \frac{1}{\pi} \int_0^\infty e^{-u} \int_{-\infty}^\infty e^{-ux^2} e^{\beta i x}\; dx\; du\\
+	%	&= \frac{1}{\pi} \int_0^\infty \sqrt{\pi/u} e^{-u} e^{-\beta^2/4u}\; du
+	%\end{align*}
 	%
 	In tandem with Fubini's theorem, this formula implies
 	%
 	\begin{align*}
-		\widehat{A}(\xi) &= \int e^{-2 \pi |x|} e^{- 2 \pi i \xi \cdot x}\; dx\\
-		&= \int \int_0^\infty \frac{e^{-u}}{\sqrt{\pi u}} e^{- |\pi x|^2/u} e^{-2 \pi i \xi \cdot x}\; du\; dx\\
-		&= \int_0^\infty \frac{e^{-u}}{\sqrt{\pi u}} \int e^{-|\pi x|^2/u} e^{-2 \pi i \xi \cdot x}\; dx\; du\\
-		&= \int_0^\infty \frac{e^{-u}}{\sqrt{\pi u}} (\delta_{\sqrt{\pi/u}} \Phi)^\ft(\xi)\; du\\
+		\widehat{A}(\xi) &= \int e^{-2 \pi |x|} e^{- 2 \pi i \xi \cdot x}\; dx = \int \int_0^\infty \frac{e^{-u}}{\sqrt{\pi u}} e^{- |\pi x|^2/u} e^{-2 \pi i \xi \cdot x}\; du\; dx\\
+		&= \int_0^\infty \frac{e^{-u}}{\sqrt{\pi u}} \int e^{-|\pi x|^2/u} e^{-2 \pi i \xi \cdot x}\; dx\; du = \int_0^\infty \frac{e^{-u}}{\sqrt{\pi u}} (\delta_{\sqrt{\pi/u}} \Phi)^\ft(\xi)\; du\\
 		&= \frac{1}{\pi^{(n + 1)/2}} \int_0^\infty e^{-u} u^{(n-1)/2} e^{- u|\xi|^2}\; du
 	\end{align*}
 	%
@@ -1325,8 +1363,22 @@ A simple corollary to the Fourier inversion theorem is that the Fourier transfor
 	%
 	\[ \widehat{A}(\xi) = \frac{\Gamma((n+1)/2)}{[\pi(1 + |\xi|^2)]^{(n+1)/2}} \]
 	%
-	Thus the Abel mean is the Fourier inverse of the Poisson kernel on the upper half plane $\mathbf{H}^{n+1}$.
+	Thus the Abel mean is the Fourier inverse of the Poisson kernel on the upper half plane $\mathbf{H}^{n+1}$. In order to conclude this function is a good kernel, it now suffices to verify that
+	%
+	\[ \int_{\mathbf{R}^n} \frac{d\xi}{(1 + |\xi|^2)^{(n+1)/2}} = \frac{\pi^{(n+1)/2}}{\Gamma((n+1)/2)} \]
+	%
+	The right hand side is half the surface area of the unit sphere in $\mathbf{R}^{n+1}$. Denoting this quantity by $S_n$, and switching to polar coordinates, we find that
+	%
+	\[ \int_{\mathbf{R}^n} \frac{d\xi}{(1 + |\xi|^2)^{(n+1)/2}} = S_{n-1} \int_0^\infty \frac{r^{n-1}}{(1 + r^2)^{(n+1)/2}}\; dr \]
+	%
+	Setting $r = \tan u$, we find
+	%
+	\[ \int_0^\infty \frac{r^{n-1}}{(1 + r^2)^{(n+1)/2}}\; dr = \int_0^{\pi/2} (\sin u)^{n-1} du \]
+	%
+	The theorem now follows from noticing that $S_{n-1} (\sin u)^{n-1}$ is the surface area of the $n-1$ sphere obtained by slicing $S^n$ with the hyperplane $x_n = \cos u$. Fubini's theorem implies that the integral is $S_n/2$, which is what we wanted to verify.
 \end{example}
+
+In order to conclude that our $\Phi$ summability method works when $\Phi$ is the F\'{e}jer, Gauss, or Poisson kernel, it now suffices to verify the Fourier transforms of these kernels integrate to one. This is obvious for the F\'{e}jer and Gauss kernel. For the Abel kernel, it suffices to calculate
 
 \begin{theorem}
 	If $f$ is an integrable, function continuous at the origin, and $\widehat{f} \geq 0$, then $\widehat{f}$ is integrable.
