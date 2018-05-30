@@ -1673,17 +1673,374 @@ Solutions to the string equation are
 
 If $u(t,x)$
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 \part{Euclidean Harmonic Analysis}
 
-\section{Fatou's Theorem}
+Here we employ the more modern techniques of functional analysis to understand the more advanced and technical portions of Fourier analysis, and related problems.
 
-Now we consider a deeper application in complex analysis, which involves elements of Hilbert spaces, Fourier series, and differentiation theory. If $f$ is defined in the interior of the unit disk, we say that $f$ has a {\it radial limit} at a point $x$ on the boundary of the disk if
-%
-\[ \lim_{r \uparrow 1} f(rx) \]
-%
-exists. Fatou's theorem says that bounded holomorphic functions on the interior of the unit disk have a wide number of radial limits.
+\chapter{Interpolation Theory}
 
-% TODO: WRITE OUT AND EXPAND THIS SECTION IN THE HARMONIC ANALYSIS NOTES ON MAXIMAL FUNCTIONS
+One of the most fundamental tools in the `hard style' of mathematical analysis, involving explicit quantitative estimates on quantities that arises in basic methods of mathematics, is the theory of interpolation. The main goal of interpolation is to take two estimates, and blend them together to form a family of intermediate estimates. Often each estimate will focus on one component of the problem at hand (an estimate in terms of the decay of the function at $\infty$, an estimate involving the growth of the derivative, or the low frequency the function is, etc). By interpolating, we can optimize and obtain an estimate which simultaneously takes into account multiple features of the function.
+
+The most basic way to interpolate is with two, basic numerical estimates. Given two inequalities $A_0 \leq B_0$ and $A_1 \leq B_1$, for any parameter $0 \leq \theta \leq 1$, if we define the additive weighted averages
+%
+\[ A_\theta = (1 - \theta) A_0 + \theta A_1\ \ \ \ \ B_\theta = (1 - \theta) B_0 + \theta B_1 \]
+%
+Then we conclude $A_\theta \leq B_\theta$ for all $\theta$. Similarily, we can consider the weighted multiplicative averages
+%
+\[ A_\theta = A_0^{1 - \theta} A_1^\theta\ \ \ \ \ B_\theta = B_0^{1 - \theta}B_1^\theta \]
+%
+in which case we still have $A_\theta \leq B_\theta$. Note that the additive averages are obtained by taking the unique linear function between two values, and the multiplicative averages are obtained by taking the unique log-linear function between two values. In particular, if $A_\theta$ is defined to be any convex function, then we have
+%
+\[ A_\theta \leq (1 - \theta) A_0 + \theta A_1  \]
+%
+and if $B_\theta$ is logarithmically convex, so that $\log B_\theta$ is convex, then
+%
+\[ B_\theta \leq B_0^{1 - \theta} B_1^\theta \]
+%
+Thus convexity provides us with a more general way of interpolating estimates, which is what makes this property so useful in analysis, enabling us to simplify estimates.
+
+\begin{example}
+	For a fixed, measurable function $f$, the map $p \mapsto \| f \|_p$ is a log convex function. This statement is precisely H\"{o}lder's inequality, since the inequality
+	%
+	\[ \| f \|_{\theta p + (1 - \theta) q} \leq \| f \|_p^\theta \| f \|_{q}^{1-\theta} \]
+	%
+	says
+	%
+	\[ \| |f|^{\theta p} |f|^{(1 - \theta) q} \|_1^{1/(\theta p + (1 - \theta) q)} \leq \| f^{\theta p} \|_{1/\theta}^{\theta} \| f^{(1-\theta)q} \|_{1/(1-\theta)}^{1-\theta} \]
+	%
+	which is precisely H\"{o}lder's inequality.
+\end{example}
+
+\begin{example}
+	For a fixed $p$, the {\bf weak $L^p$ space $L^{p,\infty}(X)$} is the family of functions $f$ for which the quantity
+	%
+	\[ \| f \|_{p,\infty} = \sup t F(t)^{1/p} \]
+	%
+	is finite, where $F(t) = ||f| \geq t|$. This weak $L^p$ norm is log convex, because if $F(t) \leq A_0^{p_0}/t^{p_0}$, and $F(t) \leq A_1^{p_1}/t^{p_1}$, then we can apply scalar interpolation to conclude that if $p_\theta = (1 - \alpha) p_0 + \alpha p_1$,
+	%
+	\[ F(t) \leq \frac{A_0^{(1 - \alpha) p_0}A_1^{\alpha p_1}}{t^{(1 - \alpha)p_0 + \alpha p_1}} = \frac{A_\theta^{p_\theta}}{t^{p_\theta}} \]
+	%
+	where $p_\theta$ is the harmonic weighted average between $p_0$ and $p_1$, and $A_\theta$ the geometric weighted average. Using this argument, interpolating slightly to the left and right of $p_\theta$, we can conclude that if $p_0 < p_\theta < p_1$, then $L^{p_0,\infty}(X) \cap L^{p_1,\infty}(X) \subset L^{p_\theta}(X)$.
+\end{example}
+
+The next result, known as Lindel\"{o}f's theorem, is one of the fundamental examples of the tools of complex interpolation. This technique employs tools from complex analysis, in particular the maximum principle, to obtain bounds on the intermediate values of a function on it's interior, from bounds on the boundary of the function.
+
+\begin{theorem}[The Three Lines Lemma]
+	If $f$ is a holomorphic function on the strip $S = \{ s : \sigma \in [0,1] \}$ with the growth condition $\smash{|f(s)| \lesssim e^{e^{(\pi - \delta)|t|}}}$, for some $\delta > 0$, then the function $\sigma \mapsto \sup f(\sigma + it)$ is log convex on $[0,1]$. In other words, if we have a bound $|f(it)| \leq B_0$ and $|f(1 + it)| \leq B_1$, then we have a general estimate $|f(s)| \leq B_0^{1-\theta}B_1^\theta$.
+\end{theorem}
+\begin{proof}
+	We can divide $f$ by the holomorphic function $B_0^{1-s}B_1^s$, and since this new function satisfies the constraints of the theorem, it suffices to prove that if $|f(it)|, |f(1+it)| \leq 1$, then $|f(s)| \leq 1$ for all $s \in S$. If we assume first that $|f(s)| \to 0$ as $|t| \to \infty$, then, applying the maximum principle, we conclude that the maximum value on $\{ s: |t| \leq T \}$ occurs for $\sigma \in \{ 0, 1 \}$, which gives us the bound for $|t| \leq T$. Taking $T \to \infty$ completes the proof. In general, if we define the function $g_\varepsilon(s) = \exp(\varepsilon i \exp(i[(\pi - \delta/2)s + \delta/4]))$, then the function $f(s)g_\varepsilon(s)g_\varepsilon(1-s) \to 0$ as $|t| \to \infty$, since
+	%
+	\begin{align*}
+		|g_\varepsilon(s)| &= \exp(-\varepsilon \text{Im}(\exp(i[(\pi - \delta/2)s + \delta/4])))\\
+		&= \exp(-\varepsilon e^{-(\pi - \delta/2) t} \sin(\delta/4 + (\pi - \delta/2)\sigma ))\\
+		&\leq \min \left( 1, e^{-\varepsilon \sin(\delta/4) e^{- (\pi - \delta/2)t}} \right)
+	\end{align*}
+	%
+	Thus $g_\varepsilon$ causes sharp decay for large values of $t$. $g_\varepsilon(1-s)$ then causes sharp decay for small values of $t$, so
+	%
+	\[ |g_\varepsilon(s)g_\varepsilon(1-s)| \leq e^{-\varepsilon \sin(\delta/4) e^{- (\pi - \delta/2)|t|}} \]
+	%
+	We can thus apply the previous case to this function to conclude that $|f(s)g_\varepsilon(s)g_\varepsilon(1-s)| \leq 1$, and then taking $\varepsilon \to 0$ completes the claim.
+\end{proof}
+
+\begin{remark}
+	The function $e^{-ie^{\pi i s}}$ shows that this theorem cannot be proven for all holomorphic functions. In particular, this means there is no family of holomorphic functions $g_\varepsilon$ which decays faster than the functions constructed above as $|t| \to \infty$ and pointwise approximates the identity as $\varepsilon \to 0$.
+\end{remark}
+
+\begin{remark}
+	Similar variants can be used to show that if $f$ is a function on the upper half strip satisfying a growth condition, then the supremum over lines on the upper half strip is log convex. If $f$ is a function on the annulus, we do not need to even restrict ourselves to a growth condition to conclude that the supremum over circles centred at the origin is log convex (a result known as the three circles lemma).
+\end{remark}
+
+%Here is a simple application, which allows us to split an additive estimate into two multiplicative estimates.
+
+%\begin{theorem}[H\"{o}lder's Inequality]
+%	If $a_1, \dots, a_N$ and $b_1, \dots, b_N$ are two groups of non-negative numbers, then
+	%
+%	\[ \sum a_nb_n \leq \left( \sum a_n^p \right)^{1/p} \left( \sum b_n^q \right)^{1/q} \]
+	%
+%	for every $p$ and $q$ with $1/p + 1/q = 1$.
+%\end{theorem}
+%\begin{proof}
+%	Rescaling the inequality, we may assume that $\sum a_n^p = \sum b_n^q = 1$, and it suffices to prove $\sum a_nb_n = 1$. Because the function $f(t) = a_n^{p(1-t)}b_n^{qt}$ is convex, with $f(0) = a_n^p$, $f(1) = b_n^q$, and $f(1/q) = a_nb_n$, we conclude
+	%
+%	\[ a_nb_n \leq a_n^p/p + b_n^q/q \]
+	%
+%	Summing up, we conclude
+	%
+%	\[ \sum a_nb_n \leq \sum a_n^p / p + \sum b_n^q/q = 1 \]
+	%
+%	The function $f$ is strictly convex provided $b_n^q \neq a_n^p$, which implies that equality can only occur if $b_n^q = a_n^p$ for all $n$, in the normalized case of the proof. In the general case, the equality can only occur if $\| a \|_p b_n^q = a_n^p \| b \|_q$.
+%\end{proof}
+
+As $p \to \infty$, the $L^p$ norm excludes functions with large peaks, and as $p \to 0$, the $L^p$ norm excludes functions with large tails. In particular, if $\| f \|_{p_0}, \| f \|_{p_1} < \infty$, then for any $p_\theta$ between $p_0$ and $p_1$,
+%
+\[ \| f \chi_{|f| \leq 1} \|_{p_\theta}^{p_\theta} = \int_{|f| \leq 1} |f|^{p_\theta} \leq \int_{|f| \leq 1} |f|^{p_0} < \infty \]
+\[ \| f \chi_{|f| > 1} \|_{p_\theta}^{p_\theta} = \int_{|f| > 1} |f|^{p_\theta} \leq \int_{|f| > 1} |f|^{p_1} < \infty \]
+%
+so, applying the triangle inequality, we conclude that $\| f \|_{p_\theta} < \infty$. Furthermore, the inequalities show that we can split any function with finite $L^{p_\theta}$ norm into the sum of a function with finite $L^{p_0}$ norm and another with finite $L^{p_1}$ norm. In the case where $p_1 = \infty$, then clearly $f \chi_{|f| > 1}$ is bounded if $f$ is bounded. This gives the inclusions
+%
+\[ L^{p_0}(X) \cap L^{p_1}(X) \subset L^{p_\theta}(X) \subset L^{p_0}(X) + L^{p_1}(X) \]
+%
+For all $p_\theta$.
+
+\section{Interpolation of Functions}
+
+
+
+\section{Interpolation of Operators}
+
+In the theory of operator interpolation, we address the following situation. We are given a norm space $X$, which can be written as the sum of two other norm spaces $Y + Z$, which perhaps have a different norm to $X$. We are given a (not necessarily bounded operator) $T: X + Y \to Z$. Given that $\| T \|_Y$ and $\| T \|_Z$ are finite, what tools enable us to conclude that $\| T \|_X$ is finite? In other cases, we are given a norm space $X$ with a family of norms $\| \cdot \|_\alpha$, and given the boundedness of $T: X \to Y$ in $\| \cdot \|_{p_0}$ and $\| \cdot \|_{p_1}$, we want to obtain boundedness in $\| \cdot \|_{p_\theta}$ for all $p_\theta$ inbetween $p_0$ and $p_1$.
+
+\begin{theorem}[Riesz-Thorin]
+	Let $p_0,p_1 \in (0,\infty]$ and $q_0,q_1 \in [1,\infty]$. Consider a linear operator $T$ mapping elements of $L^{p_0}(X)$ to $L^{q_0}(Y)$, and elements of $L^{p_1}(X)$ to $L^{q_1}(Y)$. Then for any $f \in L^{p_\theta}(X)$, where $p_\theta$ is the weighted harmonic average $1/p_\theta = (1 - \theta)/p_0 + \theta/p_1$, $Tf \in L^{q_\theta}(Y)$, where $q$ is a weighted harmonic average, and
+	%
+	\[ \| T \|_{p_\theta \to q_\theta} \leq \| T \|_{p_0 \to q_0}^{1-\theta} \| T \|_{p_1 \to q_1}^\theta \]
+\end{theorem}
+\begin{proof}
+	If $p_0 = p_1$, the proof follows by the log convexity of the $L^p$ norms of a function. Thus we may assume $p_0 \neq p_1$, so $p_\theta$ is finite in any case of interest. By normalizing the measures on both spaces, we may assume $\| T \|_{p_0,q_0} = \| T \|_{p_1,q_1} = 1$, so it suffices to prove $\| T \|_{p_\theta,q_\theta} \leq 1$. H\"{o}lder's inequality implies
+	%
+	\[ \left| \int_Y (Tf) g \right| \leq \| f \|_{p_0} \| g \|_{q_0'}, \| f \|_{p_1} \| g \|_{q_1'} \]
+	%
+	We now employ some complex interpolation to conclude that whenever $f$ and $g$ are simple functions,
+	%
+	\[ \left| \int_Y (Tf) g \right| \leq \| f \|_{p_\theta} \| g \|_{q_\theta'} \]
+	%
+	To see this, we can normalize so $\| f \|_{p_\theta} = \| g \|_{q_\theta'} = 1$, and write $f = |f| \text{sgn}(f)$. But if we now define
+	%
+	\[ F(s) = \int_Y T(|f|^{(1-s)p_\theta/p_0 + sp_\theta/p_1} \text{sgn}(f)) |g|^{(1-s)q_\theta'/q_0' + sq_\theta'/q_1'} \text{sgn}(g) \]
+	%
+	Then an application of Lindel\"{o}f's theorem implies the result. Since $g$ and $f$ can be taken to approximate all elements of $L^{p_\theta}(X)$ and $L^{q_\theta'}(Y)$, we conclude that the theorem is true for all not-necessarily simple elements of these function spaces. But applying duality, this now implies thath $\| Tf \|_{q_\theta} \leq \| f \|_{p_\theta}$, which was what was required to be proven.
+\end{proof}
+
+Given a linear operator $T$ mapping simple functions on $X$ to measurable functions on $Y$, we say $T$ has {\it strong type} $(p,q)$ if $\| T f \|_q \leq \| f \|_p$ for any simple function $f$. The Hahn-Banach theorem then says $T$ has an extension to a continuous operator from $L^p(X)$ to $L^q(Y)$, and, provided $p$ is finite, or $X$ has finite measure, this extension will be unique. If we consider the {\it strong type} diagram to be all points $(p,q)$ where $T$ is of strong type $(1/p,1/q)$, then the Riesz-Thorin interpolation theorem implies that the intersection of the strong type diagram with $[0,\infty) \times [0,1]$ is convex, and the operator norm $\| T \|_{p,q}$ is a log convex function of $(1/p,1/q)$.
+
+\begin{example}
+	If $T$ is the identity map on functions on $[0,1]$, then because of the fact that $\| f \|_p \leq \| f \|_q$ for $p < q$,
+\end{example}
+
+\begin{example}
+	We know that if $f$ and $g$ are integrable functions, then $f * g$ is an integrable function, and $\| f * g \|_1 \leq \| f \|_1 \| g \|_1$. If we apply Minkowski's integral inequality, then we find that if $f \in L^1(\mathbf{R}^n)$ and $g \in L^q(\mathbf{R}^n)$, then
+	%
+	\begin{align*}
+		\| f * g \|_q &= \left( \int |(f * g)(x)|^q\; dx \right)^{1/q} \leq \int \left( \int |f(y)g(x-y)|^q dx\; \right)^{1/q} dy\\
+		&= \int |f(y)| \| g \|_q = \| f \|_1 \| g \|_q
+	\end{align*}
+	%
+	This means $f * g \in L^q(\mathbf{R}^n)$, and so is, in particular, defined everywhere. H\"{older}'s inequality implies that if $f \in L^q(\mathbf{R}^n)$ and $g \in L^{q^*}(\mathbf{R}^n)$, then
+	%
+	\[ \left| \int f(y) g(x-y)\; dy \right| \leq \int |f(y-x)| |g(x)| \leq \int |f(y)|\; dy \int |g(y)|^{q^*}\; dy = \| f \|_q \| g \|_{q^*} \]
+	%
+	Thus $\| f * g \|_\infty \leq \| f \|_q \| g \|_{q^*}$. But this means that the convolution operator $T_g: f \mapsto f * g$ is $(1,q)$, as well as $(q^*,\infty)$ continuous. But now, connecting these two points, and applying the Riesz-Thorin theorem, we conclude that if $f \in L^p(\mathbf{R}^n)$, with $1/p = \theta/q^* + (1 - \theta) = 1/q^* + (1-\theta)/q = 1 - 1/q + 1/r$, $(f * g) \in L^r(\mathbf{R}^n)$, and
+	%
+	\[ \| f * g \|_r \leq \| f \|_p \| g \|_q \]
+	%
+	Note that we never used anything about $\mathbf{R}^n$ here other than it's translational structure, and as such Young's inequality continues to apply in the theory of any modular locally compact group. Indeed, this means if we swap $\mu$ with $\lambda \mu$, then we obtain that
+	%
+	\[ \| f * g \|_r = \lambda^{1 + 1/r} = \lambda^{1/p + 1/q} \| f \|_p \| g \|_p \]
+	%
+	which is a good way of remembering that we must have $1 + 1/r = 1/p + 1/q$.	
+\end{example}
+
+Elias Stein noticed that the Riesz-Thorin theorem can be easily extended to allow bounds over an `analytic family' of operators $T_s$, where $s \in S$, in the sense that for any two test functions $f$ and $g$, $\langle T_s f, g \rangle$ is analytic in $s$, growing slower than doubly exponentially, and we have estimates
+%
+\[ \| T_{it} f \|_{q_0} \leq B_t \| f \|_{p_0}\ \ \ \ \ \| T_{1+it} f \|_{q_1} \leq B_t \| f \|_{p_1} \]
+%
+where $B_t = O(e^{e^{(\pi - \delta)t}})$, then $\| T_\theta f \|_{q_\theta} \leq B_\theta \| f \|_{p_\theta}$.
+
+\chapter{Oscillatory Integrals}
+
+The study of oscillatory integrals provides tools enabling one to obtain asymptotics for integrals of the form
+%
+\[ I(\lambda) = \int e^{i \lambda \Phi(x)} \psi(x)\; dx \]
+%
+where $\Phi$ is the {\bf phase}, and $\psi$ is the amplitude, which are both fixed parameters, and $\lambda$ is allowed to vary. These integrals are highly oscillatory, and simply taking absolute values into the integral would destroy the oscillation, giving very poor asymptotics for the integral, so certain decomposition techniques often employed, i.e. in the theory of singular integrals, fail completely here.
+
+\begin{example}
+	The most basic example, and most important, example of an oscillatory integral is the Fourier transform
+	%
+	\[ \widehat{f}(\xi) = \int e^{- 2 \pi i \xi \cdot x} f(x)\; dx \]
+	%
+	Here $\psi = f$,. More generally, we can obtain another example by taking a finite measure $\mu$, and considering it's Fourier transform
+	%
+	\[ \widehat{\mu}(\xi) = \int e^{- 2\pi i \xi \cdot x} d\mu(x)\; dx \]
+	%
+
+\end{example}
+
+\begin{example}
+	Another example of an oscillatory integral is obtained by taking a
+\end{example}
+
+\section{The Principle of Stationary Phase}
+
+The basic principle of the theory of stationary phase is that the integral is rapidly decaying in $\lambda$ when $\nabla \Phi$ is nonvanishing, so the asymptotics of the integral are governed by the values $x$ where $\nabla \phi(x) = 0$.
+
+\begin{theorem}
+	If $\Phi$ and $\psi$ are smooth, compactly supported functions with $|\nabla \Phi(x)| \geq c$ for all $x$ in the support of $\psi$, then $I(\lambda) \lesssim_N 1/\lambda^N$.
+\end{theorem}
+\begin{proof}
+	Set $a = (\nabla \Phi)/|\nabla \Phi|^2$. Then for any smooth functions $f$ and $g$, integrating by parts, we obtain that
+	%
+	\[ \int \frac{a \cdot \nabla f(x)}{i \lambda} g(x)\; dx = - \int f(x) \frac{(\nabla \cdot (ag))(x)}{i \lambda}\; dx \]
+	%
+	Set $L(f) = (i \lambda)^{-1} (a \cdot \nabla f)$, and $L^t(f) = - (i\lambda)^{-1} (\nabla \cdot (af))$. Note that $L(e^{i \lambda \Phi}) = e^{i \lambda \Phi}$, so $L^N(e^{i \lambda \Phi}) = e^{i \lambda \Phi}$ for all integers $N$, and so
+	%
+	\[ I(\lambda) = \int L^N(e^{i \lambda \Phi}) \phi = \int e^{i \lambda \Phi} (L^t)^N(\psi) \]
+	%
+	Taking absolute values in the last integral gives that
+	%
+	\[ |I(\lambda)| \leq \int |(L^t)^N(\psi)| \leq \frac{N}{\lambda^N} (\| \psi \|_N \| \Phi \|_N) \lesssim |\lambda|^{-N} \]
+	%
+	which gives the required bounds.
+\end{proof}
+
+In the one dimensional case, we can obtain a sharper estimate, in the case where we integrate over an interval, not against a test function, and obtain a bound uniform over all intervals.
+
+\begin{theorem}
+	If we consider $I(\lambda) = \int_a^b e^{i \lambda \Phi}$, where $\Phi$ is $C^2$ and $\Phi'$ is monotonic, with $|\Phi'(x)| \geq 1$ on $[a,b]$, then $I(\lambda) \leq 3/\lambda$.
+\end{theorem}
+\begin{proof}
+	We use the operator $L$ in the last proof, which, if we assume $\Phi' > 0$, has the simple, one dimensional form $L(f) = f'/i \lambda \Phi'$. The case where $\Phi' < 0$ is obtained by taking complex conjugates. Then $L^t(f) = - (i\lambda)^{-1} (f/\Phi')'$, and so
+	%
+	\[ I(\lambda) = \int_a^b L(e^{i \lambda \Phi}) = \left. \frac{e^{i \lambda \Phi}}{i \lambda \Phi'} \right|_a^b + \int_a^b e^{i \lambda \Phi} L^t(1) \]
+	%
+	But
+	%
+	\[ \int_a^b |L^t(1)| = |\lambda|^{-1} \int_a^b (1/\Phi')' = |\lambda|^{-1} \left| \frac{1}{\Phi'(b)} - \frac{1}{\Phi'(a)} \right| \leq 2 |\lambda|^{-1} \]
+	%
+	and
+	%
+	\[ \left| \frac{e^{i \lambda \Phi(b)}}{i \lambda \Phi'(b)} - \frac{e^{i \lambda \Phi(a)}}{i \lambda \Phi'(a)} \right| \leq |\lambda|^{-1} \]
+	%
+	If $\Phi' < 0$, we just apply the previous case to $\overline{I(\lambda)} = \int_a^b e^{- i \lambda \Phi}$.
+\end{proof}
+
+\begin{remark}
+	If $|\Phi'(x)| \geq 1/\mu$, a simple modification to the argument proves that $I(\lambda) \leq 3/\mu \lambda$.
+\end{remark}
+
+Continuing in the simpler, one dimensional case, we now consider a {\it nondegenerate} critical point $x$, where $\Phi'(x) = 0$, but $\Phi''(x) \neq 0$. A good instance of this occurs where $\Phi(x) = x^2$, where we find
+%
+\[ \int e^{i \lambda x^2} \psi(x)\; dx = \sum_{k = 0}^N C_k \lambda^{-1/2-k} + O(|\lambda|^{-3/2-N}) \]
+%
+This is obtained by noting that the Fourier transform of the Gaussian implies
+%
+\[ \int e^{- sx^2} \psi(x)\; dx = (\pi/s)^{1/2} \int e^{- \pi^2 \xi^2/ s} \widehat{\psi}(\xi)\; d\xi \]
+%
+Since both sides are analytic, and they make sense for $\Re(s) > 0$, we can take $s \to -i\lambda$ to conclude that
+%
+\[ \int e^{i \lambda x^2} \psi(x)\; dx = \left( \frac{\pi}{i \lambda} \right)^{1/2} \int e^{-i\pi^2 \xi^2/\lambda} \widehat{\psi}(x)\; dx \]
+%
+Expanding the exponential $e^{i u^2}$ gives the required bounds. Thus we can expect a critical, nondegenerate point to give a $O(\lambda^{-1/2})$ error bound.
+
+\begin{theorem}
+	If $|\Phi''(x)| \geq 1$, then $|I(\lambda)| \leq 8\lambda^{-1/2}$.
+\end{theorem}
+\begin{proof}
+	Assume $\Phi''(x) \geq 1$ throughout $[a,b]$, where the other case is obtained by taking complex conjugates. This means that $\Phi'$ is increasing, and can therefore only have a single critical point. If $x_0$ is such a critical point, break $[a,b]$ into three intervals $[a,x_0 - \delta]$, $[x_0-\delta,x_0 + \delta]$, and $[x_0 + \delta, b]$. On the first and third interval, since $\Phi''(x) \geq 1$, $|\Phi'(x)| \geq \delta$, so the integrals are bounded by $6/\delta \lambda$ together, and the integral over the second interval contributes at most $2 \delta$. Choosing $\delta = 1/\sqrt{\lambda}$ to optimize the bound $2\delta + 6/\delta \lambda$, we obtain the required bound.
+\end{proof}
+
+\begin{corollary}
+	If an amplitude $\psi$ is present, then
+	%
+	\[ \left| \int_a^b e^{i \lambda \Phi(x)} \psi(x)\; dx \right| \leq 8 \left( \int_a^b |\psi'(x)|\; dx + |\psi(b)| \right) \lambda^{-1/2} \]
+\end{corollary}
+\begin{proof}
+	Integrating by parts, if $J(x) = \int_a^x e^{i \lambda \Phi(u)}\; du$, then
+	%
+	\[ \int_a^b e^{i \lambda \Phi(x)} \psi(x)\; dx = J(b)\psi(b) - \int_a^b J(x) \psi'(x)\; dx \]
+	%
+	and then since $|J(x)| \leq 8\lambda^{-1/2}$, the proposition follows.
+\end{proof}
+
+\begin{remark}
+	An analogous corollary generalizes the theorem giving $O(1/\lambda)$ bounds when $\Phi'$ never vanishes.
+\end{remark}
+
+\begin{example}
+	The Bessel functions
+	%
+	\[ J_m(r) = \frac{1}{2\pi} \int_0^{2\pi} e^{ir \sin(x)} e^{-imx}\; dx \]
+	%
+	occur naturally in many areas of analysis. The definition of the functions can be seen as an oscillatory integral, with $\lambda = r$, $\Phi(x) = \sin(x)$, and $\psi(x) = e^{-imx}/2\pi$. Split $[0,2\pi]$ into two intervals, the first upon which $\cos(x) \geq 1/\sqrt{2}$, the second where $\sin(x) \geq 1/\sqrt{2}$. On the first part, we may apply the corollary above to obtain a $O(r^{-1/2})$ bound, and on the second, we can apply the first to obtain a $O(r^{-1})$ bound. Summing these two bounds up gives the theorem.
+\end{example}
+
+These theorems don't have strict generalizations to multiple variables, but we can still introduce an analogous second derivative test.
+
+\begin{theorem}
+	Suppose that $\det H \Phi \neq 0$ on the support of $\psi$. Then $I(\lambda) = O(\lambda^{-d/2})$.
+\end{theorem}
+
+\section{Surface Carried Measures}
+
+\begin{theorem}
+	If a hypersurface $\Sigma$ has non-vanishing Gauss curvature at each point in the support of a surface carried measure $\mu$, then
+	%
+	\[ |\widehat{\mu}(\xi)| = O(|\xi|^{-(d-1)/2}) \]
+	%
+	s
+\end{theorem}
+
+
+
+
+
+\section{Restriction Theorems}
+
+If $f \in L^p(\mathbf{R}^n)$, then the Hausdorff Young theorem says that $\widehat{f}$ is a function in $L^q(\mathbf{R}^n)$, where $q$ is the dual of $p$. If $f \in L^1(\mathbf{R}^n)$, then $\smash{\widehat{f}}$ is actually continuous, so you can meaningfully discuss the behaviour of the Fourier transform when restricted to low dimensional hypersurfaces, for instance, on a sphere of a fixed radius. However, in general $\widehat{f}$ will only be defined almost everywhere, and so it is unclear whether one can form a well defined restriction of the Fourier transform.
+
+The general situation is as follows. If $\mu$ is a measure carried on a compact surface $M$, for a fixed $p$, does there exist an estimate 
+%
+\[ \| \widehat{f} \|_{L^q(M,\mu)} \lesssim \| f \|_{L^p(\mathbf{R}^n)} \]
+%
+for Schwartz functions $f$. If this is true, we can apply a density argument to show that the restriction operator $\smash{R(f) = \widehat{f}|_M}$ uniquely extends to a well defined continuous linear operator from $L^p(\mathbf{R}^n)$ to $L^q(M,\mu)$.
+
+We begin by determining a duality result to the restriction calculation. Assuming our functions are suitably regular, we calculate
+%
+\begin{align*}
+	\int_M (Rf)(\xi) \overline{g(\xi)}\; d\mu(\xi) &= \int_M \left( \int_{\mathbf{R}^n} f(x) e^{-2 \pi i \xi \cdot x}\; dx \right) \overline{g(\xi)}\; d\mu(\xi)\\
+	&= \int_{\mathbf{R}^n} f(x) \overline{\int_M g(\xi) e^{2 \pi i \xi \cdot x}\; d\mu(\xi)}\; dx 
+\end{align*}
+%
+which implies the formal adjoint of the map $R$ is the {\bf extension operator}
+%
+\[ (R^* f)(x) = \int_M e^{2 \pi i \xi \cdot x} f(\xi) d\mu(\xi) \]
+%
+which extends a function in frequency space supported on $M$ to a function on the entirety of phase space. By duality properties, $R$ is continuous as an operator from $L^p(\mathbf{R}^n)$ to $L^q(M,\mu)$ if and only if $R^*$ is continuous as an operator from $L^{q^*}(M,\mu)$ to $L^{p^*}(\mathbf{R}^n)$. We also calculate
+%
+\[ ((R^* R)f)(x) = \int_{\mathbf{R}^n} \left( \int_M e^{2 \pi i \xi \cdot (x-y)}\; d\mu(\xi) \right) f(y)\; dy = \left( f * \widecheck{\mu} \right)(x) \]
+%
+So if $R$ is $(p,2)$ continuous, $R^*$ is $(2,p^*)$ continuous, and so $R^*R$ is $(p,p^*)$ continuous. Conversely, if we know that $R^*R$ is $(p,p^*)$ continuous, then we find that for $f \in L^p(\mathbf{R}^n)$, H\"{o}lder's inequality implies
+%
+\[ \| Rf \|_{L^2(M,\mu)}^2 = (Rf,Rf)_M = ((R^* R)f, f)_{\mathbf{R}^d} \leq \| R^*R \|_{p \to p^*} \| f \|_p^2 \]
+%
+and so we conclude that $\| R \|_{p \to 2} \leq \sqrt{\| R^* R\|_{p \to p^*}}$.
+
+We now prove that $R$ is $(2n+2/n+3, 2)$ continuous, assuming that $M$ has non-zero Gaussian curvature at each point. The previous paragram implies that it suffices to show that it is enough to show that $R^*R$ is $(p,p^*)$ continuous, where $p = (2n+2)/(n+3)$ and $p^* = (2n+2)/(n-1)$. Since
+%
+\[ (R^*R)(f) = f * \widecheck{\mu} \]
+%
+We shall verify this using Stein's interpolation theorem. Consider the family of kernels $k_s$, where $\smash{k_s = \widecheck{K_s}}$, and $K_s = \gamma_s |x_n - \varphi(x')|^{s-1}_+ \varphi_0(x)$, where $\gamma_s = s(s+1) \dots (s + N) e^{s^2}$
+
+
 
 \part{Abstract Harmonic Analysis}
 
@@ -2716,7 +3073,6 @@ We finalize our basic discussion by looking at convolutions of functions in $L^p
     \[ \left( \int |f|^{p/(1 - \theta)} \right)^{(1-  \theta)/p} \leq \left( \int |f|^p \right)^{1/p} \]
 \end{proof}
 
-
 The Riesz Thorin interpolation theorem then implies $L^p * L^q \subset L^r$, for $p^{-1} + q^{-1} = 1 + r^{-1}$. However, these estimates only guarantee $L^1(G)$ is closed under convolution. If $G$ is compact, then $L_p(G)$ is closed under convolution for all $p$ (TODO). The $L_p$ conjecture says that this is true if and only if $G$ is compact. This was only resolved in 1990.
 
 \section{Homogenous Spaces and Haar Measures}
@@ -3019,60 +3375,6 @@ In the mid 20th century, it was realized that much of the analytic information a
 If $\mathbf{K}$ is a closed, multiplicative subgroup of the complex numbers, then $\mathbf{K}$ is also a locally compact abelian group, and we can therefore understand $\mathbf{K}$ by looking at its dual group $\mathbf{K}^*$. The map $\langle x,y \rangle = xy$ is bilinear, in the set that it is a homomorphism in the variable $y$ for each fixed $x$, and a homomorphism in the variable $x$ for each $y$.
 
 If $\mathbf{K}$ is a subfield of the complex numbers, then $\mathbf{K}$ is also an abelian group under addition, and we can consider the dual group $\mathbf{K}^*$. The inner product $\langle x, y \rangle = xy$ gives a continuous bilinear map $\mathbf{K} \times \mathbf{K} \to \mathbf{C}$, and therefore we can define $x^* \in \mathbf{K}^*$ by $x^*(y) = \langle x,y \rangle$. If $x^*(y) = xy = 0$ for all $y$, then in particular $x^*(1) = x$, so $x = 0$. This means that the homomorphism $\mathbf{K} \to \mathbf{K}^*$ is injective.
-
-\chapter{Distribution Theory}
-
-Classical, a function $f: \mathbf{R}^n \to \mathbf{R}$ assigns a definite value $f(x)$ to each point $x$ in a certain domain. When we proceed into integration theory, one relaxes this notion by considering functions as elements of the Banach space $L^1(\mathbf{R}^n)$, which is only defined except at points of measure zero. Distributions generalize this notion further; they are not defined at most points, but are determined by their weighted averages with respect to smooth functions. That is, if we...
-
-Many operations on functions can be extended to actions on distributions by looking at how these operations behave under integration. If $f \in C_0^\infty(\mathbf{R}^n)$, and $\partial_\alpha$ is a differential operator, then we know
-%
-\[ \int_{\mathbf{R}^n} (\partial_\alpha f)(x) \varphi(x)\; dx = (-1)^{|\alpha|} \int_{\mathbf{R}^n} f(x) (\partial_\alpha \varphi)(x)\; dx \]
-%
-If $T_f$ is the distribution associated with $f$, then this equation says
-%
-\[ T_{\partial_\alpha f}(\varphi) = (-1)^{|\alpha|} T_f(\partial_\alpha \varphi) \]
-%
-Given any distribution $T$, we therefore {\it define} the derivative $\partial_\alpha T$ by the equation
-%
-\[ (\partial_\alpha T)(\varphi) = (-1)^{|\alpha|} T(\partial_\alpha \varphi) \]
-%
-If $\varphi_n \to \varphi$, then $\partial_\alpha \varphi_n \to \partial_\alpha \varphi$, hence $(\partial_\alpha T)(\varphi_n) \to (\partial_\alpha T)(\varphi)$, so $\partial_\alpha T$ is a distribution.
-
-\begin{example}
-	Let $h$ be the Heaviside step function on $\mathbf{R}$. That is, $h(x) = 1$ for $x > 0$, and $h(x) = 0$ for $x \leq 0$. Then for any test function $\varphi$,
-	%
-	\[ \int_{-\infty}^\infty h'(x) \varphi(x)\; dx = - \int_0^\infty \varphi'(x) = \varphi(0) \]
-	%
-	and so $h' = \delta$ is the Dirac delta function at the origin.
-\end{example}
-
-If $f \in C^\infty(\mathbf{R}^n)$, and $T$ is a distribution, we define the distribution $fT$ by $(fT)(\varphi) = T(f \varphi)$. This is the correct generalization, since
-%
-\[ (gT_f)(\varphi) = \int f(x) g(x) \varphi(x)\; dx = T_{fg}(\varphi) \]
-%
-If $(\tau_h f)(x) = f(x - h)$, then
-%
-\[ T_{\tau_h f}(\varphi) = \int f(x - h) \varphi(x)\; dx = \int f(x) \varphi(x + h)\; dx \]
-%
-and so we can define $\tau_h$ on distributions by setting $(\tau_h T)(\varphi) = T(\tau_{-h} \varphi)$. If $f_a(x) = f(xa)$, then
-%
-\[ T_{f_a}(\varphi) = \int f(ax) \varphi(x)\; dx = a^{-n} \int f(x) \varphi(a^{-1} x) \]
-%
-and so we set $T_a(\varphi) = a^{-n} T(\varphi_{a^{-1}})$. More generally, for any nonsingular linear functional $L: \mathbf{R}^n \to \mathbf{R}^n$, if $f_L(x) = f(Lx)$, then we can generalize this process by setting $T_L(\varphi) = |\det L|^{-1} T(\varphi_{L^{-1}})$.
-
-The most important operation one can extend is convolution, which satisfies
-%
-\[ (f * g)(x) = \int f(y) g(x - y)\; dy \]
-%
-If $T$ is a distribution on $\mathbf{R}^n$, and $\varphi$ is a test function, we are able to interpret the integral
-%
-\[ (T * \varphi)(x) = \int T(y) g(x - y)\; dy \]
-%
-which means we could interpret $T * \varphi$ as a {\it function}, which is defined, if we let $\varphi^\sim_x$ denote the function $\varphi^\sim_x(y) = \varphi(x-y)$, by $(T * \varphi)(x) = T(\varphi^\sim_x)$. The second is by the equation
-%
-\[ \int (f * g)(x) h(x)\; dx = \int \int f(y) g(x-y) h(x)\; dy\; dx = \int f(y) (g * h^\sim_0)(y)\; dy \]
-%
-So we could define $T * \varphi$ to be the {\it distribution} $(T * \varphi)(\psi) = T(\varphi * \psi^\sim_0)$. TODO: Prove that these two definitions agree, and $T * \varphi$ is an infinitely differentiable function.
 
 \chapter{Interpolation of Besov and Sobolev spaces}
 
