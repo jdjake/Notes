@@ -55,11 +55,11 @@ Consider a region $\Omega$ in space, where we fix a temperature on the boundary,
 %
 represents the rate of energy entering $D$. Newton's law of cooling says that the rate of energy leaving $D$ is proportional to the difference in temperatures between the boundary of the body and its immediate surroundings. To a first order, this is approximated by
 %
-\[ \int_{\partial D} (\nabla u \cdot \nu)(x)\ dx \]
+\[ \int_{\partial D} (\nabla u \cdot \nu)(x)\; dS(x) \]
 %
-where $\nu(x)$ is the outward pointing unit vector varying about the boundary of $D$. The divergence theorem implies that
+where $\nu$ is the outward pointing unit vector varying about the boundary of $D$. The divergence theorem implies that
 %
-\[ \int_{\partial D} (\nabla u \cdot \nu)(x)\ dx = \int_D (\nabla \cdot \nabla u)(x)\ dx = \int_D \Delta u(x)\ dx \]
+\[ \int_{\partial D} (\nabla u \cdot \nu)(x)\ dS(x) = \int_D (\nabla \cdot \nabla u)(x)\ dx = \int_D \Delta u(x)\ dx \]
 %
 By conservation of energy, we therefore find that
 %
@@ -69,7 +69,9 @@ where $k > 0$ is some constant of proportionality. Since this holds for any doma
 %
 \[ \frac{\partial u}{\partial t} = k \Delta u \]
 %
-throughout the entire domain $\Omega$. This is the {\bf heat equation}. We note that the equation can also be applied to understand the diffusion of anything over time in some region, provided the rate of diffusion is linearly related to the change of concentration.
+throughout the entire domain $\Omega$. This is the {\bf heat equation}. More generally, this equation describes the evolution of some density function $u$ which
+
+We note that the equation can also be applied to understand the diffusion of anything over time in some region, provided the rate of diffusion is linearly related to the change of concentration.
 
 \section{Wave Equation}
 
@@ -174,69 +176,109 @@ Provided a partial differential equation is linear, then a linear combination of
         &= T^T \cdot (Du)(Tx)^T = T^T \cdot (\nabla u)(Tx) = (T^{-1} \circ \nabla u \circ T)(x)
     \end{align*}
     %
-    The equation $\nabla (u \circ T) = T^{-1} \circ \nabla u \circ T$ essentially says that the gradient respects a coordinate change obtained by a rotation matrix (Remark: This is the reason why we can define the gradient unambiguously on a Riemannian manifold). Now
+    The equation $\nabla (u \circ T) = T^{-1} \circ \nabla u \circ T$ essentially says that the gradient respects a coordinate change obtained by a rotation matrix (Remark: This is one of the main reasons why we can define the gradient unambiguously on a Riemannian manifold). Now
     %
     \begin{align*}
         H(u \circ T)(x) &= D(\nabla (u \circ T))(x) = D(T^{-1} \circ \nabla u \circ T)(x)\\
         &= T^{-1} \cdot D(\nabla u)(Tx) \cdot T = T^{-1} \cdot (Hu)(Tx) \cdot T
     \end{align*}
     %
-    The trace is an invariant of similar matrices, so therefore the trace of $H(u \circ T)(x)$ is the same as the trace of $Hu(Tx)$, so $\Delta (u \circ T)(x) = (\Delta u)(Tx)$.
+    The traces of two similar matrices are equal, so the traces of $H(u \circ T)(x)$ and $Hu(Tx)$ are equal, so $\Delta (u \circ T)(x) = (\Delta u)(Tx)$.
 \end{proof}
 
-Since $\Delta u = 0$ has rotational symmetry, it makes sense to find solutions which are rotationally symmetric. These will form our explicit solutions we can put into superposition to construct other solutions. So suppose we have a rotationally symmetric function $u(x) = f(r)$. Note that in this case we may write
+Since $\Delta u = 0$ has rotational symmetry, it makes sense to begin by finding solutions to Laplace's equation which are rotationally symmetric. These will form our explicit solutions we can put into superposition to construct other solutions. So suppose we have a rotationally symmetric function $u(x) = f(r)$, where $r = |x|$. In this case, we find
 %
-\[ \Delta u(x) = f''(r) + \frac{d - 1}{2r} f'(r) \]
+\[ D_iu(x) = f'(r) (x_i/r)\ \ \ \ \ D_{ii} u(x) = f''(r) (x_i/r)^2 + f'(r)(1/r - x_i^2/r^3) \]
 %
-In this case,
+Summing up, we find
+%
+\[ \Delta u(x) = f''(r) + f'(r) \frac{d - 1}{r} \]
+%
+If $\Delta u$ vanishes, this means
 %
 \[ \frac{f''(r)}{f'(r)} = \frac{1 - d}{r} \]
 %
-So integrating both sides in terms of $r$, we conclude that
+So, integrating both sides with respect to $r$, we find $f'(r)$ is proportional to $1/r^{d-1}$, and therefore there are constants $A$ and $B$ such that
 %
-\[ \log(f'(r)/f'(1)) = (1 - d) \log(r) \]
-\[ f'(r) = \frac{f'(1)}{r^{d-1}} \]
+\[ f(x) = \begin{cases} A|x|^{2-d} + B & : d > 2 \\ A \log r + B & : d = 2 \end{cases} \]
 %
-For $d = 2$, we conclude $f(r) = f'(1) \log(r) + f(1)$. Otherwise, we conclude that
+These solutions motivate the {\bf fundamental solution of the Laplacian}
 %
-\[ f(r) = \frac{f'(1)}{2 - d} \frac{1}{r^{d-2}} + \left[ f(1) - \frac{f'(1)}{2 - d} \right] \]
+\[ \Phi(x) = \begin{cases} \frac{1}{d(d-2) \alpha(d)} \frac{1}{|x|^{d-2}} & : d > 2 \\ \frac{-1}{2 \pi} \log |x| & : d = 2 \end{cases} \]
 %
-These solutions motivate us to define the {\bf fundamental solution of the Laplacian}, which, depending on the dimension, is defined by
+where $\alpha(d)$ is the volume of the unit ball in $d$ dimensions. Certainly these two equations solve Laplace's equation for $x \neq 0$, but we have a singularity at the origin. The integral
 %
-\[ \Phi(x) = \frac{-1}{2 \pi} \log |x|\ \ \ \ \ \ \ \ \Phi(x) = \frac{1}{d(d-2) |B^d_1|} \frac{1}{|x|^{d-2}} \]
+\[ \int_{\mathbf{R}^n} f(x) \Phi(x) \]
 %
-in dimension $2$, and dimension $\neq 2$, respectively.
+is well defined for any $f$ bounded in a ball around the origin, and with a suitable decay for the terms of the limit to exist (for instance, any decay on the order of $O(1/|x|^\delta)$ will do, for some $\delta$), because using the fact that $r^{d-1} \Phi(r) = o(1)$ as $r \to 0$, and $f$ is bounded near the origin, we conclude
 %
-The only problem with the fundamental solution is that it {\it doesn't solve Laplace's equation in $\mathbf{R}^n$}, only in $\mathbf{R}^d - \{ 0 \}$. Indeed, $\Phi(x) \to \infty$ as $|x| \to 0$. We often write $\Delta \Phi = \delta$, where $\delta$ is the Dirac delta function at the origin, which we can interpret rigorously when we introduce the theory of weak solutions to PDEs, because of the following theorem which can be seen as an `integration by parts' formulation of the Laplacian operator, since for any reasonable functions we should find
+\[ \int_{\varepsilon_0 \leq |x| \leq \varepsilon_1} f(x) \Phi(x) = O \left( \int_{\varepsilon_0}^{\varepsilon_1} r^{d-1} \Phi(r) \right)\; dr  = o(1) \]
 %
-\[ \int \Delta \Phi(x) f(x)\ dx = - \int \nabla \Phi \cdot \nabla f dx \]
+as $\varepsilon_1 \to 0$. Thus the limit is Cauchy. In particular, we have
 %
-In the higher dimensions neither $\Delta \Phi$ nor $\nabla \Phi$ is in $L^p$ for any $p \geq 1$, so neither of these integrals can be interpreted in the Lebesgue sense. However, they are locally integrable in $\mathbf{R}^d - \{ 0 \}$, and so the next result makes sense.
+\[ \left| \int_{\mathbf{R}^n} f(x) \Phi(x) \right| \lesssim \| f \|_{L^\infty(B_1)} + \| x f \|_{L^\infty(\mathbf{R}^d - B_1)} \]
+%
+and so $\Phi$ can be interpreted as a tempered distribution. In particular, we can calculate $\Delta \Phi$ in a distribution sense.
 
 \begin{theorem}
-    For any function $f \in C_c^\infty(\mathbf{R}^d)$,
+    If $\Phi$ is the fundamental solution, then $\Delta \Phi = - \delta$. More generally, if $f$ is a function with bounded continuous first and second derivatives, and with a Laplacian with enough decay at $\infty$ to define the integral below, then
     %
-    \[ \lim_{\varepsilon \to 0} \int_{|x| > \varepsilon} \Delta \Phi(x) f(x)\ dx = - \lim_{\varepsilon \to 0} \int_{|x| > \varepsilon} \nabla \Phi \cdot \nabla f\ dx = f(0) \]
+    \[ \int (- \Delta f)(x) \Phi(x) = f(0) \]
 \end{theorem}
 \begin{proof}
-    We find that the fundamental solutions satisfy
+    We note that the first partial derivatives of $\Phi$ are $\lesssim 1/|x|^{d-1}$, and the second derivatives are $\lesssim 1/|x|^d$. If $f$ is a given Schwartz function, we consider
     %
-    \[ \nabla \Phi(x) = \frac{-x}{d|B^d_1|} \frac{1}{|x|^{d-1}}\ \ \ \ \ \nabla \Phi(x) = \frac{-x}{2 \pi |x|} \]
+    \[ \int_{\mathbf{R}^n} \Phi(x) \Delta f(x) = \int_{|x| \leq \varepsilon} \Phi(x) \Delta f(x) + \int_{|x| > \varepsilon} \Phi(x) \Delta f(x) = A_\varepsilon + B_\varepsilon \]
     %
-    For $d \geq 3$,
+    Now $|A_\varepsilon| \leq \| \Delta f \|_{L^\infty(B_\varepsilon)} \| \Phi \|_{L^1(B_0(\varepsilon))} = o(1)$ as $\varepsilon \to 0$. An integration by parts implies that
     %
-    \begin{align*}
-        \int_{|x| > \varepsilon} \nabla \Phi \cdot \nabla f &= \int_{S^{d-1}} \int_\varepsilon^\infty r^{d-1} (\nabla \Phi \cdot \nabla f)(rx) dr d\sigma(x)\\
-        &= \frac{-1}{d |B_1^d| } \int_{S^{d-1}} \int_\varepsilon^\infty (x \cdot \nabla f(rx))\\
-        &= \frac{-1}{d |B_1^d|} \int_{S^{d-1}} \int_\varepsilon^\infty f_r(rx) dr d\sigma(x)
-    \end{align*}
+    \[ B_\varepsilon = \int_{|x| > \varepsilon} \Phi(x) \Delta f(x) = - \int_{S_\varepsilon} \Phi [\nabla f \cdot \eta] - \int_{|x| > \varepsilon} (\nabla \Phi) \cdot (\nabla f) = C_\varepsilon + D_\varepsilon \]
     %
-    Using the fundamental theorem of calculus, $\int_\varepsilon^\infty f_r(rx) = -f(\varepsilon x)$, and so
+    Again, the boundedness of $\nabla f$ implies that $C_\varepsilon = o(1)$, and a further integration by parts implies that
     %
-    \[ \int_{|x| > \varepsilon} \nabla \Phi \cdot \nabla f = \frac{1}{d |B_1^d|} \int_{S^{d-1}} f(\varepsilon x) d\sigma(x) \]
+    \[ D_\varepsilon = - \int_{|x| > \varepsilon} (\nabla \Phi) \cdot (\nabla f) = \int_{S_\varepsilon} f (\nabla \Phi) \cdot \eta + \int_{|x| > \varepsilon} f (\Delta \Phi \cdot \eta) = \int_{S_\varepsilon} f \nabla \Phi \cdot \eta \]
     %
-    Since $f$ is continuous, as $\varepsilon \to 0$, this value tends to $f(0)$. For $d = 2$, the same kind of techniques apply.
+    Now we use the actual features of $\Phi$ other than its decay. Indeed, we know
+    %
+    \[ (\nabla \Phi)(x) = [-1/d\alpha(d)] x/|x|^d \]
+    %
+    so
+    %
+    \[ (\nabla \Phi)(x) \cdot \eta = (\nabla \Phi)(x) \cdot x/|x| = \frac{-1}{d\alpha(d)|x|^{d-1}} \]
+    %
+    so
+    %
+    \[ \int_{S_\varepsilon} f\; \nabla \Phi \cdot \eta = \frac{-1}{d\alpha(d) \varepsilon^{d-1}} \int_{S_\varepsilon} f(x) = \fint_{S_\varepsilon} f(x) = f(0) + o(1) \]
+    %
+    This completes the calculation.
 \end{proof}
+
+Harmonic functions possess an incredibly useful integral formula which makes them as regular as we desire.
+
+\begin{theorem}
+    If $f$ is harmonic in a region $D$ containing a closed ball $B$ centered at $x$, then
+    %
+    \[ f(x) = \fint_{\partial B} f(y)\; dy \]
+\end{theorem}
+\begin{proof}
+    Set
+    %
+    \[ \phi(r) = \fint_{\partial B_r(x)} f(y)\; dy = \fint_{\partial B_1(x)} f(x + ry)\; dy \]
+    %
+    Then it is easy to see that
+    %
+    \[ \phi'(r) = \fint_{\partial B_1(x)} (\nabla f(x + ry) \cdot y)\; dy = \fint_{\partial B_r(x)} (\nabla f(y) \cdot (y-x))\; dy \]
+    %
+    But Green's formula implies
+    %
+    \[ \int_{\partial B_r(x)} (\nabla f(y) \cdot (y-x))\; dy = r \int_{\partial B_r(x)} (\nabla f(y) \cdot \eta) dy = r \int_{B_r(x)} \Delta f(y) = 0 \]
+    %
+    so $\phi' = 0$, and so $\phi$ is constant. Since $\phi(r) \to f(x)$ as $r \to 0$, we find $\phi(r) = f(x)$ for all $r$. This completes the proof.
+\end{proof}
+
+A simple corollary is that if $f$ is harmonic, then
+%
+\[ \fint_{B_r(x)} f(y)\; dy = \frac{1}{r^d \alpha(d)} \int_0^r \int_{\partial B_s(x)} f(y)\; dy\; ds = d\alpha(d) f(x) \int_0^r\; s^{d-1} ds = r^d d \alpha(d) f(x) \]
 
 %\section{Appendix: The Laplacian}
 
