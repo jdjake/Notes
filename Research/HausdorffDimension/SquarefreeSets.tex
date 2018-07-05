@@ -292,7 +292,7 @@ and since $l_n/l_{n+1} = O(n) = O((n!)^{1/2})$, we obtain the required bound. Th
     %
     \[ \max_{l_{N+1} \leq |I| \leq l_N} \min \left( \left( \frac{|I|}{l_{N+1}} \right)^\varepsilon, \left( \frac{l_N}{|I|} \right)^{1-\varepsilon} \right) = \left( \frac{l_N}{l_{N+1}} \right)^{\varepsilon (1 - \varepsilon)} \]
     %
-    In our calculation, we have $l_N/l_{N+1} = 8(n+1)$, which means that we do not have $(8(n+1))^{\varepsilon(1-\varepsilon)} \lesssim_\varepsilon 1$. Thus, with the bounds we have used, there is no way to obtain a constant coefficient bound for all scales lying inbetween the discrete scales if we use the $\mu(I) \lesssim_\varepsilon |I|^{1-\varepsilon}$ bound for the discrete scales. However, the tighter bound $\mu(I) \lesssim_\varepsilon |I|^{1-\varepsilon}/(n!)^{\varepsilon/2}$ causes the $O(n)$ term for $l_N/l_{N+1}$ to be annihilated, which results in a constant term bound at the continuous range of scales.
+    With the choice of parameters given, we have $l_N/l_{N+1} = 8(n+1)$, and we do not have $(8(n+1))^{\varepsilon(1-\varepsilon)} \lesssim_\varepsilon 1$. Thus, with the bounds we have used, there is no way to obtain a constant coefficient bound for all scales lying inbetween the discrete scales if we use the $\mu(I) \lesssim_\varepsilon |I|^{1-\varepsilon}$ bound for the discrete scales. However, the tighter bound $\mu(I) \lesssim_\varepsilon |I|^{1-\varepsilon}/(n!)^{\varepsilon/2}$ causes the $O(n)$ term for $l_N/l_{N+1}$ to be annihilated, which results in a constant term bound at the continuous range of scales.
 \end{remark}
 
 \begin{remark}
@@ -866,6 +866,61 @@ If $\mathbf{Q}(\omega)$ is a quadratic extension of the rational numbers, then t
 \section{Idea: Improving Math\'{e}'s Technique}
 
 Linear shifts will not change the degree of polynomials, so it is unlikely that my approach can be used to help understand Math\'{e}'s result. But it might be useful to learn it anyway.
+
+\section{A Note on Calculating Hausdorff Dimension}
+
+This section considers an inconvenience in the calculation of the Hausdorff dimension of Cantor like sets, and an attempt to resolve it in the most likely of scenarios. In particular, I imagine this has application to the construction of sets via Cantor like interval dissection techniques which result in an $\alpha$ dimensional set $K$ with $H^\alpha(K) = 0$. To prove such sets are $\alpha$ dimensional, we rely on Frostman's lemma, which says that $H^\beta(K) > 0$ if and only if there is a Borel probability measure $\mu$ supported on $K$ with $\mu(B_r) \lesssim_\beta r^\beta$. In our case, this can only work for $\beta < \alpha$, not $\beta = \alpha$, and so we have to find an infinite family of approximations for all $\beta$.
+
+In a Cantor set construction, we construct a nested family of sets
+%
+\[ X_0 \supset X_1 \supset X_2 \supset X_3 \supset \dots \]
+%
+$X_0 = [0,1]$, and each $X_N$ is a union of intervals of length $l_N$ obtained by dividing and removing some segments of the intervals $X_{N-1}$ more finely. We then obtain a set $X$ as the limit of the sets $X_N$. In order to calculate the dimension of $X$ by Frostman's lemma, the most natural probability measure to take is obtained by dividing the mass of the set uniformly.
+
+Because the construction is completely discrete until a limit is taken, it is often simplest to obtain a bound for an interval $I$ whose length is $l_N$, i.e. the same length as the intervals considered in the process at the scale $X_N$. The difficulty is then extending this bound to intervals of all lengths, so that the full Frostman's lemma result can be applied. Since Hausdorff dimension is completely locally defined (if we define the local dimension $\dim_{\mathbf{H}}(x) = \lim_{r \downarrow 0} \dim_{\mathbf{H}}(B_r(x) \cap X)$ then $\dim_{\mathbf{H}}(X) = \sup_{x \in X} \dim_{\mathbf{H}}(x)$), it is natural to expect that we can obtain a general bound $\mu(I) \lesssim_\beta |I|^\beta$ given that one has established precisely the same estimate, but restricted to intervals $I$ with $|I| = l_N$, and with $l_N \downarrow 0$. This section concerns itself with a general method of establishing this result.
+
+The main way of extending the results at particular scales to general results is by means of a covering argument. This is done in two ways for a given interval $I$ with $l_{N+1} \leq |I| \leq l_N$:
+%
+\begin{itemize}
+    \item We can cover $I$ by a single interval of length $l_N$, so
+    %
+    \[ \mu(I) \lesssim_\beta l_N^\beta = \left( \frac{l_N}{|I|} \right)^\beta |I|^\beta \]
+    \item We can cover $I$ by $|I|/l_{N+1}$ intervals of length $l_{N+1}$, so
+    %
+    \[ \mu(I) \lesssim_\beta \frac{|I|}{l_{N+1}} l_{N+1}^\beta = \left( \frac{|I|}{l_{N+1}} \right)^{1 - \beta} |I|^\beta \]
+\end{itemize}
+%
+For any given $I$, we can take the minimum of these two bounds. The coefficients then given by this estimate relative to $|I|^\beta$ is
+%
+\[ \min \left( \left( \frac{l_N}{|I|} \right)^\beta, \left( \frac{|I|}{l_{N+1}} \right)^{1 - \beta} \right) \]
+%
+If we consider the worst case coefficient over all $I$ with $l_{N+1} \leq |I| \leq l_N$, this gives us the constant
+%
+\[ \left( \frac{l_N}{l_{N+1}} \right)^{(1 - \beta)\beta} \]
+%
+so this would complete the argument if $l_N/l_{N+1}$ is upper bounded independantly of $N$. In most cases, however, this is impossible. We now discuss how we can weaken the condition on the growth rate of the ratio of consecutive discrete lengths by applying a simple trick.
+
+By giving ourselves an epsilon of room, in our covering argument we can replace the $l_N^\beta$ and $l_{N+1}^\beta$ bounds with $l_N^{\beta'}$ and $l_{N+1}^{\beta'}$, for any $\beta' \in [\beta, \alpha)$, provided that $\beta'$ is chosen independantly of $N$. In this case, we find that for a general interval $I$, and any $\varepsilon > 0$, by two choices of $\beta'$ we can obtain
+%
+\[ \mu(I) \lesssim_{\beta,\varepsilon} \left( \frac{l_N^{1 + \varepsilon}}{|I|} \right)^\beta |I|^\beta, \left( \frac{|I|}{l_{N+1}^{1 - \varepsilon}} \right)^{1 - \beta} |I|^\beta \]
+%
+Now we find that via the same calculation,
+%
+\[ \max_{l_{N+1} \leq x \leq l_N} \min \left( \left( \frac{l_N^{1 + \varepsilon}}{|I|} \right)^\beta, \left( \frac{|I|}{l_{N+1}^{1 - \varepsilon}} \right)^{1 - \beta} \right) = (l_N/l_{N+1})^{\beta(1-\beta)} (l_N l_{N+1})^{\varepsilon \beta(1-\beta)} \]
+%
+so now rather than having the ratios $l_N/l_{N+1}$ be upper bounded independantly of $N$, we can now have the ratios grow inversely proportional to $(l_N l_{N+1})^{\varepsilon \beta (1 - \beta)}$. The lengths are likely to easily annihilate the ratios, since the lengths are compounded from many divisions in the algorithm, whereas the ratios occur at a single scale. Thus this bound is likely to be usable in a great many examples.
+
+\begin{example}
+    Kaleti constructs a full dimensional fractal set avoiding translates of itself using the Cantor set method. He has $l_N = 1/8^{N-1}N!$, in which case $l_N/l_{N+1} = 8N$, which is eventually bounded by $l_N^{-\varepsilon} = (8^{N-1}N!)^\varepsilon$ for any $\varepsilon > 0$.
+\end{example}
+
+\begin{example}
+    Fraser and Pramanik construct a $1/(d-1)$ dimensional set avoiding nontrivial solutions to a countable family of $d$ variate functions $f(x_1, \dots, x_d)$. Does our method apply to extend from the discrete scale bound?
+\end{example}
+
+\begin{remark}
+    If this probability measure fails to satisfy the required bounds, does it follow that the set itself doesn't have the required Hausdorff dimension? Is there a counterexample to this statement?
+\end{remark}
 
 \begin{thebibliography}{9}
 
