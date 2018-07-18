@@ -353,7 +353,7 @@ Inspired by Keleti's result, Pramanik and Fraser obtained a generalization of th
 
     Now we split each interval $I$ into intervals of length $C_0c / N^{d-1}$. If we use the constant $C_0$ obtained from the lemma below, and we now discard any interval that intersects $\mathbf{B}$, or is adjacent to an interval intersecting $\mathbf{B}$. Since $\mathbf{B} \cap I$ has at most $M^3N^{d-2}$ points, and $I$ is decomposed into $N^{d-2}/C_0c$ intervals, what remains is $N^{d-2}/C_0c - 3M^3N^{d-2} = (1/C_0c - 3M^3)N^{d-2}$ intervals, which in total has length
     %
-    \[ (C_0c/N^{d-1}) (1/C_0c - 3M^3)N^{d-2} = (1 - 3M^3 C_0c) N \]
+    \[ (C_0c/N^{d-1}) (1/C_0c - 3M^3)N^{d-2} = \frac{(1 - 3M^3 C_0c)}{N} \]
     %
     Choosing $c$ such that $3M^3C_0c < 1 - c$ completes the proof.
 \end{proof}
@@ -539,7 +539,7 @@ The set of such $f$ is an uncountable family, which makes this situation interes
 
 
 
-\chapter{Ideas for New Work}
+\chapter{Ideas on Squarefree Subsets}
 
 \section{Ideas For New Work}
 
@@ -759,55 +759,60 @@ By the pidgeonhole principle, since $R < \sqrt{N}$, there are $1/\varepsilon$ ch
 
 The choice has the benefit of automatically possessing a lot of points by the pidgeonhole principle,
 
+\chapter{Low Rank Coordinate Changes}
+
 \section{Boosting the Dimension of Pattern Avoiding Sets by Low Rank Coordinate Changes}
 
-We now consider finding subsets of $[0,1]$ avoiding solutions to the equation $y = f(Tx)$, where $T: \mathbf{R}^n \to \mathbf{R}^m$ is a rank $k$ linear transformation with integer coefficients with respect to standard coordinates. Fix a constant $A$ bounding the operator norm of $T$, in the sense that $\| Tx \|_\infty \leq A \| x \|_\infty$ for all $x \in \mathbf{R}^n$. If we fix sets $T_0, T_1, \dots, T_n, \subset [0,1]$, which are unions of intervals of length $1/M$, with startpoints lying on integer multiples of $1/M$. Split each interval of $T_a$ into length $1/N$ intervals, and then set
+We now consider finding subsets of $[0,1]$ avoiding solutions to the equation $y = f(Tx)$, where $T$ is a rank $k$ linear transformation with integer coefficients with respect to standard coordinates, and $f$ is real-valued and Lipschitz continuous. Fix a constant $A$ bounding the operator norm of $T$, in the sense that $|Tx| \leq A|x|$ for all $x \in \mathbf{R}^n$, and a constant $B$ such that $|f(x+y) - f(x)| \leq B|y|$ for all $x$ and $y$ for which the equation makes sense (if $f$ is $C^1$, this is equivalent to a bound $\| \nabla f \|_\infty \leq B$). Consider sets $J_0, J_1, \dots, J_n, \subset [0,1]$, which are unions of intervals of length $1/M$, with startpoints lying on integer multiples of $1/M$. The next theorem works as a `building block lemma' used in our algorithm for constructing a set avoiding solutions to the equation with high Hausdorff dimension.
+
+\begin{theorem}
+    For infinitely many integers $N$, there exists $S_i \subset J_i$ avoiding solutions to $y = f(Tx)$ with $y \in S_0$ and $x_n \in S_n$, such that
+    %
+    \begin{itemize}
+        \item For $n \neq 0$, if we decompose each $J_i$ into length $1/N$ consecutive intervals, $S_i$ contains an initial portion $\Omega(1/N^k)$ of each length $1/N$ interval. This part of the decomposition gives the Hausdorff dimension $1/k$ bound for the set we will construct.
+
+        \item If we decompose $J_i$ into length $1/N$ intervals, and then subdivide these intervals into length $\Omega(1/N^k)$ intervals, then $S_0$ contains a subcollection of these $1/N^k$ intervals which contains a total length $\Omega(1/N)$ of a fraction $1 - 1/M$ of the length $1/N$ intervals. This property gives that our resultant set will have full Minkowski dimension.
+    \end{itemize}
+    %
+    The implicit constants in these bounds depend only on $A$, $B$, $n$, and $k$.
+\end{theorem}
+\begin{proof}
+Split each interval of $J_a$ into length $1/N$ intervals, and then set
 %
-\[ \mathbf{A} = \{ x : x_a\ \text{is a startpoint of a $1/N$ interval in $T_a$} \} \]
+\[ \mathbf{A} = \{ x : x_a\ \text{is a startpoint of a $1/N$ interval in $J_a$} \} \]
 %
-Since the startpoints of the intervals are integer multiples of $1/N$, $T(\mathbf{A})$ is contained with a rank $k$ sublattice of $(\mathbf{Z}/N)^m$. The operator norm also guarantees $T(\mathbf{A})$ is contained within $[-A,A]^m$. Because of the lattice structure of the image, $\| x - y \|_\infty \geq 1/N$ for each distinct pair $x,y \in T(\mathbf{A})$. Since $\text{Im}(T)$ is contained in a $k$ dimensional subplane $\Sigma$ of $\mathbf{R}^m$. It takes $(2AN/(1 - \varepsilon))^k$ cubes with sidelength $(1 - \varepsilon)/N$ to cover $\Sigma \cap [-A,A]^m$ (This is a rubbish bound, but I don't know if it's worth calculating better constants here, i.e. using Gauss circle type methods). Since each cube can contain only a single element of $T(\mathbf{A})$, there are at most $(2AN/(1 - \varepsilon))^k$ points in $T(\mathbf{A})$. Letting $\varepsilon \to 0$ gives that there are at most $(2AN)^k = O_{A,k}(N^k)$ points in $T(\mathbf{A})$. If we define the set of `bad points' to be
+Since the startpoints of the intervals are integer multiples of $1/N$, $T(\mathbf{A})$ is contained with a rank $k$ sublattice of $(\mathbf{Z}/N)^m$. The operator norm also guarantees $T(\mathbf{A})$ is contained within the ball $B_A$ of radius $A$ in $\mathbf{R}^m$. Because of the lattice structure of the image, $| x - y | \gtrsim_n 1/N$ for each distinct pair $x,y \in T(\mathbf{A})$. For any $R$, we can cover $\Sigma \cap B_A$ by $O_{n,k}((A/R)^k)$ balls of radius $R$. If $R \gtrsim_n 1/N$, then each ball can contain only a single element of $T(\mathbf{A})$, so we conclude that $|T(\mathbf{A})| \lesssim_{n,k} (AN)^k$. If we define the set of `bad points' to be
 %
 \[ \mathbf{B} = \{ y \in [0,1] : \text{there is $x \in \mathbf{A}$ such that $y = f(T(x))$} \} \]
 %
 Then
 %
-\[ |\mathbf{B}| = |f(T(\mathbf{A}))| \leq |T(\mathbf{A})| = (2A)^k N^k = O_{A,k}(N^k) \]
-%$
-We can now split each length $1/M$ interval in $T_0$ into $6 (2A)^k N^k = O_{A,k}(N^k)$ intervals of length $1/6M(2A)^k N^k = \Omega_{A,k,M}(1/N^k)$, then because of the bounds on $|\mathbf{B}|$, at least one of these intervals, and it's adjacent intervals, must avoid elements of $\mathbf{B}$. This means that we can pick an interval $I$ with $\text{dist}(I,\mathbf{B}) \geq 1/6M(2A)^k N^k = \Omega_{A,k,M}(1/N^k)$. The union of these intervals forms $S_0$. If $f$ is $C^1$, and $\| \nabla f \|_\infty \leq B$, then
+\[ |\mathbf{B}| = |f(T(\mathbf{A}))| \leq |T(\mathbf{A})| = O_{A,n,k}(N^k) \]
+%
+For simplicity, we now introduce an integer constant $C_0 = C_0(A,n,k,M)$ such that $|\mathbf{B}| \leq (C_0/M^2) N^k$. We now split each length $1/M$ interval in $J_0$ into length $1/N$ intervals, and filter out those intervals containing more than $C_0N^{k-1}$ elements of $\mathbf{B}$. Because of the cardinality bound we have on $\mathbf{B}$ there can be at most $N/M^2$ such intervals, so we discard at most a fraction $1/M$ of any particular length $1/M$ interval in $J_0$. If we now dissect the remaining intervals into $4C_0N^{k-1}$ intervals of length $1/4C_0N^k$, and discard any intervals containing an element of $\mathbf{B}$, or adjacent to such an interval, then the remaining such intervals $I$ satisfy $d(I,\mathbf{B}) \geq 1/4C_0N^k \gtrsim_{A,n,M,k}(1/N^k)$, and because of our bound on the number of elements of $\mathbf{B}$ in these intervals, there are at least $C_0N^{k-1}$ intervals remaining, with total length exceeding $C_0N^{k-1}/4C_0N^k = \Omega(1/N)$. If $f$ is $C^1$ with $\| \nabla f \|_\infty \leq B$, or more generally, if $f$ is Lipschitz continuous of magnitude $B$, then
 %
 \[ | f(Tx) - f(Tx')| \leq AB |x - x'| \]
 %
-and so we may choose $S_n \subset T_n$ by thickening each startpoint $x \in T_n$ to a length $1/12M(2A)^kN^k = \Omega_{A,k,M}(1/N^k)$ interval with no solutions $y = f(T(x))$, with $x_n \in S_n$, $y \in S_0$. Following the Hausdorff dimension computations in Pramanik and Fraser's paper, this gives a Hausdorff dimension $1/k$ set.
+and so we may choose $S_i \subset J_i$ by thickening each startpoint $x \in J_i$ to a length $O(1/N^k)$ interval while still avoiding solutions to the equation $y = f(T(x))$.
+\end{proof}
 
 \begin{remark}
-    If $T$ is a rank $k$ linear transformation with rational coefficients, then there is some integer $\lambda$ such that $\lambda T$ has integer coefficients, and then the equation $y = f(Tx)$ is the same as the equation $y = f'((\lambda T)(x))$, where $f'(x) = f(x)/\lambda$. Since $f'$ satisfies the same required regularity conditions that $f$ does in the proof above, we conclude that we still get the dimension $1/k$ bound if $T$ has rational rather than integral coefficients.
+    We can skip the `double split' of $T_0$ into length $1/N$ intervals, and then $1/N^k$ intervals, by just splitting these intervals immediately into length $\Omega(1/N^k)$ intervals, and discarding intervals containing or adjacent to intervals containing elements of $\mathbf{B}$. This guarantees that $\Omega(1/M)$ of each length $1/M$ interval is kept, but not that $\Omega(1/N)$ of each length $1/N$ interval is kept. Is this tighter quality of the decomposition really needed in the Hausdorff dimension argument?
 \end{remark}
 
 \begin{remark}
-    In Malabika's argument, she used the following approach:
-    
-    ``We now fix an integer $C$ depending only on $A$ and $k$, and $M$, and split $S$ into length $1/N$ subintervals $I$ such that $|\mathbf{B} \cap I| \leq N^{k-1}/C$. In this step, we throw away at most $C(4A)^k N = O_{A,k,M}(N)$ intervals. Since $|T_a| \geq 1/M$, $T_a$ contains at least $N/M$ intervals, and so if we choose $C$ small enough that $C(4A)^k \leq 1/M$, then there is at least one interval in $T_a$ that we keep. If we now split the remaining intervals into $2N^{k-1}/C$ intervals, which will have length $C/2N^k$,$\dots$''
-
-    But I don't think this is necessary in the current proof. Is this method important when we look at higher dimensions, or is this a universal simplification?
+    If $T$ is a rank $k$ linear transformation with rational coefficients, then there is some number $a$ such that $aT$ has integer coefficients, and then the equation $y = f(Tx)$ is the same as the equation $y = f_0((aT)(x))$, where $f_0(x) = f(x)/a$. Since $f_0$ is also Lipschitz continuous, we conclude that we still get the dimension $1/k$ bound if $T$ has rational rather than integral coefficients. More generally, this trick shows the result applies unperturbed if all coefficients of $T$ are integer multiples of some fixed real number. More generally, by varying the lengths of our length $1/N$ decomposition by a constant amount, we can further generalize this to the case where each column of $T$ are integers multiples of some fixed real number.
 \end{remark}
 
 \begin{remark}
-    Maybe I should apply my results to augment Math\'{e}'s result rather than Pramanik/Fraser, since their results work better in high dimensional space, where we can better employ the low degree polynomials.
+    Since the condition $y = f(Tx)$ automatically assumes a kind of `non-vanishing derivative' condition on our solutions, we do not need to assume the regularity of $f$, and so the theorem extends naturally to a more general class of functions than Rob's result, i.e. the Lipschitz continuous functions.
 \end{remark}
 
-Using the same approach, if we now try to avoid solutions to $y = f(Tx)$, where $y$ is now a vector in $\mathbf{R}^m$, and $T$ has rank $k$. Consider unions of $1/M$ cubes $T_0, \dots, T_n$. If we fix startpoints of each $x_k$ forming a full rank lattice spaced by $1/N$, and consider the space $\mathbf{A}$ of products, then there are $O_{A,k}(N^k)$ points in $T(\mathbf{A})$. If we let $\mathbf{B}$ denote the bad points as before, then there can be at most $O_{A,k}(N^k)$ of those. If we now split each $1/M$ cube in $T_0$ into $O_{A,k}(N^k)$ cubes with sidelengths $\Omega_{A,k,M}(1/N^{k/m})$, then at least one of these cubes must avoid elements of $\mathbf{B}$, and by taking a slightly smaller interval (by a constant again), we may assume that the interval satisfies $\text{dist}(I,\mathbf{B}) \geq \Omega_{A,k}(1/MN^{k/m})$. If $f$ is $C^1$, and $\| Df \|_\infty \leq B$, then
-%
-\[ |f(Tx) - f(Tx')| \leq AB|x - x'| \]
-%
-so we can thicken the startpoints to cubes with sidelengths $O_{A,k,M}(1/N^{k/m}\sqrt{m}) = O_{A,k,M,m}(1/N^{k/m})$. This should give a dimension $m/k$ set.
-
-\begin{remark}
-    Because of how we construct our set $X$, we can find a set avoiding solutions to $y = f(Tx)$ for {\it all} rank $k$ rational matrices $T$, without losing any Hausdorff dimension. Maybe this will help us avoid solutions to more general problems?
-\end{remark}
+Using essentially the same approach as the last argument shows that we can avoid solutions to $y = f(Tx)$, where $y$ and $x$ are now vectors in some $\mathbf{R}^m$, and $T$ has rank $k$. If we consider unions of $1/M$ cubes $J_0, \dots, J_n$. If we fix startpoints of each $x_k$ forming lattice spaced apart by $\Omega(1/N)$, and consider the space $\mathbf{A}$ of products, then there are $O(N^k)$ points in $T(\mathbf{A})$, and so there are $O(N^k)$ elements in $\mathbf{B}$. We now split each $1/M$ cube in $J_0$ into length $1/N$ cubes, and discard those cubes which contain more than $O(N^{k-m})$ bad points, then we discard at most $1 - 1/M$ of all such cubes. We can dissect the remaining length $1/N$ cubes into $O(N^{k-m})$ length $\Omega(1/N^{k/m})$ cubes, and as in the previous argument, the cubes not containing elements of $\mathbf{B}$ nor adjacent to an element have total volume $\Omega(1/N^m)$, which we keep. The startpoints in the other intervals $T_i$ may then be thickened to a length $\Omega(1/N^{m/k})$ portion while still avoiding solutions. This should give a set with full Minkowski dimension and Hausdorff dimension $m/k$ avoiding solutions to $y = f(Tx)$.
 
 \section{Extension to Well Approximable Numbers}
 
-If the coefficients of the linear transformation $T$ in the equation $y = f(Tx)$ are non-rational, then the images of startpoints under the action of $T$ do not form a lattice, and we therefore cannot use a direct combinatorial argument to find a large set of points $y$ avoiding solutions to $y = f(Tx)$. However, if $T$ is `very close' to a rational coefficient linear transformation, then we can show the images of the startpoints are `very close' to a lattice, which will still enable us to find points avoiding solutions by replacing the direct combinatorial approach with a covering argument.
+If the coefficients of the linear transformation $T$ in the equation $y = f(Tx)$ are non-rational, then the images of startpoints under the action of $T$ do not form a lattice, and so points may not overlap so easily when avoiding solutions to the equations $y = f(Tx)$. However, if $T$ is `very close' to a family of rational coefficient linear transformations, then we can show the images of the startpoints are `very close' to a lattice, which will still enable us to find points avoiding solutions by replacing the direct combinatorial approach in the argument for integer matrices with a covering argument.
 
 Suppose that $T$ is a real-coefficient linear transformation with the property that for each coefficient $x$ there are infinitely many rational numbers $p/q$ with $|x - p/q| \leq 1/q^\alpha$, for some fixed $\alpha$. For infinitely many $K$, we can therefore find a linear transformation $S$ with coefficients in $\mathbf{Z}/K$ with each coefficient of $T$ differing from the corresponding coefficient in $S$ by at most $1/K^\alpha$. Then for each $x$, we find
 %
@@ -843,6 +848,10 @@ for any $n$, and for any rational numbers $a_n$ that are not all zero.
 
 The easiest applications of the low rank coordinate change method are probably involving configuration problems involving pairwise distances between $m$ points in $\mathbf{R}^n$, where $m \ll n$, since this can best take advantage of our rank condition. Perhaps one way to encompass this is to avoid $m$ vertex polyhedra in $n$ dimensional space, where $m \ll n$. In order to distinguish this problem from something that can be solved from Math\'{e}'s approach, we can probably find a high dimensional set avoiding $m$ vertex polyhedra on a parameterized $n$ dimensional manifold, where $m \ll n$.
 
+\begin{remark}
+    Because of how we construct our set $X$, we can find a dimension $1/k$ set avoiding solutions to $y = f(Tx)$ for {\it all} rank $k$ rational matrices $T$, without losing any Hausdorff dimension. Maybe this will help us avoid solutions to more general problems?
+\end{remark}
+
 \section{Idea: Generalizing This Problem to low rank smooth functions}
 
 Suppose we are able to find dimension $1/k$ sets avoiding configurations $y = g(f(x))$, where $f$ is a smooth function from $\mathbf{R}^n \to \mathbf{R}^m$ of rank $k$. Then given any function $g(f(x))$, where $f$ has rank $k$, if $g(f(x)) = 0$, then the implicit function theorem guarantees that there is a cover $U_\alpha$ and functions $h_\alpha: U^k \to \mathbf{R}^{n-k}$ such that for each if $g(f(x)) = 0$, for $x \in U_\alpha$, then there is a subset of $k$ indices $I$ such that $x_{I^c} = h_\alpha(x_I)$.
@@ -863,11 +872,7 @@ Then given any function $f(x)$ with rank $k$, we can use the implicit function t
 
 If $\mathbf{Q}(\omega)$ is a quadratic extension of the rational numbers, then the ring of integers in this field form a lattice. Perhaps we can use this to generalize our approach to avoiding configurations $y = f(Tx)$, where all coefficients of the matrix $T$ lie in some common quadratic extension of the rational numbers.
 
-\section{Idea: Improving Math\'{e}'s Technique}
-
-Linear shifts will not change the degree of polynomials, so it is unlikely that my approach can be used to help understand Math\'{e}'s result. But it might be useful to learn it anyway.
-
-\section{A Note on Calculating Hausdorff Dimension}
+\chapter{Appendix: A Note on Calculating Hausdorff Dimensions of Cantor Like Sets}
 
 This section considers an inconvenience in the calculation of the Hausdorff dimension of Cantor like sets, and an attempt to resolve it in the most likely of scenarios. In particular, I imagine this has application to the construction of sets via Cantor like interval dissection techniques which result in an $\alpha$ dimensional set $K$ with $H^\alpha(K) = 0$. To prove such sets are $\alpha$ dimensional, we rely on Frostman's lemma, which says that $H^\beta(K) > 0$ if and only if there is a Borel probability measure $\mu$ supported on $K$ with $\mu(B_r) \lesssim_\beta r^\beta$. In our case, this can only work for $\beta < \alpha$, not $\beta = \alpha$, and so we have to find an infinite family of approximations for all $\beta$.
 
@@ -915,11 +920,11 @@ so now rather than having the ratios $l_N/l_{N+1}$ be upper bounded independantl
 \end{example}
 
 \begin{example}
-    Fraser and Pramanik construct a $1/(d-1)$ dimensional set avoiding nontrivial solutions to a countable family of $d$ variate functions $f(x_1, \dots, x_d)$. Does our method apply to extend from the discrete scale bound?
+    Fraser and Pramanik construct a $1/(d-1)$ dimensional set avoiding nontrivial solutions to a countable family of $d$ variate functions $f(x_1, \dots, x_d)$. Unfortunately, there choice of lengths is such that $1/l_n \gg 2 \uparrow \uparrow n$, which grows incredibly fast and annihilates the ratios, so we cannot apply this bound.
 \end{example}
 
 \begin{remark}
-    If this probability measure fails to satisfy the required bounds, does it follow that the set itself doesn't have the required Hausdorff dimension? Is there a counterexample to this statement?
+    If this particular probability measure fails to satisfy the required bounds, does it follow that the set itself doesn't have the required Hausdorff dimension? Is there a counterexample to this statement? It seems this probability measure is strongly related to the structure of the Cantor set so it seems that if this measure fails it is doubtful any other measure will fail, at least locally.
 \end{remark}
 
 \begin{thebibliography}{9}
