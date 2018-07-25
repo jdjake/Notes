@@ -410,36 +410,42 @@ Inspired by Keleti's result, Pramanik and Fraser obtained a generalization of th
 
 How do we use this lemma to construct a set avoiding solutions to $f$? We form an infinite queue which will eventually filter out all the possible zeroes of the equation. Divide the interval $[0,1]$ into $d$ intervals, and consider all orderings of $d - 1$ subsets of these intervals, and add them to the queue. Now on each iteration $N$ of the algorithm, we have a set $X_N \subset [0,1]$. We take a particular sequence of intervals $T_1, \dots, T_d$ from the queue, and then use the lemma above to dissect the $X_N \cap T_n$, which are unions of intervals, into sets avoiding solutions to the equation, and describe the remaining points as $X_{N+1}$. We then add all possible orderings of $d$ intervals created into the end of the queue, and rinse and repeat. The set $X = \lim X_n$ then avoids all solutions to the equation with distinct inputs.
 
-What remains is to bound the Hausdorff dimension of $X$ by constructing a probability measure supported on $X$ with suitable decay. To construct our probability measure, we begin with a uniform measure on the interval, and then, whenever our interval is refined, we uniformly distribute the volume on that particular interval uniformly over the new refinement. Let $\mu$ denote the weak limit of this sequence of probability distributions. At each step $n$ of the process, we let $1/M_n$ denote the size of the intervals at the beginning of the $n$'th subdivision, $1/N_n$ denote the size of the split intervals in the lemma, and $C_n$ the $n$'th constant. We have the relation $1/M_{n+1} = C_n/N_n^{d-1}$. If $J$ is a length $1/M_{n+1}$ interval, and $J \subset I$ a length $1/M_n$ interval, then we consider two cases:
+What remains is to bound the Hausdorff dimension of $X$ by constructing a probability measure supported on $X$ with suitable decay. To construct our probability measure, we begin with a uniform measure on the interval, and then, whenever our interval is refined, we uniformly distribute the volume on that particular interval uniformly over the new refinement. Let $\mu$ denote the weak limit of this sequence of probability distributions. At each step $n$ of the process, we let $1/M_n$ denote the size of the intervals at the beginning of the $n$'th subdivision, $1/N_n$ denote the size of the split intervals in the lemma, and $C_n$ the $n$'th constant. We have the relation $1/M_{n+1} = C_n/N_n^{d-1}$. If $K$ is a length $1/M_{N+1}$ interval, $J$ a length $1/N_N$ interval, and $I$ a length $1/M_N$ interval with $K \subset J \subset I$ and all recieving some mass in $\mu$. To calculate a bound on their mass, we consider the decompositions considered in the algorithm:
 %
 \begin{itemize}
-        \item If $J$ is subdivided in the non-specialized manner, then $J$ contains $N_n/M_n$ length $C_n/N_n^{d-1}$ intervals, so $\mu(J) = (M_n/N_n) \mu(I)$.
-        \item In the second case, we have at least $(1 - 1/M_n)(N_n/M_n)N_n^{d-2}$ length $C_n/N_n^{d-1}$ intervals which we distribute the mass over, so
+        \item If $J$ is subdivided in the non-specialized manner, then every length $1/N_N$ interval recieves the same mass, which is allocated to a single length $1/M_{N+1}$ interval it contains. Thus $\mu(K) = \mu(J) \leq (M_N/N_N) \mu(I)$.
+        \item In the second case, at least a fraction $1 - 1/M_N$ of the length $1/N_N$ intervals are assigned mass, so $\mu(J) = (M_N/N_N)(1 - 1/M_N)^{-1} \leq (2M_N/N_N) \mu(I)$, and more than $C_N/N_N$ of each length $1/N_N$ interval is maintained, so
         %
-        \[ \mu(J) \leq \frac{M_n}{N_n^{d-1}(1 - 1/M_n)} \mu(I) \leq \frac{2 M_n}{N_n^{d-1}} \mu(I) \]
+        \[ \mu(K) = \frac{N_N}{C_NM_{N+1}} \mu(J) \leq \frac{2M_N}{C_NM_{N+1}} \mu(I) \]
 \end{itemize}
 %
-In either case,
+Thus in both cases, we have $\mu(J) \lesssim (N_N/M_N) \mu(I)$, $\mu(K) \lesssim_N |K|$, and $N_N = M_{N+1}^{1/(d-1)}/C_N \lesssim_N M_{N+1}^{1/(d-1)}$ to conclude that there exists a family of rapidly decaying parameters which gives a $1/(d-1)$ dimensional set.
+
+%Thus, in both cases, we have $\mu(J) \lesssim (N_N/M_N) \mu(I)$, which means we can apply the second method of appendix to calculate Hausdorff dimension with rapidly growing constants, where $l_N = 1/M_N$ and $r_N = 1/N_N$. We have $\mu(K) \lesssim_N $ and $N_N = M_{N+1}^{1/(d-1)}/C_N$ and
+
+
 %
-\[ \mu(J) \leq (M_n/N_n) \mu(I) = \frac{M_n}{(C_n M_{n+1})^{1/d-1}} \mu(I) \]
+%Thus, in both cases, we have $\mu(J) \lesssim_N 1/M_{N+1}$. If $J \subset I$ is any length $1/N_N$ interval considered in the algorithm, then either $\mu(J) = (M_N/N_N) \mu(I)$, as in the first case of the subdivision, or we can apply the second case of the subdivision, giving $\mu(J) = (M_N/N_N)(1 - 1/M_N)^{-1} \mu(I) \leq (2M_N/N_N) \mu(I)$. This means we can apply the second method in the appendix. The fact that 
+
+%by induction, if $I$ is a length $1/M_N$ interval considered in the process, then
 %
-so by induction, if $I$ is a length $1/M_N$ interval considered in the process, then
+%\begin{align*}
+%    \mu(I) \leq \prod_{n < N} \frac{M_n}{(C_n M_{n+1})^{\frac{1}{d-1}}} = \left( \prod_{n < N} \frac{M_{n+1}^{1-\frac{1}{d-1} }}{C_n^{\frac{1}{d-1}}} \right) \frac{1}{M_N} = \frac{A_N}{M_N}
+%\end{align*}
 %
-\begin{align*}
-    \mu(I) \leq \prod_{n < N} \frac{M_n}{(C_n M_{n+1})^{\frac{1}{d-1}}} = \left( \prod_{n < N} \frac{M_{n+1}^{1-\frac{1}{d-1} }}{C_n^{\frac{1}{d-1}}} \right) \frac{1}{M_N} = \frac{A_N}{M_N}
-\end{align*}
+%If $J \subset I$ is any length $1/N_N$ interval considered in the algorithm, then either $\mu(J) = (M_N/N_N) \mu(I)$, as in the first case, or in the second case, $\mu(J) = (M_N/N_N(1 - 1/M_N)) \leq 2M_N/N_N \mu(I)$, so in general $\mu(J) \leq 2A_N/N_N$. This means we can apply the second method in the appendix for bounding Hausdorff dimension, with $l_N = 1/M_N$ and $r_N = 1/N_N$. To obtain 
+
+%Now if $1/N_N \leq |I| \leq 1/M_N$, then $I$ can be covered by $|I|N_N$ intervals of length $1/N_N$, and so
 %
-If $J \subset I$ is any length $1/N_N$ interval considered in the algorithm, then either $\mu(J) = (M_N/N_N) \mu(I) \leq A_N/N_N$, as in the first case, or in the second case, $\mu(J) = (M_N/N_N(1 - 1/M_N)) \mu(I)/M_N \leq 2A_N/N_N$. Thus $\mu(J) \leq 2A_N/N_N$. Now if $1/N_N \leq |I| \leq 1/M_N$, then $I$ can be covered by $|I|N_N$ intervals of length $1/N_N$, and so
+%\begin{align*}
+%    \mu(I) &\leq 2|I|N_N \frac{A_N}{N_N} = 2A_N|I| = \frac{2A_{N-1} M_N^{1 - \frac{1}{d-1}}}{C_{N-1}^{\frac{1}{d-1}}} |I| \lesssim_\varepsilon |I|M_N^{1 - \frac{1}{d-1} - \varepsilon} \leq |I|^{\frac{1}{d-1} - \varepsilon}
+%\end{align*}
 %
-\begin{align*}
-    \mu(I) &\leq 2|I|N_N \frac{A_N}{N_N} = 2A_N|I| = \frac{2A_{N-1} M_N^{1 - \frac{1}{d-1}}}{C_{N-1}^{\frac{1}{d-1}}} |I| \lesssim_\varepsilon |I|M_N^{1 - \frac{1}{d-1} - \varepsilon} \leq |I|^{\frac{1}{d-1} - \varepsilon}
-\end{align*}
+%Provided that we can choose $M_N$ such that $A_N/C_N \lesssim_\varepsilon M_{N+1}^\varepsilon$ for all $\varepsilon$ (this is why it is incredibly important that the values in the lemma are independent of $N$ in the proof above). On the other hand, if $1/M_{N+1} \leq |I| \leq 1/N_N$, then $I$ can be covered by a single length $1/N_N$ interval, hence
 %
-Provided that we can choose $M_N$ such that $A_N/C_N \lesssim_\varepsilon M_{N+1}^\varepsilon$ for all $\varepsilon$ (this is why it is incredibly important that the values in the lemma are independent of $N$ in the proof above). On the other hand, if $1/M_{N+1} \leq |I| \leq 1/N_N$, then $I$ can be covered by a single length $1/N_N$ interval, hence
+%\[ \mu(I) \leq \frac{2A_N}{N_N} = \frac{2A_N}{N_N} = \frac{2A_N}{(C_NM_{N+1})^{\frac{1}{d-1}}} \lesssim_\varepsilon \frac{1}{M_{N+1}^{\frac{1}{d-1} - \varepsilon}} \leq |I|^{\frac{1}{d-1} - \varepsilon} \]
 %
-\[ \mu(I) \leq \frac{2A_N}{N_N} = \frac{2A_N}{N_N} = \frac{2A_N}{(C_NM_{N+1})^{\frac{1}{d-1}}} \lesssim_\varepsilon \frac{1}{M_{N+1}^{\frac{1}{d-1} - \varepsilon}} \leq |I|^{\frac{1}{d-1} - \varepsilon} \]
-%
-Thus we obtain the theorem if $M_{N+1} = \exp(A_N/C_N)$, for instance.
+%Thus we obtain the theorem if $M_{N+1} = \exp(A_N/C_N)$, for instance.
 
 \section{A Set Avoiding All Functions With A Common Derivative}
 
@@ -700,7 +706,7 @@ The choice has the benefit of automatically possessing a lot of points by the pi
 
 \section{Boosting the Dimension of Pattern Avoiding Sets by Low Rank Coordinate Changes}
 
-We now consider finding subsets of $[0,1]$ avoiding solutions to the equation $y = f(Tx)$, where $T$ is a rank $k$ linear transformation with integer coefficients with respect to standard coordinates, and $f$ is real-valued and Lipschitz continuous. Fix a constant $A$ bounding the operator norm of $T$, in the sense that $|Tx| \leq A|x|$ for all $x \in \mathbf{R}^n$, and a constant $B$ such that $|f(x+y) - f(x)| \leq B|y|$ for all $x$ and $y$ for which the equation makes sense (if $f$ is $C^1$, this is equivalent to a bound $\| \nabla f \|_\infty \leq B$). Consider sets $J_0, J_1, \dots, J_n, \subset [0,1]$, which are unions of intervals of length $1/M$, with startpoints lying on integer multiples of $1/M$. The next theorem works as a `building block lemma' used in our algorithm for constructing a set avoiding solutions to the equation with high Hausdorff dimension.
+We now consider finding subsets of $[0,1]$ avoiding solutions to the equation $y = f(Tx)$, where $T$ is a rank $k$ linear transformation with integer coefficients with respect to standard coordinates, and $f$ is real-valued and Lipschitz continuous. Fix a constant $A$ bounding the operator norm of $T$, in the sense that $|Tx| \leq A|x|$ for all $x \in \mathbf{R}^n$, and a constant $B$ such that $|f(x+y) - f(x)| \leq B|y|$ for all $x$ and $y$ for which the equation makes sense (if $f$ is $C^1$, this is equivalent to a bound $\| \nabla f \|_\infty \leq B$). Consider sets $J_0, J_1, \dots, J_n, \subset [0,1]$, which are unions of intervals of length $1/M$, with startpoints lying on integer multiples of $1/M$. The next theorem works as a `building block lemma' used in our algorithm for constructing a set avoiding solutions to the equation with Hausdorff dimension $k$ and full Minkowski dimension.
 
 \begin{theorem}
     For infinitely many integers $N$, there exists $S_i \subset J_i$ avoiding solutions to $y = f(Tx)$ with $y \in S_0$ and $x_n \in S_n$, such that
@@ -734,10 +740,6 @@ and so we may choose $S_i \subset J_i$ by thickening each startpoint $x \in J_i$
 \end{proof}
 
 \begin{remark}
-    We can skip the `double split' of $T_0$ into length $1/N$ intervals, and then $1/N^k$ intervals, by just splitting these intervals immediately into length $\Omega(1/N^k)$ intervals, and discarding intervals containing or adjacent to intervals containing elements of $\mathbf{B}$. This guarantees that $\Omega(1/M)$ of each length $1/M$ interval is kept, but not that $\Omega(1/N)$ of each length $1/N$ interval is kept. Is this tighter quality of the decomposition really needed in the Hausdorff dimension argument?
-\end{remark}
-
-\begin{remark}
     If $T$ is a rank $k$ linear transformation with rational coefficients, then there is some number $a$ such that $aT$ has integer coefficients, and then the equation $y = f(Tx)$ is the same as the equation $y = f_0((aT)(x))$, where $f_0(x) = f(x)/a$. Since $f_0$ is also Lipschitz continuous, we conclude that we still get the dimension $1/k$ bound if $T$ has rational rather than integral coefficients. More generally, this trick shows the result applies unperturbed if all coefficients of $T$ are integer multiples of some fixed real number. More generally, by varying the lengths of our length $1/N$ decomposition by a constant amount, we can further generalize this to the case where each column of $T$ are integers multiples of some fixed real number.
 \end{remark}
 
@@ -749,7 +751,7 @@ and so we may choose $S_i \subset J_i$ by thickening each startpoint $x \in J_i$
     Since the condition $y = f(Tx)$ automatically assumes a kind of `non-vanishing derivative' condition on our solutions, we do not need to assume the regularity of $f$, and so the theorem extends naturally to a more general class of functions than Rob's result, i.e. the Lipschitz continuous functions.
 \end{remark}
 
-Using essentially the same approach as the last argument shows that we can avoid solutions to $y = f(Tx)$, where $y$ and $x$ are now vectors in some $\mathbf{R}^m$, and $T$ has rank $k$. If we consider unions of $1/M$ cubes $J_0, \dots, J_n$. If we fix startpoints of each $x_k$ forming lattice spaced apart by $\Omega(1/N)$, and consider the space $\mathbf{A}$ of products, then there are $O(N^k)$ points in $T(\mathbf{A})$, and so there are $O(N^k)$ elements in $\mathbf{B}$. We now split each $1/M$ cube in $J_0$ into length $1/N$ cubes, and discard those cubes which contain more than $O(N^{k-m})$ bad points, then we discard at most $1 - 1/M$ of all such cubes. We can dissect the remaining length $1/N$ cubes into $O(N^{k-m})$ length $\Omega(1/N^{k/m})$ cubes, and as in the previous argument, the cubes not containing elements of $\mathbf{B}$ nor adjacent to an element have total volume $\Omega(1/N^m)$, which we keep. The startpoints in the other intervals $T_i$ may then be thickened to a length $\Omega(1/N^{m/k})$ portion while still avoiding solutions. This should give a set with full Minkowski dimension and Hausdorff dimension $m/k$ avoiding solutions to $y = f(Tx)$.
+Using essentially the same approach as the last argument shows that we can avoid solutions to $y = f(Tx)$, where $y$ and $x$ are now vectors in some $\mathbf{R}^m$, and $T$ has rank $k$. If we consider unions of $1/M$ cubes $J_0, \dots, J_n$. If we fix startpoints of each $x_k$ forming lattice spaced apart by $\Omega(1/N)$, and consider the space $\mathbf{A}$ of products, then there are $O(N^k)$ points in $T(\mathbf{A})$, and so there are $O(N^k)$ elements in $\mathbf{B}$. We now split each $1/M$ cube in $J_0$ into length $1/N$ cubes, and discard those cubes which contain more than $O(N^{k-m})$ bad points, then we discard at most $1 - 1/M$ of all such cubes. We can dissect the remaining length $1/N$ cubes into $O(N^{k-m})$ length $\Omega(1/N^{k/m})$ cubes, and as in the previous argument, the cubes not containing elements of $\mathbf{B}$ nor adjacent to an element have total volume $\Omega(1/N^m)$, which we keep. The startpoints in the other intervals $T_i$ may then be thickened to a length $\Omega(1/N^{m/k})$ portion while still avoiding solutions. This gives a set with full Minkowski dimension and Hausdorff dimension $m/k$ avoiding solutions to $y = f(Tx)$. (I don't yet understand Minkowski dimension enough to understand this, but the techniques of the appendix make proving the Hausdorff dimension $1/k$ bound easy)
 
 \section{Extension to Well Approximable Numbers}
 
@@ -860,20 +862,25 @@ Thus we can easily obtain that $\dim_{\mathbf{H}}(X) \geq \alpha - \varepsilon$ 
     Kaleti constructs a full dimensional fractal set avoiding translates of itself using the Cantor set method. He has $l_N = 1/8^{N-1}N!$, in which case $l_N/l_{N+1} = 8N$, which is eventually bounded by $l_N^{-\varepsilon} = (8^{N-1}N!)^\varepsilon$ for any $\varepsilon > 0$.
 \end{example}
 
-It is, of course, easy to construct examples of $l_N$ for which we cannot use this technique. For instance, if $\smash{l_N = e^{-N!}}$, or $\smash{l_N = e^{-e^N}}$, the latter of which can be seen because $e^N$ is it's own derivative. Our second method for interpolating requires extra knowledge of the dissection process, but enables us to choose the $l_N$ decaying much more rapidly, when the filtration of the mass of $\mu$ only occurs at very sparse lengths. In particular, in Fraser and Pramanik's paper, the mass is essentially uniformly distributed over the length $1/N$ dissections, and then filtered to very particular length $1/N^k$ sections. Since the length $1/N$ and length $1/N^k$ differ in length only be a polynomial scale, the actual choice of $N$ relative to $M$ isn't really important, so we can let $N$ become as large as we desire relative to the choice of $M$. In particular, we can choose the $M_N$ to grow as fast as we want, which Fraser and Pramanik take full advantage of, choosing $M_N$ even bigger than $2 \uparrow \uparrow N$, which enables us to overwhelm the arbitrary constants in the construction of the configuration avoiding sets they create.
+It is, of course, easy to construct examples of $l_N$ for which we cannot use this technique. For instance, if $\smash{l_N = e^{-N!}}$, or $\smash{l_N = e^{-e^N}}$, the latter of which can be seen because $e^N$ is it's own derivative. Our second method for interpolating requires extra knowledge of the dissection process, but enables us to choose the $l_N$ decaying much more rapidly, when the filtration of the mass of $\mu$ only occurs at very sparse lengths. In particular, in Fraser and Pramanik's paper, the mass is essentially uniformly distributed over the length $1/N$ dissections, and then filtered to very particular length $1/N^k$ sections. Since the length $1/N$ and length $1/N^k$ differ in length only be a polynomial scale, the actual choice of $N$ relative to $M$ isn't really important, so we can let $N$ become as large as we desire relative to the choice of $M$. In particular, we can choose the $M_N$ to grow as fast as we want, which Fraser and Pramanik take full advantage of, choosing $M_N$ even bigger than $2 \uparrow \uparrow N$, which enables us to overwhelm the arbitrary constants in the construction of the configuration avoiding sets they create. We consider, for each $\beta = \{ l_1 \geq r_1 \geq l_2 \geq r_2 \geq \dots \to 0 \}$, a Cantor set $X^\beta$, and a corresponding probability measure $\mu_\beta$ supported on $X^\beta$. Our goal is to find a particular index set $\beta$ such that $X^\beta$ has Hausdorff dimension exceeding $\alpha$. The reason for introducing this notation is so that we can choose bounds on the measures $\mu_\beta$ as functions of the $l_1$ and $r_1$, which often occurs in recursive constructions as a consequence of the influence of the parameters on the construction. In particular, we will let $\lesssim_N$ stand for an inequality with a hidden constant depending on the parameters $\{ l_1, r_1, l_2, r_2, \dots, l_N \}$.
 
-We consider, for each $\beta = \{ l_1 \geq r_1 \geq l_2 \geq r_2 \geq \dots \to 0 \}$, a Cantor set $X^\beta$, and a corresponding probability measure $\mu_\beta$ supported on $X^\beta$. Our goal is to find a particular index set $\beta$ such that $X^\beta$ has Hausdorff dimension exceeding $\alpha$. The reason for introducing this notation is so that we can choose bounds on the measures $\mu_\beta$ as functions of the $l_1$ and $r_1$. In particular, we will let $\beta_N$ denote the subset of parameters $\{ l_1, r_1, l_2, r_2, \dots, l_N \}$. In this scenario, we assume the existence of a bound $\mu_\beta(J) \lesssim (r_N/l_N) \mu_\beta(I)$ for $J \subset I$ with $|J| = r_N$ and $|I| = l_N$. Essentially, this means that the probability mass of a length $l_N$ interval considered in the algorithm is distributed essentially uniformly over the length $r_N$ intervals it contains. The first advantage of this is to perform half of an interpolation; a bound $\mu_\beta(I) \lesssim |I|^\alpha$ for $|I| = l_N$ automatically implies that for $r_N \leq |I| \leq l_N$, we can cover $I$ by length $r_N$ intervals to obtain
+\begin{theorem}
+    If $\mu_\beta(I) \lesssim_{N-1} l_N^\alpha$ for $|I| = l_N$, $r_N \lesssim_N l_{N+1}^\alpha$, and we have $\mu_\beta(J) \lesssim_{N-1} (r_N/l_N) \mu_\beta(I)$ for $J \subset I$ with $|J| = r_N$ and $|I| = l_N$, where $I$ and $J$ range over a disjoint family of intervals covering the support of $\mu_\beta$ (essentially this means that the probability mass on a length $l_N$ interval $I$ is uniformly distributed over the length $r_N$ intervals it contains), then there exists a sequence $\beta$ such that $X^\beta$ is $\alpha$ dimensional.
+\end{theorem}
+\begin{proof}
+    The main technique in this theorem is that since we have bounds enabling us to skip the analysis of large portions of intervals, we can take $r_N$ arbitrarily large relative to $l_N$, rendering any previous constants that occur in the algorithm to become immediately negligible. The first advantage of this is that for $r_N \leq |I| \leq l_N$, we can cover $I$ by length $r_N$ intervals to obtain that if the $l_N$ decay rapidly enough with respect to $A_{N-1}$,
 %
-\[ \mu(I) \leq (|I|/r_N) (r_N/l_N) l_N^\alpha = \frac{|I|}{l_N^{1 - \alpha}} \leq |I|^\alpha \]
+\[ \mu(I) \lesssim_{N-1} (|I|/r_N) (r_N/l_N) l_N^\alpha = \frac{|I|}{l_N^{1 - \alpha}} \leq l_N^\varepsilon |I|^{\alpha - \varepsilon} \]
 %
-Secondly, it means that the probability mass of a length $l_N$ interval considered in the algorithm is distributed essentially uniformly over the length $r_N$ intervals it contains, which, since we are able to adjust parameters, will enable us to take $r_N$ arbitrarily large relative to the $l_N$, causing any constants that occur in the algorithm in previous steps to become immediately negligible. Given the existence of an inequality $\mu_\beta(I) \lesssim A_N(\beta|_N) l_N$ for $|I| = l_N$ automatically gives rise to a bound $\mu_\beta(I) \lesssim A_N(\beta|_N) r_N$ for $|I| = r_N$. If $r_N \leq B_N(\beta|_N) l_{N+1}^\alpha$, then for any $l_{N+1} \leq |I| \leq r_N$, we can cover $I$ by a single length $r_N$ interval to conclude that
+Note that since the hidden constants only depend on parameters up to index $N-1$, we can let $l_N$ decrease rapidly enough that we obtain $\mu(I) \lesssim_\varepsilon |I|^{\alpha - \varepsilon}$ independently of $N$. Given the existence of an inequality $\mu_\beta(I) \lesssim_{N-1} l_N$ for $|I| = l_N$, we automatically get the bound $\mu_\beta(I) \lesssim_N r_N$ for $|I| = r_N$. If $r_N \lesssim_N l_{N+1}^\alpha$, then for any $l_{N+1} \leq |I| \leq r_N$, we can cover $I$ by a single length $r_N$ interval to conclude that
 %
-\[ \mu_\beta(I) \lesssim A_N(\beta|_N) r_N \leq A_N(\beta|_N) B_N(\beta|_N) l_{N+1}^{(1 - \varepsilon) \alpha} r_N^\varepsilon \leq A_N(\beta|_N) B_N(\beta|_N) |I|^{(1 - \varepsilon) \alpha} r_N^\varepsilon \]
+\[ \mu_\beta(I) \lesssim_N r_N \lesssim_N l_{N+1}^{(1 - \varepsilon) \alpha} \]
 %
-Since all the values in this inequality are fixed, we can vary $r_N$ to become incredibly small with respect to the previous constants to conclude that for certain rapidly decay $\beta$, $\mu_\beta(I) \lesssim_\varepsilon |I|^{\alpha - \varepsilon}$. This guarantees the existence of a sequence $\beta$ with $X^\beta$ $\alpha$ dimensional.
+Since $r_N$ is chosen after the parameters determine the hidden constants in this bound are chose, we can let $r_N$ decay rapidly enough that we obtain a bound $\mu_\beta(I) \lesssim_\varepsilon l_{N+1}^{\alpha - \varepsilon}$ independently of $N$. This guarantees the existence of a sequence $\beta$ with $X^\beta$ an $\alpha$ dimensional set.
+\end{proof}
 
 \begin{example}
-    In Fraser and Pramanik's paper, they choose $l_{N+1} = C_Nr_N^{d-1}$, for some values $C_N$ depending only on the values $M_1, \dots, M_N$ and $N_1, \dots, N_{N-1}$. Thus $r_N/l_{N+1} = r_N^{2-d}/C_N$
+    In Fraser and Pramanik's paper, for $\alpha = 1/(d-1)$, they choose $r_N = A_N l_{N+1}^\alpha$ for some constant $A_N$, and choose $l_N$ suitably rapidly decaying to establish the inequalities $\mu_\beta(I) \lesssim |I|^\alpha$ for $|I| = l_N$. The decomposition algorithm naturally leads to the inequality $\mu_\beta(J) \lesssim (r_N/l_N) \mu_\beta(I)$, which shows that we can choose $l_N$ giving an $\alpha$ dimensional set.
 \end{example}
 
 \begin{thebibliography}{9}
