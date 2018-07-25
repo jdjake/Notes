@@ -414,7 +414,7 @@ What remains is to bound the Hausdorff dimension of $X$ by constructing a probab
 %
 \begin{itemize}
         \item If $J$ is subdivided in the non-specialized manner, then $J$ contains $N_n/M_n$ length $C_n/N_n^{d-1}$ intervals, so $\mu(J) = (M_n/N_n) \mu(I)$.
-        \item In the second case, we have $\geq (1 - 1/M_n)(N_n/M_n)N_n^{d-2}$ length $C_n/N_n^{d-1}$ intervals, so
+        \item In the second case, we have at least $(1 - 1/M_n)(N_n/M_n)N_n^{d-2}$ length $C_n/N_n^{d-1}$ intervals which we distribute the mass over, so
         %
         \[ \mu(J) \leq \frac{M_n}{N_n^{d-1}(1 - 1/M_n)} \mu(I) \leq \frac{2 M_n}{N_n^{d-1}} \mu(I) \]
 \end{itemize}
@@ -423,19 +423,23 @@ In either case,
 %
 \[ \mu(J) \leq (M_n/N_n) \mu(I) = \frac{M_n}{(C_n M_{n+1})^{1/d-1}} \mu(I) \]
 %
-so by induction, if $J$ is a length $1/M_{N+1}$ interval considered in the process, then
+so by induction, if $I$ is a length $1/M_N$ interval considered in the process, then
 %
 \begin{align*}
-    \mu(J) \leq \prod_{n = 1}^N \frac{M_n}{(C_n M_{n+1})^{\frac{1}{d-1}}} = \left( \prod_{n = 1}^N \frac{M_{n+1}^{1-\frac{1}{d-1} }}{C_n^{\frac{1}{d-1}}} \right) \frac{1}{M_{N+1}} = \frac{A_{N+1}}{M_{N+1}}
+    \mu(I) \leq \prod_{n < N} \frac{M_n}{(C_n M_{n+1})^{\frac{1}{d-1}}} = \left( \prod_{n < N} \frac{M_{n+1}^{1-\frac{1}{d-1} }}{C_n^{\frac{1}{d-1}}} \right) \frac{1}{M_N} = \frac{A_N}{M_N}
 \end{align*}
 %
-Now if $1/M_{N+1} \leq |I| \leq 1/M_N$, then $I$ can be covered by $|I|M_{N+1}$ cubes of length $1/M_{N+1}$, so
+If $J \subset I$ is any length $1/N_N$ interval considered in the algorithm, then either $\mu(J) = (M_N/N_N) \mu(I) \leq A_N/N_N$, as in the first case, or in the second case, $\mu(J) = (M_N/N_N(1 - 1/M_N)) \mu(I)/M_N \leq 2A_N/N_N$. Thus $\mu(J) \leq 2A_N/N_N$. Now if $1/N_N \leq |I| \leq 1/M_N$, then $I$ can be covered by $|I|N_N$ intervals of length $1/N_N$, and so
 %
 \begin{align*}
-    \mu(I) &\leq |I|M_{N+1} \frac{A_{N+1}}{M_{N+1}} = A_{N+1}|I| = \frac{A_N M_{N+1}^{1 - \frac{1}{d-1}}}{C_N^{\frac{1}{d-1}}} |I| \lesssim_\varepsilon |I|M_{N+1}^{1 - \frac{1}{d-1} - \varepsilon} \leq |I|^{\frac{1}{d-1} - \varepsilon}
+    \mu(I) &\leq 2|I|N_N \frac{A_N}{N_N} = 2A_N|I| = \frac{2A_{N-1} M_N^{1 - \frac{1}{d-1}}}{C_{N-1}^{\frac{1}{d-1}}} |I| \lesssim_\varepsilon |I|M_N^{1 - \frac{1}{d-1} - \varepsilon} \leq |I|^{\frac{1}{d-1} - \varepsilon}
 \end{align*}
 %
-Provided that we can choose $M_N$ such that $A_N/C_N \lesssim_\varepsilon M_{N+1}^\varepsilon$ for all $\varepsilon$. This is true, for instance, if we define $M_{N+1} = \exp(A_N/C_N) + O(1)$.
+Provided that we can choose $M_N$ such that $A_N/C_N \lesssim_\varepsilon M_{N+1}^\varepsilon$ for all $\varepsilon$ (this is why it is incredibly important that the values in the lemma are independent of $N$ in the proof above). On the other hand, if $1/M_{N+1} \leq |I| \leq 1/N_N$, then $I$ can be covered by a single length $1/N_N$ interval, hence
+%
+\[ \mu(I) \leq \frac{2A_N}{N_N} = \frac{2A_N}{N_N} = \frac{2A_N}{(C_NM_{N+1})^{\frac{1}{d-1}}} \lesssim_\varepsilon \frac{1}{M_{N+1}^{\frac{1}{d-1} - \varepsilon}} \leq |I|^{\frac{1}{d-1} - \varepsilon} \]
+%
+Thus we obtain the theorem if $M_{N+1} = \exp(A_N/C_N)$, for instance.
 
 \section{A Set Avoiding All Functions With A Common Derivative}
 
@@ -819,52 +823,58 @@ If $\mathbf{Q}(\omega)$ is a quadratic extension of the rational numbers, then t
 
 \chapter{Appendix: Calculating Dimensions of Cantor Like Sets}
 
-This section considers an inconvenience in the calculation of the Hausdorff dimension of Cantor like sets, and an attempt to resolve it in the most likely of scenarios. In particular, this has application to the construction of sets via Cantor like interval dissection techniques which result in an $\alpha$ dimensional set $K$ with $H^\alpha(K) = 0$. To prove such sets are $\alpha$ dimensional, we rely on Frostman's lemma, which says that $H^\beta(K) > 0$ if and only if there is a Borel probability measure $\mu$ supported on $K$ with $\mu(B_r) \lesssim_\beta r^\beta$. In our case, this can only work for $\beta < \alpha$, not $\beta = \alpha$, and so we have to find an infinite family of approximations approaching $\alpha$. By a Cantor like set construction, we mean a set $X$ constructed as the limit of a nested family of sets $X_0 \supset X_1 \supset X_2 \supset X_3 \supset \dots$, where $X_0 = [0,1]$, and each $X_N$ is a union of intervals of some length $l_N$ obtained by dividing and removing some segments of the intervals $X_{N-1}$. In order to calculate the dimension of $X$ by Frostman's lemma, the most natural probability measure to take is obtained by dividing the mass of the set uniformly. Because the construction is completely discrete until a limit is taken, it is often simplest to obtain a bound for an interval $I$ whose length is $l_N$, i.e. the same length as the intervals considered in the process at the scale $X_N$. The difficulty is then extending this bound to intervals of all lengths, so that the full Frostman's lemma result can be applied. Since Hausdorff dimension is a local property of a set\footnote{If we define $\dim_{\mathbf{H}}(x) = \lim_{r \downarrow 0} \dim_{\mathbf{H}}(B_r(x) \cap X)$ then $\dim_{\mathbf{H}}(X) = \sup_{x \in X} \dim_{\mathbf{H}}(x)$.}, it is natural to expect that we can obtain a general bound $\mu(I) \lesssim_\beta |I|^\beta$ given that one has established precisely the same estimate, but restricted to intervals $I$ with $|I| = l_N$, and with $l_N \downarrow 0$. This section concerns itself with a general method of establishing this result.
-
-The main way of extending the results at particular scales to general results is by means of a covering argument. This is done in two ways for a given interval $I$ with $l_{N+1} \leq |I| \leq l_N$:
-%
-\begin{itemize}
-    \item We can cover $I$ by a single length $l_N$ interval, so
-    %
-    \[ \mu(I) \lesssim_\beta l_N^\beta = \left( \frac{l_N}{|I|} \right)^\beta |I|^\beta \]
-    \item We can cover $I$ by $|I|/l_{N+1}$ intervals of length $l_{N+1}$, so
-    %
-    \[ \mu(I) \lesssim_\beta \frac{|I|}{l_{N+1}} l_{N+1}^\beta = \left( \frac{|I|}{l_{N+1}} \right)^{1 - \beta} |I|^\beta \]
-\end{itemize}
-%
-For any given $I$, we can take the minimum of these two bounds. The coefficients then given by this estimate relative to $|I|^\beta$ is
-%
-\[ \min \left( \left( \frac{l_N}{|I|} \right)^\beta, \left( \frac{|I|}{l_{N+1}} \right)^{1 - \beta} \right) \]
-%
-If we consider the worst case coefficient over all $I$ with $l_{N+1} \leq |I| \leq l_N$, this gives us the constant
-%
-\[ \left( \frac{l_N}{l_{N+1}} \right)^{(1 - \beta)\beta} \]
-%
-so this would complete the argument if $l_N/l_{N+1}$ is upper bounded independantly of $N$. In most cases, however, this is impossible. We now discuss how we can weaken the condition on the growth rate of the ratio of consecutive discrete lengths by applying a simple trick.
-
-By giving ourselves an epsilon of room, in our covering argument we can replace the $l_N^\beta$ and $l_{N+1}^\beta$ bounds with $\smash{l_N^{\beta'}}$ and $\smash{l_{N+1}^{\beta'}}$, for any $\smash{\beta' \in [\beta, \alpha)}$, provided that $\beta'$ is chosen independantly of $N$. In this case, we find that for a general interval $I$, and any $\varepsilon < (\alpha - \beta) / \min(\beta,1-\beta)$, by two choices of $\beta'$ we can obtain the two bounds
-%
-\[ \mu(I) \lesssim_{\beta,\varepsilon} \left( \frac{l_N^{1 + \varepsilon}}{|I|} \right)^\beta |I|^\beta\ \ \ \ \ \mu(I) \lesssim_{\beta,\varepsilon} \left( \frac{|I|}{l_{N+1}^{1 - \varepsilon}} \right)^{1 - \beta} |I|^\beta \]
-%
-Now we find that via the same calculation,
-%
-\[ \max_{l_{N+1} \leq x \leq l_N} \min \left( \left( \frac{l_N^{1 + \varepsilon}}{|I|} \right)^\beta, \left( \frac{|I|}{l_{N+1}^{1 - \varepsilon}} \right)^{1 - \beta} \right) = (l_N/l_{N+1})^{\beta(1-\beta)} (l_N l_{N+1})^{\varepsilon \beta(1-\beta)} \]
-%
-so now rather than having the ratios $l_N/l_{N+1}$ be upper bounded independantly of $N$, we can now have the ratios grow inversely proportional to $(l_N l_{N+1})^{\varepsilon \beta (1 - \beta)}$. The lengths are likely to easily annihilate the ratios, since the lengths are compounded from many divisions in the algorithm, whereas the ratios occur at a single scale. Thus this bound is likely to be usable in a great many examples.
-
-\begin{example}
-    Kaleti constructs a full dimensional fractal set avoiding translates of itself using the Cantor set method. He has $l_N = 1/8^{N-1}N!$, in which case $l_N/l_{N+1} = 8N$, which is eventually bounded by $l_N^{-\varepsilon} = (8^{N-1}N!)^\varepsilon$ for any $\varepsilon > 0$.
-\end{example}
-
-\begin{example}
-    Fraser and Pramanik construct a $1/(d-1)$ dimensional set avoiding nontrivial solutions to a countable family of $d$ variate functions $f(x_1, \dots, x_d)$. Unfortunately, there choice of lengths is such that $1/l_n \gg 2 \uparrow \uparrow n$, which grows incredibly fast and annihilates the ratios, so we cannot apply this bound.
-\end{example}
+This section considers an inconvenience in the calculation of the Hausdorff dimension of Cantor like sets, and an attempt to resolve it in the most likely of scenarios. That is, we consider the Hausdorff dimension of sets $X$ constructed as the limit of a nested family of sets $X_0 \supset X_1 \supset \dots$, where $X_0 = [0,1]$, and each $X_{n+1}$ is a union of intervals of some length $l_{n+1}$ obtained by dividing and removing some segments of the intervals $X_n$. To prove such sets are $\alpha$ dimensional, we rely on Frostman's lemma, which says that $H^\alpha(X) > 0$ if and only if there is a Borel probability measure $\mu$ supported on $X$ with $\mu(I) \lesssim |I|^\alpha$ for each interval $I$. Since the construction is obtained as a limit of intervals, it is often to construct $\mu$ by the {\it mass distribution principle}. That is, we let $\mu$ denote the weak limit of the probability masses $\mu_n$, where $\mu_0$ is a uniform distribution over $\mu_0$, and $\mu_{n+1}$ is obtained from $\mu_n$ by distributing the mass $\mu_n(I)$ of each length $l_n$ interval $I$ contained in $X_n$ over the portion of $I$ that remains in $X_{n+1}$. The cumulative distribution functions of the $\mu_n$ uniformly converge, hence the $\mu_n$ converge weakly to some $\mu$, which satisfy $\mu(I) = \mu_n(I)$ for each interval $I$ as above. Because of this discreteness, it is most easy to establish a bound $\mu(I) \lesssim l_n^\alpha$ when $I \subset X_n$ is a length $l_n$ interval. Since any interval $I$ of length $l_n$ is contained within at least two such intervals (or is contained in other length $l_n$ intervals that $\mu$ assigns no mass to), we have the general bound $\mu(I) \lesssim l_n^\alpha$ for all intervals $I$ of length $l_n$. Hausdorff dimension is a local property of a set\footnote{If we define $\dim_{\mathbf{H}}(x) = \lim_{r \downarrow 0} \dim_{\mathbf{H}}(B_r(x) \cap X)$ then $\dim_{\mathbf{H}}(X) = \sup_{x \in X} \dim_{\mathbf{H}}(x)$.}, so it is natural to expect that we can obtain a general bound $\mu(I) \lesssim_\alpha|I|^\alpha$ given that one has established precisely the same estimate, but restricted to intervals $I$ with $|I| = l_N$. This section concerns itself with ways that we can establish this general bound, and thus prove that $\dim_{\mathbf{H}}(X) \geq \alpha$.
 
 \begin{remark}
     If this particular probability measure fails to satisfy the required bounds, does it follow that the set itself doesn't have the required Hausdorff dimension? Is there a counterexample to this statement? It seems this probability measure is strongly related to the structure of the Cantor set so it seems that if this measure fails it is doubtful any other measure will fail, at least locally.
 \end{remark}
 
-Now we discuss a third method of interpolating the Hausdorff dimension bounds, which requires us to choose the lengths $l_n$ in advance as a function of the values beforehand.
+The main way of extending the results at particular scales to general results is by means of a covering argument. This is done in two ways for a given interval $I$ with $l_{N+1} \leq |I| \leq l_N$.
+%
+\begin{itemize}
+    \item We can cover $I$ by a single length $l_N$ interval, so
+    %
+    \[ \mu(I) \lesssim l_N^\alpha = \left( \frac{l_N}{|I|} \right)^\alpha |I|^\alpha \leq \left( \frac{l_N}{l_{N+1}} \right)^\alpha |I|^\alpha \]
+    \item We can cover $I$ by $|I|/l_{N+1}$ intervals of length $l_{N+1}$, so
+    %
+    \[ \mu(I) \lesssim \frac{|I|}{l_{N+1}} l_{N+1}^\alpha = \left( \frac{|I|}{l_{N+1}} \right)^{1 - \alpha} |I|^\alpha \leq \left( \frac{l_N}{l_{N+1}} \right)^{1 - \alpha} |I|^\alpha \]
+\end{itemize}
+%
+The first bound is better for $\alpha \leq 1/2$, the second for $\alpha \geq 1/2$, but only up to the exponent in the polynomial. By considering both covering techniques simultaneously, and then choosing the best such bound for any particular interval length $|I|$, we can actually obtain the tighter bound
+%
+\[ \mu(I) \lesssim \left( \frac{l_N}{l_{N+1}} \right)^{(1-\alpha)\alpha} |I|^\alpha \leq \left( \frac{l_N}{l_{N+1}} \right)^{1/4} |I|^\alpha \]
+%
+Ultimately, however, we shall find that in general, without additional information about the measure $\mu$, any of the three techniques suffice, because the polynomial power doesn't really help make a required bound more or less difficult to prove. For instance, here we find that using any of the three bounds we have obtained that our argument is only completed if $l_N/l_{N+1}$ is upper bounded independently of $N$. In most cases this is very difficult to obtain, since it means that we can only restrict $l_N$ to have exponential decay.
+
+We can obtain slightly better results by giving ourselves an epsilon of room. Rewording the two bounds, we have
+%
+\[ \mu(I) \leq \left( \frac{l_N}{|I|^{1 - \varepsilon/\alpha}} \right)^\alpha |I|^{\alpha - \varepsilon}\ \ \ \ \ \mu(I) \leq \left( \frac{|I|^{1 + \varepsilon/(1 - \alpha)}}{l_{N+1}} \right)^{1 - \alpha} |I|^{\alpha - \varepsilon} \]
+%
+Taking the minimum of these two bounds and optimizing gives
+%
+\[ \mu(I) \leq \left( \frac{l_N}{l_{N+1}} \right)^{\alpha(1-\alpha)} \left( l_N^{\alpha}l_{N+1}^{1-\alpha} \right)^\varepsilon |I|^{\alpha - \varepsilon} \]
+%
+Thus we can easily obtain that $\dim_{\mathbf{H}}(X) \geq \alpha - \varepsilon$ for each $\varepsilon$, if $l_N/l_{N+1} \lesssim_\varepsilon l_{N+1}^\varepsilon$. This can be expected in a great many scenarios, since the lengths $l_N/l_{N+1}$ are obtained at a single scale, whereas the lengths $l_{N+1}$ are obtained from compounding lengths over a great many scales. If we write $l_N = e^{-r_N}$, then $l_N/l_{N+1} = e^{r_{N+1} - r_N}$, so $l_{N+1}^{-\varepsilon} = e^{\varepsilon r_{N+1}}$, so it suffices to show $r_{N+1} - r_N - \varepsilon r_{N+1} \to -\infty$ for each $\varepsilon$. If $r_N$ is differentiable and accelerating, this means precisely that $r_N' - \varepsilon r_N \to -\infty$, so in particular, if $\smash{l_N = e^{-x^M}}$ for any $M$ we can apply this principle.
+
+\begin{example}
+    Kaleti constructs a full dimensional fractal set avoiding translates of itself using the Cantor set method. He has $l_N = 1/8^{N-1}N!$, in which case $l_N/l_{N+1} = 8N$, which is eventually bounded by $l_N^{-\varepsilon} = (8^{N-1}N!)^\varepsilon$ for any $\varepsilon > 0$.
+\end{example}
+
+It is, of course, easy to construct examples of $l_N$ for which we cannot use this technique. For instance, if $\smash{l_N = e^{-N!}}$, or $\smash{l_N = e^{-e^N}}$, the latter of which can be seen because $e^N$ is it's own derivative. Our second method for interpolating requires extra knowledge of the dissection process, but enables us to choose the $l_N$ decaying much more rapidly, when the filtration of the mass of $\mu$ only occurs at very sparse lengths. In particular, in Fraser and Pramanik's paper, the mass is essentially uniformly distributed over the length $1/N$ dissections, and then filtered to very particular length $1/N^k$ sections. Since the length $1/N$ and length $1/N^k$ differ in length only be a polynomial scale, the actual choice of $N$ relative to $M$ isn't really important, so we can let $N$ become as large as we desire relative to the choice of $M$. In particular, we can choose the $M_N$ to grow as fast as we want, which Fraser and Pramanik take full advantage of, choosing $M_N$ even bigger than $2 \uparrow \uparrow N$, which enables us to overwhelm the arbitrary constants in the construction of the configuration avoiding sets they create.
+
+We consider, for each $\beta = \{ l_1 \geq r_1 \geq l_2 \geq r_2 \geq \dots \to 0 \}$, a Cantor set $X^\beta$, and a corresponding probability measure $\mu_\beta$ supported on $X^\beta$. Our goal is to find a particular index set $\beta$ such that $X^\beta$ has Hausdorff dimension exceeding $\alpha$. The reason for introducing this notation is so that we can choose bounds on the measures $\mu_\beta$ as functions of the $l_1$ and $r_1$. In particular, we will let $\beta_N$ denote the subset of parameters $\{ l_1, r_1, l_2, r_2, \dots, l_N \}$. In this scenario, we assume the existence of a bound $\mu_\beta(J) \lesssim (r_N/l_N) \mu_\beta(I)$ for $J \subset I$ with $|J| = r_N$ and $|I| = l_N$. Essentially, this means that the probability mass of a length $l_N$ interval considered in the algorithm is distributed essentially uniformly over the length $r_N$ intervals it contains. The first advantage of this is to perform half of an interpolation; a bound $\mu_\beta(I) \lesssim |I|^\alpha$ for $|I| = l_N$ automatically implies that for $r_N \leq |I| \leq l_N$, we can cover $I$ by length $r_N$ intervals to obtain
+%
+\[ \mu(I) \leq (|I|/r_N) (r_N/l_N) l_N^\alpha = \frac{|I|}{l_N^{1 - \alpha}} \leq |I|^\alpha \]
+%
+Secondly, it means that the probability mass of a length $l_N$ interval considered in the algorithm is distributed essentially uniformly over the length $r_N$ intervals it contains, which, since we are able to adjust parameters, will enable us to take $r_N$ arbitrarily large relative to the $l_N$, causing any constants that occur in the algorithm in previous steps to become immediately negligible. Given the existence of an inequality $\mu_\beta(I) \lesssim A_N(\beta|_N) l_N$ for $|I| = l_N$ automatically gives rise to a bound $\mu_\beta(I) \lesssim A_N(\beta|_N) r_N$ for $|I| = r_N$. If $r_N \leq B_N(\beta|_N) l_{N+1}^\alpha$, then for any $l_{N+1} \leq |I| \leq r_N$, we can cover $I$ by a single length $r_N$ interval to conclude that
+%
+\[ \mu_\beta(I) \lesssim A_N(\beta|_N) r_N \leq A_N(\beta|_N) B_N(\beta|_N) l_{N+1}^{(1 - \varepsilon) \alpha} r_N^\varepsilon \leq A_N(\beta|_N) B_N(\beta|_N) |I|^{(1 - \varepsilon) \alpha} r_N^\varepsilon \]
+%
+Since all the values in this inequality are fixed, we can vary $r_N$ to become incredibly small with respect to the previous constants to conclude that for certain rapidly decay $\beta$, $\mu_\beta(I) \lesssim_\varepsilon |I|^{\alpha - \varepsilon}$. This guarantees the existence of a sequence $\beta$ with $X^\beta$ $\alpha$ dimensional.
+
+\begin{example}
+    In Fraser and Pramanik's paper, they choose $l_{N+1} = C_Nr_N^{d-1}$, for some values $C_N$ depending only on the values $M_1, \dots, M_N$ and $N_1, \dots, N_{N-1}$. Thus $r_N/l_{N+1} = r_N^{2-d}/C_N$
+\end{example}
 
 \begin{thebibliography}{9}
 
