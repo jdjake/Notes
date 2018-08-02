@@ -943,18 +943,47 @@ The utility of this extension relates to the fact that the Lebesgue integral beh
   is Lebesgue measurable.
 \end{theorem}
 
-\section{$L^p$ Spaces}
+\section{Rearrangement Invariant Norms}
 
-An important fact about the Lebesgue integral is that it is a `completion' of the Riemann integral. We have already seen this in the sense that the metric
-%
-\[ d(E,F) = |E \bigtriangleup F| \]
-%
-gives a complete metric space structure to the family of Lebesgue measurable sets on $\mathbf{R}^n$, showing that Lebesgue measurable sets, `complete' the Jordan measurable sets, and even the family of elementary sets. Now we consider the deeper context of how the family of Lebesgue measurable functions complete the Riemann integrable functions.
+Often in analysis, a problem occurs where one must understand how a control on the properties of a function (e.g. it's oscillation or growth at $\infty$) implies a control on the properties of a related object (e.g. the decay of it's derivative). The most analytically sound way to understand these controls is with respect to a {\it norm}, which is essentially a convex measure of the size of a function. Here we introduce commonly occuring norms which appear in the theory of functions which only depend on the measure theoretic aspects of these functions, so that if $\Phi: Y \to X$ is a measure preserving bijection of $X$, then $f$ and $f \circ \Phi$ should have the same norm. Thus we view any two shapes as equivalent if they have the same area. The main features a function has purely from its measure theoretic context is it's height, or typical amplitude, and it's width, where the large majority of it's support is distributed. The norms we give quantify height and width in different ways, often emphasizing one feature over the other. In a particular problem, one picks the norms that emphasizes the right features to understand the problem, often chosen by optimizing over a large family of norms.
 
-The most important family of Lebesgue measurable functions on $\mathbf{R}^n$ is those which are integrable, so
+Another reason to discuss norms in the context of measure theory is that it enlightens us on the sense that the Lebesgue integral is that it is a `completion' of the Riemann integral. We have already seen this principle in the discussion of the metric $d(E,F) = |E \bigtriangleup F|$ which gives the space of Lebesgue measurable sets the structure of a complete metric space, showing that Lebesgue measurable sets, `complete' the Jordan measurable sets in a sense, and even the family of elementary sets. Norms enable us to see this principle in a deeper context, for a norm gives rise to a metric on the family of measurable functions, and the Riemann integrable functions in this metric are dense in this space, so that the Lebesgue functions `fill the holes' with respect to any of the given norms.
+
+The most important family of Lebesgue measurable functions on $\mathbf{R}^n$ is those which are integrable, i.e. such that $\int |f| < \infty$. This condition already places a certain amount of control over the height and width of $f$; the function cannot be too large, except on a small set, and also must have the large majority of it's mass on a small set. The condition $\int |f|^2 < \infty$ also places a certain amount of control over the height and width of a function $f$, but now the height is controlled more tightly than the width, since the portions of the domain where $f$ is large are magnified (squared). More generally, the condition $\int |f|^p < \infty$ gives a certain amount of control over the function $f$, and we define the space $L^p(X)$ to be the measurable functions satisfying this integrability condition. The norm
 %
-\[ \int |f(x)|\ dx < \infty \]
+\[ \| f \|_p = \left( \int |f|^p \right)^{1/p} \]
 %
+measures the degree of control we have over such functions. The important of taking the $p$'th root is useful for the stability of the norm, i.e. so that $\| Af \|_p = |A| \| f \|_p$.
+
+\begin{example}
+  If $f(x) = |x|^{-\alpha}$ on $\mathbf{R}^d$, then integration by radial coordinates gives
+  %
+  \[ \int |f|^p = O(1) \int_0^\infty r^{d-1 - p\alpha} \]
+  %
+  Therefore $f$ is in $L^p(\mathbf{R}^d - B_\varepsilon(0))$ only if $p \alpha > d$, and $f$ is in $L^p(B_1(0))$ if and only if $p \alpha < d$. Notice that for large $\alpha$ $f$ is peaked at the origin, but decays rapidly away from the origin.
+\end{example}
+
+\begin{example}
+  If $f = A \chi_E$, and we set $H = |A|$ and $W = |E|$, then $\| f \|_p = W^{1/p} H$. As $p \to \infty$, the value of $\| f \|_p$ depends more and more on $H$, and less on $W$, and in fact $\lim_{p \to \infty} \| f \|_p = H$. If $f = \sum A_n \chi_{E_n}$, and $|A_m|$ is the largest constant, then as $p$ becomes large, $|A_m|^p$ overwhelms all other terms, so
+  %
+  \[ \| f \|_p = (\sum |E_n| |A_n|^p)^{1/p} \geq (|E_m||A_m|^p(1 + o(1)))^{1/p} = |E_m|^{1/p} |A_m| (1 + o(1)) \]
+  %
+  which implies $\| f \|_p \to |A_m|$ as $p \to \infty$. On the other hand, $\lim_{p \to 0} \| f \|^p_p \to \sum |E_n|$.
+\end{example}
+
+The exploration above shows that as $p \to \infty$, the width of a function is disregarded completely, motivating the definition of the $L^\infty$ norm; Given a measurable $f$, we define $\| f \|_\infty$ to be the smallest number such that $|f| \leq \| f \|_\infty$ almost surely. Similarily, we define the measure of the support of $f$ to be the $L^0$ norm of the function (though it is really the `zeroeth power' of the $L^0$ norm, which means most of the norm properties are lost).
+
+As $p \to \infty$, the $L^p$ norm excludes functions with large peaks, and as $p \to 0$, the $L^p$ norm excludes functions with large tails. In particular, if $\| f \|_{p_0}, \| f \|_{p_1} < \infty$, then for any $p_\theta$ between $p_0$ and $p_1$,
+%
+\[ \| f \chi_{|f| \leq 1} \|_{p_\theta}^{p_\theta} = \int_{|f| \leq 1} |f|^{p_\theta} \leq \int_{|f| \leq 1} |f|^{p_0} < \infty \]
+\[ \| f \chi_{|f| > 1} \|_{p_\theta}^{p_\theta} = \int_{|f| > 1} |f|^{p_\theta} \leq \int_{|f| > 1} |f|^{p_1} < \infty \]
+%
+so, applying the triangle inequality, we conclude that $\| f \|_{p_\theta} < \infty$. Furthermore, the inequalities show that we can split any function with finite $L^{p_\theta}$ norm into the sum of a function with finite $L^{p_0}$ norm and another with finite $L^{p_1}$ norm. In the case where $p_1 = \infty$, then clearly $f \chi_{|f| > 1}$ is bounded if $f$ is bounded. This gives the inclusions
+%
+\[ L^{p_0}(X) \cap L^{p_1}(X) \subset L^{p_\theta}(X) \subset L^{p_0}(X) + L^{p_1}(X) \]
+%
+For all $p_\theta$.
+
 which essentially establishes an overall decay criterion on the function $f$. The value above is known as the {\bf $L^1$ norm of $f$}, and denoted by $\| f \|_1$. An important fact of this value is that if $\lambda$ is any number, then $\| \lambda f \|_1 = |\lambda| \| f \|_1$. This linear homogeneity is important, and motivates us, for $p > 0$, to consider the {\bf $L^p$ norms}
 %
 \[ \| f \|_p = \left( \int |f(x)|^p\ dx \right)^{1/p} \]
@@ -1598,6 +1627,29 @@ A function $f: [a,b] \to \mathbf{R}$ is {\bf absolutely continuous} if for every
 %
 The Cantor function is {\it not} absolutely continuous, since it is constant except on the Cantor set, and we can cover the Cantor set by intervals with total length $(2/3)^n$ for each $n$. Thus it is impossible for the Cantor function to satisfy the fundamental theorem of calculus.
 
+\begin{theorem}
+  If $g \in L^1(\mathbf{R})$, and
+  %
+  \[ f(x) = \int_a^x g(t)\; dt \]
+  %
+  then $f$ is absolutely continuous.
+\end{theorem}
+\begin{proof}
+  Fix $\varepsilon > 0$. We claim that there is $\delta$ such that if $|E| < \delta$, then $\int_E |g| < \varepsilon$. Otherwise there are sets $E_n$ with $|E_{n+1}| \leq |E_n|/3$ and with $\int_{E_n} |g| \geq \varepsilon$. Thus if we define the sets $E_m' = E_m - \bigcup_{n > m} E_n$ then the $E_m'$ and we have $|E_m| \sim |E_m|'$. Since $g$ is integrable, we must have $\sum \int_{E_n'} |g| < \infty$, so we conclude that as $N \to \infty$,
+  %
+  \[ \sum_{n \geq N} \int_{E_n'} |g| \to 0 \]
+  %
+  Yet for any $N$,
+  %
+  \[ \sum_{n \geq N} \int_{E_n'} |g| = \int_{E_N} |g| \geq \varepsilon \]
+  %
+  which is an impossibility. Thus such a $\delta$ exists for every $\varepsilon$, and so if we have disjoint intervals $(a_n,b_n)$ with $\sum (b_n - a_n) < \delta$, then
+  %
+  \[ \sum |f(b_n) - f(a_n)| = \sum \left| \int_{a_n}^{b_n} g(t) \right| \leq \sum \int_{a_n}^{b_n} |g| = \int_{\bigcup (a_n,b_n)} |g| < \varepsilon \]
+  %
+  which shows the function is absolutely continuous.
+\end{proof}
+
 To prove the differentiation theorem, we require a covering estimate not unlike that used to prove the Lebesgue differentiation theorem. We say a collection of balls is a {\bf Vitali covering} of a set $E$ if for every $x \in E$ and every $\eta > 0$, there is a ball $B$ in the cover containing $x$ with $|B| < \eta$. Thus every point is covered by an arbitrary small ball.
 
 \begin{lemma}
@@ -1623,7 +1675,7 @@ To prove the differentiation theorem, we require a covering estimate not unlike 
     \[ \left| E - \bigcup B_i \right| < 2\delta \]
 \end{corollary}
 \begin{proof}
-    Let $E \subset U$, where $U$ is an open set with $|U - E| < \delta$. In the algorithm above, we may consider all balls in the Vitali covering as contained within $U$. But then
+    Let $E \subset U$, where $U$ is an open set with $|U - E| < \delta$. In the algorithm above, we may consider only balls in the Vitali covering as contained within $U$. But then
     %
     \[ \left| E - \bigcup B_i \right| \leq |U| - \sum |B_i| = |U| - \bigcup E_i \leq \delta + |E| - \sum |B_i| \leq 2\delta \]
     %
@@ -1667,6 +1719,15 @@ To prove the differentiation theorem, we require a covering estimate not unlike 
 \begin{proof}
     Since $f$ is absolutely continuous, we can write $f$ as the difference of two continuous increasing functions on $[a,b]$, and this easily implies $f$ is differentiable almost everywhere and is integrable on $[a,b]$. If $g(x) = \int_a^x f'(x)$, then $g$ is absolutely continuous, hence $g - f$ is also absolutely continuous. But we know that $(g - f)' = g' - f' = 0$ almost everywhere, so the last theorem implies that $g$ differs from $f$ by a constant. Since $g(a) = 0$, $g(x) = f(x) - f(a)$. The converse was proved exactly in our understanding of differentiating integrals.
 \end{proof}
+
+We now dwell slightly longer on the properties of absolutely continuous functions, which enables us to generalize other properties of integrals found in the calculus. We begin by noting that it is easy to verify that if $f$ and $g$ are absolutely continuous functions, then $fg$ is also absolutely continuous. We know $f'$, $g'$, and $(fg)'$ exist almost everywhere. But when all three exist simultaneously, the product rule gives $(fg)' = f'g + fg'$. The absolute continuity implies that
+%
+\[ \int_a^b f'g + fg' = \int_a^b (fg)' = f(b)g(b) - f(a)g(a) \]
+%
+Thus one can integrate a pair of absolutely continuous functions by parts.
+
+
+
 
 \section{Differentiability of Jump Functions}
 
@@ -1916,6 +1977,12 @@ Using some Fourier analysis, we can prove that the only smooth curves which make
 %
 \[ \frac{1}{2} \left| \int_\Gamma x\; dy - y\; dx \right| = \frac{1}{2} \left| \int_a^b x(t) y'(t) - y(t) x'(t) \right| \]
 %
+We then take a Fourier series in $x$ and $y$.
+
+\begin{theorem}
+  The only curves $\Gamma$ such that $A = \pi (L/2)^2$ are circles.
+\end{theorem}
+\begin{proof}
 By normalizing, we may assume $z$ is an arcline parameterization, and $\Gamma$ has length $2\pi$, so $a = 0$, and $b = 2 \pi$. If $x(t) = \sum a_n e(t)$ and $y(t) = \sum b_n e(t)$, then $x'(t) \sim \sum i n a_n e^{n i t}$ and $y(t) \sim \sum i n b_n e^{it}$. Parsevel's equality implies
 %
 \[ \int_0^{2\pi} x(t) y'(t) - y(t) x'(t) = 2 \pi i \sum n (b_n \overline{a_n} - a_n \overline{b_n}) \]
@@ -1929,6 +1996,7 @@ On the other hand, the length constraint implies that, since $|z'(t)| = 1$,
 \[ 1 = \frac{1}{2\pi} \int_0^{2\pi} x'(t)^2 + y'(t)^2 = \sum |n|^2(|a_n|^2 + |b_n|^2) \]
 %
 And so we obtain the general area bound $A \leq 1$ because $|n| \leq |n|^2$. If $A = 1$, we cannot have $|n| < |n|^2$ for any nonzero $a_n$ or $b_n$. Thus the Fourier support of $x$ and $y$ is precisely $\{ -1, 0, 1 \}$. Since $x$ is real valued, $a_1 = \overline{a_{-1}} = a$, $b_1 = \overline{b_{-1}}$. We thus have $2(|a_1|^2 + |b_1|^2) = 1$, and since we must have $a$ a scalar multiple of $b$ so the Cauchy Schwarz inequality application becomes an equality, we must have $|a_1| = |b_1| = 1/2$. If $a_1 = e^{i\alpha}/2$ and $b_1 = e^{i\beta}/2$, the fact that $1 = 2|a_1\overline{b_1} - \overline{a_1}b_1|$ implies $|\sin(\alpha - \beta)| = 1$, hence $\alpha - \beta = k \pi /2$, where $k$ is an odd integer. Thus $x(s) = \cos(\alpha + s)$, and $y(s) = \cos(\beta + s)$. This completes the proof.
+\end{proof}
 
 \chapter{Measure Extension}
 
