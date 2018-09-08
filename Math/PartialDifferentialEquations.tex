@@ -159,7 +159,7 @@ So the initial values $g$ propogate throughout the equation at a velocity $a$, a
 
 \section{The Laplacian and Fundamental Solutions}
 
-Provided a partial differential equation is linear, then a linear combination of solutions to the partial differential equation is also a solution to the partial differential equation. A good strategy to finding {\it all} solutions to PDEs of this form is to find a set of explicit solutions to the PDE, and then to find arbitrary solutions by taking arbitrary linear combinations of explicit solutions. We begin by analyzing Laplace's equation $\Delta u = 0$. It will help to note that the operator is invariant under rotations.
+Provided a partial differential equation is linear, then a linear combination of solutions to the partial differential equation is also a solution to the partial differential equation. A good strategy to finding {\it all} solutions to PDEs of this form is to find a set of explicit solutions to the PDE, and then to find arbitrary solutions by taking arbitrary linear combinations of explicit solutions. We begin by analyzing Laplace's equation $\Delta u = 0$, or more generally, Poisson's equation $\Delta u = f$. It will help to note that the Laplacian is invariant under translations.
 
 \begin{theorem}
     $(\Delta u) \circ T = \Delta (u \circ T)$ for any rotation $T$.
@@ -185,6 +185,50 @@ Provided a partial differential equation is linear, then a linear combination of
     %
     The traces of two similar matrices are equal, so the traces of $H(u \circ T)(x)$ and $Hu(Tx)$ are equal, so $\Delta (u \circ T)(x) = (\Delta u)(Tx)$.
 \end{proof}
+
+We now illustrate how to solve Poisson's equation using the distributional method of fundamental solutions. Given the equation $\Delta u = f$, we find a tempered distribution $\Phi$ whose Laplacian $\Delta \Phi$ is the Dirac delta function $\delta$. Then for any Schwarz function $f$, the Schwarz function $\Phi * f$ satisfies $\Delta(\Phi * f) = (\Delta \Phi) * f = \delta * f = f$, so via convolution we can find a solution to virtually any smooth Poisson's equation we require. A function $\Phi$ for such an equation is known as a {\bf fundamental solution}.
+
+To determine if a fundamental solution exists, we can determine it's structure by using the Fourier transform, since $\Phi$ is tempered. This gives
+%
+\[ - 4 \pi^2 |\xi|^2 \widehat{\Phi} = (\Delta \Phi)^\ft = \delta^\ft = 1 \]
+%
+so we can divide both hand sides of the equations to conclude
+%
+\[ \widehat{\Phi}(\xi) = \frac{-1}{4 \pi^2 |\xi|^2} \]
+%
+The right hand side is bounded away from the origin, and locally integrable for $d \geq 3$, so is actually a tempered distribution, and we find by taking the inverse Fourier transform that
+%
+\[ \Phi(x) = \frac{- \Gamma(d/2 - 1)}{4 \pi^{d/2} |x|^{d - 2}} \]
+%
+Notice that the fundamental solution is radially symmetric, reflecting the fact that the Laplacian involves dispersion from a point. Since we have the inequality
+%
+\[ |\Phi(\phi)| \lesssim \int \frac{\phi(x)}{|x|^{d-2}} \lesssim \| \phi \|_\infty + \| x^3 \phi \|_\infty \]
+%
+the distribution $\Phi$ extends continuously to the Banach space of all measurable functions for which $f, x^3 f \in L^\infty(\mathbf{R})$. In particular, we can define
+%
+\[ (\Phi * f)(x) = \Phi(T_x f^*) \]
+%
+where $f^*(y) = f(-y)$. We find
+%
+\[ \int \Phi(T_x f^*) \frac{\phi(x+h) - \phi(x)}{h}\; dx = \int \frac{\Phi(T_{x-h} f^*) - \Phi(T_x f^*)}{h} \phi(x)\; dx \]
+%
+TODO: Extend this to show that the convolution satisfies Poisson's equation when $f$ is in a more general space.
+
+\begin{example}
+    Suppose $\Lambda$ is a tempered distribution with $\Delta \Lambda = 0$. Then
+    %
+    \[ 0 = \widehat{\Delta \Lambda}(\xi) = - 4 \pi^2 |\xi|^2 \widehat{\Lambda}(\xi) \]
+    %
+    Thus $\widehat{\Lambda}$ has support at the origin. But if $\widehat{\Lambda} = \sum \lambda_\alpha D^\alpha$, then combined with the fact that
+    %
+    \[ (D^\alpha f^\vee)(0) = ((-2 \pi i x)^\alpha f)^\vee(0) = \int (- 2 \pi i x)^\alpha f(x)\; d\xi \]
+    %
+    so $(D^\alpha)^\vee = (- 2 \pi i \xi)^\alpha$, so
+    %
+    \[ \Lambda(x) = \sum \lambda_\alpha (D^\alpha)^\vee(x) = \sum \lambda_\alpha (- 2 \pi i x)^\alpha \]
+    %
+    Thus the only harmonic tempered distributions are the polynomials.
+\end{example}
 
 Since $\Delta u = 0$ has rotational symmetry, it makes sense to begin by finding solutions to Laplace's equation which are rotationally symmetric. These will form our explicit solutions we can put into superposition to construct other solutions. So suppose we have a rotationally symmetric function $u(x) = f(r)$, where $r = |x|$. In this case, we find
 %
