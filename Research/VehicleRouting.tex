@@ -7,6 +7,8 @@
 \theoremstyle{plain}
 \newtheorem{lemma}{Lemma}
 \newtheorem{prop}{Proposition}
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}[theorem]{Proposition}
 \newtheorem*{example}{Example}
 \newtheorem*{fact}{Fact}
 \newtheorem*{corollary}{Corollary}
@@ -14,9 +16,8 @@
 \usepackage{algorithm}
 \usepackage[noend]{algpseudocode}
 
-\theoremstyle{plain}
-\newtheorem{theorem}{Theorem}
-\newtheorem{proposition}[theorem]{Proposition}
+\newcommand{\VRPsplit}[1]{V^*_{\text{split}}( #1 )}
+\newcommand{\VRPunsplit}[1]{V^*_{\text{unsplit}}( #1 )}
 
 \title{Vehicle Routing}
 \author{Jacob Denson}
@@ -28,53 +29,71 @@
 
 \maketitle
 
-The travelling salesman problem asks to find the shortest cycle in a connected graph passing through each vertex. A practical formulation of this problem is that a door to door deliveryman is attempting to deliver packages to each house in a neighbourhood, and wants to travel between houses as efficiently as possible. The {\it vehicle routing problem} adds an additional challenge to the scenario: the deliveryman can only carry a limited supply of goods at any once time, and must periodically return to a central depot to resupply. The deliveryman still wants to deliver goods as efficiently as possible, but must now simultaneously cluster potential customers together while optimizing routing within these clusters to ensure that time spent refueling is not wasted. As one of the most famous NP complete problems, most work on the travelling salesman problem is spent deriving heuristics which give approximation guarantees on solutions. In this work, we collect research on heuristics obtained for the vehicle routing problem.
+\tableofcontents
 
-In the vehicle routing problem, we take a complete graph $G$, with vertices $V \cup \{ B \}$, where $B$ is a distinguished {\it depot node}. We are also given a metric $d$ between the vertices in the graph, as well as a capacity $C$. Each node on the graph, except for the depot node, has a fixed demand $D_v$. We shall let $r_v$ denote $d(B,v)$, the {\it radius} from $B$ to $v$. To begin with, we consider two variants of the vehicle routing problem. In the {\it split demand} problem, a feasible solution to this problem consists of a collection of cycles $T_1, \dots, T_n$, each cycle containing $B$, together with quantities $D^i_v$ for each vertex $v$ on the tour $T_i$, such that
+\newpage
+
+The travelling salesman problem asks to find the shortest cycle in a connected graph passing through each vertex. A practical formulation of this problem is that a door to door deliveryman is attempting to deliver packages to each house in a neighbourhood, and wants to travel between houses as efficiently as possible. The {\it vehicle routing problem} adds an additional challenge to the scenario: the deliveryman can only carry a limited supply of goods at any once time, and must periodically return to a central depot to resupply. The deliveryman still wants to deliver goods as efficiently as possible, but must now simultaneously cluster potential customers together while optimizing routing within these clusters to ensure that time spent refueling is not wasted. As one of the most famous NP complete problems, most work on the travelling salesman problem is spent deriving heuristics which give approximation guarantees on solutions. In this work, we collect work on heuristics obtained for finding efficient solutions to the vehicle routing problem. We begin by introducing some common notation to discuss the problem:
 %
 \begin{itemize}
-    \item Each tour remains within the capacity of the delivery vehicle, so that $\sum_v D^i_v \leq C$ holds for each tour $i$.
+    \item Our work will be done on a complete graph $G$, with vertices $V \cup \{ O \}$, where $O$ is a distinguished {\it depot node}, where deliverymen resupply.
 
-    \item Each vertex is completely supplied with the capacity which it demands, so that $\sum_i D^i_v = D_v$.
+    \item The graph has a metric $d: G \times G \to \mathbf{R}^+$ between the vertices in the graph. Normally, $G$ does not begin as a complete graph, but rather only a connected one, but it can be given a metric induced by the shortest path between two points, and then artificially made into a complete graph. We additionally let $r_v := d(O,v)$ denote the {\it radius} from $O$ to $v$.
+
+    \item The deliverymen have a fixed capacity $C$, and each node, except for the depot node $O$, has a quantity $D_v$ known as the demand of the vertex.
 \end{itemize}
 %
-In the {\it unsplit demand} version of the problem, we are unable to split demand satisfaction of a single node between different tours; each node must be completely supplied by a single vertex. In this case, we can assume a feasible solution is a collection of cycles $T_1, \dots, T_n$ forming a disjoint cover of the vertices $V$, intersecting only at $B$, such that
+To begin with, we consider two variants of the vehicle routing problem, depending on whether we can make one or more trips to each customer vertex. In the {\it split demand} problem, a feasible solution to this problem consists of a collection of cycles $T_1, \dots, T_n$, each cycle containing $O$, together with quantities $D^i_v$ for each vertex $v$ on the tour $T_i$, such that
 %
 \begin{itemize}
-    \item Each tour remains within capacity, so that $\sum_{v \in T_i} D_v \leq C$ holds for each tour $T_i$. Of course, in this version of the problem we must therefore assume $D_v \leq C$ for each vertex $v$.
+    \item Each tour remains within capacity of the delivery vehicle, so for each tour $T_i$, the constraint $\sum_v D^i_v \leq C$ is satisfied.
+
+    \item Each vertex is completely supplied with the capacity demanded, so for each vertex $v$, the constraint $\sum_i D^i_v = D_v$ holds.
 \end{itemize}
 %
-The goal of both the split and unsplit versions of vehicle routing is to find a feasible solution minimizing the combined total length of all cycles.
+In the {\it unsplit demand} version of the problem, we are unable to split demand satisfaction of a single node between different tours; each node must be completely supplied by a single tour. In this case, a feasible solution consists of a collection of cycles $T_1, \dots, T_n$ extending from $O$, forming a disjoint cover of the vertices $V$, such that
+%
+\begin{itemize}
+    \item Each tour remains within capacity, so $\sum_{v \in T_i} D_v \leq C$ holds for each tour $T_i$. Of course, in this version of the problem we must assume $D_v \leq C$ for each vertex $v$.
+\end{itemize}
+%
+The goal of both the split and unsplit versions of vehicle routing is to find a feasible solution minimizing the combined total length of all cycles covering the vertices.
 
-\part{Basic Results}
+\section{Basic Results}
 
-\section{Lower Bounds to Vehicle Routing}
+\subsection{Lower Bounds to Vehicle Routing}
 
-In our introduction to vehicle routing, we emphasized how vehicle routing is an extension of the travelling salesman problem. The additional problem is to partition the graph into efficient, bounded demand clusters of nodes to travel through at once. Indeed, if the capacity of the salesman is greater than the sum of the demands of all vertices, than an optimal solution to the travelling salesman problem will give an optimal solution to the vehicle routing problem. Here we introduce strategies showing that feasible solutions to the travelling salesman problem can be adapted using certain refueling strategies to yield efficient approximations to vehicle routing. Given a vehicle routing instance $G$, define $T^*(G)$ to be the optimal length of a travelling salesman solution on the graph $G$, and let $V^*(G)$ denote the optimal length of a vehicle routing solution. The bounds below are established for the {\it split} version of the vehicle routing problem; since any solution to the unsplit problem is also a solution to the split version, the split optimal value is at least as optimal as the unsplit optimal value.
+Vehicle routing is essentially a travelling salesman type problem, with the additional problem of partitioning a graph into small, efficiently `TSP-izable' clusters of nodes to travel through at once. If the capacity of the salesman is greater than the sum of the demands of all vertices, than an optimal solution to the travelling salesman problem will give an optimal solution to the vehicle routing problem. The first major approximation algorithm for vehicle routing was given by Haimovich and Rinnooy Kan, and is obtained by using an efficient travelling salesman solution to partition the graph into clusters. Given a vehicle routing instance $G$, let $T^*(G)$ denote the optimal length of a travelling salesman solution on the graph $G$, and let $\VRPsplit{G}$ and $\VRPunsplit{G}$ denote the optimal length of feasible solutions to the split and unsplit vehicle routing solution. Since any solution to the unsplit VRP problem is also a solution to the split VRP problem, we find $\VRPsplit{G} \leq \VRPunsplit{G}$. Similarily, any solution to the split VRP problem is also a feasible solution to the travelling salesman problem. Thus we conclude that
 
-\begin{proposition} $T^*(G) \leq V^*(G)$
+\begin{proposition}
+$T^*(G) \leq \VRPsplit{G} \leq \VRPunsplit{G}$
+\end{proposition}
+
+This can be interpreted as saying that we can introduce an optimal TSP solution to our problem to a VRP solution at a cost of at most one optimal solution to the VRP problem. If we have an $\alpha$ approximation to the TSP solution, this costs at most $\alpha$ times the optimal solution to the VRP problem. The next lower bound considers the cost from travelling back and forth between the root vertex.
+
+\begin{proposition}
+%
+\[ \frac{2}{C} \sum_v D_v r_v \leq \VRPsplit{G} \]
 \end{proposition}
 \begin{proof}
-    The optimal solution of the vehicle routing is essentially just a feasible solution to the travelling salesman problem, because we can concatenate cycles to obtain a tour.
-\end{proof}
-
-\begin{proposition}$\frac{2}{C} \sum_v D_v r_v \leq V^*$
-\end{proposition}
-\begin{proof}
-    We first note that for any vertex $v$ on the tour $T_i$, the tour $T_i$ consists of two paths from the depot to $v$, and hence the tour is longer than twice the distance from the depot to $v$. Thus $T^*(T_i) \geq 2 \max_{v \in T_i} r_v$. What's more, the values $D^i_v$, once normalized by $\sum D^i_v$, constitute a probability distribution over the vertices in tour $i$, and employing the general fact that $\max_{v \in T_i} r_v \geq \mathbf{E}[r_X]$ for any random variable $X$ distributed over the vertices in tour $i$, we conclude that
+    We first note that for any vertex $v$ on the tour $T_i$, the tour $T_i$ consists of two paths from the depot to $v$, and hence the tour at least as long as twice the distance $r_v$ from the depot to $v$. Thus $T^*(T_i) \geq 2 \max_{v \in T_i} r_v$. What's more, the values $D^i_v$, once normalized by $\sum D^i_v$, constitute a probability distribution over the vertices in tour $i$, and employing the general fact that $\max_{v \in T_i} r_v \geq \mathbf{E}[r_X]$ for any random variable $X$ distributed over the vertices in tour $i$, we conclude that
     %
     \[ T^*(T_i) \geq 2 \max_{v \in V_i} r_v \geq 2 \frac{\sum_v D^i_v r_v}{\sum_v D^i_v} \geq 2 \frac{\sum_v D^i_v r_v}{C} \]
     %
-    where we have used the fact that $\sum_v D^i_v \leq C$. But now $V^*(G) = \sum T^*(T_i)$, and so we therefore conclude that
+    where we have used the fact that $\sum_v D^i_v \leq C$. But now $\VRPsplit{G} = \sum T^*(T_i)$, and so we therefore conclude that
     %
-    \[ V^*(G) = \sum_i T^*(T_i) \geq \sum_i 2 \frac{\sum_v D^i_v r_v}{C} = \frac{2}{C} \sum_v \left( \sum_i D^i_v \right) r_v = \frac{2}{C} \sum_v D_v r_v \]
+    \[ \VRPsplit{G} = \sum_i T^*(T_i) \geq \sum_i 2 \frac{\sum_v D^i_v r_v}{C} = \frac{2}{C} \sum_v \left( \sum_i D^i_v \right) r_v = \frac{2}{C} \sum_v D_v r_v \]
     %
     This essentially says that the average radius of demands, weighted by the demands at each node with respect to the capacity, lower bounds the distance a routing problem must travel.
 \end{proof}
 
-This bound shows that, roughly, the expected radii of a random vertex in the graph, weighted by demand, lower bounds an optimum vehicle routing solution. The result implies that if we take a particular travelling salesman solution, and we are able to randomly refuel at a rate weighted by demand, then the expected resulting distance added by refueling along the cycle is bounded by the optimal vehicle routing solution. For brevity, we let $\text{LB} = \frac{2}{C} \sum_v D_v r_v$ stand for the left hand side of the inequality above. It is the canonical bound used to obtain approximations to the vehicle routing problem. However, one disadvantage with how this bound is often employed is that it isolates the {\it refill cost} of a particular solution to the vehicle routing problem, while discarding the {\it routing cost} of travelling between different nodes. This is why the bound works particularly well with vehicle routing approximations augmenting travelling salesman solutions, but is not sufficient to obtain better approximations in other scenarios.
+This bound shows that, roughly, the expected radii of a random vertex in the graph, weighted by demand, lower bounds an optimum vehicle routing solution. The result implies that if we take a particular travelling salesman solution, and we are able to randomly refuel at a rate weighted by demand, then the expected resulting distance added by refueling along the cycle is bounded by the optimal vehicle routing solution. For brevity, we let
+%
+\[ \text{LB} = \frac{2}{C} \sum_v D_v r_v \]
+%
+stand for the left hand side of the inequality above. It is the canonical bound used to obtain approximations to the vehicle routing problem. However, one disadvantage with how this bound is often employed is that it isolates the {\it refill cost} of a particular solution to the vehicle routing problem, while discarding the {\it routing cost} of travelling between different nodes. This is why the bound works particularly well with vehicle routing approximations augmenting travelling salesman solutions, but is not sufficient to obtain better approximations in other scenarios, which must interpolate between the refill cost bound and the routing cost bound.
 
-\section{Random Refill Approximations}
+\subsection{Random Refill Approximations}
 
 As we mentioned, the bound above shows that an effective random refill policy results in a bounded approximation to the vehicle routing problem. We detail one such algorithm for the split vehicle routing problem below, assuming the existence of a polynomial time $1 + \alpha$ approximation to the travelling salesman problem.
 
@@ -94,7 +113,7 @@ As we mentioned, the bound above shows that an effective random refill policy re
 \EndWhile
 \State Return to $B$.
 \end{algorithmic}
-\caption{Augmenting a TSP to Obtain a Routing Approximation.}
+\caption{Augmenting a TSP Solution to Obtain a Routing Approximation.}
 \label{alg:TSPAugmentationSplit}
 \end{algorithm}
 
@@ -106,19 +125,19 @@ The event that the node $v_i$ is a breakpoint is the same as the event that ther
 %
 \[ (1 + \alpha) T^*(G) + \frac{2}{C} \sum_v D_v r_v = (1 + \alpha) T^*(G) + \text{LB} \leq (2 + \alpha) V^*(G) \]
 %
-The current standard approximation algorithm for the travelling salesman problem is a $3/2$ approximation algorithm. Thus the random refill policy gives a $7/2$ approximation algorithm for the vehicle routing problem. If we work over graphs in Euclidean space, or more generally, we work over graphs with a bounded genus, then we have a polynomial time approximation scheme giving $1 + \varepsilon$ approximation algorithms for each value of $\varepsilon$. This implies that there are $2 + \varepsilon$ approximation algorithms for vehicle routing on graphs of bounded genus.
+The current standard approximation algorithm for the general travelling salesman problem is a $3/2$ approximation. Thus the random refill policy gives a $7/2$ approximation algorithm for the vehicle routing problem. If we work over graphs in Euclidean space, or more generally, we work over graphs with a bounded genus, then we have a polynomial time approximation scheme giving $1 + \varepsilon$ approximation algorithms for each value of $\varepsilon$. This implies that there are $2 + \varepsilon$ approximation algorithms for vehicle routing on graphs of bounded genus.
 
-The random refill technique is certainly unnatural, especially when compared to just refilling to the maximum value each time. However, the random refill technique is useful for avoiding being `stuck' in certain inefficient scenarios, and the technique is provably better: Refilling to maximum does result in an approximation algorithm with a constant approximation guarantee, but there are examples of graphs in which the full refuel strategy is unable to reach the $2 + \alpha$ constant guaranteed by the random refill value (The constant value approximation bound to non stochastic refill policies is left as an exercise in  Gupta's {\it Approximation Algorithms for VRP with Stochastic Demands}, which I have yet to do).
+The random refill technique certainly `seems' unnatural, especially when compared to just refilling to the maximum value each time. However, the random refill technique is useful for avoiding being `stuck' in certain inefficient artifically scenarios, and enables us to weight the vertices by the $\text{LB}$ bound. Refilling to maximum does result in an approximation algorithm with a constant approximation guarantee, but there are examples of graphs in which the full refuel strategy is unable to reach the $2 + \alpha$ constant guaranteed by the random refill value (The constant value approximation bound to non stochastic refill policies is left as an exercise in  Gupta's {\it Approximation Algorithms for VRP with Stochastic Demands}, which I have yet to do).
 
-\section{Simulating Split Routing in Unsplit Scenarios}
+\subsection{Simulating Split Routing in Unsplit Scenarios}
 
-We can obtain an approximation algorithm for the unsplit version of vehicle routing by simulating the TSP approximation for the split version of the problem. We proceed as in the split case, until we end up with a vertex $v$ with $D_v > C'$. In this case, we return to the depot, fill up our supply to $D_v$, return to $v$, supply $v$ completely, then return back to the depot, fill up to $C - (D_v - C')$ capacity, and continue with the TSP cycle. The reason for this is that the algorithm will then follow the route provided by the split version of the algorithm, except that whenever the original algorithm goes back and forth from the depot, the split version of the algorithm goes back and forth twice. The expected length of the route will be
+It might seem more simple to obtain an unsplit approximation algorithm for vehicle routing, because there are `less decisions' to be made: we need only partition vertices up into efficiently TSP-able routes, rather than having the additional problem of allocating demand to multiple cycles passing through the vertex. On the contrary, it seems the additional `discreteness' introduced to the problem in the unsplit problem makes finding efficient feasible solutions more difficult. Nonetheless, there is a simple additional trick one can add to the TSP augmentation solution to obtain a feasible unsplit solution to the TSP approximation. We proceed as in the split case, until we end up with a vertex $v$ with $D_v > C'$. In this case, we return to the depot, fill up our supply to $D_v$, return to $v$, supply $v$ completely, then return back to the depot, fill up to $C - (D_v - C')$ capacity, and continue with the TSP cycle. The reason for this is that the algorithm will then follow the route provided by the split version of the algorithm, except that whenever the original algorithm goes back and forth from the depot, the split version of the algorithm goes back and forth twice. The expected length of the route will be
 %
 \[ (1 + \alpha) T^*(G) + (4/C) \sum_v d_v r_v = (1 + \alpha) T^*(G) + 2 \text{LB} \]
 %
-which is bounded by $3 + \alpha$ times the length of the optimal solution to the {\it split} solution to the algorithm, and the split solution will always be shorter than the optimal solution to the unsplit algorithm\footnote{It might be a profitable question to ask when there is a measurable difference between the performance of split and unsplit optimal solutions on graphs, in which case we can bound the unsplit optimal algorithm performance even better, as well as understand what features of a graph limit the capabilities of the unsplit graph algorithm to perform well. I have yet to see an analysis of unsplit vehicle routing which does not just bound the output of an algorithm by the split demand cost.}.
+which is bounded by $3 + \alpha$ times the length of the optimal solution $\VRPsplit{G}$ to the {\it split} solution to the algorithm on the graph $G$, and the split solution will always be shorter than the optimal solution to the unsplit algorithm\footnote{It might be a profitable question to ask when there is a quantifiable difference between the performance of split and unsplit optimal solutions on graphs, in which case we can bound the unsplit optimal algorithm performance even better, as well as understand what features of a graph limit the capabilities of the unsplit graph algorithm to perform well. I have yet to see an analysis of unsplit vehicle routing which does not just bound the output of an algorithm by the split demand cost.}.
 
-\section{NEW: Shortcutting in Unsplit Routing}
+\subsection{NEW: Shortcutting in Unsplit Routing}
 
 The refill approximations to unsplit vehicle routing break down their approximations into two factors, the {\it refill cost}, which is obtained by returning to the vehicle depot, and the {\it TSP cost}. One idea to improving these approximation algorithms is to optimize the TSP route by skipping certain parts of the TSP journey when we travel to the depot to refuel. In the split case, we are unlikely to decrease the TSP cost without coming up with a completely new algorithm for VRP, because with random refills there is a zero percent chance of having to refuel from a vertex which is completely satisfied, so we must travel between the TSP tour completely to refuel all vertices. However, in the unsplit algorithm we are able to {\it shortcut} the parts of the TSP, because, when we travel back to the depot to refuel a second time, we have completely satisfied the current vertex, and so we have no need to return to it, so we may proceed directly to the next vertex, shortcutting the TSP path.
 
@@ -193,15 +212,15 @@ TODO: Describe method of directed arrows to strategize shortcutting the path, an
 %
 %so we obtain slightly better results, depending on how large the capacity $C$ is. This analysis does not work if we randomize starting demands instead, because then the edges of the graph have non uniform probabilities of being skipped, depending on the demand of their starting vertex.
 
-\section{Reserving Refills in Small Demand Unsplit Vehicle Routing}
+\subsection{NEW: Reserving Refills in Small Demand Unsplit Routing}
 
 TODO: Talk about reserve tank to reduce unsplit refill distances to two laps rather than 4.
 
-\part{Prize Collecting Vehicle Routing}
+\section{Prize Collecting Vehicle Routing}
 
 In most combinatorial optimization problems, a feasible solution must accomplish the entire task thoroughly. In a feasible solution to the travelling salesman problem, we must visit {\it all} the vertices of the graph. But in a real life application of the travelling salesman problem, we might reject possible sales opportunities that are outlandishly far from our start point, unless these opportunities are significantly valuable. {\it Prize collection} versions of combinatorial optimization problems place values on subtasks of a particular problem, and ask to find an optimal solution, given that we need only solve a certain number of the subtasks of a problem. In a similar vein, {\it $K$-subtask} problems ask us to find the optimal solution to a task, given that we need only complete $K$ subtasks. Certain techniques have been developed to reduce the $K$-subtask version of the travelling salesman problem to the prize collecting version. Good approximations for the prize collecting version of the vehicle routing problem have been developed, and one project we plan to work on this summer is to generalize the $K$-subtask prize collecting reduction used in travelling salesman problem to yield a good approximation to the $K$-subtask vehicle routing problem. We begin by detailing the prize collecting travelling salesman problem reduction which is likely to yield good results in the vehicle routing arena.
 
-\section{$K$ Minimal Spanning Tree}
+\subsection{$K$ Minimal Spanning Tree}
 
 In the $K$ minimal spanning tree problem, we are given a root node $r$, where we have some cost function $d$ on the edges. The goal is to find a minimal edge set in the graph which connects the root to at least $K$ other edges. We denote the optimum value of this problem by $\text{OPT}_K$. We begin by describing a basic linear program reduction. Let $X_e \in \{ 0, 1 \}$ be a variable denoting whether we choose an edge $e$, and $Z_v \in \{ 0, 1 \}$ describe whether $v$ is connected to the root note. We can obtain an easy linear program relaxation by letting $X_e$ denote choosing the edge $e$, and $Z_v$ denote not connecting the vertex $v$ to the root. The linear program is then to minimize $\sum d_eX_e$, such that for each vertex $v$, and for each subset $S$ of edges containing $v$ but not containing $r$, $\sum_{e \in \delta(S)} X_e + Z_v \geq 1$, and also $\sum Z_v \leq n - k$. Unfortunately, this approximation algorithm has a poor integrality gap.
 
@@ -297,7 +316,7 @@ and therefore
 %
 this completes the analysis of the algorithm.
 
-\section{Prize Collecting Steiner Tree}
+\subsection{Prize Collecting Steiner Tree}
 
 In order to obtain the integrality bound algorithm above, we have to look into the prize collecting Steiner tree problem in more detail. In general, the prize collecting Steiner tree problem assigns penalties $\pi$ to each vertex not covered by the Steiner tree, in addition to the cost function $c$ on edges. The problem then tries to minimize $c(E) + \pi(V)$, where $E$ is a tree from a fixed root $r$, and $V$ are the vertices not covered by $E$.
 
@@ -351,17 +370,17 @@ Combining these two points, we find that
 %
 and this gives the inequality required in our analysis of $K$ minimum spanning trees, while also giving us a 2 approximation for the prize collecting Steiner tree problem.
 
-\section{Prize Collecting Travelling Salesman}
+\subsection{Prize Collecting Travelling Salesman}
 
 The analysis of the $K$ travelling salesman and its relation to prize collecting travelling salesman is essentially the same as with the minimum spanning tree problem. The linear program for $K$ travelling salesman is to minimize $\sum c_eX_e$ subject to the constraints that $\sum_{e \in \delta(S)} X_e + 2 Z_v \geq 2$ for all sets $S$ with $v \in S$, and $\sum_v Z_v \leq n - K$. The corresponding Lagragian problem is to minimize $\sum c_eX_e + \lambda (\sum Z_v - (n-K))$. We utilize the same notation as for MST, using $\text{OPT}_K$, $\text{OPT}_K(\lambda)$.
 
 TODO: Write more about prize collecting travelling salesman.
 
-\section{Prize Collecting Vehicle Routing Problem}
+\subsection{Prize Collecting Vehicle Routing Problem}
 
 Consider a $1 + \alpha$ approximation algorithm for $K$-MST. For instance, Arora's {\it A $2 + \varepsilon$ approximation algorithm for the $K$-MST problem} introduces a polynomial time computable heuristic with $\alpha = 1 + \varepsilon$. Given a particular instance of vehicle routing, define $d_{vw} = d(v,w) + \frac{d_vr_v + d_wr_w}{C} + d(v,w)$. This new metric now takes into account {\it both} the travelling salesman cost of an algorithm, and the refill cost of the algorithm. Indeed, a given travelling salesman tour using the metric gives rise to a vehicle routing solution whose expected cost using the random refill strategy. In fact, this metric should guarantee at least as good an approximation as any other vehicle routing strategy augmenting the travelling salesman solution, because all the other solutions are feasible in this solution! Thus we just need to explore which travelling salesman solutions are optimal with respect to this metric.
 
-\part{Metric Augmentation to Improve Vehicle Routing Approximations}
+\section{Metric Augmentation to Improve Vehicle Routing Approximations}
 
 %\begin{multicols}{2}
 
@@ -383,7 +402,7 @@ Currently, our knowledge of approximations for variants of the minimum spanning 
 
 What remains is to construct a linear program which can find the appropriate preflows, which is fairly simple, given that flow problems have proven particularly amenable to LP solutions.
 
-\section{A Prize-Collecting Vehicle Routing LP}
+\subsection{A Prize-Collecting Vehicle Routing LP}
 
 We begin with an analysis of the most basic `subset' variant of vehicle routing, the prize collecting vehicle routing problem. In this problem, we only need to find an optimum vehicle routing tour over a subset of vertices in the graph. However, for each vertex $v$ our optimum vehicle routing tour does not cover, we are given a penalty $\pi_v \geq 0$, which encourages us to at least cover efficiently covered vertices. If a given vehicle routing tour $T$ satisfies the vertices $W \subset V$, we assign it a value $c(T) + \pi(V - W)$, and we attempt to find a vehicle routing tour minimizing this value. Since we intend to augment a travelling salesman tour with the random refill strategy, we design an LP which discourages choosing vertex subsets to cover with a high refill cost.
 
@@ -472,7 +491,7 @@ Before we finish our discussion of prize collection, we note that the unsplit de
 
 %NOTE: WE DIDN'T USE THE BIDIRECTED METRIC STRATEGY, BUT IT MIGHT DISCOURAGE UNSPLIT TOURS FROM TAKING THE SAME NODE TWICE. I DON'T KNOW WHETHER IT HAS A GOOD INTEGRALITY GAP FOR SPLIT TOURS.
 
-\section{A $K$-VRP Approximation}
+\subsection{A $K$-VRP Approximation}
 
 To summarize, in terms of uniform Lagrangian penalties $\lambda$ in place of the variable $\pi$, we can find a VRP solution $T$ covering the vertices $W$ such that $c(T) + 3 \pi(W^c) \lambda \leq 3 \text{OPT}_{\text{VRP}}(\lambda)$, where $\text{OPT}_{\text{VRP}}(\lambda)$ denotes the value of the optimal prize collecting steiner tree with uniform penalties $\lambda$. Here we employ the `standard' technique of Lagrangifying a `$K$-subset problem' which asks to find the cheapest VRP solution satisfying exactly $K$ nodes. This has been employed most notably in the $K$-MST problem, where it yields a $5$ approximation \cite{MSTLPApprox}. Our ideas are essentially the same, but included in full for completeness. The only new idea is the way we graft two VRP solutions together to obtain an exact $K$ VRP solution, which we can do more efficiently than in the $K$ MST problem, leading to a slightly improving approximation factor increase.
 
@@ -563,7 +582,7 @@ approximation to $K$ VRP. Proceeding along the same as with the split case, we c
 %
 approximation to unsplit $K$ VRP.
 
-\section{Orienteering}
+\subsection{Orienteering}
 
 s
 

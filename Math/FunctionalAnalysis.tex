@@ -932,6 +932,74 @@ In Linear Algebra, we know we may diagonalize any symmetric matrix. Here we appl
 
 
 
+\chapter{Vector Valued Integration}
+
+Ubiquitous to analysis is the integral, defined to be $\int f(x)\; dx$, defined to be an average of the infinitisimal values of the function $f$ across a certain domain. In this context, $f$ is almost always real or complex valued. But there are many spaces in which an average can be taken. Indeed, in order to define the average of a set of values $a_1, \dots, a_N$, given by
+%
+\[ \frac{a_1 + \dots + a_N}{N} \]
+%
+we need only that we can add the $a_n$, and multiply them by a scalar. Thus the natural place to generalize the integration of functions is to those which take their values in a topological vector space. In this chapter we analyze such a theory.
+
+The weakest definition of the integral exploits the fact that the integral is linear. Because integration is the limit of finite sums, and linear functions are interchangable with summation, for any continuous linear operator $\Lambda: X \to Y$, and function $f: \Omega \to X$, we ought to have
+%
+\[ \Lambda \left( \int_\Omega f \right) = \int_\Omega (\Lambda \circ f) \]
+%
+In particular, if $\Lambda$ is a linear functional, the right hand side is just a scalar-valued function, and we know how to integrate those. In fact, we can {\it define} the {\bf weak integral} $\int_\Omega f$ such that this equation holds for any continuous linear functional $\Lambda$. In particular, if $X^*$ separates $X$, then such an integral is unique, and the only question of applicability is when such an integral exists. The conditions of the next theorem, which show that such an integral exists, are automatically satisfied if $X$ is a Fr\'{e}chet space.
+
+\begin{theorem}
+    If $X$ is a topological vector space such that $X^*$ separates points, and $\mu$ is a Borel probability measure on a compact Hausdorff space $\Omega$, and $f: \Omega \to X$ is a continuous function such that the closed convex hull of $f(\Omega)$ is compact, then the weak integral exists.
+\end{theorem}
+\begin{proof}
+    Let $H$ be the closed convex hull of $f(\Omega)$. Given a finite family of linear functionals $L = \{ \Lambda_1, \dots, \Lambda_N \}$, we consider the family $E_L$ of all points $x \in H$ such that
+    %
+    \[ \Lambda_n(x) = \int_\Omega (\Lambda_n \circ f)(x)\; d\mu \]
+    %
+    If we can prove that each $E_L$ is non-empty, then by the compactness of $H$, the intersection of all such $E_L$ will be nonempty, and this will be the required weak integral. If we define a vector $y$ by
+    %
+    \[ y_n = \int_\Omega (\Lambda_n \circ f)\; d\mu \]
+    %
+    then it suffices to show that the image of $H$ under the map $L(x) = (\Lambda_1 x, \dots, \Lambda_N x)$ contains $y$. Because $L$ is a linear map into $\mathbf{C}^n$, $L(H)$ is compact and convex. Thus if $y$ was not an element of this set, we can separate $y$ from $H$ by a linear functional. In other words, there are constants $c_1, \dots, c_N$ such that for any $x \in H$,
+    %
+    \[ \sum c_n y_n < \sum c_n \Lambda_n x \]
+    %
+    In particular,
+    %
+    \[ \sum c_n y_n < \sum c_n (\Lambda_n \circ f) \]
+    %
+    Now integrating the right hand side gives
+    %
+    \[ \sum c_n y_n < \sum c_n y_n \]
+    %
+    which contradicts the fact that $y$ was not in the convex hull.
+\end{proof}
+
+Thus the integral of a continuous function is defined in a great many circumstances. TODO: ESTABLISH PROPERTIES ALA RUDIN.
+
+\section{Convolution}
+
+Convolution of functions can be realized as a vector valued integral. The normal definition
+%
+\[ (f * g)(x) = \int f(x - y) g(y)\; dy \]
+%
+By removing the value $x$, can be realized as the function-valued integral
+%
+\[ f * g = \int f_y g(y)\; dy \]
+%
+If $g$ is integrable, then we can consider this as integration of the function $f_y$ against the finite measure $g\; dy$, so provided that the map $y \mapsto f_y$ is continuous, then the weak integral exists. The weak convolution is the normal convolution, because if $h$ is a bounded function, then since $|f| * |g|$ is integrable, $(|f| * |g|)h$ is also integrable, so
+%
+\[ \int |(f * g)(x)| |h(x)|\; dx \leq \int (|f| * |g|)(x) h(x)\; dx < \infty \]
+%
+and so we may apply Fubini's theorem to conclude that
+%
+\[ \int \left( \int f(x-y) g(y)\; dy \right) h(x)\; dx = \int \left( \int f(x-y) h(x)\; dx \right) g(y)\; dy \]
+%
+
+
+
+
+
+
+
 
 
 
@@ -940,14 +1008,12 @@ In Linear Algebra, we know we may diagonalize any symmetric matrix. Here we appl
 
 \chapter{Topological Vector Spaces}
 
-Originally, functional analysis dealt with norm spaces, providing vectors with an explicit way of measuring their size, and the distance between vectors. But soon, vector spaces of functions appeared in problems equipped with strange, non-normable topologies. For instance, the space of holomorphic functions under the topology of locally uniform convergence, or the class of Schwartz functions on Euclidean space under the topology of rapid uniform convergence of the function and all of its derivatives. Even if we only care about normable spaces, the study of the weak and weak $*$ topologies on a Banach space and it's dual forces us to care about non normable spaces. Thus we are forced to treat vector spaces with non normable topologies.
+Originally, functional analysis dealt with norm spaces, providing vectors with an explicit way of measuring their size, and the distance between vectors. But soon, vector spaces of functions appeared in problems equipped with strange, non-normable topologies. For instance, the space of holomorphic functions under the topology of locally uniform convergence, or the class of Schwartz functions on Euclidean space under the topology of rapid uniform convergence of the function and all of its derivatives. Even if we only care about normable spaces, the study of the weak and weak $*$ topologies on a Banach space and it's dual forces us to care about non normable spaces, so studying topological vector spaces in their complete generality is still useful.
 
-In order to be completely general, we begin by making a framework to study function spaces with a topology under the weakest assumptions. A {\bf topological vector space} is a vector space, together with a topology making addition and scalar multiplication continuous. In terms of nets, this continuity means exactly that if $x_\alpha \to x$, $y_\beta \to y$, and $\lambda_\gamma \to \lambda$, then $\lambda_\gamma (x_\alpha + y_\beta) \to \lambda (x + y)$. In terms of neighbourhoods, the continuity says that if $V$ is an open subset containing $\lambda(x + y)$, then there exists $\varepsilon > 0$, and neighbourhoods $W$ of $x$ and $U$ of $y$ such that if $|\lambda - \gamma| < \varepsilon$, then $\gamma(W + U) \subset V$.
-
-The maps $T_y(x) = x + y$ and $M_\lambda(x) = \lambda x$ are homeomorphisms of $X$, as a consequence of the continuity of addition and multiplication. As a consequence, every neighbourhood of a point $x$ can be written as $x + W$, where $W$ is a neighbourhood of the origin. Because of this, most of the topological structure of a space can be understood by looking at the structure around the origin. Another special case of the continuity of addition and multiplication is that, since $1 \cdot (0 + 0) = 0$, we can find a neighbourhood $W$ of the origin with $W + W \subset V$, and, by induction, we can repeat this process to find a neighbourhood $W$ with $W + W + \dots + W \subset V$ for any fixed, finite number of additions.
+In order to be completely general, we begin by making a framework to study function spaces with a topology under the weakest assumptions. A {\bf topological vector space} is a vector space, together with a topology making addition and scalar multiplication continuous. In terms of nets, this continuity means exactly that if $x_\alpha \to x$, $y_\beta \to y$, and $\lambda_\gamma \to \lambda$, then $\lambda_\gamma (x_\alpha + y_\beta) \to \lambda (x + y)$. In terms of neighbourhoods, the continuity says that if $V$ is an open subset containing $\lambda(x + y)$, then there exists $\varepsilon > 0$, and neighbourhoods $W$ of $x$ and $U$ of $y$ such that if $|\lambda - \gamma| < \varepsilon$, then $\gamma(W + U) \subset V$. The maps $T_y(x) = x + y$ and $M_\lambda(x) = \lambda x$ are homeomorphisms of $X$, as a consequence of the continuity of addition and multiplication. As a consequence, every neighbourhood of a point $x$ can be written as $x + W$, where $W$ is a neighbourhood of the origin. Because of this, most of the topological structure of a space can be understood by looking at the structure around the origin. Another special case of the continuity of addition and multiplication is that, since $1 \cdot (0 + 0) = 0$, we can find a neighbourhood $W$ of the origin with $W + W \subset V$, and, by induction, we can repeat this process to find a neighbourhood $W$ with $W + W + \dots + W \subset V$ for any fixed, finite number of additions.
 
 \begin{remark}
-    A topological vector space is, of course, an abelian topological group. However, unlike in the case of topological groups, interesting topological vector spaces are not locally compact. In fact, in this chapter we will prove the only locally compact topological vector spaces are the finite dimensional ones. This is why these two theories proceed down very different paths.
+    A topological vector space is, of course, an abelian topological group. However, unlike in the case of topological groups, all but the finite dimensional topological vector spaces fail to be locally compact. This is why these two theories proceed down very different paths.
 \end{remark}
 
 %Algebraically, a vector space arised from a representation of a field $\mathbf{F}$ over the automorphisms of an abelian group. The topological vector spaces can also be characterized by such a structure. If $G$ is an abelian topological group, and $\rho: \mathbf{F} \to \text{Aut}(G)$ is a map into the continuous automorphisms of $G$, then the conditions which guarantee that this representation gives a topological vector space structure to $G$ is that if $g = \rho(\lambda) h$, then for any neighbourhood of the origin $W$ there is $\varepsilon > 0$ and $U$ such that if $|\lambda - \gamma| < \varepsilon$ then $\rho(\gamma) U \subset gW$. This is sufficiently satisfied if the representation is continuous with respect to the topology on $\text{Aut}(G)$ generated by neighbourhoods of the origin of the form
@@ -969,23 +1035,19 @@ The maps $T_y(x) = x + y$ and $M_\lambda(x) = \lambda x$ are homeomorphisms of $
 \end{example}
 
 \begin{example}
-    Consider the space $L_0(X)$ of {\it all} measurable functions on a space with the topology induced by convergence of measure. That is, a net $f_\alpha$ converges to $f$ if, for any $\varepsilon > 0$, $\mu ( |f_\alpha - f| \geq \varepsilon ) \to 0$. Under a probabilistic interpretation, the probability that the two functions differ by more than $\varepsilon$ converges to zero for every $\varepsilon$. The neighbourhoods of the origin with respect to this topology are of the form
+    Consider the space $L_0(X)$ of {\it all} measurable functions on a measure space $X$ with the topology induced by convergence of measure. That is, a net $f_\alpha$ converges to $f$ if, for any $\varepsilon > 0$, $\mu ( |f_\alpha - f| \geq \varepsilon ) \to 0$. Under a probabilistic interpretation, the probability that the two functions differ by more than $\varepsilon$ converges to zero for every $\varepsilon$. The neighbourhoods of the origin with respect to this topology are of the form
     %
-    \[ \varepsilon U_\delta = \{ f \in L_0(X): \mu(f < \varepsilon) \leq \delta \} \]
+    \[ \varepsilon U_\delta = \{ f \in L_0(X): \mu(|f| < \varepsilon) \leq \delta \} \]
     %
     The space is therefore first countable.
 \end{example}
 
 \begin{example}
-    We would expect the space $L_0(X)$ to have an additional topological structure given by pointwise convergence almost everywhere. That is, we would like to have a topology such that $f_\alpha \to f$ if the set of points $x$ where $f_\alpha(x)$ does not converge to $f(x)$ has zero measure. Tempting a notion as it is, there is no topological structure giving this notion of convergence on $L_0(X)$. To see why, consider the space $L_0[0,1]$, induced by the Lebesgue measure on $[0,1]$. Consider the typewrite sequence of characteristic functions $\chi_n$, defined in terms of the sets $[H_n, H_{n+1}]$ modulo 1, where $H_n$ is the $n$th Harmonic number. Since $H_n \to \infty$, every point intersects infinitely many of the intervals, so that $\chi_n$ does not converge anywhere to zero. But $\chi_n$ does converge in measure to 0, so that for every subsequence of $\chi_n$, there is a further subsequence consisting of functions which converge pointwise almost everywhere to 0. But this contradicts the topological fact that a net $x_\alpha$ converges to a point $x$ if and only if every subnet of $x_\alpha$ has a further subnet which converges to $x$.
+    We would expect the space $L_0(X)$ to have an additional topological structure given by pointwise convergence almost everywhere. That is, we would like to have a topology such that $f_\alpha \to f$ if the set of points $x$ where $f_\alpha(x)$ does not converge to $f(x)$ has zero measure. Tempting a notion as it is, there is no topological structure giving this notion of convergence on $L_0(X)$. To see why, consider the space $L_0[0,1]$, induced by the Lebesgue measure on $[0,1]$. Consider the typewrite sequence of characteristic functions $\chi_n$, defined in terms of the sets $[H_n, H_{n+1}]$ modulo 1, where $H_n$ is the $n$th Harmonic number. Since $H_n \to \infty$, every point intersects infinitely many of the intervals, so that $\chi_n$ does not converge anywhere to zero. But $\chi_n$ does converge in measure to 0, so that for every subsequence of $\chi_n$, there is a further subsequence consisting of functions which converge pointwise almost everywhere to 0. But this contradicts the topological fact that a net $x_\alpha$ converges to a point $x$ if and only if every subnet of $x_\alpha$ has a further subnet which converges to $x$. Thus there can be no topology whose convergence agrees with almost everywhere convergence.
 \end{example}
 
 \begin{example}
-    Consider the space $\mathbf{F}[[X]]$ of formal power series in a single variable. Define a topology on $\mathbf{F}[[X]]$ by letting $f_\alpha \to f$ if, eventually, the lower order coefficients in the power series expansion of $f_\alpha - f$ vanish. Thus a neighbourhood basis about the origin consists of the decreasing family
-    %
-    \[ \mathfrak{m} \supset \mathfrak{m}^2 \supset \dots \]
-    %
-    where $\mathfrak{m}$ is the ideal consisting of power series with vanishing constant coefficient. It is easy to see that addition is continuous. Multiplication of two power series is also continuous, for if $f_\alpha \to f$ and $g_\beta \to g$, then
+    Consider the space $\mathbf{F}[[X]]$ of formal power series in a single variable. Define a topology on $\mathbf{F}[[X]]$ by letting $f_\alpha \to f$ if, eventually, the lower order coefficients in the power series expansion of $f_\alpha - f$ vanish. Thus a neighbourhood basis about the origin consists of the decreasing family $\mathfrak{m}$, $\mathfrak{m}^2$, and so on, where $\mathfrak{m}$ is the ideal consisting of power series with vanishing constant coefficient. It is easy to see that addition is continuous. Multiplication of two power series is also continuous, for if $f_\alpha \to f$ and $g_\beta \to g$, then
     %
     \[ f_\alpha g_\beta - fg = f_\alpha (g_\beta - g) + (f_\alpha - f) g \]
     %
@@ -994,7 +1056,7 @@ The maps $T_y(x) = x + y$ and $M_\lambda(x) = \lambda x$ are homeomorphisms of $
 
 \section{Basic Theorems}
 
-We recall, and introduce some terminology from analytical linear algebra, which will become even more prevalent in the theory of topological vector spaces.
+We now introduce some terminology from analytical linear algebra, which will become even more prevalent in the theory of topological vector spaces.
 %
 \begin{itemize}
     \item A {\bf convex} subset $C$ of a vector space $X$ is a set such that if $x, y \in C$ imply $tx + (1 - t) y \in C$ for $0 \leq t \leq 1$, so $C$ contains line segments between each of its points, or in set notation, $tC + (1 - t)C \subset C$ for all $0 \leq t \leq 1$. For any $t, u \in \mathbf{R}$, we have $tC + uC \subset (t + u) C$ which reduces to the ordinary convex equation by dividing both sides by $t + u$.
@@ -1012,7 +1074,7 @@ We recall, and introduce some terminology from analytical linear algebra, which 
     \item A set $K$ is {\bf (Von Neumann) bounded} if, for every neighbourhood $U$ of the origin, there is $u > 0$ such that if $t > u$, $tU \supset K$.
 
     % As an example, compact sets are bounded. If $x \neq 0$, then the set $\{ x, 2x, \dots \}$ is {\it never} boundedness, because otherwise if $W$ is a balanced neighbourhood, with $nx \in tW$ for all $n$, then $x \in (t/n)W$ for all $n$, which for $t < n$ implies $x \in W$. But this means $x$ is in every neighbourhood of the origin
-.\end{itemize}
+\end{itemize}
 %
 One of the cornerstones of the basis theory of topological vector spaces is that analytic properties of a space can be established from the existence of open sets with the geometric properties above.
 
@@ -1126,12 +1188,19 @@ Given a set $A$, we let $\text{Conv}(A)$ denote the {\bf convex hull} of $A$, th
 %
 \[ \text{Conv}(A) = \bigcup_{n = 1}^\infty \bigcup_{t_1 + \dots + t_n = 1} (t_1A + \dots + t_nA) \]
 %
-It follows that the convex hull of an open set is open. In a locally convex space, the convex hull of a bounded set is bounded, because if $W$ is a convex neighbourhood, and $A$ is bounded, then $A \subset tW$ for some $t$, and so $\text{Conv}(A) \subset tW$.
+It follows that the convex hull of an open set is open.
+
+\begin{theorem}
+    In a locally convex space, the convex hull of a bounded set is bounded.
+\end{theorem}
+\begin{proof}
+    If $W$ is a convex neighbourhood, and $A$ is bounded, then $A \subset tW$ for some $t$, and so $\text{Conv}(A) \subset tW$.
+\end{proof}
 
 We now move on to a very important point of the basis theory of topological vector spaces: When can we metrize the topology of a vector space. The most useful metrics on a vector space are the {\bf translation invariant} ones, which satisfy $d(a + x, a + y) = d(x,y)$ for all points $a,x,y$ in the vector space. It turns out that every first countable vector space has such a metrization.
 
 \begin{theorem}
-    if $X$ is a first countable vector space with a countable base, then $X$ is metrizable by an invariant metric $d$ whose open balls are balanced. If $X$ is locally convex, the metric can be chosen so the open balls are convex.
+    If $X$ is a first countable vector space with a countable base, then $X$ is metrizable by an invariant metric $d$ whose open balls are balanced. If $X$ is locally convex, the metric can be chosen so the open balls are convex.
 \end{theorem}
 \begin{proof}
     We consider a balanced neighbourhood base of the origin $V_1, V_2, \dots$ with $V_{n+1} + V_{n+1} + V_{n+1} \subset V_n$. If $X$ is locally convex, choose the $V_n$ to be convex as well. With each Dyadic rational number $r = \sum c_n 2^{-n}$ in $[0,1]$, we can associate the interval $V_r = \sum c_n V_n$, with $V_1 = X$. These neighbourhoods are monotonic because of the inclusion properties of these neighbourhoods, and satisfy $V_r + V_s \subset V_{r+s}$ (this is most easily proved when $r = s$, in which case the general case is proved). Thus we cam define
@@ -1161,9 +1230,9 @@ The notion of Cauchy sequences can be used to determine if the metric $d$ is com
     If $Y$ is complete and metrizable, and $y_\alpha \to x$, then $y_\alpha$ is Cauchy, hence converges in $Y$, and since $X$ is Hausdorff, $Y$ is closed.
 \end{proof}
 
-A {\bf seminorm} on a space $X$ is a positive function $\| \cdot \|$ on $X$ such that $\| x + y \| \leq \| x \| + \| y \|$, and $\| \alpha x \| \leq |\alpha| \| x \|$. These seminorms would give $X$ a metric by setting $d(x,y) = \| x - y \|$, except that we might have $d(x,y) = 0$ with $x \neq y$. One way to fix this is to consider the set $Y$ of all $x$ with $\| x \| = 0$. Then $Y$ forms a subspace of $X$, and if $y \in Y$, then $\| x + y \| \leq \| x \|$, and also $\| x \| = \| x + y - y \| \leq \| x + y \|$, hence $\| x + Y \| = \| x \|$, and so the seminorm descends to $X/Y$, and is now a norm.
+A {\bf seminorm} on a space $X$ is a positive function $\| \cdot \|$ on $X$ such that $\| x + y \| \leq \| x \| + \| y \|$, and $\| \alpha x \| \leq |\alpha| \| x \|$. These seminorms would give $X$ a metric by setting $d(x,y) = \| x - y \|$, except that we might have $d(x,y) = 0$ with $x \neq y$. One way to fix this is to consider the set $Y$ of all $x$ with $\| x \| = 0$. Then $Y$ forms a subspace of $X$, and if $y \in Y$, then $\| x + y \| \leq \| x \|$, and also $\| x \| = \| x + y - y \| \leq \| x + y \|$, hence $\| x + Y \| = \| x \|$, and so the seminorm descends to $X/Y$, and is now a norm. This is the perspective taken in the $L^p$ spaces, where $X$ is the space of all $p$ integrable functions, and $Y$ is the space of $p$ integrable functions equal to zero almost everywhere.
 
-We shall now describe another way to give $X$ a Hausdorff topological structure if, instead of a single seminorm, we have a {\it family} of seminorms. If this family is given, we can give $X$ a topological structure by letting $x_\alpha \to 0$ if $\| x_\alpha \| \to 0$ for every seminorm $\| \cdot \|$ in the family. A family of seminorms is called {\bf separating} if for every $x \neq 0$, there is a seminorm $\| \cdot \|$ with $\| x \| \neq 0$. This implies that the topological structure is Hausdorff, for if $x_\alpha$ converges to two points $x$ and $x'$, then for any seminorm $\| \cdot \|$
+We shall now describe another way to give $X$ a Hausdorff topological structure if, instead of a single seminorm, we have a {\it family} of seminorms. Given such a family, we can give $X$ a topological structure by letting $x_\alpha \to 0$ if $\| x_\alpha \| \to 0$ for every seminorm $\| \cdot \|$ in the family. A family of seminorms is called {\bf separating} if for every $x \neq 0$, there is a seminorm $\| \cdot \|$ with $\| x \| \neq 0$. This implies that the topological structure is Hausdorff, for if $x_\alpha$ converges to two points $x$ and $x'$, then for any seminorm $\| \cdot \|$
 %
 \[ \| x - x' \| \leq \| x - x_\alpha \| + \| x_\alpha - x' \| \to 0 \]
 %
@@ -1239,7 +1308,7 @@ To finish our understanding of locally convex spaces, we ask when the topology o
 \end{example}
 
 \begin{example}
-    Let $X$ be an open subset of $\mathbf{R}^n$. Then we can give $C^\infty(X)$ the structure of a topological vector space by letting $f_\alpha \to f$ if all the partial derivatives of $f_\alpha$ converge to the partial derivatives of $f$ locally uniformly. Arguing essentially the same as with $C(X)$ and $H(X)$, this shows $C^\infty(X)$ is a metrizable locally convex space. If $f_\alpha$ is a Cauchy sequence in this space, then $f_\alpha$ is Cauchy on each compact set $K$, hence $f_\alpha$ and all it's partial derivatives converges locally uniformly on $K$ to some $C^\infty$ function $g_K$. Putting these things together gives that $C^\infty(X)$ is a Fr\'{e}chet space. Surprisingly $C^\infty(X)$ also satisfies the Heine-Borel property. This is easily proven using the Arzela-Ascoli theorem. Since $C^\infty(X)$ is never finite dimensional, this space cannot be locally bounded, hence $C^\infty(X)$ isn't normable. An important family of closed subspaces of $C^\infty(X)$ are given by $D(K)$, where $K \subset X$ is compact, which is the family of $C^\infty$ functions supported on $K$. Since $D(K)$ isn't finite dimensional when $K$ has non-empty interior, $D(K)$ also isn't normable.
+    Let $X$ be an open subset of $\mathbf{R}^n$. Then we can give $C^\infty(X)$ the structure of a topological vector space by letting $f_\alpha \to f$ if all the partial derivatives of $f_\alpha$ converge to the partial derivatives of $f$ locally uniformly. Arguing essentially the same as with $C(X)$ and $H(X)$, this shows $C^\infty(X)$ is a metrizable locally convex space. If $f_\alpha$ is a Cauchy sequence in this space, then $f_\alpha$ is Cauchy on each compact set $K$, hence $f_\alpha$ and all it's partial derivatives converges locally uniformly on $K$ to some $C^\infty$ function $g_K$. Putting these things together gives that $C^\infty(X)$ is a Fr\'{e}chet space. Surprisingly $C^\infty(X)$ also satisfies the Heine-Borel property. This is easily proven using the Arzela-Ascoli theorem. Since $C^\infty(X)$ is never finite dimensional, this space cannot be locally bounded, hence $C^\infty(X)$ isn't normable.
 \end{example}
 
 
@@ -1249,7 +1318,7 @@ To finish our understanding of locally convex spaces, we ask when the topology o
 As in the functional analysis of Banach spaces, linear maps play an important role in the theory. In particular, we are interested in those linear maps between topological vector spaces which are continuous. Continuous maps are exactly those which are uniformly continuous, because if $T: X \to Y$ is continuous, then for every neighbourhood $V$ of the origin in $Y$, there is a neighbourhood $U$ of the origin in $X$ such that if $x - y \in U$, then $Tx - TY \in V$.
 
 \begin{lemma}
-    If $T$ is continuous at the origin, then $T$ is continuous everywhere.
+    If $T$ is continuous at $0$, then $T$ is continuous everywhere.
 \end{lemma}
 \begin{proof}
     Suppose $T$ is continuous at the origin. If $x_\alpha \to x$, then $x_\alpha - x \to 0$, hence $T(x_\alpha - x) = T(x_\alpha) - T(x) \to 0$, so $T(x_\alpha) \to T(x)$. Thus $T$ is continuous everywhere.
@@ -1272,11 +1341,11 @@ The theory of linear functions is difficult to classify in the general case, but
 \end{proof}
 
 \begin{example}
-    Suppose $X$ is a locally convex space, with the topology specified by a family of seminorms $\rho_\alpha$ which forms a directed set. Then the balls $\varepsilon U_{\rho_\alpha}$ form a basis for the space. It follows that if $f \in X^*$ is a continuous linear functional, then $f$ is bounded on a neighbourhood on the origin, so there exists $\rho, \varepsilon$, and $M$ such that if $\rho(x) \leq \varepsilon$, then $|f(x)| \leq M$. It then follows that for any $x$,
+    Suppose $X$ is a locally convex space, with the topology specified by a family of seminorms closed under the maximum operation. Then the balls $\varepsilon U_\rho$ form a basis for the space. It follows that if $f \in X^*$ is a continuous linear functional, then $f$ is bounded on a neighbourhood on the origin, so there exists $\rho, \varepsilon$, and $M$ such that if $\rho(x) \leq \varepsilon$, then $|f(x)| \leq M$. It then follows that for any $x \in X$,
     %
     \[ |f(x)| = \frac{\rho(x)}{\varepsilon} \left| f \left( \frac{\varepsilon x}{\rho(x)} \right) \right| \leq (M/\varepsilon) \rho(x) \]
     %
-    so the functional is directly bounded by a seminorm.
+    so the functional is directly bounded above by a seminorm.
 \end{example}
 
 For finite dimensional topological vector spaces, the continuous linear maps are particularly easy to consider.
@@ -1313,7 +1382,14 @@ For finite dimensional topological vector spaces, the continuous linear maps are
     Then the span of the $x_i$ is a closed subspace $Y$ of $X$, and $\overline{V} \subset Y + V/2$. Then, of course, $V \subset Y + V/2$, hence, dividing by two, we find $V/2 \subset Y + V/4$, and so $\overline{V} \subset Y + V/4$. Continuing this process, we find $\overline{V} \subset \bigcap (Y + V/2^n)$, and since $V/2^n$ form a local base, we find $\overline{V} \subset \overline{Y} = Y$. We conclude that $Y$ contains an absorbing set for $X$, hence $Y = X$.
 \end{proof}
 
-Since we have a definition of boundedness in any topological vector space $X$, we can ask if a version of the Heine Borel theorem holds in $X$. That is, are closed, bounded subsets of $X$ compact. The theorem above tells us that the Heine-Borel theorem cannot hold in any locally bounded infinite dimensional topological vector space, for if $V$ is a bounded neighbourhood, then it is precompact, hence the space is locally compact. We note, however, that the Heine Borel theorem does hold in some non locally bounded infinite dimensional vector spaces. Indeed, Montel's theorem in Complex analysis says that a locally uniformly bounded family of holomorphic functions is precompact, and we shall soon see that the bounded subsets of $H(X)$ are precisely the locally uniformly bounded ones.
+Since we have a definition of boundedness in any topological vector space $X$, we can ask if a version of the Heine Borel theorem holds in $X$. That is, are closed, bounded subsets of $X$ compact.
+
+\begin{corollary}
+    No infinite dimensional space can be locally bounded and satisfy the Heine-Borel theorem.
+\end{corollary}
+\begin{proof}
+    If $V$ is a bounded neighbourhood, then it is precompact, hence the space is locally compact, so finite dimensional.
+\end{proof}
 
 In the context of norm spaces, we found a linear map was continuous if and only if it was bounded. An analogous definition of a bounded operator $T: X \to Y$ between topological vector spaces is an operator that maps bounded sets to bounded sets. It is easy to prove that a continuous map is bounded, but the converse is not always true. However, in a metrizable space, it is true.
 
@@ -1324,6 +1400,10 @@ In the context of norm spaces, we found a linear map was continuous if and only 
     If $d$ is translation invariant, it is easy to prove that for any $x$, $d(nx,0) \leq n d(x,0)$. If $d(x_n,0) \to 0$, there are an increasing sequence of positive integers $N_m$ with $d(x_n,0) \leq 1/m^2$ for $n \geq N_m$. Then $d(mx_{n_m},0) \leq 1/m$, so if $\lambda_n$ is the largest $m$ with $n_m \leq n$, then $\lambda_n x_{n_m} \to 0$.
 \end{proof}
 
+\begin{example}
+    If $X$ is non-metrizable, this need not be true. Consider the space $\mathbf{C}^{[0,1]}$ of all complex functions on $[0,1]$, under the topology of pointwise convergence. Since $[0,1]$ has the same cardinality as the space $\mathbf{C}^{\mathbf{N}}$ of all complex-valued sequences converging to zero pointwise, we can define a map $F: [0,1] \to \mathbf{C}^{\mathbf{N}}$, and then define a sequence $f_n$ of functions converging pointwise to zero by letting $f_n(x) = F(x)_n$. For any sequence of constants $\lambda_1, \lambda_2, \dots$ converging to $\infty$, the sequence $1/\lambda_1, 1/\lambda_2, \dots$ converges to zero, hence there is some $x \in [0,1]$ with $F(x)_n = 1/\lambda_n$. Then $\lambda_n f_n(x) = \lambda_n/\lambda_n = 1$, so $\lambda_n f_n$ does not converge pointwise to zero.
+\end{example}
+
 \begin{theorem}
     If $X$ is a metrizable space, every bounded operator with $X$ as a domain is continuous.
 \end{theorem}
@@ -1332,7 +1412,7 @@ In the context of norm spaces, we found a linear map was continuous if and only 
 \end{proof}
 
 \begin{example}
-    A quasinorm space is a vector space $X$ equipped with a non-negative real-valued function $\| \cdot \|$ such that $\| x \| = 0$ if and only if $x = 0$, $\| \lambda x \| = |\lambda| \| x \|$, and $\| x + y \| \lesssim \|x\| + \|y\|$, rather than the stronger inequality $\| x + y \| \leq \| x \| + \| y \|$. The most precient examples of quasinorm spaces are the $L_p(X)$ spaces over some measure $\mu$, where $p < 1$. Since the unit ball in these spaces are not convex, we know that $\| \cdot \|_p$ is not a norm. However, the norms corresponding to these spaces {\it are} quasinorms. To see this, we use the fairly trivial inequality $(a + b)^p \leq 2^p(a^p + b^p)$, for $a,b,p > 0$, which follows because
+    A quasinorm space is a vector space $X$ equipped with a non-negative real-valued function $\| \cdot \|$ such that $\| x \| = 0$ if and only if $x = 0$, $\| \lambda x \| = |\lambda| \| x \|$, and $\| x + y \| \lesssim \|x\| + \|y\|$, rather than the stronger inequality $\| x + y \| \leq \| x \| + \| y \|$. The most precient examples of quasinorm spaces are the $L^p(X)$ spaces over some measure $\mu$, where $p < 1$. Since the unit ball in these spaces are not convex, we know that $\| \cdot \|_p$ is not a norm. However, the norms corresponding to these spaces {\it are} quasinorms. To see this, we use the fairly trivial inequality $(a + b)^p \leq 2^p(a^p + b^p)$, for $a,b,p > 0$, which follows because
     %
     \[ (a + b)^p \leq (2 \max(a,b))^p = 2^p \max(a,b)^p \leq 2^p(a^p + b^p) \]
     %
@@ -1340,7 +1420,7 @@ In the context of norm spaces, we found a linear map was continuous if and only 
     %
     \[ \| f + g \|_p \leq 2 ( \| f \|_p^p + \| g \|_p^p )^{1/p} \leq 2^{1 + 1/p} ( \| f \|_p + \| g \|_p ) \]
     %
-    So the `$L^p$ norm' is a quasinorm. This quasinorm gives $L^p(X)$ the structure of a complete metric space. The fact that only a single quasinorm is defined in the definition of the topology shows the space is locally bounded.  However, the space is not locally convex, hence not a Fr\'{e}chet space. In fact, as an example, $L^p[0,1]$ contains no convex open sets other than $\emptyset$ and $L^p[0,1]$. To see this, let $W$ be an non-empty, open, bounded set, and without loss of generality, let $0 \in W$, and suppose $W$ contains all functions $f$ with $\| f \|_p < \varepsilon$. Given any $f \in L^p[0,1]$, and any integer $N$, we can divide $[0,1]$ into disjoint intervals $I_1, I_2, \dots, I_N$ with
+    So the `$L^p$ norm' is a quasinorm. This quasinorm gives $L^p(X)$ the structure of a complete metric space, the proof of completeness being exactly the same as in the case where $p \geq 1$. The fact that only a single quasinorm is defined in the definition of the topology shows the space is locally bounded.  However, the space is not locally convex, hence not a Fr\'{e}chet space. In fact, as an example, $L^p[0,1]$ contains no convex open sets other than $\emptyset$ and $L^p[0,1]$. To see this, let $W$ be an non-empty, open, convex set, and without loss of generality, let $0 \in W$, and suppose $W$ contains all functions $f$ with $\| f \|_p < \varepsilon$. Given any $f \in L^p[0,1]$, and any integer $N$, we can divide $[0,1]$ into disjoint intervals $I_1, I_2, \dots, I_N$ with
     %
     \[ \| f \|_{L^p(I_n)} = \frac{\| f \|_{L^p[0,1]}}{N^{1/p}} \]
     %
@@ -1352,8 +1432,23 @@ In the context of norm spaces, we found a linear map was continuous if and only 
     %
     \[ T^{-1}(0) = T^{-1} \left( \bigcap W \right) = \bigcap T^{-1}(W) = L^p[0,1] \]
     %
-    A consequence of this fact is that there are {\it no} nonzero continuous linear functions on $L^p[0,1]$.
+    Thus there are {\it no} nonzero continuous linear functions on $L^p[0,1]$.
 \end{example}
+
+For non-metrizable locally convex spaces, we still have a nice analytical criterion for continuity in terms of seminorms.
+
+\begin{theorem}
+    Let $T: X \to Y$ be a map between convex spaces. Then $T$ is continuous if and only if for any continuous seminorm $\| \cdot \|_Y$ on $Y$, there is a continuous seminorm $\| \cdot \|_X$ on $X$ such that $\| Tx \|_Y \leq \| x \|_X$.
+\end{theorem}
+\begin{proof}
+    Suppose $T$ is continuous. Then the unit ball $B$ in the $Y$ norm is open, so $T^{-1}(B)$ is an open neighbourhood of the origin in $X$, and there therefore contains a convex, balanced subset about the origin which is the unit ball with respect to some continuous seminorm $\| \cdot \|_X$. Thus $\| Tx \|_Y \leq 1$ if $\| x \|_X \leq 1$, which implies that
+    %
+    \[ \| Tx \|_Y = \| x \|_X \left\| T \left( x/\|x \|_X \right) \right\|_Y \leq \| x \|_X \]
+    %
+    Conversely, if the other condition is satisfied and $U$ is an open convex set about the origin in $Y$, then it is the unit ball with respect to some norm $\| \cdot \|_Y$, and so there is $\| \cdot \|_X$ such that $\| Tx \|_Y \leq \| x \|_X$, hence the unit ball with respect to the $X$ norm is an open neighbourhood which maps into $U$, so $T$ is continuous at the origin, hence continuous everywhere.
+\end{proof}
+
+If $X$ and $Y$ are generated by a family of seminorms closed under maxima, we can restrict the conditions of the theorem to only the seminorms contained in this group, if we weaken the condition $\| Tx \|_Y \leq \| x \|_Y$ to $\| Tx \|_Y \lesssim \| x \|_X$.
 
 \section{Quotient Spaces}
 
@@ -1401,26 +1496,6 @@ We can now argue why assuming a space is Hausdorff isn't too strong a statement.
 
 
 
-\chapter{The Weak Topology}
-
-\begin{example}
-    In Banach theory, the most important examples of topological spaces are those obtain by placing other topologies on a norm space than the original norm topology. Given a norm space $X$, we have a space $X^*$ consisting of continuous linear functionals on $X$. We say that a net $x_\alpha$ converges weakly to $x$ if $f(x_\alpha) \to f(x)$ for every $f \in X^*$. This defines the {\bf weak topology} on $X$. Similarily, on $X^*$ we may define the {\bf weak $*$ topology}, by letting $f_\alpha \to f$ if $f_\alpha(x) \to f(x)$ for every $x \in X$. Note that we may also put a weak topology on $X^*$, since it is also a norm space, but the weak and weak $*$ topologies on $X^*$ rarely correspond (the weak topology has more stringent notions of continuity). These topologies are effectively topologies induced by pointwise convergence, because the weak topology is obtained by embedding $X$ in $\mathbf{F}^{X^*}$, and the weak $*$ topology is obtained by considering $X^*$ as a subspace of $\mathbf{F}^X$. The weak topology on $X$ is rarely equal to the original topology on $X$, except in degenerate circumstances. For instance, if we consider $e_n \in l_p$, for $1 < p < \infty$, then $\| e_n - e_m \| = 1$, so $e_n$ does not converge, yet if we consider any element $f \in l_q$ of the dual space, then $\langle f, e_n \rangle = f(n)$, which converges to zero as $n \to \infty$. Thus $e_n$ converges to zero in the weak topology. In $l_1$, $e_n$ does not converge weakly, because the function $f(n) = (-1)^n$ is in $l_\infty$, and $\langle f, e_n \rangle = (-1)^n$ does not converge. It is important to note that the weak $*$ topology depends on the predual we are using. If we consider $l_1 = c_0^*$, then the $e_n$ converges to zero in the weak $*$ topology, yet if we consider $l_1$ as $c^*$, then the $e_n$ do not converge in the induced weak $*$ topology.
-
-    The weak topology on a space is rarely first countable. If $A = \{ \sqrt{n} e_n : n \in \mathbf{N} \}$ is viewed as a subset of $l_2$, then 0 is contained in the weak closure of $A$, because if $\varepsilon > 0$ and we are given a finite set of sequences $\{ a_n^k \}_{n \in \mathbf{N}}$, for $1 \leq k \leq K$ and, for any $n$, there is $k_n$ such that $|a_n^{k_n}| \sqrt{n} > \varepsilon$, and if we consider the sum $\sum_k |a_n^k| \in l^2$, then
-    %
-    \[ \sum_n \left|\sum_k |a_n^k| \right|^2 \geq \sum_n |a_n^{k_n}|^2 \geq \varepsilon \sum \frac{1}{n} = \infty \]
-    %
-    so there must be an element of $A$ in each $U_{\varepsilon, \{ a_n^1 \}, \dots, \{ a_n^K \}}$, and hence $0$ is in the weak closure of $A$. However, 0 is not the weak limit of any sequence of elements in $A$, for
-    %
-    \[ \sum_{n = 0}^\infty \frac{e_n}{n} \in l_2 \]
-    %
-    and if we consider any sequence $\sqrt{n_i} e_{n_i}$ that converges weakly to zero, then we find that $(n_i)^{-1/2}$ converges to zero, hence $n_i \to \infty$. But then the sequence is not norm bounded, and hence cannot converge!
-\end{example}
-
-
-
-
-
 
 
 \chapter{Weak Topologies}
@@ -1449,60 +1524,58 @@ We can now argue why assuming a space is Hausdorff isn't too strong a statement.
 
 \chapter{The Theory of Distributions}
 
-The theory of distributions is a jewel which emerges from the theory of topological vector spaces; in enables us to justify formal manipulations without the numerous technical issues which emerge from the analytical side. For instance, the ordinary integral formulation of the Fourier transform is only defined on $L^1$ functions, whereas the theory of distributions enables us to define the Fourier transform on essentially every function we would ever want to take the Fourier transform. Similarily, classically we can only differentiate a very particular class of functions, which does not behave so nicely under the rules of functional analysis. The theory of distributions enables us to define an object which behaves as the derivative of any continuous function.
+The theory of distributions is a jewel which emerges from the theory of topological vector spaces; in enables us to justify formal manipulations without the numerous technical issues which emerge from the analytical side. For instance, the ordinary integral formulation of the Fourier transform is only defined on $L^1$ functions, whereas the theory of distributions enables us to define the Fourier transform on essentially every function we would ever want to take the Fourier transform. Similarily, classically we can only differentiate a very particular class of functions, which does not behave so nicely under the rules of functional analysis. The theory of distributions enables us to define an object which behaves as the derivative of any continuous function. For these reasons, and the fact that distributions behave well from the perspective of functional analysis that has made them the cornerstone of modern harmonic analysis and the analysis of partial differential equations.
 
-The general idea emerges from how we view functions. The modern definition of a function $f$ is an object which assigns a value $f(x)$ to each point in a domain. However, from a physical perspective, it is impossible to ever accurately measure a value at each point. Instead, one obtains a physical value from taking the average of a function over a certain part $E$ of the domain, i.e. a function assigns a value
+The power of measure theory is that it enables us to study a very general class of functions - ranging in the various classes $L^p(\mathbf{R}^n)$ of integrable functions. The problem is that as we allow more general classes of functions, the operations we can perform on these functions becomes more and more restricted. Nonetheless, there are a set of functions which are dense in almost every function class we consider in real analysis, the space $C^\infty_c(\mathbf{R}^n)$ of infinitely differentiable functions with compact support. It is here that all the fundamental analytical operations can be performed, but generality is lost because a single discontinuity discounts a function from being contained in this space. Often more general results are able to be obtained from applying a density argument in the larger spaces. The theory of distributions provides an alternate viewpoint.
+
+The general idea of distributions emerges from duality. Because the dual space of $L^p(\mathbf{R}^n)$, except in exceptional circumstances, is $L^q(\mathbf{R}^n)$, where $q$ is the conjugate to $p$, functions $f \in L^p(\mathbf{R}^n)$ can be identified uniquely as `integrands'
 %
-\[ \int_E f(x)\; dx \]
+\[ g \mapsto \int f(x) g(x)\; dx \]
 %
-to each point in the domain. More generally, we might weight certain values more, meaning a function is an object $f$ assigning a value to each
-%
-\[ \int f(x) \phi(x)\; dx \]
-%
-where $\phi$ is a smooth function with compact support, a `test function' which tests the behaviour of the function $f$. A distribution is a `function' which does not assign values to points, but instead assigns values to averages weighted with respect to functions with compact support.
+Similarily, the dual space of $C(K)$, where $K$ is compact, is the space $M(K)$ of finite Borel measures on $K$. Thus we can think of measures as a suitable `generalized functions', operating as integrands against linear functionals. From the perspective of physics this is entirely natural. Points in space are idealizations - one can never measure the exact value of some quantity of a function at a point, but rather only understand the function by looking at it's averages over a small region around that point. Thus a `function' can be understood by the averages with respect to a family of integrands, known as test functions, since they test the value of the function over a region. As we make the family of integrands smaller and smaller, a `function' can be behave more and more erratically. A distribution is an `integrand' with respect to the space $C^\infty_c(\mathbf{R}^n)$ of infinitely differentiable functions with compact support. Since these functions are incredibly analytically nice, distributions are allowed to behave incredibly erratically, but we can still extend the operations of differentiation and integration to them.
 
 \section{The Space of Test Functions}
 
-We fix an open subset $\Omega$ of $\mathbf{R}^n$, and let $D(\Omega)$ denote the family of all smooth functions on $\Omega$ with compact support. We could equip $D(\Omega)$ with a locally convex, metrizable topology with respect to the seminorms
+We fix an open subset $\Omega$ of $\mathbf{R}^n$, and let $C_c^\infty(\Omega)$ denote the family of all smooth functions on $\Omega$ with compact support. We could equip $C_c^\infty(\Omega)$ with a locally convex, metrizable topology with respect to the seminorms
 %
-\[ \| f \|_{W^{n,\infty}(\Omega)} = \max_{|\alpha| \leq n} \| D^\alpha f \|_{L^\infty(\Omega)} \]
+\[ \| f \|_{C^n(\Omega)} = \max_{|\alpha| \leq n} \| D^\alpha f \|_{L^\infty(\Omega)} \]
 %
-However, this does not give $D(\Omega)$ a complete metric space structure.
+However, this does not give $C_c^\infty(\Omega)$ a complete metric space structure.
 
 \begin{example}
-    Let $\Omega = \mathbf{R}$, pick a bump function $\phi \in D(\mathbf{R})$ supported on $[0,1]$ with $\phi > 0$ on $(0,1)$, and define
+    Let $\Omega = \mathbf{R}$, pick a bump function $\phi \in C_c^\infty(\mathbf{R})$ supported on $[0,1]$ with $\phi > 0$ on $(0,1)$, and define
     %
     \[ \psi_m(x) = \phi(x-1) + \frac{\phi(x-2)}{2} + \dots + \frac{\phi(x-m)}{m} \]
     %
     Then $\psi_m$ is compactly supported on $[1,m]$, and Cauchy, since for $k \geq l$,
     %
-    \[ \| D^m (\psi_k - \psi_l) \|_{W^{n,\infty}(\mathbf{R})} = \frac{ \max_{r \leq n} \| D^r \phi \|_\infty}{l} \]
+    \[ \| D^m (\psi_k - \psi_l) \|_{C^n(\mathbf{R})} = \frac{ \max_{r \leq n} \| D^r \phi \|_\infty}{l} \]
     %
     but with respect to these seminorms, the $\psi_m$ converge to the function
     %
     \[ \psi(x) = \sum_{n = 1}^\infty \psi(x-n) \]
     %
-    an element of $C^\infty(\mathbf{R})$ which is not compactly supported.
+    an element of $C^\infty(\mathbf{R})$ which is not compactly supported. In other words, we have proven that $C_c^\infty(\mathbf{R})$ is not a closed subspace of $C^\infty(\mathbf{R})$.
 \end{example}
 
-Instead, we will give $D(\Omega)$ a stronger locally convex topology which will make it complete, but non metrizable. However, many metric tricks will still be able to be used, because each of the maps $D(K) \to D(\Omega)$ will be embeddings, where $K$ is compact. We define a neighbourhood basis for $D(\Omega)$ to consist of all convex balanced sets $W$ containing the origin such that $W \cap D(K)$ is open in $D(K)$ for each compact set $K \subset \Omega$.
+To make $C_c^\infty(\Omega)$ complete, we give is a stronger locally convex topology. As a subspace, the topology on the space $C_c^\infty(K)$ of smooth functions compactly supported on $K$ will have the same topology, but the new topology will only have a sequence of functions $\phi_1, \phi_2, \dots$ converge if the union of their supports is precompact. We define a neighbourhood basis for $C_c^\infty(\Omega)$ to consist of all convex balanced sets $W$ such that $W \cap C_c^\infty(K)$ is open in $C_c^\infty(K)$ for each compact set $K \subset \Omega$.
 
 \begin{theorem}
-    This gives a basis of a Hausdorff topology on $D(\Omega)$.
+    This gives a basis of a Hausdorff topology on $C_c^\infty(\Omega)$.
 \end{theorem}
 \begin{proof}
-    If $\phi_1 + V_1$ and $\phi_2 + V_2$ both contain $\phi$, then $\phi - \phi_1 \in V_1$ and $\phi - \phi_2 \in V_2$. The function $\phi, \phi_1$, and $\phi_2$ are all supported on some compact set $K$. By continuity of multiplication on $D(K)$, and the fact that $V_n \cap D(K)$ is open, there is a small constant $\delta$ such that $\phi - \phi_n \in (1 - \delta) V_n$. The convexity of the $V_n$ implies that $\phi - \phi_n + \delta V_n \subset V_n$. But then $\phi + \delta V_n \subset \phi_n + V_n$, and so $\phi + \delta_n V_n \subset V_1 \cap V_2$. The space is Hausdorff, because if $\phi$ is in every open neighbourhood of the origin, then in particular, for every compcat set $K$, $\phi$ is in the convex, balanced neighbourhood consisting of functions $\psi$ such that $\| \psi \|_{L^\infty(K)} < \varepsilon$ for each $\varepsilon > 0$. Letting $\varepsilon \to 0$ gives that $\phi$ vanishes on $K$, and since $\Omega$ is locally compact, $\phi$ vanishes everywhere.
+    If $\phi_1 + V_1$ and $\phi_2 + V_2$ both contain $\phi$, then $\phi - \phi_1 \in V_1$ and $\phi - \phi_2 \in V_2$. The function $\phi, \phi_1$, and $\phi_2$ are all supported on some compact set $K$. By continuity of multiplication on $C_c^\infty(K)$, and the fact that $V_n \cap C_c^\infty(K)$ is open, there is a small constant $\delta$ such that $\phi - \phi_n \in (1 - \delta) V_n$. The convexity of the $V_n$ implies that $\phi - \phi_n + \delta V_n \subset V_n$. But then $\phi + \delta V_n \subset \phi_n + V_n$, and so $\phi + \delta (V_1 \cap V_2) \subset V_1 \cap V_2$. The space is Hausdorff, because if $\phi$ is in every open neighbourhood of the origin, then in particular, for every compact set $K$, $\phi$ is in the convex, balanced neighbourhood consisting of functions $\psi$ such that $\| \psi \|_{L^\infty(K)} < \varepsilon$ for each $\varepsilon > 0$. Letting $\varepsilon \to 0$ gives that $\phi$ vanishes on $K$, and since $\Omega$ is locally compact, $\phi$ vanishes everywhere.
 \end{proof}
 
 \begin{remark}
-    This same technique can be used to give a locally convex topological structure to the direct limit of any family of locally convex spaces.
+    This technique can be formulated more abstractly to give a locally convex topological structure to the direct limit of locally convex spaces. From this perspective, we also see why our metrization doesn't work; if $X = \lim X_n$, with each $X_n$ a locally convex metrizable space, then we cannot give $X$ a complete metrizable topology such that each $X_n$ is an embedding and has empty interior in $X$, because this would contradict the Baire category theorem. In particular, this means that the topology we have given to $C_c(\Omega)$ cannot be metrizable, and therefore the space cannot be first countable. Later we will see a more explicit proof of this.
 \end{remark}
 
 \begin{theorem}
-    $D(\Omega)$ is a complete, locally convex space.
+    $C_c^\infty(\Omega)$ is a locally convex space.
 \end{theorem}
 \begin{proof}
-    Fix $\phi$ and $\psi$, and consider any neighbourhood $W$ of the origin. By convexity, we have $(\phi + W/2) + (\psi + W/2) \subset (\phi + \psi) + W$. This shows addition is continuous. To show multiplication is continuous, fix $\lambda$, $\phi$, and $W$. Find $\varepsilon > 0$ such that if $|\alpha| < \varepsilon$, $\alpha \phi \in W/2$. Then we find that if $|\gamma - \lambda| < \varepsilon$, then because $W$ is balanced and convex,
+    Fix $\phi$ and $\psi$, and consider any neighbourhood $W$ of the origin. By convexity, we have $(\phi + W/2) + (\psi + W/2) \subset (\phi + \psi) + W$. This shows addition is continuous. To show multiplication is continuous, fix $\lambda$, $\phi$, and a neighbourhood $W$ of the origin. Then $\phi$ is supported on some compact set $K$, and $W \cap C_c^\infty(K)$ is open, in particular absorbing, so there is $\varepsilon > 0$ such that if $|\alpha| < \varepsilon$, $\alpha \phi \in W/2$. Then if $|\gamma - \lambda| < \varepsilon$, then because $W$ is balanced and convex,
     %
     \begin{align*}
         \gamma \left(\phi + \frac{W}{2(|\lambda| + \varepsilon)} \right) &= \lambda \phi + (\gamma - \lambda) \phi + \frac{\gamma}{2(|\lambda| + \varepsilon)} W\\
@@ -1513,58 +1586,89 @@ Instead, we will give $D(\Omega)$ a stronger locally convex topology which will 
 \end{proof}
 
 \begin{theorem}
-    The map $D(K) \to D(\Omega)$ is an embedding.
+    The map $C_c^\infty(K) \to C_c^\infty(\Omega)$ is an embedding.
 \end{theorem}
 \begin{proof}
-    We shall prove a convex, balanced neighbourhood $V$ is open in $D(\Omega)$ if and only if $D(K) \cap V$ is open in $D(K)$ for each $K$. Since $V$ is open, $V$ is the union of convex, balanced sets $W_\alpha$ with $W_\alpha \cap D(K)$ open in $D(K)$ for each $K$. But then $V \cap D(K) = (\bigcup W_\alpha) \cap D(K)$ is open in $D(K)$. The converse is true by definition of the topology. But this statements means exactly that the map $D(K) \to D(\Omega)$ is an embedding, because it is certainly continuous, and if $W$ is a convex neighbourhood of the origin equal to the set of $\phi$ supported on $K$ with $\| \phi \|_{W^{n,\infty}(K)} \leq \varepsilon$ for some $n$, then the image is the intersection of $D(K)$ with the set of all $\phi$ supported on $\Omega$ satisfying the inequality, which is open. This shows that the map is open onto its image, hence an embedding.
+    We shall prove a convex, balanced neighbourhood $V$ is open in $C_c^\infty(\Omega)$ if and only if $C_c^\infty(K) \cap V$ is open in $C_c^\infty(K)$ for each $K$. Since $V$ is open, $V$ is the union of convex, balanced sets $W_\alpha$ with $W_\alpha \cap C_c^\infty(K)$ open in $C_c^\infty(K)$ for each $K$. But then $V \cap C_c^\infty(K) = (\bigcup W_\alpha) \cap C_c^\infty(K)$ is open in $C_c^\infty(K)$. The converse is true by definition of the topology. But this statement means exactly that the map $C_c^\infty(K) \to C_c^\infty(\Omega)$ is an embedding, because it is certainly continuous, and if $W$ is a convex neighbourhood of the origin equal to the set of $\phi$ supported on $K$ with $\| \phi \|_{C^n(K)} \leq \varepsilon$ for some $n$, then the image is the intersection of $C_c^\infty(K)$ with the set of all $\phi$ supported on $\Omega$ satisfying the inequality, which is open. This shows that the map is open onto its image, hence an embedding.
 \end{proof}
 
+Because of the definition in terms of open sets, it is difficult to see why the topology is that much stronger than the topology previously given. We can see this more numerically by introducing the topology in terms of seminorms. The topology we have given $C_c^\infty(\Omega)$ is the same as the locally convex topology introduced by all norms $\| \cdot \|$ on the space which are continuous when restricted to each $C_c^\infty(K)$. As an example, if we choose an increasing family $U_1, U_2, \dots$ of precompact open sets whose closure is contained in $\Omega$, then any compact set $K$ is contained in some $U_N$ for large enough $N$, and for any increasing sequence $\alpha_1, \alpha_2, \dots$ of positive constants and increasing sequence $k_1, k_2, \dots$ of positive integers the norm
+%
+\[ \| f \| = \min_{\text{supp}(f) \subset U_n} \alpha_n \| f \|_{C^{k_n}(U_n)} \]
+%
+is well defined on $C_c^\infty(\Omega)$ and continuous. But this means that if $f_1, f_2, \dots \to 0$, then $\| f \| \to 0$ for any choice of constants $\alpha_n$ and $k_n$, so asymptotically as we approach the boundary of $\Omega$ (or $\infty$, if $\Omega$ is unbounded), the $L^\infty$ norms of the $f_n$ and all of their derivatives must converge arbitrarily fast outside certain compact sets. The next theorem shows that this implies that the union of the domains $f_n$ must actually be precompact. It is this `uniform compactness' that gives us completeness.
+
 \begin{theorem}
-    $E$ is a bounded subset of $D(\Omega)$ if and only if $E$ is contained in $D(K)$ for some compact set $K$, and there are constants $M_n$ such that $\| \phi \|_{W^{n,\infty}(\Omega)} \leq M_n$ for all $\phi \in E$.
+    $E$ is a bounded subset of $C_c^\infty(\Omega)$ if and only if $E$ is contained in $C_c^\infty(K)$ for some compact set $K$, and there are constants $M_n$ such that $\| \phi \|_{C^n(\Omega)} \leq M_n$ for all $\phi \in E$.
 \end{theorem}
 \begin{proof}
-    If $E$ is not contained in some $D(K)$ for some $K$, then we can find functions $\phi_n$ and a set of points $x_n \in X$ with no limit point and $\phi_n(x_n) \neq 0$. The set
+    If $E$ is not contained in some $C_c^\infty(K)$ for some $K$, then we can find functions $\phi_n \in E$ and a set of points $x_n \in X$ with no limit point and $\phi_n(x_n) \neq 0$. The set
     %
     \[ V = \left\{ \phi: |\phi(x_n)| < \frac{|\phi_n(x_n)|}{n} \right\} \]
     %
-    is an open neighbourhood of the origin, since it is convex and balanced, and for any compact set $K$, $K$ can only contain finitely many of the $x_n$, and so $V \cap D(K)$ is specified by finitely many seminorms. Now $E$ cannot be bounded with respect to $V$, because $\phi_n \not \in nV$ for all $n$. Thus if $E$ is bounded, then $E$ is contained in some $D(K)$, and the existence of the constants $M_n$ is implied by the fact that the topology induced $D(K)$ is just the usual topology. The converse follows by the embedding property.
+    is an open neighbourhood of the origin, since it is convex and balanced, and for any compact set $K$, $K$ can only contain finitely many of the $x_n$, and so $V \cap C_c^\infty(K)$ is specified by finitely many seminorms. Now $E$ cannot be bounded with respect to $V$, because $\phi_n \not \in nV$ for all $n$. Thus if $E$ is bounded, then $E$ is contained in some $C_c^\infty(K)$, and the existence of the constants $M_n$ is implied by the fact that the topology induced $C_c^\infty(K)$ is just the usual topology. The converse follows by the embedding property.
 \end{proof}
 
 \begin{corollary}
-    $D(\Omega)$ has the Heine Borel property.
+    $C_c^\infty(\Omega)$ has the Heine Borel property.
 \end{corollary}
 \begin{proof}
-    This follows because if $E$ is bounded and closed, it is a closed and bounded subset of some $D(K)$ for some $K$, hence $E$ is compact since $D(K)$ satisfies the Heine-Borel property.
+    This follows because if $E$ is bounded and closed, it is a closed and bounded subset of some $C_c^\infty(K)$ for some $K$, hence $E$ is compact since $C_c^\infty(K)$ satisfies the Heine-Borel property.
 \end{proof}
 
 \begin{corollary}
-    $D(\Omega)$ is quasicomplete.
+    $C_c^\infty(\Omega)$ is quasicomplete.
 \end{corollary}
 \begin{proof}
-    If $\phi_1, \phi_2, \dots$ is a Cauchy sequence in $D(\Omega)$, then the sequence is bounded, hence contained in some common $D(K)$. Since the sequence is Cauchy, they converge in $D(K)$ to some $\phi$, and thus the $\phi_n$ converge to $\phi$ in $D(\Omega)$.
+    If $\phi_1, \phi_2, \dots$ is a Cauchy sequence in $C_c^\infty(\Omega)$, then the sequence is bounded, hence contained in some common $C_c^\infty(K)$. Since the sequence is Cauchy, they converge in $C_c^\infty(K)$ to some $\phi$, and thus the $\phi_n$ converge to $\phi$ in $C_c^\infty(\Omega)$.
 \end{proof}
 
-\begin{remark}
-    The corollary implies that a sequence of functions $\phi_1, \phi_2, \dots$ converge to some function $\phi$ if the functions are all supported on a common compact set $K$, and they converge in $D(K)$ to $\phi$. It is this `uniform compactness property' that gives us completeness in $D(\Omega)$.
-\end{remark}
-
-Even though $D(\Omega)$ is not metrizable, it's linear operators still have many of the same properties as metrizable spaces because it is the limit of metrizable spaces.
+The power of the topology on $C_c^\infty(\Omega)$ forces uniform convergence, but it means we have too many open sets to have metrizability. However, because $C_c^\infty(\Omega)$ is the limit of metrizable spaces, it's linear operators still have many of the same properties as metrizable spaces because it is the limit of metrizable spaces.
 
 \begin{theorem}
-    If $T: D(X) \to Y$ is a map from $D(X)$ to some locally convex space $Y$, then the following are equivalent:
+    If $T: C_c^\infty(X) \to Y$ is a map from $C_c^\infty(X)$ to some locally convex space $Y$, then the following are equivalent:
     %
     \begin{itemize}
         \item[(1)] $T$ is continuous.
         \item[(2)] $T$ is bounded.
         \item[(3)] If $\phi_1, \dots \to 0$, then $T\phi_1, \dots \to 0$.
-        \item[(4)] $T$ is continuous restricted to each $D(K)$.
+        \item[(4)] $T$ is continuous restricted to each $C_c^\infty(K)$.
     \end{itemize}
 \end{theorem}
 \begin{proof}
-    We already known that (1) implies (2). If $T$ is bounded, and we have a sequence $\phi_1, \dots$ converge to zero, then thesequence is bounded, hence contained in some $D(K)$, and $T$ is bounded as a map from $D(K)$ to $Y$, hence $T\phi_1, \dots \to 0$. (3) implies (4) holds because each $D(K)$ is metrizable, and any convergent sequence is contained in some common $D(K)$. To prove that (4) implies (1), we let $V$ be a convex, balanced set. Then $T^{-1}(V) \cap D(K)$ is open for each $K$, and $T^{-1}(V)$ is convex and balanced, so $T^{-1}(V)$ is balanced.
+    We already known that (1) implies (2). If $T$ is bounded, and we have a sequence $\phi_1, \dots$ converge to zero, then thesequence is bounded, hence contained in some $C_c^\infty(K)$, and $T$ is bounded as a map from $C_c^\infty(K)$ to $Y$, hence $T\phi_1, \dots \to 0$. (3) implies (4) holds because each $C_c^\infty(K)$ is metrizable, and any convergent sequence is contained in some common $C_c^\infty(K)$. To prove that (4) implies (1), we let $V$ be a convex, balanced set. Then $T^{-1}(V) \cap C_c^\infty(K)$ is open for each $K$, and $T^{-1}(V)$ is convex and balanced, so $T^{-1}(V)$ is balanced.
 \end{proof}
 
-An easily application of this theorem is that differentiation $f \mapsto D^\alpha f$ is a continuous operator from $D(X)$ to itself, since it is continuous when restricted to each $D(K)$.
+Because convergence is so strict in $C_c^\infty(\Omega)$, almost every operation we want to perform on smooth functions is continuous in this space.
+%
+\begin{itemize}
+    \item Since $f \mapsto D^\alpha f$ is a continuous operator from $C_c^\infty(K)$ to itself, it is therefore continuous on the entire space $C_c^\infty(\Omega)$. More generally, any linear differential operator with coefficients in $C_c^\infty(\Omega)$ is a continuous operator.
+
+    \item The inclusion $C_c^\infty(\Omega) \to L^p(\Omega)$ is continuous. To prove this, it suffices to prove for each compact $K$, the inclusion $C_c^\infty(K) \to L^p(\Omega)$ is continuous, and this follows because $\| f \|_p \leq |K| \| f \|_\infty$, which is easy to verify.
+
+    \item If $f \in L^1(\mathbf{R}^n)$ and is compactly supported, then for any $g \in C_c^\infty(\mathbf{R}^n)$, $f * g \in C_c^\infty(\mathbf{R}^n)$. This is because $f * g$ is continuous since $g \in L^\infty(\mathbf{R}^n)$, and it's support is contained in the sums of the support of $f$ and $g$, as well as the identity $D^\alpha(f * g) = f * (D^\alpha g)$. In fact, the map $g \mapsto f * g$ is a continuous operator on $C_c^\infty(\mathbf{R}^n)$. This is because if we restrict our attention to $C_c^\infty(K)$, and $f$ has supported on $K'$, then our convolution operator maps into the compact set $K+K'$, and since
+    %
+    \[ \| D^\alpha (g * f) \|_\infty = \| D^\alpha g * f \|_\infty \leq \| D^\alpha g \|_\infty \| f \|_1 \]
+    %
+    we conclude
+    %
+    \[ \| g * f \|_{C^n(K+K')} \leq \| g \|_{C^n} \| f \|_1 \]
+    %
+    which gives continuity of the operator as a map from $C_c^\infty(K)$ to $C_c^\infty(K+K')$. Since the latter space embeds in $C_c^\infty(\mathbf{R}^n)$, we obtain continuity of the operator on $C_c^\infty(\mathbf{R}^n)$.
+\end{itemize}
+
+\begin{theorem}
+    If a map $T: C_c^\infty(K) \to C_c^\infty(\mathbf{R}^n)$ is continuous, then the image of $C_c^\infty(K)$ is actually $C_c^\infty(K')$ for some compact set $K'$.
+\end{theorem}
+\begin{proof}
+    Suppose there is a sequence $x_1, x_2, \dots$ with no limit point and smooth functions $f_1, f_2, \dots$ compactly supported on $C_c^\infty(K)$ such that $(Tf_n)(x_n) \neq 0$. But then for any sequence $\alpha_n$ whatsoever, we cannot have $\alpha_n Tf_n$ converging to zero, hence $\alpha_n f_n$ cannot converge to zero. But this is clearly not true, for if we let
+    %
+    \[ \alpha_n = \frac{1}{2^n \| f_n \|_{C^n}} \]
+    %
+    Then for any fixed $m$, $\| f_n \|_{C^m}$ is eventually bounded above by $1/2^n$ and therefore converges to zero. Thus such a sequence $x_n$ cannot exist, and therefore the image of $T$ is supported on some compact set $K'$.
+\end{proof}
+
+Thus the topology on the space $C_c^\infty(\mathbf{R}^n)$ is as strict as can be. As a consequence, we shall see that the weak $*$ topology on $C_c^\infty(\mathbf{R}^n)^*$ is the weakest concept in analysis, which makes it surprising that we still be able to recover the continuity of many operators.
 
 \section{The Space of Distributions}
 
@@ -1572,7 +1676,7 @@ We now have the tools to explain the idea of a distribution. If $f$ is an integr
 %
 \[ \Lambda_f(\phi) = \int f(x) \phi(x)\; dx \]
 %
-is a {\it continuous} linear functional defined on $D(\Omega)$. The functional $\Lambda_f$ determines $f$ up to a set of measure zero, and so we identify $\Lambda_f$ with $f$. But even if $f$ satisfies weaker properties like being locally integrable, the definition above defines a continuous linear functional. The idea of the theory of distributions is to treat any continuous linear functional $\Lambda$ on $D(\Omega)$ as if it were given by integration against a function as nice as possible. Using the properties of integration for these integration, we can usually cheat out a definition of operations usually only applicable to functions that works for all distributions. Thus the operations of analysis generalize to an incredibly large family of objects. As an example, if $f$ was continuously differentiable, then we would find
+is a {\it continuous} linear functional defined on $C_c^\infty(\Omega)$. The functional $\Lambda_f$ determines $f$ up to a set of measure zero, and so we identify $\Lambda_f$ with $f$. But even if $f$ satisfies weaker properties like being locally integrable, the definition above defines a continuous linear functional. The idea of the theory of distributions is to treat any continuous linear functional $\Lambda$ on $C_c^\infty(\Omega)$ as if it were given by integration against a function as nice as possible. Using the properties of integration for these integration, we can usually cheat out a definition of operations usually only applicable to functions that works for all distributions. Thus the operations of analysis generalize to an incredibly large family of objects. As an example, if $f$ was continuously differentiable, then we would find
 %
 \[ \int f'(x) \phi(x)\; dx = - \int f(x) \phi'(x)\; dx \]
 %
@@ -1590,11 +1694,15 @@ and more generally, for a linear functional on $n$ dimensional space, we could d
     Thus the `derivative' of the Heaviside step function is the Dirac delta. It is not a function, but if we were to think of it as a function, it would be zero everywhere except at the origin, where it is infinitely peaked.
 \end{example}
 
-In general, we define a {\bf distribution} to be a continuous linear functional on the space of test functions $D(\Omega)$. In the last section, our exploration of continuous linear transformations on $D(\Omega)$ guarantees that a linear functional $\Lambda$ on $D(\Omega)$ is continuous if and only if for every compact $K \subset X$ there is an integer $N$ and a constant $A$ such that
-%
-\[ |\Lambda f| \leq A \| f \|_{W^{N,\infty}(K)} \]
-%
-If one integer $N$ works for all $K$, we define this to be the {\bf order} of the distribution. If such an $N$ doesn't exist, we say the distribution has infinite order.
+\begin{example}
+    Consider the Dirac delta function at the origin, which is the distribution $\delta(f) = f(0)$. Then
+    %
+    \[ \delta'(f) = - \delta(f') = - f'(0) \]
+    %
+    which is a distribution which doesn't arise from integration with respect to a locally integrable function nor a Radon measure. Thus the `derivative' of an infinitely peaked function at the origin is the negation of a derivative.
+\end{example}
+
+In general, we define a {\bf distribution} to be a continuous linear functional on the space of test functions $C_c^\infty(\Omega)$. In the last section, our exploration of continuous linear transformations on $C_c^\infty(\Omega)$ guarantees that a linear functional $\Lambda$ on $C_c^\infty(\Omega)$ is continuous if and only if for every compact $K \subset X$ there is an integer $N$ such that $|\Lambda f| \lesssim \| f \|_{C^N}$ for $f$ supported on $K$. If one integer $N$ works for all $K$, we define this to be the {\bf order} of the distribution. If such an $N$ doesn't exist, we say the distribution has infinite order.
 
 \begin{example}
     If $\mu$ is a locally finite Borel measure, or a finite complex valued measure, then we can define
@@ -1605,21 +1713,46 @@ If one integer $N$ works for all $K$, we define this to be the {\bf order} of th
     %
     \[ |\Lambda_\mu(\phi)| \leq \mu(K) \| \phi \|_{L^\infty(K)} \]
     %
-    Thus $\Lambda_\mu$ is a distribution of order one. When we say $\mu$ is a distribution, we are really thinking of the distribution $\Lambda_\mu$.
+    Thus $\Lambda_\mu$ is a distribution of order zero. When we say $\mu$ is a distribution, we are really thinking of the distribution $\Lambda_\mu$.
+\end{example}
+
+\begin{example}
+    Not all distributions arise from functions or measures. For instance, if $f$ is smooth and has compact support on the real line, then
+    %
+    \[ \text{p.v} \int \frac{f(x)}{x} = \lim_{\varepsilon \to 0} \int_{|x| > \varepsilon} \frac{f(x)}{x}\; dx \]
+    %
+    exists, independantly of the value of $f$ at the origin. This is because the values of $1/x$ on either side of the real axis cancel each other out in the integral. More rigorously, if the support of $f$ is contained in $[-N,N]$, then
+    %
+    \[ \left| \int_{|x| > \varepsilon} \frac{f(x)}{x} \right| = \left| \int_{\varepsilon < |x| < N} \frac{f(x) - f(0)}{x} \right| \]
+    %
+    and by the mean value theorem, $f(x) - f(0) = xf'(y)$ for some $y$ between zero and $x$, so
+    %
+    \[ \left| \int_{|x| \leq \varepsilon} \frac{f(x) - f(0)}{x} \right| \leq 2 \varepsilon \| f \|_{C^1} \]
+    %
+    From this, we can conclude that the values converge, and that
+    %
+    \[ \left| \text{p.v.} \int \frac{f(x)}{x} \right| \leq 2N \| f \|_{C^1} \]
+    %
+    hence this linear functional is actually continuous, hence a distribution, and it is not induced by any function or measure. This distribution is the derivative of the distribution induced by the locally integrable function $\log |x|$, since an integration by parts gives
+    %
+    \begin{align*}
+        - \int \log |x| f'(x) &= \lim_{\varepsilon \to 0} \int_{|x| \geq \varepsilon} \log |x| f'(x)\\
+        &= \log \varepsilon \left( f(x) - f(-x) \right) + \int_{|x| \geq \varepsilon} \frac{f(x)}{x} = \text{p.v.} \int \frac{f(x)}{x}\; dx
+    \end{align*}
 \end{example}
 
 As we stated before, given any distribution $\Lambda$, we can define it's {\it derivative} $D^\alpha \Lambda$ to be the distribution
 %
 \[ D^\alpha \Lambda (\phi) = (-1)^{|\alpha|} \Lambda(D^\alpha \phi) \]
 %
-which is continuous since the derivative operation is continuous on $D(\Omega)$. Just as the partial derivatives commutes on $D(\Omega)$, the partial differentiation operation commutes on the the space of distributions, i.e. $D^\alpha D^\beta \Lambda = D^\beta D^\alpha \Lambda$, and we take the common value to be $D^{\alpha + \beta} \Lambda$. If $D^\alpha f$ is continuous, then we already know an integration by parts gives $D^\alpha \Lambda_f = \Lambda_{D^\alpha f}$, so we can think of the distribution derivative as a true generalization of the usual derivative. On the other hand, in general the distribution derivative may disagree with the usual derivative if the function is less well behaved. If $P$ is a polynomial, we have
+which is continuous since the derivative operation is continuous on $C_c^\infty(\Omega)$. Just as the partial derivatives commutes on $C_c^\infty(\Omega)$, the partial differentiation operation commutes on the the space of distributions, i.e. $D^\alpha D^\beta \Lambda = D^\beta D^\alpha \Lambda$, and we take the common value to be $D^{\alpha + \beta} \Lambda$. If $D^\alpha f$ is continuous, then we already know an integration by parts gives $D^\alpha \Lambda_f = \Lambda_{D^\alpha f}$, so we can think of the distribution derivative as a true generalization of the usual derivative. On the other hand, in general the distribution derivative may disagree with the usual derivative if the function is less well behaved. If $P$ is a polynomial, we have
 %
 \[ P(D)(\Lambda)(\phi) = \Lambda(P(-D)(\phi)) \]
 %
 if we understand the polynomial applications of derivatives linearly.
 
 \begin{example}
-    Let $f$ be a left continuous function on the real line with bounded variation. Then $f'$ exists almost everywhere, and $f' \in L^1(\mathbf{R})$. Now by Fubini's theorem, if we let $\mu$ be the measure defined by $\mu([a,b)) = f(b) - f(a)$, then for any $\phi \in D(\mathbf{R})$,
+    Let $f$ be a left continuous function on the real line with bounded variation. Then $f'$ exists almost everywhere, and $f' \in L^1(\mathbf{R})$. Now by Fubini's theorem, if we let $\mu$ be the measure defined by $\mu([a,b)) = f(b) - f(a)$, then for any $\phi \in C_c^\infty(\mathbf{R})$,
     %
     \begin{align*}
         \int_{-\infty}^\infty \phi(x) d\mu(x) &= - \int_{-\infty}^\infty \int_{(x,\infty)} \phi'(y)\; dy\; d\mu(x) = - \int_{-\infty}^\infty \phi'(y) \int_{(-\infty,y)} d\mu(x)\; dy\\
@@ -1629,21 +1762,21 @@ if we understand the polynomial applications of derivatives linearly.
     and we know $f(-\infty) = 0$, hence we find $\smash{\Lambda_f' = \Lambda_\mu}$. In particular, we only have $\smash{\Lambda_f' = \Lambda_\mu}$ if $\smash{f dx = \mu}$, which only holds if $f$ is absolutely continuous.
 \end{example}
 
-If $f$ is locally integrable, and $g$ is $C^\infty$, then $fg$ is locally integrable. The identity
+If $f \in L^1_{\text{loc}}(\mathbf{R}^n)$, and $g$ is $C^\infty$, then $fg$ is locally integrable. The identity
 %
 \[ \int (f(x)g(x)) \phi(x)\; dx = \int f(x) (g(x) \phi(x))\; dx \]
 %
-enables us to define the product of a $C^\infty(\Omega)$ function with a distribution. Given any distribution $\Lambda$, we define $(f \Lambda)(\phi) = \Lambda(f \phi)$. To see why $f \Lambda$ is a distribution, fix a compact set $K$, and pick $A$ and $N$ such that for any $\phi \in D(K)$, $|\Lambda(f)| \leq A \| f \|_{N,K}$. The Leibnitz rule tells us that
+enables us to define the product of a $C^\infty(\Omega)$ function with a distribution. Given any distribution $\Lambda$, we define $(f \Lambda)(\phi) = \Lambda(f \phi)$. To see why $f \Lambda$ is a distribution, fix a compact set $K$, and pick $A$ and $N$ such that for any $\phi \in C_c^\infty(K)$, $|\Lambda(f)| \leq A \| f \|_{N,K}$. The Leibnitz rule tells us that
 %
 \[ D^\alpha(f \phi) = \sum_{\lambda + \gamma = \alpha} C_{\lambda \gamma} D^\lambda f D^\gamma \phi \]
 %
 and so
 %
-\[ |\Lambda(f \phi)| \leq A \| f \phi \|_{N,K} \leq N A \left( \max |C_{\lambda \gamma}| \| D^\lambda f \|_{L^\infty(K)} \right) \| \phi \|_{W^{N,\infty}(K)} \]
+\[ |\Lambda(f \phi)| \leq A \| f \phi \|_{N,K} \leq N A \left( \max |C_{\lambda \gamma}| \| D^\lambda f \|_{L^\infty(K)} \right) \| \phi \|_{C^N(K)} \]
 %
-so $f \Lambda$ is a distribution with the same order as $\Lambda$.
+so $f \Lambda$ is a distribution with the same order as $\Lambda$. It is important that $f$ is a smooth function, so that $fg$ is smooth for each function $g$.
 
-Since $D(X)'$ is the dual space of a topological vector space, we can give it a natural topology, the weak $*$ topology. Thus a net of distributions $\Lambda_\alpha$ converges to $\Lambda$ if and only if $\Lambda_\alpha(\phi) \to \Lambda(\phi)$ for all test functions $\phi$. This gives a further topology on the space of measures and functions, and we often write $f_\alpha \to f$ `in the distribution sense' if we have a convergence $\Lambda_{f_\alpha} \to \Lambda_f$ for the corresponding distributions. The following is quite a surprising result which hints at the generality of the theory of distributions.
+Since $C_c^\infty(X)^*$ is the dual space of a topological vector space, we can give it a natural topology, the weak $*$ topology. Thus a net of distributions $\Lambda_\alpha$ converges to $\Lambda$ if and only if $\Lambda_\alpha(\phi) \to \Lambda(\phi)$ for all test functions $\phi$. This gives a further topology on the space of measures and functions, and we often write $f_\alpha \to f$ `in the distribution sense' if we have a convergence $\Lambda_{f_\alpha} \to \Lambda_f$ for the corresponding distributions. Since the convergence in $C_c^\infty(\Omega)$ is incredibly strict, convergence of distributions is incredibly weak. The following is quite a surprising result which hints at the generality of the theory of distributions.
 
 \begin{theorem}
     Suppose that $\Lambda_1, \Lambda_2, \dots$ are a sequence of distributions such that for a fixed test function $\phi$,
@@ -1653,14 +1786,14 @@ Since $D(X)'$ is the dual space of a topological vector space, we can give it a 
     exists. Then $\Lambda$ is a distribution, and $D^\alpha \Lambda_n \to D^\alpha \Lambda$ for each $\alpha$.
 \end{theorem}
 \begin{proof}
-    Fix a compact set $K$. Then the Banach Steinhaus theorem guarantees that $\Lambda$ restricted to $D(K)$ is a continuous functional, and we know this implies $\Lambda$ is continuous in general. The fact that $D^\alpha \Lambda_n \to D^\alpha \Lambda$ is trivial, because for a fixed $\phi$, $D^\alpha \phi \in D(X)$, so
+    Fix a compact set $K$. Then the Banach Steinhaus theorem guarantees that $\Lambda$ restricted to $C_c^\infty(K)$ is a continuous functional, and we know this implies $\Lambda$ is continuous in general. The fact that $D^\alpha \Lambda_n \to D^\alpha \Lambda$ is trivial, because for a fixed $\phi$, $D^\alpha \phi \in C_c^\infty(X)$, so
     %
     \[ D^\alpha \Lambda(\phi) = (-1)^{|\alpha|} \Lambda(D^\alpha \phi) = (-1)^{|\alpha|} \lim \Lambda_n(D^\alpha \phi) = \lim D^\alpha \Lambda_n(\phi) \]
     %
     Thus the sequence weakly converges to $D^\alpha \Lambda$.
 \end{proof}
 
-A similar application of the Banach Steinhaus theorem guarantees that if $g_n \to g$ in $C^\infty(X)$, and $\Lambda_n \to \Lambda$ in the distributional sense, then $g_n \Lambda_n$ converges to $g \Lambda$ in the distributional sense.
+A similar application of the Banach Steinhaus theorem guarantees that if $g_n \to g$ in $C^\infty(\mathbf{R}^n)$, and $\Lambda_n \to \Lambda$ in the distributional sense, then $g_n \Lambda_n$ converges to $g \Lambda$ in the distributional sense. Thus the space of distributions is a topological $C^\infty(\mathbf{R}^n)$ module.
 
 \section{Localization of Distribuitions}
 
@@ -1681,21 +1814,21 @@ Just as we can consider the local behaviour of functions around a point, we can 
     The continuity is verified by fixing a compact $K$, from which there are only finitely many nonzero $\psi_{\alpha \beta}$ on $K$, and the fact that this definition is independant of the partition of unity follows from the first part of the theorem.
 \end{proof}
 
-In the language of modern commutative algebra, the association of $D(U)'$ to each open subset $U$ of $\Omega$ gives a sheaf structure to $\Omega$. Given a distribution $\Lambda$, we might have $\Lambda(\phi) = 0$ for every $\phi$ supported on some open set $U$. The complement of the largest open set $U$ for which this is true is called the {\bf support} of $\Lambda$.
+In the language of modern commutative algebra, the association of $C_c^\infty(U)^*$ to each open subset $U$ of $\Omega$ gives a sheaf structure to $\Omega$. Given a distribution $\Lambda$, we might have $\Lambda(\phi) = 0$ for every $\phi$ supported on some open set $U$. The complement of the largest open set $U$ for which this is true is called the {\bf support} of $\Lambda$. If $f$ vanishes on a neighbourhood of the support of $\Lambda$, then by definition of the support, $\Lambda f = 0$. The neighbourhood condition is important -- $\delta'$ is supported on $\{ 0 \}$, since $\delta$ is, but it certainly doesn't vanish on $f$ if $f(0) = 0$.
 
 \begin{theorem}
     If a distribution has precompact support, the distribution has finite order, and extends uniquely to a continuous linear functional on $C^\infty(X)$.
 \end{theorem}
 \begin{proof}
-    Let $\Lambda$ be a distribution supported on a compact set. If $\psi$ is a function with compact support with $\psi(x) = 1$ on the support of $\Lambda$, then $\psi \Lambda = \Lambda$, because for any $\phi$, $\phi - \phi \psi$ is supported on a set disjoint from the support of $\Lambda$. But if $\psi$ is supported on $K$, then there is $N$ such that for any $\phi \in D(K)$,
+    Let $\Lambda$ be a distribution supported on a compact set. If $\psi$ is a function with compact support with $\psi(x) = 1$ on the support of $\Lambda$, then $\psi \Lambda = \Lambda$, because for any $\phi$, $\phi - \phi \psi$ is supported on a set disjoint from the support of $\Lambda$. But if $\psi$ is supported on $K$, then there is $N$ such that for any $\phi \in C_c^\infty(K)$,
     %
     \[ |\Lambda(\phi)| \lesssim \| \phi \|_{N,K} \]
     %
     and so for any other compact set $K$,
     %
-    \[ |\Lambda(\phi)| = |\Lambda(\phi \psi)| \lesssim \| \phi \psi \|_{N,K} \lesssim \| \psi \|_{W^{N,\infty}(K)} \| \phi \|_{W^{N,\infty}(K)} \]
+    \[ |\Lambda(\phi)| = |\Lambda(\phi \psi)| \lesssim \| \phi \psi \|_{N,K} \lesssim \| \psi \|_{C^N(K)} \| \phi \|_{C^N(K)} \]
     %
-    which shows $\Lambda$ has order $N$. We have shown that $\Lambda$ is continuous with respect to the seminorm $\| \cdot \|_{W^{N,\infty}(K)}$ on $C^\infty(X)$, and so by the Hahn Banach theorem, $\Lambda$ extends uniquely to a continuous functional on $C^\infty(X)$.
+    which shows $\Lambda$ has order $N$. We have shown that $\Lambda$ is continuous with respect to the seminorm $\| \cdot \|_{C^N(K)}$ on $C^\infty(X)$, and so by the Hahn Banach theorem, $\Lambda$ extends uniquely to a continuous functional on $C^\infty(X)$.
 \end{proof}
 
 \begin{example}
@@ -1705,19 +1838,37 @@ In the language of modern commutative algebra, the association of $D(U)'$ to eac
     %
     Find $A$ such that for functions $\phi$ supported on $K$,
     %
-    \[ |\Lambda(\phi)| \leq A \| \phi \|_{W^{N,\infty}(K)} \]
+    \[ |\Lambda(\phi)| \leq A \| \phi \|_{C^N(K)} \]
     %
     Fix a bump function $\psi$ with support on the ball of radius one and $\psi(x) = 1$ in a neighbourhood of the origin, and define $\psi_\delta(x) = \psi(x/\delta)$. If $\delta$ is small enough, then $\psi$ is supported on $K$, and because $\Lambda$ is supported on $x$,
     %
     \begin{align*}
-        |\Lambda(\phi)| &= |\Lambda(\phi \psi_\delta)| \leq A \| \phi \psi_\delta \|_{W^{N,\infty}(K)}\\
+        |\Lambda(\phi)| &= |\Lambda(\phi \psi_\delta)| \leq A \| \phi \psi_\delta \|_{C^N(K)}\\
         &\leq A \sum_{|\alpha + \beta| = N} |c_{\alpha \beta}| \| D^\alpha \phi \|_\infty \| D^\beta \psi_\delta \|\\
-        &\leq A \| \psi \|_{W^{N,\infty}} \sum_{|\alpha + \beta| = N} |c_{\alpha \beta}| \delta^{|\beta| - |\alpha|} \| D^\beta \phi \|_{L^\infty(K)}\\
+        &\leq A \| \psi \|_{C^N} \sum_{|\alpha + \beta| = N} |c_{\alpha \beta}| \delta^{|\beta| - |\alpha|} \| D^\beta \phi \|_{L^\infty(K)}\\
         &\leq \varepsilon A \left( \sum_{|\alpha + \beta| = N} |c_{\alpha \beta}| n^{N - |\beta|} \right)
     \end{align*}
     %
     We can then let $\varepsilon \to 0$ to conclude $\Lambda(\phi) = 0$. But this means that $\Lambda(\phi)$ is a linear function of the partial derivatives of $\phi$ with order $\leq N$, completing the proof.
 \end{example}
+
+\begin{example}
+    If $\delta$ is the Dirac delta distribution, then $f \delta = f(0) \delta$ for any smooth function $f$. Thus, in particular, $x \delta = 0$. Conversely, if $\Lambda$ is any distribution with $x \Lambda = 0$, then $\Lambda$ is a multiple of the Dirac delta distribution. To see this, we note that this would imply $\Lambda(f) = 0$ for all functions $f$ such that $f/x$ is also smooth and compactly supported. In particular, this is true if the support of $f$ does not contain the origin. Thus $\Lambda$ is supported on the origin, hence there are constants $a_n$ such that
+    %
+    \[ \Lambda f = \sum_{n = 0}^N a_n f^{(n)}(0) \]
+    %
+    But $(xf)^{(n)}(0) = n f^{(n-1)}(0)$ only vanishes for all $f$ when $n = 0$, so $\Lambda$ is a multiple of the Dirac delta distribution. A more simple way to see this is that if $f$ is compactly supported on $[-N,N]$, the function
+    %
+    \[ g(x) = \frac{f(x) - f(0)}{x} = \int_0^1 f'(tx)\; dt \]
+    %
+    is smooth, and $f = f(0) + xg$. Since $\Lambda$ and $x \Lambda$ have bounded support, they extend uniquely to $C^\infty(\Omega)$, and so $\Lambda f = f(0) \Lambda 1 + \Lambda(xg) = f(0) \Lambda 1$.
+\end{example}
+
+In many other ways, distributions act like functions. For instance, any distribution $\Lambda$ can be uniquely written as $\Lambda_1 + i \Lambda_2$ for two distributions $\Lambda_1, \Lambda_2$ that are real valued for any real-valued smooth continuous function. However, we cannot write a real-valued distribution as the difference of two positive distributions, i.e. those which are non-negative when evaluated at any non-negative functional. Given a non-negative functional $\Lambda$,  we define $\Lambda f$ for a compactly supported continuous function $f \geq 0$ as
+%
+\[ \Lambda f = \sup \{ \Lambda g: g \in C_c^\infty(\mathbf{R}^n), g \leq f \} \]
+%
+and then in general define $\Lambda (f^+ - f^-) = \Lambda f^+ - \Lambda f^-$. Then $\Lambda$ is obviously a positive extension of $\Lambda$ to all continuous functions, and is linear. But then the Riesz representation theorem implies that there is a positive Radon measure such that $\Lambda = \Lambda_\mu$, completing the proof.
 
 \section{Derivatives of Continuous Functions}
 
@@ -1766,7 +1917,7 @@ Notice that we can also define the translation operators on distributions by set
         &= \Lambda(T_x (D^\alpha \phi)^*) = (\Lambda * D^\alpha \phi)(x)
     \end{align*}
     %
-    If $e$ is a unit vector, and we set $\Delta_h = h^{-1} (1 - T_{he})$, then $\Delta_h \phi$ converges to $D_e \phi$ in $D(\mathbf{R}^n)$, and as such,
+    If $e$ is a unit vector, and we set $\Delta_h = h^{-1} (1 - T_{he})$, then $\Delta_h \phi$ converges to $D_e \phi$ in $C_c^\infty(\mathbf{R}^n)$, and as such,
     %
     \begin{align*}
         \Delta_h(\Lambda * \phi)(x) &= \frac{(\Lambda * \phi)(x) - (\Lambda * \phi)(x - he)}{h}\\
@@ -1777,14 +1928,14 @@ Notice that we can also define the translation operators on distributions by set
 \end{proof}
 
 \begin{theorem}
-    If $\phi, \psi \in D(\mathbf{R}^n)$, then $\Lambda * (\phi * \psi) = (\Lambda * \phi) * \psi$.
+    If $\phi, \psi \in C_c^\infty(\mathbf{R}^n)$, then $\Lambda * (\phi * \psi) = (\Lambda * \phi) * \psi$.
 \end{theorem}
 \begin{proof}
     Let $\phi$ and $\psi$ be supported on $K$. We calculate
     %
     \[ (\phi * \psi)^*(x) = \int \phi^*(x + y) \psi(y)\; dy = \int (T_y \phi)^*(x) \psi(y)\; dy \]
     %
-    since the map $y \mapsto (T_y \phi)^* \psi(y)$ is continuous, and vanishes out of the compact set $K$, so that we have a $D(K)$ valued integral
+    since the map $y \mapsto (T_y \phi)^* \psi(y)$ is continuous, and vanishes out of the compact set $K$, so that we have a $C_c^\infty(K)$ valued integral
     %
     \[ (\phi * \psi)^* = \int_K \psi^*(y) T_y \phi^*\; ds \]
     %
@@ -1798,13 +1949,13 @@ Notice that we can also define the translation operators on distributions by set
     The commutativity in general results from applying the commutativity of the translation operators.
 \end{proof}
 
-A net $\phi_\alpha$ is known as an {\it approximate identity} in the space of distributions if $\Lambda * \phi_\alpha \to \Lambda$ as distributions for every distribution $\phi$, and an approximate identity in the space of test functions if $\psi * \phi_\alpha \to \psi$ in $D(\mathbf{R}^n)$.
+A net $\phi_\alpha$ is known as an {\it approximate identity} in the space of distributions if $\Lambda * \phi_\alpha \to \Lambda$ as distributions for every distribution $\phi$, and an approximate identity in the space of test functions if $\psi * \phi_\alpha \to \psi$ in $C_c^\infty(\mathbf{R}^n)$.
 
 \begin{theorem}
-    If $\phi$ is a test function on $\mathbf{R}^n$, and we set $\phi_\delta(x) = \delta^{-n} \phi(x/\delta)$, then $\phi_\delta$ is an approximate identity in the space of test functions and in the space of distributions.
+    If $\phi_\alpha$ is a family of non-negative functions in $C_c^\infty(\mathbf{R}^n)$ which are eventually supported on every neighbourhood of the origin, and integrate to one, then $\phi_\alpha$ is an approximation to the identity in the space of test functions and in the space of distributions.
 \end{theorem}
 \begin{proof}
-    It is easy to verify that if $f$ is a continuous function, then $f * \phi_\delta$ converges locally uniformly to $f$ as $\delta \to 0$. But now we calculate that $D^\alpha(f * \phi_\delta) = (D^\alpha f) * \phi_\delta$ converges locally uniformly to $D^\alpha \phi$, which gives that $f * \phi$ converges to $f$ in $D(\mathbf{R}^n)$. Now if $\Lambda$ is a distribution, and $\psi$ is a test function, then continuity gives
+    It is easy to verify that if $f$ is a continuous function, then $f * \phi_\delta$ converges locally uniformly to $f$ as $\delta \to 0$. But now we calculate that if $f \in C_c^\infty(\mathbf{R}^n)$, then $D^\alpha(f * \phi_\delta) = (D^\alpha f) * \phi_\delta$ converges locally uniformly to $D^\alpha \phi$, which gives that $f * \phi$ converges to $f$ in $C_c^\infty(\mathbf{R}^n)$. Now if $\Lambda$ is a distribution, and $\psi$ is a test function, then continuity gives
     %
     \begin{align*}
         \Lambda(\psi^*) &= \lim_{\delta \to 0} \Lambda(\phi_\delta * \psi) = \lim_{\delta \to 0} (\Lambda * (\phi_\delta * \psi))(0)\\
@@ -1814,14 +1965,14 @@ A net $\phi_\alpha$ is known as an {\it approximate identity} in the space of di
     and $\psi$ was arbitrary.
 \end{proof}
 
-If $\Lambda$ is a distribution on $\mathbf{R}^n$, then the map $\phi \mapsto \Lambda * \phi$ is a linear transformation from $D(\mathbf{R}^n)$ into $C^\infty(\mathbf{R}^n)$, which commutes with translations. It is also continuous. To see this, we consider a fixed compact $K$, and consider the map from $D(K)$ to $C^\infty(\mathbf{R}^n)$. We can apply the closed graph theorem to prove continuity, so we assume the existence of $\phi_1, \phi_2, \dots$ converging to $\phi$ in $D(K)$ and $\Lambda * \phi_1, \Lambda * \phi_2, \dots$ converges to $f$. It suffices to show $f = \Lambda * \phi$. But we calculate
+If $\Lambda$ is a distribution on $\mathbf{R}^n$, then the map $\phi \mapsto \Lambda * \phi$ is a linear transformation from $C_c^\infty(\mathbf{R}^n)$ into $C^\infty(\mathbf{R}^n)$, which commutes with translations. It is also continuous. To see this, we consider a fixed compact $K$, and consider the map from $C_c^\infty(K)$ to $C^\infty(\mathbf{R}^n)$. We can apply the closed graph theorem to prove continuity, so we assume the existence of $\phi_1, \phi_2, \dots$ converging to $\phi$ in $C_c^\infty(K)$ and $\Lambda * \phi_1, \Lambda * \phi_2, \dots$ converges to $f$. It suffices to show $f = \Lambda * \phi$. But we calculate
 %
 \[ f(x) = \lim (\Lambda * \phi_n)(x) = \lim \Lambda(T_x \phi^*_n) = \Lambda (\lim T_x \phi^*_n) = \Lambda(T_x \phi^*) = (\Lambda * \phi)(x) \]
 %
-where we have used the fact that $T_x \phi_n^*$ converges to $T_x \phi^*$ in $D(\mathbf{R}^n)$. Suprisingly, the converse is true.
+where we have used the fact that $T_x \phi_n^*$ converges to $T_x \phi^*$ in $C_c^\infty(\mathbf{R}^n)$. Suprisingly, the converse is true.
 
 \begin{theorem}
-    If $L: D(\mathbf{R}^n) \to C^\infty(\mathbf{R}^n)$ and commutes with translations, then there is a distribution $\Lambda$ such that $L(\phi) = \Lambda * \phi$.
+    If $L: C_c^\infty(\mathbf{R}^n) \to C^\infty(\mathbf{R}^n)$ and commutes with translations, then there is a distribution $\Lambda$ such that $L(\phi) = \Lambda * \phi$.
 \end{theorem}
 \begin{proof}
     If $L(\phi) = \Lambda * \phi$, then we would have
@@ -1869,7 +2020,7 @@ Now we come to the grand finale, defining the convolution of two distributions. 
 %
 \[ L(\phi) = \Lambda * (\Psi * \phi) \]
 %
-Then $L$ commutes with translations, and is continuous, because if we have $\phi_1, \phi_2, \dots$ converging to $\phi$ in $D(K)$, then $\Psi * \phi_n$ converges to $\Psi * \phi$ in $C^\infty(\mathbf{R}^n)$. If $\Psi$ is supported on a compact support $C$, then the $\Psi * \phi_n$ have common compact support $C + K$, and actually converge in $D(C + K)$, hence $\Lambda * (\Psi * \phi_n)$ converges to $\Lambda * (\Psi * \phi)$. Conversely, if $\Lambda$ has compact support, then $\Psi * \phi_n$ converges in $C^\infty(\mathbf{R}^n)$, which implies $\Lambda * (\Psi * \phi_n)$ converges to $\Lambda * (\Psi * \phi)$ in $C^\infty(\mathbf{R}^n)$. Thus $L$ corresponds to a distribution, and we define this distribution to be $\Lambda * \Psi$.
+Then $L$ commutes with translations, and is continuous, because if we have $\phi_1, \phi_2, \dots$ converging to $\phi$ in $C_c^\infty(K)$, then $\Psi * \phi_n$ converges to $\Psi * \phi$ in $C^\infty(\mathbf{R}^n)$. If $\Psi$ is supported on a compact support $C$, then the $\Psi * \phi_n$ have common compact support $C + K$, and actually converge in $C_c^\infty(C + K)$, hence $\Lambda * (\Psi * \phi_n)$ converges to $\Lambda * (\Psi * \phi)$. Conversely, if $\Lambda$ has compact support, then $\Psi * \phi_n$ converges in $C^\infty(\mathbf{R}^n)$, which implies $\Lambda * (\Psi * \phi_n)$ converges to $\Lambda * (\Psi * \phi)$ in $C^\infty(\mathbf{R}^n)$. Thus $L$ corresponds to a distribution, and we define this distribution to be $\Lambda * \Psi$.
 
 \begin{theorem}
     If $\Lambda$ and $\Psi$ are distributions, one of which has compact support, then $\Lambda * \Psi = \Psi * \Lambda$. Let $S_\Lambda$ and $S_\Psi$, and $S_{\Lambda * \Psi}$ denote the supports of $\Lambda$, $\Psi$, and $\Lambda * \Psi$. Then $\Lambda * \Psi = \Psi * \Lambda$, and $S_{\Lambda * \Psi} \subset S_\Lambda + S_\Psi$.

@@ -36,27 +36,27 @@
 
 \section{Rusza: Difference Sets Without Squares}
 
-In this section, we describe the work of Ruzsa on the discrete squarefree difference problem, which provides inspiration for our speculated results for the squarefree subset problem in the continuous setting. Recall that if $X$ and $Y$ are subsets of integers, we let
+In this section, we describe the work of Ruzsa on the discrete squarefree difference problem, which provides inspiration for our speculated results for the squarefree subset problem in the continuous setting. If $X$ and $Y$ are subsets of integers, we shall let
 %
 \[ X \pm Y = \{ x \pm y: x \in X, y \in Y, x \pm y > 0 \} \]
 %
-The {\it differences} of a set $X$ are elements of $X - X$. The {\it difference set problem} asks to consider how large a subset of the integers can be, whose differences do not contain the square of any positive integer. We let $D(N)$ denote the maximum number of integers which can be selected from $[1,N]$ whose differences do not contain a square.
+denote the sums and difference of the set. The {\it differences} of a set $X$ are elements of $X - X$, and so the squarefree difference set problem asks to consider how large a subset of the integers can be, whose differences do not contain the square of any positive integer. We let $D(N)$ denote the maximum number of integers which can be selected from $[1,N]$ whose differences do not contain a square.
 
 \begin{example}
     The set $X = \{ 1, 3, 6, 8 \}$ is squarefree, because $X - X = \{ 2, 3, 5, 7 \}$, and none of these elements are perfect squares. On the other hand, $\{ 1, 3, 5 \}$ is not a squarefree subset, because $5 - 1 = 4$ is a perfect square.
 \end{example}
 
-It is easily to greedily construct fairly large subsets of the integers by applying a sieve. We start by writing out a large list of integers $1,2,3,4,\dots,N$. Then, while we still have numbers to pick, we greedily select the smallest number $x_*$ we haven't crossed out of the list, add it to our set $X$ of squarefree numbers, and then cross out all integers $y$ such that $y - x_*$ is a positive square. Thus we cross out $x_*$, $x_* + 1$, $x_* + 4$, and so on, all the way up to $x_* + m^2$, where $m$ is the largest integer with $x_* + m^2 \leq N$. This implies $m \leq \sqrt{N - x_*} \leq \sqrt{N-1}$, hence we cross out at most $\sqrt{N-1} + 1$ integers whenever with add a new element $x_*$ to $X$. When the algorithm terminates, all integers must be crossed out, and if the algorithm runs $n$ iterations, a union bound gives that we cross out at most $n[\sqrt{N-1} + 1]$ integers, hence $n[\sqrt{N-1} + 1] \geq N$. It follows that the set $X$ we end up with satisfies
+There are a few tricks to constructing large subsets of integers avoiding squares. If $p$ is prime, then $p \mathbf{Z} \cap [1,p^2)$ avoids squares, because the difference of two numbers must be divisible by $p$, but not by $p^2$. If $n = p^2$, this gives a set with $n^{1/2}$ elements. However, we can do just as well without using any properties of the set of squares except for their sparsity, by greedily applying a sieve. We start by writing out a large list of integers $1,2,3,4,\dots,N$. Then, while we still have numbers to pick, we greedily select the smallest number $x_*$ we haven't crossed out of the list, add it to our set $X$ of squarefree numbers, and then cross out all integers $y$ such that $y - x_*$ is a positive square. Thus we cross out $x_*$, $x_* + 1$, $x_* + 4$, and so on, all the way up to $x_* + m^2$, where $m$ is the largest integer with $x_* + m^2 \leq N$. This implies $m \leq \sqrt{N - x_*} \leq \sqrt{N-1}$, hence we cross out at most $\sqrt{N-1} + 1$ integers whenever with add a new element $x_*$ to $X$. When the algorithm terminates, all integers must be crossed out, and if the algorithm runs $n$ iterations, a union bound gives that we cross out at most $n[\sqrt{N-1} + 1]$ integers, hence $n[\sqrt{N-1} + 1] \geq N$. It follows that the set $X$ we end up with satisfies
 %
-\[ |X| \geq \frac{N}{\sqrt{N-1} + 1} = \Omega(\sqrt{N}) \]
+\[ |X| \geq \frac{N}{\sqrt{N-1} + 1} = \Omega \left( \sqrt{N} \right) \]
 %
-What's more, this algorithm generates an increasing family of squarefree subsets of the integers as $n$ increases, so we may take the union of these subsets over all $N$ to find an infinite squarefree subset $X$ with $|X \cap [1,N]| = \Omega(\sqrt{N})$.
+What's more, this algorithm generates an increasing family of squarefree subsets of the integers as $n$ increases, so we may take the union of these subsets over all $N$ to find an infinite squarefree subset $X$ with $|X \cap [1,N]| = \Omega(\sqrt{N})$ for all $N$.
 
 In 1978, S\'{a}rk\"{o}zy proved an upper bound on the size of squarefree subsets of the integers, showing $D(N) = O(N (\log N)^{-1/3 + \varepsilon})$ for every $\varepsilon > 0$. In particular, this proves a conjecture of Lov\'{a}sz that every infinite squarefree subset has density zero, because if $X$ is any infinite squarefree subset, then
 %
 \[ \frac{|X \cap [1,N]|}{N} \leq \frac{D(N)}{N} = O(\log(N)^{-1/3 + \varepsilon}) = o(1) \]
 %
-S\'{a}rk\"{o}zy even conjectured that $D(N) = O(N^{1/2 + \varepsilon})$ for all $\varepsilon > 0$. This effectively implies the greedy sieve technique of selecting squarefree subsets of the integers is asymptotically optimal. Since the Sieve method doesn't depend on any properties of the set of perfect squares\footnote{In general, if $S = \{ x_1 , x_2 < \dots \}$ is a sequence of positive integers, the sieve strategy on $[1,N]$ products a set containing no `$S$ differences' with at least $N(1 + K(N))^{-1}$ elements, where $K(N)$ is the greatest integer with $x_{K(N)} \leq N-1$}, this is incredibly pessimistic. Ruzsa's paper shows we should be more optimistic, taking advantage of the structure of perfect suqares to obtain infinite squarefree subsets $X$ with $|X \cap [1,N]| = \Omega(N^{0.73})$. The method reduces the problem to a finitary problem of maximizing squarefree subsets modulo a squarefree integer $m$.
+S\'{a}rk\"{o}zy even conjectured that $D(N) = O(N^{1/2 + \varepsilon})$ for all $\varepsilon > 0$. Thus the sieve technique is essentially optimal, an incredibly pessimistic point of view, since the Sieve method doesn't depend on any properties of the set of perfect squares. Ruzsa's results shows we should be more optimistic, taking advantage of the digit expansion of numbers to obtain infinite squarefree subsets $X$ with $|X \cap [1,N]| = \Omega(N^{0.73})$. The method reduces the problem to a finitary problem of maximizing squarefree subsets modulo a squarefree integer $m$.
 
 \begin{theorem}
     If $m$ is a squarefree integer, then
@@ -75,40 +75,35 @@ S\'{a}rk\"{o}zy even conjectured that $D(N) = O(N^{1/2 + \varepsilon})$ for all 
 \end{theorem}
 
 \begin{remark}
-    Let us look at the analysis of the sieve method backwards. Rather than fixing $N$ and trying to find optimal solutions of $[1,N]$, let's fix a particular strategy (to start with, the sieve strategy), and think of varying $N$ and seeing how the size of the solution given by the strategy on $[1,N]$ increases over time. In our analysis, the size of a solution is directly related to the number of iterations the stategy can produce before it runs out of integers to add to a solution set. Because we apply a union bound in our analysis, the cost of each particular new iteration is the same as the cost of the other iterations. If the cost of each iteration was independant of $N$, we could increase the solution size by increasing $N$ by a fixed constant, leading to family of solutions which increases on the order of $N$. However, as we increase $N$, the cost of each iteration increases on the order of $\sqrt{N}$, leading to us only being able to perform $N/\sqrt{N} = \sqrt{N}$ iterations for a fixed $N$. Rusza's method applies the properties of the perfect squares to perform a similar method of expansion. At an exponential cost, Rusza's method increases the solution size exponentially. The advantage of exponentials is that, since Rusza's is based on a particular parameter, a squarefree integer $m$, we can vary $m$ to make the exponentials match up how we like to obtain a better polynomial lower bound.
+    Let us look at the analysis of the sieve method backwards. Rather than fixing $N$ and trying to find optimal solutions of $[1,N]$, let's fix a particular strategy (to start with, the sieve strategy), and think of varying $N$ and seeing how the size of the solution given by the strategy on $[1,N]$ increases over time. In our analysis, the size of a solution is directly related to the number of iterations the stategy can produce before it runs out of integers to add to a solution set. Because we apply a union bound in our analysis, the cost of each particular new iteration is the same as the cost of the other iterations. If the cost of each iteration was independant of $N$, we could increase the solution size by increasing $N$ by a fixed constant, leading to family of solutions which increases on the order of $N$. However, as we increase $N$, the cost of each iteration increases on the order of $\sqrt{N}$, leading to us only being able to perform $N/\sqrt{N} = \sqrt{N}$ iterations for a fixed $N$. Rusza's method applies the properties of the perfect squares to perform a similar method of expansion. At an exponential cost, Rusza's method increases the solution size exponentially. The advantage of exponentials is that, since Rusza's is based on a particular parameter, a squarefree integer $m$, we can vary $m$ to improve the iteration numbers more naturally.
 \end{remark}
 
-The idea of Rusza's construction is to break the problem into exponentially large intervals, upon which we can solve the problem modulo an integer. More generally, Rusza's method works on the problem of constructing subsets of the integers whose differences are $d$'th powers-free. Let $R \subset [1,m]$ be a subset of integers such that no difference is a power of $d$ modulo $m$, where $m$ is a {\it squarefree integer}. Construct the set
+The idea of Rusza's construction is to break the problem into exponentially large intervals, upon which we can solve the problem modulo an integer. More enerally, Rusza constructs a set whose differences are free of $d$'th powers.
+
+\begin{theorem}
+    Let $R \subset [1,m]$ be a subset of integers such that no difference is a power of $d$ modulo $m$, where $m$ is a {\it squarefree integer}. Construct the set
+    %
+    \[ A = \left\{ \sum_{k = 0}^n r_k m^k : 0 \leq n < \infty, r_k \in \left. \begin{cases} R & d\ \text{divides}\ N\\ [1,m] & \text{otherwise} \end{cases} \right\} \right\} \]
+    %
+    Then $A$ is squarefree.
+\end{theorem}
+\begin{proof}
+    Suppose that we can write $\sum (r_k - r_k') m^k = N^d$. Let $s$ to be the smallest index with $r_s \neq r_s'$. Then $(r_s - r_s') m^s + M m^{s+1} = N^d$ where $M$ is some positive integer. If $s = ds_0$, then $(N/m^{s_0})^d = (r_s - r_s') + M m$, and this contradicts the fact that $r_s - r_s'$ cannot be a $d$'th power modulo $m$. On the other hand, we know $m^s$ divides $N^d$, but $m^{s+1}$ does not. This is impossible if $s$ is not divisible by $d$, because primes in $N^d$ occur in multiples of $d$, and $m$ is squarefree.
+\end{proof}
+
+For any $n$, we find
 %
-\[ A = \left\{ \sum_{k = 0}^n r_k m^k : 0 \leq n < \infty, r_k \in \left. \begin{cases} R & d\ \text{divides}\ N\\ [1,m] & \text{otherwise} \end{cases} \right\} \right\} \]
-%
-we claim that $A$ is squarefree. Suppose that we can write
-%
-\[ \sum (r_k - r_k') m^k = N^d \]
-%
-Let $s$ to be the smallest index with $r_s \neq r_s'$. Then
-%
-\[ (r_s - r_s') m^s + M m^{s+1} = N^d \]
-%
-where $M$ is some positive integer. If $s = ds_0$, then
-%
-\[ (N/m^{s_0})^d = (r_s - r_s') + M m \]
-%
-and this contradicts the fact that $r_s - r_s'$ cannot be a $d$'th power modulo $m$. On the other hand, we know $m^s$ divides $N^d$, but $m^{s+1}$ does not. This is impossible if $s$ is not divisible by $d$, because primes in $N^d$ occur in multiples of $d$, and $m$ is squarefree. For any $n$, we find
-%
-\[ A \cap [1,m^n] = \left\{ \sum_{k = 0}^{n-1} r_km^k : r_k \in [1,m], r_k \in R\ \text{when $d$ divides $k$} \right\} \]
+\[ A \cap [1,m^n - 1] = \left\{ \sum_{k = 0}^{n-1} r_km^k : r_k \in [1,m], r_k \in R\ \text{when $d$ divides $k$} \right\} \]
 %
 which therefore has cardinality
 %
 \begin{align*}
-    |R|^{1 + \lfloor n-1/d \rfloor}& m^{n-1- \lfloor n-1/d \rfloor} = m^n \left( \frac{|R|}{m} \right)^{1 + \lfloor n-1/d \rfloor}\\
-    &\geq m^n \left( \frac{|R|}{m} \right)^{n+1/d} = \frac{(m^{n+1})^{1 - 1/d + \log_m |R|/d}}{m}\\
-    &= \frac{(m^{n+1})^{\gamma(m,d)}}{m}
+    |R|^{1 + \lfloor \frac{n-1}{d} \rfloor} m^{n-1- \lfloor \frac{n-1}{d} \rfloor} = m^n \left( \frac{|R|}{m} \right)^{1 + \lfloor \frac{n-1}{d} \rfloor} \geq m^n \left( \frac{|R|}{m} \right)^{n/d} = m^{n \gamma(m,d)}
 \end{align*}
 %
-where $\gamma(m,d) = 1 - 1/d + \log_m |R|/d$. Therefore, for $m^{n+1} \geq k \geq m^n$
+where $\gamma(m,d) = 1 - 1/d + \log_m |R|/d$. Therefore, for $m^{n+1} - 1 \geq k \geq m^n - 1$
 %
-\[ A \cap [1,k] \geq A \cap [1,m^n] \geq \frac{(m^{n+1})^{\gamma(m,d)}}{m} \geq \frac{k^{\gamma(m,d)}}{m} \]
+\[ A \cap [1,k] \geq A \cap [1,m^n] \geq m^{n \gamma(m,d)} = \frac{m^{(n+1) \gamma(m,d)}}{m} \geq \frac{k^{\gamma(m,d)}}{m} \]
 %
 This completes Rusza's construction. Thus we have proved a more general result than was required.
 
@@ -120,7 +115,11 @@ This completes Rusza's construction. Thus we have proved a more general result t
     where $\gamma(d,m) = 1 - 1/d + \log_m |R^*|/d$, and $R^*$ is the largest subset of $[1,m]$ containing no $d$'th powers modulo $m$.
 \end{theorem}
 
-For $m = 65$, the group $\mathbf{Z}_{65}^* \cong \mathbf{Z}_{5}^* \times \mathbf{Z}_{13}^*$ has a set of squarefree residues of the form $\{ (0,0), (0,2), (1,8), (2,1), (2,3), (3,9), (4,7) \}$, which gives the required value for $\gamma_{65}$. Rusza believes that we cannot choose $m$ to construct squarefree subsets of the integers growing better than $\Omega(n^{3/4})$, and he claims to have proved this assuming $m$ is squarefree and consists only of primes congruent to 1 modulo 4. Looking at some sophisticated papers in number theory (Though I forgot to write down the particular references), it seems that using modern estimates this is quite easy to prove. Thus expanding on Rusza's result in the discrete case requires a new strategy, or perhaps Rusza's result is the best possible.
+For $m = 65$, the group $\mathbf{Z}_{65}^* \cong \mathbf{Z}_{5}^* \times \mathbf{Z}_{13}^*$ has a set of squarefree residues of the form $\{ (0,0), (0,2), (1,8), (2,1), (2,3), (3,9), (4,7) \}$, which gives the required value for $\gamma_{65}$. In 2016, Mikhail Gabdullin proved that if $m$ is squarefree, then in $\mathbf{Z}_m$, any set $R$ such that $R - R$ is squarefree has $|R| \leq me^{-c \log m / \log \log m}$, where $n$ denotes the number of odd prime divisors of $m$, so that
+%
+\[ \gamma(d,m) \leq 1 - 1/d + \frac{\log(me^{-c \log m / \log \log m})}{m} \]
+
+Rusza believes that we cannot choose $m$ to construct squarefree subsets of the integers growing better than $\Omega(n^{3/4})$, and he claims to have proved this assuming $m$ is squarefree and consists only of primes congruent to 1 modulo 4. Looking at some sophisticated papers in number theory (Though I forgot to write down the particular references), it seems that using modern estimates this is quite easy to prove. Thus expanding on Rusza's result in the discrete case requires a new strategy, or perhaps Rusza's result is the best possible.
 
 Let $D(N,d)$ denote the largest subset of $[1,N]$ containing no $d$th powers of positive integer. The last part of Rusza's paper is devoted to lower bounding the polynomial growth of $D(N,d)$ over asymptotically with respect to $N$. Rusza proves
 
@@ -349,64 +348,56 @@ This is true, for instance, if $N_n = n$. Since $l_n/l_{n+1} = 8N_{n+1}$, we can
 Inspired by Keleti's result, Pramanik and Fraser obtained a generalization of the queue method which allows one to find sets avoiding solutions to {\it any} smooth function satisfying suitably mild regularity conditions. To do this, rather than making a linear shift in one of the intervals we avoid as in Keleti's approach, one must use the smoothness properties of the function to find large segments of an interval avoiding solutions to another interval.
 
 \begin{theorem}
-    Suppose that $f: \mathbf{R}^d \to \mathbf{R}$ is a $C^1$ function, and there are sets $T_1, \dots, T_d \subset [0,1]$, which each $T_n$ a union of almost disjoint closed intervals of length $1/M$ such that $A \leq |\partial_d f(x)|$ and $|\nabla f(x)| \leq B$ for $x \in T_1 \times \dots \times T_d$. There there exists a rational constant $C$ and arbitrarily large integers $N \in M \mathbf{Z}$ for which there exist subsets $S_n \subset T_n$ such that
+    Suppose that $f: \mathbf{R}^{d+1} \to \mathbf{R}$ is a $C^1$ function, and there are sets $T_0, \dots, T_d \subset [0,1]$, with each $T_n$ a union of almost disjoint closed intervals of length $1/M$ such that $A \leq |\partial_0 f|$ and $|\nabla f| \leq B$ on $T_0 \times \dots \times T_d$. There there exists a rational constant $C$ and arbitrarily large integers $N \in M \mathbf{Z}$ for which there exist subsets $S_n \subset T_n$ such that
     %
     \begin{itemize}
-        \item[(i)] $f(x) \neq 0$ for $x \in S_1 \times \dots \times S_d$.
+        \item[(i)] $f(x) \neq 0$ for $x \in S_0 \times \dots \times S_d$.
 
-        \item[(ii)] For each $n \neq d$, If we split each interval $T_n$ into $1/N$ intervals, then $S_n$ contains an interval of length $CN^{1-d}$ of each of these intervals.
+        \item[(ii)] For $n \neq 0$, if we divide each interval $T_n$ into length $1/N$ intervals, then $S_n$ contains an interval of length $C/N^d$ of each of these intervals.
 
-        \item[(iii)] If we split $T_d$ into $1/N$ intervals, then $S_d$ contains a length $C/N$ portion of at least a fraction $1 - 1/M$ of the total number of these intervals. This portion need not be a complete interval, like in the last property, but it is a union of length $C/N^{d-1}$ intervals.
+        \item[(iii)] If $T_0$ is split into length $1/N$ intervals, then for a fraction $1 - 1/M$ of such intervals, $S_0$ is a union of length $C/N^d$ intervals with total length $C/N$.
     \end{itemize}
 \end{theorem}
 \begin{proof}
-    Choosing the sets $S_n$ for $n \neq d$ is easy. We split the intervals $T_n$ into length $1/M$ segments, and define $S_n$ as the union of the first $CN^{1-d}$ portion of them. This satisfies property (ii) of the theorem automatically. Now if $a \in \mathbf{R}^{d-1}$ is chosen, with each $a_k \in T_k$, then the total number of points $x \in T_d$ for which $f(a,x) = 0$ is $M$. This follows from the fact that $T_d$ can contain at most $M$ intervals of length $1/M$, and as we vary $x$, because the partial derivative $\partial_d f(a,x)$ is non-vanishing on the interval, the function is monotone on this interval. Define
+    We begin by dividing the sets $T_1, \dots, T_d$ into length $1/N$ intervals, and let $S_n$ be defined by including a length $C_0/N^d$ segment, for some constant $C_0$ to be chosen later. Then once we fix $C_0$, the $S_n$ will satisfy property (ii) of the theorem. We define
     %
-    \[ \mathbf{A} = \{ a: a_n\ \text{is a startpoint of a length $1/N$ segment in $T_n$} \} \]
+    \[ \mathbf{A} = \{ a \in \mathbf{R}^{d-1} : a_n\ \text{is a startpoint of a length $1/N$ interval in}\ T_n \} \]
     %
-    Then $|\mathbf{A}| \leq N^{d-1}$, since $T_n$, contained in $[0,1]$, can contain at most $N$ almost disjoint intervals of length $1/N$. This means that if
+    Then $|\mathbf{A}| \leq N^d$, since each interval $T_n$ is contained in $[0,1]$, and therefore can only contain at most $N$ almost disjoint intervals of length $1/N$. Hence if we define the set of `bad points' in $T_0$ as
     %
-    \[ \mathbf{B} = \{ x \in T_d: \text{there is}\ a \in \mathbf{A}\ \text{such that}\ f(a,x) = 0 \} \]
+    \[ \mathbf{B} = \{ x \in T_0: \text{there is}\ a \in \mathbf{A}\ \text{such that}\ f(x,a) = 0 \} \]
     %
-    is the set of `bad points' in $T_d$, then $|\mathbf{B}| \leq MN^{d-1}$. Now we filter out a subcollection of intervals $I$ if $|\mathbf{B} \cap I| \leq M^3N^{d-2}$. Then we throw away at most $MN^{d-1}/M^3N^{d-2} = N/M^2$ intervals. Thus we keep $N/M - N/M^2 = N/M(1 - 1/M)$ intervals, which is $1 - 1/M$ of the total number of intervals in the decomposition of $T_d$. Now we split each interval $I$ in the subcollection into $(1/4C_0C) N^{d-2}$ subintervals of length $4C_0 C N^{d-1}$, and remove any interval which contains a bad point, or is adjacent to an interval containing a bad point, then what remains will consist of the  interval $T_d$. It contains at least $M^3 N^{d-2}$ intervals from each interval $I$ we didn't discard, so for any such interval $I$, $|T_d \cap I| \geq 1/4N$.
-
-    Now we split each interval $I$ into intervals of length $C_0C / N^{d-1}$. We now use the constant $C_0$ obtained from the lemma below, and discard any interval that intersects $\mathbf{B}$, or is adjacent to an interval intersecting $\mathbf{B}$. What remains is our set $T_d$. Since $\mathbf{B} \cap I$ has at most $M^3N^{d-2}$ points, and $I$ is decomposed into $N^{d-2}/C_0C$ intervals, what remains is $N^{d-2}/C_0C - 3M^3N^{d-2} = (1/C_0C - 3M^3)N^{d-2}$ intervals, which in total has length
-    %
-    \[ (C_0c/N^{d-1}) (1/C_0c - 3M^3)N^{d-2} = \frac{(1 - 3M^3 C_0c)}{N} \]
-    %
-    Choosing $C$ such that $3M^3C_0C < 1 - C$ completes the proof.
+    Then $|\mathbf{B}| \leq MN^d$. This is because for each fixed $a$, the function $x \mapsto f(x,a)$ is either strictly increasing or decreasing over each interval in the decomposition of $T_0$, or which there are at most $M$ because $T_0 \subset [0,1]$. If we split $T_0$ into length $1/N$ intervals, and choose a subcollection of such intervals $I$ such that $|I \cap \mathbf{B}| \leq M^3N^{d-1}$, then we throw away at most $MN^d/M^3N^{d-1} = N/M^2$ intervals, and so we keep $(N/M)(1 - 1/M)$ intervals, which is $1 - 1/M$ of the total number of intervals in the decomposition of $T_0$. The lemma we prove after this theorem implies that there exists a constant $C_1$ such that if $x \in S_n$, and $f(y,x) = 0$, then $d(y,\mathbf{B}) \leq C_0C_1/N^d$. If we split each interval $I$ with $|I \cap \mathbf{B}| \leq M^3N^{d-1}$ into $4M^3N^{d-1}$ length $1/4M^3N^d$ intervals, and we choose $C_0$ such that $C_0C_1 < 1/4M^3$, then the set $S_0$ obtained by discarding each interval that contains or is adjacent to an interval containing an element of $\mathbf{B}$ satisfies $d(S_0,\mathbf{B}) > C_0C_1/N^d$, and therefore there does not exist any $x_n \in S_n$ and $y \in S_0$ such that $f(y,x) = 0$. $S_0$ satisfies property (iii) of the theorem since for the interval $I$ we are considering, we keep at least $M^3N^{d-1}$ length $1/4M^3N^d$ intervals, which in total has length at least $1/4N$.
 \end{proof}
+
+\begin{remark}
+    Suppose our equation is $f(x_0, Tx_1) = 0$, where $T$ is a rational matrix of rank $k$, and $x_0$ is a scalar. Then we can actually obtain that $|\mathbf{B}| \lesssim |\mathbf{A}| \lesssim N^k$, since the points of $\mathbf{A}$ are contained in a rank $k$ lattice. Then the same lemma implies that we can actually build intervals of size $1/N^k$, leading to a dimension $1/k$ set rather than a dimension $1/(d-1)$ set (these dimensions agree if $T$ has full rank). If our equation is $f(x_0, g_1(x_1), \dots, g_k(x_1)) = 0$, where each $g_n$ is a rational polynomial with rank at most $m$, the same techniques should show that we get a dimension $1/mk$ set.
+
+    Is this true for equations of the form $f(g_1(x), \dots, g_k(x))$ as well? If we define $\mathbf{B}$ as the set of bad points, and if $f(g_1(x_1,x_2), \dots, g_k(x_1,x_2)) = 0$. This can only be true if the zero set of $f$ has some special structure with respect to the polynomials $g_k$.
+\end{remark}
 
 \begin{remark}
     The length $1/N$ portion of each interval guaranteed by (iii) is unneccesary to the Hausdorff dimension bound, since the slightly better bounds obtained on scales where an interval is dissected as a $1/N$ are decimated when we eventually divide the further subintervals into $1/N^{d-1}$ intervals. The importance of (iii) is that it implies that the set we will construct has full {\it Minkowski dimension}. The reason for this is that Minkowski dimension lacks the ability to look at varying dissection depths at once, and since, at any particular depth, there exists a length $1/N$ dissection, the process appears to Minkowski to be full dimensional, even though at later scales this $1/N$ dissection is dissected into $1/N^{d-1}$ intervals.
 \end{remark}
 
 \begin{lemma}
-    For any $f$ and $T_1, \dots, T_d$, and $C$, there exists a constant $C_0$ depending on these quantities, such that for the choice of $S_1, \dots, S_{d-1}$, for any choice $x_1, \dots, x_{n-1}$ in each of the sets $S_n$, if $f(x_1, \dots, x_{n-1}, x_n) = 0$, then $d(x_n, \mathbf{B}) \leq C_0C/N^{d-1}$.
+    Given the $f$, $T_0, \dots, T_d$, there exists a constant $C_1$ depending on these quantities, such that for any $C_0$, and $x \in S_1 \times \dots \times S_{d-1}$, if $f(y,x) = 0$, then $d(y, \mathbf{B}) \leq C_0C_1/N^{d-1}$.
 \end{lemma}
 \begin{proof}
-    Let $J$ be a $d$ dimensional cube with sidelengths $1/M$ intersecting the zero set of $f$. The implicit function theorem can then be applied to conclude that, if we write $J = J' \times I$, where $J_1$ is a cube in $\mathbf{R}^{d-1}$ and $I$ is an interval, that there is a function $g: J' \to \mathbf{R}$ such that $f(x,y) = 0$ for $(x,y) \in J$ if and only if $y = g(x)$. We know that $|\nabla g| \leq C/\sqrt{d}$, because if $h(x) = f(x,g(x))$, then
+    Since $T_0 \times \dots \times T_d$ breaks into finitely many cubes with sidelengths $1/M$, it suffices to prove the theorem for a particular cube $J$ in this decomposition, where we assume the zeroset of $f$ intersects $J$. If $J = I \times J'$, where $I$ is an interval, we let $U$ be the set of all $x \in J'$ for which there is $y$ in the interior of $I$ such that $f(y,x) = 0$. Then $U$ is open. The implicit function theorem implies that there exists a $C^1$ function $g: U \to I$ such that $f(x,y) = 0$ if and only if $y = g(x)$. Then the function $h(x) = f(x,g(x))$ vanishes uniformly, so
     %
-    \[ 0 = \partial_i h(x) = \partial_i f (x,g(x)) + \partial_d f (x, g(x)) \partial_i g(x) \]
+    \[ 0 = \partial_n h(x) = (\partial_n f) (g(x),x) + (\partial_0 f) (g(x),x) \partial_n g(x) \]
     %
-    Hence for $x \in T_1, \dots, T_{d-1}$ with $g(x) \in T_d$,
+    Hence for $x \in U$,
     %
-    \[ |(\nabla g)(x)| \leq \frac{|(\nabla f)(x)|}{|(\partial_d f)(x,g(x))|} \leq \frac{B}{A} \]
+    \[ |(\nabla g)(x)| = \frac{|(\nabla f)(x)|}{|(\partial_d f)(x,g(x))|} \leq \frac{B}{A} \]
     %
-    In particular, if $g(x) \in S_d$, then there is $a \in \mathbf{A}$ with
+    If $N$ is chosen large enough, then for every $x \in U \cap (S_1 \times \dots \times S_d)$ there is $a \in \mathbf{A} \cap U$ in the same connected component of $U$ as $x$ with $|x - a| \lesssim C_0/N^{d-1}$, and this means that
     %
-    \[ |x-a| \leq \sum |x_n - a_n| \leq \frac{C \sqrt{d}}{N^{d-1}} \]
+    \[ |g(x) - g(a)| \leq \| \nabla g \|_\infty |x - a| \lesssim \frac{BC_0}{A N^{d-1}} \]
     %
-    and now we know
-    %
-    \[ |g(x) - g(a)| \leq \| \nabla g \|_\infty |x - a| \leq \frac{BC \sqrt{d}}{A N^{d-1}} \]
-    %
-    and so $g(a) \in \mathbf{B}$, and we can set $C_0 = BC \sqrt{d}/A$.
+    and $g(a) \in \mathbf{B}$, completing the proof.
 \end{proof}
-
-\begin{remark}
-    In the paper, the authors state that the $N^{1-d}$ bound for all but the last variable means we cannot get a Hausdorff dimension one set in the process. In certain cases where we can use properties of a particular function $f$, we can choose much larger sets and get a much better Hausdorff dimension bound. This is what we attempt to do with our strategies.
-\end{remark}
 
 How do we use this lemma to construct a set avoiding solutions to $f$? We form an infinite queue which will eventually filter out all the possible zeroes of the equation. Divide the interval $[0,1]$ into $d$ intervals, and consider all orderings of $d - 1$ subsets of these intervals, and add them to the queue. Now on each iteration $N$ of the algorithm, we have a set $X_N \subset [0,1]$. We take a particular sequence of intervals $T_1, \dots, T_d$ from the queue, and then use the lemma above to dissect the $X_N \cap T_n$, which are unions of intervals, into sets avoiding solutions to the equation, and describe the remaining points as $X_{N+1}$. We then add all possible orderings of $d$ intervals created into the end of the queue, and rinse and repeat. The set $X = \lim X_n$ then avoids all solutions to the equation with distinct inputs.
 
@@ -419,7 +410,7 @@ What remains is to bound the Hausdorff dimension of $X$ by constructing a probab
         \[ \mu(K) = \frac{N_N}{C_NM_{N+1}} \mu(J) \leq \frac{2M_N}{C_NM_{N+1}} \mu(I) \]
 \end{itemize}
 %
-Thus in both cases, we have $\mu(J) \lesssim (N_N/M_N) \mu(I)$, $\mu(K) \lesssim_N |K|$, and $N_N = M_{N+1}^{1/(d-1)}/C_N \lesssim_N M_{N+1}^{1/(d-1)}$ to conclude that there exists a family of rapidly decaying parameters which gives a $1/(d-1)$ dimensional set.
+Thus in both cases, we have $\mu(J) \lesssim (N_N/M_N) \mu(I)$, $\mu(K) \lesssim_N |K|$, and $N_N = M_{N+1}^{1/(d-1)}/C_N \lesssim_N M_{N+1}^{1/(d-1)}$. From this, we conclude using the results of the appendix that there exists a family of rapidly decaying parameters which gives a $1/(d-1)$ dimensional set.
 
 \begin{remark}
     The set $X$ constructed is precisely a $1/(d-1)$ dimensional set. Recall that $X = \lim X_n$, where $X_n$ is a union of a certain number of length $1/M_n$ intervals $I_1, \dots, I_N$. For each $n$, the interval $I_i$ is inevitably subdivided at a stage $J_i$ into length $C_{J_i} N_{J_i}^{1-d}$ intervals for each length $1/N_{J_i}$ interval that $I_i$ contains. Thus
@@ -498,11 +489,19 @@ The classical Weyl equidistribution theorem says that if $\alpha$ is an irration
 %
 \[ \frac{1}{N} \sum_{n \leq N} f(n \alpha) \to \int_{\mathbf{T}} f(x)\; dx \]
 %
-By approximating the indicator function of an interval $[a,b] \subset [0,1]$ from above and below by continuous functions to an arbitrary degree of error, we conclude that
+This is equivalent to prove that for any interval $[a,b] \in [0,1)$,
 %
-\[ \frac{\# \{ n \in [1,N]: [n \alpha] \in [a,b] \}}{N} \to b - a \]
+\[ \frac{\# \{ 1 \leq n \leq N : x_n \in [a,b] \}}{N} \to b - a \]
 %
-where for a general point $x \in \mathbf{R}$, we let $x]$ denote the coset containing $x$ in $\mathbf{T}$. Later on we try and apply equidistribution theory in our Cantor dissection techniques. Here we discuss some of the higher dimensional results we will apply. The most famous proof of Weyl's equidistribution theorem is obtained by approximating $f$ by a Fourier series, reducing the problem to proving that the theorem is true when $f(x)$ is an exponential $e(nx) = e^{2 \pi i n x}$. In higher dimensions, essentially the same approximation techniques give an analogous result.
+as $N \to \infty$. By approximating a continuous function $f$ by a Fourier series, to prove this is true for a particular sequence, it suffices to prove it for $f(x) = e(nx) = e^{2 \pi i n x}$, for each nonzero integer $n$. Certain techniques we are developing in the theory of cantor decompositions require a higher dimensional variant of such a result, so this section details some information which might help us in the future. We will encounter sequences that are not equidistributed over the entire space, so if $G$ is any closed subgroup of $\mathbf{T}$, we say a sequence $x_n$ is equidistributed over $G$ if $x_n \in G$ for all $n$, and for any continuous function $f: G \to \mathbf{R}$,
+%
+\[ \frac{1}{N} \sum_{n \leq N} f(n \alpha) \to \int_G f(x)\; dx \]
+%
+or alternatively, if for any closed set $K$ in $G$,
+%
+\[ \frac{\# \{ 1 \leq n \leq N: x_n \in K \}}{N} \to |K| \]
+%
+where $|K|$ is taken with respect to the Haar probability measure on $G$.
 
 \begin{theorem}
     A sequence $x_1, x_2, \dots$ is equidistributed in $\mathbf{T}^d$ if and only if for every nonzero $\xi \in \mathbf{Z}^n$,
@@ -523,26 +522,39 @@ where for a general point $x \in \mathbf{R}$, we let $x]$ denote the coset conta
     Weyl's exponential sum theorem implies that $x_n$ is equidistributed on $\mathbf{T}^n$ precisely when $\xi \cdot \alpha \not \in \mathbf{Z}$ for all $\xi \in \mathbf{Z}^n$. What's more, it is simple to see from this that $x_n$ is still equidistributed for any subsequence whose indices form an arithmetic progression.
 \end{example}
 
-In the higher dimensional case, sequences can equidistribute themselves on subsets of the space. Ratner's theorem provides the precise version of this theorem.
+Thus in one dimension, an arithmetic sequence is either equidistributed over the entire torus, or over a discrete set of points forming a {\it discrete subgroup} of the torus. We can think of this discrete subgroup as a zero dimension torus, which leads us to suspect that in higher dimensions, an arithmetic sequence is always equidistributed, but not necessarily over the whole torus, but instead over a lower dimensional subtorus.
 
 \begin{theorem}[Ratner]
-    If $x_n = n \alpha + \beta$, then we can write $\alpha = \alpha_0 + \alpha_1$, where the sequence $n \alpha_0$ is equidistributed on a subtorus of $\mathbf{T}^d$, and $n \alpha_1 + \beta$ is periodic.
+    If $x_n = n \alpha + \beta$, then we can write $\alpha = \alpha_0 + \alpha_1$, where the sequence $n \alpha_0 + \beta$ is periodic in $\mathbf{T}^d$, and $n \alpha_1 + \beta$ is equidistributed over a subtorus of $\mathbf{T}^d$. In particular, if $\beta = 0$, then Ratner's theorem says that $x_n$ has an evenly spaced subsequence equidistributed over a subtorus of the space containing the origin.
 \end{theorem}
 \begin{proof}
-    We induct on the dimension. For $d = 1$, the theorem is obvious, since either $\alpha$ is rational, and therefore $n \alpha + \beta$ is periodic, or $\alpha$ is irrational, and $n \alpha + \beta$ is equidistributed on $\mathbf{T}$. So now let us consider a sequence on the torus $\mathbf{T}^{d+1}$. If $\alpha$ is irrational, then $x_n$ is equidistributed, and the theorem is obvious. Otherwise, there exists $\xi \in \mathbf{Z}^{d+1}$ such that $\xi \cdot \alpha \in \mathbf{Z}$. Then we may find $\alpha_1 \in \mathbf{Q}^{d+1}$ such that $\xi \cdot \alpha_1 = \xi \cdot \alpha$, so that $\alpha_0 = \alpha - \alpha_1$ is orthogonal to $\xi$. The sequence $n \alpha_1 + \beta$ is periodic, whereas $n \alpha_0$ takes values in the subspace of points $x$ with $\xi \cdot x = 0$. If $\xi_{n+1} \neq 0$ (for simplicity, changing indices if necessary if some other $\xi_i \neq 0$), then this subspace is spanned by the vectors $v_i = \xi_{n+1} e_i - \xi_i e_{n+1}$, for $i \leq n$. The map $x \mapsto \sum x_i v_i$ is then an isomorphism between $\mathbf{R}^d$ and $\xi^\perp$, which descends to a homomorphism from $\mathbf{T}^d$ to $\xi^\perp/\mathbf{Z}^d$. 
+    We induct on the dimension. For $d = 1$, the theorem is obvious, since either $\alpha$ is rational, and therefore $n \alpha + \beta$ is periodic, or $\alpha$ is irrational, and $n \alpha + \beta$ is equidistributed on $\mathbf{T}$. So now let us consider a sequence on the torus $\mathbf{T}^{d+1}$. If $\alpha$ is irrational, then $x_n$ is equidistributed, and the theorem is obvious. Otherwise, there exists $\xi \in \mathbf{Z}^n$ such that $\xi \cdot \alpha \in \mathbf{Z}$. We may write $\alpha = \alpha_0 + \alpha_1$, where $\alpha_0 \in \mathbf{Q}^d$, and $\xi \cdot \alpha_1 = 0$. The sequence $n\alpha_0 + \beta$ is periodic, whereas $n \alpha_1$ takes values in the subtorus $T$ of points $x$ with $\xi \cdot x = 0$. Since $\xi \neq 0$, $T$ is a $d$ dimensional compact subgroup of $\mathbf{T}^{d+1}$ isomorphic to $\mathbf{T}^d$. To see this, we assume for simplicity that $\xi_d \neq 0$. Then $\xi^\perp$ is generated by the basis of $d$ vectors $v_n = \xi_d e_n - \xi_n e_d$, for $1 \leq n \leq d$. Thus we get a homomorphism between $\mathbf{R}^d$ and $T$ given by the map $x \mapsto \sum x_n v_n$. If $\sum x_n v_n \in \mathbf{Z}$, so that $\sum x_n v_n = 0$ on $T$, then this means that $x_n \in \mathbf{Z}/\xi_d$ for each $n$, implying that the kernel of this homomorphism is discrete. Lattice theory implies that we can write the kernel as $\bigoplus \mathbf{Z} \langle w_n \rangle$, for $d$ generating vectors $w_1, \dots, w_d$. But then the map $f(x) = \sum x_n w_n$ gives an isomorphism between $\mathbf{T}^d$ and $T$. If we set $\beta = f^{-1}(\alpha_0)$, then $f^{-1}(n\alpha_0) = n \beta$, and so by induction, we can write $\beta = \beta_0 + \beta_1$, where $n\beta_0$ is periodic, and $n \beta_1$ is equidistributed over a subtorus of $\mathbf{T}^d$. But then $n f(\beta_0) = f(n \beta_0)$ is periodic on $T$, and $n f(\beta_1) = f(n \beta_1)$ is equidistributed over a subtorus of $T$. Since the sum of two periodic sequences is periodic, $n \alpha_0 + n f(\beta_0)$ is periodic, and $n f(\beta_1)$ is equidistributed over a subtorus. We have $\alpha_0 + f(\beta_0) + f(\beta_1) = \alpha_0 + f(\beta) = \alpha_0 + \alpha_1$, completing the proof.
 \end{proof}
 
 \begin{corollary}
     Any linear sequence in $\mathbf{T}^d$ is equidistributed in a finite union of cosets of a subtorus of $\mathbf{T}^d$.
 \end{corollary}
 
-\begin{remark}
-    Since $\xi_0$ is rational, the perpendicular subspace to $\xi_0$ contains a rational lattice?
-\end{remark}
+In general, ergodic theory results do not give rates on how long it takes for a sequence to equidistribute over a set. This is not a problem in the constructions we perform, since the rates that our intervals shrink can be arbitrarily fast. However, it is important to note that the convergence rates are uniform across all intervals.
 
-\begin{remark}
-    If we consider just $x_n = n \alpha$, then Ratner's theorem says there is $M$ such that if $y_n = X_{Mn}$, such that $y_n$ is equidistributed on a subtorus containing the origin.
-\end{remark}
+\begin{theorem}
+    If $x_n$ is equidistributed over a torus $\mathbf{T}^d$, and
+    %
+    \[ A_N = \sup_I \left| \frac{\# \{ 1 \leq n \leq N : x_n \in I \}}{N} - |I| \right| \]
+    %
+    where $I$ ranges over all boxes in $\mathbf{T}^d$, then $A_N \to 0$ as $N \to \infty$.
+\end{theorem}
+\begin{proof}
+    For notational simplicity, we let
+    %
+    \[ \# (I,N) = \# \{ 1 \leq n \leq N: x_n \in I \} \]
+    %
+    For each $n$, we can partition $\mathbf{T}^d$ into finitely many disjoint cubes $\{ I_n \}$ with sidelengths $1/n$. Since there are only finitely many such cubes, there is $N_n$ such that for $M \geq N_n$, $| \#(I_n,M)/M - |I_n|| \leq 1/n$. Now given any box $J$, we can find sets $J_1$ and $J_2$, each unions of the cubes $I_n$, with $J_1 \subset J \subset J_2$ and $|J - J_1|, |J_2 - J| \lesssim_d 1/n$. Thus
+    %
+    \[ |J| - \frac{2}{n} \leq |J_1| - \frac{1}{n} \leq \frac{\#(J_1,M)}{M} \leq \frac{\#(J,M)}{M} \leq \frac{\#(J_2,M)}{M} \leq |J_2| + \frac{1}{n} \leq |J| + \frac{2}{n} \]
+    %
+    which completes the proof, since $N_n$ is independent of $J$.
+\end{proof}
 
 
 
@@ -770,6 +782,83 @@ By the pidgeonhole principle, since $R < \sqrt{N}$, there are $1/\varepsilon$ ch
 
 The choice has the benefit of automatically possessing a lot of points by the pidgeonhole principle,
 
+\chapter{Extension to Arbitrary Cartesian Avoidence Problems}
+
+Using a random construction, we can actually extend Pramanik and Fraser's result to include avoiding the nullsets of arbitrary, nonsmooth functions. More generally, we may restructure the problem as taking a set $Y \subset [0,1]^d$, and finding a set $X \subset [0,1]$ such that $X^d$ is disjoint from $Y$, at least when all variables are distinct. We will find that the lower the Hausdorff dimension of the set $Y$, the more easily we will be able to avoid the nullset.
+
+\begin{lemma}
+    Suppose $\text{dim}_M(Y) < \alpha$, and let $I_1, \dots, I_d$ be sets which are unions of length $1/M$ intervals. If $\beta < (d - 1)/(d - \alpha)$, then for sufficiently large $N$, there exists $J_1, \dots, J_d$ such that if we split each $I_n$ into length $1/N$ intervals, then $J_n \cap I_n$ contains a length $1/N^\beta$
+\end{lemma}
+\begin{proof}
+    Since $Y$ has Minkowski dimension $\alpha$, then for certain choice of sufficiently large $N$, if we divide $[0,1]^d$ uniformly into length $1/N^\beta$ cubes, $Y$ intersects $O(N^{\alpha \beta})$ of them. Now split each length $1/N$ interval in each of the $I_n$ into length $1/N^\beta$ intervals, and randomly select a single length $1/N^\beta$ interval from each of them, the union of which forming the sets $J_1, \dots, J_d$. For any length $1/N^\beta$ cube in $I_1 \times \dots \times I_d$, the chance that this cube is included in $J_1 \times \dots \times J_d$ is $N^{d(1-\beta)}$. Thus the expected number of cubes where $Y$ intersects $J_1 \times \dots \times J_d$ is $O(N^{\alpha \beta + d(1-\beta)})$. Because $\alpha \beta + d (1 - \beta) < 1$, $N^{\alpha \beta + d(1 - \beta)} = o(N)$, if we remove the intervals in $J_n$ which form the sides of cubes intersecting $Y$, $J_n$ is still expected to contain a length $1/N^\beta$ portion of $1 - o(1)$ of all intervals in $I_n$. In particular, if we let $J_1, \dots, J_n$ be chosen to minimize the number of cubes in $J_1 \times \dots \times J_n$ intersecting $Y$, then these intervals satisfy the lemma.
+\end{proof}
+
+If we consider a queueing process analogous to the queuing processes considered in the lemmas above, then we can apply the lemma iteratively. If we apply different parameters $\alpha_n$ and $\beta_n$ with $\alpha_n$ converging to $\text{dim}_M(Y)$ rapidly, and $\beta_n$ converging rapidly to $(d - 1)/(d-\alpha)$, then we end up with a set $X$ of Hausdorff dimension $(d - \alpha)/(d-1)$ with $X^d$ avoiding elements of $Y$ when variables are distinct. Of course, since the queueing process repeats ad infinitum, we can actually avoid sets $Y$ which are the countable union of sets of Minkowski dimension $\alpha$, i.e. sets $Y$ with packing dimension $\dim_P(Y) < \alpha$.
+
+\begin{remark}
+    If we are considering a multivariate version of the problem, where $X$ lies in $[0,1]^l$ for some $l$, then the same analysis shows that we can subdivide each $I_n$ into length $1/N^\beta$ cubes. Randomly selecting a cube from $I_n$ gives a probability $N^{l(1-\beta)}$ of selecting any particular cube, so the expected number of intersections is still $O(N^{\alpha \beta + d(1 - \beta)})$ and we need $\alpha \beta + d(1 - \beta) < l$ in order for most of the intervals to remain. Thus we need to set
+    %
+    \[ \beta > \frac{d - l}{d - \alpha} \]
+    %
+    This leads to a Hausdorff dimension $l(d - \alpha)/(d-l)$ set $X$ such that $X^{d/l}$ avoids elements of $Y$ for distinct elements of $X$.
+\end{remark}
+
+\begin{remark}
+    We can avoid the necessity that the variables are distinct in the avoidence problem above by repeating the lemma with slightly different sets $Y$. For instance, in order to allow for two of the variables in $X$ to be equal, while still avoiding elements of $Y$, we can consider the problem of ensuring $X^{d-1}$ avoids a set of the form
+    %
+    \[ \tilde{Y}_{ij} = \{ y : (y_1, \dots, y_{i-1}, y_j, y_i, \dots, y_{d-1}) \in Y \} \]
+    %
+    Thus $\tilde{Y}_{ij} = f_{ij}^{-1}(Y)$, where $f_{ij}(y) = (y_1, \dots, y_{i-1}, y_j, y_i, \dots, y_{d-1})$. Thus we have $\smash{\dim_M(\tilde{Y}_{ij}) < \dim_M(Y)}$, and so we can avoid $\tilde{Y}_{ij}$ with dimension $(d-1-\alpha)/(d-2)$. In particular, if $\alpha < 1$, we can find a set $X$ of Hausdorff dimension one such that $X^d$ avoids elements of $Y$, except when all the variables are equal to one another. But in this case the dimension is trivial, since the complement of the projection on each coordinate is essentially the whole set.
+\end{remark}
+
+\begin{remark}
+    Our random construction is essentially a disguised use of pidgeonholing. Define $\mathbf{A}_1, \dots, \mathbf{A}_d$ to be the space of all choices of all sets obtained from taking a length $1/N^\beta$ interval from each length $1/N$ interval in the respective sets $I_1, \dots, I_n$. Then each set $\mathbf{A}_n$ has cardinality $(N^{\beta - 1})^{N|I_n|}$. Define a positive integer-valued function $f$ on $\mathbf{A}_1 \times \dots \times \mathbf{A}_d$ by letting $f(J_1, \dots, J_d)$ be the number of length $1/N^\beta$ boxes in $(J_1 \times \dots \times J_d) \cap Y$. We will now calculate
+    %
+    \[ \sum_{J_n \in \mathbf{A}_n} f(J_1, \dots, J_d) \]
+    %
+    For each length $1/N^\beta$ interval $J_0 \subset I_n$, the number of $J_n$ with $J_0 \subset J_n$ is $(N^{\beta-1})^{N|I_n| - 1}$, since we obtain all such $J_n$ by fixing the choice of $J_0$ in the length $1/N$ interval it is contained within in $I_n$, and then considering arbitrary choices in the other length $1/N$ intervals. Thus if $Y$ intersects $K$ length $1/N^\beta$ cubes in $I_1 \times \dots \times I_d$, each cube is contained in precisely $\prod (N^{\beta-1})^{N|I_n| - 1}$ tuples $(J_1, \dots, J_d)$, and so
+    %
+    \[ \sum_{J_n \in \mathbf{A}_n} f(J_1, \dots, J_d) = K \prod (N^{\beta-1})^{N|I_n| - 1} \]
+    %
+    Thus the average value of $f$ on $\mathbf{A}^1 \times \dots \times \mathbf{A}_d$ is
+    %
+    \[ \frac{K \prod (N^{\beta - 1})^{N |I_n| - 1}}{\prod (N^{\beta-1})^{N |I_n|}} = \frac{K}{N^{d(\beta - 1)}} \]
+    %
+    In particular, we can find some $J_1, \dots, J_d$ such that $f(J_1, \dots, J_d) \leq K/N^{d(\beta - 1)}$. If $K \lesssim N^{\alpha \beta}$,
+    %
+    \[ K/N^{d(\beta - 1)} \lesssim N^{\alpha \beta - d(\beta - 1)} = o(N) \]
+    %
+    Discarding all intervals $I \subset J_n$ which form the sidelength of a cube in $J_1 \times \dots J_d$ intersecting $Y$, we only lose a fraction $1 - o(1)$ of the length $1/N^\beta$ intervals originally contained in $J_n$, and the resulting set satisfies the required properties of the map.
+\end{remark}
+
+\begin{example}
+    Let $Y$ be a countable union of sets of Minkowski dimension $\alpha$. Then we can find a set $X$ of dimension $1 - \alpha$ such that $X + X$ and $X - X$ avoids elements of $Y$, or more generally, $X + X$ and $X - X$ avoids all rational translates of $Y$. This is because if $f(x,y) = x + y$, then $f^{-1}(Y)$ is a set of Minkowski dimension $1 + \alpha$. More generally, we can find a set $X$ of dimension $(1 - \alpha)/(d-1)$ such that the $d$ sum $X + \dots + X$ avoids elements of $Y$. If we let $g(x,y) = xy$, then $g^{-1}(Y)$ is also $1 + \alpha$ dimensional, so we can assmue that $X \cdot X$ avoids all elements of $Y$, and even all rational translates of $Y$. Applying the multivariate version of the theorem, if $Y \subset \mathbf{R}^d$ is a countable union of sets with Minkowski dimension $\alpha$, then $f^{-1}(Y)$ has dimension $\alpha + d$, and so we can find $X \subset \mathbf{R}^d$ such that $X + X$ and $X - X$ avoid all elements of $Y$, and $X$ has dimension
+    %
+    \[ d\frac{2d - (\alpha + d)}{d} = d - \alpha\]
+    %
+    again, complementing the dimension of $Y$.
+\end{example}
+
+\begin{example}
+    If $Y \subset [0,1]$ is a countable union of subsets of Minkowski dimension $\alpha$, given the function $f(x,y) = |x - y|$, if $f^{-1}(Y)$ is $1 + \alpha$ dimensional, then we can find a set $X$ with Hausdorff dimension $1 - \alpha$ such that the distance set of $X$ avoids $Y$. More generally, given any norm on $\mathbf{R}^n$, and $Y$ a countable union of sets of Minkowski dimension $\alpha$, then $f^{-1}(Y)$ is $d + \alpha (d - 1)$ dimensional, and so we can find $X$ with Hausdorff dimension $n - \alpha$ whose difference set avoids elements of $Y$.
+\end{example}
+
+\begin{example}
+    If we consider $Y \subset S^{d-1}$ a countable union of sets of Minkowski dimension $\alpha$, we can find $X \subset \mathbf{R}^d$ such that $f(x,y) = (x - y)/|x-y|$ avoids elements of $Y$, then $f^{-1}(Y)$ is $\alpha + d + 1$ dimensional, and so we can find $X$ with dimension $d-\alpha-1$ such that $X - X$ avoids all directions in $Y$.
+\end{example}
+
+\begin{example}
+    Given a set $Y \subset \mathbf{R}$, consider the problem of finding a set $X$ in $\mathbf{R}^d$ such that the angles formed by elements of $X$ avoid elements of $Y$. Then the function is
+    %
+    \[ f(x,y,z) = \frac{(x - y) \cdot (x - z)}{|x - y| |x - z|} \]
+    %
+    and we want to avoid elements of $f^{-1}(\cos(Y))$. If $Y$ is $\alpha$ dimensional, then $f^{-1}(\cos(Y))$ is $2d + \alpha(d - 1)$ dimensional, and so we can find a set $X$ of Hausdorff dimension $(d - \alpha(d-1))/2$.
+\end{example}
+
+\section{Future Work}
+
+TODO: The general problem of extracting an `independent set of intervals' that we use in our building block constructing is known as the problem of {\it independent sets in hypergraphs}. Maybe exploiting some constructions in the general theory of independant sets in hypergraphs, we can perform other constructions.
+
 \chapter{Low Rank Coordinate Changes}
 
 \section{Boosting the Dimension of Pattern Avoiding Sets by Low Rank Coordinate Changes}
@@ -839,37 +928,77 @@ If we now consider $T_0, \dots, T_n$, splitting $T_1, \dots, T_n$ into length $1
     If $T$ has rank 1, then Dirichlet's theorem says that every irrational number $x$ can be approximated by infinitely many $p/q$ with $|x - p/q| < 1/q^2$, so every real-valued rank 1 linear transformation can be avoided with a dimension one bound.
 \end{example}
 
-\section{Equidistribution on the Torus To Extend the Result to Irrational Matrices}
-
-Or maybe this shows that shifting wont help us if the points aren't rational?
-
 \section{Equidistribution and Real Valued Matrices}
 
-If $T$ is a non-invertible matrix containing irrational coefficients, then the values $Tx$, for $x \in \mathbf{Z}^n$, do not form a lattice, and therefore we cannot use the direct combinatorial arguments of the past section to obtain the decomposition lemma. However, without loss of generality, we can write $T(x) = S(x_1) + U(x_2)$, where $x = (x_1,x_2)$, $x_1 \in \mathbf{R}^k$, $x_2 \in \mathbf{R}^{n-k}$, and $S$ has full rank $k$. Then $S$ is an embedding of $\mathbf{R}^k$ into $\mathbf{R}^n$, so $\Gamma = S((\mathbf{Z}/N)^k)$ forms a lattice with points spaced apart by a minimum distance $\Omega_T(1/N)$. Since $T$ has rank $k$, the image of $U$ is contained within the image of $S$. We let $\mathbf{T}$ denote the torus obtained by quotienting the $k$ dimensional subplane forming the image of $T$ by $\Gamma$. If $\pi: \mathbf{R}^k \to \mathbf{T}$ is the homomorphism obtained by composing the quotient map onto the torus with the linear map $T$, then $\pi(x_1,0) = 0$ for all $x_1 \in (\mathbf{Z}/N)^k$. If we consider $\pi(0, nx_2) = n \pi(0,x_2)$, then this sequence is equidistributed on $\mathbf{T}$ if and only if $\xi \cdot U(x_2) \not \in \mathbf{Z}$ for all nonzero $\xi \in \mathbf{Z} \langle S(\mathbf{Z}/N)^k \rangle$. In particular, unless $\xi \cdot U(x_2) = 0$ for one of the discrete $\xi$, because there are only countably many $\xi$ we can find $\alpha$ arbitrarily close to one such that $\xi \cdot U(\alpha x_2) \not \in \mathbf{Z}$, so we get an equidistribution result. Regardless, the sequence $n \pi(0,x_2)$ is equidistributed on a subtorus on $\mathbf{T}$, which should enable us to concentrate a particular subsequence concentrated at certain parts of the torus.
+If $T$ is a non-invertible matrix containing irrational coefficients, then the values $Tx$, for $x \in \mathbf{Z}^n$, do not form a lattice, and therefore we cannot use the direct combinatorial arguments of the past section to obtain the decomposition lemma. However, without loss of generality, we can write $T(x) = S(x_1) + U(x_2)$, where $x = (x_1,x_2)$, $x_1 \in \mathbf{R}^k$, $x_2 \in \mathbf{R}^{n-k}$, and $S$ has full rank $k$. Then $S$ is an embedding of $\mathbf{R}^k$ into $\mathbf{R}^n$, so $\Gamma = S((\mathbf{Z}/N)^k)$ forms a lattice with points spaced apart by a distance on the order of $\Omega(1/N)$. Since $T$ has rank $k$, the image of $U$ is contained within the image of $S$. We let $\mathbf{T}$ denote the torus obtained by quotienting the $k$ dimensional subplane forming the image of $T$ by $\Gamma$. Then the image of $S$ in $\mathbf{T}$ is contained within an $\alpha$ dimensional subtorus of $\mathbf{T}$. Note that $\alpha = 0$ precisely when $T$ still has rank $k$ over the rational numbers, so that in a suitable basis $T$ is an integer valued matrix. If $\alpha = 1$, then by an appropriate scaling in the values $x_2$ we can still make the values of $S$ lie at lattice points, which should give a Hausdorff dimension one set. When $\alpha = 2$, we run into problems.
+
+If $\pi: \mathbf{R}^k \to T$ is the homomorphism obtained by composing the quotient map onto the torus with the linear map $T$, then $\pi(x_1,0) = 0$ for all $x_1 \in (\mathbf{Z}/N)^k$. On the other hand, Ratner's theorem implies that for each $x_2 \in \mathbf{R}^{n-k}$, there is some $M$ such that the sequence $\pi(0, nMx_2) = Mn \pi(0, x_2)$ is equidistributed on a subtorus of $T$. Equidistribution may be useful in extending the rational matrix result to all real matrices with some dimension loss, since a matrix is rational if and only if $n M \pi(0, x_2)$ is equidistributed on a zero dimensional lattice -- it may ensure that points are closely clustered to lattice points.
+
+Lets consider the simplest case, where $n = k+1$, so $x_2 \in \mathbf{R}$. Consider our setup, with intervals $J_0, \dots, J_n$, and an equation $y = f(Tx)$, where $f$ is Lipschitz with Lipschitz norm bounded by $B$. Now if $T = S + U$, then $S(\mathbf{Z}^k)$ forms a rank $k$ lattice, and $U(\mathbf{Z})$ equidistributes over an $\alpha$ dimensional subtorus of the torus generated over the lattice. In particular, since the set $\mathbf{Z} \cap NJ_n$ contains $\Omega(N |J_n|) = \Omega(N)$ consecutive points, for any $\varepsilon$ and suitably large $N$, $\mathbf{Z} \cap NJ_n$ contains $\Omega(Nr^\alpha)$ points $x$ such that $S(x)$ is within a distance $r$ from a lattice point, for any $r$. Dividing by $N$ tells us that we have $O(Nr^\alpha)$ points $x$ in $\mathbf{Z}/N \cap J_n$ such that $U(x)$ is at a distance $r/N$ from a lattice point in $S((\mathbf{Z}/N)^k)$. If $r = 1/N^\beta$, then  we have $O(N^{1-\alpha\beta})$ points at a distance $1/N^{\beta + 1}$ from a lattice point. There are $O(N^k)$ points in the lattice, and so provided that $k < 1 + \beta$, we can find a large subset avoiding the images of these startpoints, and we should be able to thicken the startpoints to length $\Omega(1/N^k)$ intervals, hence we should expect the set we construct to have Hausdorff dimension $1/k(k-1)$ if this process is repeated to construct our solution avoiding set.
 
 \section{Applications of Low Rank Coordinate Changes}
 
+\begin{example}
 Our initial exploration of low rank coordinate changes was inspired by trying to find solutions to the equation
 %
 \[ y - x = (u - w)^2 \]
 %
-The solution above gives a Hausdorff dimension $1/2$ set avoiding solutions to this equation. More generally, if $X$ is a set, then given a smooth function $f$ of $n$ variables, we can find a set $X$ of Hausdorff dimension $1/n$ such that there is no $x \in X$, and $y_1, \dots, y_n \in X - X$ such that $x = f(y_1, \dots, y_n)$. This is better than the $1/2n$ bound that is obtained by Malabika and Fraser's result.
+Our algorithm gives a Hausdorff dimension $1/2$ set avoiding solutions to this equation. This equals Math\'{e}'s result. But this dimension for us now depends on the shifts involved in the equation, not on the exponent, so we can actually avoid solutions to the equation
+%
+\[ y - x = (u - w)^n \]
+%
+for any $n$, in a set of Hausdorff dimension $1/2$. More generally, if $X$ is a set, then given a smooth function $f$ of $n$ variables, we can find a set $X$ of Hausdorff dimension $1/n$ such that there is no $x \in X$, and $y_1, \dots, y_n \in X - X$ such that $x = f(y_1, \dots, y_n)$. This is better than the $1/2n$ bound that is obtained by Malabika and Fraser's result.
+\end{example}
 
-As a particular special case of our result, for any fixed $m$, we can find a set $X \subset \mathbf{R}^n$ of full Hausdorff dimension which contains no solutions to
+\begin{example}
+For any fixed $m$, we can find a set $X \subset \mathbf{R}^n$ of full Hausdorff dimension which contains no solutions to
 %
 \[ a_1x_1 + \dots + a_nx_n = 0 \]
 %
-for {\it any} rational numbers $a_n$ which are not all zero. Since Malabika/Fraser's technique's solutions are bounded by the number of variables, they cannot let $n \to \infty$ to obtain a linearly independant set over the rational numbers. But since the Hausdorff dimension of our sets now only depends on the rank of $T$, rather than the total number of variables in $T$, we can let $n \to \infty$ to obtain full sets linearly independant over the rationals. More generally, for any smooth function $f: \mathbf{R} \to \mathbf{R}$, we can find a full Hausdorff dimensional set such that there are no solutions
+for {\it any} rational numbers $a_n$ which are not all zero. Since Malabika/Fraser's technique's solutions are bounded by the number of variables, they cannot let $n \to \infty$ to obtain a linearly independant set over the rational numbers. But since the Hausdorff dimension of our sets now only depends on the rank of $T$, rather than the total number of variables in $T$, we can let $n \to \infty$ to obtain full sets linearly independant over the rationals. More generally, for any Lipschitz continuous function $f: \mathbf{R} \to \mathbf{R}$, we can find a full Hausdorff dimensional set such that there are no solutions
 %
-\[ y = f(a_1x_1 + \dots + a_nx_n) \]
+\[ f(a_1x_1 + \dots + a_nx_n, y) \]
 %
 for any $n$, and for any rational numbers $a_n$ that are not all zero.
+\end{example}
 
-The easiest applications of the low rank coordinate change method are probably involving configuration problems involving pairwise distances between $m$ points in $\mathbf{R}^n$, where $m \ll n$, since this can best take advantage of our rank condition. Perhaps one way to encompass this is to avoid $m$ vertex polyhedra in $n$ dimensional space, where $m \ll n$. In order to distinguish this problem from something that can be solved from Math\'{e}'s approach, we can probably find a high dimensional set avoiding $m$ vertex polyhedra on a parameterized $n$ dimensional manifold, where $m \ll n$.
+\begin{example}
+The easiest applications of the low rank coordinate change method are probably involving configuration problems involving pairwise distances between $m$ points in $\mathbf{R}^n$, where $m \ll n$, since this can best take advantage of our rank condition. Perhaps one way to encompass this is to avoid $m$ vertex polyhedra in $n$ dimensional space, where $m \ll n$. In order to distinguish this problem from something that can be solved from Math\'{e}'s approach, we can probably find a high dimensional set avoiding $m$ vertex polyhedra on a parameterized $n$ dimensional manifold, where $m \ll n$. There is a result in projective geometry which says that every projectively invariant property of $m$ points in $\mathbf{RP}^d$ is expressible as a function in the ${m \choose d}$ bracket polynomials with respect to these $m$ points. In particular, our result says that we can avoid a countable collection of such invariants in a dimension $1/{m \choose d}$ set. This is a better choice of coordinates than Euclidean coordinates if ${m \choose d} \leq m$. Update: I don't think this is ever the case.
+\end{example}
 
 \begin{remark}
     Because of how we construct our set $X$, we can find a dimension $1/k$ set avoiding solutions to $y = f(Tx)$ for {\it all} rank $k$ rational matrices $T$, without losing any Hausdorff dimension. Maybe this will help us avoid solutions to more general problems?
 \end{remark}
+
+\begin{example}
+Given a smooth curve $\Gamma$ in $\mathbf{R}^n$, can we find a subset $E$ with high Hausdorff dimension avoiding isoceles triangles. That is, if the curve is parameterized by $\gamma: [0,1] \to \mathbf{R}^n$, can we find $E \subset [0,1]$ such that for any $t_1, t_2, t_3$, $\gamma(t_1)$, $\gamma(t_2)$, and $\gamma(t_3)$ do not form the vertices of an isoceles triangle. This is, in a sense, a non-linear generalization of sets avoiding arithmetic progressions, since if $\Gamma$ is a line, an isoceles triangle is given by arithmetic progressions. Assuming our curve is simple, we must avoid zeroes of the function
+%
+\[ |\gamma(t_1) - \gamma(t_2)|^2 = |\gamma(t_2) - \gamma(t_3)|^2 \]
+%
+If we take a sufficiently small segment of this curve, and we assume the curve has non-zero curvature on this curve, we can assume that $t_1 < t_2 < t_3$ in our dissection method.
+
+If the coordinates of $\gamma$ are given by polynomials with maximum degree $d$, then the equation
+%
+\[ |\gamma(t_1) - \gamma(t_2)|^2 - |\gamma(t_2) - \gamma(t_3)|^2 \]
+%
+is a polynomial of degree $2d$, and so Math\'{e}'s result gives a set of dimension $1/2d$ avoiding isoceles triangles. In the case where $\Gamma$ is a line, then the function $f(t_1,t_2,t_3) = \gamma(t_1) + \gamma(t_3) - 2\gamma(t_2)$ avoids arithmetic progresions, and Math\'{e}'s result gives a dimension one set avoiding such progressions. Rob and Malabika's algorithm easily gives a set with dimension $1/2$ for any curve $\Gamma$. Our algorithm doesn't seem to be able to do much better here.
+\end{example}
+
+\begin{example}
+    What is the largest dimension of a set in Euclidean space such that for any value $\lambda$, there is at most one pair of points $x,y$ in the set such that $|x - y| = \lambda$.
+\end{example}
+
+\begin{example}
+    What is the largest dimension of a set which avoids certain angles, i.e. for which a triplet $x,y,z$ avoids certain planar configurations.
+\end{example}
+
+\begin{example}
+    A set of points $x_0, \dots, x_d \in \mathbf{R}^d$ lie in a hyperplane if and only if the determinant formed by the vectors $x_n - x_0$, for $n \in \{ 1, \dots, d \}$, is zero. This is a degree $d$ polynomial, hence Math\'{e}'s result gives a dimension one set with no set of $d+1$ points lying in a hyperplane. On the other hand, a theorem of Mattila shows that every analytic set $E$ with dimension exceeding one contains $d + 1$ points in a hyperplane. Can we generalize this to a more general example avoiding points on a rotational, translation invariant family of manifolds using our results?
+\end{example}
+
+\begin{example}
+    Given a set $F$ not containing the origin, what is the largest Hausdorff dimension of a set $E$ such that for any for any distinct rational $a_1, \dots, a_N$, the sum $a_1E + \dots + a_NE$ does not contain any elements of $F$. Thus the vector space over the rationals generated by $E$ does not contain any elements of $F$. We can also take the non-linear values $f(a_1E + \dots + a_NE)$ avoiding elements of $F$. $F$ must have non-empty interior for the problem to be interesting. Then can we find a smooth function $f$ with non-nanishing derivative which vanishes over $F$, or a family of smooth functions with non-vanishing derivative around $F$.
+\end{example}
 
 \section{Idea: Generalizing This Problem to low rank smooth functions}
 
@@ -890,6 +1019,45 @@ Then given any function $f(x)$ with rank $k$, we can use the implicit function t
 \section{Idea: Algebraic Number Fields}
 
 If $\mathbf{Q}(\omega)$ is a quadratic extension of the rational numbers, then the ring of integers in this field form a lattice. Perhaps we can use this to generalize our approach to avoiding configurations $y = f(Tx)$, where all coefficients of the matrix $T$ lie in some common quadratic extension of the rational numbers.
+
+\section{A Scheme for Avoiding Configurations}
+
+Math\'{e}'s result can be reconfigured in terms of a building block strategy for implementation in our algorithm.
+
+\begin{theorem}
+    Let $f$ be a polynomial of degree $m$, and consider unions of length $1/M$ intervals $T_0, \dots, T_d \subset [0,1]$, with rational start-points. If $\partial_0 f$ is non-vanishing on $T_0 \times \dots \times T_d$, then there exists arbitrarily large integers $N$ and a constant $C$ not depending on $N$ and sets $S_n \subset T_n$ such that
+    %
+    \begin{itemize}
+        \item $f(x) \neq 0$ for $x \in S_0 \times \dots \times S_d$.
+        \item If $T_0, \dots, T_d$ are split into length $1/N$ intervals, then $S_n$ contains a length $C/N^d$ region of each interval.
+    \end{itemize}
+\end{theorem}
+\begin{proof}
+    Without loss of generality (by subdividing the initial intervals), let $M$ be the greatest common divisor of all of the startpoints of the intervals in $T_n$. Divide each interval $T_n$ into length $1/N$ intervals, and let $\mathbf{A} \subset (\mathbf{Z}/N)^d$ be the cartesian product of all startpoints of these length $1/N$ intervals. Since $f$ has degree $m$, $f(\mathbf{A}) \subset \mathbf{Z}/N^m$. If $A_0 \leq |\partial_0 f| \leq A_1$ on $T_0 \times \dots \times T_d$, then for any $a \in \mathbf{A}$, and $\delta_0$, there exists $\delta_1$ between $0$ and $\delta_0$ for which
+    %
+    \[ |f(a + \delta_0 e_0)| - f(a)| = \delta_0 |(\partial_0 f)(a + \delta_1)| \]
+    %
+    If $K$ is fixed such that $A_1 \leq (K-1)A_0$, so that we can choose
+    %
+    \[ \frac{1/K}{A_0N^m} \leq \delta_0 \leq \frac{\left( 1 - 1/K \right)}{A_1N^m} \]
+    %
+    Then
+    %
+    \[ \frac{1/K}{N^m} \leq |f(a + \delta_0 e_0) - f(a)| \leq \frac{1 - 1/K}{N^m} \]
+    %
+    Thus $d(f(\mathbf{A} + \delta_0 e_0), \mathbf{Z}/N^m) \geq 1/KN^m$. Thus if we thicken the coordinates of $\mathbf{A} + \delta_0$ to intervals of length $O(1/N^m)$, then we obtain sets $S_0, \dots, S_n$ avoiding solutions.
+\end{proof}
+
+TODO: CAN WE USE THE COMBINATORIAL NULLSTELLENSATZ TO COME UP WITH AN ALTERNATE BUILDING BLOCK LEMMA FOR ARBITRARY FIELDS?
+
+\section{Square Free Sets}
+
+We now look at avoiding solutions to the equation $x - y = (u - v)^2$. We consider two sets $I$ and $J$. Suppose that we can select a subset $\mathbf{S}$ from $\mathbf{Z} \cap N^2I$ such that if $x,y \in \mathbf{S}$ are distinct, $x - y$ is not a perfect square, and $|\mathbf{S}| \gtrsim |\mathbf{Z} \cap N^2I|^\alpha$. Then for any distinct $u,v \in \mathbf{Z} \cap NJ$, $(u - v)^2 \not \in \mathbf{S} - \mathbf{S}$. But this means that if we thicken the points in $\mathbf{S}/N^2$ to length $O(1/N^2)$ intervals, and the points in $\mathbf{Z}/N \cap J$ into length $O(1/N)$ intervals, then the resultant set will avoid solutions to $x - y = (u - v)^2$. This should give a dimension $\alpha$ set.
+
+
+
+
+
 
 \chapter{Appendix: Calculating Dimensions of Cantor Like Sets}
 
@@ -933,7 +1101,7 @@ Thus we can easily obtain that $\dim_{\mathbf{H}}(X) \geq \alpha - \varepsilon$ 
 It is, of course, easy to construct examples of $l_N$ for which we cannot use this technique. For instance, if $\smash{l_N = e^{-N!}}$, or $\smash{l_N = e^{-e^N}}$, the latter of which can be seen because $e^N$ is it's own derivative. Our second method for interpolating requires extra knowledge of the dissection process, but enables us to choose the $l_N$ decaying much more rapidly, when the filtration of the mass of $\mu$ only occurs at very sparse lengths. In particular, in Fraser and Pramanik's paper, the mass is essentially uniformly distributed over the length $1/N$ dissections, and then filtered to very particular length $1/N^k$ sections. Since the length $1/N$ and length $1/N^k$ differ in length only be a polynomial scale, the actual choice of $N$ relative to $M$ isn't really important, so we can let $N$ become as large as we desire relative to the choice of $M$. In particular, we can choose the $M_N$ to grow as fast as we want, which Fraser and Pramanik take full advantage of, choosing $M_N$ even bigger than $2 \uparrow \uparrow N$, which enables us to overwhelm the arbitrary constants in the construction of the configuration avoiding sets they create. We consider, for each $\beta = \{ l_1 \geq r_1 \geq l_2 \geq r_2 \geq \dots \to 0 \}$, a Cantor set $X^\beta$, and a corresponding probability measure $\mu_\beta$ supported on $X^\beta$. Our goal is to find a particular index set $\beta$ such that $X^\beta$ has Hausdorff dimension exceeding $\alpha$. The reason for introducing this notation is so that we can choose bounds on the measures $\mu_\beta$ as functions of the $l_1$ and $r_1$, which often occurs in recursive constructions as a consequence of the influence of the parameters on the construction. In particular, we will let $\lesssim_N$ stand for an inequality with a hidden constant depending on the parameters $\{ l_1, r_1, l_2, r_2, \dots, l_N \}$.
 
 \begin{theorem}
-    If $\mu_\beta(I) \lesssim_{N-1} l_N^\alpha$ for $|I| = l_N$, $r_N \lesssim_N l_{N+1}^\alpha$, and we have $\mu_\beta(J) \lesssim_{N-1} (r_N/l_N) \mu_\beta(I)$ for $J \subset I$ with $|J| = r_N$ and $|I| = l_N$, where $I$ and $J$ range over a disjoint family of intervals covering the support of $\mu_\beta$ (essentially this means that the probability mass on a length $l_N$ interval $I$ is uniformly distributed over the length $r_N$ intervals it contains), then there exists a sequence $\beta$ such that $X^\beta$ is $\alpha$ dimensional.
+    If $\mu_\beta(I) \lesssim_{N-1} l_N^\alpha$ for $|I| = l_N$, $r_N \lesssim_N l_{N+1}^\alpha$, and we have $\mu_\beta(J) \lesssim_{N-1} (r_N/l_N) \mu_\beta(I)$ for $J \subset I$ with $|J| = r_N$ and $|I| = l_N$, where $I$ and $J$ range over a disjoint family of intervals covering the support of $\mu_\beta$, then there exists a sequence $\beta$ such that $X^\beta$ is $\alpha$ dimensional.
 \end{theorem}
 \begin{proof}
     The main technique in this theorem is that since we have bounds enabling us to skip the analysis of large portions of intervals, we can take $r_N$ arbitrarily large relative to $l_N$, rendering any previous constants that occur in the algorithm to become immediately negligible. The first advantage of this is that for $r_N \leq |I| \leq l_N$, we can cover $I$ by length $r_N$ intervals to obtain that if the $l_N$ decay rapidly enough with respect to $A_{N-1}$,
@@ -946,6 +1114,10 @@ Note that since the hidden constants only depend on parameters up to index $N-1$
 %
 Since $r_N$ is chosen after the parameters determine the hidden constants in this bound are chose, we can let $r_N$ decay rapidly enough that we obtain a bound $\mu_\beta(I) \lesssim_\varepsilon l_{N+1}^{\alpha - \varepsilon}$ independently of $N$. This guarantees the existence of a sequence $\beta$ with $X^\beta$ an $\alpha$ dimensional set.
 \end{proof}
+
+\begin{remark}
+    The condition $\mu_\beta(J) \lesssim_{N-1} (r_N/l_N) \mu_\beta(I)$ essentially means that the probability mass on a length $l_N$ interval $I$ is uniformly distributed over the length $r_N$ intervals it contains. This is what enables us to remove the discussion of the growth of the sequence $\beta$ over time from discussion.
+\end{remark}
 
 \begin{example}
     In Fraser and Pramanik's paper, for $\alpha = 1/(d-1)$, they choose $r_N = A_N l_{N+1}^\alpha$ for some constant $A_N$, and choose $l_N$ suitably rapidly decaying to establish the inequalities $\mu_\beta(I) \lesssim |I|^\alpha$ for $|I| = l_N$. The decomposition algorithm naturally leads to the inequality $\mu_\beta(J) \lesssim (r_N/l_N) \mu_\beta(I)$, which shows that we can choose $l_N$ giving an $\alpha$ dimensional set.
