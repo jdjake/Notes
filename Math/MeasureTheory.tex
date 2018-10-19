@@ -919,7 +919,7 @@ The initial way we measured the area of nontrivial shapes $E \subset \mathbf{R}^
 %
 Which reflects the fact that, for $f \geq 0$, we interpret the Riemann integral of $f$ as defining the volume under the hypersurface defined by $f$. A useful fact about the Riemann integral is that if $f$ is Riemann integral, then we can write $f = f^+ - f^-$, where $f^+ = \max(f,0)$ and $f^- = -\min(f,0)$ are both Riemann integrable, and then $\int f = \int f^+ - \int f^-$, so the general Riemann integral is just the `oriented' area lying above and below the hypersurface defined by $f$. Of course, Jordan measure is very limited. If $f \geq 0$ is a function chosen such that the set
 %
-\[ X_f =  \{ (x,y): y \leq f(x) \} \]
+\[ X_f =  \{ (x,y): 0 \leq y \leq f(x) \} \]
 %
 is Lebesgue measurable, then we say $f$ itself is {\bf Lebesgue measurable}, and then we define the Lebesgue integral as the quantity
 %
@@ -933,15 +933,49 @@ and if $f$ is complex valued, with $f = u + iv$, then we say $f$ is Lebesgue mea
 %
 \[ \int f(x)\ dx = \int u(x)\ dx + i \int v(x)\ dx \]
 %
+If $f$ is only defined on a subset of $\mathbf{R}^n$, then we extend it globally by making it vanish outside the domain of definition, and use this to make a more general definition of the Lebesgue integral. Thus we set
+%
+\[ \int_E f(x)\; dx = \int f(x) \chi_E(x)\; dx \]
+%
 The utility of this extension relates to the fact that the Lebesgue integral behaves much more nicely with respect to convergence of functions than the Riemann integral.
 
 \begin{theorem}
-  A function $f$ is Lebesgue measurable if and only if, for each $M \in \mathbf{R}$, the set
-  %
-  \[ \{ x: f(x) \leq M \} \]
-  %
-  is Lebesgue measurable.
+  A function $f$ is Lebesgue measurable if and only if, for each $M \in \mathbf{R}$, the set $\{ x: f(x) \leq M \}$ is Lebesgue measurable.
 \end{theorem}
+
+If a function $f$ is Lebesgue measurable, then $f^{-1}((a,b])$ is measurable for each $a < b$, since
+%
+\[ f^{-1}((a,b]) = \{ x: f(x) \leq b \} \cap \{ x : f(x) \leq a \}^c \]
+%
+Since $f^{-1}((a,b))$ is the countable union of $f^{-1}((a,b_i])$, as $b_i \uparrow b$, and $f^{-1}([a,b])$ is the countable intersection of $f^{-1}((a_i,b])$, we conclude the inverse image of every interval is measurable. By taking unions of open intervals, we obtain that the inverse image of every open set is measurable, and by taking complements, that the inverse image of every closed set is as well. and then $f^{-1}(X)$ is measurable for every set $X$ which is open and closed.
+
+\begin{lemma}
+  If $f: \mathbf{R}^n \to \mathbf{C}$ is continuous, and $g_1, \dots, g_n$ are measurable, then $f(g_1, \dots, g_n)$ is measurable.
+\end{lemma}
+\begin{proof}
+  If $U$ is open, then $f^{-1}(U)$ is open, and is therefore the countable union of open rectangles of the form $(a_1,b_1) \times \dots \times (a_n,b_n)$, and it suffices to prove that $(g_1, \dots, g_n)^{-1}((a_1,b_1) \times \dots \times (a_n,b_n))$ is open. But this is precisely the intersection of $g_m^{-1}((a_m,b_m))$, which is measurable, completing the proof, since a function is measurable if and only if the inverse image of every open set is measurable.
+\end{proof}
+
+A consequence of this lemma is that if $f_1, \dots, f_n$ are measurable functions, then so too is $f_1 + \dots + f_n$ and $f_1 \dots f_n$, since the functions $g(x_1, \dots, x_n) = \sum x_i$ and $g(x_1, \dots, x_n) = \prod x_n$ are continuous. Other variants show that every nice combination of measurable functions is again measurable, which we take for granted in the sequel.
+
+An incredibly nice feature of Lebesgue measurable functions is their closure under pointwise convergence, a feature not present in the theory of Riemann integrable functions. If $f_1, f_2, \dots$ is a family of measurable functions, then $\sup f_n$, $\inf f_n$, $\limsup f_n$, and $\liminf f_n$ are all measurable functions as well. This follows by noticing that $X_{\inf f_n} = \bigcap X_{f_n}$, and $X_{\sup f_n} = \bigcup X_{f_n}$. It then follows that $\limsup f_n = \inf_N \sup_{n \geq N} f_n$ and $\liminf = \sup_N \inf_{n \geq N} f_n$ are measurable by iterating this argument. Since the set of points $x$ where $\lim f_n(x)$ exists is the same as the set of points where $\limsup f_n(x) = \liminf f_n(x)$, and the function $\limsup f_n - \liminf f_n$ is measurable, we conclude the set of points where the limit exists is measurable. Since the function agrees with $\limsup f_n$ and $\liminf f_n$ on its domain of definition, the limit of any sequence of measurable functions is also measurable. The next theorem is one of the three main measure theoretic results related to pointwise convergence.
+
+\begin{theorem}[Monotone convergence theorem]
+  If $0 \leq f_1 \leq f_2 \leq \dots$ converge to a function $f$ pointwise, then $\int f_n \to \int f$ pointwise.
+\end{theorem}
+\begin{proof}
+  We have $X_f = \lim X_{f_n}$, and so the countable additivity of the Lebesgue measure comes into play to determine that $|X_f| = \lim |X_{f_n}|$.
+\end{proof}
+
+The simplest measurable functions are the {\it step functions}, which are functions which take the form of a finite sum $\sum a_n \chi_{E_n}$, where each $E_n$ is a rectangle, and the $a_n$ are scalars. Next most simplest are the {\it simple functions}, which have the same definition as step functions but which allow $E_n$ to take the form of any measurable set. For both such functions we have
+%
+\[ \int \sum a_n \chi_{E_n} = \sum a_n |E_n| \]
+%
+assuming that the $E_n$ all have finite measure. If $f$ is any positive measurable function, then there exists a family of simple functions $f_1 \leq f_2 \leq \dots$ converging to $f$ pointwise (approximating the range of $f_n$ by discrete segments at length $1/N$ spaces, for instance). If we only want pointwise convergence almost rather than monotone convergence, we can approximate the function by step functions. If $f = \lim f_n$, where the $f_n$ are monotone converging to $f$ pointwise. For any measurable set $E$, we may find a finite union of rectangles $F$ with $|E \Delta F| \leq \varepsilon$. Thus for each $n$ and $\varepsilon$ we can find a step function $g_n$ which agrees with $f_n$ except on a set $F_n$ of size $1/2^n$. The functions $g_n$ converge to $f$ except on the set
+%
+\[ \bigcap_N \bigcup_{n \geq N} F_n \]
+%
+which has measure zero, completing the proof.
 
 \section{Rearrangement Invariant Norms}
 
@@ -960,7 +994,7 @@ measures the degree of control we have over such functions. The important of tak
   %
   \[ \int |f|^p = O(1) \int_0^\infty r^{d-1 - p\alpha} \]
   %
-  Therefore $f$ is in $L^p(\mathbf{R}^d - B_\varepsilon(0))$ only if $p \alpha > d$, and $f$ is in $L^p(B_1(0))$ if and only if $p \alpha < d$. Notice that for large $\alpha$ $f$ is peaked at the origin, but decays rapidly away from the origin.
+  Therefore $f$ is in $L^p(\mathbf{R}^d - B_\varepsilon(0))$ only if $p \alpha > d$, and $f$ is in $L^p(B_1(0))$ if and only if $p \alpha < d$. Notice that for large $\alpha$ $f$ is peaked at the origin, but decays rapidly away from the origin, hence the inclusions above.
 \end{example}
 
 \begin{example}
@@ -968,7 +1002,7 @@ measures the degree of control we have over such functions. The important of tak
   %
   \[ \| f \|_p = (\sum |E_n| |A_n|^p)^{1/p} \geq (|E_m||A_m|^p(1 + o(1)))^{1/p} = |E_m|^{1/p} |A_m| (1 + o(1)) \]
   %
-  which implies $\| f \|_p \to |A_m|$ as $p \to \infty$. On the other hand, $\lim_{p \to 0} \| f \|^p_p \to \sum |E_n|$.
+  which implies $\| f \|_p \to |A_m|$ as $p \to \infty$. On the other hand, we have $\lim_{p \to 0} \| f \|^p_p \to \sum |E_n|$, so the width of the function becomes more and more emphasized.
 \end{example}
 
 The exploration above shows that as $p \to \infty$, the width of a function is disregarded completely, motivating the definition of the $L^\infty$ norm; Given a measurable $f$, we define $\| f \|_\infty$ to be the smallest number such that $|f| \leq \| f \|_\infty$ almost surely. Similarily, we define the measure of the support of $f$ to be the $L^0$ norm of the function (though it is really the `zeroeth power' of the $L^0$ norm, which means most of the norm properties are lost).
