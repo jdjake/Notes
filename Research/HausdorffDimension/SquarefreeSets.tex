@@ -5,6 +5,7 @@
 \usepackage{multicol}
 \usepackage{amssymb}
 \usepackage{mathabx}
+\usepackage{accents}
 
 \theoremstyle{plain}
 \newtheorem{lemma}{Lemma}
@@ -31,6 +32,97 @@
 \tableofcontents
 
 \newpage
+
+We study a simple question:
+%
+\begin{center}
+    How large can objects with a fixed irregularity be?
+\end{center}
+%
+The objects we study are subsets of Euclidean space, and the irregularities manifest as avoiding a function's locus. For instance, the problem
+%
+\begin{center}
+    How large can a subset $X$ of $\mathbf{R}^n$ be such that the angle formed by any three distinct points of $X$ are distinct for distinct triples.
+\end{center}
+%
+can be rephrased as finding $X \subset \mathbf{R}^n$ such that for any {\it distinct} pair of triples $(x_1,y_1,z_1), (x_2,y_2,z_2) \in X^3$,
+%
+\[ \frac{(x_1 - z_1) \cdot (y_1 - z_1)}{|x_1 - z_1||y_1 - z_1|} - \frac{(x_2 - z_2) \cdot (y_2 - z_2)}{|x_2 - z_2||y_2 - z_2|} \neq 0 \]
+%
+Thus we are avoiding the locus of zeroes of the function defined on a subset of $X^6$ by the equation on the left. We call the problem of finding $X$ such that $f(x) \neq 0$ for any distinct $x_1, \dots, x_n \in X$ a {\it configuration avoidance problem}. The reasons for studying such problems emerge from scenarios in ergodic theory, harmonic analysis, and the analysis of partial differential equations. Here the boundedness of operators can be disproved by taking the characteristic functions of sets possessing irregularities.
+% TODO: SOME EXAMPLES OF BOUNDED OPERATORS ON SUCH A SPACE?
+
+Rather than studying particular instances of the configuration avoidance problem, we choose to study general methods to find large subsets of space avoiding configurations. In particular, we expand on a number of general {\it interval dissection methods} which have proven useful in the area, originally developed by Keleti but also studied notably by Math\'{e}, and Pramanik/Fraser. Our novel contribution to the construction is that in an arbitrary configuration problem, random choices can overcome the lack of presence of structure. We use this to expand the utility of interval dissection methods to a set of {\it fractal avoidance problems}, that previous methods were completely unavailable to address. Such problems include:
+%
+\begin{center}
+    How large can a subset $X$ of $\mathbf{R}^n$ be such that the angle formed by any three distinct points of $X$ avoid a specified set $Y$ of angles, where $Y$ has a fixed Hausdorff dimension.
+\end{center}
+%
+For instance, $Y$ could be the set of all angles of the form $\cos(q + x)$, where $q$ is a rational number, and $x$ is an element of the Cantor set.
+
+Since we study subsets of Euclidean space, a natural way to quantify size seems to be the Lebesgue measure of an object. However, objects with positive Lebesgue measure will not possess the irregularities we wish to construct. This is because sets of positive measure `almost' contain an open set, and open sets contain will essentially contain all the configurations we wish to avoid in interesting problems. All the sets avoiding irregularities we study will have to have Lebesgue measure zero. Thus a `second-order' measure of a set's size has to be introduced, and this is satisfied by the notion of Hausdorff and Minkowski dimension. These are the notions of size we will use in this thesis.
+
+If you haven't encountered the notion of fractal dimensions before, the following intuitions should help you through this talk. A set in $\mathbf{R}^n$ has Minkowski dimension $\alpha$ if it is covered by approximately $N^\alpha$ sidelength $1/N$ cubes. Hausdorff dimension is a refinement to Minkowski dimension which is more stable under infinite operations, such as countable unions. It lower bounds the Minkowski dimension.
+
+% TODO: INTUITIONS FOR HAUSDORFF DIMENSION
+
+\section{Interval Dissection}
+
+It is easy to avoid configurations that occur at a particular scale. For instance, if $f(x) = 0$ implies that $x_i \geq \delta$ for some fixed $\delta$, then any length $\delta$ interval will solve the configuration avoidance problem. Thus the interesting configuration avoidance problems occur when the zero sets of functions need to be analyzed at infinitely many suitably fine scales. Interval dissection is a way of turning the infinitely many fine scales of configuration avoidance problems into an infinite series of discrete problems involving cutting a family of intervals into smaller pieces to avoid configurations at a particular scale. The idea is simple.
+
+The idea of interval dissection is rather simple. You've encountered it, in a suitable guise, if you've ever seen the construction of the Cantor set. Recall that the Cantor set is constructed by an infinite series of iterations, where at each scale, we have a union of intervals, and we obtain the next scale by dividing each interval into three, and removing the middle third. One multi scale property of the Cantor set is that every number in the Cantor set has a trinary expansion not containing any twos. This property is self evident when you see that at the $n$'th iteration of the algorithm, the middle third sets we remove are precisely the elements of the previous iteration whose trinary expansion has a two or a three in the nth place. Since the Cantor set is obtained from applying infinitely many iterations, all possible numbers which have a two in their trinary expansion are eventually removed in the iteration process.
+
+In general, the interval dissection techniques we consider are slightly more technical, because the property of avoiding zeroes of a real valued function on $\mathbf{R}^n$ is much more general, and therefore not as easy to break down into discrete scale arguments like as we saw for the Cantor set. But using a queueing system, we can break our fine scale argument into discrete scales. Each piece of data in the queue will consist of a sequence of disjoint regions of the domain $I_1, \dots, I_n$. At each stage of the process, we have a union $X_n$ of intervals. The idea is that at this step of the process, we take the first set of regions $I_1, \dots, I_n$ off the front of the queue, and dissect the intervals defining $X_n$ to form a set $X_{n+1}$ such that for any $x_i \in I_i \cap X_{n+1}$, $f(x) \neq 0$ The set $X_{n+1}$ is also a region of intervals, and for each choice of $n$ intervals in the set, we add this interval to the back of the queue.
+
+% Formulate this using better notation so it can be used better in our construction
+
+Every choice of intervals will be processed eventually, and the set $X = \lim X_n$ will avoid the required configurations, because for any distinct pair of $x_1, \dots, x_n \in X$, there is $N$ such that each $x_i$ occurs in a interval $I_i$ of $X_N$, such that the intervals $I_i$ are pairwise disjoint from one another and so at some iteration $X_{N+M}$, any $x_i$ with $f(x) = 0$ will have been removed, so $f(x_1, \dots, x_n)$ must be nonzero. Thus we have reduced the problem of finding configuration avoiding sets to dissection a disjoint family of unions of intervals into small unions. As should be intuitive, the more efficiently we will be able to dissect our intervals, the higher the Hausdorff dimension we should obtain. This discrete problem can be encompassed in what we call a {\it building block lemma}.
+
+Note that since the interval dissection method is a discrete series of problems, it is no more difficult to avoid the zero sets of a countable collection of functions than to avoid a single function. We just make sure that for each function we have a covering of the domain by intervals of arbitrary scales that are eventually dissected to avoid the particular function.
+
+\begin{example}
+    Keleti's original problem can be seen as interval dissection. His building block lemma takes a union of intervals, and dissects them into a union of disjoint intervals containing a fraction $\Omega(1)$ of the mass of each interval at each stage. Because up to a constant, no mass is lost at each stage, Keleti obtains a Hausdorff dimension one set in the limit.
+\end{example}
+
+\begin{example}
+    Math\'{e} essentially disguised an interval dissection method behind a strange topological argument to avoid configurations on a degree $m$ polynomial. At each stage, he considers a union of intervals, divides them into length $1/N$ intervals, and takes a length $\Omega(1/N^m)$ portion of each such interval. He thus obtains a Hausdorff dimension $1/m$ solution.
+\end{example}
+
+We consider a fractal avoidance problem, where we have to avoid the locus of an $\alpha$ dimensional set in $\mathbf{R}^d$. Our interval dissection method will take a union of intervals, divide them into length $1/N$ intervals, and essentially take a length $\Omega(1/N^{(d-1)/(d-\alpha)})$ of each such interval. We therefore obtain a solution to the problem with Hausdorff dimension $(d-\alpha)/(d-1)$.
+
+\section{Fractal Avoidance and Random Selection}
+
+By rephrasing a configuration avoidance problem in a different light, we can view the problem from a different perspective. Once the problem is specified, the precise function $f$ is irrelevant. We really only want to look at the zero set $Y = f^{-1}(0)$. If $f$ is a smooth function with non-vanishing gradient, then $Y$ will be a hypersurface, and one can apply various differential techniques to avoid the zeroes of $Y$. This is done, for instance, in Fraser and Pramanik's paper. But we now want to consider the case where $f$ is non smooth, and $Y$ can be as irregular as we wish. Thus we forget the function completely, and study what we call a {\it fractal avoidance problem}; we wish to find $X \subset \mathbf{R}$
+
+
+ For two sets $A, B \subset \mathbf{R}^n$, $A \overset{\circ}{-} B = (A \cap B) - \Delta$, where
+ %
+ \[ \Delta = \{ x: \text{there exists $i$, $j$ such that}\ x_i = x_j \} \]
+ %
+ is a union of hyperplanes. We consider a set $Y \subset \mathbf{R}^n$, and we wish to find $X \subset \mathbf{R}$ such that $X^n \overset{\circ}{-} Y = \emptyset$, i.e. for any {\it distinct} $x_1, \dots, x_n \in X$, $x \not \in Y$ (we say that $X^d$ {\it primarily} avoids $Y$). Since $Y$ is no longer the zero set of a smooth function, it can be arbitrarily fractal in nature. The {\it fractal avoidance problem} is to find $X$ with a high Hausdorff dimension, characterized by the dimension of $Y$. Since $Y$ now has essentially no geometric structure, we cannot rely on the previous techniques of Fraser/Pramanik and Math\'{e}, and we shall find that a random construction finds a tight result in terms of the dimension of $Y$ (Our current result finds $X$ if $Y$ is the countable union of Minkowski dimension $\alpha$, but we are close to obtaining the same dimension of $X$ if $Y$ has Hausdorff dimension $\alpha$). From the description of the interval dissection technique, it suffices to come up with an algorithm which, given a disjoint unions of intervals, dissects these intervals into smaller intervals avoiding the elements of $Y$. We now describe the gist of the technique we use for fractal dissection. The following lemma fullfills the requirement of a building block lemma for the construction.
+
+\begin{lemma}
+    Suppose $\text{dim}_M(Y) < \alpha$, and let $I_1, \dots, I_d$ be sets which are unions of length $1/M$ intervals. If $\beta < (d - 1)/(d - \alpha)$, then for sufficiently large $N$, there exists subsets $J_1, \dots, J_d$ of $I_1, \dots, I_d$ such that if we split each $I_n$ into length $1/N$ intervals, then $J_n$ contains a length $1/N^\beta$ section of a fraction $1 - o(1)$ of all length $1/N$ intervals in $I_n$, and $J_1 \times \dots \times J_d$ avoids elements of $Y$.
+\end{lemma}
+\begin{proof}
+    Since $Y$ has Minkowski dimension bounded above by $\alpha$, then for certain choice of sufficiently large $N$, if we divide $[0,1]^d$ uniformly into sidelength $1/N^\beta$ cubes, $Y$ intersects $o(N^{\alpha \beta})$ of them. Denote the set of such intervals by $B$, so $|B| = o(N^{\alpha \beta})$. Now split each length $1/N$ interval in each of the $I_n$ into length $1/N^\beta$ intervals, and uniformly randomly select a single length $1/N^\beta$ interval from each of them, the union of which forming a random set $S_n$. We let $S = S_1 \times \dots \times S_d$. For any sidelength $1/N^\beta$ cube $C = C_1 \times \dots \times C_d$ in $I_1 \times \dots \times I_d$,
+    %
+    \[ \mathbf{P}(C \subset S) = \prod_{n = 1}^d \mathbf{P}(C_n \subset S_n) = \prod_{n = 1}^d N^{1 - \beta} = N^{d(1 - \beta)} \]
+    %
+    And so if $B'$ denotes the set of all cubes in $B$ which are contained in $S$, then
+    %
+    \[ \mathbf{E}|B'| = \sum_{C \in B} \mathbf{P}(C \subset S_n) = \sum_{C \in B} N^{d(1 - \beta)} = o \left( N^{\alpha \beta + d(1 - \beta)} \right) \]
+    %
+    Because $\alpha \beta + d (1 - \beta) < 1$, $\mathbf{E}|B'| = o(N)$. In particular, we can now choose a particular instance of $S$ for which $|B'| = o(N)$, so $S$ is now no longer a random set. If we form the sets $J_n$ by removing all sidelength $1/N^\beta$ intervals in $S_n$ which form the sides of cubes intersecting $Y$, the sets $J_1, \dots, J_n$ satisfy the conditions of the lemma.
+\end{proof}
+
+Slight technical modifications to the queuing method using this lemma produce a dimension $(d-\alpha)/(d-1)$ set. This extends the result of Pramanik Fraser, where they construct dimension $1/(d-1)$ configurations avoiding zero sets of smooth functions with non-vanishing gradient, because the locus of such a function is an $\alpha = d - 1$ dimensional hyperplane.
+
+\section{Low Rank Functions and Shifting?}
+
+\section{Future Work?}
+
+After coming up with the building block lemma used in the fractal avoidance problem, we realized that the discrete lemma is really analogous to the construction of independant sets in hypergraphs, ala Tur\'{a}n's theorem. We are currently exlporing how other techniques on construction independant sets in certain families of hypergraphs might be used to improve the dimension of $X$ under certain assumptions on $Y$.
 
 \chapter{Background}
 
@@ -608,9 +700,13 @@ Thus if we define the dyadic Hausdorff measure
 %
 whose limit as $\delta \to 0$ is $H^\alpha_N(E)$, then $H^\alpha_\delta(E) \leq H^\alpha_{\delta,N}(E) \leq 1/N^\alpha H^\alpha_\delta(E)$, and so $H^\alpha(E) \leq H^\alpha_N(E) \leq H^\alpha(E)/N^\alpha$. This means that if $\dim_{\mathbf{H}}(E) > \alpha$, then we can cover $E$ by a collection of dyadic sets, consisting of $A_1$ size $1/N$ balls, $A_2$ size $1/N^2$ balls, $A_3$ size $1/N^3$ balls, and so on and so forth, with $\sum A_n/N^{\alpha n}$ as small as we desire. Provided that we can work at dyadic scales, this bound shows that our results will connect strongly to the Hausdorff dimension.
 
-Katz and Tao have also found a way to work at scales at exponential rather than dyadic differences. We fix a positive integer $N$, and consider {\bf hyperdyadic scales}, which are of the form $2^{- N^k}$. For any $n$, and $\delta > 0$, the number of hyperdyadic scales between $\delta$ and $\delta^n$ is $O(\log n / \log N)$, most importantly, independant of $\delta$. which makes things very easy to work with, rather than $O(n \log(1/\delta)/\log N)$, as in the dyadic scales. Unfortunately, a naive covering lemma does not give us good results about the Hausdorff measure with respect to hyperdyadic covers. Here choosing $2^{-N^{k+1}} \leq r_n \leq 2^{-N^k}$, and the multiplicative gap between the interior and exterior values is still on the order of $2^{N^{k+1}}$, which isn't even independant of $k$. However, Katz and Tao found a way to work with such bounds.
-
-We let $A \preccurlyeq B$ means $A \leq (1/\delta)^{CN} C_N B$ for some constants $C_N, C$. We let $A \approx B$ mean $A \preccurlyeq B$ and $B \preccurlyeq A$ simultaneously hold. We say a set $E$ is $\delta$ discretized if it is the union of balls $\approx \delta$.
+Katz and Tao have also found a way to work at scales at exponential rather than dyadic differences. We fix a positive $\varepsilon$, and consider {\bf hyperdyadic scales}, which are of the form $2^{- (1 + \varepsilon)^k}$. For any $n$, and $\delta > 0$, the number of hyperdyadic scales between $\delta$ and $\delta^n$ is $O(\log n / \log (1/\varepsilon))$, most importantly, independant of $\delta$. which makes things very easy to work with, rather than $O(n \log(1/\delta)/\log (1/\varepsilon))$, as in the dyadic scales. Unfortunately, a naive covering lemma does not give us good results about the Hausdorff measure with respect to hyperdyadic covers. Here choosing $2^{-(1 + \varepsilon)^{k+1}} \leq r_n \leq 2^{-(1 + \varepsilon)^k}$, and the multiplicative gap between the two values is not even independant of $k$. However, Katz and Tao found a way to work with such bounds. We assume $\delta$ and $\varepsilon$ are some fixed parameters. If $A(\varepsilon, \delta)$ and $B(\varepsilon,\delta)$ are two quantities depending on $\varepsilon$ and $\delta$, we write $A \preccurlyeq B$ mean $A \lesssim_\varepsilon \delta^{-C \varepsilon} B$ for some $C$, and for every $\varepsilon$. We let $A \approx B$ mean $A \preccurlyeq B$ and $B \preccurlyeq A$ hold simultaneously. We say a union of balls is $\delta$ discretized if it is the union of balls with radius $\approx \delta$. Thus there exists $C_\varepsilon$ and $C$ such that for each ball $B_r$ of radius $r$, $|r - \delta| \leq C_\varepsilon \delta^{1-C \varepsilon}$. Thus
+%
+\[ \delta(1 - C_\varepsilon \delta^{-C \varepsilon}) \leq r \leq \delta(1 + C_\varepsilon \delta^{- C \varepsilon}) \]
+%
+In particular, the dyadic scales $2^{-\lfloor (1 + \varepsilon)^k \rfloor}$ are allowed in a discretization of a hyperdyadic scale $2^{-(1+\varepsilon)^k}$, since we can choose $C_\varepsilon$ and $C$ such that
+%
+\[ 1 - C_\varepsilon 2^{C (1 + \varepsilon)^k \varepsilon} \leq 1 \leq 2^{(1 + \varepsilon)^k -\lfloor (1 + \varepsilon)^k \rfloor} \leq 2 \leq 1 + C_\varepsilon 2^{(1 + \varepsilon)^k C \varepsilon} \]
 
 \begin{theorem}
     Let $E$ be a compact subset of $\mathbf{R}^n$. If $0 < \alpha < n$, and $\dim(E) \leq \alpha$, then for each hyperdyadic number $\delta$, we can associate a $\delta$ discretized set $X_\delta$ with $|X_\delta \cap B(x,r)| \preccurlyeq \delta^n (r/\delta)^\alpha$ for all $\delta \leq r \leq 1$ and $x \in \mathbf{R}^n$, and every element of $E$ is contained in infinitely many of the $X_\delta$.
@@ -618,15 +714,35 @@ We let $A \preccurlyeq B$ means $A \leq (1/\delta)^{CN} C_N B$ for some constant
 \begin{proof}
     Fix $E$. For every hyperdyadic $\delta$, we can find a cover of $E$ by balls $B(x_{\delta n}, r_{\delta n})$ such that $r_{\delta n} < \delta$, and
     %
-    \[ \sum_n r_{\delta n}^{\alpha + CN} \lesssim 1 \]
+    \begin{equation} \sum_n r_{\delta n}^{\alpha + C\varepsilon} \lesssim 1 \end{equation}
     %
-    Choose $m_n$ such that $2^{-N^{m_n+1}} \leq r_{\delta n} \leq 2^{-N^{m_n}}$. Now
+    Choose $m_{\delta n}$ such that $2^{-(1 + \varepsilon)^{m_{\delta n}+1}} \leq r_{\delta n} \leq 2^{-(1 + \varepsilon)^{m_{\delta n}}}$. We calculate
     %
-    \[ \frac{2^{-(\alpha + CN) N^{m_n}}}{r_{\delta n}^{\alpha + tCN}} = \frac{2^{- (\alpha + CN) N^{m_n}}}{2^{- (\alpha + tCN) N^{m_n + 1}}} = 2^{- \alpha N^{m_n} + (\alpha - C)N^{m_n + 1} + tCN^{m_n+ 2}} \]
+    \begin{align*}
+        \frac{2^{-(\alpha + C'\varepsilon) (1 + \varepsilon)^{m_{\delta n}}}}{r_{\delta n}^{\alpha + C\varepsilon}} &\leq \frac{2^{- (\alpha + C'\varepsilon) (1 + \varepsilon)^{m_{\delta n}}}}{2^{- (\alpha + C\varepsilon) (1 + \varepsilon)^{m_{\delta n} + 1}}}\\
+        &= \left( 2^{\varepsilon (1 + \varepsilon)^{m_{\delta n}}} \right)^{\alpha + (C (1 + \varepsilon) - C')}
+    \end{align*}
     %
-    \[ \sum_n 2^{-(\alpha + CN)N^{m_n}} = \sum_n 2^{- \alpha N^{m_n}} 2^{- CN^{m_n + 1}} = \sum_n 2^{- \alpha N^{m_n}} r_{\delta n}^{-C} \]
+    Provided that $C' > \alpha + C(1 + \varepsilon)$, the quantity on the left is $\leq 1$, which is independant of $\varepsilon$ provided that $\varepsilon$ is bounded from above, and so we conclude
+    %
+    \[ \sum_n \left( 2^{-(1 + \varepsilon)^{m_{\delta n}}} \right)^{\alpha + C' \varepsilon} \leq \sum_n r_{\delta n}^{\alpha + C\varepsilon} \]
+    %
+    Thus we may assume by changing the value of $C$ that the quantities $r_{\delta n}$ are hyperdyadic from the outset. This means that at each hyperdyadic scale $\delta$, the number of hyperdyadic balls at the scale $\delta$ in each cover is $\lesssim (1/\delta)^{\alpha + C\varepsilon}$. STOP IS THIS ALL WE NEED, THEN COME BACK TO THE PROOF.
 
-    Can we make $2^{-\alpha N^{m_n}} \leq r_{\delta n}^{\alpha + CN}$
+
+    For a pair of hyperdyadic numbers $\delta$ and $\gamma$ we set
+    %
+    \[ Y_{\delta \gamma} = \bigcup_{r_{\delta n} = \gamma} B(x_{\delta n}, r_{\delta n}) \]
+    %
+    Every element of $X$ is in infinitely many of the $Y_{\delta n}$. For each $\delta$ and $\gamma$, we let $Q_{\delta \gamma}$ be the collection of hyperdyadic cubes with sidelength at least $\gamma$ covering $Y_{\delta \gamma}$ and minimizing $\sum_{Q \in Q_{\delta \gamma}} l(Q)^\alpha$. From condition (1.1) we obtain that $Y_{\delta \gamma}$ can be covered by at most $r^{-\alpha - \varepsilon}$ sidelength $r$ cubes, so
+    %
+    \[ \sum_{Q \in Q_{\delta \gamma}} l(Q)^\alpha \leq Cr^{-\varepsilon} \]
+    %
+    and so $l(Q) \leq Cr^{-\varepsilon/\alpha}$ for all $Q \in Q_{\delta \gamma}$. From the construction of $Q_{\delta \gamma}$, we see that the $Q$ are all disjoint, and for any hyperdyadic cube $I$,
+    %
+    \[ \sum_{\substack{Q \in Q_{\delta \gamma}\\Q \subset I}} l(Q)^\alpha \leq l(I)^\alpha \]
+    %
+    since otherwise we could replace such elements of $Q$ in $Q_{\delta \gamma}$ by $I$ itself.
 \end{proof}
 
 
@@ -1097,7 +1213,7 @@ If we consider a queueing process analogous to the queuing processes considered 
 \end{remark}
 
 \begin{remark}
-    We can avoid the necessity that the variables are distinct in the avoidence problem above by repeating the lemma with slightly different sets $Y$. For instance, in order to allow for two of the variables in $X$ to be equal, while still avoiding elements of $Y$, we can consider the problem of ensuring $X^{d-1}$ avoids a set of the form
+    We can avoid the necessity that the variables are distinct in the avoidance problem above by repeating the lemma with slightly different sets $Y$. For instance, in order to allow for two of the variables in $X$ to be equal, while still avoiding elements of $Y$, we can consider the problem of ensuring $X^{d-1}$ avoids a set of the form
     %
     \[ \tilde{Y}_{ij} = \{ y : (y_1, \dots, y_{i-1}, y_j, y_i, \dots, y_{d-1}) \in Y \} \]
     %
@@ -1187,7 +1303,13 @@ In particular, we can choose $J$ such that $H_\alpha(J \cap Y) \leq N^{d(1-\beta
 %
 %Provided $d(n + \beta - 1) \geq \alpha n$, which holds if $\beta \geq 1 + (\alpha/d - 1) n$, so the expected area is bounded by $(1 + o(1)) H^\alpha(Y)$. In particular, we can make the expected value of the interval as small as we want if $H^\alpha(Y) = 0$. Thus we can choose $\beta$ independantly of $N$, and get essentially an arbitrarily small intersection with $Y_0$ as we want.
 
-Josh suggested an alternate idea. Given $Y$, we can consider a hyperdyadic cover $Y$ by $A_1$ sidelength $2^{-N}$ cubes, $A_2$ sidelength $2^{-N^2}$ cubes, and so on and so forth, with $\sum A_n/2^{\alpha N^n} \lesssim \varepsilon$.
+Josh suggested an alternate idea. Given $Y$, we consider a quantity $\varepsilon$, take the dyadic numbers $\delta_n = 2^{-(1 + \varepsilon)^n}$, and then consider a hyperdyadic cover of $A_n$ sidelength $\delta_n$ cubes. The condition that $Y$ has Hausdorff dimension $\alpha$ guarantees that we have $A_n \lesssim_\varepsilon (1/\delta)^{\alpha + C\varepsilon}$, for some constant $C$ independant of $\varepsilon$. The building block lemma then takes the following form. We are given a union of intervals $X_n$, each of length $\delta_n$, and we must dissect this set into a union $X_{n+1}$ of intervals of length $\delta_{n+1}$, such that the cartesian product of any two disjoint set of intervals in $X_{n+1}$ avoids the $A_{n+1}$ cubes of length $\delta_{n+1}$ in the cover of $Y$. Suppose we take $\beta$ length $\delta_{n+1}$ intervals from each length $\delta_n$ interval in $X_n$ at random to form $X_{n+1}$. What does the distribution of $X_{n+1}^d - \Delta_{n+1}$ look like, where $\Delta_{n+1}$ is the union of certesian products of length $\delta_{n+1}$ cubes containing a duplicate of the same interval. Any interval in $[0,1]^d - \Delta_{n+1}$ is contained in $X_{n+1}^d$ essentially with probability $(\beta \delta_{n+1}/\delta_n)^d$ (duplicates will be chosen will negligible probability), and so $X_{n+1}^d - \Delta_{n+1}$ contains, on average
+%
+\[ A_{n+1} (\beta \delta_n/\delta_{n+1})^d \lesssim_\varepsilon \beta^d (1/\delta_{n+1})^{\alpha + C\varepsilon} (\delta_{n+1} / \delta_n)^d = \beta^d \delta_{n+1}^{d + \alpha + C \varepsilon} / \delta_n^d \]
+%
+elements of the cover of $Y$ at the scale $\delta_{n+1}$
+
+? The probability that $X_{n+1}^d - \Delta$
 
 
 
