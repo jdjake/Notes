@@ -1,0 +1,112 @@
+\documentclass{article}
+
+\usepackage{amsthm}
+\usepackage{amsmath}
+\usepackage{multicol}
+\usepackage{amssymb}
+\usepackage{mathabx}
+\usepackage{accents}
+\usepackage[margin=1in]{geometry}
+
+\theoremstyle{plain}
+\newtheorem{lemma}{Lemma}
+\newtheorem{prop}{Proposition}
+\newtheorem*{example}{Example}
+\newtheorem*{fact}{Fact}
+\newtheorem*{corollary}{Corollary}
+
+\usepackage{algorithm}
+\usepackage[noend]{algpseudocode}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem*{remark}{Remark}
+
+\title{Fractals Avoiding Fractal Sets}
+\author{Jacob Denson}
+
+\begin{document}
+
+\maketitle
+
+\begin{multicols}{2}
+
+Our proof depends very little on the Euclidean structure of the plane, and as such, we rephrase the construction as a combinatorial problem on graphs. Recall that an {\it $n$ uniform hypergraph} if a collection of {\it vertices} and {\it hyperedges}, where a hyperedge is a set of $n$ distinct vertices. We say such a graph is {\it hypartite} if we can partition the vertex set into $n$ sets $V_1, \dots, V_n$, such that each edge in the graph contains exactly one vertex from each set. An {\it independant set} is a subset of vertices containing no complete set of vertices in any edge. A {\it coloring} is a partition of the vertex set into finitely many classes, and we call each such class a {\it color}. The next lemma is a variant of Tur\'{a}n's theorem on the construction of independant sets, generalized for hypergraphs. For technical reasons, we need an extra restriction on the vertex set so it is `uniformly' chosen over the graph, which is the reason for the coloring.
+
+\begin{lemma}
+	Let $G$ be an $n$ uniform hypartite graph together with a coloring partitioning each vertex set into size $A$ sets. Then we can find an independent set $U$ containing all but $(n/A^n)|E|$ of the colors.
+\end{lemma}
+\begin{proof}
+	Form vertex sets $W_1 \subset V_1, \dots, W_n \subset V_n$ by randomly selecting a vertex from each color. Then each vertex in the graph is selected with probability $1/A$. For each edge $e = (v_1, \dots, v_n)$ in the graph, the chance that this edge connects vertices in the set we have constructed is
+	%
+	\begin{align*}
+		&\mathbf{P}(w_1 \in W_1, \dots, w_n \in W_n)\\
+		&\ \ \ \ = \mathbf{P}(w_1 \in W_1) \dots \mathbf{P}(v_n \in W_n) = 1/A^n
+	\end{align*}
+	%
+	Thus if we let $E'$ denote the set of all edges $e = (w_1, \dots, w_n)$ with $w_1 \in W_1, \dots, w_n$, then
+	%
+	\[ \mathbf{E}|E'| = \sum_{e \in E} \mathbf{P}(e \in E') = \sum_{e \in E} 1/A^n = \frac{|E|}{A^n} \]
+	%
+	In particular, we may choose a {\it particular}, nonrandom choice $W_1, \dots, W_n$ for which $|E'| \leq |E|/A^n$. For each $i$, we form $U_i \subset W_i$ by removing all vertices $w \in W_i$ which are a vertex for some edge in $E'$. Then the vertices in $U_1, \dots, U_n$ form an independant set, and we have removed at most $n |E'| \leq (n/A^n) |E|$ representatives from the color classes.
+\end{proof}
+
+\begin{corollary}
+	If $|V_1|, \dots, |V_n| \gtrsim N^a$, $|E| \lesssim N^b$, and $A \gtrsim N^c$, where $b < a + c(n-1)$, then as $N \to \infty$ we can find an independent set containing all but a fraction $o(1)$ of all colors.
+\end{corollary}
+\begin{proof}
+	A simple calculation on the quantities of the previous lemma yields
+	%
+	\begin{align*}
+		&\frac{\# ( \text{colors removed} )}{\# ( \text{total colors} )} = \frac{(n/A^n)|E|}{|V|/A}\\
+		&\ \ \ \ = \frac{n|E|}{|V|A^{n-1}} \lesssim \frac{N^b}{N^{a + c(n-1)}}
+	\end{align*}
+	%
+	This is $o(1)$ if $b < a + c(n-1)$.
+\end{proof}
+
+We now apply these constructions on graphs to a problem which is quite clearly related to the fractal avoidance problem, and will form our key building block to constructing solutions to the problem. Given a fixed integer $N$, we subdivide $\mathbf{R}^d$ into a grid of sidelength $1/N$ cubes, the collection of such cubes we will denote by $\mathcal{I}$.
+
+\begin{theorem}
+	Suppose that $\text{dim}_{\mathbf{M}}(Y) < \alpha$. If $\mathcal{I}_1, \dots, \mathcal{I}_n$ are disjoint collections of length $1/N$ cubes in $\mathcal{I}$, with $|\mathcal{I}_i| \gtrsim N^d$ for each $i$, then provided $\beta < (n-1)/(n-\alpha)$, we can find a collection of length $1/N^\beta$ cubes $\mathcal{J}_1, \dots, \mathcal{J}_n$ with $\mathcal{J}_1 \times \dots \times \mathcal{J}_n$ disjoint from $Y$ and as $N \to \infty$, each $\mathcal{J}_i$ contains a cube in all but $o(1)$ of the cubes in $\mathcal{I}_i$.
+\end{theorem}
+\begin{proof}
+	For sufficiently large $N$, if we partition $\mathbf{R}^{nd}$ into a grid of length $1/N^\beta$ cubes, and if $\mathcal{K}$ is the collection of all these cubes intersecting $Y$, then $|\mathcal{K}| \lesssim N^{\alpha \beta}$. Similarily, we partition each $\mathcal{I}_i$ into a grid of length $1/N^\beta$ cubes $\mathcal{I}'_i$, using these intervals as vertices in a hypartite graph $G$ with a hyperedge between $I_1 \in \mathcal{I}'_1, \dots, I_n \in \mathcal{I}'_n$ if $I_1 \times \dots \times I_n \in \mathcal{K}$. We say two cubes in $G$ are the same color if they are contained in a common cube in $\mathcal{I}_i$. Since each sidelength $1/N$ cube contains $N^{\beta d}/N^d = N^{(\beta - 1)d}$ sidelength $1/N^\beta$ cubes, each color in $G$ contains $N^{(\beta - 1)d}$ vertices. Each vertex set $V_i$ in $G$ contains $|\mathcal{I}'_i| = N^{\beta - 1} |\mathcal{I}_i| \gtrsim N^{\beta + (d-1)}$ vertices. Finally the number of edges is bounded above by $|\mathcal{K}| \lesssim N^{\alpha \beta}$. Thus in the parameters of the previous corollary, $a = \beta + (d-1)$, $b = \alpha \beta$, and $c = d(\beta - 1)$, and in particular, we can find an independent set $\mathcal{J}_1 \subset \mathcal{I}_1, \dots, \mathcal{J}_n \subset \mathcal{I}_n$ containing all but $o(1)$ of the colors provided that $\alpha \beta < \beta + (d-1) + (\beta - 1)d(n-1)$, which can be rearranged to give the inequality in the hypothesis.
+\end{proof}
+
+s
+
+\end{multicols}
+
+\begin{thebibliography}{9}
+
+\bibitem{RuzsaSetsWithoutSquares}
+I. Z. Ruzsa
+\textit{Difference Sets Without Squares}
+
+\bibitem{KeletiDimOneSet}
+Tam\'{a}s Keleti
+\textit{A 1-Dimensional Subset of the Reals that Intersects Each of its Translates in at Most a Single Point}
+
+\bibitem{MalabikaRob}
+Robert Fraser, Malabika Pramanik
+\textit{Large Sets Avoiding Patterns}
+
+\bibitem{DickmanK}
+Karl Dickman
+\textit{On the Frequency of Numbers Containing Prime Factors of a Certain Relative Magnitude}
+
+\bibitem{Sudakov}
+B. Sudakov, E. Szemer\'{e}di, V.H. Vu
+\textit{On a Question of Erd\"{o}s and Moser}
+
+\end{thebibliography}
+
+%- Berend's counterexample is a discrete version of Kaleti's continuous counterexample for 3APs
+%- Look up Wisewell functions
+%- (x_2 - x_1)^2 = x_3 - x_1: Comes up in Bourgain & Chang
+
+%- Principal character gives main term, rest should be thrown into the error term.   
+
+\end{document}
