@@ -34,62 +34,56 @@
 
 \section{A Discrete Building Block}
 
-We now develop a technique which we will use repeatedly to construct solutions to the fractal avoidance problem. It depends very little on the Euclidean structure of the plane, and as such, we rephrase the construction as a combinatorial problem on graphs. Recall that an {\it $n$ uniform hypergraph} if a collection of {\it vertices} and {\it hyperedges}, where a hyperedge is a set of $n$ distinct vertices. We say such a graph is {\it hypartite} if we can partition the vertex set into $n$ sets $V_1, \dots, V_n$, such that each edge in the graph contains exactly one vertex from each set. An {\it independant set} is a subset of vertices containing no complete set of vertices in any edge. A {\it coloring} is a partition of the vertex set into finitely many classes, and we call each such class a {\it color}. The next lemma is a variant of Tur\'{a}n's theorem on the construction of independant sets, generalized for hypergraphs. For technical reasons, we need an extra restriction on the vertex set so it is `uniformly' chosen over the graph, which is the reason for the coloring.
+We now develop a discrete technique used to construct solutions to the fractal avoidance problem. It depends very little on the Euclidean structure of the plane. As such, we rephrase the construction as a combinatorial problem on graphs.
+
+An {\it $n$ uniform hypergraph} is a collection of {\it vertices} and {\it hyperedges}, where a hyperedge is a set of $n$ distinct vertices. An {\it independent set} is a subset of vertices containing no complete set of vertices in any hyperedge of the graph. A {\it colouring} is a partition of the vertex set into finitely many independent sets, each of which we call a {\it colour}. Such a colouring is {\it $K$ uniform} if each colour class has $K$ elements.
+
+The next lemma is a variant of Tur\'{a}n's theorem on independent sets. For technical reasons, we need an extra restriction on the independant set so it is `uniformly' chosen over the graph. This is why colorings are introduced.
 
 \begin{lemma}
-	Let $G$ be an $n$ uniform hypergraph together with a coloring partitioning each vertex set into size $A$ independant sets. Then we can find an independent set $U$ containing all but $(n/A^n)|E|$ of the colors.
+	Let $G$ be an $n$ uniform hypergraph  with a $K$ uniform coloring. Then there exists an independent set $W$ containing all but $|E|/K^n$ colors.
 \end{lemma}
 \begin{proof}
-	Let $U$ be a vertex set chosen by randomly selecting a vertex of each color. Then each vertex in the graph is selected with probability $1/A$. For each edge $e = (v_1, \dots, v_n)$ in the graph, we know that the vertices $v_i$ all have different colors, so they are added to $U$ independantly, and so the chance that this edge connects vertices in the set we have constructed is
+	Let $U$ be a random vertex set chosen by selecting a vertex of each color uniformly randomly. Every vertex occurs in $U$ with probability $1/K$. For any edge $e = (v_1, \dots, v_n)$, the vertices $v_i$ all have different colors. Thus they have an independent chance of being added to $U$, and we calculate
 	%
 	\begin{align*}
 		&\mathbf{P}(v_1 \in U, \dots, v_n \in U)\\
-		&\ \ \ \ = \mathbf{P}(v_1 \in U) \dots \mathbf{P}(v_n \in U) = 1/A^n
+		&\ \ \ \ = \mathbf{P}(v_1 \in U) \dots \mathbf{P}(v_n \in U) = 1/K^n
 	\end{align*}
 	%
-	Thus if we let $E'$ denote the set of all edges $e = (u_1, \dots, u_n)$ with $u_1, \dots, u_n \in U$, then
+	If we let $E'$ denote the set of all edges $e = (u_1, \dots, u_n)$ with $u_1, \dots, u_n \in U$, then
 	%
-	\[ \mathbf{E}|E'| = \sum_{e \in E} \mathbf{P}(e \in E') = \sum_{e \in E} 1/A^n = \frac{|E|}{A^n} \]
+	\[ \mathbf{E}|E'| = \sum_{e \in E} \mathbf{P}(e \in E') = \sum_{e \in E} 1/K^n = \frac{|E|}{K^n} \]
 	%
-	In particular, we may choose a {\it particular}, nonrandom choice $U$ for which $|E'| \leq |E|/A^n$. If we form a vertex set $W \subset U$ by removing all vertices $u \in U$ which are a vertex in some edge in $E'$, then $W$ is an independant set containing all but $n |E'| \leq (n/A^n) |E|$ colors.
+	This means we may choose a {\it particular}, nonrandom $U$ for which $|E'| \leq |E|/K^n$. If we form a vertex set $W \subset U$ by removing, for each $e \in E'$, a vertex in $U$ adjacent to the edge, then $W$ is an independent set containing all but $|E'| \leq |E|/K^n$ colors.
 \end{proof}
 
 \begin{corollary}
-	If $|V| \gtrsim N^a$, $|E| \lesssim N^b$, and $A \gtrsim N^c$, where $b < a + c(n-1)$, then as $N \to \infty$ we can find an independent set containing all but a fraction $o(1)$ of the colors.
+	If $|V| \gtrsim N^a$, $|E| \lesssim N^b$, and $K \gtrsim N^c$, where $b < a + c(n-1)$, then as $N \to \infty$ we can find an independent set containing all but a fraction $o(1)$ of the colors.
 \end{corollary}
 \begin{proof}
 	A simple calculation on the quantities of the previous lemma yields
 	%
 	\begin{align*}
-		&\frac{\# ( \text{colors removed} )}{\# ( \text{total colors} )} = \frac{(n/A^n)|E|}{|V|/A}\\
-		&\ \ \ \ = \frac{n|E|}{|V|A^{n-1}} \lesssim \frac{N^b}{N^{a + c(n-1)}}
+		&\frac{\# ( \text{colors removed} )}{\# ( \text{all colors} )} = \frac{|E|/K^n}{|V|/K}\\
+		&\ \ \ \ = \frac{|E|}{|V|K^{n-1}} \lesssim \frac{N^b}{N^{a + c(n-1)}}
 	\end{align*}
 	%
 	This is $o(1)$ if $b < a + c(n-1)$.
 \end{proof}
 
-We now apply these constructions on graphs to a problem which is quite clearly related to the fractal avoidance problem, and will form our key building block to constructing solutions to the problem. Given a fixed integer $N$, we subdivide $\mathbf{R}^d$ into a grid of sidelength $1/N$ cubes, the collection of such cubes we will denote by $\mathcal{I}$.
+We now apply these constructions to a problem clearly related to the fractal avoidance problem. It will form our key method to construct fractal avoidance solutions. Given an integer $N$, we subdivide $\mathbf{R}^d$ into a lattice of sidelength $1/N$ cubes with corners on $\mathbf{Z}^d/N$, the collection of such cubes we will denote by $\mathcal{B}_N$. This grid is used to granularize configuration avoidance.
 
 \begin{theorem}
-	Suppose that $\text{dim}_{\mathbf{M}}(Y) < \alpha$. If $\mathcal{I}_1, \dots, \mathcal{I}_n$ are disjoint collections of length $1/N$ cubes in $\mathcal{I}$, with $|\mathcal{I}_i| \gtrsim N^d$ for each $i$, then provided $\beta > d(n-1)/(n-\alpha)$, we can find a collection of length $1/N^\beta$ cubes $\mathcal{J}_1, \dots, \mathcal{J}_n$ with $\mathcal{J}_1 \times \dots \times \mathcal{J}_n$ disjoint from $Y$ and as $N \to \infty$, each $\mathcal{J}_i$ contains a cube in all but $o(1)$ of the cubes in $\mathcal{I}_i$.
+	Suppose $\mathcal{I}_1, \dots, \mathcal{I}_n$ are disjoint collections of cubes in $\mathcal{B}_N$, with $|\mathcal{I}_i| \gtrsim N^d$. We assume the lower Minkowski dimension of $Y$ is bounded above by $\alpha$, and $\beta > d(n-1)/(n-\alpha)$. Then there exists arbitrarily large $N$ and collections of cubes $\mathcal{J}_1, \dots, \mathcal{J}_n \in \mathcal{B}_{N^\beta}$ with each cube in $\mathcal{J}_1 \times \dots \times \mathcal{J}_n$ disjoint from $Y$, and as $N \to \infty$, each $\mathcal{J}_i$ contains cubes in all but a fraction $o(1)$ of cubes in $\mathcal{I}_i$.
 \end{theorem}
 \begin{proof}
-	For sufficiently large $N$, if we partition $\mathbf{R}^{nd}$ into a grid of length $1/N^\beta$ cubes, and if $\mathcal{K}$ is the collection of all these cubes intersecting $Y$, then $|\mathcal{K}| \lesssim N^{\alpha \beta}$. Similarily, we partition each $\mathcal{I}_i$ into a grid of length $1/N^\beta$ cubes $\mathcal{I}'_i$, using these cubes as vertices in a hypartite graph $G$ with a hyperedge between $I_1 \in \mathcal{I}'_1, \dots, I_n \in \mathcal{I}'_n$ if $I_1 \times \dots \times I_n \in \mathcal{K}$. We say two cubes in $G$ are the same color if they are contained in a common cube in $\mathcal{I}_i$. Using the fact that a sidelength $1/N$ cube contains $N^{d(\beta - 1)}$ sidelength $1/N^\beta$ cubes, we conclude
-	%
-	\begin{itemize}
-		\item The number of vertices in $G$ is
-		%
-		\[ \sum |\mathcal{I}'_i| = N^{d(\beta - 1)} \sum |\mathcal{I}_i| \gtrsim N^{d \beta} \]
+	If $\mathcal{K} \subset \mathcal{B}_{N^\beta}^n$ is the collection of all cubes in a sidelength $1/N^\beta$ lattice intersecting $Y$, then $|\mathcal{K}| \lesssim N^{\alpha \beta}$. We then let $\mathcal{I}'_i$ be all cubes in $\mathcal{B}_{N^\beta}$ contained in $\mathcal{I}_i$. Considering these cubes as vertices gives us an $n$ uniform hypergraph $G$ with a hyperedge between $I_1 \in \mathcal{I}'_1, \dots, I_n \in \mathcal{I}'_n$ if $I_1 \times \dots \times I_n \in \mathcal{K}$. We say two cubes in $G$ are the same color if they are contained in a common cube in $\mathcal{I}_i$.
 
-		\item The number of edges is bounded by $|\mathcal{K}| \lesssim N^{\alpha \beta}$.
-
-		\item Each color in $G$ contains $N^{d(\beta - 1)}$ vertices.
-	\end{itemize}
-	%
-	Thus in the terminology of the previous corollary, $a = d \beta$, $b = \alpha \beta$, and $c = d(\beta - 1)$, and the inequality in the hypothesis of this theorem is then equivalent to the inequality in the hypothesis of the corollary.
+	Using the fact that a sidelength $1/N$ cube contains $N^{d(\beta - 1)}$ sidelength $1/N^\beta$ cubes, we conclude that $G$ has $\sum |\mathcal{I}_i| = N^{d(\beta - 1)} \sum |\mathcal{I}_i| \gtrsim N^{d \beta}$ vertices. The number of edges in $G$ is bounded by $|\mathcal{K}| \lesssim N^{\alpha \beta}$. Finally, the coloring is $N^{d(\beta - 1)}$ uniform. Thus in the terminology of the previous corollary, $a = d \beta$, $b = \alpha \beta$, and $c = d(\beta - 1)$, and the inequality in the hypothesis of this theorem is then equivalent to the inequality in the hypothesis of the corollary. Applying the corollary gives the required result.
 \end{proof}
 
-The value $d(n-1)/(n-\alpha)$ is directly related to the Hausdorff dimension $(n-\alpha)/(n-1)$ we obtain for solutions to the fractal avoidance problem in our main result. Any improvement on this bound for any special case of the fractal avoidance problem would immediately lead to improvements on the Hausdorff dimension of the resulting set. However, since this hypergraph result is tight in general, we believe that for the class of problems we consider, our construction is tight.
+The value $d(n-1)/(n-\alpha)$ in the theorem is directly related to the dimension $(n-\alpha)/(n-1)$ we obtain in our main result. Any improvement on this bound for special cases of the fractal avoidance problem immediately leads to improvements on the Hausdorff dimension of the set constructed. The fact that our hypergraph result is tight indicates that for the general fractal avoidance problem, our construction gives tight bounds.
 
 % Include Tightness?
 
@@ -105,12 +99,12 @@ We achieve  the constraint to the construction by choosing our parameters subjec
 
 \section{Dimension Bounds}
 
-To complete the proof, it suffices to choose the parameters $L_N$ and $\beta_N$ which lead to the correct Hausdorff dimension bound on $X$. The `uniformity' result present in our discrete construction will aid us in eliminating the superexponentially increasing constants which emerge from the exponentially decrasing values of $L_N$ we are forced to pick.
+To complete the proof, it suffices to choose the parameters $L_N$ and $\beta_N$ which lead to the correct Hausdorff dimension bound on $X$. The `uniformity' result present in our discrete construction will aid us in eliminating the superexponentially increasing constants which emerge from the exponentially decrasing values of $L_N$ we are forced to pick to eliminate the inherent multiplicative constants which occur in our construction.
 
-To prove the dimension bounds on $X$, we rely on the mass distribution principle to construction a probability measure $\mu$ on $X$ from which we can apply Frostman's lemma. We begin by putting the uniform probability measure $\mu_0$ on $X_0 = [0,1]$. Then, at each stage of the construction, we construction $\mu_{N+1}$ from the measure $\mu_N$ supported on $X_N$ by taking the mass of $\mu_N$ supported on a certain length $L_{N-1}$ interval in $X_N$, and uniformly distributing it over the length $L_N$ intervals contained with this interval which remain in $X_{N+1}$. Then we just use the weak compactness of the unit ball in $L^1(\mathbf{R}^d)^*$ to construct a weak limit $\mu = \lim \mu_n$, and $\mu$ is supported on $X$. It should be intuitive that the mass will be distributed more thinly at each stage the fatter the intervals that are kept at each stage, and thus Frostman's lemma will obtain a higher Hausdorff dimension bound.
+To prove the dimension bounds on $X$, we rely on the mass distribution principle to construction a probability measure $\mu$ on $X$ from which we can apply Frostman's lemma. We begin by putting the uniform probability measure $\mu_0$ on $X_0 = [0,1]$. Then, at each stage of the construction, we construction $\mu_{N+1}$ from the measure $\mu_N$ supported on $X_N$ by taking the mass of $\mu_N$ supported on a certain length $L_{N-1}$ interval in $X_N$, and uniformly distributing it over the length $L_N$ intervals contained with this interval which remain in $X_{N+1}$. Then we just use the weak compactness of the unit ball in $L^1(\mathbf{R}^d)^*$ to construct a weak limit $\mu = \lim \mu_n$, for which $\mu$ is supported on $X$. It should be intuitive that the mass will be distributed more thinly at each stage the fatter the intervals that are kept at each stage, and thus Frostman's lemma will obtain a higher Hausdorff dimension bound.
 
 \begin{lemma}
-	s
+	If $I$ is an interval of length $L_N$ in $X_N$, and $J \subset I$ is an interval of length $L_{N+1}$ kept at the next stage in $X_{N+1}$, then
 \end{lemma}
 
 \end{multicols}
