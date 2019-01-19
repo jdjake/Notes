@@ -6,7 +6,7 @@
 \usepackage{amssymb}
 \usepackage{mathabx}
 \usepackage{accents}
-\usepackage[margin=0.7in]{geometry}
+%\usepackage[margin=0.7in]{geometry}
 \usepackage[english]{babel}
 \usepackage{blindtext}
 
@@ -38,7 +38,7 @@
 
 \maketitle
 
-\begin{multicols}{2}
+%\begin{multicols}{2}
 
 \begin{abstract}
 	\blindtext[1]
@@ -155,93 +155,211 @@ Because of the lack of any {\it rigid} geometric information about the set $Z$, 
 
 \section{Avoidance at a Single Scale}
 
-We now develop a discrete technique used to construct solutions to the fractal avoidance problem. It depends very little on the Euclidean structure of the plane. As such, we rephrase the construction as a combinatorial problem on graphs. In the past few years in the discrete setting it has been noticed that rephrasing particular questions in terms of abstract problems on hypergraphs allows one to extend various results into sparse analogues \cite{BaloghMorrisSamotij}. In this paper we consider a continuous analogue, where sparsity is represented in terms of the dimension of the set $Z$ we are trying to avoid. Breaking down the problem into a sequence of discrete scales then reduces to discrete techniques.
+We now develop a discrete technique used to construct solutions to the fractal avoidance problem. Once we have discretized the problem, the Euclidean structure of the setting becomes irrelevant. As such, we rephrase our single scale avoidance method as a combinatorial problem on graphs. Here we prove a form of Tur\'{a}n's theorem, which quantifies the idea that graphs with few edges contain large independant sets. In the next section, we apply this theorem to find large discretized sets avoiding a discretization of the fractal we are required to avoid. Exploiting this repeatedly at an infinite series of discretizations then gives a set completely avoiding the required fractal.
 
-%TODO: Maybe move this to the comparison section?
-
-Recalling notation, we consider a fixed {\it vertex set} $V$ and a collection of {\it hyperedges} $E \subset 2^V$ consisting solely of {\it $n$ element subsets} of $V$. The collection of data $G = (V,E)$ is known as a {\it $n$ uniform hypergraph}. A subset of vertices $W \subset V$ that {\it contains no edge}, in the sense that for any $e \in E$, $e \not \subset W$, is known as an {\it independent set}. Finally, a {\it coloring} is a partition of the vertex set into finitely many subclasses, each class called a {\it color}, subject to the restriction that no two vertices in any edge $e \in E$ have the same color. We consider {\it $K$ uniform} colorings, such that there are at least $K$ vertices with each color.
-
-We prove a form of Tur\'{a}n's theorem, which quantifies the statement that graphs with few edges contain large independent sets. The connection with fractals is we will take the vertices of our graph as cubes in $\mathbf{R}^d$, and take a hyperedge between cubes whose Cartesian product intersects $Z$. The smaller the dimension of $Z$, the fewer edges exist in the graph. For technical reasons, we need an extra restriction on the independent sets we construct so it is `uniformly' chosen over the graph. This is the reason for the introduction of colorings.
+Recalling notation, we consider a fixed set of $V$ elements, whose points we call {\it vertices}. A set of $n$ {\it distinct} vertices will be called an {\it $n$ vertex hyperedge}. The structure consisting of a set of vertices, and a family of $n$ vertex hyperedges on those vertices, will be called an {\it $n$ uniform hypergraph}. We let $E$ denote the number of edges in such a graph. A subset of vertices which does not contain any hyperedge as a subset is known as an {\it independent set}. We will consider partitions of the vertex set, and we say a partition is {\it $K$ spread} if there are at least $K$ vertices in each equivalence class.
 
 \begin{lemma}
-	Let $G$ be an $n$ uniform hypergraph with a $K$ uniform coloring. Then there is an independent set $W$ containing elements from all but at most $|E|/K^n$ colors.
+	Every $n$ uniform hypergraph with a $K$ spread partition contains an independent set with elements selected from all but at most $E/K^n$ equivalence classes.
 \end{lemma}
 \begin{proof}
-	Let $U$ be a random vertex set chosen by selecting a vertex of each color uniformly at random. So every vertex occurs in $U$ with probability at most $1/K$. For any edge $e = \{ v_1, \dots, v_n \}$, the vertices $v_i$ all have different colors. Thus they occur in $U$ independently, and so
+	Let $X$ be a random vertex set chosen by selecting a representative vertex from every equivalence class uniformly at random. Then every vertex occurs in $X$ with probability at most $1/K$. If an edge $e = \{ v_1, \dots, v_n \}$ satisfies $\mathbf{P}(v_1, \dots, v_n \in X) > 0$, then the $v_1, \dots, v_n$ are distinct, and lie in separate equivalence classes of the partition. This implies that $v_1, \dots, v_n$ each occur in $X$ with independant likelihood, so a bound on the probability that all vertices in $e$ lie in $X$ is
 	%
 	\begin{align*}
-		\mathbf{P}(v_1 \in U, \dots, v_n \in U) = \mathbf{P}(v_1 \in U) \dots \mathbf{P}(v_n \in U) \leq 1/K^n
+		\mathbf{P}(v_1, \dots, v_n \in X) = \mathbf{P}(v_1 \in V) \dots \mathbf{P}(v_n \in X) \leq 1/K^n
 	\end{align*}
 	%
-	If we let $E'$ denote the edges $e = \{ u_1, \dots, u_n \}$ with $u_1, \dots, u_n \in U$, then
-	%
-	\[ \mathbf{E}|E'| = \sum_{e \in E} \mathbf{P}(e \in E') \leq \sum_{e \in E} 1/K^n = \frac{|E|}{K^n} \]
-	%
-	This means we may choose a particular, {\it nonrandom} $U$ for which $|E'| \leq |E|/K^n$. If we form a vertex set $W \subset U$ by removing, for each $e \in E'$, a vertex in $U$ adjacent to the edge, then $W$ is an independent set containing all but $|E'| \leq |E|/K^n$ colors.
-\end{proof}
-
-\begin{corollary}
-	If $|V| \gtrsim N^a$, $|E| \lesssim N^b$, and $K \gtrsim N^c$, where $b < a + c(n-1)$, then as $N \to \infty$ we can find an independent set containing all but a fraction $o(1)$ of the colors.
-\end{corollary}
-\begin{proof}
-	A simple calculation on the quantities of the previous lemma yields
+	If $E_0$ denotes the number of edges $e = \{ v_1, \dots, v_n \}$ with $v_1, \dots, v_n \in X$, then
 	%
 	\begin{align*}
-		\frac{\# ( \text{colors removed} )}{\# ( \text{all colors} )} = \frac{|E|/K^n}{|V|/K} = \frac{|E|}{|V|K^{n-1}} \lesssim \frac{N^b}{N^{a + c(n-1)}}
+		\mathbf{E}(E_0) = \sum_{e \in E} \mathbf{P}(e \in E_0) \leq \sum_{e \in E} 1/K^n = E/K^n
 	\end{align*}
 	%
-	This is $o(1)$ if $b < a + c(n-1)$.
+	This means we may choose a particular, {\it nonrandom} $X$ for which $E_0 \leq E/K^n$. If we form a vertex set $W \subset V$ by removing, for each $e \in E_0$, a vertex in $X$ adjacent to $e$, then $W$ is an independent set containing representatives from all but $E_0 \leq E/K^n$ equivalence classes of the partition.
 \end{proof}
 
-We now apply these constructions to a problem clearly related to the fractal avoidance problem. It will form our key method to construct fractal avoidance solutions. Given a real number $L$, we subdivide $\mathbf{R}^d$ into a lattice of side length $L$ cubes with corners on $L \cdot \mathbf{Z}^d$, the collection of such cubes we will denote by $\mathcal{B}(L,d)$. This grid is used to granularize configuration avoidance.
+%\begin{corollary}
+%	If $|V| \gtrsim N^a$, $|E| \lesssim N^b$, and $K \gtrsim N^c$, where $b < a + c(n-1)$, then as $N \to \infty$ we can find an independent set containing all but a fraction $o(1)$ of the colors.
+%\end{corollary}
+%\begin{proof}
+%	A simple calculation on the quantities of the previous lemma yields
+	%
+%	\begin{align*}
+%		\frac{\# ( \text{colors removed} )}{\# ( \text{all colors} )} = \frac{|E|/K^n}{|V|/K} = \frac{|E|}{|V|K^{n-1}} \lesssim \frac{N^b}{N^{a + c(n-1)}}
+%	\end{align*}
+	%
+%	This is $o(1)$ if $b < a + c(n-1)$.
+%\end{proof}
 
-\begin{theorem}
-	Suppose $\mathcal{I}_1, \dots, \mathcal{I}_n$ are disjoint collections of cubes in $\mathcal{B}(L,d)$, with $|\mathcal{I}_i| \gtrsim (1/L)^d$. If $\alpha$ strictly bounds the lower Minkowski dimension of $Z$ from above, and a rational parameter
-	%
-	\[ \beta > \max \left(1, d \cdot \frac{n-1}{nd-\alpha} \right) \]
-	%
-	is fixed, then there exists collections of cubes $\mathcal{J}_1, \dots, \mathcal{J}_n \in \mathcal{B}(L^\beta,d)$ with each cube in $\mathcal{J}_1 \times \dots \times \mathcal{J}_n$ disjoint from $Z$, and each $\mathcal{J}_i$ containing cubes in all but a fraction $o(1)$ of cubes in $\mathcal{I}_i$ as $L \to 0$.
-\end{theorem}
-\begin{proof}
-	We reduce this problem to the independent set problem we just proved a result about. We define the discretization of $Z$ to be
-	%
-	\[ \mathcal{Z} = \{ I \in \mathcal{B}(L^\beta,nd) : I \cap Z \neq \emptyset \} \]
-	%
-	For each $i$, we set
-	%
-	\[ \mathcal{I}_i' = \{ I \in \mathcal{B}(L^\beta,d) : \text{there is}\ J \in \mathcal{I}_i\ \text{s.t.}\ I \subset J \} \]
-	%
-	We obtain an $n$ uniform hypergraph $G$ by taking the cubes in $\mathcal{I}_1', \dots, \mathcal{I}_n'$ as vertices, with a hyperedge between $I_1 \in \mathcal{I}'_1, \dots, I_n \in \mathcal{I}'_n$ if $I_1 \times \dots \times I_n \in \mathcal{Z}$. We then take a coloring on $G$ by declaring two cubes in $\mathcal{I}_i'$ to be the same color if they are contained in a common cube in $\mathcal{I}_i$. In particular, this gives us a true coloring because every color occurs solely in $\mathcal{I}_i$ for some index $i$, and every edge in the hypergraph contains exactly one vertex from each index. An independent set in this graph can be written as $\mathcal{J}_1, \dots, \mathcal{J}_n$, where the $\mathcal{J}_i$ are collections of cubes which are sub-cubes of cubes in $\mathcal{I}_i$ and no cube in $\mathcal{J}_1 \times \dots \times \mathcal{J}_n \subset \mathcal{B}(1/N^\beta,nd)$ intersects $Z$. Thus to prove the theorem it suffices to find a large independent set in this graph.
+%To apply the theorem to fractals, we will take cubes in the Euclidean plane as our vertices, and connect an edge between cubes if their cartesian product intersects a portion of $Y$. For technical reasons, we require that the cubes are essentially uniformly chosen across the candidate set of choices, and this is the reason for the introduction of partitions of vertices in the graph theory result above.
 
-	We employ the corollary we just proved to do this, by bounding the number of vertices and edges in $G$. Since a cube in $\mathcal{B}(L,d)$ contains $\Omega(1/L^{d(\beta-1)})$ cubes in $\mathcal{B}(L^\beta,d)$, we conclude that $|\mathcal{I}'_i| \gtrsim (1/L)^{d(\beta - 1)} |\mathcal{I}_i| \gtrsim (1/L)^{d \beta}$. But then the number of vertices of $G$ is $\sum |\mathcal{I}'_i| \gtrsim (1/L)^{d \beta}$. The Minkowski dimension bound on $Z$ implies that the number of edges in $G$ is bounded above by $|\mathcal{Z}| \lesssim (1/L)^{\alpha \beta}$,Finally, the coloring is $N^{d(\beta - 1)}$ uniform. Thus in the terminology of the previous corollary, $a = d \beta$, $b = \alpha \beta$, and $c = d(\beta - 1)$. The inequality $\beta > d(n-1)/(nd - \alpha)$, is equivalent to the inequality $b < a + c(n-1)$, and so the corollary applies to give the required result.
-\end{proof}
+An important feature of our bound on the independant set selected is the ratio between the number of equivalence classes we choose versus the total number of equivalence classes. Since each class contains $K$ elements, there are $V/K$ equivalence classes. We calculate
+%
+\[ \frac{\# (\text{classes not chosen})}{\# (\text{total classes})} \leq \frac{E/K^n}{V/K} \leq \frac{E/V}{K^{n-1}} \]
+%
+To make this ratio small, we upper bound $E$, and lower bound $V$ and $K$.
 
-The value $d \cdot (n-1)/(n-\alpha)$ in the theorem is directly related to the dimension $(n-\alpha)/(n-1)$ we get in our main result. If, for a specific $Z$, we can prove a variant of this lemma with $d \cdot (n-1)/(n-\alpha)$ replaced with $d/\lambda$, then going through the rest of our proof will immediately yield $X$ with Hausdorff dimension $\lambda$. In particular, to prove our second result it will suffice to prove the theorem above given that $Z$ has a low rank assumption and $d \cdot (n-1)/(n-\alpha)$ is replaced with $d \cdot(2k-1)/(dk - k - \alpha)$.
+%In our case, $E$ will be dependant on the Hausdorff dimension of $Y$, $V$ will depend on the sidelength
+
+%In our case, we get few edges if our set $Y$ has low Hausdorff dimension, and we have lots of vertices if we choose a proportionally small sidelengths for our cubes.
+
+%We now apply these constructions to a problem clearly related to the fractal avoidance problem. It will form our key method to construct fractal avoidance solutions. Given a real number $L$, we subdivide $\mathbf{R}^d$ into a lattice of side length $L$ cubes with corners on $L \cdot \mathbf{Z}^d$, the collection of such cubes we will denote by $\mathcal{B}(L,d)$. This grid is used to granularize configuration avoidance.
+
+%\begin{theorem}
+%	Suppose $\mathcal{I}_1, \dots, \mathcal{I}_n$ are disjoint collections of cubes in $\mathcal{B}(L,d)$, with $|\mathcal{I}_i| \gtrsim (1/L)^d$. If $\alpha$ strictly bounds the lower Minkowski dimension of $Z$ from above, and a rational parameter
+	%
+%	\[ \beta > \max \left(1, d \cdot \frac{n-1}{nd-\alpha} \right) \]
+	%
+%	is fixed, then there exists collections of cubes $\mathcal{J}_1, \dots, \mathcal{J}_n \in \mathcal{B}(L^\beta,d)$ with each cube in $\mathcal{J}_1 \times \dots \times \mathcal{J}_n$ disjoint from $Z$, and each $\mathcal{J}_i$ containing cubes in all but a fraction $o(1)$ of cubes in $\mathcal{I}_i$ as $L \to 0$.
+%\end{theorem}
+%\begin{proof}
+%	We reduce this problem to the independent set problem we just proved a result about. We define the discretization of $Z$ to be
+	%
+%	\[ \mathcal{Z} = \{ I \in \mathcal{B}(L^\beta,nd) : I \cap Z \neq \emptyset \} \]
+	%
+%	For each $i$, we set
+	%
+%	\[ \mathcal{I}_i' = \{ I \in \mathcal{B}(L^\beta,d) : \text{there is}\ J \in \mathcal{I}_i\ \text{s.t.}\ I \subset J \} \]
+	%
+%	We obtain an $n$ uniform hypergraph $G$ by taking the cubes in $\mathcal{I}_1', \dots, \mathcal{I}_n'$ as vertices, with a hyperedge between $I_1 \in \mathcal{I}'_1, \dots, I_n \in \mathcal{I}'_n$ if $I_1 \times \dots \times I_n \in \mathcal{Z}$. We then take a coloring on $G$ by declaring two cubes in $\mathcal{I}_i'$ to be the same color if they are contained in a common cube in $\mathcal{I}_i$. In particular, this gives us a true coloring because every color occurs solely in $\mathcal{I}_i$ for some index $i$, and every edge in the hypergraph contains exactly one vertex from each index. An independent set in this graph can be written as $\mathcal{J}_1, \dots, \mathcal{J}_n$, where the $\mathcal{J}_i$ are collections of cubes which are sub-cubes of cubes in $\mathcal{I}_i$ and no cube in $\mathcal{J}_1 \times \dots \times \mathcal{J}_n \subset \mathcal{B}(1/N^\beta,nd)$ intersects $Z$. Thus to prove the theorem it suffices to find a large independent set in this graph.
+
+%	We employ the corollary we just proved to do this, by bounding the number of vertices and edges in $G$. Since a cube in $\mathcal{B}(L,d)$ contains $\Omega(1/L^{d(\beta-1)})$ cubes in $\mathcal{B}(L^\beta,d)$, we conclude that $|\mathcal{I}'_i| \gtrsim (1/L)^{d(\beta - 1)} |\mathcal{I}_i| \gtrsim (1/L)^{d \beta}$. But then the number of vertices of $G$ is $\sum |\mathcal{I}'_i| \gtrsim (1/L)^{d \beta}$. The Minkowski dimension bound on $Z$ implies that the number of edges in $G$ is bounded above by $|\mathcal{Z}| \lesssim (1/L)^{\alpha \beta}$,Finally, the coloring is $N^{d(\beta - 1)}$ uniform. Thus in the terminology of the previous corollary, $a = d \beta$, $b = \alpha \beta$, and $c = d(\beta - 1)$. The inequality $\beta > d(n-1)/(nd - \alpha)$, is equivalent to the inequality $b < a + c(n-1)$, and so the corollary applies to give the required result.
+%\end{proof}
+
+%The value $d \cdot (n-1)/(n-\alpha)$ in the theorem is directly related to the dimension $(n-\alpha)/(n-1)$ we get in our main result. If, for a specific $Z$, we can prove a variant of this lemma with $d \cdot (n-1)/(n-\alpha)$ replaced with $d/\lambda$, then going through the rest of our proof will immediately yield $X$ with Hausdorff dimension $\lambda$. In particular, to prove our second result it will suffice to prove the theorem above given that $Z$ has a low rank assumption and $d \cdot (n-1)/(n-\alpha)$ is replaced with $d \cdot(2k-1)/(dk - k - \alpha)$.
 
 % TODO: Include Tightness Calculation?
 
 \section{A Fractal Avoiding Set}
 
-We get solutions $X$ to fractal avoidance problems by breaking the problem down into a sequence of discrete configuration problems. This is the exact method as the queuing method in \cite{MalabikaRob}. Parameters $L_{N+1} \ll R_N \ll L_N$ are fixed, tending to zero as $N \to \infty$. We construct $X$ as a limit of a nested family of sets $X_0 \supset X_1 \supset \dots \to X$, where $X_N$ is a disjoint union of side length $L_N$ cubes. To obtain $X_{N+1}$, we subdivide $X_N$ into cubes of side length $R_N$, then further subdivide these cubes into cubes of smaller side length $L_{N+1}$, removing a portion of them. The union of the remainder $X_{N+1}$.
-
-At each step $N$, we consider a disjoint collection of side length $R_N$ cubes $\mathcal{I}_1(N), \dots, \mathcal{I}_n(N) \subset \mathcal{B}(R_N,d)$, by a process described shortly, each cube contained in $X_N$, but not necessarily containing all cubes in $X_N$. The family of cubes $\mathcal{I}_i(N)$ splits into a series of chunks of cubes in $\mathcal{B}(R_N,d)$ contained in a single cube in $\mathcal{B}(L_N,d)$, so $|\mathcal{I}_i(N)| \geq (L_N/R_N)^d \gtrsim 1/R_N^d$. Thus the main result of the previous section allows us to find a collection of side length $R_N^{\beta_N}$ cubes $\mathcal{J}_i(N) \subset \mathcal{I}_i(N)$ with all cubes in $\mathcal{J}_1(N) \times \dots \times \mathcal{J}_n(N)$ disjoint from $Z$. The parameter $\beta_N$ is an arbitrary decreasing sequence converging to $\beta = d(n-1)/(n-\alpha)$ from above. We then form $X_{N+1}$ from $X_N$ by removing the parts of cubes in $\mathcal{I}_i(N)$ which are not contained in the cubes in $\mathcal{J}_i(N)$. Note that in particular this means that we can set $L_{N+1} = R_N^{\beta_N}$. Once we fix parameters and an initial set $X_0$, we get a sequence $X_0, X_1, \dots$ converging to a set $X$. We set $X_0 = [0,1]^d$ for simplicity. A simple constraint detailed below is the only requirement to ensure that $X$ is a solution to the fractal avoidance problem.
+We now describe an avoidance technique applied at a single scale. The technique is repeated for an infinite sequence of scales to then get the general result. Given a dyadic length $L$, we let $\mathcal{B}(L,d)$ denote the partition of $\mathbf{R}^d$ into a family of half open cubes with corners lying on the lattice $(\mathbf{Z}/L)^d$. If the dimension is clear, we simplify denote $\mathcal{B}(L,d)$ as $\mathcal{B}(L)$.
 
 \begin{lemma}
-	Suppose that for any choice of distinct $x_1, \dots, x_n \in X$, there exists $N$ such that each $\mathcal{I}_i(N)$ contains a cube containing $x_i$. Then $X^n \cap Y \subset \Delta$.
+	Consider three dyadic scales $L \gg R \gg S$. If $I \subset \mathbf{R}^d$ is a union of $\mathcal{B}(L)$ cubes and $K \subset \mathbf{R}^{nd}$ a union of $\mathcal{B}(S)$ cubes, then we can find $J$ such that for any distinct $\mathcal{B}(S)$ subcubes $J_1, \dots, J_n$ of $J$, $J_1 \times \dots \times J_n$ is disjoint from $K$, and $J$ contains a $\mathcal{B}(S)$ subcube from all but $|K|R^{-nd}$ of the $\mathcal{B}(R)$ subcubes of $I$. 
 \end{lemma}
 \begin{proof}
-	Given any such $x_1, \dots, x_n \in X$, we know that $x_1, \dots, x_n \in X_{N+1}$, so $x_1 \in \mathcal{J}_1(N), \dots, x_n \in \mathcal{J}_n(N)$. This means that $(x_1, \dots, x_n)$ are contained in a cube in $\mathcal{J}_1(N) \times \mathcal{J}_n(N)$, and by assumption this cube is disjoint from $Y$. Taking contrapositives of this argument shows that if $y \in X^d \cap Y$, then there must be some $i$ and $j$ for which $y_i = y_j$, so $y \in \Delta$.
+	Form a random set $U$ by selecting uniformly randomly, from each $\mathcal{B}(R)$ subcube of $I$, a single subcube in $\mathcal{B}(S)$. Thus the probability that any subcube is selected is $(S/R)^d$. Since any two $\mathcal{B}(S)$ subcubes of $U$ lie in distinct elements of $\mathcal{B}(R)$, the only chance that a $\mathcal{B}(S)$ subcube $I$ of $K$ with distinct sides intersects $U^n$ is if $I_1, \dots, I_n$ all lie in separate cubes in $\mathcal{B}(R)$. Then the chance that each occurs is independant of one another, and so
+	%
+	\begin{align*}
+		\mathbf{P}(I \in U^n) &= \mathbf{P}(I_1 \in U) \dots \mathbf{P}(I_n \in U) = (S/R)^{nd}
+	\end{align*}
+	%
+	If $E$ denotes the number of $\mathcal{B}(S)$ subcubes $I$ of $K$ contained in $U^n$,
+	%
+	\[ \mathbf{E}(E) = \sum_{\substack{I \subset K}} \mathbf{P}(I \in U^n) = [|K| S^{-nd}] [(S/R)^{nd}] = |K| R^{-nd} \]
+	%
+	If, for each $\mathcal{B}(S)$ subcube $I$ of $U^n$, we remove $I_i$ from $U$, for any index $i$, we obtain a set $J$ with $J_1 \times \dots \times J_n$ disjoint from $K$ for any distinct $\mathcal{B}(R)$ subcubes $J_i$ of $J$. The interval $J$ contains an interval from all but $E$ sidelength $R$ cubes. In particular, we can select some nonrandom choice of $U$ such that $E \leq |K| R^{-nd}$, which gives the required $J$.
 \end{proof}
 
-% TODO: Include diagram of construction of queueing.
+We will be most interested in applying this lemma when $L$ and $S$ are consecutive hyperdyadic numbers. We fix a small $\delta$, and define $H_N = 2^{-\lfloor (1 + \delta)^N \rfloor}$ to be the $N$'th hyperdyadic number. Hyperdyadic numbers are useful scales for discussing Hausdorff dimension, because a weak-type bound allows us understand coverings of the set. The idea to use such scales was inspired by Katz and Tao's 2001 paper on Falconer's distance problem. We say a sequence $Y_1, Y_2, \dots$ {\it strongly} covers $Y$ if $Y \subseteq \limsup Y_N$, so each $y \in Y$ is in infinitely many of the sets $Y_N$.
 
-We achieve the constraint in the lemma by dynamically choosing parameters subject to a queueing process which eventually ensures all points in $X$ are separated. By a queue, we have in mind the data structure in computing science. That is, a queue is an ordered sequence of objects. We can either take off, or {\it pop} an object from the front of a queue, removing it from the queue, or add an element to the end of the queue, in which case it will be processed through the queue until all objects in front of it have been popped off the queue, and then will be the next object popped off the queue.
+\begin{lemma}
+	If $Y$ has Hausdorff dimension $\alpha$, then for each $\varepsilon > \delta$ we can find a strong cover of $Y$ by sets $Y_N$, where $Y_N$ is a union of $O_\varepsilon(N/H_N^{\alpha + \varepsilon})$ hyperdyadic cubes with sidelength $H_N$.
+\end{lemma}
+\begin{proof}
+	Since $Y$ is $\alpha$ dimensional, then for each $\varepsilon_0$ and $N$ we can find a covering of $Y$ by dyadic cubes $I_i$, where $I_i$ has sidelength $L_i \leq H_N$, and $\sum L_i^{\alpha + \varepsilon_0} \lesssim_{\varepsilon_0} 1$. But we can now apply a weak type bound to conclude that the number of $L_i$ between $H_{N+1}$ and $H_N$ is $O_{\varepsilon_0}(1/H_{N+1}^{\alpha + \varepsilon_0})$. The calculation
+	%
+	\[ 1/H_{N+1}^{\alpha + \varepsilon_0} = (H_N/H_{N+1})^{\alpha + \varepsilon_0} (1/H_N^{\alpha + \varepsilon_0}) \lesssim 1/H_N^{\alpha + \varepsilon_0 + \delta} \]
+	%
+	implies we have used $O_{\varepsilon_0}(1/H_N^{\alpha + \delta + \varepsilon_0})$ sidelength $H_N$ cubes to cover $Y$. If we now perform this process for each index $N$, then collect all cubes together from all the covers to obtain a strong cover, and set $\varepsilon = \delta + \varepsilon_0$, we obtain the required result.
+\end{proof}
 
-The objects in our queue will consist of tuples $(I_1, \dots, I_n)$, where $I_1 ,\dots, I_n$ are disjoint cubes. At stage $N$ of the construction, we take off the front tuple $(I_1, \dots, I_n)$ from the queue, and set $\mathcal{I}_i(N)$ to be the set of all cubes in $\mathcal{B}(R_N,d)$ which are a subset of both $I_i$ and $X_N$. We then subdivide $X_N$ using these parameters to form the set $X_{N+1}$ as a union of length $L_{N+1} = R_N^\beta$ intervals. After this, for {\it any} ordered choice of distinct intervals $I_1, \dots, I_n \in \mathcal{B}(L_{N+1},d)$, with each interval $I_i$ a subset of $X_{N+1}$, we add the tuple $(I_1, \dots, I_n)$ to the end of the queue.
+\begin{corollary}
+	Suppose $L = H_N$, $S = H_{N+1}$, and $R$ is the closest dyadic number to $S^\beta$. Furthermore, suppose $|K| \lesssim S^{nd - \gamma}$. Then provided
+	%
+	\[ nd - \gamma - \beta(n-1)d = \Omega \left( \frac{ 1 + \log |I|^{-1}}{(1 + \delta)^{N+1}} \right) = \log_S |I| + \Omega(1/\log(1/S)) \]
+	%
+	the set $J$ obtained in the discrete avoidance lemma contains a portion of at least half of all the sidelength $L_1$ intervals contined in $I$.
+\end{corollary}
 
-We add a vast number of tuples to the end of the queue at each iteration, so the queue will never run out of elements of run through. Nonetheless, since we only ever add tuples to the end of the queue, every tuple that is added to the queue will eventually be processed at some stage. If $x_1, \dots, x_n \in X$, and $L_N$ is small enough that $|x_i - x_j| \geq 2L_N$ for distinct $i$ and $j$, then at the $N$'th stage a tuple $(I_1, \dots, I_n)$ is added to the end of the queue with each $x_i \in I_i$, and at a {\it much} {\it much} later stage $M$, this tuple pops off the front of the queue, so $\mathcal{I}_i(M)$ contains a cube containing $x_i$ for each $i$. Thus the constraint of the lemma is satisfied, and so $X$ is a solution to the fractal avoidance problem.
+\begin{proof}
+	We simply calculate
+	%
+	\begin{align*}
+		&\frac{\# (\text{$\mathcal{B}(R)$ subcubes not selected from})}{\# (\text{all $\mathcal{B}(R)$ subcubes})} = \frac{|K| R^{-nd}}{|I|R^{-d}}\\
+		&\ \ \ \ \ \lesssim \frac{[S^{nd - \gamma}][S^{- \beta n d}]}{|I| S^{-\beta d}} = |I|^{-1} S^{nd - \gamma - \beta (n-1)d}
+	\end{align*}
+	%
+	The inequality above guarantees that the quantity above is bounded by $1/2$, so less than half of the intervals are missed in the selection process.
+\end{proof}
 
-% Add reason why the intervals are gtrsim L^{-n}
+%\begin{theorem}[Katz-Tao, 2001]
+%	If $Y \subset \mathbf{R}^{nd}$ is an $\alpha$ dimensional set, and a small $\varepsilon > 0$ is given, then we can find an efficient {\it strong cover} of $Y$ by a sequence of discretized sets $Y_N$. By a strong cover, we mean $Y \subseteq \limsup Y_N$. By discretized, we mean $Y_N$ is a union of cubes with sidelength's between $C_\varepsilon^{-1} H_N^{1 + C\varepsilon}$ and $C_\varepsilon H_N^{1 - C\varepsilon}$. By an efficient cover, we mean that $|Y_N| \leq C_\varepsilon H_N^{nd - \alpha - C\varepsilon}$.
+%\end{theorem}
+
+%If we replace $Y_N$ with a set obtained from uniform sidelength cubes, each with sidelength $C_\varepsilon H_N^{1 - C\varepsilon}$, then we obtain a new strong cover with total mass $O_\varepsilon(H_N^{nd - \alpha - C\varepsilon(2nd + 1)})$
+
+%\begin{align*}
+%	2 \sum C_\varepsilon^{nd} H_N^{nd(1 - C\varepsilon)} &= 2 C_\varepsilon^{2nd} H_N^{-2 C\varepsilon nd} \sum C_\varepsilon^{-nd} H_N^{nd(1 + C \varepsilon)}\\
+%	&\leq 2 C_\varepsilon^{2nd} H_N^{-2C\varepsilon nd} C_\varepsilon H_N^{nd - \alpha - C\varepsilon}\\
+%	&= 2C_\varepsilon^{2nd + 1} H_N^{nd - \alpha - C \varepsilon (2nd + 1)}
+%\end{align*}
+
+%If we replace each cube in $Y_N$ by an expanded cube with sidelength $C_\varepsilon H_N^{1 - C\varepsilon}$, we get a set constructed from cubes with a uniform sidelength, 
+
+%$(C_\varepsilon^{-1} H_N^{1 + C\varepsilon})^{nd} \leq |B| \leq (C_\varepsilon H_N^{1 - C\varepsilon})^{nd}$
+
+%If $L$ and $S$ are the closest dyadic numbers to $C_\varepsilon H_N^{1 - C\varepsilon}$ and $C_\varepsilon H_{N+1}^{1 - C\varepsilon}$ respectively, and $|K| \leq H_{N+1}^{(1 - C\varepsilon)(n - \alpha)}$
+
+We now describe a general method for finding solutions to fractal avoidance problems by breaking the problem down into a sequence of discrete configuration problems. To achive this, we rely on a hyperdyadic discretization of the set $Y$. If we fix a small constant $\delta$, we obtain a sequence of dyadic scales $\smash{L_N = 2^{- \lfloor (1 + \delta)^k \rfloor}}$. These lengths are known as {\it hyperdyadic}. Since $2^{-(1 + \delta)^k} \leq L_N \leq 2^{1- (1 + \delta)^k}$, the floor operation doesn't get in our way that much.
+
+For any length $L$, we let $\mathcal{B}(L,d)$ denote the family of all cubes with sidelength $L$, and with corners on the lattice $(\mathbf{Z}/L)^d$. If $d$ is clear, we abbreviate the notation as $\mathcal{B}(L)$. It is a result of Katz and Tao that if $Y \subset \mathbf{R}^{nd}$ is a set with Hausdorff dimension $0 < \alpha < nd$, and $\varepsilon$ is a small constant, then we can find an efficient {\it strong cover} of $Y$ by a union of sets $Y_N \subset \mathbf{R}^{nd}$, for $N \geq 1$, with $Y_N$ a union of cubes in $\mathcal{B}(C_\varepsilon L_N^{1 - \varepsilon})$. By a strong cover, we mean $Y \subseteq \limsup Y_N$, and by efficient, we mean that $Y_N$ is the union of at most $\smash{C_\varepsilon L_N^{-(\alpha + \varepsilon)}}$ cubes with sidelength $L_N$. For the purposes of our calculations, we fix a constant $A$ such that $Y_N$ contains at most $A/L_N^\alpha$ sidelength $L_N$ cubes\footnote{As Josh indicated, this bound might not be true, but can hopefully be adjusted as required for the true result which Katz and Tao prove}.
+
+We now construct $X$ as a limit of discrete nested sets $X_N$, where $X_N$ is a union of cubes in $\mathcal{B}(L_N)$, and $X_N^n$ is disjoint from all {\it non-diagonal} cubes with length $L_N$ in $Y_N$. By a non-diagonal cube, we mean $I \subset \mathcal{B}(L_N)$ such that $\pi_i(I) \neq \pi_j(I)$, where $\pi_i, \pi_j: \mathbf{R}^{nd} \to \mathbf{R}^d$ are projections onto the $i$'th and $j$'th coordinate vector. In particular, this means that $X^n$ avoids all cubes at all lengths in the cover of $Y$, and in particular, avoids non-diagonal elements of $Y$. As an initial set, for lack of an interesting choice, we let $X_0 = [0,1]^d$.
+
+\begin{lemma}
+	If for all $N$, $X_N^n$ avoids non-diagonal cubes in $Y_N$, $X^n \cap Y \subset \Delta$.
+\end{lemma}
+\begin{proof}
+	Let $y \in Y$ be a point not contained in $\Delta$. Because $Y_N$ forms a strong cover, we can find an infinite sequence of indices $N_k$ with $y \in Y_{N_k}$. For a suitably large choice of $K$, $\sqrt{n} \cdot L_{N_k} < d(y,\Delta)$ for $k \geq K$. But this means that the cube of $\mathcal{B}(L_{N_k})$ containing $y$ is disjoint from $\Delta$, and therefore cannot be a non-diagonal cube. This means that $X_{N_k}^n$ is disjoint from this cube, and therefore does not contain $y$. But then $X^n = \lim X_{N_k}^n$ cannot contain $y$. Taking contrapositives to our argument, we have shown every point in $X^n \cap Y$ must lie in $\Delta$.
+\end{proof}
+
+The recursive definition of $X_{N+1}$ from $X_N$ relies on the discrete result just proved in the last section. We set $I = X_N$, and $X_{N+1}$ equal to the resultant $J$, where $K$ is formed from the union of cubes in the hyperdyadic cover of $K$.
+
+Thus we must formulate the problem of avoiding cubes as a problem of finding independant sets in hypergraphs. Given $X_N$, which is a union of cubes in $\mathcal{B}(L_N)$, we divide the cubes into a fine scale set of cubes in $\mathcal{B}(L_{N+1})$. These cubes will form the vertices of our hypergraph. Given a set of $n$ {\it distinct} cubes $I_1, \dots, I_n$ at the fine scale, we add an edge between them if $I_1 \times \dots \times I_n$ is contained in $Y_{N+1}$. An independant set of vertices then corresponds exactly to a selection of cubes whose cartesian product does not contain any non-diagonal elements of the cubes in $Y_{N+1}$. We will find a large such independant set in this graph, using the technique of the last section. The union of the corresponding cubes will form $X_{N+1}$.
+
+For technical purposes, we require that the intervals in $X_{N+1}$ are uniformly chosen over intervals at a slightly coarser scale that $X_N$. This is the reason for the introduction of the partition in the graph theory result of the last section. We fix a parameter $(1 + \delta)^{-1} < \beta < 1$, and define $R_N = 2^{-\lfloor \beta(1 + \delta)^k \rfloor}$. Thus $L_{N+1} \leq R_{N+1} \leq L_N$. We can then partition the cubes considered as vertices in the graph above into equivalence classes consisting of cubes which are contained in a common element of $\mathcal{B}(R_{N+1})$. Given all this information, we now use the theorem of the last section to find a family of cubes containing a single interval in $\mathcal{B}(L_{N+1})$ from a large ratio of the intervals in $\mathcal{B}(R_{N+1})$. To find the ratio that is kept, we must bound the values of $V$, $E$, and $K$ for the graph we have constructed.
+
+If $X_N$ contains $M_N$ sidelength $L_N$ cubes, then our graph has $M_N (L_N/L_{N+1})^d$ vertices. There are also at most $A/L_{N+1}^\alpha$ edges, since $Y_{N+1}$ contains at most this many cubes. Finally, each equivalence class of the partition contains $(R_{N+1} / L_{N+1})^d$ elements, since there are this many sidelength $L_{N+1}$ intervals in a single sidelength $R_{N+1}$ intervals. The discrete result of the last section enables us to find an independent set containing one cube from all but at most
+%
+\begin{align*}
+	E/K^n &\leq [A/L_{N+1}^\alpha] [(R_{N+1} / L_{N+1})^d]^{-n}\\
+		&= A L_{N+1}^{dn-\alpha} R_{N+1}^{-dn} \leq (4 A) 2^{(\alpha - (1 - \beta) d n) (1 + \delta)^{N+1}}
+\end{align*}
+%
+sidelength $R_{N+1}$ cubes. The total number of such sidelength $R_{N+1}$ intervals is
+%
+\[ M_N (L_N/R_{N+1})^d \geq (M_N/4) 2^{\beta d(1 + \delta)^{N+1} - d (1 + \delta)^N} \]
+%
+This means that in order for our procedure to keep half of the intervals at each stage, we need
+%
+\[ (4A) 2^{[\alpha - (1 - \beta) dn] (1 + \delta)^{N+1}} \leq \frac{(M_N/4) 2^{\beta d(1 + \delta)^{N+1} - d (1 + \delta)^N}}{2} \]
+%
+We can rearrange this inequality to read
+%
+\[ (\alpha - (1 - \beta) dn - \beta d) (1 + \delta)^{N+1} \leq \log_2 (M_N/32A) \]
+
+\newpage
+
+We prove the estimate by induction. For simplicity, we assume the base case is proven. To obtain the estimate, if $M_N \geq B/L_N^d$, we have $M_{N+1} \geq (1 - AB) M_N (L_N/L_{N+1}^\beta)^d$. If we assume the inductive hypothesis for all $K \leq N$, then we can calculate that
+%
+\[ M_N \geq M_0 (1 - AB)^N L_0^d L_1^{d(1 - \beta)} \dots L_{N-1}^{d(1 - \beta)} L_N^{-\beta d} \]
+%
+Since $M_0 = L_0^{-d}$, and $L_{K+1} = L_K^{1 + \delta}$ for all indices $K$, this simplifies to an inequality
+%
+\begin{align*}
+	M_N &\geq (1 - AB)^N L_N^{d(1 - \beta) \sum_{k = 1}^{N-1} (1 + \delta)^{-k} -\beta d}
+\end{align*}
+%
+By our previous calculation, to continue the inductive proof that $M_{N+1} \geq B/L_{N+1}^d$, we must show
+%
+\[ (1 - AB)^{N+1} L_N^{d(1 - \beta) \sum_{k = 1}^{N-1} (1 + \delta)^{-k} - \beta d} (L_N/L_{N+1}^\beta)^d \geq B/L_{N+1}^d \]
+%
+This simplifies to proving
+%
+\[ (1 - AB)^{N+1} L_N^{d(1 - \beta)(1/\delta + 1 + \delta)} \geq B \]
+%
+
 
 \section{Dimension Bounds}
 
@@ -355,6 +473,8 @@ The fact that the dimension is independent of $n$ has some interesting consequen
 
 \section{Comparison with Other Generic Avoidance Schemes}
 
+In the past few years in the discrete setting it has been noticed that rephrasing particular questions in terms of abstract problems on hypergraphs allows one to extend various results into sparse analogues \cite{BaloghMorrisSamotij}. In this paper we consider a continuous analogue, where sparsity is represented in terms of the dimension of the set $Z$ we are trying to avoid.
+
 \section{Concluding Remarks}
 
 \begin{thebibliography}{9}
@@ -389,6 +509,6 @@ Michael Bennett, Alex Iosevich, Krystal Taylor
 
 \end{thebibliography}
 
-\end{multicols}
+%\end{multicols}
 
 \end{document}
