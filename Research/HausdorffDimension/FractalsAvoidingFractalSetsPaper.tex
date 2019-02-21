@@ -1,4 +1,4 @@
-\documentclass{article}
+\documentclass[usenames,dvipsnames]{article}
 
 \usepackage{amsthm}
 \usepackage{amsmath}
@@ -6,10 +6,40 @@
 \usepackage{amssymb}
 \usepackage{mathabx}
 \usepackage{accents}
-%\usepackage[margin=0.7in]{geometry}
 \usepackage[english]{babel}
 \usepackage{blindtext}
 \usepackage{graphicx}
+
+\usepackage{tikz}
+\usepackage{tkz-berge}
+\usepackage{tkz-graph}
+
+\usetikzlibrary{patterns,arrows,decorations.pathreplacing}
+
+\usepackage{xcolor}
+\definecolor{dblue}{RGB}{20,66,129}
+\definecolor{rose}{RGB}{255,101,122}
+\definecolor{crimsonred}{RGB}{132,22,23}
+\definecolor{darkblue}{RGB}{72,61,139}
+
+\definecolor{deepblue}{RGB}{36,123,160}
+\definecolor{deepred}{RGB}{255,22,84}
+\definecolor{deeporange}{RGB}{240,111,62}
+
+\definecolor{olive}{rgb}{0.3, 0.4, .1}
+\definecolor{fore}{RGB}{249,242,215}
+\definecolor{back}{RGB}{51,51,51}
+\definecolor{title}{RGB}{255,0,90}
+\definecolor{dgreen}{rgb}{0.,0.6,0.}
+\definecolor{gold}{rgb}{1.,0.84,0.}
+\definecolor{JungleGreen}{cmyk}{0.99,0,0.52,0}
+\definecolor{BlueGreen}{cmyk}{0.85,0,0.33,0}
+\definecolor{RawSienna}{cmyk}{0,0.72,1,0.45}
+\definecolor{Magenta}{cmyk}{0,1,0,0}
+
+
+
+
 
 \theoremstyle{plain}
 \newtheorem{lemma}{Lemma}
@@ -50,7 +80,7 @@
 
 % Ergodic Theoretic Connections: Furstenberg Katznelson and Weiss. Ziegler sets of positive density.
 
-Is it true that sets with large fractal dimension unavoidably contain certain patterns? The Lebesgue density theorem implies this is essentially true for sets with positive Lebesgue measure. But the case of fractal dimension is much more interesting. In \cite{KeletiDimOneSet}, a set with full Hausdorff dimension is obtained avoiding translates. TODO: MORE EXAMPLES. In this paper, we construct explicit high dimensional sets avoiding `low dimensional' patterns.
+Is it true that sets with large fractal dimension unavoidably contain certain patterns? The Lebesgue density theorem implies this is essentially true for sets with positive Lebesgue measure. But the case of fractal dimension is much more interesting. In \cite{KeletiDimOneSet}, a set with full Hausdorff dimension is obtained avoiding translates. TODO: MORE EXAMPLES. In this paper, we construct explicit high dimensional sets avoiding `low dimensional' patterns. The sets we construct have large Hausdorff dimension, and the patterns have low modified box counting dimension.
 
 %n $n$ point configuration can be identified with a subset $Z$ of $(\mathbf{R}^d)^n$ such that $(x_1, \dots, x_n) \in Z$ if and only if $x_1, \dots, x_n$ are arranged in the configuration. For instance, we identify the 3 point configuration determining the vertices of an isoceles triangle with $\{ (x_1,x_2,x_3) \in (\mathbf{R}^d)^3 : d(x_1,x_3) = d(x_2,x_3) \}$. Thus the fractal dimension of the configuration can be definied as the dimension of the set $Z$.
 
@@ -62,16 +92,20 @@ Is it true that sets with large fractal dimension unavoidably contain certain pa
 %we provide methods to construct high dimensional sets avoiding configurations, thus providing lower bounds on the problem. One difficulty to avoiding isosceles triangles is that they occur in arbitrarily small sets of space. This paper quantifies this phenomenon in terms of the relative `sparsity', or `dimension' of a configuration. Stated precisely, we construct high dimensional sets avoiding sparse configurations.
 
 \begin{theorem}
-	Suppose $Z \subset (\mathbf{R}^d)^n$ can be written as the countable union of compact sets with lower Minkowski dimension upper bounded by $\alpha$. Then there exists a set $X \subset [0,1]^d$ with
+	Suppose $\underline{\dim_{\mathbf{MB}}}(Z) < \alpha$. Then there exists a set $X \subset [0,1]^d$ with
 	%
 	\[ \dim_{\mathbf{H}}(X) = \min \left( \frac{nd - \alpha}{n-1}, d \right), \]
 	%
 	such that if $x_1, \dots, x_n$ are distinct points in $X$, $(x_1, \dots, x_n) \not \in Z$.
 \end{theorem}
 
-There are already generic pattern avoidance methods in the literature. But they rely on the assumption that $Z$ is a smooth manifold, or an algebraic hypersurface. The novel feature of our method is that we focus on how the fractal dimension of the configuration is exploitable. We are therefore able to find sets avoiding configurations specified by arbitrarily irregular $Z$. Meanwhile, the Hausdorff dimension of $X$ is competitive in relation to results obtained by more restricted techniques, and even recovers a selection of the avoidance results as special cases. We compare our method to them in more detail in Section 6.
+\begin{remark}
+	We can allow $\underline{\dim_{\mathbf{MB}}}(Z) = \alpha$, provided that the infinum in the definition of the box counting dimension is actually attained by some cover of $Z$, i.e. $Z$ is covered by countably many sets with lower Minkowski dimension no greater than $\alpha$.
+\end{remark}
 
-The key idea to avoiding sparse configurations is a random mass equidistribution strategy. This occurs primarily in Section 2, when we solve a discrete variant of the problem by finding a set minimizing the number of intersections with a discrete variant of $Z$. Finding an absolute minimizer to this problem is tricky, but a random set has a small number of intersections, which suffices for our purposes. By overlaying the solution to the discretized problems at a sequence of scales, we obtain $X$ as a Cantor-type set, at the end of Section 3. Exploiting the equidistribution of mass at discrete scales, in Section 4, we are able to show the set $X$ has the required Hausdorff dimension regardless of how fast our sequence of scales decay. Though this technique occurs implicitly in at least one other Hausdorff dimension calculation in the literature, as in \cite{MalabikaRob}, we do not believe equidistribution has been explicitly identified as a method to balance offsets from a rapid decay of scales in a Cantor set construction.
+There are already generic pattern avoidance methods in the literature. But they rely on the assumption that $Z$ is a smooth manifold, or an algebraic hypersurface. The novel feature of our method is that we focus on how the fractal dimension of the configuration is exploitable. We are therefore able to find sets avoiding configurations specified by arbitrarily irregular $Z$. Meanwhile, the Hausdorff dimension of $X$ is competitive in relation to results obtained by more restricted techniques, and even recovers a selection of the avoidance results as special cases. We compare our method to other generic pattern avoidance methods in Section 6.
+
+The key idea to avoiding sparse configurations is a random mass equidistribution strategy. This occurs primarily in Section 2, when we solve a discrete variant of the problem by finding a set minimizing the number of intersections with a discrete variant of $Z$. Finding an absolute minimizer to this problem is tricky, but a random set has a small number of intersections, which suffices for our purposes. By overlaying the solution to the discretized problems at a sequence of scales, we obtain $X$ as a Cantor-type set, at the end of Section 3. Exploiting the equidistribution of mass at discrete scales, in Section 4, we are able to show the set $X$ has the required Hausdorff dimension regardless of how fast our sequence of scales decay. This technique occurs implicitly in at least one other Hausdorff dimension calculation in the literature, e.g. \cite{MalabikaRob}. But we do not believe equidistribution has been explicitly identified as a method to balance offsets from a rapid decay of scales in a Cantor set construction.
 
 %\section{A Fractal Avoidance Framework}
 
@@ -148,11 +182,11 @@ The key idea to avoiding sparse configurations is a random mass equidistribution
 \section{Notation and Terminology}
 
 \begin{itemize}
-	\item For a length $L$, $\mathcal{B}^d(L)$ denotes the partition of $\mathbf{R}^d$ into the family of all half open cubes of sidelength $L$, with corners on the lattice $(L \cdot \mathbf{Z})^d$, i.e.
+	\item For a length $L$, $\mathcal{B}^d(L)$ denotes the family of all half open cubes in $\mathbf{R}^d$ with sidelength $L$ and corners on the lattice $(L \cdot \mathbf{Z})^d$. That is,
 	%
 	\[ \mathcal{B}^d(L) = \{ [a_1,a_1 + L) \times \dots \times [a_d, a_d + L) : a_i \in L \cdot \mathbf{Z} \}. \]
-
-	\item If $E \subset \mathbf{R}^d$, $\mathcal{B}^d(L,E)$ is the family of cubes in $\mathcal{B}^d(L)$ intersecting $E$, i.e.
+	%
+	If $E \subset \mathbf{R}^d$, $\mathcal{B}^d(L,E)$ is the family of cubes in $\mathcal{B}^d(L)$ intersecting $E$, i.e.
 	%
 	\[\mathcal{B}^d(L,E) = \{ I \in \mathcal{B}^d(L): I \cap E \neq \emptyset \}. \]
 
@@ -160,7 +194,7 @@ The key idea to avoiding sparse configurations is a random mass equidistribution
 	%
 	\[ \lhdim(E) = \liminf_{L \to 0} \frac{\log( \#( \mathcal{B}^d(E,L) ) )}{\log(1/L)}. \]
 	%
-	Thus there is $L_k \to 0$ with $\# \mathcal{B}(L_k,E) = (1/L_k)^{\lhdim(E) + o(1)}$.
+	Thus there is $L_k \to 0$ with $\# ( \mathcal{B}^d(L_k,E) ) = (1/L_k)^{\lhdim(E) + o(1)}$.
 
 %	\item The {\it lower modified box counting dimension} of a set $E$ is
 	%
@@ -170,19 +204,123 @@ The key idea to avoiding sparse configurations is a random mass equidistribution
 
 	\item Adopting the terminology of \cite{KatzTao}, we say a collection of sets $U_1, U_2, \dots$ is a {\it strong cover} of some set $E$ if $E \subset \limsup U_k$, which means every element of $E$ is contained in infinitely many of the sets $U_k$.
 
-	\item Given a cube $I \in \mathcal{B}(L, dn)$, there are unique cubes $I_1, \dots, I_n \in \mathcal{B}(L,d)$ such that $I = I_1 \times \dots \times I_n$. We say $I$ is {\it non diagonal} if the intervals $I_1, \dots, I_n$ are pairwise distinct.
+	\item Given a cube $I \in \mathcal{B}^{dn}(L)$, there are unique cubes $I_1, \dots, I_n \in \mathcal{B}^d(L)$ such that $I = I_1 \times \dots \times I_n$. We say $I$ is {\it non diagonal} if $I_1, \dots, I_n$ are distinct.
 \end{itemize}
 
 \section{Avoidance at Discrete Scales}
 
 We avoid $Z$ by considering an infinite sequence of scales. At each scale, we solve a discretized version of the problem, and combining these solutions gives a solution to the original problem. This section describes the discretized avoidance technique. The technique is the {\it core} part of our construction, and the Hausdorff dimension we achieve is a direct result of our success in the discrete setting.
 
-Fix two dyadic sidelengths $L > S$. In the fractal setting, $Z$ is replaced by a union of sidelength $S$ cubes, denoted $K$. Our goal is to take a set $E$, which is a union of sidelength $L$ cubes, and carve out a union of sidelength $S$ cubes $F$ such that $F^n$ is disjoint from the non-diagonal cubes of $K$.
+Fix two dyadic sidelengths $L > S$. In the discrete setting, $Z$ is replaced by a union of sidelength $S$ cubes, denoted $K$. Our goal is to take a set $E$, which is a union of sidelength $L$ cubes, and carve out a union of sidelength $S$ cubes $F$ such that $F^n$ is disjoint from the non-diagonal cubes of $K$.
 
-In order to ensure the Hausdorff dimension calculations of $X$ go smoothly, it is crucial in the discrete setting that the mass of $F$ is spread uniformly over $E$. We can achieve this by trying to include a equal portion of mass in each sidelength $R$ subcube of $E$, for some intermediary scale $L > R > S$. The next lemma shows that we can select a sidelength $S$ cube from {\it almost} all of the sidelength $R$ cubes.
+In order to ensure the Hausdorff dimension calculations of $X$ go smoothly, it is crucial in the discrete setting that the mass of $F$ is spread uniformly over $E$. We can achieve this by trying to include a equal portion of mass in each sidelength $R$ subcube of $E$, for some intermediary scale $L > R > S$. The next lemma shows that we can select a equal portion of mass from {\it almost} all of the sidelength $R$ cubes.
+
+\begin{figure}[t]
+	\centering
+    \begin{tikzpicture}[scale=4] %% Change scaling as needed
+        \draw [|-]  (0,0) -- (1/4,0);
+		\draw (0,0) -- (1,0);
+        \draw [-|] (3/4,0) -- (1,0);% node [anchor = south west] {$E$};
+
+        \foreach \x in {1,2,3}
+        	\draw (\x/4,-0.5pt) -- (\x/4,0.5pt);
+
+        \foreach \x in {0,1,3}
+    		\draw[darkblue, very thick] (\x/4+0.001,0) -- (\x/4 + 1/4-0.001,0);
+
+
+
+
+        \draw [|-]  (0,-0.2) -- (1/4,-0.2);
+        \draw (0,-0.2) -- (1,-0.2);
+        \draw [-|] (6/7,-0.2) -- (1,-0.2);% node [anchor = north west] {$F$};
+
+        \foreach \x in {1,...,15}
+            \draw (\x/16,-0.2-0.005) -- (\x/16,-0.2+0.005);
+
+        \foreach \x in {1,...,7}
+            \draw (\x/8,-0.2-0.02) -- (\x/8,-0.2+0.02);
+
+        \foreach \x in {1,2,6,12,15}
+            \draw[SkyBlue, very thick] (\x/16+0.001,-0.2) -- (\x/16 + 1/16 - 0.001,-0.2);
+
+
+
+
+
+
+
+
+        \draw [|-]  (-0.2,-0.4) -- ++(0,-0.01);
+        \draw (-0.2,-0.4) -- (-0.2,-1.4);
+        \draw [-|] (-0.2,-1.38) -- (-0.2,-1.4);% node [anchor = north east] {$F$};
+
+        \foreach \x in {1,...,15}
+            \draw (-0.2-0.005,-0.4-\x/16) -- (-0.2+0.005,-0.4 -\x/16);
+
+        \foreach \x in {1,...,7}
+            \draw (-0.2-0.02,-0.4-\x/8) -- (-0.2+0.02,-0.4-\x/8);
+
+        \foreach \x in {1,2,6,12,15}
+        	\draw[SkyBlue, very thick] (-0.2,-0.4-\x/16-0.001) -- (-0.2,-0.4-\x/16-1/16+0.001);
+
+
+
+
+
+        \draw[dashed] (0,-0.4) -- (1,-0.4) -- (1,-1.4) -- (0,-1.4) -- (0,-0.4);
+
+        \foreach \x in {1,2,6,12,15}
+        	\foreach \y in {1,2,6,12,15}
+        		\draw[fill=SkyBlue] (\x/16,-0.4 - \y/16) -- ++(0,-1/16) -- ++ (1/16,0) -- ++(0,1/16) -- ++(-1/16,0);
+
+        \foreach \x in {1,2,6,12,15}
+        	\draw[fill=white] (\x/16,-0.4 - \x/16) -- ++(0,-1/16) -- ++ (1/16,0) -- ++(0,1/16) -- ++(-1/16,0);
+
+        \foreach \x/\y in {4/4, 5/4, 6/4, 7/5, 8/5, 9/5, 10/5, 5/6, 6/6,7/6,8/6,9/6, 6/7, 7/7, 8/7, 10/7, 3/8, 4/8, 5/8, 6/8, 8/8, 9/8, 11/8, 4/9, 5/9, 6/9, 9/9, 11/9, 12/9, 4/11, 8/11, 9/11, 10/11, 9/12}
+        	\draw[fill=crimsonred] (\x/16,-0.4 - \y/16) -- ++(0,-1/16) -- ++ (1/16,0) -- ++(0,1/16) -- ++(-1/16,0);
+
+
+
+
+
+
+
+            \draw [darkblue, very thick] (1.1,-0.6) -- (1.3,-0.6);
+%            \foreach \x in {1.1, 1.3}
+%                \draw (\x,-0.6 - 0.01) -- (\x,-0.6 + 0.01);
+            \draw (1.35,-0.6) node [anchor = west] {$E$};
+
+            \draw [SkyBlue, very thick] (1.1,-0.7) -- (1.3,-0.7);
+%            \foreach \x in {1.1,1.3}
+%                \draw (\x,-0.7 - 0.01) -- (\x, -0.7 + 0.01);
+            \draw (1.35,-0.7) node [anchor = west] {$F$};
+
+            \draw [crimsonred, very thick] (1.1,-0.8) -- (1.3,-0.8);
+%            \foreach \x in {1.1,1.3}
+%                \draw (\x,-0.8 - 0.01) -- (\x, -0.8 + 0.01);
+            \draw (1.35,-0.8) node [anchor = west] {$K$};
+
+            \draw (1.1,-1.1) -- (1.3,-1.1);
+            \foreach \x in {1.1, 1.3}
+                \draw (\x,-1.1 - 0.01) -- (\x,-1.1 + 0.01);
+            \draw (1.35,-1.1) node [anchor = west] {$L$};
+
+            \draw (1.1,-1.2) -- (1.2,-1.2);
+            \foreach \x in {1.1, 1.2}
+                \draw (\x,-1.2 - 0.01) -- (\x,-1.2 + 0.01);
+            \draw (1.35,-1.2) node [anchor = west] {$R$};
+
+            \draw (1.1,-1.3) -- (1.15,-1.3);
+            \foreach \x in {1.1, 1.15}
+                \draw (\x,-1.3 - 0.01) -- (\x,-1.3 + 0.01);
+            \draw (1.35,-1.3) node [anchor = west] {$S$};
+	\end{tikzpicture}
+	\caption{An example choice of $F$ satisfying the Lemma below, where $d = 1$ and $n = 2$. $F$ satisfies the non-concentration and avoidance property, as well as containing an interval from all but 3 of the intervals in $\mathcal{B}(E,R)$. The white boxes indicate diagonal boxes in $F^2$, which are irrelevant to the avoidance property.}
+\end{figure}
 
 \begin{lemma}
-	Fix three dyadic lengths $L > R > S$. Let $E$ be a union of cubes in $\mathcal{B}^d(L)$, and $K$ a union of cubes in $\mathcal{B}^{dn}(S)$. Then there exists a subset $F$ of $E$, which is a union of cubes in $\mathcal{B}^d(S)$, such that
+	Fix three dyadic lengths $L > R > S$. Let $E$ be a union of cubes in $\mathcal{B}^d(L)$, and $K$ a union of cubes in $\mathcal{B}^{dn}(S)$. Then there exists $F \subset E$, which is a union of cubes in $\mathcal{B}^d(S)$, such that
 	%
 	\begin{enumerate}
 		\item[(a)] \emph{Avoidance:}  For any distinct $I_1, \dots, I_n \in \mathcal{B}^d(S,F)$, $I_1 \times \dots \times I_n \not \in \mathcal{B}^{dn}(S,K)$.
@@ -197,32 +335,35 @@ In order to ensure the Hausdorff dimension calculations of $X$ go smoothly, it i
 	%
 	\[ U = \bigcup\; \{ J_I: I \in \mathcal{B}^d(R,E) \}, \]
 	%
-	where $J_I$ is an element selected uniformly randomly from $\mathcal{B}^d(S,I)$. $U$ certainly satisfies the equidistribution and non-concentration properties, but not the avoidance property. We will show that with non-zero probability, we can obtain the avoidance property by removing at most $|K|R^{-dn}$ intervals from $U$.
+	where $J_I$ is an element selected uniformly randomly from $\mathcal{B}^d(S,I)$. $U$ certainly satisfies the equidistribution and non-concentration properties, but not the avoidance property. We will show that with non-zero probability, we can obtain the avoidance property by removing at most $|K|R^{-dn}$ cubes from $U$.
 
-	For any $I \in \mathcal{B}^d(S,E)$, $\mathbf{P}(I \subset U) = (S/R)^d$. Since any two elements of $\mathcal{B}^d(S,U)$ lie in distinct cubes of $\mathcal{B}^d(R)$, the only chance that a {\it non-diagonal} cube $I$ in $\mathcal{B}^{dn}(S,K)$ is a subset of $U^n$ is if $I_1, \dots I_n$ all lie in separate cubes of $\mathcal{B}^d(R)$. They each have an independent chance of being added to $U$, and so
+	For any $J \in \mathcal{B}^d(S,E)$, there is a unique $I \in \mathcal{B}^d(L,E)$ such that $J \subset I$. Then
+	%
+	\[ \mathbf{P}(J \subset U) = \mathbf{P}(J_I = J) = (S/R)^d. \]
+	%
+	Since any two elements of $\mathcal{B}^d(S,U)$ lie in distinct cubes of $\mathcal{B}^d(R)$, the only chance that a {\it non-diagonal} cube $J$ in $\mathcal{B}^{dn}(S,K)$ is a subset of $U^n$ is if $J_1, \dots J_n$ all lie in separate cubes of $\mathcal{B}^d(R)$. They each have an independent chance of being added to $U$, and so
 	%
 	\begin{align*}
-		\mathbf{P}(I \subset U^n) &= \mathbf{P}(I_1 \subset U) \cdots \mathbf{P}(I_n \subset U) = (S/R)^{dn}.
+		\mathbf{P}(J \subset U^n) &= \mathbf{P}(J_1 \subset U) \cdots \mathbf{P}(J_n \subset U) = (S/R)^{dn}.
 	\end{align*}
 	%
-	If $\mathcal{I}$ denotes the family of all non-diagonal cubes of $\mathcal{B}^{dn}(S,K)$ contained in $U^n$, then, letting $I$ range over the non-diagonal cubes of $\mathcal{B}^{dn}(S,K)$, we find
+	If $\mathcal{J}$ denotes the family of all non-diagonal cubes of $\mathcal{B}^{dn}(S,K)$ contained in $U^n$, then, letting $J$ range over the non-diagonal cubes of $\mathcal{B}^{dn}(S,K)$, we find
 	%
 	\begin{align*}
-		\mathbf{E}(\# (\mathcal{I})) &= {\sum}_I\; \mathbf{P}(I \subset U^n) \leq |\mathcal{B}^{dn}(S,K)| (S/R)^{dn} = |K| R^{-dn}.
+		\mathbf{E}(\# (\mathcal{J})) &= {\sum}_J\; \mathbf{P}(J \subset U^n) \leq |\mathcal{B}^{dn}(S,K)| (S/R)^{dn} = |K| R^{-dn}.
 	\end{align*}
 	%
 	In particular, this means that out of all possible outcomes for the set $U$, there is at least one {\it particular} $U_0$ we can choose for which the corresponding set of cubes $\mathcal{I}_0$ satisfies $\#(\mathcal{I}_0) \leq \mathbf{E}(\mathcal{I}) = |\mathcal{B}^{dn}(S,K)| (S/R)^{dn} = |K| R^{-dn}$.
-	%TODO: REDUCE PROBABILISTIC METHOD
 
 	%TODO: ADD A LITTLE BIT MORE EXPOSITION ABOUT THE PROJECTION.
-	We now define $F = U_0 - \{ I_1 : I \in \mathcal{I}_0 \}$. As a subset of $U_0$, $F$ inherits the non-concentration property. We have removed at most $|K| R^{-dn}$ intervals from $U_0$, and since $U_0$ contains an interval from {\it every} cube in $\mathcal{B}^d(R,E)$, $F$ satisfies the equidistribution property. Finally, since we have removed a single side from every non-diagonal cube in $U_0^n$ intersecting $K$, $F$ satisfies the avoidance property. So our construction is complete.
+	We now define $F = U_0 - \{ I_1 : I \in \mathcal{I}_0 \}$. As a subset of $U_0$, $F$ inherits the non-concentration property. We have removed at most $|K| R^{-dn}$ cubes from $U_0$, and since $U_0$ contains an cube from {\it every} cube in $\mathcal{B}^d(R,E)$, $F$ satisfies the equidistribution property. Finally, since we have removed a single side from every non-diagonal cube in $U_0^n$ intersecting $K$, $F$ satisfies the avoidance property. So our construction is complete.
 \end{proof}
 
 \begin{remark}
-	Our construction here uses randomness to count the number of intersections with $K$. Nonetheless, the set $F$ we find is explicitly non-random -- it is a set that exists, and can be found by iterating through the finitely many choices of $F$ satisfying the avoidance and non-concentration properties. Thus the set $X$ we obtain is explicit. It is not a random object.
+	Our construction here uses randomness to count the average number of intersections with $K$. Nonetheless, the set $F$ we find is explicitly non-random; it is a set whose existence can be obtained by purely constructive means, and a constructive solution can be found by iterating through the finitely many possible choices of $F$ satisfying the avoidance and non-concentration properties. This means the set $X$ we obtain is explicit. It is not a random object.
 \end{remark}
 
-If $Z$ has dimension $\alpha$, we will be able to obtain that $|K| \leq 2^{dn} S^{dn-\gamma}$ for values $\gamma$ convering to $\alpha$ in the limit. We also set $R$ to be the closest dyadic number to $S^\lambda$ for some $\lambda \in (0,1)$. The size of $\lambda$ is directly related to the Hausdorff dimension of our theorem (the larger the better!). The next corollary calculates how large $\lambda$ can be if $F$ must be equidistributed over a constant fraction of cubes in $\mathcal{B}^d(R,E)$. The error term $5A \log_S |E|$ in the corollary will be made insignificant by the rapid decay of $S$ in the construction.
+If $Z$ has dimension $\alpha$, we will find $|K| \leq 2^{dn} S^{dn-\gamma}$ for values $\gamma$ convering to $\alpha$ as $S \to 0$. We also set $R$ to be the closest dyadic number to $S^\lambda$ for some $\lambda \in (0,1)$. The size of $\lambda$ is directly related to the Hausdorff dimension of our theorem (the larger the better!). The next corollary calculates how large $\lambda$ can be if $F$ must be equidistributed over a constant fraction of cubes in $\mathcal{B}^d(R,E)$. The error term $5A \log_S |E|$ will be made insignificant by the rapid decay of $S$ in our construction.
 
 \begin{corollary}
 	Consider the last lemma's setup, in addition to three additional parameters $\lambda \in (0,1]$, $\gamma \in [d,dn)$, and $A$ is a positive integer. Suppose $R = 2^{- \lfloor \lambda \log_2(1/S) \rfloor}$, $|E| \leq 1/2$, and $|K| \leq 2^{dn} S^{dn-\gamma}$. If
@@ -244,29 +385,38 @@ If $Z$ has dimension $\alpha$, we will be able to obtain that $|K| \leq 2^{dn} S
 	%
 	\begin{align*}
 		&\frac{|\{ I \in \mathcal{B}^d(R,E): \mathcal{B}^d(S,I) \cap \mathcal{B}^d(S,F) = \emptyset \}|}{|\mathcal{B}^d(R,E)|} \leq \frac{|K| R^{-dn}}{|E|R^{-d}}\\
-		&\ \ \ \ \ \leq 2^{dn} |E|^{-1} S^{dn - \gamma} R^{-d(n-1)} \leq 2^{dn} |E|^{-1} S^{dn - \gamma} (S/2)^{- \lambda d(n-1)}\\
-		&\ \ \ \ \ \leq 2^{dn + \lambda d(n-1)} |E|^{-1} S^{5d(n-1) A \log_S|E|}\\
-		&\ \ \ \ \ = 2^{dn + \lambda d(n-1)} |E|^{5d(n-1) A - 1} \leq 2^{dn + d(n-1) + 1 - 5d(n-1)A}\\
-		&\ \ \ \ \ \leq 2^{2dn + [1 - 5d(n-1)]}/2^A \leq 2^{5d-3dn + 1}/2^A \leq 2^{1 - d}/2^A \leq 1/2^A.
+		&\ \ \ \ \ \leq (2^{dn} S^{dn - \gamma}) |E|^{-1} R^{-d(n-1)}\\
+		&\ \ \ \ \ \leq 2^{dn} |E|^{-1} S^{dn - \gamma} (S/2)^{- \lambda d(n-1)}\\
+		&\ \ \ \ \ \leq 2^{dn + \lambda d(n-1)} |E|^{5d(n-1)A - 1}\\
+		&\ \ \ \ \ \leq 2^{dn + d(n-1) - (5d(n-1)A - 1)} \leq 1/2^A.
 	\end{align*}
 	%
-	The last inequality was obtained because $n \geq 2$.
+	The last inequality was obtained because $n \geq 2$, $d \geq 1$, and $A \geq 1$, so
+	%
+	\begin{align*}
+		[dn + &d(n-1) - (5d(n-1)A - 1)] + A\\
+		&\ \ \ \ \ \leq 2dn + 1 - d + (1 - 5d(n-1)) A\\
+		&\ \ \ \ \ \leq 2dn + (1 - 5d(n-1))\\
+		&\ \ \ \ \ \leq 5d-3dn + 1 \leq 0.
+	\end{align*}
+	%
+	Thus $dn + d(n-1) - (5d(n-1)A - 1) \leq -A$.
 %	The last inequality was obtained by picking the $O(A) \geq 2d A$, which is equivalent to making the $O(A \log_S |E|)$ term in the statement of the corollary on the order of $2d A \log_S |E|$.
 \end{proof}
 
 \begin{remark}
-	As mentioned, this discrete lemma is the core of our avoidance technique. The remaining argument is fairly modular, and can be applied with any other discrete avoidance technique to yield a solution to the fractal avoidance problem. Indeed, the remainder of our paper was inspired by the construction method of \cite{MalabikaRob}. If for a special case of $Z$, one can improve the lemma so fewer intervals are discarded, then one can apply the remaining parts of our paper near verbatim to yield a set $X$ with a larger Hausdorff dimension. For instance, a variation on the argument in \cite{Mathe} shows that if $Z$ is a degree $m$ algebraic hypersurface, and $K = \mathcal{B}(L,Z)$, then one can set $\lambda \approx 1/m$. Following through the remainder of the proof replicates Mathe's result.
+	As mentioned, this discrete lemma is the core of our avoidance technique. The remaining argument is fairly modular, and can be applied with any other discrete avoidance technique to yield a solution to the fractal avoidance problem. Indeed, the remainder of our paper was inspired by the construction method of \cite{MalabikaRob}. If for a special case of $Z$, one can improve the lemma so fewer cubes are discarded, then one can apply the remaining parts of our paper near verbatim to yield a set $X$ with a larger Hausdorff dimension. For instance, a variation on the argument in \cite{Mathe} shows that if $Z$ is a degree $m$ algebraic hypersurface, and $K = \mathcal{B}^{dn}(L,Z)$, then a different strategy at the discrete scale allows us to set $\lambda \approx 1/m$. Following through the remainder of the proof replicates Mathe's result.
 \end{remark}
 
 \section{Fractal Discretization}
 
-Now we apply the discrete technique we just described to obtain an actual fractal avoidance set. The fact that $Z$ is the countable union of compact sets with Minkowski dimension $\alpha$ implies that we can find an efficient {\it strong cover} of $Z$ by cubes restricted to lie at a sequence of dyadic scales $L_k$.
+Now we apply the discrete technique we just described to obtain an actual fractal avoidance set. The fact that $Z$ is the countable union of compact sets with Minkowski dimension $\alpha$ implies that we can find an efficient {\it strong cover} of $Z$ by cubes restricted to lie at a sequence of dyadic scales $L_k$ converging to zero arbitrarily fast.
 
 \begin{lemma}
-	Let $Z$ be a countable union of compact sets, each with lower Minkowski dimension at most $\alpha$, and consider any positive sequence $\varepsilon_k$ converging to zero. Then there is a decreasing sequence of lengths $L_1, L_2, \dots$, and $\mathcal{B}(L_k)$ sets $Z_k$ such that $Z$ is strongly covered by the sets $Z_k$ and $|\mathcal{B}(Z_k, L_k)| \leq 2^{dn}/L_k^{\alpha + \varepsilon_k}$.
+	Let $Z \subset \mathbf{R}^{dn}$ be a countable union of compact sets, each with lower Minkowski dimension at most $\alpha$, and consider any positive sequence $\varepsilon_k$ converging to zero. Then there is a decreasing sequence of lengths $L_1, L_2, \dots$, and $\mathcal{B}^{dn}(L_k)$ sets $Z_k$ such that $Z$ is strongly covered by the sets $Z_k$ and $|\mathcal{B}(Z_k, L_k)| \leq 2^{dn}/L_k^{\alpha + \varepsilon_k}$.
 \end{lemma}
 \begin{proof}
-	Let $Z$ be the union of sets $Y_i$ with $\lhdim(Y_i) \leq \alpha$ for each $i$. Consider any sequence of integers $m_1, m_2, \dots$which repeats each integer infinitely often. Given $k$, there are infinitely many lengths $L$ with $\#(\mathcal{B}^{dn}(L,Y_{m_k})) \leq 1/L^{\alpha + \varepsilon_k}$. Replacing $L$ with a dyadic number at most twice the size of $L$, there are infinitely many {\it dyadic} lengths $L$ with $\# (\mathcal{B}^{dn}(L,Y_{m_k})) \leq 1/(L/2)^{\alpha + \varepsilon_k} \leq 2^{dn}/L^{\alpha + \varepsilon_k}$. In particular, we may fix a length $L_k$ smaller than $L_1, \dots, L_{k-1}$. Then the union of the cubes in $\mathcal{B}{dn}(L_k,Y_{m_k})$ forms the set $Z_k$.
+	Let $Z$ be the union of sets $Y_i$ with $\lhdim(Y_i) \leq \alpha$ for each $i$. Consider any sequence of integers $m_1, m_2, \dots$which repeats each integer infinitely often. Given $k$, there are infinitely many lengths $L$ with $\#(\mathcal{B}^{dn}(L,Y_{m_k})) \leq 1/L^{\alpha + \varepsilon_k}$. Replacing $L$ with a dyadic number at most twice the size of $L$, there are infinitely many {\it dyadic} lengths $L$ with $\# (\mathcal{B}^{dn}(L,Y_{m_k})) \leq 1/(L/2)^{\alpha + \varepsilon_k} \leq 2^{dn}/L^{\alpha + \varepsilon_k}$. In particular, we may fix a length $L_k$ smaller than $L_1, \dots, L_{k-1}$. Then the union of the cubes in $\mathcal{B}^{dn}(L_k,Y_{m_k})$ forms the set $Z_k$.
 \end{proof}
 
 \begin{remark}
@@ -283,14 +433,14 @@ We can now construct $X$ by avoiding the various discretizations of $Z$ at each 
 	%
 	\[ \Delta = \{ w \in (\mathbf{R}^d)^n : \text{there exists}\ i,j\ \text{such that}\ w_i = w_j \}. \]
 	%
-	Then $d(\Delta,z) > 0$. The point $z$ is covered by cubes in infinitely many of collections $Z_{k_m}$. For suitably large $N$, the cube $I$ in $\mathcal{B}(L_{k_N})$ containing $z$ is disjoint from $\Delta$. But this means that $I$ is non diagonal, and so $z \not \in X_N^d$. In particular, $z$ is not an element of $X^n$.
+	Then $d(\Delta,z) > 0$. The point $z$ is covered by cubes in infinitely many of collections $Z_{k_m}$. For suitably large $N$, the cube $I$ in $\mathcal{B}^{dn}(L_{k_N})$ containing $z$ is disjoint from $\Delta$. But this means that $I$ is non diagonal, and so $z \not \in X_N^d$. In particular, $z$ is not an element of $X^n$.
 \end{proof}
 
 It is now simple to see how we must work at the discrete scales. First, we see $X_0 = [0,1/2]^d$, so that $|X_0| \leq 1/2$. To obtain $X_{k+1}$ from $X_k$, we apply the discrete argument. We set $E = X_k$ and $W = Z_{k+1}$, with scales $L = L_k$ and $S = L_{k+1}$. We know that we can choose $\gamma = \alpha + \varepsilon_k$, and also pick $R = R_{k+1}$ the closest dyadic number to $L_{k+1}^\lambda$, where
 %
 \[ \lambda = \beta_{k+1} = \frac{dn - \alpha}{d(n-1)} - \frac{\varepsilon_{k+1}}{d(n-1)} - 10(k+1) \log_{L_{k+1}} |X_k|. \]
 %
-The discrete lemma then constructs a set $F$ with $F^n$ avoiding non diagonal cubes in $Z_{k+1}$, and containing a $\mathcal{B}(L_{k+1})$ subcube from all but a fraction $1/2^{2k +2}$ of the $\mathcal{B}(R_{k+1})$ cubes in $I$. We set $X_{k+1} = F$. Repeatedly doing this builds an infinite sequence of the $X_k$. Since $X_k^n$ avoids $Z_k$, $X$ is a solution to the fractal avoidance problem. It now remains to calculate the Hausdorff dimension of $X$.
+The discrete lemma then constructs a set $F$ with $F^n$ avoiding non diagonal cubes in $Z_{k+1}$, and containing a $\mathcal{B}^d(L_{k+1})$ subcube from all but a fraction $1/2^{2k +2}$ of the $\mathcal{B}^d(R_{k+1})$ cubes in $I$. We set $X_{k+1} = F$. Repeatedly doing this builds an infinite sequence of the $X_k$. Since $X_k^n$ avoids $Z_k$, $X$ is a solution to the fractal avoidance problem.
 
 %\section{Construction of Avoiding Set}
 
@@ -316,7 +466,7 @@ Then, in the limit $X$ looks $d \beta$ dimensional on the discrete scales, which
 	$\beta_k \to \beta$.
 \end{lemma}
 \begin{proof}
-	It suffices to show that the error terms in $\beta_k$ become neglible over time, i.e. we must show
+	It suffices to show that the error terms in $\beta_k$ become neglible over time. Namely, we must show
 	%
 	\[ \frac{\varepsilon_{k+1}}{d(n-1)} + 10(k+1) \log_{L_{k+1}} |X_k| = o(1). \]
 	%
@@ -327,28 +477,28 @@ Then, in the limit $X$ looks $d \beta$ dimensional on the discrete scales, which
 	Thus both components of the error term converge to zero as $k \to \infty$.
 \end{proof}
 
-The most convenient way to look at the dimension of $X$ at various scales is to use Frostman's lemma. To understand the behaviour of $X$, we construct a non-zero measure $\mu$ supported on $X$ such that for all $\varepsilon > 0$, for all lengths $L$, and for all $I \in \mathcal{B}(L)$, $\mu(I) \lesssim_\varepsilon L^{d\beta - \varepsilon}$. We can then understand the behaviour of $X$ at the scale $L$ by looking at $\mu$'s behaviour when restricted to cubes at the particular scale, i.e. cubes in $\mathcal{B}(L)$.
+The most convenient way to look at the dimension of $X$ at various scales is to use Frostman's lemma. To understand the behaviour of $X$, we construct a non-zero measure $\mu$ supported on $X$ such that for all $\varepsilon > 0$, for all lengths $L$, and for all $I \in \mathcal{B}^d(L)$, $\mu(I) \lesssim_\varepsilon L^{d\beta - \varepsilon}$. We can then understand the behaviour of $X$ at the scale $L$ by looking at $\mu$'s behaviour when restricted to cubes at the particular scale $L$.
 
-To construct a measure $\mu$ naturally reflecting the dimension of $X$, we rely on a variant of the mass distribution principle. This means we take a sequence of measures $\mu_k$, supported on $X_k$, and then take a weak limit to form a measure $\mu$. We initialize this construction by setting $\mu_0$ to be the uniform measure on $X_0 = [0,1/2]^d$. We then define $\mu_{k+1}$, supported on $X_{k+1}$, by modifying the distribution of $\mu_k$. First, we throw away the mass of the $\mathcal{B}(L_k)$ cubes $I$ for which over half of the $\mathcal{B}(I,R_{k+1})$ cubes fail to contain a part of $X_{k+1}$. For the cubes $I$ for which more than half of the cubes $\mathcal{B}(I,R_{k+1})$ contain a part of $X_{k+1}$, we distribute the mass of $\mu_k(I)$ uniformly over the subcubes of $I$ in $X_{k+1}$. This gives a mass function $\mu_{k+1}$. It is easy to see from the cumulative distribution functions of the $\mu_k$ that these measures converge to a function $\mu$ such that for any $I \in \mathcal{B}(L_k)$, $\mu(I) \leq \mu_k(I)$, which is useful for passing from bounds on the discrete measures to bounds on the final measure.
+To construct a measure $\mu$ naturally reflecting the dimension of $X$, we rely on a variant of the mass distribution principle. This means we take a sequence of measures $\mu_k$, supported on $X_k$, and then take a weak limit to form a measure $\mu$. We initialize this construction by setting $\mu_0$ to be the uniform measure on $X_0 = [0,1/2]^d$. We then define $\mu_{k+1}$, supported on $X_{k+1}$, by modifying the distribution of $\mu_k$. First, we throw away the mass of the $\mathcal{B}^d(L_k)$ cubes $I$ for which half of the elements of $\mathcal{B}^d(I,R_{k+1})$ fail to contain a part of $X_{k+1}$. We note that this happens for so few cubes that little mass is lost even over compounded values of $k$. For the cubes $I$ with more than half of the cubes $\mathcal{B}^d(I,R_{k+1})$ containing a part of $X_{k+1}$, we distribute the mass of $\mu_k(I)$ uniformly over the subcubes of $I$ in $X_{k+1}$. This gives a mass function $\mu_{k+1}$. It is easy to see from the cumulative distribution functions of the $\mu_k$ that these measures converge to a function $\mu$ such that for any $I \in \mathcal{B}^d(L_k)$, $\mu(I) \leq \mu_k(I)$, which is useful for passing from bounds on the discrete measures to bounds on the final measure.
 
 \begin{lemma}
-	If $I \in \mathcal{B}(L_k)$, then
+	If $I \in \mathcal{B}^d(L_k)$, then
 	%
 	\[ \mu(I) \leq \mu_k(I) \leq 2^k \left[ \frac{R_k R_{k-1} \dots R_1}{L_{k-1} \dots L_1} \right]^d. \]
 \end{lemma}
 \begin{proof}
-	Consider $I \in \mathcal{B}(L_{k+1})$, $J \in \mathcal{B}(L_k)$. If $\mu_k(I) > 0$, this means that $J$ contains a $\mathcal{B}(L_k)$ cube in at least half of the $\mathcal{B}(R_N)$ cubes it contains. Thus the mass of $J$ distributes itself evenly over at least $2^{-1} (L_{k-1}/R_k)^d$ cubes, which gives that $\mu_k(I) \leq 2(R_k/L_k)^d \mu_{k-1}(J)$. But then expanding this recursive inequality, using the fact that $\mu_0$ has total mass one as a base case, we obtain exactly the result we need.
+	Consider $I \in \mathcal{B}^d(L_{k+1})$, $J \in \mathcal{B}^d(L_k)$. If $\mu_k(I) > 0$, this means that $J$ contains an element of $\mathcal{B}^d(L_k)$ in at least half of the cubes in $\mathcal{B}^d(R_k,J)$. Thus the mass of $J$ distributes itself evenly over at least $2^{-1} (L_{k-1}/R_k)^d$ cubes, which gives that $\mu_k(I) \leq 2(R_k/L_{k-1})^d \mu_{k-1}(J)$. But then expanding this recursive inequality, using the fact that $\mu_0$ has total mass one as a base case, we obtain exactly the result we need.
 \end{proof}
 
 \begin{corollary}
 	The measure $\mu$ is positive.
 \end{corollary}
 \begin{proof}
-	To prove this result, it suffices to show that the total mass of $\mu_k$ is bounded below, independently of $k$. At each stage $k$, $X_k$ consists of at most
+	To prove this result, it suffices to show that the total mass of $\mu_k$ is bounded below, independently of $k$. At each stage $k$,
 	%
-	\[ \left[ \frac{L_{k-1} \dots L_1}{R_k \dots R_1} \right]^d. \]
+	\[ \# (\mathcal{B}^d(X_k,L_k)) \leq \left[ \frac{L_{k-1} \dots L_1}{R_k \dots R_1} \right]^d. \]
 	%
-	$\mathcal{B}(L_k)$ cubes. Since only a fraction $1/2^{2k+2}$ of the $\mathcal{B}(R_k)$ cubes do not contain an interval in $X_{k+1}$, it is only for at most a fraction $1/2^{2k+1}$ of the $\mathcal{B}(L_k)$ cubes that $X_{k+1}$ fails to contain a $\mathcal{B}(L_{k+1})$ cube from more than half of the $\mathcal{B}(R_{k+1})$ cubes. But this means that we discard a total mass of at most
+	Since only a fraction $1/2^{2k+2}$ of the cubes in $\mathcal{B}^d(X_k,R_k)$ do not contain an cube in $X_{k+1}$, it is only for at most a fraction $1/2^{2k+1}$ of the cubes in $\mathcal{B}^d(X_k,R_k)$ cubes that $X_{k+1}$ fails to equidistribute over more than half of the cubes. But this means that we discard a total mass of at most
 	%
 	\[ \left( \frac{1}{2^{2k + 1}} \left[ \frac{L_{k-1} \dots L_1}{R_k \dots R_1} \right]^d \right) \left( 2^{k} \left[ \frac{R_k \dots R_1}{L_{k-1} \dots L_1} \right]^d \right) \leq 1/2^{k+1}. \]
 	%
@@ -362,7 +512,7 @@ To construct a measure $\mu$ naturally reflecting the dimension of $X$, we rely 
 Ignoring all parameters in the inequality for $I$ which depend on indices $< k$, we `conclude' that $\mu_k(I) \lesssim R_k^d \lesssim L_k^{\beta_k d}$. The fact that $L_{k+1} \leq L_k^{k^2}$ has such a rapid decay essentially enables us to ignore quantities depending on previous indices, and obtain a true inequality.
 
 \begin{corollary}
-	For all $I \in \mathcal{B}(L_k)$, $\mu(I) \leq \mu_k(I) \lesssim L_k^{d \beta_k - k^{-1/2}}$.
+	For all $I \in \mathcal{B}^d(L_k)$, $\mu(I) \leq \mu_k(I) \lesssim L_k^{d \beta_k - k^{-1/2}}$.
 \end{corollary}
 \begin{proof}
 	Given $\varepsilon$, we find
@@ -390,23 +540,23 @@ Ignoring all parameters in the inequality for $I$ which depend on indices $< k$,
 %	Now $R_k^d L_k^{-d\beta_k'} \leq (2L_k^{\beta_k})^d L_k^{-d\beta_k'} \leq 2^d L_k^{d(\beta_k - \beta_k')}$, which tends to zero as $L_k \to \infty$, while the remaining parameters are fixed. Thus if $L_k$ is sufficiently small, we can bound the constant in the square brackets by $1$, which is sufficient to obtain the inequality.
 %\end{proof}
 
-This is close to the cleanest expression of the $d \beta$ dimensional behaviour at discrete scales. To get a general inequality of this form, we use the fact that our construction distributes uniformly across all intervals.
+This is close to the cleanest expression of the $d \beta$ dimensional behaviour at discrete scales. To get a general inequality of this form, we use the fact that our construction distributes uniformly across all cubes.
 
 \begin{theorem}
-	If $L \leq L_k$ is dyadic and $I \in \mathcal{B}(L)$, then $\mu(I) \lesssim L^{d\beta_k - k^{-1/2}}$.
+	If $L \leq L_k$ is dyadic and $I \in \mathcal{B}^d(L)$, then $\mu(I) \lesssim L^{d\beta_k - k^{-1/2}}$.
 \end{theorem}
 \begin{proof}
 	We break our analysis into three cases, depending on the size of $L$ in proportion to $L_k$ and $R_k$:
 	%
 	\begin{itemize}
-		\item If $R_{k+1} \leq L \leq L_k$, we can cover $I$ by $(L/R_{k+1})^d$ cubes in $\mathcal{B}(R_{k+1})$. For each of these cubes, because the mass is uniformly distributed over $R_{k+1}$ cubes, we know the mass is bounded by at most $2(R_{k+1}/L_{k+1})^d$ times the mass of a $\mathcal{B}(L_k)$ cube. Thus
+		\item If $R_{k+1} \leq L \leq L_k$, we can cover $I$ by $(L/R_{k+1})^d$ cubes in $\mathcal{B}^d(R_{k+1})$. For each of these cubes, because the mass is uniformly distributed over $R_{k+1}$ cubes, we know the mass is bounded by at most $2(R_{k+1}/L_{k+1})^d$ times the mass of a $\mathcal{B}^d(L_k)$ cube. Thus
 		%
 		\begin{align*}
 			\mu(I) &\lesssim [(L/R_{k+1})^d] [2(R_{k+1}/L_k)^d] [L_k^{d \beta_k - k^{-1/2}}]\\
 			&\leq 2 L^d / L_k^{d + k^{-1/2} - d \beta_k} \leq 2 L^{d \beta_k - k^{-1/2}}.
 		\end{align*}
 
-		\item If $L_{k+1} \leq L \leq R_{k+1}$, we can cover $I$ by a single cube in $\mathcal{B}(R_{k+1})$. Each cube in $\mathcal{B}(R_{k+1},d)$ contains at most one cube in $\mathcal{B}(L_{k+1},d)$ which is also contained in $X_{k+1}$, so
+		\item If $L_{k+1} \leq L \leq R_{k+1}$, we can cover $I$ by a single cube in $\mathcal{B}^d(R_{k+1})$. Each cube in $\mathcal{B}^d(R_{k+1},d)$ contains at most one cube in $\mathcal{B}^d(L_{k+1},d)$ which is also contained in $X_{k+1}$, so
 		%
 		\[ \mu(I) \lesssim L_{k+1}^{d\beta_{k+1} - (k+1)^{-1/2}} \leq L^{d \beta_k - k^{-1/2}}. \]
 
@@ -418,7 +568,7 @@ This is close to the cleanest expression of the $d \beta$ dimensional behaviour 
 	The three bulletpoints address all cases considered in the theorem.
 \end{proof}
 
-To use Frostman's lemma, we need the result $\mu(I) \lesssim L^{d \beta_k - k^{-1/2}}$ for an {\it arbitrary} interval, not just one with $L \leq L_k$. But this is no trouble; it is only the behavior of the measure on arbitrarily small scales that matters. This is because if $L \geq L_k$, then $\mu(I)/L^{d \beta_k - k^{-1/2}} \leq 1/L_k^{d \beta_k - k^{-1/2}} \lesssim_k 1$, so $\mu(I) \lesssim_k L^{d \beta_k - k^{-1/2}}$ holds automatically for all sufficiently large intervals. Thus we have shown that $\dim_{\mathbf{H}}(X) \geq d \beta_k - k^{-1/2}$, and letting $k \to \infty$ gives $\dim_{\mathbf{H}}(X) \geq d \beta$. It is also easy to see $X$ has {\it precisely} this dimension.
+To use Frostman's lemma, we need the result $\mu(I) \lesssim L^{d \beta_k - k^{-1/2}}$ for an {\it arbitrary} cube, not just one with $L \leq L_k$. But this is no trouble; it is only the behavior of the measure on arbitrarily small scales that matters. This is because if $L \geq L_k$, then $\mu(I)/L^{d \beta_k - k^{-1/2}} \leq 1/L_k^{d \beta_k - k^{-1/2}} \lesssim_k 1$, so $\mu(I) \lesssim_k L^{d \beta_k - k^{-1/2}}$ holds automatically for all sufficiently large cubes. Thus we have shown that $\dim_{\mathbf{H}}(X) \geq d \beta_k - k^{-1/2}$, and letting $k \to \infty$ gives $\dim_{\mathbf{H}}(X) \geq d \beta$. It is also easy to see $X$ has {\it precisely} this dimension.
 
 \begin{theorem}
 	$\dim_{\mathbf{H}}(X) = (dn - \alpha)/(n-1)$.
@@ -490,12 +640,14 @@ We have ideas on fusing our result with inspiration from the result of \cite{Mat
 \end{example}
 
 \begin{example}
-	Suppose we have a fractal set $Y$, together with an orthogonal projection $\pi$ such that $\pi(Y) = \mathbf{R}^d$. Then we can form the set
+	However, our method is able to do something much more interesting. Suppose we have a set $Y \subset \mathbf{R}^{d + k}$, together with an orthogonal projection $\pi$ such that $\pi(Y) = \mathbf{R}^d$. Form the set
 	%
-	\[ \{ (x_0,x_1,x_2): \text{There is}\ x'_0,x'_1,x'_2 \in Y\ \text{s.t.}\ \pi(x'_i) = x_i, d(x',y') = d(x',z') \} \]
+	\[ Z = \left\{ (x_1,x_2,x_3) \in (\mathbf{R}^d)^3 : \begin{array}{l} \text{there is}\ y_1,y_2,y_3 \in Y\ \text{such that} \\
+	\pi(y_i) = x_i, d(y_1,y_2) = d(y_1,y_3) \end{array} \right\} \]
 	%
-	Shall we work on the Koch Snowflake for explicitness?
-	% TODO: USE MEASURE APPROACH, OR LOOK AT NESTED STRUCTURE OF PI/4 PROJECTION FOR CANTOR DUST, WHICH IS A BIJECTION. IS THE INVERSE PROJECTION BACK ONTO THE CANTOR DUST LIPSCHITZ.
+	Bounding the fractal dimension of $Z$ by $\alpha$ allows us to find $X$ with $X^3$ disjoint from $Z$, with appropriate Hausdorff dimension $\beta = (3d - \alpha)/2$. Then $\pi^{-1}(X) \cap Y$ is a set with Hausdorff dimension at least $\beta$, not containing any isoceles triangles.
+
+	Given $y_2$ and $y_3$, the points $y_1$ giving an isoceles triangles are precisely those points lying on the line $L_{y_2 y_3}$ perpendicular to the line between $y_2$ and $y_3$, passing through the point halfway between $y_2$ and $y_3$. The dimension of $Z$ can be bounded by proving that for any $y_2, y_3 \in Y$, $Y \cap L_{y_2 y_3}$ is a small set. 
 \end{example}
 
 \section{Relation to Literature, and Future Work}
@@ -507,7 +659,7 @@ The technical skeleton of our construction are heavily modelled after $\cite{Mal
 
 Our result is a direct generalization of the main result of \cite{MalabikaRob}, which says that if $Z \subset (\mathbf{R}^d)^n$ is a smooth surface of dimension $nd - d$, then we can find $X$ with dimension $(n-1)^{-1}$ solving the fractal avoidance problem. Of course, such a $Z$ has Minkowski dimension $nd - d$, and our result achieves the same dimension for $X$. In response to $\cite{MalabikaRob}$, our result says that the only really necessary feature of a smooth hypersurface to the avoidance problem, aside from other geometric features, is its dimension. Not only is our result more flexible, enabling the surface $Z$ to have non smooth points, but we can also take advantage of the fact that the surface might have dimension different from $nd - d$. Better yet, we can `thicken' or `thin' $Z$ by slightly increasing or decrease the Minkowski dimension, while stably affecting the Hausdorff dimension of the solution $X$ we construct.
 
-The technique leading to this generalization can be compared to a phenomenon that has recently been noticed in the discrete setting, i.e. \cite{BaloghMorrisSamotij}. There, certain combinatorial problems can be rephrased as abstract problems on hypergraphs, and by doing this one can often generalize the solutions of these problems into analogues on `sparse versions' of these hypergraphs. One can see our result as a continuous analogue to this phenomenon, where sparsity is represented by the dimension of the set $Z$ we are trying to avoid. One can even view Lemma 1 as a solution to a problem about independent sets in hypergraphs. In particular, we can form a hypergraph by taking the intervals $\mathcal{B}(F,S)$ as vertices, and adding an edge $(I_1, \dots, I_n)$ between $n$ distinct cubes if $I_1 \times \dots \times I_n$ intersects $W$. Then the union of an independent set of cubes in this graph is precisely a set $F$ with $F^n$ disjoint except on the discretization of the diagonal. And so the goal of Lemma 1 is essentially to find a `uniformly chosen' independent set in this graph. Thus we even applied the discrete phenomenon at many scales to obtain the continuous version of the phenomenon.
+The technique leading to this generalization can be compared to a phenomenon that has recently been noticed in the discrete setting, i.e. \cite{BaloghMorrisSamotij}. There, certain combinatorial problems can be rephrased as abstract problems on hypergraphs, and by doing this one can often generalize the solutions of these problems into analogues on `sparse versions' of these hypergraphs. One can see our result as a continuous analogue to this phenomenon, where sparsity is represented by the dimension of the set $Z$ we are trying to avoid. One can even view Lemma 1 as a solution to a problem about independent sets in hypergraphs. In particular, we can form a hypergraph by taking the cubes $\mathcal{B}^d(F,S)$ as vertices, and adding an edge $(I_1, \dots, I_n)$ between $n$ distinct cubes if $I_1 \times \dots \times I_n$ intersects $W$. Then the union of an independent set of cubes in this graph is precisely a set $F$ with $F^n$ disjoint except on the discretization of the diagonal. And so the goal of Lemma 1 is essentially to find a `uniformly chosen' independent set in this graph. Thus we even applied the discrete phenomenon at many scales to obtain the continuous version of the phenomenon.
 
 A useful technique used in \cite{MalabikaRob}, and its predecessor \cite{KeletiDimOneSet}, is a Cantor set construction `with memory'; a queue in their construction algorithm allows storage of particular configurations, to be retrieved and avoided at a much, much later step of the building process. The fact that our result is more general, yet we can discard the queueing method from our proof, is an interesting anomoly. Adding memory to the queueing set is certainly an important trick to remember when thinking of new constructions for fractal avoiding sets. It enables one to restrict the requirements of an analogy to Lemma 1 from carving out an avoiding set $F$ from a single set $E$, to carving $F_1, \dots, F_n$ out of disjoint sets $E_1, \dots, E_n$, such that $F_1 \times \dots \times F_n$ avoids $W$. Nonetheless, it makes the construction much more complicated to describe, which makes understanding dimension bounds slightly more complicated, because its hard to `grasp' precisely what configuration we are avoiding at each step of the construction. The fact that our algorithm is more general than \cite{MalabikaRob}, yet we can discard the queueing method, is an interesting anomoly. We have ideas on how to exploit the fact that we do not use queueing to generalize our theorem to much more wide family of `dimension $\alpha$' sets $Z$, which we plan to publish in a later result.
 
