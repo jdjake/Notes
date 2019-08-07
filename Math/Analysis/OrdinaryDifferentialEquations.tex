@@ -1,4 +1,4 @@
-\input{../style.tex}
+\input{../../style.tex}
 
 \title{Ordinary Differential Equations}
 \author{Jacob Denson}
@@ -12,6 +12,182 @@
 \tableofcontents
 
 \pagenumbering{arabic}
+
+\chapter{Introduction}
+
+Here we consider \emph{ordinary differential equations}, i.e. we try and find solutions to equations involving an arbitrary one-variable function $f(x)$, it's derivatives, and functions of $x$, i.e. given some function $F$, we try and find a function $f$ such that
+%
+\[ F(x,f(x), \dots, f^{(n)}(x)) = 0. \]
+%
+It is important that $n$ here is a finite quantity. We say the equation has \emph{order} $n+1$. Furthermore, it is also important that the function $F$ cannot access the properties of the function $f$ globally, only pointwise.
+
+\begin{example}
+    An example of an ordinary differential equation is
+    %
+    \[ \frac{dy}{dx} + y = 0. \]
+    %
+    Here the function involved is $F(x,y,z) = y + z$, and the equation has order one.
+\end{example}
+
+\begin{example}
+    The equation $(f \circ f)'(x) + f(x) = 0$ is \emph{not} a differential equation, since $(f \circ f)'(x)$ cannot be expressed as a function of $f(x)$ and $f'(x)$.
+\end{example}
+
+An interesting amount of geometry is going on here. For simplicity, consider the $n$'th order differential equation
+%
+\[ f^{(n)}(x) = G(x,f(x), \dots, f^{(n-1)}(x)) \]
+%
+Then a solution $f: I \to \mathbf{R}$ to an $n+1$ order differential equation as a \emph{curve} in the \emph{phase space} $\mathbf{R}^n$, i.e. a map $y: I \to \mathbf{R}^n$ satisfying the system of first order differential equations
+%
+\begin{align*}
+    y_0' &= 1\\
+    y_1' &= y_2\\
+        & \vdots\\
+    y_{n-1}' &= y_n\\
+    y_n' &= F(y_0, \dots, y_{n-1})\\
+\end{align*}
+%
+The connection is obvious by setting $y_0(x) = x$, $y_1(x) = f(x)$, $y_2(x) = f'(x)$, and so on. Thus, if we define a vector field
+%
+\[ X_{y} = (1,y_2,\dots,y_n,F(y_0, \dots, y_{n-1})), \]
+%
+then a solution to a differential equation can be viewed as a curve in phase space whose velocity vector agrees with $X$ at all points, i.e. $y' = X_y$. Such a curve is known as a integral curve.
+
+\begin{example}
+    Consider the vector field in $\mathbf{R}^2$ given by $X_{(x,y)} = (y,-x)$. Then the curve $c(t) = (\cos(t),\sin(t))$ is an integral curve for this vector field, which corresponds to the differential equation $f'' = -f$.
+\end{example}
+
+Another way of geometrically simplifying the situation is, rather than a vector field, to consider a collection of lines, i.e. a map $\Delta$ such that for each $x$, $\Delta_x \in \mathbf{P}(T\mathbf{R}^n_x)$ is a line in tangent space passing through $x$. The goal here is to find a one dimensional manifold $M$ such that $TM_x = \Delta_x$ for each $x \in M$. The manifold $M$ here is known as an \emph{integral curve}, and the function $\Delta$ is known as a (one dimensional) \emph{distribution}.
+
+\begin{example}
+    Consider the distribution $\Delta$ in $\mathbf{R}^2$ given by the two equations
+    %
+    \[ (xy^2 + 2xy - 1) dy + y^2 dx. \]
+    %
+    That is, at each point $p = (x,y)$, $\Delta_p$ is the line
+    %
+    \[ \{ (x + x_0,y + y_0): (xy^2 + 2xy - 1) y_0 + y^2 x_0 = 0 \}. \]
+    %
+    and we want to find a curve whose tangent at each point passes through this line. One such example is the curve $M$ given by the equation
+    %
+    \[ xy^2 - e^{-y} - 1 = 0. \]
+    %
+    By differentiating, we find that $TM_p$ is given by the set of solutions to the equation
+    %
+    \[ y^2 dx + (2xy + e^{-y}) dy + y^2 dx = 0. \]
+    %
+    This equation is not equal to the other equation at all points, but it is equal when $xy^2 - e^{-y} - 1$, so $M$ is an integral curve. In particular, a distribution in $\mathbf{R}^n$ can be given by $n-1$ linearly independant equations in $dx_1, \dots, dx_n$.
+\end{example}
+
+\begin{example}
+    Let $X: \mathbf{R}^n \to \mathbf{R}^n$ be a vector field. Then we can define a distribution by letting $\Delta_x$ be the line lying along the vector $X_x$. If $M$ is an integral curve locally parameterized by some function $y: I \to \mathbf{R}^n$, then $y'(t)$ is a constant multiple of $X_{y(t)}$ for each time $t$. Thus there is a function $A: I \to \mathbf{R}$, never vanishing, such that $y'(t) = A(t) X_{y(t)}$. If we can write $t = f(s)$, such that $f'(s) = A(s(t))$, then $y \circ f$ is an integral curve to $X$. Thus integral curves to distributions, once appropriately parameterized are equivalent to vector fields.
+\end{example}
+
+To summarize, we have three problems:
+%
+\begin{itemize}
+    \item Find solutions to differential equations.
+    \item Find curves lying tangent to vector fields.
+    \item Find integral curves to distributions
+\end{itemize}
+%
+All of these problems are (roughly) equivalent, and the goal of differential equations is to find techniques for studying them.
+
+In general, if a vector field $X: \mathbf{R}^n \to \mathbf{R}^n$ is \emph{locally Lipschitz}, then there is a unique integral curve passing through any point. And moreover, we can find a continuous function $\alpha: \mathbf{R}^n \times \mathbf{R}$ such that for each $x_0$, the function $y(t) = \alpha(x_0,t)$ is a curve with $y'(t) = X_{y(t)}$. Such a function is known as a \emph{flow}, and gives a complete description of the integral curves of the vector field. More generally, if $X$ is $C^k$, then $\alpha$ will also be $C^k$. Theoretically, $\alpha$ exists, but one still requires techniques to calculate $\alpha$ as an explicit function.   
+
+
+\chapter{Basic Techniques}
+
+\section{Reduction to Integration}
+
+Calculus already teaches us some basic techniques for solving differential equations. The most basic differential equation $y' = f(x)$ can be solved as
+%
+\[ y(x) = A + \int_0^x f(t)\; dt,  \]
+%
+where $A$ is an arbitrary constant. If we know that $y(x_0) = y_0$, for some values $x_0$ and $y_0$, then we can also write
+%
+\[ y(x) = y_0 + \int_{x_0}^x f(t)\; dt. \]
+%
+This is often how a differential equation is solved; given certain \emph{initial conditions}, which is this case are $(x_0,y_0)$, i.e values of $y$ at a particular timepoint, one can uniquely solve the differential equation.
+
+\section{Separable Equations}
+
+Slightly more generally, integration enables us to solve a \emph{separable equation}
+%
+\[ f(x) dx + g(y) dy = 0. \]
+%
+We note that if $F'(x) = f(x)$ and $G'(y) = g(y)$, then $d(F + G) = f(x) dx + g(y) dy$, and so the family of curves defined by the equation $F(x) + G(y) = C$ give a family of integral curves to the distribution.
+
+\begin{example}
+Next, we consider a homogenous equation
+%
+\[ P(x,y)\; dx + Q(x,y)\; dy = 0 \]
+%
+where $P$ and $Q$ are each homogenous functions of order $n$, i.e. for each $x$ and $y$,
+%
+\[ P(tx,ty) = t^n P(x,y)\quad \text{and}\quad Q(tx,ty) = t^n Q(x,y). \]
+%
+To exploit this homogeneity, we switch variables by setting $y = ux$, provided we are working where $x \neq 0$. Then $dy = x du + u dx$, and
+%
+\begin{align*}
+    P(x,y)\; dx + Q(x,y)\; dy &= x^n P(1,u)\; dx + x^n Q(1,u)(u\; dx + x\; du)\\
+    &= x^n[(P(1,u) + u Q(1,u))\; dx + x Q(u,1)\; du].
+\end{align*}
+%
+Thus the original equation is equivalent, when $x \neq 0$, to the equation
+%
+\[ \frac{dx}{x} = \frac{Q(1,u)}{P(1,u) + u Q(1,u)}\; du, \]
+%
+and this equation is separable.
+\end{example}
+
+\begin{example}
+    Consider the differential equation
+    %
+    \[ (a_1x + b_1y + c_1)\; dx + (a_2 x + b_2 y + c_2)\; dy = 0. \]
+    %
+    where the coefficients $(a_1, b_1)$ and $(a_2, b_2)$ are not constant multiples of one another. Then the lines corresponding to these coefficients have a unique intersection $(x_0,y_0)$, i.e. such that $a_1x_0 + b_1y_0 + c_1 = a_2x_0 + b_2y_0 + c_2 = 0$. If we set $x = x_0 + h$, $y = y_0 + k$, then the equation becomes
+    %
+    \[ (a_1h + b_1k)\; dh + (a_2 h + b_2 k)\; dk = 0 \]
+    %
+    This is a homogenous differential equation, and therefore reduces to the last example. Alternatively, we can let $u = a_1x + b_1y + c_1$, and $v = a_2x + b_2y + c_2$, so that $du = a_1dx + b_1dy$ and $dv = a_2dx + b_2dy$. These two equations can then be solved for $dx$ and $dy$, and substitution gives another homogenous differential equation.
+\end{example}
+
+\begin{example}
+    If we consider the `parallel case' of the previous problem, i.e.
+    %
+    \[ (a_1 x + b_1y + c_1)\; dx + A(a_1x + b_1y + c_2)\; dy \]
+    %
+    Then substituting $u = a_1x + b_1y$ gives a separable equation in $x$ and $u$, or in $y$ and $u$.
+\end{example}
+
+\section{Exact Differential Equation}
+
+More general than the separable case is the case where we have
+%
+\[ \omega = f(x,y) dx + g(x,y) dy = 0 \]
+%
+where $d\omega = 0$. This occurs if
+%
+\[ \frac{\partial g}{\partial x} - \frac{\partial f}{\partial y} = 0. \]
+%
+In this case, there exists a function $F(x,y)$ such that
+%
+\[ \frac{\partial F}{\partial x} = f\quad\text{and}\quad \frac{\partial F}{\partial y} = g. \]
+%
+It then follows that $F(x,y) = 0$ gives a family of integral curves for the differential equation.
+
+\section{Integrating Factors}
+
+There is a trick which can be used to reduce non-exact differential equation to exact differential equations. Given a differential form $\omega$, there may exist a function $f$ such that $f \omega$ is exact, and therefore integral curves can be found.
+
+\begin{example}
+    The equation $(y^2 + y)dx - x dy = 0$ is not exact. Nonetheless, if we multiply by $1/y^2$, we obtain the equation $(1 + 1/y)dx - (x/y^2)dy = 0$, which is exact. In fact, the equation is $d(x/y + x) = 0$, so the integral curves are given by $x/y + x = C$.
+\end{example}
+
+Theoretically, if one can find
+
+
 
 \chapter{Vector Fields on $\mathbf{RP}^n$}
 
@@ -60,6 +236,59 @@ Sometimes the geometry of projective space provides an enlightening viewpoint on
     \end{align*}
     %
     This function can be extended to a smooth vector field on the whole of $\mathbf{RP}^2$ by defining $v(x,0) = (1 + \alpha x^2,0)$.
+\end{example}
+
+\chapter{Linear Differential Equations}
+
+A linear differential equation is one of the form $Lf = 0$, where
+%
+\[ (Lf)(x) = a_n(x) (D^n f)(x) + \dots + a_0(x) f(x) = 0, \]
+%
+where the $a_0, \dots, a_n$ are functions, and $D$ is the differentiation operator, where we assume $a_n(x) \neq 0$ for all $x$. We note that if $Lf = 0$ and $Lg = 0$, then $L(af + bg) = 0$, for any constants $a$ and $b$. Thus the space of solutions to the differential equation spans a subspace of the space of all functions. For any $x_0$, the values of $D^{n-1}f(x_0), \dots, f(x_0)$ uniquely determine the function $f$ satisfying the differential equation. In particular, this means that the map $f \mapsto (f(x_0), \dots, D^{n-1}f(x_0))$ is an isomorphism between the solution set of functions and $\mathbf{R}^n$, so the solution set is $n$ dimensional.
+
+There are some general tricks to determine if a given set of functions $\{ f_1, \dots, f_n \}$ satisfying an $n$th order linear differential equation are independant. One such trick is to consider the Wronskian determinant
+%
+\[ W(f_1, \dots, f_n)(x) = \det \begin{pmatrix} f_1(x) & \dots & f_n(x) \\ f_1'(x) & \dots & f_n'(x) \\ \vdots & \ddots & \vdots \\ f_1^{(n-1)}(x) & \dots & f_n^{(n-1)}(x) \end{pmatrix} \]
+%
+If there exists a point $x_0$ such that $W(f_1, \dots, f_n)(x_0) \neq 0$, then the vectors in the matrix span the set of all initial parameters, and therefore $\{ f_1, \dots, f_n \}$ is a basis. In particular, this also means $W(f_1, \dots, f_n)(x_0) \neq 0$ everywhere. Conversely, if the functions do not form a basis, then $W(f_1, \dots, f_n) = 0$.
+
+Nonhomogenous equations can be viewed by very similar methods. Consider a differential equation of the form $Lf = g$, for some function $g$. If we can find a \emph{single} function $f_0$ such that $Lf_0 = g$, then any other solution is given by $f_0 + b$, where $Lb = 0$. Thus we need only find a single non-homogenous solution, and then solve the homogenous form of the equation.
+
+\section{Homogenous Linear Differential Equations with Constant Coefficients}
+
+A homogenous differential equation is one of the form
+%
+\[ a_n D^nf + \dots + a_0 f = 0, \]
+%
+where $D$ is the differential operator, and $a_0, \dots, a_n$ are constants. These are perhaps the simplest general class of differential equations to solve. The first idea is to see a correspondence between these operators and polynomials. We note that if $L$ and $S$ are two linear differential operators with constant coefficients, then these operators actually commute, i.e. $L \circ S = S \circ L$. Since these operators also form an algebra under composition, and have as a basis $\{ 1, D, D^2, \dots \}$, the space of linear differential operators with constant coefficients is actually isomorphic to $\mathbf{C}[D]$.
+
+The advantage of this result is that we can apply the fundamental theorem of algebra. Thus we can write any homogenous differential equation as
+%
+\[ L = (D - \alpha_1)^{m_1} \dots (D - \alpha_n)^{m_n} \]
+%
+where $\alpha_1, \dots, \alpha_n \in \mathbf{C}$. Now we have to do some calculation. For each $k$, the solution space to $(D - \alpha_k)^{m_k} f = 0$ has dimension $m_k$, and is given by $\{ e^{\alpha_k x}, \dots, x^{m_k - 1} e^{\alpha_k x} \}$. Furthermore, the solution spaces to each $(D - \alpha_k)^{m_k}$ are disjoint to one another. Thus the solution space to $L$ breaks down into the direct sum of the solution spaces $(D - \alpha_k)^{m_k}$. And so we can solve each of the individual differential equations, and then work our way back up.
+
+\begin{remark}
+    If we are working over the real numbers, we cannot completely break polynomials into linear factors, instead having to deal with factors of the form $((D - \alpha)^2 + \beta^2)^m$. This solution space is spanned by the real vector space
+    %
+    \[ \{ e^{\alpha x} \cos(\beta x), e^{\alpha x} \sin(\beta x), \dots, x^{m-1} e^{\alpha x} \cos(\beta x), x^{m-1} e^{\alpha x} \sin(\beta x) \}. \]
+    %
+    and so we obtain sines and cosines in our decomposition as well as exponentials. Of course, the two representations of the solution space are connected by Euler's formula $e^{\beta ix} = \cos(\beta x) + \sin(\beta x)$.
+\end{remark}
+
+
+\section{The Method of Annihilation}
+
+It is difficult to find explicit solutions to non-homogenous differential equations with constant coefficients. However, when the `constant' term of the differential equation is also given as a solution to a differential equation, the method of annihilation enables one to obtain an explicit solution.
+
+Let $L_0$ be a linear differential operator with constant coefficients, and suppose we wish to solve the equation $L_0y = f$, for some function $f$, and suppose in addition that there exists a differential operator $L_1$ with constant coefficients such that $L_1f = 0$. Then $L_1(L_0 y) = L_1(f) = 0$, so $y$ is a solution to the homogenous equation $(L_1 \circ L_0)(y) = 0$, with constant coefficients. One can obtain the complete span of solutions to this equation, and then calculate coefficients to obtain a particular solution to $L_0y = 0$.
+
+\begin{example}
+    Consider the differential equation $L_0y = e^{5x}$, where $L_0 = D^2 + 2D + 1 = (D + 1)^2$. We note that if $f(x) = e^{5x}$, then $L_1 f = 0$ where $L_1 = D - 5$. Thus $L_0L_1y = 0$, and $L_0L_1 = (D - 5)(D+1)^2$. Thus there must be constants $A$, $B$, and $C$ such that
+    %
+    \[ y = A e^{5x} + B e^{-x} + C x e^{-x}. \]
+    %
+    Without loss of generality, we can set $B = C = 0$, since $L_0(e^{-x}) = L_0(xe^{-x}) = 0$. Since $L_0(e^{5x}) = 36 e^{5x}$, we can set $A = 1/36$. Thus a general solution to the differential equation is given by $y = e^{5x}/36 + Be^{-x} + Cxe^{-x}$.
 \end{example}
 
 \begin{thebibliography}{9}

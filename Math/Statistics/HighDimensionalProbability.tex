@@ -948,12 +948,38 @@ Later on, we discuss suprema of random processes. We can use symmetrization in t
 \begin{lemma}
     Let $X_1(t), \dots, X_n(t)$ be independant, mean zero random processes indexed by points $t \in T$. Let $\varepsilon_1, \dots, \varepsilon_n$ be independant, mean zero, symmetric Bernoulli random processes. Then
     %
-    \[ 0.5 \cdot \EE \left( \sup_{t \in T} \sum \varepsilon_i X_i(t) \right) \leq \EE \left( \sup \sum X_i(t) \right) \leq 2 \EE \left( \sum \varepsilon_i X_i(t) \right) \]
+    \[ 0.5 \cdot \EE \left( \sup_{t \in T} \sum \varepsilon_i X_i(t) \right) \leq \EE \left( \sup_{t \in T} \sum X_i(t) \right) \leq 2 \EE \left( \sup_{t \in T} \sum \varepsilon_i X_i(t) \right). \]
 \end{lemma}
 \begin{proof}
 	The maximum of a set of numbers is a convex function, so if $T$ is finite, this claim is already proved. And if we interpret the expected supremum as the supremum of the expected supremum of finite subsets of indices, this inequality remains true under taking a limit.
 \end{proof}
 
+We can also remove the mean zero assumption in some circumstances.
+
+\begin{theorem}
+	Let $X_1, \dots, X_n$ be independant, mean zero random vectors in a normed space. Then
+	%
+	\[ \EE \left\| \sum X_i - \EE X_i \right\| \leq 4 \EE \left\| \sum \varepsilon_i X_i \right\|, \]
+	%
+	where $\{ \varepsilon_i \}$ are i.i.d and symmetric Bernoulli.
+\end{theorem}
+\begin{proof}
+	Since $\sum X_i' - \EE X_i'$ has mean zero, where $\{ X_i \}$ and $\{ X_i' \}$ are independant and identically distributed,
+	%
+	\begin{align*}
+		\EE \left\| \sum X_i - \EE X_i \right\| &\leq \EE \left\| (\sum X_i - \EE X_i) - (\sum X_i' - \EE X_i') \right\|\\
+		&= \EE \left\| \sum X_i - X_i' \right\|
+	\end{align*}
+	%
+	We can now apply the standard symmetrization lemma to $X_i - X_i'$ to yield
+	%
+	\[ \EE \left\| \sum X_i - X_i' \right\| \leq 2 \EE \left\| \sum \varepsilon_i X_i - \varepsilon_i X_i' \right\| \leq 4 \EE \left\| \sum \varepsilon_i X_i \right\|. \]
+	%
+	TODO: Can we improve the 4 to a 2?
+\end{proof}
+
+
+\section{Matrix Completion}
 
 
 
@@ -969,12 +995,34 @@ There is one more useful inequality we discuss in this chapter, known as \emph{ 
     %
     \[ \EE \left\| \sum a_i \varepsilon_i x_i \right\| \leq \| a \|_\infty \left\| \sum \varepsilon_i x_i \right\|. \]
 \end{theorem}
+\begin{proof}
+	Without loss of generality, assume $\| a \|_\infty = 1$. The map $f(a) = \EE \left\| \sum a_i \varepsilon_i x_i \right\|$ is a convex function for $\RR^n$ to $\RR$. The maximum principle for convex functions tells us the maximum of $f(a)$ for all $a$ with $\| a \|_\infty \leq 1$ is attained at an extreme point of the set, i.e. at a value of $a$ with $a_i = \pm 1$ for all $i$. For this point, $a_i \varepsilon_i$ has the same distribution as $\varepsilon_i$, and so
+	%
+	\[ f(a) = \EE \left\| \sum \varepsilon_i x_i \right\| \]
+	%
+	which completes the proof.
+\end{proof}
 
 \begin{remark}
     We can also prove this identity for convex functions of the norm.
 \end{remark}
 
-As an application, we can prove a version of symmetrization for Gaussian vectors.
+We can also contract on general distributions.
+
+\begin{theorem}
+	Let $X_1,\dots, X_n$ be mean zero random vectors in a normed space, and let $a \in \RR^n$. Then
+	%
+	\[ \EE \left\| \sum a_i X_i \right\| \leq 4 \| a \|_\infty \EE \left\| \sum X_i \right\| \]
+\end{theorem}
+\begin{proof}
+	We apply symmetrization together with the last contraction principle to conclude
+	%
+	\begin{align*}
+		\EE \left\| \sum a_i X_i \right\| &\leq 2 \EE \left\| \sum a_i \varepsilon_i X_i \right\| \leq 2 \| a \|_\infty \EE \left\| \sum \varepsilon_i X_i \right\| \leq 4 \| a \|_\infty \EE \left\| X_i \right\|. \qedhere
+	\end{align*}
+\end{proof}
+
+As an application, we can prove a version of symmetrization which introduces Gaussians into a random sum, rather than symmetric Bernoulli distributions.
 
 \begin{theorem}
     Let $X_1, \dots, X_n$ be independant, mean zero random vectors in a norm space. Let $g_1, \dots, g_n \sim N(0,1)$ be independant vectors. Then
@@ -982,16 +1030,40 @@ As an application, we can prove a version of symmetrization for Gaussian vectors
     \[ \frac{1}{(\log n)^{1/2}} \EE \left\| \sum g_i X_i \right\| \lesssim \EE \left\| \sum X_i \right\| \leq 3 \EE \left\| \sum g_i X_i \right\| \]
 \end{theorem}
 \begin{proof}
-    s
+	We first perform normal symmetrization, so that
+    %
+    \[  \EE \left\| \sum X_i \right\| \leq 2 \EE \left\| \sum \varepsilon_i X_i \right\|. \]
+    %
+    But now, since $\EE |g_i| = (2/\pi)^{1/2}$, we can apply Jensen's inequality to conclude
+    %
+    \begin{align*}
+    	\EE \left\| \sum \varepsilon_i X_i \right\| &\leq (\pi/2)^{1/2} \EE_X \left\|  \EE_g \sum \varepsilon_i |g_i| X_i \right\| \\
+    	&\leq (\pi/2)^{1/2} \EE \left\| \sum \varepsilon_i |g_i| X_i \right\|\\
+    	&= (\pi/2)^{1/2} \EE \left\| \sum g_i X_i \right\|.
+    \end{align*}
+    %
+    where the last equality followed because $\varepsilon_i |g_i|$ is distributed identically to $g_i$. Putting this together with the first inequality gives the upper bound.
+
+    To prove the lower bound, we apply contraction and symmetrization to conclude
+    %
+    \begin{align*}
+    	\EE \left\| \sum g_i X_i \right\| &= \EE \left\| \sum \varepsilon_i g_i X_i \right\|\\
+    	&= \EE \| g \|_\infty \cdot \EE_\varepsilon \left\| \sum \varepsilon_i X_i \right\|\\
+    	&\leq 2 \EE \| g \|_\infty \cdot \EE_X \left\| \sum X_i \right\|\\
+    	&\lesssim 2 (\log n)^{1/2} \cdot \EE \left\| \sum X_i \right\|. \qedhere
+    \end{align*}
 \end{proof}
 
-We can also prove a version of contraction which can be used in the study of random processes.
+We can also prove a version of contraction which works for more general functions, which are {\it contraction} maps.
 
 \begin{theorem}[Talagrand's Contraction Principle]
     Let $T$ be a bounded subset of $\RR^n$, and let $\varepsilon_1, \dots, \varepsilon_n$ be independant symmetric Bernoulli random variables. Let $\phi: \RR \to \RR$ be contraction maps, i.e. Lipschitz functions with $|\phi(x - y)| \leq |x - y|$. Then
     %
     \[ \EE \left( \sup_t \left( \sum \varepsilon_i \phi_i(t_i) \right) \right) \leq \EE \left( \sup_t \sum \varepsilon_i t_i \right) \]
 \end{theorem}
+\begin{proof}
+	TODO.
+\end{proof}
 
 
 
@@ -1458,6 +1530,307 @@ There are situations where Dudley's inequality is not sharp. But we will later p
 
 Gaussian width is very important to the application of the concepts of high dimensional probability to statistics.
 
+\section{Empirical Processes}
+
+An {\it empirical process} is a type of random process whose index set consists of {\it functions}. The motivating example, given i.i.d random variables $X_1, \dots, X_n$ with distribution given by some probability measure $\mu$, to consider the functional
+%
+\[ f \mapsto \frac{1}{n} \sum_{k = 1}^n f(X_k). \]
+%
+A natural question is how close this functional is to the functional
+%
+\[ f \mapsto \int f\; d\mu. \]
+%
+Approximating this integral by random samples is known as the {\it Monte Carlo method}. The law of large numbers implies that this functional does converge {\it pointwise} for each function $f$. But quantitative estimates on the error are much more useful. We now show that these functional do converge uniformly, over the class $\mathcal{F} = \{ f: [0,1] \to \RR : \| f \|_{\text{Lip}} \leq L \}$, for some $L < \infty$.
+
+For a fixed function $f$, we can calculate that
+%
+\[ \EE \left| \frac{1}{n} \sum_{k = 1}^n f(X_k) - \EE f(X) \right| \leq  \Var \left( \frac{1}{n} \sum_{k = 1}^n f(X_k) \right)^{1/2} = O(1/\sqrt{n}). \]
+%
+The next theorem shows we can guarantee this expectation bound {\it uniformly} across an infinite family of functions. Notice that in the theorem, the supremum occurs inside the expectation, which makes the consequence that much more powerful.
+
+\begin{theorem}
+	Let $X_1, \dots, X_n$ be i.i.d random variables taking values in $[0,1]$. Then
+	%
+	\[ \EE \sup_{f \in \mathcal{F}} \left| \frac{1}{n} \sum_{k = 1}^n f(X_k) - \EE f(X) \right| \lesssim L \cdot n^{-1/2}. \]
+\end{theorem}
+\begin{proof}
+	Let $X$ denote the common distribution of the $\{ X_k \}$. For each $f \in \mathcal{F}$, set
+	%
+	\[ X_f = \frac{1}{n} \sum_{k = 1}^n f(X_k) - \EE f(X). \]
+	%
+	Without loss of generality, we assume $L = 1$. Furthermore, because $X_f$ is translation invariant, we may assume we are working with the class of all 1 Lipschitz functions $f$ with $f(0) = 0$. In particular, this implies that $\| f \|_\infty \leq 1$.
+
+	We are interested in bounding $\EE \sup_{f \in \mathcal{F}} |X_f|$. We may then apply independence and centering to conclude
+	%
+	\begin{align*}
+		\| X_f - X_g \|_{\psi_2}^2 &= n^{-2} \sum \left\| [f(X_k) - g(X_k)] - \EE (f - g)(X) \right\|_{\psi_2}^2\\
+		&\leq n^{-2} \sum \| f(X_k) - g(X_k) \|_{\psi_2}\\
+		&\lesssim n^{-1} \| f - g \|_{L^\infty(\RR^n)}^2.
+	\end{align*}
+	%
+	Thus $\| X_f - X_g \|_{\psi_2} \lesssim n^{-1/2} \| f - g \|_{L^\infty(\RR^n)}$, so the process is subgaussian with respect to the $L^\infty$ norm on $\mathcal{F}$.
+
+	We wish to apply Dudley's inequality, so we must calculate the covering number of $\mathcal{F}$. For each $m$, form a grid of $1/m \times 1/m$ squares partitioning $[0,1] \times [-1,1]$. Then any function $f: [0,1] \to [0,1]$, we can approximate the graph of $f$ by travelling along squares, up to a $\varepsilon$ or error. Thus we obtain a $1/m$ net by taking the class of all 1 Lipschitz functions obtained by travelling along the net. The number of such functions is bounded by $3^m$. We now apply Dudley's inequality. Since $\| f - g \|_{L^\infty[0,1]} \leq 2$, for each $f,g \in \mathcal{F}$ with $f(0) = g(0) = 0$,
+	%
+	\begin{align*}
+		\EE \sup_{f \in \mathcal{F}} |X_f| &\lesssim n^{-1/2} \sum_{k = -10} 2^{-k} (\log(3^{2^k}))^{1/2}\\
+		&\lesssim n^{-1/2} \sum_{k = 0}^\infty 2^{-k/2} \lesssim n^{-1/2}. \qedhere
+	\end{align*}
+\end{proof}
+
+\begin{remark}
+	For any two measures $\mu$ and $\eta$, the {\it Wasserstein distance} is defined to be
+	%
+	\[ \sup_{f \in \mathcal{F}} \left| \int f d\mu - \int f d\eta \right|. \]
+	%
+	The theorem we just proved shows that if we draw i.i.d random variables $X_1, \dots, X_n$ with some distribution $\mu$, and define $\mu_n = \sum X_i \delta_{X_i}$ to be the sum of points masses at the same point, then the Wasserstein distance between $\mu$ and $\mu_n$ is, in expectation, $O(n^{-1/2})$.
+\end{remark}
+
+\section{Vapnik-Chervonenkis Dimension}
+
+We now discuss Vapnik-Chervonenkis dimension, which is a notion of complexity for families of Boolean functions $\{ 0, 1 \}^\Omega$ where $\Omega$ is some arbitrary set. This notion of complexity is related to covering numbers, and thus we can relate certain learning bounds with Dudley's inequality.
+
+Given a family $\mathcal{F}$ of Boolean functions on some domain $\Omega$, we say a set $\Lambda \subset \Omega$ is {\it shattered} by $\mathcal{F}$ if the restrict map $F: \{ 0, 1 \}^\Omega \to \{ 0, 1 \}^\Lambda$ is surjective. The \textbf{VC Dimension} of $\mathcal{F}$, denoted by $\text{vc}(\mathcal{F})$ is the largest cardinality of a set shattered by $\mathcal{F}$.
+
+\begin{example}
+	Let $\mathcal{F} = \{ \chi_{[a,b]} : a < b \}$ be the class of all indicator functions of intervals on $\RR$. The family $\mathcal{F}$ shatters any two point set, but no three point set is shattered; for instance, if $t < s < u$, then there is no $f \in \mathcal{F}$ with $f(t) = 1$, $f(s) = 0$, and $f(u) = 1$. Thus $\text{vc}(\mathcal{F}) = 2$.
+\end{example}
+
+\begin{example}
+	Let $\mathcal{F} = \{ \chi_{\mathbf{H}} : \mathbf{H}\ \text{is a half plane in $\RR^2$} \}$. Then $\mathcal{F}$ is a family of Boolean functions in $\RR^2$. The family $\mathcal{F}$ shatters any three points in general position. But $\mathcal{F}$ doesn't shatter any four point set, so $\text{vc}(\mathcal{F}) = 3$.
+\end{example}
+
+\begin{example}
+	If $\Omega = \{ 1, 2 ,3 \}$, then elements of $\{ 0, 1 \}^\Omega$ can be identified with length three binary strings. Consider
+	%
+	\[ \mathcal{F} = \{ 001, 010, 100, 111 \}. \]
+	%
+	Then $\mathcal{F}$ shatters any two point set. But it doesn't shatter $\Omega$, since $\mathcal{F} \neq \{ 0, 1 \}^\Omega$, so $\text{vc}(\mathcal{F}) = 2$.
+\end{example}
+
+\begin{example}
+	Let
+	%
+	\[ \mathcal{F} = \{ \chi_{[a,b] \cup [c,d]}: a,b,c,d \in \RR \} \]
+	%
+	be the indicator functions of unions of two intervals. This class can even shatter four point sets. But it cannot shatter five point sets, because if $s < t < u < v < w$, there is no $f \in \mathcal{F}$ with $f(s) = f(u) = f(w) = 1$, and $f(t) = f(v) = 0$. Thus $\text{vc}(\mathcal{F}) = 4$.
+\end{example}
+
+\begin{example}
+	Let $\mathcal{F}$ be the class of indicator functions of circles in $\RR^2$. Then $\mathcal{F}$ can shatter three point sets, but not four point sets. To prove the latter point, we may assume a four point set is in general position, because otherwise we can reduce to the case of indicator functions of intervals. If one of the points is in the convex hull of the other three, then $\mathcal{F}$ cannot shatter these points, because a circle cannot contain the three points, but not the fourth point. TODO.
+\end{example}
+
+\begin{example}
+	The class of indicator functions of axis aligned rectangles in $\RR^2$ has VC dimension 4. Conversely, the indicators of axis aligned squares has VC dimension 3.
+\end{example}
+
+\begin{example}
+	Let $\mathcal{F}$ be the class of indicator functions of all convex polygons in $\RR^2$. Then one can show $\mathcal{F}$ shatters sets of arbitrarily large cardinality. Thus $\text{vc}(\mathcal{F}) = \infty$.
+\end{example}
+
+\begin{lemma}[Pajor's Lemma]
+	Given any class of Boolean functions $\mathcal{F}$ on $\Omega$,
+	%
+	\[ |\mathcal{F}| \leq | \{ \Lambda \subset \Omega : \mathcal{F}\ \text{shatters}\ \Lambda \} |. \]
+\end{lemma}
+\begin{proof}
+	Let $S(\mathcal{F}) = \{ \Lambda \subset \Omega : \mathcal{F}\ \text{shatters}\ \Lambda \}$. We prove by induction on $\Omega$. If $\Omega = \emptyset$, then $\{ 0, 1 \}^\Omega = \emptyset$, so $\mathcal{F} = \emptyset$, and $S(\emptyset) = \{ \emptyset \}$, so the inequality in the lemma reads $0 \leq 1$, which is true.
+
+	Next, we suppose $\Omega = \Omega_0 \cup \{ \omega \}$. Then $\mathcal{F} = \mathcal{F}_0 \cup \mathcal{F}_1$, where $\mathcal{F}_i = \{ f \in \mathcal{F} : f(\omega) = i \}$. By induction, $|S(\mathcal{F}_i)| \geq |\mathcal{F}_i|$. To finish the proof, we need only check $|S(\mathcal{F}_0)| + |S(\mathcal{F}_1)| \leq |S(\mathcal{F})|$. We note that for each $\Lambda \in S(\mathcal{F}_0) \cap S(\mathcal{F}_1)$, $\mathcal{F}$ shatters $\Lambda$ and $\Lambda \cup \{ \omega \}$. Thus
+	%
+	\[ S(\mathcal{F}) \supset S(\mathcal{F}_0) \cup S(\mathcal{F}_0) \cup (S(\mathcal{F}_0) \cap S(\mathcal{F}_1)) \times \{ \omega \} \]
+	%
+	And this is sufficient to obtain the inequality.
+\end{proof}
+
+\begin{theorem}[Sauer-Shelah Lemma]
+	Let $\mathcal{F}$ be a class of Boolean functions on an $n$ point set $\Omega$. Then
+	%
+	\[ |\mathcal{F}| \leq \sum_{k = 0}^{\text{vc}(\mathcal{F})} {n \choose k} \leq \left( \frac{en}{\text{vc}(\mathcal{F})} \right)^{\text{vc}(\mathcal{F})}. \]
+\end{theorem}
+\begin{proof}
+	The combinatorial sum counts the number of subsets of $\Omega$ containing at most $\text{vc}(\mathcal{F})$ points. A simple application of Pajor's lemma completes the proof.
+\end{proof}
+
+These lemmas are useful for analyzing finite collections of Boolean functions, but do not give any useful information if the class of functions is infinite. To analyze these functions, it turns out that the covering number of $\mathcal{F}$ becomes useful here.
+
+Given any probability measure $\mu$ on $\Omega$, we can discuss the $L^2$ norm, which for any two Boolean functions $f,g \in \{ 0, 1 \}^\Omega$,
+%
+\[ \| f - g \|_{L^2(\mu)} = (\EE |f(X) - g(X)|^2)^{1/2} = \PP(f(X) \neq g(X))^{1/2}. \]
+%
+We can then discuss the covering numbers $N(\mathcal{F},\mu,\varepsilon)$ with respect to this metric. First, we need to discuss a way to reduce the size of the set $\mathcal{F}$.
+
+\begin{lemma}
+	Let $\mathcal{F}$ consist of $N$ functions on a probability space $\Omega$ with probability measure $\mu$. If $\| f - g \|_{L^2(\mu)} > \varepsilon$ for any distinct $f,g \in \mathcal{F}$, then there exists $n \lesssim \log N / \varepsilon^4$ and an $n$ point subset $\Lambda$ of $\Omega$ such that if $\eta$ is the uniform probability measure on $\Lambda$, then $\| f - g \|_{L^2(\eta)} > (\varepsilon/2)$ for distinct $f,g \in \mathcal{F}$.
+\end{lemma}
+\begin{proof}
+	We rely on the probabilistic method. Let $X_1, \dots, X_n$ be $n$ independent independent points drawn from the measure $\mu$, and let $\eta$ be the average of point masses on each $X_i$. Set $h = (f - g)^2$. We want to bound the deviation
+	%
+	\[ \| f - g \|^2_{L^2(\eta)} - \| f - g \|_{L^2(\mu)}^2 = \frac{1}{n} \sum h(X_k) - \EE h(X). \]
+	%
+	We calculate that
+	%
+	\[ \| h(X_k) - \EE h(X) \|_{\psi_2} \lesssim \| h(X) \|_{\psi_2} \lesssim \| h(X) \|_\infty \lesssim 1. \]
+	%
+	Then Hoeffding's inequality implies that there is a constant $c$ with
+	%
+	\[ \PP \left( \left| \| f - g \|_{L^2(\eta)}^2 - \| f - g \|_{L^2(\mu)}^2 \right| > \varepsilon^2/4 \right) \leq 2 \exp(- c n \varepsilon^4). \]
+	%
+	And if this is true, then $\| f - g \|_{L^2(\eta)}^2 > 3\varepsilon^2/4$, so
+	%
+	\[ \| f - g \|_{L^2(\eta)} > (3/4)^{1/2} \varepsilon \geq \varepsilon/2. \]
+	%
+	Taking a union bound over all $f,g \in \mathcal{F}$, we conclude that with probability at least $1 - 2 |\mathcal{F}|^2 \exp(-cn \varepsilon^4) = 1 - 2N^2 \exp(-cn \varepsilon^4)$, the inequality above holds for all $f,g$. If
+	%
+	\[ n \gtrsim \log(N) / \varepsilon^4, \]
+	%
+	this quantity is nonzero, and therefore such a choice of $X_1, \dots, X_n$ exists. Now some of the $X_i$ may be repeated, but removing some of them only decreases the mass of $\eta$, so this isn't a problem.
+\end{proof}
+
+\begin{theorem}
+	Let $\mathcal{F} \subset \{ 0, 1 \}^\Omega$. Then there is a universal constant $C$ such that for every $\varepsilon \in (0,1)$,
+	%
+	\[ N(\mathcal{F},\varepsilon) \leq (2/\varepsilon)^{C \cdot \text{vc}(\mathcal{F})}. \]
+\end{theorem}
+\begin{proof}
+	If $\Omega$ is finite, we could employ the Sauer-Shelah lemma to conclude
+	%
+	\[ N(\mathcal{F},\varepsilon) \leq \left( \frac{en}{\text{vc}(\mathcal{F})} \right)^{\text{vc}(\mathcal{F})}. \]
+	%
+	This is almost what we want. We apply the dimension-reduction lemma to apply something along the lines of this.
+
+	For a fixed $\varepsilon$, let $\mathcal{G} \subset \mathcal{F}$ be a $\varepsilon$ packing consisting of at least $N(\mathcal{F},\mu,\varepsilon)$ elements. If we apply the reduction lemma, we obtain a set $\Lambda$ with cardinality $O(\log N(\mathcal{F},\mu,\varepsilon) / \varepsilon^4)$ such that $\mathcal{G}$ is still a $\varepsilon/2$ packing with respect to the uniform measure on $\Lambda$. Applying Sauer-Shelah to $\mathcal{G}$, we conclude that if $d$ is the VC dimension of $\mathcal{G}$ on $\Lambda$,
+	%
+	\[ N(\mathcal{F},\mu,\varepsilon) \leq O \left( \frac{\log N(\mathcal{F},\mu,\varepsilon)}{d \varepsilon^4} \right)^d \]
+	%
+	But $\log N(\mathcal{F},\mu,\varepsilon)/2d = \log(N^{1/2d}) \leq N^{1/2d}$, so we can simplify to conclude
+	%
+	\[ N(\mathcal{F},\mu,\varepsilon) \leq O(1/\varepsilon)^{8d}. \]
+	%
+	The proof is completed when we notice $d \leq \text{vc}(\mathcal{F})$.
+\end{proof}
+
+Now we have connected covering numbers to VC dimension, we can now apply Dudley's inequality to upper bound the supremum of deviations of a class of Boolean functions.
+
+\begin{theorem}
+	Let $\mathcal{F}$ be a class of Boolean functions on a probability space $\Omega$ with VC dimension $\text{vc}(\mathcal{F})$. If $X_1, \dots, X_n$ are i.i.d samples taken from $\Omega$, with common distribution $X$, then
+	%
+	\[ \EE \sup_{f \in \mathcal{F}} \left| \frac{1}{n} \sum f(X_k) - \EE f(X)  \right| \lesssim \sqrt{\frac{\text{vc}(\mathcal{F})}{n}}. \]
+\end{theorem}
+\begin{proof}
+	A simple symmetrization argument shows that
+	%
+	\[ \EE \sup_{f \in \mathcal{F}} \left| \frac{1}{n} \sum f(X_k) - \EE f(X)  \right| \leq 2 \EE \sup_{f \in \mathcal{F}} \left| \frac{1}{n} \sum \varepsilon_k f(X_k) \right|, \]
+	%
+	where $\{ \varepsilon_k \}$ are i.i.d symmetric Bernoulli variables. Next, we condition on the $\{ X_k \}$, viewing $\{ \varepsilon_k \}$ as the only random quantities. Set $Z_f = \sum \varepsilon_i f(X_i)$, so that we are now interested in bounding $\EE \sup |Z_f|$. Notice that
+	%
+	\begin{align*}
+		\| Z_f - Z_g \|_{\psi_2} &= \left\| \sum \varepsilon_k(f - g)(X_k) \right\|_{\psi_2}\\
+		&\lesssim \sqrt{n} \cdot \left( \frac{1}{n} \sum (f - g)(X_k)^2 \right)^{1/2} = \sqrt{n} \cdot \| f - g \|_{L^2(\eta)}.
+	\end{align*}
+	%
+	Thus $\| Z_f - Z_g \|_{\psi_2} \lesssim \sqrt{n} \cdot \| f - g \|_{L^2(\eta)}$, where $\eta$ is the uniform distribution on the conditioned points $\{ X_1, \dots, X_n \}$. If we assume $0 \in \mathcal{F}$, then we can apply Dudley's inequality, combined with the last theorem, to conclude
+	%
+	\begin{align*}
+		\EE \sup |Z_f| = \EE \sup |Z_f - Z_0| &\lesssim \frac{1}{\sqrt{n}} \EE_X \int_0^1 (\log N(\mathcal{F}, \eta, \varepsilon))^{1/2}\; d\varepsilon\\
+		&\lesssim \frac{1}{\sqrt{n}} \EE_X \int_0^1 (\text{vc}(\mathcal{F}) \log(2/\varepsilon))^{1/2}\; d\varepsilon\\
+		&\lesssim \left( \frac{\text{vc}(\mathcal{F})}{n} \right)^{1/2}.
+	\end{align*}
+	%
+	In general, if $0 \not \in \mathcal{F}$, then we can still apply the previous bound to obtain
+	%
+	\[ \EE \sup |Z_f| \lesssim \left( \frac{\text{vc}(\mathcal{F} \cup \{ 0 \})}{n} \right)^{1/2}. \]
+	%
+	But this really proves the result. If $\Lambda$ is shattered by $\mathcal{F} \cup \{ 0 \}$, then $\mathcal{F}$ shatters every proper subset of $\Lambda$, so $\text{vc}(\mathcal{F} \cup \{ 0 \}) \leq \text{vc}(\mathcal{F}) + 1$.
+\end{proof}
+
+An important consequence of this result is the Glivenko-Cantelli theorem. How many samples does it take to estimate an arbitrary distribution given by a cumulative distribution function $F$? Given $X_1, \dots, X_n$, we might want to define an estimate
+%
+\[ \widehat{F}(x) = \frac{\# \{ i : X_i \leq x \}}{n} \]
+%
+The weak law of large numbers shows $\EE| \widehat{F}(x) - F(x) | \lesssim 1/\sqrt{n}$ for every $x \in \RR$. The Glivenko-Cantelli theorem shows that this expectation bound is achieved uniformly.
+
+\begin{theorem}[Glivenko-Cantelli]
+	Given a CDF $F$, samples $X_1, \dots, X_n$, and an induced estimate $\widehat{F}$,
+	%
+	\[ \EE \| F - \widehat{F} \|_{L^\infty(\mathbf{R})} \lesssim 1/\sqrt{n}. \]
+\end{theorem}
+\begin{proof}
+	Let $\Omega = \RR$, and $\mathcal{F}$ the indicators of $(-\infty,x]$. Then $\text{vc}(\mathcal{F}) \leq 2$, which immediately implies the result.
+\end{proof}
+
+\begin{remark}
+	A class of functions $\mathcal{F}$ is called {\it uniformly Glivenko-Cantelli} if for any $\varepsilon > 0$,
+	%
+	\[ \lim_{n \to \infty} \sup_\mu \PP \left( \sup_{f \in \mathcal{F}} \left| \frac{1}{n} \sum f(X_k) - \EE f(X) \right| > \varepsilon \right) = 0 \]
+	%
+	where $\{ X_k \}$ are i.i.d samples with respect to $\mu$, and the supremum is taken over all probability measures $\mu$. Markov's inequality combined with the main result of this section shows any class of Boolean functions with finite VC dimension is uniform Glivenko-Cantelli.
+\end{remark}
+
+\begin{theorem}
+	Any class of Boolean functions with infinite VC dimension is not uniform Glivenko-Cantelli.
+\end{theorem}
+\begin{proof}
+	Let $\mathcal{F}$ be a collection of Boolean functions, and let $\Omega$ be an $N$ point set shattered by $\mathcal{F}$. If $\mu$ is the uniform distribution on $\Omega$, then for any $X_1, \dots, X_n$ drawn from $\mu$, we can find $f$ with $f(X_k) = 0$ for all $k$, but with $\EE f(X) = 1 - n/N$. Thus
+	%
+	\[ \sup_{f \in \mathcal{F}} \left| \frac{1}{n} \sum f(X_k) - \EE f(X) \right| \geq 1 - n/N. \]
+	%
+	Thus for all $n$,
+	%
+	\[ \sup_\mu \PP \left( \sup_{f \in \mathcal{F}} \left| \frac{1}{n} \sum f(X_k) - \EE f(X) \right| \right) = 1. \]
+\end{proof}
+
+An important application of the theory of complexity of Boolean functions is to classification in mathematical statistics. Given a hidden rule $T: \Omega \to \{ 0, 1 \}$, we consider samples $(X_1,Y_1), \dots, (X_n, Y_n)$ with $X_k \in \Omega$, and $T(X_k) = Y_k$, our goal is to learn $T$ from the samples. An answer this problem would be a function $f: \Omega \to \{ 0, 1 \}$. The {\it risk} corresponding to this function is $R(f) = \PP(f(X) \neq T(X))$, and our goal is to choose $f$ such that $R(f)$ is as small as possible.
+
+If $T$ is arbitrary, it can be very difficult to learn $T$ from samples, if not impossible. To restrict the complexity of $T$, we force our candidate functions $f$ to lie in some hypothesis space $\mathcal{F}$. We must balance {\it fit} and {\it complexity}. Hopefully, some function in $\mathcal{F}$ approximates $T$ accurately, but $\mathcal{F}$ itself has low complexity.
+
+Our best answer to the question would be to compute $f^* = \text{argmin}_{f \in \mathcal{F}} R(f)$. But we are not able to compute $R(f)$, because we do not know the distribution our data came from. But we can always {\it estimate} using our training data. We define the {\it empirical risk} to be
+%
+\[ \widehat{R}(f) = \frac{1}{n} \sum (f(X_k) - T(X_k))^2. \]
+%
+Let $\widehat{f^*}$ denote the minimizer of empirical risk. The main question is the difference between $R(\widehat{f^*})$ and $R(f^*)$. We can use the VC dimension to answer this question.
+
+\begin{theorem}
+	Let $T$ be a Boolean function, and a hypothesis space $\mathcal{F}$. Then
+	%
+	\[ \EE \left( R(\widehat{f^*}) \right) \leq R(f^*) + O \left( \left( \frac{\text{vc}(\mathcal{F})}{n} \right)^{1/2} \right). \]
+\end{theorem}
+\begin{proof}
+	Let $\varepsilon = \sup_{f \in \mathcal{F}} |\widehat{R}(f) - R(f)|$. Then
+	%
+	\begin{align*}
+		R \left( \widehat{f^*} \right) \leq \widehat{R} \left( \widehat{f}^* \right) + \varepsilon \leq \widehat{R}(f^*) + \varepsilon \leq R(f^*) + \varepsilon.
+	\end{align*}
+	%
+	Thus $R(\widehat{f^*}) - R(f^*) \leq 2 \varepsilon$. It thus suffices to show that
+	%
+	\[ \EE(\varepsilon) = \EE \left( \sup_{f \in \mathcal{F}} |\widehat{R}(f) - R(f)| \right) \lesssim \left( \frac{\text{vc}(\mathcal{F})}{n} \right)^{1/2}. \]
+	%
+	If we set $\mathcal{L} = \{ (f - T)^2 : f \in \mathcal{F} \}$, then
+	%
+	\[ \varepsilon = \sup_{l \in \mathcal{L}} \left| \frac{1}{n} \sum l(X_k) - \EE l(X) \right| \]
+	%
+	There is no easy way to relate $\text{vc}(\mathcal{L})$ to $\text{vc}(\mathcal{F})$, so we cannot just apply the normal uniform bound. But if $\eta$ is the uniform distribution on $\{ X_1, \dots, X_n \}$, then for $\varepsilon \in (0,1)$, we do have
+	%
+	\[ N(\mathcal{L}, \eta, \varepsilon) \leq N(\mathcal{F},\eta,\varepsilon/4). \]
+	%
+	This is because if $\mathcal{G}$ is a $\varepsilon/4$ net in $\mathcal{F}$, then $\{ (g - T)^2 : g \in \mathcal{G} \}$ is a $\varepsilon$ net in $\mathcal{L}$. And then we apply Dudley's inequality to yield the theorem.
+\end{proof}
+
+If we learn from data $X_1, \dots, X_n$, but we can take $n \to \infty$, then by Glivenko Cantelli we can approximate the CDF of the underlying distribution arbitrarily small, and therefore calculate $R$ up to an arbitrarily small error as well. This means that we can find the risk minimizer $f^*$, and $R(f^*)$ is the `risk' associated with choosing the hypothesis class $\mathcal{F}$. But if we cannot let $n$ be arbitrarily large, we occur an additional risk quantity
+%
+\[ R \left( \widehat{f^*} \right) - R(f^*), \]
+%
+known as {\it excess risk}. The last theorem says that the expected excess risk is on the order of $(\text{vc}(\mathcal{F})/n)^{1/2}$. Thus if we want the expected excess risk to be smaller than $\varepsilon$, we need $n \sim \text{vc}(\mathcal{F})/\varepsilon^2$ samples. To learn, we need more samples than the complexity of the hypothesis class.
+
+\begin{remark}
+	VC dimension is not the end all description of the excess risk incurred by learning. If $\mathcal{F}$ is the class of functions $f: [0,1] \to [0,1]$ with $\| f \|_{\text{Lip}} \leq L$, then similar techniques to our Lipschitz bound on Monte Carlo integration show
+	%
+	\[ \EE R(\widehat{f^*}) - R(f^*) \lesssim L / \sqrt{n}. \]
+	%
+	On the other hand, $\mathcal{F}$ has infinite VC dimension.
+\end{remark}
+
 \section{Generic Chaining}
 
 Using a slightly more technical chaining argument, we can obtain much tight bounds on the expectation of the supremum of a random process. To do this, we avoid using covering numbers at all. The idea is that, rather than fixing a number $\varepsilon$, and considering the minimum cardinality of a $\varepsilon$ net, we instead consider a fixed cardinality $N$, and try and find the smallest $\varepsilon$ such that there exists a $\varepsilon$ net of cardinality $N$.
@@ -1506,7 +1879,7 @@ We say a process $\{ X_t \}$ is {\it Gaussian} if all finite dimension distribut
 
 Since $\gamma_2(T)$ {\it upper bounds} any subgaussian process, the majorizing measures theorem often enables us to replace an arbitrary subgaussian process with a Gaussian process.
 
-\begin{corollary}
+\begin{corollary}[Talagrand's Comparison Inequality]
 	Let $\{ X_t : t \in T \}$ be a mean zero process and let $\{ Y_t : t \in T \}$ be a Gaussian process. If $\| X_t - X_s \|_{\psi_2} \leq K \| Y_t - Y_s \|_2$, then
 	%
 	\[ \EE \left( \sup X_t \right) \lesssim \EE \left( \sup Y_t \right). \]
@@ -1515,6 +1888,36 @@ Since $\gamma_2(T)$ {\it upper bounds} any subgaussian process, the majorizing m
 As a special case of this result, if $\{ X_x : x \in T \}$ is a mean zero process with $T \subset \RR^n$, then
 %
 \[ \EE \left( \sup X_x \right) \lesssim \| X \|_{\psi_2} \cdot w(T). \]
+
+\section{Chevet's Inequality}
+
+Talagrand's comparison inequality is often useful for studying subgaussian random variables by switching to studying Gaussian processes. Here, we give an application which gives a bound on
+%
+\[ \sup \{ Ax \cdot y : x \in T, y \in S \}, \]
+%
+where $A$ is random, and $T$ and $S$ are arbitrary sets. We now give a bound with respect to the Gaussian width of $T$ and $S$, and in terms of the {\it radius} $\text{rad}(T) = \sup_{x \in T} |x|$ and $\text{rad}(S) = \sup_{y \in S} |y|$.
+
+\begin{theorem}
+	Let $A$ be an $m \times n$ random matrix whose entries are independant, mean-zero, subgaussian random variables with $\| A_{ij} \|_{\psi_2} \leq K$. Let $T \subset \RR^n$ and $S \subset \RR^m$ be bounded sets. Then
+	%
+	\[ \EE \sup \{ Ax \cdot y : x \in T, y \in S \} \lesssim K(w(T) \text{rad}(S) + w(S) \text{rad}(T)). \]
+\end{theorem}
+\begin{proof}
+	We employ Talagrand's comparison inequality. Without loss of generality, let $K = 1$. We would like to bound $X_{uv} = Au \cdot v$, for $u \in T$ and $v \in S$. A simple calculation shows
+	%
+	\[ \| X_{uv} - X_{wz} \|_{\psi_2} \leq |u-w| \text{rad}(S) + |v-z| \text{rad}(T). \]
+	%
+	Define $Y_{uv} = (g \cdot u) \text{rad}(S) + (h \cdot v) \text{rad}(T)$, where $g \sim N(0,I_n)$ and $h \sim N(0,I_m)$ are independant, Gaussian vectors. We calculate that
+	%
+	\[ \| Y_{uv} - Y_{wz} \|_2^2 = |u-w|^2 \text{rad}(T)^2 + |v-z|^2 \text{rad}(S)^2. \]
+	%
+	Comparing these increments, we apply Talagrand's comparison inequality to conclude that
+	%
+	\begin{align*}
+		\EE \sup X_{uv} \lesssim \EE \sup Y_{uv} &= \EE \sup (g \cdot u) \text{rad}(S) + \EE \sup (h \cdot v) \text{rad}(T)\\
+		&= w(T) \text{rad}(S) + w(S) \text{rad}(T). \qedhere
+	\end{align*}
+\end{proof}
 
 \chapter{Gaussian Processes}
 
@@ -1662,7 +2065,7 @@ defined so that $\Sigma(Z_u) = u \Sigma(X) + (1 - u) \Sigma(Y)$.
 
 
 
-\section{Sudakov-Fernique and Gordan's Inequalities}
+\section{Sudakov-Fernique Inequality}
 
 Sudakov-Fernique's theorem gives the expectation bound of Slepian's inequality, but works without the assumption of equality of variances.
 
@@ -1866,6 +2269,76 @@ where $\theta$ is a uniformly randomly chosen vector on the unit sphere. Because
 	Thus $B^1$ has a proportionally \emph{tiny} width as compared to the unit balls in the $l^2$ and $l^\infty$ norm. It has essentially the same width as the radius $1/\sqrt{n}$ ball in the $l^2$ norm that it contains. Thus we can conclude that the majority of the mass of the $l^1$ ball is concentrated near the origin.
 \end{example}
 
+\begin{example}
+	If $X$ is a collection of $n$ vertices with $\diam(X) \leq 1$, then $w(X) \lesssim (\log n)^{1/2}$. We might as well assume $|x| = 1$ for all $x \in X$, because this would only increase $\sup g \cdot x$, and then we are just considering the supremum of $n$ unit variance Gaussians, which gives the result.
+\end{example}
+
+It is often useful to work with a squared version of Gaussian width, i.e. $h(T) = (\EE \sup (g \cdot x)^2)^{1/2}$. This is equivalent to the Gaussian width, up to a constant factor.
+
+\begin{theorem}
+	For any $T \subset \RR^n$,
+	%
+	\[ w(T-T) \leq h(T-T) \leq w(T-T) + O(\diam(T)) \lesssim w(T-T). \]
+	%
+	In particular, $h(T-T)$ is comparable with $w(T)$ for any set $T$.
+\end{theorem}
+\begin{proof}
+	Because $T - T$ is symmetric, since the $L^2$ norm of a random variable is always greater than the $L^1$ norm,
+	%
+	\begin{align*}
+		h(T-T) &= \left(\EE \sup_{x,y \in T} (g \cdot (x-y))^2 \right)^{1/2}\\
+		&= \left( \EE \left( \sup_{x,y \in T} |g \cdot (x-y)| \right)^2 \right)^{1/2}\\
+		&\geq \EE \sup_{x,y \in T} |g \cdot (x-y)|\\
+		&= \EE \sup_{x,y \in T} g \cdot (x-y) = w(T-T).
+	\end{align*}
+	%
+	TODO: UPPER BOUND.
+\end{proof}
+
+It's also often useful to discuss the {\it Gaussian complexity} of a set $T$, which is defined as $\gamma(T) = \EE \sup |g \cdot x|$. We obviously have $w(T) \leq \gamma(T)$, but we need $T$ to be symmetric about the origin to conclude that $w(T) = \gamma(T)$. But they are closely related in general.
+
+\begin{lemma}
+	For any set $T$, and $y \in T$,
+	%
+	\[ (1/3) \cdot (w(T) + |y|) \leq \gamma(T) \leq 2(w(T) + |y|). \]
+\end{lemma}
+\begin{proof}
+	TODO
+\end{proof}
+
+\section{Stable Dimension}
+
+If $T \subset \RR^n$, it's algebraic dimension $\dim(T)$ is the dimensional of the smallest vector space containing $T$. The algebraic dimension is very unstable, since small changes in $T$ can vastly change the dimension. The Gaussian width helps us come up with a geometric quantity which acts like the algebraic dimension, but is more stable under small pertubations. We define the {\it stable dimension} of a bounded set $T$ as
+%
+\[ d(T) = \frac{h(T-T)^2}{\diam(T)^2} = \frac{\EE \sup_{x,y \in T} (g \cdot (x - y))^2}{\diam(T)^2} \sim \frac{w(T)^2}{\diam(T)^2}. \]
+%
+The stable dimension is always bounded by the algebraic dimension, but can be significantly smaller.
+
+\begin{lemma}
+	For any $T$, $d(T) \leq \dim(T)$.
+\end{lemma}
+\begin{proof}
+	Suppose $T$ lies in a $k$ dimensional subspace. Without loss of generality, we can assume it has diameter one. If $Q$ denotes the orthogonal projection onto this $k$ dimensional subspace, then
+	%
+	\[ \EE \sup_{x,y \in T} (g \cdot (x-y))^2 = \EE \sup_{x,y \in T} (Qg \cdot (x-y))^2 \leq \EE |Qg|^2 = k. \]
+\end{proof}
+
+The intersection of a unit ball with a $k$ dimensional plane has $d(T) = \dim(T)$. On the other hand, $d(T) \lesssim \log |T|$.
+
+\begin{example}
+	Let $B$ be the unit ball in $n$ dimensions, and let $A$ be an $m \times n$ matrix. If $A$ has singular value decomposition $\sum s_i u_i v_i^T$, then
+	%
+	\[ \sup_{x \in B} (g \cdot Ax)^2 = \sup_{x \in B} \sum s_i^2 (g \cdot u_i)^2 (x \cdot v_i)^2 \]
+	%
+	This random variable is identically distributed to
+	%
+	\[ \sup_{x \in B} \sum s_i^2 g_i^2 x_i^2 = \max(s_1^2g_1^2, \dots, s_n^2g_n^2) \]
+	%
+	TODO: FINISH. and so $h(AB) = \| A \|_F^2$.
+\end{example}
+
+The {\it stable rank} of an $m \times n$ matrix $A$ if $r(A) = \| A \|_F^2 / \| A \|^2$. The normal rank of $A$ is the algebraic dimension of $A(B)$, whereas the stable rank is the stable dimension of $A(B)$. Thus $r(A) \leq \text{rank}(A)$ for any set $A$.
+
 \section{Sudakov's Minorization Inequality}
 
 We now establish a lower bound on the expectation of the supremum of a Gaussian process using covering numbers. Since Dudley's inequality upper bounds the supremum using covering numbers, we can fairly easily see how sharp the two inequalities are with respect to one another.
@@ -1873,7 +2346,7 @@ We now establish a lower bound on the expectation of the supremum of a Gaussian 
 \begin{theorem}
 	If $\{ X_t \}$ is a centered, Gaussian process, then for any $\varepsilon > 0$,
 	%
-	\[ \EE \sup X_t \gtrsim \varepsilon \sqrt{N(T,\varepsilon)}. \]
+	\[ \EE \sup X_t \gtrsim \varepsilon \sqrt{\log N(T,\varepsilon)}. \]
 \end{theorem}
 \begin{proof}
 	We deduce the result from the Sudakov-Fernique inequality. Assume that $N(T,\varepsilon) = N$, and consider a $\varepsilon$ net $S$ of cardinality $N$. We certainly have $\sup_{t \in T} X_t \geq \sup_{s \in S} X_s$. Define $Y_s = (\varepsilon 2^{-1/2}) g_s$, where $\{ g_s \}$ is a family of independant standard normal distributions. Then
@@ -1886,6 +2359,141 @@ We now establish a lower bound on the expectation of the supremum of a Gaussian 
 	%
 	This completes the proof.
 \end{proof}
+
+\begin{example}
+	If $P$ is a polytope with $n$ vertices, then $w(P) \lesssim (\log n)^{1/2}$. But Sudakov's minorization inequality implies that $w(P) \gtrsim \varepsilon (\log(P,\varepsilon))^{1/2}$, so we conclude that $N(P,\varepsilon) \lesssim n^{1/\varepsilon^2}$.
+\end{example}
+
+\section{Two Sided Sudakov Inequality}
+
+There is a gap between Sudakov's minorization and Dudley's inequality. But when talking about coverings on $\RR^n$, the gap is logarithmically large. The two-sided Sudakov inequality makes this precise.
+
+\begin{theorem}
+	Let $T \subset \RR^n$ and define
+	%
+	\[ s(T) = \sup_{\varepsilon \geq 0} \varepsilon \cdot (\log N(T,\varepsilon))^{1/2}. \]
+	%
+	Then $s(T) \lesssim w(T) \lesssim \log(n) \cdot s(T)$.
+\end{theorem}
+\begin{proof}
+	TODO.
+\end{proof}
+
+\section{Diameters of Random Projections}
+
+Our goal in this section is, given a random projection $Q: \RR^n \to \RR^m$, and some set $T$, does $P$ shrink the diameter of $T$ with high probability. For instance, if $T$ is a finite set, then the Johnson-Lindenstrauss lemma shows that with high probability, provided $m \gtrsim \log |T|$,
+%
+\[ \diam(Q(T)) \approx (m/n)^{1/2} \cdot \diam(T). \]
+%
+If $T$ is infinite, then this need not be the case. For instance, if $T$ is the unit ball in $\RR^n$, then $Q(T)$ is the unit ball in $\RR^m$, so $\diam(Q(T)) = \diam(T)$ for any projection $Q$. We now show that random projections {\it do} shrink the diameter of a set, but only up to the spherical width of the set.
+
+\begin{theorem}
+	Let $T$ be a bounded set in $\RR^n$, and $Q: \RR^n \to \RR^m$ a random projection onto an $m$ dimensional subplace of $\RR^n$. Then with probability at least $1 - 2 e^{-m}$,
+	%
+	\[ \diam(Q(T)) \lesssim w_s(T) + (m/n)^{1/2} \diam(T). \]
+\end{theorem}
+\begin{proof}
+	Without loss of generality, assume $\diam(T) \leq 1$. We note that if $z \in S^{m-1}$, then $Q^T z$ is uniformly distributed on $S^{n-1}$. Now
+	%
+	\[ \diam(Q(T)) = \sup_{x \in T-T} |Qx| = \sup_{x \in T-T} \max_{z \in S^{m-1}} (Qx \cdot z). \]
+	%
+	We now use a covering argument to bound this quantity. Let $N$ be a $1/2$ net of $S^{m-1}$ with $|N| \leq 5^m$. Then
+	%
+	\[ \diam(Q(T)) \leq 2 \max_{z \in N} \sup_{x \in T-T} (Q^Tz \cdot x). \]
+	%
+	If we fix $z \in N$, then
+	%
+	\[ \EE \sup_{x \in T-T} (Q^T z \cdot x) = w_s(T-T) = 2w_s(T). \]
+	%
+	Using the concentration inequality for Lipschitz functions on th esphere, the map $f(\theta) =  \sup_{x \in T-T} x \cdot \theta$ has $\| f \|_{\text{Lip}} \leq 1$, because
+	%
+	\[ \sup_{x \in T-T} x \cdot \eta = \sup_{x \in T-T} x \cdot \theta - x \cdot (\eta - \theta) \geq \sup_{x \in T-T} x \cdot \theta - |\eta - \theta|, \]
+	%
+	and so
+	%
+	\[ |f(\theta) - f(\eta)| = \sup_{x \in T-T} x \cdot \theta - \sup_{x \in T-T} x \cdot \eta \leq |\eta - \theta|. \]
+	%
+	Therefore, we conclude
+	%
+	\[ \PP \left( \sup_{x \in T-T} (Q^T z \cdot x) \geq 2 w_s(T) + t \right) \leq 2 \exp(-cnt^2). \]
+	%
+	If we now take a union bound, we find
+	%
+	\begin{align*}
+		\PP \left( \max_{z \in N} \sup_{x \in T-T} (Q^Tz \cdot x) \geq 2w_s(T) + t \right) &\leq 2 |N| \exp(-cnt^2)\\
+		&\leq 2 \cdot 5^m \exp(-cnt^2).
+	\end{align*}
+	%
+	Choosing $t = C (m/n)^{1/2}$, where $C$ is large enough, we can bound the probability above by $2 e^{-m}$. And so
+	%
+	\[ \PP \left( \diam(Q(T)) \geq 4w_s(T) + 2C (m/n)^{1/2} \right) \leq e^{-m}. \qedhere \]
+\end{proof}
+
+We can equivalent write the result as saying
+%
+\[ \diam(Q(T)) \lesssim \max(w_s(T), (m/n)^{1/2} \cdot \diam(T) ). \]
+%
+The threshold bound at which the spherical mean becomes important occurs when $w_s(T) = (m/n)^{1/2} \cdot \diam(T)$, so
+%
+\[ m = \frac{n w_s(T)^2}{\diam(T)^2} \sim \frac{w(T)^2}{\diam(T)^2} \sim d(T), \]
+%
+where $d(T)$ is the {\it stable dimension} of $T$. Thus
+%
+\[ \diam(Q(T)) \lesssim \begin{cases} (m/n)^{1/2} \cdot \diam(T) & : m \geq d(T) \\ w_s(T) &: m \leq d(T) \end{cases}. \]
+%
+So the diameter shrinks under the projection up to when we project onto a set which has the same dimension as the stable dimension of the set.
+
+
+
+
+
+
+\chapter{Deviations of Random Matrices}
+
+We now use all of the tools we have developed to show that for any $m \times n$ random matrix $A$, $|Ax| \approx \EE |Ax|$ with high probability, for infinitely many values $x$. But what is the error rate if we take points $x$ lying in some set $T$? The answer is the Gaussian complexity $\gamma(T)$. We reduce to the Gaussian case by applying Talagrand's comparison inequality.
+
+\begin{theorem}
+	Let $A$ be an $m \times n$ matrix whose rows $A_i$ are independant, isotropic, and subgaussian. Then the process $X_x = |Ax| - \sqrt{m} \cdot |x|$ has sub-gaussian increments, i.e.
+	%
+	\[ \| X_x - X_y \|_{\psi_2} \lesssim K^2 |x - y|, \]
+	%
+	where $K = \max \| A_i \|_{\psi_2}$.
+\end{theorem}
+\begin{proof}
+	Assume first that $|x| = 1$, and $y = 0$. Then we need only show
+	%
+	\[ \left\| |Ax| - m^{1/2} \right\|_{\psi_2} \lesssim K^2. \]
+	%
+	But this follows because the coordinates $A_i \cdot x$ of $Ax$ are independant with $\EE (A_i \cdot x)^2 = 1$, and $\| A_i \cdot x \|_{\psi_2} \leq K$, so we can apply the concentration of norm theorem to yield the result.
+
+	Now we assume $|x| = |y| = 1$. We then have to prove that
+	%
+	\[ \left\| |Ax| - |Ay| \rigth\|_{\psi_2} \lesssim K^2 |x - y|. \]
+	%
+	We first prove a version of this for the squared process. TODO: Fill in details here.
+\end{proof}
+
+We then obtain our main result immediately.
+
+\begin{theorem}
+	Let $A$ be an $m \times n$ matrix whose rows $A_i$ are independent, isotropic, and subgaussian random vectors. Then for any $T \subset \RR^n$,
+	%
+	\[ \EE \sup_{x \in T} \left| |Ax| - m^{1/2} \cdot |x| \right| \lesssim K^2 \gamma(T), \]
+	%
+	where $\gamma(T)$ is the Gaussian complexity, and $K = \max \| A_i \|_{\psi_2}$.
+\end{theorem}
+\begin{proof}
+	s
+\end{proof}
+
+
+
+
+
+
+
+
+
 
 \chapter{Applications of Random Processes}
 

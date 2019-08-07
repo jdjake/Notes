@@ -1,4 +1,4 @@
-\input{../style.tex}
+\input{../../style.tex}
 
 \title{Geometric Measure Theory}
 \author{Jacob Denson}
@@ -13,31 +13,185 @@
 
 \pagenumbering{arabic}
 
-\chapter{The Hausdorff Measure}
+\chapter{Fractal Dimensions}
 
-The expression of geometric properties of subsets of $\mathbf{R}^d$ requires more than can be expressed using the Lebesgue measure. For instance, curves and surfaces all have measure zero in two and three dimensions respectively, and thus we cannot distinguish them by the Lebesgue measure from any of the other nasty Lebesgue measurable subsets of measure zero. Hausdorff showed that there is a notion of `dimension' of measure zero subsets of $\mathbf{R}^d$ which matches the dimension of corresponding curves and surfaces. Even more interestingly, Hausdorff's theory of dimension gives certain fractal subsets non-integer dimension.
+The expression of geometric properties of subsets of $\mathbf{R}^d$ requires more than can be expressed using the Lebesgue measure. For instance, curves and surfaces all have measure zero in two and three dimensions respectively, and thus we cannot distinguish them by the Lebesgue measure from any of the other nasty Lebesgue measurable subsets of measure zero. Hausdorff showed that there is a notion of `dimension' of measure zero subsets of $\mathbf{R}^d$ which matches the dimension of corresponding curves and surfaces. Even more interestingly, Hausdorff's theory of dimension gives certain fractal subsets non-integer dimension. It is very useful when studying non-smooth shapes, like fractals.
 
-Here is the general idea. If $X = [0,1)$ is a unit interval, then $nX = [0,n)$ is the union of $n$ disjoint translates of $[0,1)$. If we instead consider the unit square $X = [0,1) \times [0,1)$, then $nX = [0,n) \times [0,n)$ is the union of $n^2$ disjoint translates of $[0,1)$. If $X$ is a unit cube, the $nX$ is the union of $n^3$ disjoint translates of $[0,1)$, and so on and so forth. Thus, it makes sense to define the dimension of $X$ to be the value $\alpha$ such that $nX$ is the union of $n^\alpha$ disjoint copies of $X$. Note that if $X$ is the Cantor set, then $3X$ is the union of two translates of $X$, so we would have to be willing to say that the Cantor set `has dimension $\log_3 2 = 0.6309\dots$.
+%Here is the general idea. If $X = [0,1)$ is a unit interval, then $nX = [0,n)$ is the union of $n$ disjoint translates of $[0,1)$. If we instead consider the unit square $X = [0,1) \times [0,1)$, then $nX = [0,n) \times [0,n)$ is the union of $n^2$ disjoint translates of $[0,1)$. If $X$ is a unit cube, the $nX$ is the union of $n^3$ disjoint translates of $[0,1)$, and so on and so forth. Thus, it makes sense to define the dimension of $X$ to be the value $\alpha$ such that $nX$ is the union of $n^\alpha$ disjoint copies of $X$. Note that if $X$ is the Cantor set, then $3X$ is the union of two translates of $X$, so our previous intuition would be willing to say that the Cantor set has `dimension' $\log_3 2 = 0.6309\dots$.
 
-By definition, for a subset $E$ of Euclidean space, we define
+\section{Minkowski Dimension}
+
+The easiest fractal dimension to introduce is Minkowski dimension. If $E$ is a bounded set in $\mathbf{R}^n$, then we can consider the open set $E_\delta$, which is an `$\delta$ thickening' of $E$. We define the \emph{upper} and \emph{lower} Minkowski dimension as
+%
+\[ \upminkdim(E) = \limsup_{\delta \to 0} n - \frac{\log|E_\delta|}{\log \delta}\quad\text{and}\quad \lowminkdim(E) = \liminf_{\delta \to 0} n - \frac{\log|E_\delta|}{\log \delta}. \]
+%
+If $\upminkdim(E) = \lowminkdim(E)$, then we refer to this common quantity as the Minkowski dimension $\minkdim(E)$. One can interpret that if $\minkdim(E) = \alpha$, then $|E_\delta| = \delta^{n - \alpha + o(1)}$. This means that for sufficiently small $\delta$, if $\dim_M(E) = \alpha$, then $|E_\delta| = \delta^{n - \alpha + o(1)}$. These notions can also be extended to unbounded sets by considering the supremum over all bounded subsets, by setting for a set $E$,
+%
+\begin{align*}
+	\upminkdim(E) &= \limsup_{r \to \infty} \upminkdim(E \cap B(0,r)),\\
+	\lowminkdim(E) &= \liminf_{r \to \infty} \lowminkdim(E \cap B(0,r)),.
+\end{align*}
+%
+The Minkowski dimension $\minkdim(E)$ is defined as the common value of these two functions, if they agree.
+
+\begin{example}
+	If $E = B^k \times \{ 0 \}^{n-k}$, where $B^k$ is the $k$ dimensional unit ball, then
+	%
+	\[ B^k \times \delta B^{n-k} \subset E_\delta \subset (1 + \delta)B^k \times \delta B^{n-k} \]
+	%
+	which shows that
+	%
+	\[ \delta^{n-k} \lesssim |E_\delta| \lesssim (1 + \delta)^k \delta^{n-k} \]
+	%
+	Thus $\minkdim(E) = k$. In particular, $\minkdim(r E) = k$ for all $r > 0$, and so taking $r \to \infty$ shows $\minkdim(\RR^k \times 0^{n-k}) = k$.
+\end{example}
+
+\begin{example}
+	Let
+	%
+	\[ C = \left\{ \sum_{i = 1}^\infty a_i/4^i : a_i \in \{ 0, 3 \} \right\} \]
+	%
+	be a Cantor set. If $1/4^{N+1} \leq \delta \leq 1/4^N$, then
+	%
+	\[ \left\{ \sum_{i = 1}^\infty a_i/4^i : a_1, \dots, a_{N+1} \in \{ 0, 3 \} \right\} \subset C_\delta \subset \left\{ \sum_{i = 1}^\infty a_i/4^i : a_1, \dots, a_N \in \{ 0, 3 \} \right\}. \]
+	%
+	The latter set has volume $2^N/4^N = 1/2^N \leq (2\delta)^{1/2}$. The initial set has volume $2^{N+1}/4^{N+1} = 1/2^{N+1} \geq \delta^{1/2}$. Thus $\log |C_\delta| = \log(\delta) / 2 + O(1)$, and so $C$ has Minkowski dimension $1/2$.
+\end{example}
+
+\begin{example}
+	We can modify the last example slightly, considering
+	%
+	\[ C = \left\{ \sum_{i = 1}^\infty a_i/4^i : a_i \in \{ 0, 3 \}\ \text{if there is $k$ s.t.}\ (2k)! \leq i \leq (2k+1)! \right\}. \]
+	%
+	Then $C$ has lower Minkowski dimension $1/2$ and upper Minkowski dimension 1. If one looks at the iterated construction of $C$, one sees that we only dissect $C$ at an incredibly sparse range of scales.
+\end{example}
+
+\begin{example}
+	Let $S = \{ (x,\sin(1/x)) : 0 < x \leq 1 \}$. Then $S$ has Minkowski dimension $3/2$. Consider a fixed scale $\delta$. For any $x \in (0,1)$, Let $f(x) = \sin(1/x)$. Then $|f'(x)| \leq 1/x^2$, so for any fixed $x_0$, the length of the vertical segment $S_\delta \cap \{ x = x_0 \}$ is at most $2\delta / (x_0 - \delta)^2$. In particular, we may cover $S_\delta \cap [0,1] \times [-1,1]$ by an initial cube $[0, \delta^\alpha] \times [-1,1]$ for $\alpha < 1$, and then an integral over the bound obtained for the lengths of the vertical segments. Thus
+	%
+	\[ |S_\delta \cap [0,1] \times [-1,1]| \leq 2\delta^\alpha + \int_{\delta^\alpha}^1 \frac{2\delta}{(x_0 - \delta)^2} \lesssim \delta^\alpha + \delta^{1-\alpha}. \]
+	%
+	Choosing $\alpha = 1/2$ gives $|S_\delta| \lesssim \delta^{1/2}$. But $S_\delta$ certainly contains $[0,\delta^{1/2}] \times [-1,1]$, which gives $|S_\delta| \gtrsim \delta^{1/2}$. In particular, taking limits shows this estimate is enough to conclude $S$ has Minkowski dimension $3/2$.
+\end{example}
+
+Many fractals display self similarity properties. For instance, if $C$ is the classical Cantor set, then $3C$ is the union of two translates of $C$. The next lemma thus implies the Minkowski dimension of the Cantor set is $\log_3(2)$.
+
+\begin{theorem}
+	If $E$ is compact, $r > 1$, and there is $r$ such that $rE$ is the union of $k$ disjoint translates of $E$, then $\dim_M(E) = \log_r k$.
+\end{theorem}
+\begin{proof}
+	For small $\delta$, $(rE)_\delta$ is the union of $k$ disjoint translates of $E_\delta$, so
+	%
+	\[ r^d |E_{\delta/r}| = |(rE)_\delta| = k |E_\delta|. \]
+	%
+	In particular, this means that $|E_{1/r^N}|$ is proportional to $(k/r^d)^N$. But this means that for any $1/r^{N+1} \leq \delta \leq 1/r^N$,
+	%
+	\[ |E_\delta| \sim (k/r^d)^N \sim (k/r^d)^{-\log_r \delta} = \delta^{d - \log_r k}. \]
+	%
+	Thus $\dim_M(E) = \log_r k$.
+\end{proof}
+
+There are several alternate definitions of Minkowski dimension. Given a bounded set $E$, and $\delta > 0$, we let
+%
+\begin{itemize}
+	\item $N^\text{Ext}_\delta(E)$ denote the minimum number of $\delta$ balls required to cover $E$.
+	\item $N^\text{Int}_\delta(E)$ denotes the minimum number of $\delta$ balls with centers in $E$ required to cover $E$.
+	\item $N^\text{Pack}_\delta(E)$ is the largest number of disjoint open balls of radius $\delta$ with centers in $E$.
+\end{itemize}
+%
+Given a cover of $E$ by $N$ balls of radius $\delta$, by doubling the radius of the balls, we can cover $E$ by $N$ balls of radius $2\delta$ with centers of $E$. Thus $N^\text{Int}_{2\delta}(E) \leq N^\text{Ext}_\delta(E) \leq N^{\text{Int}}_\delta(E)$. Conversely, if we have a maximal packing by $N$ radius $\delta$ balls, then we can cover $E$ by $N$ radius $2\delta$ balls. Thus $N^\text{Int}_{2\delta}(E) \leq N^\text{Pack}_\delta(E)$. On the other hand, $N^\text{Pack}_\delta(E) \leq |E_\delta|/|\delta B^n| \leq N_\delta^\text{Ext}(E)$, because a packing of balls inside $E$ provides a disjoint subset of balls in $E_\delta$, and if we cover $E$ by $\delta$ balls, then $E_\delta$ is covered by the radius $2\delta$ balls with the same centres. In particular, we have shown that as $\delta \to 0$, all the quantities $\log_{1/\delta} N^*_\delta(E)$ are comparable to one another. Since
+%
+\[ \delta^n |N_\delta^{\text{Pack}}(E)| \lesssim |E_\delta| \lesssim \delta^n |N_\delta^{\text{Ext}}(E)| \]
+%
+We find that
+%
+\[ \underline{\dim}_M(E) = \liminf_{\delta \to 0} \frac{\log N_\delta^*(E)}{\log(1/\delta)}\ \ \ \ \overline{\dim}_M(E) = \limsup_{\delta \to 0} \frac{\log N_\delta^*(E)}{\log(1/\delta)}. \]
+%
+These definitions are quite useful, because they can be defined for subsets of an arbitrary metric space.
+
+\section{Hausdorff Dimension}
+
+Hausdorff dimension is a more stable version of fractal dimension which is obtained by finding a canonical `$s$ dimensional measure' $H^s$ on $\mathbf{R}^n$ for each $s$, and then setting the dimension of $E$ to be the supremum of $s$ such that $H^s(E) < \infty$. A naive way to construct is to assign a mass $r^s$ to each radius $r$ ball in $\mathbf{R}^n$, and then define
+%
+\[ H^s_\infty(E) = \inf \left\{ \sum r_k^s : E \subset \bigcup B(x_k,r_k) \right\} \]
+%
+This is an outer measure, and so Caratheodory's extension theorem gives a $\sigma$ algebra of measurable sets. Unfortunately, not even intervals are measurable with respect to this $\sigma$ algebra, for non-integer values of $s$.
+
+\begin{example}
+	Let $s = 1/2$, and let $E = (a,b)$. On one hand, $H^s_\infty(E) \leq [(b-a)/2]^{1/2}$. On the other hand, if $(a,b)$ is covered by balls $B(x_k,r_k)$, then $\sum 2r_k \geq b - a$, so applying the concavity of $x \mapsto x^{1/2}$, we conclude
+	%
+	\[ \sum r_k^{1/2} \geq \left( \sum r_k \right)^{1/2} \geq \left( \frac{b - a}{2} \right)^{1/2} \]
+	%
+	Thus $H^s_\infty(E) = [(b-a)/2]^{1/2}$. But now we see that the additivity property begins to breakdown, since $H^{1/2,\infty}[0,1] = 2^{-1/2}$, whereas $H^{1/2,\infty}[0,1/2] = H^{1/2,\infty}[1/2,1] = 1/2$, and so $H^{1/2,\infty}[0,1] < H^{1/2,\infty}[0,1/2] + H^{1/2,\infty}[1/2,1]$.
+\end{example}
+
+The reason why intervals fail to be measurable is that $[0,1]$ is most efficiently coverable by a single large ball, rather than covering the set by the two intervals $[0,1/2]$ and $[1/2,1]$. We can fix this by limiting the Hausdorff measure to be the value of the most efficient cover by arbitrarily small balls.
+
+For a subset $E$ of Euclidean space, we define
 %
 \[ H_\delta^s(E) = \inf \left\{ \sum_{n = 1}^\infty \text{diam}(B_n)^s : E \subset \bigcup_{n = 1}^\infty B_n, \text{diam}(B_n) \leq \delta \right\} \]
 %
-We then define $H^s(E) = \lim_{\delta \to 0} H_\delta^s(E)$. Then $H^s$ is an exterior measure, which satisfies $H^s(E \cup F) = H^s(E) + H^s(F)$ if $d(E,F) > 0$. Thus all Borel sets are measurable.
+We then define $H^s(E) = \lim_{\delta \to 0} H_\delta^s(E)$. Then $H^s$ is an exterior measure, and $H^s(E \cup F) = H^s(E) + H^s(F)$ if $d(E,F) > 0$. Thus all Borel sets are measurable with respect to $H^s$, which is certainly more satisfactory than the last definition.
 
-TODO: Which sets are measurable with respect to $H_\delta^s$?
+\begin{remark}
+	Though not all sets are measurable with respect to $H^s_\infty$. Nonetheless, since the values $H^s_\delta(E)$ increase to the value $H^s(E)$, if $H^s(E) = 0$, then $H^s_\delta(E) = 0$ for all $\delta > 0$. Thus $H^s_\infty(E) = 0$. Conversely, if $H^s_\infty(E) = 0$, and $E$ is compact, then $H^s_\delta(E) = 0$ for all $\delta > 0$. To fix the compactness condition, we known $H^s_\infty(E \cap [-R,R]) = 0$ for all $R$, so $H^s(E \cap [-R,R]) = 0$, and then
+	%
+	\[ H^s(E) = \lim_{R \to \infty} H^s(E \cap [-R,R]) = 0. \]
+	%
+	Thus though the $\sigma$ algebra of measurable sets with respect to $H^s$ and $H^s_\infty$ may disagree, the null sets do agree.
+\end{remark}
+
+\begin{example}
+	Let $s = 0$. Then $H_\delta^0(E) = N_\delta^{\text{Ext}}(E)$, which tends to $\infty$ as $\delta \to 0$ unless $E$ is finite, and then $H_\delta^0(E) \to \# E$. Thus $H^0$ is just the counting measure.
+\end{example}
+
+\begin{example}
+	Let $s = n$. If $E$ has Lebesgue measure zero, then for any $\varepsilon > 0$, there exists countable many balls $B(x_k,r_k)$ covering $E$ with $\sum r_k^n < \varepsilon$. Then $r_k < \varepsilon^{1/n}$, so $H^n_{\varepsilon^{1/n}}(E) < \varepsilon$. Letting $\varepsilon \to 0$, we conclude $H^n(E) = 0$. Thus $H^n$ is absolutely continuous with respect to the Lebesgue measure. The measure $H^n$ is translation invariant, so $H^n$ is actually a constant multiple of the Lebesgue measure. We let the constant multiple be defined $1/\omega_n$. The value $\omega_n$ can be defined as the volume of a unit ball in $\mathbf{R}^n$, since $H^n(B) = 1$ if $B$ is a unit ball.
+\end{example}
+
+The same argument shows that if $V$ is an $m$ dimensional subspace of $\mathbf{R}^n$, then $H^m$, restricted to subsets of $V$, is a constant multiple of the $m$ dimensional Lebesgue measure on $V$. More generally, $H^m$ measures the $m$ dimensional surface area of smooth, $m$ dimensional submanifolds of $\mathbf{R}^n$.
+
+\begin{theorem}
+	Let $U$ be an open subset of $\mathbf{R}^d$, and let $\phi: U \to \mathbf{R}^n$ be a smooth immersion. Then for any compact set $E$,
+	%
+	\[ H^d(\phi(E)) \propto \frac{1}{\omega_d} \int_E J(x)\; dx \]
+	%
+	where $J(x)$ is the square root of the sums of squares of the $d \times d$ minors of $D\phi(x)$.
+\end{theorem}
+\begin{proof}
+	We may cover $E$ by finitely many open sets $U_1, \dots, U_N$, together with coordinate charts $y_1, \dots, y_N$ such that $(y_k \circ \phi)(x) = (x,f_k(x))$ for some smooth $f_k$, and fix $J_k$ such that for any $x \in U_k$, $|J(x) - J_k| < \varepsilon$. TODO: PROVE REST OF THEOREM.
+\end{proof}
+
+\begin{lemma}
+	If $t < s$ and $H^t(E) < \infty$, $H^s(E) = 0$, and if $H^s(E) = \infty$, $H^t(E) = \infty$.
+\end{lemma}
+\begin{proof}
+	If, for any cover of $E$ by balls $B(x_k,r_k)$, $\sum r_k^t \leq A$, and $r_k \leq \delta$, then $\sum r_k^s \leq \sum r_k^{s-t} r_k^t \leq \delta^{s-t} A$. Thus $H^s_\delta(E) \leq \delta^{s-t} A $, and taking $\delta \to 0$, we conclude $H^s(E) = 0$. The latter point is just proved by taking contrapositives.
+\end{proof}
+
+Thus given any Borel set $E$, there is $s$ such that $H^{s_0}(E) = 0$ for $s_0 < s$, and $H^{s_1}(E) = \infty$ for $s_1 > s$. We refer to $s$ as the Hausdorff dimension of $E$, denoted $\dim_H(E)$.
+
+\begin{example}
+	Consider $S = \{ (x,\sin(1/x)) : 0 < x \leq 1 \}$. Then for each $\delta > 0$, the set $S \cap [\delta,1] \times \mathbf{R}$ is the image of a smooth curve, and therefore has Hausdorff dimension $1$. Thus for any $\varepsilon > 0$, $H^{1 + \varepsilon}(S \cap [\delta,1] \times \mathbf{R}) = 0$. But then taking limits as $\delta \to 0$, we conclude $H^{1+\varepsilon}(S) = 0$. Since $H^1(S) > 0$, this shows $S$ has Hausdorff dimension 1. Compare this to the Minkowski dimension $3/2$ result we obtained previously.
+\end{example}
+
+An easy way to compare the approaches to fractal dimension given by Minkowski and Hausdorff dimension is that Minkowski dimension measures the efficiency of covers of a set at a fixed scale, whereas Hausdorff dimension measures the efficiency of covers of a set at various, small scales.
 
 \section{Energy Integrals and Frostman's Lemma}
 
-Although upper bounding Hausdorff measures and dimensions is often quite easy to do, because the definition is defined in terms of outer covers. But finding lower bounds is often much harder. Frostman's lemma reduces this lower bound to finding the existence of measures on the set with good upper bounds for measures on balls. For a set $E$, we let $M(E)$ denote the set of finite measures with compact support which is a subset of $E$.
+By taking particular covers of a set, it is easy to upper bound the Hausdorff dimension of a set. On the other hand, finding a lower bound is a little more tricky. One method to finding to lower bound is constructing a measure on our set with a certain `measure' property. We say a finite Borel measure $\mu$ is a Frostman measure with dimension $\alpha$ if $\mu(B(x,r)) \lesssim r^\alpha$. For a set $E$, we let $M(E)$ denote all Borel measures supported on $E$.
 
 \begin{theorem}[Frostman's Lemma]
-	Let $0 \leq s \leq n$. For a Borel set $E$, the Hausdorff dimension $H^\alpha(E)  > 0$ if and only if there is a finite Borel measure $\mu$ with compact support on $E$ and $\mu(B_r(x)) \lesssim r^\alpha$. In particular,
+	Let $0 \leq s \leq n$. For a compact set $E$, the Hausdorff dimension $H^\alpha(E) > 0$ if and only if there is an $\alpha$ dimensional Frostman measure supported on $E$. In particular
 	%
-	\[ \dim_{\mathbf{H}}(E) = \sup \{ \alpha \geq 0: \text{there is}\ \mu \in M(E)\ \text{such that}\ \mu(B_r(x)) \lesssim r^\alpha \} \]
+	\[ \hausdim(E) = \sup \{ \alpha \geq 0: \text{there is an $\alpha$ dimensional measure}\ \mu \in M(E) \} \]
 \end{theorem}
 \begin{proof}
-	TODO
+	Suppose $H^s(E) > 0$. Without loss of generality, assume $E \subset [0,1)^n$. We work dyadically. For each $k$, let $\mathcal{Q}_k$ denote the set of all cubes of the form $[a,a+1/2^k]$, with $a \in \mathbf{Z}/2^k$. A cube in $\bigcup \mathcal{Q}_k$ is known as a dyadic cube. We can define the $s$ dimensional dyadic Hausdorff exterior measure $H^s_{\Delta,\delta}$ as the exterior measure obtained by restricting to coverings by Dyadic cubes with sidelength bounded by $\delta$, and a cube in $\mathcal{Q}_k$ is assigned mass $1/2^{sk}$. The measure $H^s_\Delta$ is then obtained by taking limits. It is not difficult to show that there are universal constants such that $H^s_\Delta$ is comparable to $H^s$ for all $s$. We now construct a subadditive premeasure $\mu^+$ by defining $\mu^+(Q) = H^s_{\Delta,2^{-k}}(E \cap Q)$ for each dyadic $Q$. Then $\mu^+([0,1)^n) \geq H^s_\Delta(E) > 0$, and we can apply the Caratheodory extension theorem to extend the measure to all Borel sets (since all open sets are the countable union of dyadic cubes). Note that if $Q \in \mathcal{Q}_k$, then covering $E \cap Q$ by $Q$ gives $\mu^+(Q) \leq 1/2^{-sk}$. But we can find an additive measure $\mu$ on dyadic cubes such that $\mu([0,1)^n) = \mu^+([0,1)^n)$, and $\mu(Q) = \sum_{Q' \subset Q} \mu(Q')$ whenever $Q$ is dyadic, and $Q'$ ranges over dyadic cubes with half the sidelength of $Q$. This can be done by working downward `greedily'. And the Caratheodory extension theorem then gives that $\mu$ is the required Frostman lemma.
+
+	Conversely, if an $s$ dimensional measure $\mu$ exists supported on $E$, then $\mu$ is absolutely continuous with respect to $H^s$, and therefore there is a locally integrable $f$ such that
+	%
+	\[ \mu(E) = \int f(x)\; dH^s(x) \]
 \end{proof}
 
 A fundamental concept in the lower bounding of dimensions is the $\alpha$ energy of a Borel measure $\mu$, which is
@@ -46,7 +200,7 @@ A fundamental concept in the lower bounding of dimensions is the $\alpha$ energy
 %
 where $k_s(x) = |x|^{-\alpha}$, for $x \in \mathbf{R}^d$. If $0 < \beta < \alpha$, and $\mu$ has compact support. Integrating Frostman's lemma gives that for a Borel $E$,
 %
-\[ \text{dim}_{\mathbf{H}}(E) = \sup \{ \alpha: \text{there is}\ \mu \in M(A)\ \text{such that}\ I_\alpha(\mu) < \infty \} \]
+\[ \hausdim(E) = \sup \{ \alpha: \text{there is}\ \mu \in M(A)\ \text{such that}\ I_\alpha(\mu) < \infty \} \]
 %
 The $\alpha$ dimensional energy then
 %
@@ -54,7 +208,7 @@ The $\alpha$ dimensional energy then
 %
 Thus
 %
-\[ \text{dim}_{\mathbf{H}}(E) = \sup \left\{ \text{there is}\ \mu \in M(A)\ \text{such that}\ \int |\widehat{\mu}(x)|^2 |x|^{\alpha-d}\; dx < \infty \right\} \]
+\[ \hausdim(E) = \sup \left\{ \text{there is}\ \mu \in M(A)\ \text{such that}\ \int |\widehat{\mu}(x)|^2 |x|^{\alpha-d}\; dx < \infty \right\} \]
 
 \section{Projection Theorems}
 
@@ -64,24 +218,29 @@ Recall that the Grassmanian manifold $G(n,m)$ is a space parameterizing the fami
 	s
 \end{theorem}
 
+
+
+
+
+
 \chapter{Fourier Dimension}
 
 The {\bf Fourier dimension} of a Borel set $E$ is
 %
 \[ \dim_{\mathbf{F}}(E) = \sup \{s : \text{there is}\ \mu \in M(E)\ \text{s.t.}\ |\widehat{\mu}(\xi)| \leq |\xi|^{-s/2}  \} \]
 %
-This implies the energy integrals of the right dimension to converge, implying $\dim_{\mathbf{F}}(E) \leq \dim_{\mathbf{H}}(E)$. A set is {\bf Salem} if $\dim_{\mathbf{H}}(E) = \dim_{\mathbf{F}}(E)$.
+This implies the energy integrals of the right dimension to converge, implying $\dim_{\mathbf{F}}(E) \leq \hausdim(E)$. A set is {\bf Salem} if $\hausdim(E) = \dim_{\mathbf{F}}(E)$.
 
 \section{Dimensions of Brownian Motion}
 
 Consider a one dimensional Brownian motion $W$. Then almost surely, for each $0 < \alpha < 1/2$, $W$ is locally $\alpha$ H\"{o}lder continuous. For a fixed Borel set $E$, The bound
 %
-\[ \dim_{\mathbf{H}}(W(E)) \leq \frac{1}{\alpha} \dim_{\mathbf{H}}(E) \]
+\[ \hausdim(W(E)) \leq \frac{1}{\alpha} \hausdim(E) \]
 %
-then holds for almost every path of the motion. Taking $\alpha \uparrow 1/2$, we find the $\dim_{\mathbf{H}}(W(E)) \leq 2 \dim_{\mathbf{H}}(E)$. In this lecture we focus on a converse.
+then holds for almost every path of the motion. Taking $\alpha \uparrow 1/2$, we find the $\hausdim(W(E)) \leq 2 \hausdim(E)$. In this lecture we focus on a converse.
 
 \begin{theorem}[Mckean, 1955]
-	Let $A \subset [0,\infty)$ be Borel. Then $\dim_{\mathbf{H}}(W(E)) = 2\dim_{\mathbf{H}}(E) \wedge 1$ almost surely.
+	Let $A \subset [0,\infty)$ be Borel. Then $\hausdim(W(E)) = 2\hausdim(E) \wedge 1$ almost surely.
 \end{theorem}
 
 More generally,
@@ -89,10 +248,10 @@ More generally,
 \begin{theorem}[Kaufman's Dimension Doubling Theorem]
 	Let $B$ be a Brownian motion in $\mathbf{R}^d$, for $d \geq 2$, then almost surely, for every Borel set $E$,
 	%
-	\[\dim_{\mathbf{H}}(B(E)) = 2\dim_{\mathbf{H}}(E) \]
+	\[\hausdim(B(E)) = 2\hausdim(E) \]
 \end{theorem}
 
-Note that the almost surely condition is now independent of $E$, so we can apply this theorem to random sets. If $Z = \{ t \geq 0: B_t = 0 \}$ is the random zero set of a path of Brownian motion, and $d \geq 2$, then almost surely we find $\dim_{\mathbf{H}}(E) = 0$. For $d = 1$, the zero may not even be zero dimensional, so we know that Mckean's theorem cannot take out the almost surely over all subsets. We will follow Kahane's 1966 proof of Mckean's result. Consider the following lemma.
+Note that the almost surely condition is now independent of $E$, so we can apply this theorem to random sets. If $Z = \{ t \geq 0: B_t = 0 \}$ is the random zero set of a path of Brownian motion, and $d \geq 2$, then almost surely we find $\hausdim(E) = 0$. For $d = 1$, the zero may not even be zero dimensional, so we know that Mckean's theorem cannot take out the almost surely over all subsets. We will follow Kahane's 1966 proof of Mckean's result. Consider the following lemma.
 
 \begin{lemma}
 	If $\mu$ is an $s$ dimensional measure supported on $[0,\infty)$, then almost surely, for all $|\xi| > 2$,
@@ -109,7 +268,7 @@ If $E$ was $s$ dimensional, we could find an $s$ dimensional probability measure
 %
 \[ I_s(\mu_W) \lesssim O(1) + \int_{|\xi| > 2} |\widehat{\mu_W}(\xi)|^2 |\xi|^{s-1} \lesssim O(1) + \int_{-\infty}^\infty \frac{\log |x|}{|x|^{-1-s}} < \infty \]
 %
-so $\mu_W$ is $s$ dimensional, and so $\dim_{\mathbf{H}}(W(E)) \geq s$. Note that we actually proved something even stronger. The inequality above implies that $\dim_{\mathbf{F}}(W(E)) \geq s$ almost surely, so $W(E)$ is a Salem set almost surely. In particular, Salem sets exist. An alternate proof is to calculate, using Fubini's theorem, we calculate that if $Z \sim N(0,1)$, then provided $r < 2s < 1$,
+so $\mu_W$ is $s$ dimensional, and so $\hausdim(W(E)) \geq s$. Note that we actually proved something even stronger. The inequality above implies that $\dim_{\mathbf{F}}(W(E)) \geq s$ almost surely, so $W(E)$ is a Salem set almost surely. In particular, Salem sets exist. An alternate proof is to calculate, using Fubini's theorem, we calculate that if $Z \sim N(0,1)$, then provided $r < 2s < 1$,
 	%
 	\[ \mathbf{E}[I_r(\mu_W)] = \int_{-\infty}^\infty \mathbf{E} \left( \frac{1}{|W_t - W_s|^r} \right)\; dr = \left( \int_{-\infty}^\infty \frac{dt\; ds}{|t-s|^{r/2}} \right) \mathbf{E} \left( \frac{1}{|Z|^r} \right) < \infty \]
 	%

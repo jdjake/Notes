@@ -1,4 +1,4 @@
-\input{../style.tex}
+\input{../../style.tex}
 
 \title{Introductory Analysis}
 \author{Jacob Denson}
@@ -10,7 +10,7 @@
 \tableofcontents
 \pagenumbering{arabic}
 
-\chapter{Inequalities}
+\part{Inequalities}
 
 Principles of inequalities:
 
@@ -179,6 +179,364 @@ Alternatively, writing $a_nb_nc_n = (a_n^{1/2}b_n)(a_n^{1/2}c_n)$,
 
 
 
+
+\part{The Calculus}
+
+\chapter{Limits}
+
+The most important definition to modern analysis is the notion of a limit, which allows one to approximate other quantities arbitrarily well by other quantities. We start by defining the limit of a sequence. We fix a sequence of numbers $\{ a_n \}$. We say $a_n$ \emph{approaches} $a$ as $n \to \infty$, $a_n$ has as a \emph{limit} $a$, $a_n \to a$, or
+%
+\[ \lim_{n \to \infty} a_n = a, \]
+%
+if for any $\varepsilon > 0$, there exists a value $N$ such that $|a_n - a| < \varepsilon$ if $n \geq N$. We write
+%
+\[ \lim_{n \to \infty} a_n = \infty \]
+%
+if for any $M > 0$, we can find a value $N$ such that $a_n \geq M$ if $n \geq N$, and
+%
+\[ \lim_{n \to \infty} a_n = -\infty \]
+%
+if for any $M > 0$, there is $N$ such that $a_n \leq -M$ if $n \geq N$.
+
+\begin{example}
+    Consider the sequence $a_n = 1/n$, for $n > 0$. We calculate the initial terms as
+    %
+    \[ a_1 = 1, \quad a_2 = 1/2, \quad a_3 = 1/3, \]
+    %
+    and so it appears as if the numbers $a_n$ cluster around $a = 0$. Thus we have reason to believe
+    %
+    \[ \lim_{n \to \infty} 1/n = 0. \]
+    %
+    To prove this statement, we fix $\varepsilon > 0$. Then $1/\varepsilon > 0$, and if $n > 1/\varepsilon$, then $0 < 1/n < \varepsilon$. Thus we can set $m$ to be the smallest integer greater than $1/\varepsilon$, and this proves the claim.
+\end{example}
+
+It is often useful to give more precise information on how fast a limit approaches zero. This is of course often much more difficult than just establishing a limit, but it often useful. Obtaining this precise information is known as \emph{hard} analysis, to distinguish it from the \emph{soft} analysis where most things are not quantified quite as strongly. To establish this, we introduce some notation. Given two values $A$ and $B$, which may depend on various parameters, we write $A \lesssim B$ if there exists a constant $C$ such that $A \leq C \cdot B$, where $C$ is normally independant of the parameters in question. If $C$ does depend on some parameter $\alpha$ in the definition of $A$ and $B$, we write $A \lesssim_\alpha B$. Often the constant $C$ is unimportant to the convergence of whatever is being dealt with when compared to $A$ and $B$, so does not need to be explicitly written. We also often write $O(B)$ for a constant $A$ with $A \lesssim B$, or $O_\alpha(B)$ if $A \lesssim_\alpha B$.
+
+\begin{example}
+    We have
+    %
+    \[ \lim_{n \to \infty} \sqrt{n+1} - \sqrt{n} = 0. \]
+    %
+    Thus $\sqrt{n}$ is `essentially' the same as $\sqrt{n+1}$ for large $n$. We can see this by writing
+    %
+    \[ 0 < \sqrt{n+1} - \sqrt{n} = \frac{1}{\sqrt{n+1} + \sqrt{n}} < \frac{1}{2\sqrt{n}} \]
+    %
+    Thus
+    %
+    \[ \sqrt{n+1} = \sqrt{n} + O \left( \frac{1}{\sqrt{n}} \right), \]
+    %
+    and from here, it is obvious that $\sqrt{n+1} - \sqrt{n} \to 0$ as $n \to \infty$. We can guess from the calculation above that $1/2\sqrt{n}$ is the closest multiple of $1/\sqrt{n}$ which approximates $\sqrt{n+1} - \sqrt{n}$, and if we plug this in, we calculate
+    %
+    \[ \left| \sqrt{n+1} - \sqrt{n} - \frac{1}{2\sqrt{n}} \right| = \left| -\frac{1}{2} \frac{\sqrt{n+1} - \sqrt{n}}{\sqrt{n} \sqrt{n+1} + n} \right| \leq \frac{(1/2\sqrt{n})}{4n} = (1/8\sqrt{n}). \]
+    %
+    Thus
+    %
+    \[ \sqrt{n+1} = \sqrt{n} + \frac{0.5}{n^{1/2}} + O(1/n^{3/2}). \]
+\end{example}
+
+\begin{example}
+    We have
+    %
+    \[ \lim_{n \to \infty} \frac{3n^3 + 7n^2 + 1}{4n^3 - 8n + 63} = 3/4. \]
+    %
+    This makes sense, because when $n$ is large, the terms involving $n^3$ dominate the other terms. In particular, if we divide the numerator and denominator of the rational function by $n^3$, we conclude
+    %
+    \[ \frac{3n^3 + 7n^2 + 1}{4n^3 - 8n + 63} = \frac{3 + 7/n + 1/n^3}{4 - 8/n^2 + 63/n^3}. \]
+    %
+    The proof is completed by using the following properties of limits.
+\end{example}
+
+\begin{lemma}
+    Let $\{ a_n \}$ and $\{ b_n \}$ be two convergent sequences. Then
+    %
+    \begin{align*}
+        \lim_{n \to \infty} a_n + b_n &= \lim_{n \to \infty} a_n + \lim_{n \to \infty} b_n,\\
+        \lim_{n \to \infty} a_n \cdot b_n &= \lim_{n \to \infty} a_n \cdot \lim_{n \to \infty} b_n;
+    \end{align*}
+    %
+    If $\lim_{n \to \infty} b_n \neq 0$, then
+    %
+    \[ \lim_{n \to \infty} a_n/b_n = \frac{\lim_{n \to \infty} a_n}{\lim_{n \to \infty} b_n}. \]
+\end{lemma}
+\begin{proof}
+    Let $a_n \to a$, and $b_n \to b$. We utilize the triangle inequality to write
+    %
+    \[ |(a_n + b_n) - (a + b)| \leq |a_n - a| + |b_n - b|. \]
+    %
+    Carrying through the details shows that this inequality is enough to show the first statement.
+    %
+    \[ |a_nb_n - ab| = |(a_n - a)b_n + a(b_n - b)| \leq |a_n - a| |b_n| + |a| |b_n - b|. \]
+    %
+    Since a convergent sequence is \emph{bounded}, this proves the second claim. Finally, we have
+    %
+    \[ |a_n/b_n - a/b| = \left| \frac{a_n b - ab_n}{b_n b} \right| \leq \frac{|a_n| |b - b_n| + |a_n - a| |b_n|}{|b_n| |b|} \]
+    %
+    and that if $b_n \to b$ and $b \neq 0$, then $|b_n|$ is bounded from below.
+\end{proof}
+
+The statements above continue to hold if $a$ or $b$ are infinite, except in a few indeterminate cases, which should be obvious from practice.
+
+\begin{example}
+    Given $a \in (0,1)$,
+    %
+    \[ \lim_{n \to \infty} a^n = 0, \]
+    %
+    and for $a \in (1,\infty)$,
+    %
+    \[ \lim_{n \to \infty} a^n = \infty. \]
+    %
+    To prove this statement, we utilize Bernoulli's inequality $(1 + h)^n \geq 1 + nh$, which holds for $h \geq -1$. Given $a \in (1,\infty)$, write $a = 1 + h$ for $h > 0$. Then $a^n \geq 1 + nh$, and since $1 + nh \to \infty$ as $n \to \infty$, this implies $a^n \to \infty$. Conversely, if $a \in (0,1)$, then we can write $a = 1/1 + h$ for some $h > 0$, and Bernoulli's inequality then implies
+    %
+    \[ a^n = \frac{1}{(1 + h)^n} \leq \frac{1}{1 + nh}, \]
+    %
+    and the latter quantity tends to zero.
+\end{example}
+
+\begin{example}
+    For any $a > 0$, we have
+    %
+    \[ \lim_{n \to \infty} \sqrt[n]{a} = 1. \]
+    %
+    We again, apply Bernoulli's inequality. If $a > 1$, then $\sqrt[n]{a} > 1$, and so we can write $\sqrt[n]{a} = 1 + h$ for some $h > 0$. Thus Bernoulli's inequality shows $a \geq 1 + nh$, and so rearranging this equation shows
+    %
+    \[ \sqrt[n]{a} - 1 = h \leq \frac{a - 1}{n}. \]
+    %
+    This gives the required convergence in this case. If $0 < a < 1$, we have
+    %
+    \[ \lim_{n \to \infty} \sqrt[n]{a} = \frac{1}{\lim_{n\to \infty}(1/\sqrt[n]{1/a})} = 1. \]
+    %
+    Alternatively, we can apply Bernoulli's inequality, setting $\sqrt[n]{a} = 1/(1 + h)$ for some $h > 0$, to conclude that
+    %
+    \[ a = \left( \frac{1}{1 + h} \right)^n \leq \frac{1}{1 + nh}. \]
+    %
+    Thus $h \leq (1/a - 1)/n$, which means
+    %
+    \[ 1 - \sqrt[n]{a} = \frac{h}{1 + h} \leq h \leq \frac{(1/a - 1)}{n}. \]
+\end{example}
+
+\begin{example}
+    We also have, perhaps surprisingly,
+    %
+    \[ \lim_{n \to \infty} \sqrt[n]{n} = 1. \]
+    %
+    Write $\sqrt[2n]{n} = 1 + h$. Then Bernoulli's inequality shows
+    %
+    \[ \sqrt{n} = (1 + h)^n \geq 1 + nh. \]
+    %
+    Thus
+    %
+    \[ h \leq \frac{\sqrt{n} - 1}{n} \leq \frac{1}{\sqrt{n}}. \]
+    %
+    This means that $\sqrt[n]{n} = (1 + h)^2 = 1 + 2h + h^2 \leq 1 + 2n^{-1/2} + n^{-1}$.
+\end{example}
+
+\begin{remark}
+    I think this sneaky way of applying Bernoulli's inequality is really just a way of working in a second order Taylor expansion in disguise. Does it give better constants than just the mean value theorem?
+\end{remark}
+
+\begin{example}
+    We have
+    %
+    \[ \lim_{n \to \infty} \frac{n!}{n^n} = 0 \]
+    %
+    To see why, note that given $n$, if $n$ is even, we write $n = 2m$, and calculate
+    %
+    \[ n! = \left( \prod_{k = 1}^m k \right) \left( \prod_{k = m+1}^{2m} k \right) \leq m^m (2m)^m \leq (2m)^{2m} / 2^m = n^n/2^{n/2}. \]
+    %
+    whereas if $n$ is odd, write $n = 2m + 1$, and use the last case to show
+    %
+    \[ n! = n(n-1)! \leq n(n-1)^{n-1}/2^{(n-1)/2} \leq n^n (\sqrt{2}/2^{n/2}). \]
+    %
+    In either case, $n!/n^n \leq \sqrt{2}/2^{n/2}$, which rapidly converges to zero as $n \to \infty$.
+\end{example}
+
+\begin{example}
+    For any $\alpha > 1$,
+    %
+    \[ \lim_{n \to \infty} \frac{n}{\alpha^n} = 0. \]
+    %
+    If $\sqrt{\alpha} = 1 + h$, then $\alpha^{n/2} = (1 + h)^{n/2} \geq 1 + (n/2)h$, so $\alpha^n \geq 1 + nh + (n/2)^2h^2$. In particular,
+    %
+    \[ \frac{n}{\alpha^n} \leq \frac{4}{h^2n}. \]
+\end{example}
+
+It is important to have ways of guaranteeing sequences converge, without necessarily being able to calculate the value to which they converge. Given a sequence $\{ a_n \}$, we say it is monotone increasing if $a_{n+1} \geq a_n$ for all values of $n$.
+
+\begin{theorem}[Monotone Convergence Theorem]
+    If $\{ a_n \}$ is a bounded, monotone increasing sequence, then $a_n$ converges.
+\end{theorem}
+\begin{proof}
+    Since $\{ a_n \}$ is bounded, we can find a supremum $a$. Thus $a_n \leq a$ for all $n$, but for any $\varepsilon > 0$, there is $N$ such that $a - \varepsilon \leq a_N \leq a$. But then if $n \geq N$, then
+    %
+    \[ a \leq a_n \leq a_N \leq a - \varepsilon, \]
+    %
+    so $|a_n - a| \leq \varepsilon$.
+\end{proof}
+
+Of course, a bounded, monotone decreasing sequence $\{ a_n \}$ is also convergent, since $\{ -a_n \}$ is then a bounded, monotone increasing sequence. The next theorem introduces two quantities which are associated with a sequence $\{ a_n \}$, namely
+%
+\[ \liminf_{n \to \infty} a_n = \lim_{n \to \infty} \left( \inf_{m \geq n} a_m \right) \]
+\[ \limsup_{n \to \infty} a_n = \lim_{n \to \infty} \left( \sup_{m \geq n} a_m \right) \]
+%
+known as the limit inferior and the limit superior. Note that these quantities are well defined even if the sequence $\{ a_n \}$ does not converge, since the sequences $A_n = \inf_{m \geq n} a_m$ and $B_n = \sup_{m \geq n} a_m$ are both monotone. If $\{ a_n \}$ is convergent, then
+%
+\[ \liminf_{n \to \infty} a_n = \lim_{n \to \infty} a_n = \limsup_{n \to \infty} a_n, \]
+%
+and this is the only case in which the limit inferior is equal to the limit superior. For the next lemma, it is important to notice that if the sequence $\{ a_n \}$ is bounded, then both the limit inferior and the limit superior are finite.
+
+\begin{lemma}
+    Any sequence contains a monotone subsequence.
+\end{lemma}
+\begin{proof}
+    Let $\{ a_n \}$ be a sequence. Call a value $n$ a \emph{peak} if $a_m < a_n$ for all $m > n$. If the sequence contains infinitely many peak points, then the sequence of peaks forms a monotone decreasing subsequence. If the sequence contains finitely many peak points, then for suitably large $n$, $a_n$ is not a peak point, and so we can find $m > n$ with $a_m > a_n$. We can use this fact to recursively define a monotone increasing subsequence.
+\end{proof}
+
+\begin{corollary}[Bolzano-Weirstrass Theorem]
+    Any bounded sequence $\{ a_n \}$ contains a convergent subsequence.
+\end{corollary}
+\begin{proof}
+    Such a subsequence contains a bounded monotone sequence.
+\end{proof}
+
+We say that a sequence $\{ a_n \}$ is \emph{eventually} larger than some quantity $a$ if there is $N$ such that $a_n \geq a$ for $n \geq N$. Then it is easy to see that
+%
+\[ \liminf_{n \to \infty} a_n = \sup \{ a : a_n\ \text{is eventually larger than $a$} \}. \]
+%
+Similarily,
+%
+\[ \limsup_{n \to \infty} a_n = \inf \{ a : a_n\ \text{is eventually smaller than $a$} \}. \]
+%
+This is just a simple rewording of the definitions.
+
+\begin{corollary}
+    For any sequence $\{ a_n \}$,
+    %
+    \[ \liminf_{n \to \infty} a_n = \inf \{ a : \text{some subsequence converges to $a$} \}, \]
+    \[ \limsup_{n \to \infty} a_n = \sup \{ a : \text{some subsequence converges to $a$} \}. \]
+\end{corollary}
+\begin{proof}
+    We prove the first property, to which the second property can be reduced. If $a_n$ is eventually greater than $a$, then every convergent subsequence must converge to a value greater than or equal to $a$. Since
+    %
+    \[ \liminf_{n \to \infty} a_n = \sup \{ a : a_n\ \text{is eventually greater than}\ a \}, \]
+    %
+    it is easy to see that
+    %
+    \[ \liminf_{n \to \infty} a_n \leq \inf \{ a : \text{some subsequence converges to $a$} \} \]
+    %
+    In particular, this means the infinum on the right hand side is finite. But now if we choose, for each $n$, an integer $k_n$ such that $k_{n+1} \geq k_n$, and
+    %
+    \[ | a_{k_n} - \inf_{m \geq n} a_m| \leq 1/2^n. \]
+    %
+    Then $a_{k_n} \to \liminf_{n \to \infty} a_n$, so
+    %
+    \[ \inf \{ a : \text{some subsequence converges to $a$} \} \leq \liminf_{n \to \infty} a_n. \]
+    %
+    Thus we obtain equality.
+\end{proof}
+
+\begin{example}
+    Consider the sequence
+    %
+    \[ \{ 1/2, 1/3, 2/3, 1/4, 2/4, 3/4, 1/5, \dots \} \]
+    %
+    Then $\liminf a_n = 0$ and $\liminf a_n = 1$. And
+    %
+    \[ \{ a : \text{some subsequence converges to $a$} \} = [0,1]. \]
+    %
+    Given any $a \in [0,1]$, and $n$, we can find $k$ such that $|a - k/n| \leq 1/n$.
+\end{example}
+
+There is another condition which guarantees the convergence of a sequence, without having to calculate the actual value of the limit. If
+%
+\[ \lim_{n \to \infty} a_n = a \]
+%
+Then given any $\varepsilon > 0$, there is $N$ such that if $n \geq N$, then $|a_n - a| \leq \varepsilon$. To get rid of the value of $a$ from this condition, we take the difference between two values of $a_n$, to conclude that $|a_n - a_m| \leq 2\varepsilon$ for $n,m \geq N$. We say a sequence $\{ a_n \}$ is \emph{Cauchy} if for any $\varepsilon > 0$, there is $N$ such that if $n,m \geq N$, $|a_n - a_m| \leq \varepsilon$.
+
+\begin{theorem}
+    A sequence is Cauchy if and only if it converges.
+\end{theorem}
+\begin{proof}
+    Let $\{ a_n \}$ be a Cauchy sequence, and fix $\varepsilon > 0$. Then there is $N$ such that if $n,m \geq N$, $|a_n - a_m| \leq \varepsilon$. But then
+    %
+    \[ \sup_{n \geq N} a_n - \inf_{n \geq N} a_n \leq \varepsilon \]
+    %
+    Since $\varepsilon$ was arbitrary, this shows
+    %
+    \[ \limsup_{n \to \infty} a_n - \liminf_{n \to \infty} a_n = 0. \]
+    %
+    So the sequence $\{ a_n \}$ converges.
+\end{proof}
+
+\begin{example}
+    Consider the sequence
+    %
+    \[ \left\{ \sqrt{2}, \sqrt{2\sqrt{2}}, \sqrt{2\sqrt{2\sqrt{2}}}, \dots \right\}. \]
+    %
+    In other words, set $a_1 = \sqrt{2}$, and $a_{n+1} = \sqrt{2a_n}$. We first note that $a_{n-1} < a_{n+1} < 2$ for all $n > 2$. It is obvious that $a_1 < 2$, and the fact that $a_n < 2$ for all $n$ can be proved for the remaining terms by induction noting that if $a_n < 2$,
+    %
+    \[ a_{n+1} \sqrt{2a_n} = \sqrt{2} \sqrt{a_n} < \sqrt{2} \sqrt{2} = 2. \]
+    %
+    Working the other way, we have
+    %
+    \[ a_{n+1} = \sqrt{2a_n} = \sqrt{2} \sqrt{a_n} \geq \sqrt{a_n} \sqrt{a_n} = a_n. \]
+    %
+    Thus $\{ a_n \}$ is a monotone sequence, so the monotone convergence theorem implies that $a_n$ converges to some value $a$. But then
+    %
+    \[ a = \lim_{n \to \infty} a_n = \lim_{n \to \infty} a_{n+1} = \lim_{n \to \infty} \sqrt{2a_n} = \sqrt{2a}. \]
+    %
+    Solving this equation shows that either $a = 0$, or $a = 2$, and since $\sqrt{2} \leq a_n$ for all $n$, this shows $a = 2$.
+\end{example}
+
+
+
+\section{Series}
+
+\begin{example}
+    Fix $\alpha \in (0,1)$, and set
+    %
+    \[ S_n = \sum_{k = 1}^n a_k. \]
+    %
+    Then it is well known that
+    %
+    \[ S_n = \frac{1 - \alpha^n}{1 - \alpha}. \]
+    %
+    Thus
+    %
+    \[ \frac{1}{1 - \alpha} - S_n = \frac{\alpha^n}{1 - \alpha},  \]
+    %
+    which rapidly converges to zero. Thus we obtain the geometric series formula
+    %
+    \[ \sum_{k = 1}^\infty \alpha^k = \frac{1}{1 - \alpha}. \]
+\end{example}
+
+\begin{example}
+    Let
+    %
+    \[ S_n(p) = \sum_{k = 1}^n k^p \]
+    %
+    Then
+    %
+    \[ \lim_{n \to \infty} \frac{S_n(p)}{n^{p+1}} = \frac{1}{p+1}. \]
+    %
+    To see this, we apply the formula
+    %
+    \[ (k + 1)^{p+1} - k^{p+1} = \sum_{q = 0}^p {p+1 \choose k} k^q. \]
+    %
+    In particular, if we sum over all $k$ from one to $n$, we find
+    %
+    \[ (n+1)^{p+1} = \sum_{q = 0}^p {p+1 \choose k} S_n(q). \]
+    %
+    Dividing by $(n+1)^{p+1}$, and applying induction, so that $S_n(q) = O(n^{q+1})$ for each $q < p$, we conclude
+    %
+    \begin{align*}
+        1 &= \lim_{n \to \infty} \sum_{q = 0}^p {p+1 \choose k} \frac{S_n(q)}{(n+1)^{p+1}}\\
+        &= \lim_{n \to \infty} (p+1) \frac{S_n(p)}{(n+1)^{p+1}}.
+    \end{align*}
+    %
+    Rearranging completes the argument.
+\end{example}
+
+% Relation of convergence of functions and convergence of sequences
 
 \chapter{The Riemann Integral}
 

@@ -1,0 +1,199 @@
+\input{../../style.tex}
+
+\title{The Polynomial Method}
+\author{Jacob Denson}
+
+\begin{document}
+
+\pagenumbering{gobble}
+
+\maketitle
+
+\tableofcontents
+
+\pagenumbering{arabic}
+
+\chapter{Intro}
+
+The core techniques of the polynomial method are incredibly elementary, but can be used to solve questions which have stumped mathematicians for decades. The technique relies on the fact that polynomials are both a flexible family of objects, and also a very restricted family. Given any set of points, we can find a polynomial vanishing on that set. But on the other hand, the behaviour of a polynomial with low degree is very restricted. The interplay between these two properties is what makes the polynomial method click.
+
+The first principle of the polynomial can be described using very basic ideas in linear algebra, known as {\it parameter counting}. Let $T: V \to W$ be a linear transformation with $\dim(W) < \dim(V)$. Then by the rank nullity theorem, the nullspace is nontrivial, so there must be $x \in V$ such that $T(x) = 0$. In particular, if $V$ is a vector space of functions on some space $X$, we select some finite collection of points $x_1, \dots, x_m \in X$, and we consider the evaluation map $T(f) = (f(x_1), \dots, f(x_m))$, then provided $n > m$, there is a function $f \in V$ vanishing on the $m$ points. Of course, since polynomials form an infinite dimensional vector space, this principle implies that for any finite collection of points, we can find a polynomial vanishing on them. But it is more interesting to finte a {\it low degree} polynomial vanishing on the set of points.
+
+\begin{theorem}
+	Given a finite set $S$, there is a polynomial with degree at most $n|S|^{1/n}$ vanishing on $S$.
+\end{theorem}
+\begin{proof}
+	We let $\text{Poly}(D,K^n)$ denote the vector space of polynomials we degree at most $D$ defined on $K^n$. Now this vector space is spanned by the monomials $x_1^{m_1} \dots x_n^{m_n}$ with $m_1 + \dots + m_n \leq D$. To simplify the combinatorics, we homogenize, counting monomials $x_0^{m_0} \dots x_n^{m_n}$ with $m_0 + \dots + m_n = D$. But this is just the number of decompositions of $D$ into $n+1$ equal parts, and so we conclude that
+	%
+	\[ \dim \left( \text{Poly}(D,K^n) \right) = {D + n \choose n} \geq \frac{D^n}{n!} \]
+	%
+	Provided that $D$ is much greater than $n$, this is a good approximation to the dimension. In particular, given a finite set $S \subset K^n$, there exists a polynomial $f$ with $\deg(f) \leq n |S|^{1/n}$ vanishing on $S$. This is tight to the bounds established above if $|S| \gg n$.
+\end{proof}
+
+One example of the restrictedness of polynomials is provided by the {\it vanishing lemma}, which implies polynomials vanishing on enough points on a line eventually lie on the entire line.
+
+\begin{theorem}
+	Let $f$ be a polynomial vanishing on $\deg(f) + 1$ points of a line. Then $f$ vanishes on the entire line.
+\end{theorem}
+\begin{proof}
+	Suppose $L = \{ x + \lambda y: \lambda \in K \}$ is a line, for some $x,y \in K^n$. Then $f(x + \lambda y)$ is a one dimensional polynomial in $\lambda$ with degree at most $\deg(f)$, with $\deg(f) + 1$ zeroes. But this means that $f(x + \lambda y) = 0$ for all $\lambda$, so $f$ vanishes on the entire line.
+\end{proof}
+
+We note that this remains true in the projective context. If $f$ is a homogenous polynomial vanishing on more than $\deg(f)$ points of a projective line in $K \mathbf{P}^n$, then $f$ vanishes on the entire projective line. This is easy to prove by reduction to the affine case using a change of coordinates.
+
+\section{Nikodym and Kakeya, and Joints}
+
+Despite the simplicity of the two principles we just described, they are enough to answer nontrivial questions. The statement of these theorems involves no mention of polynomials, but the proof we give uses the lemmas above. No proof without using polynomials is currently known.
+
+A subset $N$ of $K^n$ is called a {\it Nikodym set} if, for any $x \in K$, there exists a line $L(x)$ through $x$ such that $L(x) - \{ x \} \subset N$. It is believed that any Nikodym set must be quite large. The main interest of Nikodym sets is in $\mathbf{R}^n$, where the problem becomes analytical. But as a testbed, we might want to consider the problem where $K$ is a finite field with a large number of points, and then establishing that a Nikodym set is large becomes a purely combinatorial question.
+
+\begin{lemma}
+	If $K$ is finite, $f$ vanishes on $K^n$, and $\deg(f) < |K|$, then $f = 0$.
+\end{lemma}
+\begin{proof}
+	We prove this theorem by induction. For $n = 1$, if $f$ vanishes on $K$, the division algorithm gives that $X^{|K|} - 1$ divides $f$, which implies $\deg(f) \geq |K|$ unless $f = 0$. For an induction, write
+	%
+	\[ f(x_1, \dots, x_{n+1}) = \sum_k f_k(x_1, \dots, x_n) x_{n+1}^k  \]
+	%
+	For each value of $x_1, \dots, x_n \in K$, $\sum_k f_k(x_1, \dots, x_n) x_{n+1}^k$ is a polynomial in $x_{n+1}$ vanishing everywhere, so by the base case, we conclude $f_k(x_1, \dots, x_n) = 0$ for all $x_1, \dots, x_n \in K$. And then by induction, $f_k = 0$.
+\end{proof}
+
+\begin{theorem}
+	Any Nikodym set in a finite field $K^n$ contains $\Omega_n |K|^n$ points.
+\end{theorem}
+\begin{proof}
+	Let $N$ be a Nikodym set. By parameter counting, we can find a non-zero polynomial $f$ with $\deg(f) \leq n |N|^{1/n}$. If $x \in K^n$, then $f$ vanishes completely on $L(x)$, except perhaps at the point $x$. Suppose $n |N|^{1/n} < |K| - 1$. Since $f$ vanishes on at least $|K| - 1$ points of $L(x)$, this means that $f$ vanishes at $x$ as well. Since $x$ was arbitrary, $f$ vanishes on every point of $K^n$. The last lemma then implies $f = 0$. Thus we have a contradiction unless $n |N|^{1/n} \geq |K| - 1$, so it must be true that
+	%
+	\[ |N| \geq \left( \frac{|K| - 1}{n} \right)^n \geq |K|^n n^{-n} (1 - n|K|^{-1}) = \Omega_n |K|^n \qedhere \]
+\end{proof}
+
+In the finite field case, a set $B$ in $K^n$ is called a {\it Kakeya}, or {\it Besocovitch} set if it contains a line in every direction. That is, for every $y \in K^n$, there exists $x$ such that the line $\{ x + \lambda y : \lambda \in K \}$ is a subset of $B$. Just like Nikodym sets, in $\mathbf{R}^n$, Kakeya sets are conjectured to be very large in size, and we can verify this in the finite field case using the polynomial method.
+
+\begin{theorem}
+	A Kakeya set has $\Omega_n |K|^n$ elements.
+\end{theorem}
+\begin{proof}
+	Let $B$ be a Kakeya set. Construct a homogenous polynomial $f$ in $K[x_0, \dots, x_n]$ with degree at most $n |B|^{1/n}$ such that $f(1,x) = 0$ all $x \in B$. Assume $f$ has the smallest degree such that it vanishes on $B$. Since $B$ contains a line in every direction, we find $f(0,x) = 0$ for all $x \in B$. If we write $f(x) = f_0(x_1, \dots, x_n) + x_0 f_1(x)$, then $f_0(x_1, \dots, x_n) = 0$ for all $x_1, \dots, x_n \in K$. Since $\deg(f_0) \leq \deg(f) \leq n |B|^{1/n}$, if $n |B|^{1/n} < |K|$, then $f_0 = 0$. This implies $x_0$ divides $f$. But then $x_0^{-1} f$ vanishes on $B$, contradicting the fact that $f$ was minimal. This gives a contradiction, so we must have $n |B|^{1/n} \geq |K|$, so $|B| \geq |K|^n n^{-n}$.
+\end{proof}
+
+If $\mathcal{L}$ is a family of lines in $\mathbf{R}^3$, a joint is a point lying at the intersection of three non coplanar lines. One might consider the maximum number of joints a family of lines with a fixed cardinality $L$ might have. If we take an $S \times S \times S$ grid, and we consider the family of axis parallel lines passing through the gridpoints. Then there are $3S^2$ points, and each grid point is a joint, giving $S^3$ joints. Thus the number of joints is approximately $L^{3/2}$. To do slightly better, we can consider a generic set of $S$ planes. These intersect in $S$ choose 2 lines, and $S$ choose 3 joints. If we take $S = 4$, we get a slightly better constant, but still asymptotically $L^{3/2}$. And we now prove this is the maximum one can obtain, up to a constant factor.
+
+\begin{lemma}
+	If $\mathcal{L}$ is a set of lines in $\mathbf{R}^3$ determining $J$ joints, then one line contains fewer than $3J^{1/3}$ joints. 
+\end{lemma}
+\begin{proof}
+	Let $f$ be a polynomial vanishing at every joint of $\mathcal{L}$, with degree at most $3J^{1/3}$. If every line contains more than $3J^{1/3}$ joints, then $f$ vanishes on all of the lines. But then $\nabla f$ vanishes on all of the joints as wells. If we choose $f$ to have minimal degree vanishing on the joints, this is impossible.
+\end{proof}
+
+\begin{theorem}
+	$L$ lines determine at most $O(L^{3/2})$ joints.
+\end{theorem}
+\begin{proof}
+	Let $J(L)$ denote the maximum joints from a set of $L$ lines. If $\mathcal{L}$ is a set of $L$ lines determining $J(L)$ joints, then one line contains fewer than $3J^{1/3}$ joints. If we remove this line, the remaining joints are formed by $L-1$ lines, and so we obtain that $J(L) \leq 3J(L)^{1/3} + J(L-1)$. Thus we obtain that $J(L) \leq 3L J(L)^{1/3}$, and so $J(L) = O(L^{3/2})$.
+\end{proof}
+
+This theorem easily generalizes to high dimensions. The analogy of Lemma 1.6 is that if lines in $\mathbf{R}^n$ determine $J$ joints, then one line must have fewer than $nJ^{1/n}$ joints. This gives $J(L) \leq nJ(L)^{1/n} + J(L-1)$, and so $J(L) = O(n L^{1 + 1/n})$.
+
+\section{Exercises}
+
+\begin{theorem}
+	Given a set of $L$ $m$-planes in $\mathbf{R}^n$, we can find a polynomial with degree at most $2n^{n/(n-m)} L^{1/(n-m)}$ vanishing on the planes.
+\end{theorem}
+\begin{proof}
+	Fix $K$, and form an orthogonal grid of $K^m$ points on each plane. Then we can find a polynomial with degree at most $n(K^m L)^{1/n}$ vanishing on this grid. Provided that $n(K^m L)^{1/n} < K$, this polynomial must also vanish on all of the planes. It is possible to do this with $K \leq 2n^{n/(n-m)} L^{1/(n-m)}$, which gives a polynomial with degree at most $2n^{n/(n-m)} L^{1/(n-m)}$ vanishing on the set of planes.
+\end{proof}
+
+\begin{theorem}[Schwarz-Zippel Lemma]
+	Suppose $A_1, \dots, A_n$ are finite subsets with $|A_k| \leq N$ for each $k$, and $f$ is a polynomial with degree at most $D$. Then the number of zeroes of $f$ in $A_1 \times \dots \times A_n$ is at most $DN^{n-1}$.
+\end{theorem}
+\begin{proof}
+	We prove by induction. For $n = 1$, the theorem is elementary. In general, if $f$ has most that $DN^{n-1}$ zeroes on $A_1 \times \dots \times A_n$, then by pidgeonholing it must have more than $DN^{n-2}$ zeroes on some line parallel to the $n$'th axis. But this is impossible by induction.
+\end{proof}
+
+\begin{corollary}
+	In $\mathbf{R}^n$, $V(f)$ always has zero Lebesgue measure.
+\end{corollary}
+\begin{proof}
+	We prove this by Riemann integration. Note that
+	%
+	\[ |V(f) \cap [0,1]^n| = \int_{[0,1]^n} \mathbf{I}(f(x) = 0)\; dx \]
+	%
+	Now by the Schwarz-Zippel lemma,
+	%
+	\[ \frac{1}{N^n} \sum_{m_1, \dots, m_n = 1}^N \mathbf{I}(f(m_1, \dots, m_n) = 0) \leq \frac{DN^{n-1}}{N^n} = D/N \]
+	%
+	Thus, taking $N \to \infty$, we conclude that $|V(f) \cap [0,1]^n| = 0$.
+\end{proof}
+
+\chapter{Lecture}
+
+Given an irreducible polynomial $f$ over an algebraically closed field, it is useful to find a large vector space containing functions not vanishing identically on $Z(f)$. Any polynomial which vanishes identically on $Z(f)$ is divisible by $f$. Furthermore, the dimension of the set of polynomials with degree at msot $D$ which are divisible by $f$ is ${{D - \deg f + n} \choose {n}}$, if $\deg f \leq D$. By linear algebra, given any linear map $L: V \to W$, we can decompose $V$ as the direct sum of the kernel of $L$ and a complementary subspace. Here, we can take $L(g) = g|_{Z(f)}$. Thus we get a space with dimension ${{D + n}\choose{n}} - {{D - \deg f + n}\choose{n}}$. Since ${{D + n} \choose {n}} \gtrsim_n D^n$, we find that we can find a space with dimension $\gtrsim (\deg f) D^{n-1}$.
+
+Unfortunately, this doesn't work so well over the real numbers, so we have to look a little harder. If $R$ is a commutative ring, and $I$ is an idea, we say it is {\bf real} if for every sequence $r_1, \dots, r_n \in R$ for which $r_1^2 + \dots + r_n^2 \in R$, $r_1, \dots, r_n \in R$. A real ideal is radical, because if $n = 1$, and $r^{2N} \in R$, $r^N \in R$. Eventually we obtain that $r \in R$. Given an ideal $I$, the real radical of $I$ is the set of all $r$ such that there is $s_1, \dots, s_n \in R$ such that $r^n + s_1^2 + \dots + s_k^2 \in I$. The real nullstellensatz says that $I$ is a real ideal if and only if $I(Z(I)) = \sqrt[R]{I}$.
+
+There is a nice classification of irreducible polynomials which generate real ideals. One condition is that there exists $x \in Z(f)$ such that $\nabla f = 0$, and another is that $f$ changes sign somewhere on $\mathbf{R}^n$.
+
+\begin{lemma}
+    Let $f$ be a polynomial. Then there exists $f'$ with degree smaller than $f$, $Z(f') \supset Z(f)$, and each irreducible component of $f'$ generates a real ideal.
+\end{lemma}
+\begin{proof}
+    We prove by induction on $\deg f$. Then we may assume $f$ is irreducible. PROVE LATER.
+\end{proof}
+
+% Read Real Algebraic Geometry, Bochnack, Coste, Roy
+
+\chapter{Sphere}
+
+Spheres of arbitrary radius:
+
+Forbidden configurations help. But not really many forbidden configurations here.
+
+Thus number of spheres times number of points is sharp for incidences of points and spheres.
+
+However, if no four points are co-circular, then there can be no four points incidents to two spheres simultaneously. Running the partitioning machine, we can guess that the polynomial partitioning result will give us the right result.
+
+More generally, if we take a family of varieties and points, and assume there is no particular graph lying in the incidence graph of the situation. Then we can try and bound the number of incidences.
+
+Unit distances in four dimensions:
+
+Idea of Solymozi and Tao: Looks like problem one dimension lower than the one we started with.
+
+\chapter{Restriction Problem}
+
+To prove a bound of the form $\| Ef \|_p \lesssim_p \| f \|_\infty$, it suffices to prove estimates of the form $\| Ef \|_{L^p(B_R)} \lesssim_{\varepsilon,p} R^\varepsilon \| F \|_\infty$ for a slightly small value of $p$.
+
+Parabolic rescaling tells us that if $\| Ef \|_{L^p(B_R)} \leq A \| f \|_{L^\infty(S)}$, then $\| Ef \|_{L^p(B_R)} \leq A r^{2 - 4/p} \| f \|_{L^\infty(S_r)}$, where $f$ is supported on a cap of radius $r$.
+
+\section{Broad vs. Narrow Points}
+
+Let $f: S \to \mathbf{C}$, with $|f(\omega)| \leq 1$ for all $\omega \in S$. We want $\| Ef \|_{L^p(B_R)} \lesssim_\varepsilon R^\varepsilon \| f \|_{\infty}$. Let $K > 1$ be a large number, and divide $S$ into caps of diameter $1/K$. We call a point $x \in B_R$ {\it narrow} if the wave packets passing through $x$ come from the same $1/K$ cap.
+
+Suppose all of $B_R$ is narrow for a given function $f$. Suppose we have already established for some fixed $\varepsilon$, $C_\varepsilon$ for all balls of radius $\leq R/2$. Let $N = \{ x \in B_2: \text{no wave packets through $x$} \}$, so $Ef(x) = 0$ on $N$. For each $1/K$ cap $\tau$, elt $X_\tau$ be the set of points passing through the $x$ cone from the cap $\tau$. If $x \in X_\tau$, then $Ef(x) = Ef_\tau(x)$, so
+%
+\[ \int_{X_\tau} |Ef(x)|^p = \int_{X_\tau} |Ef_\tau(x)|^p \leq \int_{B_R} |Ef_\tau(x)|^p \]
+%
+Thus
+%
+%\[ \int_{B_R} |Ef|^p \= \sum_\tau \int_{X_\tau} |Ef|^p \lesssim \sum_\tau K^{4-2[p} C_\varepsilon^p R^\varepsilon \| f \|_\infty^p \lesssim K^{6-2p} C_\varepsilon^p R^{\varepsilon p} \| f \|_{L^\infty}^p \]
+%
+Thus we have found $\| E f\|_{L^p(B_R)} \lesssim K^{6/p - 2} C_\varepsilon R^\varepsilon \| f \|_{L^\infty}$.
+
+Now let's imagine every point in $B_R$ is broad. We will prove instead that if $p = 13/4 + \varepsilon$, then
+%
+\[ \| Ef \|_{L^p(B_R)}^p \lesssim_\varepsilon R_\varepsilon^p \| f \|_{L^2(S)}^{3 + \varepsilon} \| f \|_{L^\infty(S)}^{1/4} \leq R_\varepsilon^p \| f \|_{L^2(S)}^{3 + \varepsilon} \max_\Theta \| f \|_{L^2(\Theta)}^{1/4} \]
+%
+TODO: EXPAND
+
+We want to understand $\int_{B_R} |Ef|^p$. Let $D > 1$ be a large integer. Let $P$ be a polynomial breaking up $\mathbf{R}^3$ into a union of $O(D^3)$ cells. The mass of $|Ef|^p$ is roughly the same in each one of the cells (examine the proof of polynomial partitioning but rather than taking points take equidistributed mass). Thus on each cell $\Omega$,
+%
+\[ \int_\Omega |Ef|^p = D^{-3} \int_{B(R)} |Ef|^p \]
+%
+Unfortunately, a wave packet is a thickened line, so even though the line might not enter a cell, the wave packet might still enter a cell.
+
+Define $W = N_{R^{1/2}}(Z(p))$. For each cell $\Omega$, let $\Omega' = \Omega - W$. If a wave packet supported on a tube $T$ intersects $\Omega'$, then the line coaxial with $T$ intersects $\Omega$, then on average each smaller cell $\Omega'$ only intersects $|T|/D^2$ wave packets. For each cell $\Omega$, let $f_\Omega: S \to \mathbf{C}$ be the function whose extension $Ef_\Omega$ consists of the wave packets that intersect $\Omega'$.
+
+\begin{thebibliography}{9}
+
+\end{thebibliography}
+
+\end{document}
