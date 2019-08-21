@@ -2,9 +2,9 @@
 
 \usepackage[margin = 1.0in]{geometry}
 \usepackage{amsmath,amssymb,graphicx,mathabx,accents}
-\usepackage{enumitem,mdwlist}
+\usepackage{enumerate,mdwlist}
 
-\setlist[enumerate]{label*={\normalfont(\Alph*)},ref=(\Alph*)}
+%\setlist[enumerate]{label*={\normalfont(\Alph*)},ref=(\Alph*)}
 
 \numberwithin{equation}{section}
 
@@ -21,7 +21,9 @@
 \newtheorem{lemma}{Lemma}
 \newtheorem{corollary}{Corollary}
 \newtheorem*{example}{Example}
+\theoremstyle{remark}
 \newtheorem*{remark}{Remark}
+\newtheorem*{remarks}{Remarks}
 
 \DeclareMathOperator{\minkdim}{\dim_{\mathbf{M}}}
 \DeclareMathOperator{\hausdim}{\dim_{\mathbf{H}}}
@@ -55,9 +57,9 @@
 \maketitle
 
 \begin{abstract}
-	The pattern avoidance problem seeks to construct a set $X\subset \RR^d$ with large dimension that avoids a prescribed pattern such as three term arithmetic progressions, or more general patterns such as avoiding points $x_1, \dots, x_n$ such that $f(x_1, \dots, x_n) = 0$ (three term arithmetic progressions are specified by the pattern $x_1 - 2x_2 + x_3 = 0$). Previous work on the subject has considered patterns described by polynomials, or by functions $f$ satisfying certain regularity conditions. We consider the case of `rough patterns.
-	% DISCUSS: SHOULD WE INCLUDE THE FACT THAT WE USE HAUSDORFF DIMENSION?
-	There are several problems that fit into the framework of rough pattern avoidance. As a first application, if $Y \subset \RR^d$ is a set with Minkowski dimension $\alpha$, we construct a set $X$ with Hausdorff dimension $1-\alpha$ such that $X+X$ is disjoint from $Y$. As a second application, given a set $Y$ of dimension close to one, we can construct a subset $X \subset Y$ of dimension $1/2$ that avoids isosceles triangles. [{\bf{TODO:}} I'd like to replace this with a rectifiability statement]
+	The pattern avoidance problem seeks to construct a set $X\subset \RR^d$ with large dimension that avoids a prescribed pattern. Examples of such patterns include three-term arithmetic progressions (solutions to $x_1 - 2x_2 + x_3 = 0$), or more general patterns of the form $f(x_1, \dots, x_n) = 0$. Previous work on the subject has considered patterns described by polynomials, or by functions $f$ satisfying certain regularity conditions. We consider the case of `rough' patterns, not prescribed by functional zeros.
+
+	There are several problems that fit into the framework of rough pattern avoidance. As a first application, if $Y \subset \RR^d$ is a set with Minkowski dimension $\alpha$, we construct a set $X$ with Hausdorff dimension $1-\alpha$ such that $X+X$ is disjoint from $Y$. As a second application, if $C$ is a Lipschitz curve, we construct a set $X \subset C$ of dimension $1/2$ that does not contain the vertices of an isosceles triangle.
 \end{abstract}
 
 
@@ -67,31 +69,58 @@
 
 
 
-A major question in modern geometric measure theory is whether sets with sufficiently large Hausdorff dimension necessarily contain copies of certain patterns. For example, Theorem 6.8 of \cite{Matilla} shows that each set $X \subset \RR^d$ with Hausdorff dimension exceeding one must contain three colinear points. On the other hand, the main result of \cite{Maga} constructs a set $X \subset \RR^2$ with full Hausdorff dimension such that no four points in $X$ form the vertices of a parallelogram. At the time of this writing, many fundamental questions about the relation between the geometric patterns of a set and it's fractional dimension remain open. The threshold dimension above which patterns are guaranteed can vary for different patterns, or not even exist at all. In this paper, we provide lower bounds for the threshold by solving the pattern avoidance problem; constructing sets with large dimension avoiding patterns.
+A major question in modern geometric measure theory is whether sufficiently large sets are forced to contain copies of certain patterns. Intuitively, one expects the answer to be yes, and many results in the literature support this intuition. For example, the Lebesgue density theorem implies that a set of positive Lebesgue measure contains an affine copy of any finite set.
+% CHANGE: Changed this next sentence so that the functional perspective is hidden.
+And any set $X \subset \RR^d$ with Hausdorff dimension exceeding one must contain three colinear points (a simple consequence of Theorem 6.8 of \cite{Matilla}). On the other hand, there are a family of results challenging this intuition.
+% CHANGE: Changed next sentence so functional perspective is hidden.
+Keleti \cite{KeletiDimOneSet} constructs a set $X \subset \RR$ with full Hausdorff dimension not containing any nontrivial three term arithmetic progressions. Maga \cite{Maga} constructs a set $X \subset \RR^2$ of full Hausdorff dimension such that no four points in $X$ form the vertices of a parallelogram. The pattern avoidance problem (informally stated) asks: for a given pattern, how large can the dimension of a set $X \subset \RR^d$ be before it is forced to contain a copy of this pattern? 
 
-One natural way to approach the pattern avoidance problem is to find general methods for constructing pattern avoiding sets by exploiting a particular geometric feature of the pattern. In \cite{Mathe}, M\'{a}th\'{e} shows that, given a pattern specified by a countable union of rational coefficient bounded degree polynomials $f_1, f_2, \dots$ in $nd$ variables, one can construct a set $X \subset \RR^d$ such that for every collection of distinct points $x_1, \dots, x_n$, and each index $k$, $f_k(x_1, \dots, x_n) \neq 0$. In \cite{MalabikaRob}, Fraser and the second author consider a related problem where the polynomials $f_k$ are replaced with full rank $C^1$ functions.
+A natural way to formalize the notion of a pattern is as a set $Z \subset \RR^{dn}$ for some integers $d \geq 1$ and $n \geq 2$. We say a set $X \subset \RR^d$ avoids a pattern $Z$ if for every collection of $n$ {\it distinct} points $x_1, \dots, x_n \in X$, the $n$-tuple $(x_1, \dots, x_n)$ is not an element of $Z$. For example, a set $X \subset \RR^d$ does not contain three collinear points if and only if it avoids the pattern
+%
+% CHANGE: Avoid the wedge product, because not everyone will know the wedge product, and we don't really need it in the rest of our proof.
+% CHANGE: $$ is an obselete command, and modifies vertical spacing in weird ways, so should only be used in TeX, not LaTeX.
+% CHANGE: Use : instead of \colon here, because the : symbol is not a punctuation symbol of the left hand side, but is a separator between the left and right.
+\[ Z_0 = \{ (x_1,x_2,x_3) \in \RR^{3d} : \text{there is}\ \lambda\ \text{such that}\ (x_3 - x_1) = \lambda (x_2 - x_1) \}. \]
+%
+Similarly, a set $X \subset \RR^2$ avoids the pattern 
+%
+% CHANGE: Avoided wedge product again.
+\[ Z_1 = \{ (x_1,x_2,x_3,x_4) \in \RR^8 : x_1 + x_4 = x_2 + x_3, (x_1,x_2,x_3) \not \in Z_0 \} \]
+%
+if and only if no four points in $X$ form the vertices of a parallelogram.
 
-% DISCUSS: SAY "WE SAY THIS AVOIDS THIS PATTERN IF..."
-
-In this paper, we also find general methods for constructing pattern avoid sets. But rather than avoiding the zeroes of a function, we fix $Z \subset \RR^{dn}$, and construct sets $X$ such that for any distinct $x_1, \dots, x_n \in X$, $(x_1, \dots, x_n) \not \in Z$. We then say $X$ avoids the pattern specified by $Z$. For instance, if $Z = \{ (x_1,x_2,x_3) \in (\RR^d)^3 : (x_1,x_2,x_3)\ \text{are colinear} \}$, then $X \subset \RR^d$ avoids the pattern specified by $Z$ precisely when $X$ does not contain three colinear points. Our problem generalizes the problem statements considered in \cite{Mathe} and \cite{MalabikaRob} if we set $Z = \bigcup_{k = 1}^\infty f_k^{-1}(0)$. From this perspective, M\'{a}th\'{e} constructs sets avoiding a set $Z$ formed from a countable union of algebraic varieties, while Fraser and the second author construct sets avoiding a set $Z$ formed from the countable union of $C^1$ manifolds.
-
-The advantage of the formulation of pattern avoidance we consider is that it is now natural to consider `rough' sets $Z \subset \RR^{dn}$ which are not naturally specified as the zero set of a function. In particular, in this paper we consider $Z$ formed from the countable union of sets, each with lower Minkowski dimension bounded above by some $\alpha$. In contrast with previous work, no further assumptions are made on $Z$. The dimension of the avoiding set $X$ we will eventually construct depends only on the codimension $nd - \alpha$ of the set $Z$, and the number of variables $n$.
+A number of recent articles have established pattern avoidance results for increasingly general patterns. In \cite{Mathe}, M\'{a}th\'{e} constructs a set $X\subset\RR^d$ that avoids a pattern specified by a countable union of algebraic varieties of controlled degree. In \cite{MalabikaRob}, Fraser and the second author consider the pattern avoidance problem for countable unions of $C^1$ manifolds.
+% Change: Moved this sentence to last paragraph to continue the `flow', so our development fits into past developments..
+In this paper, we continue these developments by considering the pattern avoidance problem for an even more general class of `rough' patterns $Z \subset \RR^{dn}$, that are the countable union of sets with controlled lower Minkowski dimension.
 
 \begin{theorem}\label{mainTheorem}
-	Let $Z \subset \RR^{nd}$ be a countable union of compact sets, each with lower Minkowski dimension at most $\alpha$, with $d \leq \alpha < dn$. Then there exists a set $X \subset [0,1)^d$ with Hausdorff dimension at least $(nd - \alpha)/(n-1)$ such that whenever $x_1, \dots, x_n \in X$ are distinct, then $(x_1, \dots, x_n) \not \in Z$.
+	% CHANGE: Switch from an inequality in alpha to a specification of the interval alpha lies to make things more gramatically clear, and emphasize alpha is the parameter.
+	%
+	Fix $\alpha \in [d,dn]$, and let $Z \subset \RR^{nd}$ be a countable union of bounded sets, each with lower Minkowski at most $\alpha$. Then there exists a set $X \subset [0,1)^d$ with Hausdorff dimension at least $(nd - \alpha)/(n-1)$ avoiding $Z$.
 \end{theorem}
 
-\begin{remark}
-	When $\alpha < d$, the pattern avoidance problem is trivial, since $X = [0,1)^d - \pi(Z)$ is full dimensional and solves the pattern avoidance problem, where $\pi(x_1, \dots, x_n) = x_1$ is a projection map from $\RR^{dn}$ to $\RR^d$. The case $\alpha = dn$ is trivial as well, since we can set $X = \emptyset$.
+% CHANGE: Using an amsthm environment leads to a more uniform structure to the LaTeX document.
+% DISCUSS: Should all these remarks really be remarks?
+\begin{remarks}
+	\ 
+	\begin{enumerate}[1.]
+		\item When $\alpha < d$, the pattern avoidance problem is trivial, since $X = [0,1)^d - \pi(Z)$ is full dimensional and solves the pattern avoidance problem, where $\pi(x_1, \dots, x_n) = x_1$ is a projection map from $\RR^{dn}$ to $\RR^d$.
 
-	%And given only a lower Minkowski dimension bound on the sets which form $Z$, we cannot do any better than a zero dimensional set since it is possible for $Z$ to be $\RR^{dn}$, in which case solutions to the pattern avoidance problem can consist of at most $n-1$ points.
-\end{remark}
+		\item Theorem \ref{mainTheorem} is trivial when $\alpha = dn$, since we can set $X = \emptyset$.
+		% CHANGE: Added \alpha = dn into the statement of Theorem 1, then showed that this endpoint case is trivial.
+		We will therefore assume that $\alpha < dn$ in our proof of the theorem, without loss of generality.
 
-% DISCUSS: Without mentioning why this result can only be developed because our method can be applied to very rough sets, the application doesn't seem exciting at all.
+		\item When $Z$ is a countable union of smooth manifolds in $\mathbb R^{nd}$ of co-dimension $m$, we have $\alpha = nd - m$. In this case Theorem \ref{mainTheorem} yields a set $X \subset \mathbb R^d$ with Hausdorff dimension at least $(nd - \alpha)/(n-1) = m/(n-1)$. This recovers Theorem 1.1 and 1.2 from \cite{MalabikaRob}, making Theorem \ref{mainTheorem} a generalization of these results.
 
-When $Z$ is a countable union of smooth manifolds, Theorem \ref{mainTheorem} generalizes Theorem 1.1 and 1.2 from \cite{MalabikaRob}. Section \ref{futureWorkSection} is devoted to a comparison of our methods with \cite{MalabikaRob}, as well as other general pattern avoidance methods. But our result is more interesting when it can be applied to truly `rough' sets. One surprising application to our method is obtained by considering a `rough' set $Y$ in addition to a set $Z$, and finding a set $X \subset Y$ of large dimension avoiding $Z$. Previous methods in the literature fundamentally exploit the ability to select points on the entirety of Euclidean space, and so it remains unlikely that we can obtain any result of this form using their methods, unless $Y$ is suitably flat, i.e. a smooth surface. To contrast this, our result even applies for certain sets $Y$ which are of Cantor type. We discuss applications of our result in Section 5.
+		\item Since Theorem \ref{mainTheorem} does not require any regularity assumptions on the set $Z$, it can be applied in contexts that cannot be addressed using previous methods. Two such applications, new to the best of our knowledge, have been recorded in Section \ref{applications}; see Theorems \ref{sumset-application} and \ref{C1IsoscelesThm} there.
 
-Theorem \ref{mainTheorem} is proved using a Cantor-type construction, a common theme in the surrounding literature, described explicitly in Section \ref{discretizationsection}. For a sequence of decreasing lengths $\{ l_n \}$ with $l_n \to 0$, the construction specifies a selection mechanism for a nested family of sets $X_n \to X$, with $X_n$ a union of sidelength $l_n$ cubes and avoiding $Z$ at scales close to $l_n$. Our {\it key} contribution to this process is using the probabilistic method to guarantee the existence of efficient selections at each scale, described in Section 2. This selection also assigns mass uniformly on intermediate scales, akin to \cite{MalabikaRob}, ensuring that the selection procedure at a single scale is the sole reason for the Hausdorff dimension we calculate in Section 4. Furthermore, the randomization allows us to avoid the complicated queueing techniques in \cite{KeletiDimOneSet} and \cite{MalabikaRob}, which has the additional benefit that we can confront the entire behaviour of $Z$ at scales close to $l_n$ simultaneously during the $n$th step of the construction.
+		\item\label{remarkSolutionDescription} The set $X$ in Theorem \ref{mainTheorem} is obtained by constructing a sequence of approximations to $X$, each of which avoids the pattern $Z$ at different scales. For lengths $l_k \searrow 0$, we construct a decreasing nested family of sets $\{ X_k \}$, where $X_k$ is a union of cubes of sidelength $l_k$ that avoids $Z$ at scales close to $l_k$. The set $X = \bigcap X_k$ then avoids $Z$. While this proof strategy is not new, our method for constructing the sets $\{X_k\}$ has several innovations that simplify the analysis of the resulting set $X=\bigcap X_k$. In particular, through a probabilistic selection process we are able to avoid the complicated queuing techniques used in \cite{KeletiDimOneSet} and \cite{MalabikaRob}, that required storage of data from each step of the iterated construction, to be retrieved at a much later stage of the construction process.
+
+		At the same time, our construction continues to share certain features with \cite{MalabikaRob}. For example, between each pair of scales $l_{k-1}$ and $l_{k}$, we carefully select an intermediate scale $r_{k}$. The set $X_{k}\subset X_{k-1}$ avoids $Z$ at scale $l_{k}$, and it is `evenly distributed' at scale $r_k$:
+		% DISCUSS: This seems like a weird statement to make.
+		the set $X_{k}$ is a union of intervals of length $l_{k}$ whose midpoints resemble (a large subset of) an arithmetic progression of step size $r_k$. The details of a single step of this construction are described in Section \ref{discretesection}. In Section \ref{discretizationsection}, we explain how the length scales $l_k$ and $r_k$ for $X$ are chosen, and prove its avoidance property. In Section \ref{dimensionsection} we analyze the size of $X$ and show that it satisfies the conclusions of Theorem \ref{mainTheorem}.
+	\end{enumerate}
+\end{remarks}
 
 
 
@@ -104,54 +133,40 @@ Theorem \ref{mainTheorem} is proved using a Cantor-type construction, a common t
 
 \section{Frequently Used Notation and Terminology}\label{notationSection}
 
-Our argument heavily depends upon discretizing sets into unions of cubes. Throughout our argument, we use the following notation:
+\begin{enumerate}
+	\item\label{defDyadicLength} A {\it dyadic length} is a number $l$ equal to $2^{-k}$ for some non-negative integer $k$.
 
-% DISCUSS: DOES THE SECTION PARTITIONING HELP?
-
-\begin{enumerate}%[label=\Alph*]
-	\item A {\it dyadic length} is a length $l$ equal to $2^{-k}$ for some non-negative integer $k$.
-
-	\item Given a length $l > 0$, we let $\B^d_l$  denote the family of all half open cubes in $\RR^d$ with sidelength $l$ and corners on the lattice $(l \cdot \ZZ)^d$. That is,
+	\item\label{defDyadicGrid} Given a length $l > 0$, we let $\B^d_l$ denote the family of all half open cubes in $\RR^d$ with sidelength $l$ and corners on the lattice $(l \cdot \ZZ)^d$, i.e.
 	%
-	\[ \B^d_l = \{ [a_1, a_1 + l] \times \cdots \times [a_d, a_d+l] : a_k \in l \cdot \ZZ \}. \]
+	\[ \B^d_l = \{ [a_1, a_1 + l) \times \cdots \times [a_d, a_d+l) : a_k \in l \cdot \ZZ \}. \]
 	%
 	If $E \subset \RR^d$, $\B^d_l(E)$ is the family of cubes in $\B^d_l$ intersecting $E$, i.e.
 	%
 	\[ \B^d_l(E) = \{ I \in \B^d_l: I \cap E = \emptyset \}. \]
 
-	\item The {\it lower} and {\it upper Minkowski dimension} of a compact set $Z \subset \RR^d$ are defined as
+	% DISCUSS: Remove upper Minkowski dimension?	
+	\item\label{defMinkowskiDim} The {\it lower} and {\it upper Minkowski dimension} of a compact set $Z \subset \RR^d$ are defined as
 	%
-	%	\begin{equation} \label{minkdimdef}
-	\[		\lowminkdim(Z) = \liminf_{l \to 0} \frac{\log(\# \B^d_l(Z))}{\log(1/l)}\quad \text{and}\quad \upminkdim(Z) = \limsup_{l \to 0} \frac{\log(\# \B^d_l(Z))}{\log(1/l)}. \]
-	%	\end{equation}
-	If $\lowminkdim(Z) = \upminkdim(Z)$, then we define $\minkdim(Z)$ equal to the common value.
+	\[ \lowminkdim(Z) = \liminf_{l \to 0} \frac{\log(\# \B^d_l(Z))}{\log(1/l)}\quad \text{and}\quad \upminkdim(Z) = \limsup_{l \to 0} \frac{\log(\# \B^d_l(Z))}{\log(1/l)}. \]
 
-	\item If $0 \leq \alpha$ and $\delta > 0$, we define the dyadic Hausdorff content of a set $E\subset\RR^d$ as 
+	\item\label{defHausdorffDim} If $\alpha \in (0,\infty)$ and $\delta \in (0,\infty)$, we define the dyadic Hausdorff content of a set $E\subset\RR^d$ as 
 		%
 	\[ H^\alpha_\delta(E) = \inf \left\{ \sum_{k = 1}^m l_k^\alpha : E \subset \bigcup_{k = 1}^m I_k\ \text{and}\ I_k \in \B^d_{l_k}, l_k \leq \delta\ \text{for all $k$} \right\}. \]
 	%
 	The $\alpha$-dimensional dyadic Hausdorff measure $H^\alpha$ on $\RR^d$ is $H^\alpha(E) = \lim_{\delta \to 0} H_\delta^\alpha(E)$, and the {\it Hausdorff dimension} of a set $E$ is $\hausdim(E) = \inf \{ \alpha \geq 0 : H^\alpha(E) = 0 \}$.
-\suspend{enumerate}
-%
-%In Section 2, we solve a discrete version of Theorem \ref{mainTheorem}. Non-diagonal cubes will play an important role in this process. 
-%
-\resume{enumerate}
-	\item \label{stronglyNonDiagonalDef}Given $I \in \B^{dn}_l$, we can decompose $I$ as $I_1 \times \cdots \times I_n$ for unique cubes $I_1, \dots, I_n \in \B_l^d$. We say $I$ is {\it strongly non-diagonal} if the cubes $I_1, \dots, I_n$ are distinct. Strongly non-diagonal cubes will play an important role in Section \ref{discretesection}, when we solve a discrete version of Theorem \ref{mainTheorem}.
-\suspend{enumerate}
-%
-%In Section 3, we discretize the set $Z$ in the hypothesis of Theorem \ref{mainTheorem} into a union of boxes. Our argument is aided by the following definitions:
-%
-\resume{enumerate}
-	\item\label{strongCoverDefn} Adopting the terminology of \cite{KatzTao}, we say a collection of sets $\{ U_k \}$ is a {\it strong cover} of a set $E$ if $E \subset \limsup U_k$, which means every element of $E$ is contained in infinitely many of the sets $U_k$. This idea will be useful in Section \ref{discretizationsection}.  
-\suspend{enumerate}
-%
-%Once $X$ has been constructed, in Section 4 we show it has the Hausdorff dimension required by Theorem \ref{mainTheorem}. Here we use a Frostman's lemma type approach.
-%
-\resume{enumerate}
-	\item\label{frostmanItem} A {\it Frostman measure} of dimension $\alpha$ is a non-zero compactly supported probability measure $\mu$ on $\RR^d$ such that for every cube $I$ of sidelength $l$, $\mu(I) \lesssim l^\alpha$. Note that a measure $\mu$ satisfies this inequality for every cube $I$ if and only if it satisfies the inequality for cubes whose sidelengths are dyadic lengths. {\it Frostman's lemma} says that
+
+	\item\label{defStronglyNonDiagonal} Given $I \in \B^{dn}_l$, we can decompose $I$ as $I_1 \times \cdots \times I_n$ for unique cubes $I_1, \dots, I_n \in \B_l^d$. We say $I$ is {\it strongly non-diagonal} if the cubes $I_1, \dots, I_n$ are distinct. Strongly non-diagonal cubes will play an important role in Section \ref{discretesection}, when we solve a discrete version of Theorem \ref{mainTheorem}.
+
+	\item\label{defStrongCover} Adopting the terminology of \cite{KatzTao}, we say a collection of sets $\{ U_k \}$ is a {\it strong cover} of a set $E$ if $E \subset \limsup U_k$, which means every element of $E$ is contained in infinitely many of the sets $U_k$. This idea will be useful in Section \ref{discretizationsection}.  
+
+	\item\label{defFrostmanItem} A {\it Frostman measure} of dimension $\alpha$ is a non-zero compactly supported probability measure $\mu$ on $\RR^d$ such that for every cube $I$ of sidelength $l$, $\mu(I) \lesssim l^\alpha$. Note that a measure $\mu$ satisfies this inequality for every cube $I$ if and only if it satisfies the inequality for cubes whose sidelengths are dyadic lengths. {\it Frostman's lemma} says that
 	%
-	\[ \hausdim(E) = \sup \left\{ \alpha: \begin{array}{c} \text{there is an}\ \alpha\ \text{dimensional Frostman}\\
-	\text{measure supported on $E$} \end{array} \right\}. \]
+	% CHANGE: Using an aligned environment here gives weird spacing between lines which is unnecessary and doesn't look very good.
+	\[ \hausdim(E) = \sup \left\{ \alpha:
+		\begin{array}{c}
+			\text{there is a Frostman measure of}\\
+			\text{dimension $\alpha$ supported on $E$}
+		\end{array} \right\}. \]
 \end{enumerate}
 
 
@@ -164,16 +179,18 @@ Our argument heavily depends upon discretizing sets into unions of cubes. Throug
 
 \section{Avoidance at Discrete Scales}\label{discretesection}
 
-In this section we describe a method for avoiding $Z$ at a single scale. We apply this technique in Section \ref{discretizationsection} at many scales to construct a set $X$ avoiding $Z$ at all scales. This single scale avoidance technique is the core part of our construction, and the efficiency with which we can avoid $Z$ at a single scale has direct consequences on the Hausdorff dimension of the set $X$ obtained in Theorem \ref{mainTheorem}.
+In this section we describe a method for avoiding $Z$ at a single scale. We apply this technique in Section \ref{discretizationsection} at many scales to construct a set $X$ avoiding $Z$ at all scales. This single scale avoidance technique is the core building block of our construction, and the efficiency with which we can avoid $Z$ at a single scale has direct consequences on the Hausdorff dimension of the set $X$ obtained in Theorem \ref{mainTheorem}.
 
-At a single scale, we solve a discretized version of the problem, where all sets are unions of cubes at two dyadic lengths $l \geq s$. In the discrete setting, $Z$ is replaced by a discretization version of itself, i.e. a union of cubes in $\B^{dn}_s$, denoted by $Z_s$. Given a set $E$, which is a union of cubes in $\B_l^d$, our goal is to construct a a union of cubes in $\B_s^d$, denoted $F$, such that $F \subset E$ and $F^n$ is disjoint from the strongly non-diagonal cubes of $Z_s$ (see Definition \ref{stronglyNonDiagonalDef}).
+% Change: Using B_s^{dn}(Z) is not correct here, i.e if Z is a dense set.
+At a single scale, we solve a discretized version of the problem, where all sets are unions of cubes at two dyadic lengths $l > s$. In this discrete setting, $Z$ is replaced by a discretized version of itself as the dyadic length $s$, i.e. a union of cubes in $\B^{dn}_s$, denoted by $Z_s$. Given a set $X_l$, which is a union of cubes in $\B_l^d$, our goal is to construct a set $X_s \subset X_l$ that is a union of cubes in $\B_s^d$, and $X_s^n$ is disjoint from strongly non-diagonal cubes in $\B^{dn}_s(Z_s)$. Using the setup introduced in Remark \ref{remarkSolutionDescription} to Theorem \ref{mainTheorem}, we will later choose $l = l_k$, $s = l_{k+1}$, and $X_l = X_k$. The set $X_{k+1}$ will be defined as the set $X_s$ we construct.
+%(see Definition \ref{defStronglyNonDiagonal}).
+% DISCUSS: Don't we want to reference definitions when we first use them?
 
-% DISCUSS: The double parentehesis in the `see definition' annoys me for some reason.
+% DISCUSS: Your new version of this paragraph avoids the intuition established in the previous version.
+In order to ensure the final set $X$ obtained in Theorem \ref{mainTheorem} has large Hausdorff dimension regardless of the rapid decay of scales used in the construction of $X$, it is crucial that $X_s$ is uniformly distributed over $X_l$. We achieve this by decomposing $X_l$ into sub-cubes in $\B_r^d$ for some intermediate scale $r \in [s,l]$, and distributing $X_s$ as evenly among these intermediate sub-cubes as possible. Assuming a mild regularity condition on the volume of $X_s$, this is possible.
 
-In order to ensure the final set $X$ obtained in Theorem \ref{mainTheorem} has large Hausdorff dimension regardless of the rapid decay of scales used in the construction of $X$, it is crucial that $F$ is spread uniformly over $E$. We achieve this by decomposing $E$ into sub-cubes in $\B_r^d$ for some intermediate scale $r \in [s,l]$, and distributing $F$ evenly among as many of these intermediate sub-cubes as possible. Assuming a mild regularity condition on the volume of $Z_s$, this is possible.
-
-\begin{lemma} \label{discretelemma}
-	Fix two dyadic lengths $l \geq s$. Let $E$ be a nonempty union of cubes in $\B^d_l$, and let $Z_s$ be a union of cubes in $\B^d_s$ such that $|Z_s| \leq l^{dn}/2$. Then there exists a dyadic length $r \in [s,l]$ such that
+\begin{lemma}\label{discretelemma}
+	Fix two dyadic lengths $l > s$. Let $X_l \subset [0,1)^d$ be a nonempty union of cubes in $\B^d_l$, and let $Z_s$ be a union of cubes in $\B^d_s$ such that $\# \B^{dn}(Z_s) \leq 0.5 \cdot (l/s)^{dn}$. Then there exists a dyadic length $r \in [s,l]$ such that
 	%
 	\begin{equation} \label{rBound}
 		A_l |Z_s|^{1/d(n-1)} \leq r \leq \max(s, 2 A_l |Z_s|^{1/d(n-1)})\quad \text{where}\quad A_l = (2^{1/d}/l)^{1/(n-1)}.
@@ -206,7 +223,7 @@ In order to ensure the final set $X$ obtained in Theorem \ref{mainTheorem} has l
 	%
 	Then set
 	%
-	\begin{equation} \label{defnOfF}
+	\begin{equation} \label{defOfF}
 		F_U = U - \{ \pi(K): K \in \mathcal{K}(U), K\ \text{is strongly diagonal} \},
 	\end{equation}
 	%
@@ -254,7 +271,7 @@ In order to ensure the final set $X$ obtained in Theorem \ref{mainTheorem} has l
 \end{proof}
 
 \begin{remark}
-	While the existence of the set $F$ in Lemma \ref{discretelemma} was obtained by probabilistic techniques, we emphasize that it's existence is a purely deterministic statement. One can find a candidate $F$ constructively by checking all of the finitely many possible choice of $U$ to find one particular choice $U_0$ which satisfies $\eqref{KU0Small}$, and then defining $F$ by \eqref{defnOfF}.
+	While the existence of the set $F$ in Lemma \ref{discretelemma} was obtained by probabilistic techniques, we emphasize that it's existence is a purely deterministic statement. One can find a candidate $F$ constructively by checking all of the finitely many possible choice of $U$ to find one particular choice $U_0$ which satisfies $\eqref{KU0Small}$, and then defining $F$ by \eqref{defOfF}.
 	%The advantage of the probabilistic argument is that we are able to find an explicit bound for the minimal cardinality of $\mathcal{K}(U)$. 
 	Thus the set we obtain in Theorem \ref{mainTheorem} exists by purely constructive means.
 \end{remark}
@@ -271,10 +288,10 @@ If we combine this inequality with Property \ref{nonConcentrationItem} of Lemma 
 \[	\frac{\log \# \B^d_s(F)}{\log(1/s)} \leq \frac{\log \# \B^d_r(E)}{\log(1/s)} = \frac{\log |E| r^{-d}}{\log(1/s)} = \frac{d \log(1/r) - \log |E|^{-1}}{\log(1/s)} \leq \frac{dn - \alpha}{n - 1}. \]
 %\end{equation}
 %
-Given a set $F = \bigcap F_k$, where $\{ F_k \}$ are infinitely many sets obtained from an application of Lemma \ref{discretelemma} at a sequence of scales $\{ s_k \}$ with $s_k \to 0$ as $k \to \infty$, then we can show% \eqref{boxCountingBound} shows
+Given a set $F = \bigcap F_k$, where $\{ F_k \}$ are infinitely many sets obtained from an application of Lemma \ref{discretelemma} at a sequence of scales $\{ s_k \}$ with $s_k \to 0$ as $k \to \infty$, and where $|Z_{s_k}| \geq s_k^{dn - \alpha}$, then the last computation shows% \eqref{boxCountingBound} shows
 %
 %\begin{equation} \label{badDimension}
-\[	\hausdim(F) \leq \lim_{s_k \to 0} \frac{\log \# \B^d_{s_k}(F_k)}{\log(1/s_k)} \leq \frac{dn - \alpha}{n-1}. \]
+\[	\hausdim(F) \leq \upminkdim(F) \leq \lim_{s_k \to 0} \frac{\log \# \B^d_{s_k}(F_k)}{\log(1/s_k)} \leq \frac{dn - \alpha}{n-1}. \]
 %\end{equation}
 %
 This is why we can only lower the Hausdorff dimension of the set $X$ obtained in Theorem \ref{mainTheorem} by $(dn - \alpha)/(n-1)$. Furthermore, we see that we must be very careful to ensure applications of the discrete lemma are the only place in our proof where dimension is lost.
@@ -293,7 +310,7 @@ This is why we can only lower the Hausdorff dimension of the set $X$ obtained in
 
 
 \section{Fractal Discretization}\label{discretizationsection}
-In this section we will construct the set $X$ by applying Lemma \ref{discretelemma} at many scales. Since $Z$ is a countable union of compact sets with Minkowski dimension at most $\alpha$, there exists a strong cover (see Definition \ref{strongCoverDefn}) of $Z$ by cubes restricted to a sequence of dyadic lengths $\{ l_k \}$. We will select this strong cover so that the scales $l_k$ converge to 0 very quickly.
+In this section we will construct the set $X$ by applying Lemma \ref{discretelemma} at many scales. Since $Z$ is a countable union of compact sets with Minkowski dimension at most $\alpha$, there exists a strong cover (see Definition \ref{defStrongCover}) of $Z$ by cubes restricted to a sequence of dyadic lengths $\{ l_k \}$. We will select this strong cover so that the scales $l_k$ converge to 0 very quickly.
 
 \begin{lemma} \label{coveringlemma}
 	Let $Z \subset \RR^{dn}$ be a countable union of compact sets, each with lower Minkowski dimension at most $\alpha$. Let $\{ \varepsilon_k \}$ be a sequence of positive numbers and let $\{ f_k \}$ be a sequence of functions such that $f_k \colon (0,\infty) \to (0,\infty)$. Then there exists a sequence of dyadic lengths $\{ l_k \}$ and compact sets $\{ Z_k \}$ such that
@@ -330,7 +347,7 @@ We now construct $X$ by avoiding the various discretizations of $Z$ at each scal
 
 We are now ready to construct the set $X$ in Theorem \ref{mainTheorem}. Let $l_0 = 1$ and $X_0 = [0,1)^d$. For each $k \geq 1$, define $\varepsilon_k = c_0/k$, where we view $c_0 = (dn - \alpha)/4$ as a irrelevant constant small enough that $dn - \alpha - 2\varepsilon_k > 0$ for any $k$. We set
 %
-%\begin{equation}\label{defnFK}
+%\begin{equation}\label{defFK}
 \[	f_k(x) = \min \left( x^{k^2}, (x^{dn}/2)^{1/(dn - \alpha - \varepsilon_{k+1})}, (1/2A_x)^{d(n-1)/\varepsilon_{k+1}} \right). \]
 %	f_k(x)=\min \left( x^{k^2}, (x^d4^{-k-1})^{\frac{1}{\varepsilon_{k+1}d(n-1)}} \right).
 %\end{equation}
@@ -387,9 +404,9 @@ To complete the proof of Theorem \ref{mainTheorem}, we must show that $\dim_{\ma
 %
 \[ \beta = \frac{dn - \alpha}{n - 1}. \]
 %
-We begin with a rough outline of our proof strategy. Recall that from the previous section, we have a decreasing sequence of lengths $\{ l_k \}$. The most convenient way to examine the dimension of $X$ at various scales is to use Frostman's lemma (see Definition \ref{frostmanItem}). We construct a probability measure $\mu$ supported on $X$ such that for all $\varepsilon > 0$, for all dyadic lengths $l$, and for all $I \in \B^d_l$, $\mu(I) \lesssim_\varepsilon l^{\beta - \varepsilon}$. We begin by proving the bound $\mu(I) \lesssim l_k^{\beta - O(1/k)}$ when $I \in \B^d_{l_k}$, which we view as saying $X$ looks like a set with dimension $\beta - O(1/k)$ at the lengths $\{ l_k \}$. To obtain the complete dimension bound, it then suffices to interpolate to get an acceptable bound at all intermediate scales. In this construction, as in \cite{MalabikaRob}, the rapid decay of the lengths $\{ l_k \}$ forced on us in the construction means interpolation poses a significant difficulty. We avoid this difficulty because of the uniform way that we have selected cubes in consecutive scales. This will imply that between the scales $l_k$ and $r_{k+1}$, the mass of $\mu$ distributes with similar properties to the full dimensional Lebesgue measure, which makes interpolation easy.
+We begin with a rough outline of our proof strategy. Recall that from the previous section, we have a decreasing sequence of lengths $\{ l_k \}$. The most convenient way to examine the dimension of $X$ at various scales is to use Frostman's lemma (see Definition \ref{defFrostmanMeasure}). We construct a probability measure $\mu$ supported on $X$ such that for all $\varepsilon > 0$, for all dyadic lengths $l$, and for all $I \in \B^d_l$, $\mu(I) \lesssim_\varepsilon l^{\beta - \varepsilon}$. We begin by proving the bound $\mu(I) \lesssim l_k^{\beta - O(1/k)}$ when $I \in \B^d_{l_k}$, which we view as saying $X$ looks like a set with dimension $\beta - O(1/k)$ at the lengths $\{ l_k \}$. To obtain the complete dimension bound, it then suffices to interpolate to get an acceptable bound at all intermediate scales. In this construction, as in \cite{MalabikaRob}, the rapid decay of the lengths $\{ l_k \}$ forced on us in the construction means interpolation poses a significant difficulty. We avoid this difficulty because of the uniform way that we have selected cubes in consecutive scales. This will imply that between the scales $l_k$ and $r_{k+1}$, the mass of $\mu$ distributes with similar properties to the full dimensional Lebesgue measure, which makes interpolation easy.
 
-We now define the measure $\mu$, by first defining it as a premeasure on $\bigcup_{i = 1}^\infty \B^d_{l_i}[0,1)^d$. We initially set $\mu([0,1)^d) = 1$. Given $I \in \B^d_{l_k}$, we find a parent cube $I' \in \B^d_{l_{k-1}}$ with $I \subset I'$. If $I \subset X_k$, then we set
+We now define the measure $\mu$, by first defining it recursively on cubes $I \in \B_{l_k}^d[0,1)^d$, for each positive integer $k$. Start by setting $\mu([0,1)^d) = 1$. Given $I \in \B^d_{l_k}$, we find the unique `parent cube' $I' \in \B^d_{l_{k-1}}$ with $I \subset I'$. If $I \subset X_k$, then we set
 %
 \begin{equation} \label{muRecurse} \mu(I) = \frac{\mu(I')}{\# \B^d_{l_k}(X_k \cap I')}. \end{equation}
 %
@@ -397,7 +414,7 @@ Otherwise, if $I \not \subset X_k$, we set $\mu(I) = 0$. Notice
 %
 \[ \mu(I') = \sum_{I \in \B^d_{l_k}(X_k \cap I')} \frac{\mu(I')}{\# \B^d_{l_k}(X_k \cap I')} = \sum_{I \in \B^d_{l_k}(I')} \mu(I). \]
 %
-Thus mass is maintained at each stage of the construction, and then Proposition 1.7 of \cite{Falconer} implies $\mu$ is a premeasure, and thus extends to a measure on the entire Borel sigma algebra. The remainder of this section is devoted to showing that $\mu$ is a Frostman measure of dimension $\beta - \varepsilon$ for any $\varepsilon > 0$.
+Thus mass is maintained at each stage of the construction. Proposition 1.7 of \cite{Falconer} then implies $\mu$ extends to a measure on the entire Borel sigma algebra. The remainder of this section is devoted to showing that $\mu$ is a Frostman measure of dimension $\beta - \varepsilon$ for any $\varepsilon > 0$.
 
 % General principle:
 % Let Q_k be all dyadic cubes of sidelength 1/2^k.
