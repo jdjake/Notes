@@ -1,0 +1,1998 @@
+
+
+
+
+\part{Euclidean Harmonic Analysis}
+
+In analysis, we often study operators on function spaces. Given a function $f$ lying in some space $V$, we have an associated function $Tf$ lying in some space $W$. Harmonic analysis attempts to understand how quantitative control on certain properties of $f$ implies quantiative control on properties of $Tf$. In particular, given some quantity $A$ defined with respect to $f$, and a quantity $B$ defined with respect to $Tf$, we want to understand if a general bound $B \leq A$ is possible.
+
+A core technique to this part of harmonic analysis is the method of \emph{decomposition}. We write $f = \sum f_k$, where the function $f_k$ have particular properties, perhaps being concentrated in a particular region of space, or restricted to having a particular wavelength. We can then often obtain bounds $B_k \leq A_k$, for the quantities $A_k$ and $B_k$ associated with $f_k$ and $Tf_k$, quite easily. Provided the operator $T$ and the quantities $B$ and $A$ are `stable under addition', we can then obtain the bound $B \leq A$ by `summing up'. The fact that $B$ and $A$ are stable under addition is often obtained by assuming these quantities are \emph{norms}, i.e. that there exists two norms $\| \cdot \|_V$ and $\| \cdot \|_W$ such that $A = \| f \|_V$, and $B = \| Tf \|_W$, and the stability of $T$ is obtained by assuming the function is linear, or at least sublinear.
+
+The decomposition method often gives results which are not `quite optimal', but often differ from the best one by a multiplicative constant. Thus we really only care about obtaining bounds of the form $B \lesssim A$. For this reason, we really only care that $\| \cdot \|_V$, and $\| \cdot \|_W$ are \emph{quasinorms}, i.e. maps $\| \cdot \|$ which are homogenous and satisfy a \emph{quasi-triangle inequality} $\| v + w \| \lesssim \| v \| + \| w \|$. If $T$ is linear, and we write $f = f_1 + \dots + f_N$, then it is obvious in the linear case that a uniform bound $\| Tf_k \|_W \lesssim \| f \|_V$ implies $\| Tf \|_W \lesssim_N \| f \|_V$. If $N$ is fixed, this is an essentially `free' method to reduce the analysis of $Tf$ to the analysis of $Tf_k$. If one can obtain exponentially decaying estimates $\| Tf_k \|_W \lesssim 2^{-\varepsilon k} \| f \|_V$, for some fixed $\varepsilon > 0$, which we can often obtain by applying one of the many methods of \emph{dyadic decomposition} described later on these notes, then one can obtain $\| Tf \|_W \lesssim_\varepsilon \| f \|_V$, independently of $N$, and in particular, we can take an infinite summation instead of a finite one.
+
+\begin{lemma}
+    Suppose $\| \cdot \|$ is a seminorm, $f = \sum_{k = 1}^\infty f_k$, and $\| f_k \| \lesssim 2^{-\varepsilon k}$ for some $\varepsilon > 0$. Then $\| f \| \lesssim 1$.
+\end{lemma}
+\begin{proof}
+    Pick $A > 0$ such that $\| g + h \| \leq A(\| g \| + \| h \|)$ for all $g$ and $h$. If $A < 2^{\varepsilon}$, we can write
+    %
+    \begin{align*}
+        \| f \| &\leq \sum_{k = 1}^\infty A^k \| f_k \| \leq \left( \sum_{k = 1}^\infty (A 2^{-\varepsilon})^k \right) \leq \left( \frac{1}{1 - A 2^{-\varepsilon}} \right) \lesssim_\varepsilon 1.
+    \end{align*}
+    %
+    This establishes the result in this case. In general, fix $N$, and write $f = f^1 + \dots + f^N$, where $f^i = \sum_{k = 1}^\infty f_{i + Nk}$. Then $\| f_{i + Nk} \| \lesssim 2^{- N \varepsilon k}$, and if $A < 2^{N \varepsilon}$, we can apply the previous case to conclude that $\| f^i \| \lesssim 1$. Then we can apply the quasi-triangle inequality to conclude that $\| f \| \lesssim 1$.
+\end{proof}
+
+\begin{lemma}
+    Suppose $\| \cdot \|$ is a seminorm. Then there exists $t$ such that, if $f = \sum_{k = 1}^\infty f_k$, and if $\| f_k \| \lesssim k^{-s}$, for $s > t$, then $\| f \| \lesssim 1$.
+\end{lemma}
+\begin{proof}
+    As in the previous lemma, pick $A > 0$ such that $\| g + h \| \leq A(\| g \| + \| h \|)$ for all $g$ and $h$. We write $f = \sum_{i = 0}^\infty f^i$, where $f^i = \sum_{k = 2^i}^{2^{i+1} - 1} f_k$. By splitting the sum into a binary tree, we can ensure that
+    %
+    \[ \| f^i \| \lesssim A^{i+1} \sum_{k = 2^i}^{2^{i+1} - 1} \| f_k \| \leq A^{i+1} 2^{- is} \lesssim (A/2^s)^i. \]
+    %
+    If $s > \log A$, we can apply the previous lemma to conclude that $\| f \| \lesssim 1$.
+\end{proof}
+
+In general, the problems we consider in these notes involve taking two seminorms and an operator, and obtaining quantiative statements about the boundedness of the operator with respect to these seminorms, up to a multiplicative constant. This describes much of the techniques developed by the \emph{Calderon-Zygmund school} of harmonic analysis.
+
+
+
+
+
+
+\chapter{Monotone Rearrangement Invariant Norms}
+
+In this chapter, we discuss common families of \emph{monotone, rearrangement invariant quasinorms} that occur in harmonic analysis. The general framework is as follows. For each function $f$, we associate it's \emph{distribution function} $F: [0,\infty) \to [0,\infty]$ given by $F(t) = |\{ x : |f(x)| > t \}|$. A \emph{rearrangement invariant space} is a subspace $V$ of the collection of measurable complex-valued functions on some measure space $X$, equipped with a quasi-norm $\| \cdot \|$, satisfying the following two properties:
+%
+\begin{itemize}
+    \item \emph{Monotonicity}: If $|f(x)| \leq |g(x)|$ for all $x \in X$, then $\| f \| \leq \| g \|$.
+
+    \item \emph{Rearrangement-Invariance}: If $f$ and $g$ have the same distribution function, then $\| f \| = \| g \|$.
+\end{itemize}
+%
+A monotone rearrangement-invariant norm essentially provides a way of quantifying the height and width of functions on $X$. It has no interest in the `shape' of the objects studied, because of the property of rearrangement invariance. In a particular problem, one picks the norm best emphasizing a particular family of features useful in the problem.
+
+There are two very useful classes of functions useful for testing the behaviour of translation invariant norms:
+%
+\begin{itemize}
+    \item The \emph{indicator functions} $\mathbf{I}_E(x) = \mathbf{I}(x \in E)$, for a measurable set $E$.
+    \item The \emph{simple functions} $f = \sum_{i = 1}^n a_i \mathbf{I}_{E_i}$, for disjoint sets $E_i$.
+\end{itemize}
+%
+The class of all simple functions forms a vector space, and for any monotone rearrangement invariant norm we consider in this section, this vector space will form a dense subspace of the class of all functions. This means that when we want to study how an operator transforms the height and width of functions, the behaviour of the operator on simple functions often reflects the behaviour of an arbitrary function.
+
+\section{The $L^p$ norms}
+
+For $p \in (0,\infty)$, we define the $L^p$ norm on measurable function on a measure space $X$ by
+%
+\[ \| f \|_p = \left( \int |f(x)|^p\; dx \right)^{1/p}. \]
+%
+For $p = \infty$, we define
+%
+\[ \| f \|_\infty = \inf \left\{ t: |f(x)| \leq t\ \text{almost surely} \right\}. \]
+%
+These are the most fundamental monotone, rearrangement invariant norms. The space of functions $f$ with $\| f \|_p < \infty$ is denoted by $L^p(X)$.
+
+As $p$ increases, the $L^p$ norm of a particular function $f$ gives more control over the height of the function $f$, and weaker control on values where $f$ is particular small. At the extreme end of this spectrum of values, $L^\infty(X)$ only has control over the height of a function, and no control over it's width.
+
+\begin{example}
+  If $f(x) = |x|^{-\alpha}$ for $x \in \RR^d$, then integration by radial coordinates shows that
+  %
+  \[ \int_{\varepsilon \leq |x| \leq M} \frac{1}{|x|^{\alpha p}}\; dx \approx \int_\varepsilon^M r^{d-1 - p\alpha}\; dr = \frac{M^{d - p \alpha} - \varepsilon^{d - p \alpha}}{d - p \alpha}. \]
+  %
+  This quantity remains finite as $\varepsilon \to 0$ if and only if $d > p \alpha$, and finite as we let $M \to \infty$ if and only if $d < p \alpha$. Thus if $p < d/\alpha$, $f$ is \emph{locally} in $L^p$, in the sense that $f \in L^p(B)$ for every bounded $B \in \RR^d$. The class of functions for which this condition holds is denoted $L^p_{\text{loc}}(X)$. Conversely, if $p > d/\alpha$, then for every domain $B$ separated from the origin, $f \in L^p(B)$. For $p = d/\alpha$, the function $f$ fails to be $L^p(\RR^d)$, but only `by a logarithm', in the sense that
+  %
+  \[ \int_{\varepsilon \leq |x| \leq M} \frac{1}{|x|^{\alpha p}}\; dx \approx \int_\varepsilon^M \frac{dr}{r} = \log(M/\varepsilon). \]
+  %
+  We will later find `weaker' versions of the $L^p$ norm, and $f$ will have finite version of these norms.
+\end{example}
+
+The last example shows that, roughly speaking, control on the $L^p$ norm of a function for large values of $p$ prevents the formation of higher order singularities, and control of the norm for small values of $p$ ensures that functions have large decay at infinity.
+
+\begin{example}
+  If $s = A \chi_E$, and we set $H = |A|$ and $W = |E|$, then $\| s \|_p = W^{1/p} H$. As $p \to \infty$, the value of $\| s \|_p$ depends more and more on $H$, and less on $W$, and in fact $\lim_{p \to \infty} \| s \|_p = H$. If $s = \sum A_n \chi_{E_n}$, and $|A_m|$ is the largest constant from all other values $A_n$, then as $p$ becomes large, $|A_m|^p$ overwhelms all other terms. We calculate that as $p \to \infty$,
+  %
+  \[ \| s \|_p = \left( \sum |E_n| |A_n|^p \right)^{1/p} = |A_m|^p (|E_m| + o(1))^{1/p} = |A_m| (1 + o(1)). \]
+  %
+  This implies $\| s \|_p \to |A_m|$ as $p \to \infty$. But as $p \to 0$, $\lim_{p \to 0} \| f \|_p$ does not in general exist, even for step functions with finite support. Nonetheless, we can conclude that $\lim_{p \to 0} \| s \|_p^p = \sum |E_n|$, which is the measure of the support of $s$.
+\end{example}
+
+As $p \to \infty$, the width of a function is disregarded completely by the $L^p$ norm, motivating the definition of \emph{the $L^\infty$ norm}; Given a measurable $f$, we define $\| f \|_\infty$ to be the smallest number such that $|f| \leq \| f \|_\infty$ almost surely. We then define $L^\infty(X)$ to be the space of measurable functions $f$ for which $\| f \|_\infty < \infty$. We have already shown $\| s \|_p \to \| s \|_\infty$ if $s$ is a simple function, and the density of such functions gives a general result.
+
+\begin{theorem}
+    Let $p \in (0,\infty)$. If $f \in L^p(X) \cap L^\infty(X)$, then
+    %
+    \[ \lim_{t \to \infty} \| f \|_t = \| f \|_\infty. \]
+\end{theorem}
+\begin{proof}
+    Without loss of generality, assume $p \geq 1$. Consider the norm $\| \cdot \|$ on $L^p(X) \cap L^\infty(X)$ given by
+    %
+    \[ \| f \| = \| f \|_p + \| f \|_\infty. \]
+    %
+    Then $L^p(X) \cap L^\infty(X)$ is complete with respect to this metric. For each $t \in [p,\infty)$, define $T_t(f) = \| f \|_t$. Then the functions $\{ T_t \}$ are uniformly bounded in the norm $\| \cdot \|$, since if $p = \theta t$, then
+    %
+    \[ |T_t(f)| = \| f \|_t \leq \| f \|_p^\theta \| f \|_\infty^{1-\theta} \leq \| f \|^\theta \| f \|^{1-\theta} = \| f \|. \]
+    %
+    For any $\varepsilon > 0$, we can find a step function $s$ with $\| s - f \| \leq \varepsilon$. As $t \to \infty$, $\| s \|_t = \| s \|_\infty = o(1)$. And so
+    %
+    \begin{align*}
+        \Big| T_t(f) - \| f \|_\infty \Big| &\leq |T_t(f) - T_t(s)| + |T_t(s) - \| s \|_\infty| + |\| s \|_\infty - \| f \|_\infty| \leq 2\varepsilon + o(1). 
+    \end{align*}
+    %
+    Taking $\varepsilon \to 0$ gives the result.
+\end{proof}
+
+Abusing notation, we define $\| f \|_0^0 = | \text{supp} f | = | \{ x: f(x) \neq 0 \} |$, and let $L^0(X)$ be the space of functions with finite support. We know that for any simple function $s$, $\| s \|_p^p \to \| s \|_0^0$ as $p \to 0$. If $f \in L^0(X) \cap L^p(X)$ for some $p \in (0,\infty)$, then the monotone and dominated convergence theorems implies that
+%
+\[ \| f \|_0^0 = \int \mathbf{I}(f(x) \neq 0) = \int \left( \lim_{t \to 0} |f(x)|^t \right)\; dx = \lim_{t \to 0} \int |f(x)|^t\; dx = \lim_{t \to 0} \| f \|_t^t. \]
+%
+Thus the space $L^0(X)$ lies at the opposite end of the spectrum to $L^\infty$.
+
+Taking things to the `power of zero' implies many nice norm properties of the $L^p$ spaces fail to hold for $L^0(X)$. For instance, homogeneity no longer holds; in fact, for each $\alpha \neq 0$,
+%
+\[ \| \alpha f \|_0 = \| f \|_0. \]
+%
+It does, however, satisfy the triangle inequality $\| f + g \|_0 \leq \| f \|_0 + \| g \|_0$, which follows from elementary considerations, or because
+%
+\[ \| f + g \|_p^p \leq \| f \|_p^p + \| g \|_p^p \]
+%
+when $p < 1$.
+
+\begin{example}
+  Let $p < q$, and suppose $f \in L^p(X) \cap L^q(X)$. For any $r \in (p,q)$, the $L^r$ norm emphasizes the height of $f$ less than the $L^q$ norm, and emphasizes the width of $f$ less than the $L^p$ norm. In particular, we find that for any $\lambda \geq 0$,
+  %
+  \begin{align*}
+    \| f \|_r^r = \int_{\mathbf{R}} |f(x)|^r\; dx &= \int_{|f(x)| \leq 1} |f(x)|^r\; dx + \int_{|f(x)| > 1} |f(x)|^r\; dx\\
+    &\leq \int_{|f(x)| \leq 1} |f(x)|^p\; dx + \int_{|f(x)| > 1} |f(x)|^q\; dx\\
+    &\leq \| f \|_p^p + \| f \|_q^q < \infty.
+  \end{align*}
+  %
+  In particular, this shows $f \in L^r(X)$.
+\end{example}
+
+\begin{remark}
+    The bound obtained in the last example can be improved by using scaling symmetries. For any $A > 0$,
+    %
+    \[ \| f \|_r^r = \frac{\| Af \|_r^r}{A^r} \leq \frac{\| Af \|_p^p + \| Af \|_q^q}{A^r} \leq \frac{A^p \| f \|_p^p + A^q \| f \|_q^q}{A^r}. \]
+    %
+    If $1/r = \theta/p + (1 - \theta)/q$, and we set $A = \| f \|_q^{q/(p-q)} / \| f \|_p^{p/(p-q)}$, then the above inequality implies $\| f \|_r \leq 2 \| f \|_p^\theta \| f \|_q^{1 - \theta}$, which is a homogenous equality. The constant 2 can be removed in the equation using the {\it tensor power trick}. If we consider the function on $X^n$ defined by $f^{\otimes n}(x_1, \dots, x_n) = f(x_1) \dots f(x_n)$, then $\| f^{\otimes n} \|_r = \| f \|_r^n$, and so
+    %
+    \[ \| f \|_r = \| f^{\otimes n} \|_r^{1/n} \leq \left( 2 \| f^{\otimes n} \|_p^\theta \| f^{\otimes n} \|_q^{1-\theta} \right)^{1/n} = 2^{1/n} \| f \|_p^\theta \| g \|_q^{1-\theta}. \]
+    %
+    We can then take $n \to \infty$ to conclude that $\| f \|_r \leq \| f \|_p^\theta \| f \|_q^{1-\theta}$.
+\end{remark}
+
+The argument in the last remark is an instance of \emph{real interpolation}; In order to conclude some fact about a function which lies `between' two other functions we know how to deal with, we split the function up into two parts lying in the other spaces, deal with them separately, and then put them back together to get some equality. One can then apply various symmetry considerations (homogeneity and the tensor power trick being two examples) to eliminate extraneous constants. We now also show how to prove this inequality using convexity, which illustrates another core technique of the field. In the next theorem, $1/\infty = 0$.
+
+\begin{theorem}[H\"{o}lder]
+  If $0 < p,q \leq \infty$ and $1/p + 1/q = 1/r$, $\| f g \|_r \leq \| f \|_p \| g \|_q$.
+\end{theorem}
+\begin{proof}
+  The case where $p$ or $q$ is $\infty$ is left as an exercise to the reader. In the other case, by moving around exponents, we may simplify to the case where $r = 1$. The theorem depends on the log convexity inequality, such that for $A,B \geq 0$ and $0 \leq \theta \leq 1$, $A^\theta B^{1 - \theta} \leq \theta A + (1 - \theta) B$. But since the logarithm is concave, we calculate
+  %
+  \[ \log(A^\theta B^{1 - \theta}) = \theta \log A + (1 - \theta) \log B \leq \log(\theta A + (1 - \theta) B), \]
+  %
+  and we can then exponentiate. To prove H\"{o}lder's inequality, by scaling $f$ and $g$, which is fine by homogeneity, we may assume that $\| f \|_p = \| g \|_q = 1$. Then we calculate
+  %
+  \begin{align*}
+    \| f g \|_1 &= \int |f(x)| |g(x)| = \int |f(x)|^{p/p} |g(x)|^{q/q}\\
+    &\leq \int \frac{|f(x)|^p}{p} + \frac{|g(x)|^q}{q} = \frac{1}{p} + \frac{1}{q} = 1 = \| f \|_p \| g \|_q.
+  \end{align*}
+  %
+  If $p = \infty$, $q = 1$, then the inequality is trivial, since we have the pointwise inequality $|f(x) g(x)| \leq \| f \|_\infty |g(x)|$ almost everywhere, which we can then integrate.
+\end{proof}
+
+\begin{remark}
+  Note that $A^\theta B^{1-\theta} \leq \theta A + (1 - \theta) B$ is an \emph{equality} if and only if $A = B$, or $\theta \in \{ 0, 1 \}$. In particular, following through the proof above shows that if $\| f \|_p = \| g \|_q = 1$, we must have $|f(x)|^{1/p} = |g(x)|^{1/q}$ almost everywhere. In general, this means H\"{o}lder's inequality is sharp if and only if $|f(x)|^{1/p}$ is a constant multiple of $|g(x)|^{1/q}$.
+\end{remark}
+
+The next inequality is known as the \emph{triangle inequality}.
+
+\begin{corollary}
+  Given $f$,$g$, and $p \geq 1$, $\| f + g \|_p \leq \| f \|_p + \| g \|_p$.
+\end{corollary}
+\begin{proof}
+  The inequality when $p = 1$ is obtained by integrating the inequality $|f(x) + g(x)| \leq |f(x)| + |g(x)|$, and the case $p = \infty$ is equally trivial. When $1 < p < \infty$, by scaling we can assume that $\| f \|_p + \| g \|_p = 1$. Then we can apply H\"{o}lder's inequality combined with the $p = 1$ case to conclude
+  %
+  \begin{align*}
+    \int |f(x) + g(x)|^p &\leq \int |f(x)| |f(x) + g(x)|^{p-1} + |g(x)| |f(x) + g(x)|^{p-1}\\
+    &\leq \| f \|_p \| (f + g)^{p-1} \|_q + \| g \|_p \| (f + g)^{p-1} \|_q = \| f + g \|_{p}^{p-1}
+  \end{align*}
+  %
+  Thus $\| f + g \|_p^p \leq \| f + g \|_p^{p-1}$, and simplifying gives $\| f + g \|_p \leq 1$.
+\end{proof}
+
+\begin{remark}
+  Suppose $\| f + g \|_p = \| f \| + \| g \|_p$. Following through the proof given above shows that both applications of H\"{o}lder's inequality must be sharp. And this is true if and only if $|f(x)|^p$ and $|g(x)|^p$ are scalar multiples of $|f(x) + g(x)|^p$ almost everywhere. But this means $|f(x)|$ and $|g(x)|$ are scalar multiples of $|f(x) + g(x)|$. If $|f(x)| = A|f(x) + g(x)|$ and $|g(x)| = B|f(x) + g(x)|$. If $g \neq 0$, this implies there is $C$ such that $|f(x)| = C |g(x)|$ for some $C > 0$. Thus we can write $f(x) = C e^{i \theta(x)} g(x)$, and we must have
+  %
+  \[ \| f + g \|_p^p = \int |1 + C e^{i \theta(x)}|^p |g(x)|^p = (1 + C)^p \int |g(x)|^p \]
+  %
+  so $|1 + Ce^{i \theta(x)}| = |1 + C|$ almost everywhere but this can only be true if $e^{i \theta(x)} = 1$ almost everywhere, so $f = C g$. Thus the triangle inequality is only sharp is $f$ and $g$ are positive scalar multiples of one another.
+\end{remark}
+
+This discussion leads to a useful heuristic: Unless $f$ and $g$ are `aligned' in a certain way, the triangle inequality is rarely sharp. For instance, if $f$ and $g$ have disjoint support, we calculate that
+%
+\[ \| f + g \|_p = \left( \| f \|_p^p + \| g \|_p^p \right)^{1/p} \]
+%
+For $p > 1$, this is always sharper than the triangle inequality.
+
+\begin{remark}
+  If $p < 1$, then the proof above no longer works, and in fact, is no longer true. In fact, if $f$ and $g$ are non-negative functions, then we actually have the \emph{anti} triangle inequality
+  %
+  \[ \| f + g \|_p \geq \| f \|_p + \| g \|_p. \]
+\end{remark}
+
+\begin{theorem}
+    If $p \geq 1$, then for any positive functions $f_1, \dots, f_N$,
+    %
+    \begin{equation} \label{triangleInequality} ( \| f_1 \|_p^p + \dots + \| f_N \|_p^p )^{1/p} \leq \| f_1 + \dots + f_N \|_p \leq \| f_1 \|_p + \dots + \| f_N \|_p. \end{equation}
+    %
+    If $p \leq 1$, then the inequality reverses, i.e. for any positive functions $f_1, \dots, f_N$,
+    %
+    \begin{equation} \label{antiTriangleInequality} \| f_1 \|_p + \dots + \| f_N \|_p \leq \| f_1 + \dots + f_N \|_p \leq (\| f_1 \|_p^p + \dots + \| f_N \|_p^p)^{1/p} \end{equation}
+\end{theorem}
+\begin{proof}
+    The upper bound in \ref{triangleInequality} is just obtained by applying the triangle inequality iteratively. To obtain the lower bound, we note that for $A_1, \dots, A_N \geq 0$,
+    %
+    \[ (A_1 + \dots + A_N)^p \geq A_1^p + \dots + A_N^p, \]
+    %
+    One can prove this from induction from the inequality $(A_1 + A_2)^p \geq A_1^p + A_2^p$, which holds when $A_2 = 0$, and the derivative of the left hand side is greater than the right hand side for all $A_2 \geq 0$. But then setting $A_k = f_k$ and then integrating gives
+    %
+    \[ \| f_1 + \dots + f_N \|_p^p \geq \| f_1 \|_p^p + \dots + \| f_N \|_p^p. \]
+    %
+    Now assume $0 < p < 1$. We begin by proving the lower bound in \ref{antiTriangleInequality}. We can assume $N = 2$, and $\| f_1 \|_p + \| f_2 \|_p = 1$, and then it suffices to show $\| f_1 + f_2 \|_p \geq 1$. For any $\theta \in (0,1)$, and $A,B \geq 0$, concavity implies
+    %
+    \[ (A + B)^p = (\theta (A/\theta) + (1 - \theta) (B/(1-\theta)))^p \geq \theta^{1-p} A^p + (1 - \theta)^{1-p} B^p. \]
+    %
+    Thus setting $A = f_1(x)$, $B = f_2(x)$, and $\theta = \| f_1 \|_p$, so that $1 - \theta = \| f_2 \|_p$, and then integrating, we find
+    %
+    \[ \| f_1 + f_2 \|_p^p \geq \theta + (1 - \theta) = 1. \]
+    %
+    On the other hand, the inequality $(A_1 + \dots + A_N)^p \leq A_1^p + \dots + A_N^p$, which holds for $A_1, \dots, A_N \geq 0$, can be applied with $f_k = A_k$ and integrated to yield
+    %
+    \[ \| f_1 + \dots + f_N \|_p^p \leq \| f_1 \|_p^p + \dots + \| f_N \|_p^p. \qedhere \]
+\end{proof}
+
+Thus the triangle inequality is not satisfied for the $L^p$ norms when $p < 1$. This is one of the deficiencies which leads the $L^p$ theories for $0 < p < 1$ to be rather deficient when compared to the case with $p \geq 1$. This can be fixed in many ways, most notably to harmonic analysts, using the theory of Hardy spaces. On the other hand, we do have a \emph{quasi} triangle inequality.
+
+\begin{theorem}
+    For $f_1, \dots, f_N \in L^p(X)$, with $0 < p < 1$,
+    %
+    \[ \| f_1 + \dots + f_N \|_p \leq N^{1/p - 1} (\| f_1 \|_p + \dots + \| f_N \|_p). \]
+\end{theorem}
+\begin{proof}
+    By H\"{o}lder's inequality applied to sums,
+    %
+    \[ \| f_1 + \dots + f_N \|_p \leq (\| f \|_p^p + \dots + \| f_N \|_p^p)^{1/p} \leq N^{1/p - 1} (\| f_1 \|_p + \dots + \| f_N \|_p). \qedhere \]
+\end{proof}
+
+\begin{remark}
+    When $p < 1$, the space $L^p(X)$ is \emph{not} normable. To see why, we look at the topological features of $L^p(X)$. Fix $\varepsilon > 0$, and let $C$ be a convex set containing all functions $f$ with $\| f \|_p < \varepsilon$. Thus, in particular, $C$ contains all step functions $H \mathbf{I}_E$ where $H |E|^{1/p} < \varepsilon$. But if we now find a countable sequence of disjoint sets $\{ E_k \}$, each with positive measure, and for each $k$, define $H_k = (\varepsilon/2) |E_k|^{-1/p}$, then for any $N$, the function
+    %
+    \[ f_N = (H_1/N) \mathbf{I}_{E_1} + \dots + (H_N/N) \mathbf{I}_{E_N} \]
+    %
+    lies in $C$, and
+    %
+    \[ \| f_N \|_p = (1/N) (H_1^p |E_1| + \dots + H_N^p |E_N|)^{1/p} = (\varepsilon/2) N^{1/p - 1} \]
+    %
+    as $N \to \infty$, the $L^p$ norm of $f_N$ becomes unbounded. In particular, this means that we have proven that every bounded convex subset of $L^p(X)$ has empty interior, and a norm space certainly does not have this property.
+\end{remark}
+
+As we have mentioned, as $p \to \infty$, the $L^p$ norm excludes functions with large peaks, or large height, and as $p \to 0$, the $L^p$ norm excludes functions with large tails, or large width. They form a continuously changing family of functions as $p$ ranges over the positive numbers. In general, there is no inclusion of $L^p(X)$ in $L^q(X)$ for any $p,q$, except in two circumstances which occur often enough to be mentioned.
+
+\begin{example}
+  If $X$ is a finite measure space, and $0 < p \leq q \leq \infty$, $L^p(X) \subset L^q(X)$. H\"{o}lder's inequality implies $\| f \|_p = \| f \chi_X \|_p \leq \| f \|_q |X|^{1/p-1/q}$. Taking $q \to \infty$, we conclude $\| f \|_p \leq | X |^{1/p} \| f \|_\infty$. One can best remember the constants here by the formula
+  %
+  \[ \left( \fint |f(x)|^p \right)^{1/p} \leq \left( \fint |f(x)|^q \right)^{1/q}. \]
+  %
+  In particular, when $X$ is a probability space, the $L^p$ norms are increasing.
+\end{example}
+
+\begin{example}
+  On the other hand, suppose the measure space is {\it granular}, in the sense that there is $\varepsilon > 0$ such that either $|E| = 0$ or $|E| \geq \varepsilon$ for any measurable set $E$. Then $L^q(X) \subset L^p(X)$ for $0 < p \leq q \leq \infty$. First we check the $q = \infty$ case, which follows by the trivial estimate
+  %
+  \[ \int |f(x)|^p \geq \varepsilon \| f \|_\infty, \]
+  %
+  so $\| f \|_\infty \leq \| f \|_p \varepsilon^{-1/p}$. But then applying log convexity, if $p \leq q < \infty$, we can write $1/q = \theta/p$ for $0 < \theta \leq 1$, and then log convexity shows
+  %
+  \[ \| f \|_q = \| f \|_p^\theta \| f \|_\infty^{1-\theta} \leq \varepsilon^{-(1 - \theta)/p} \| f \|_p = \varepsilon^{-1/p - 1/q} \| f \|_p. \]
+  %
+  If $\varepsilon = 1$, which occurs if $X = \mathbf{Z}$, then the $L^p$ norms are decreasing in $p$. This gives the best way to remember the constants involved, since the measure $\mu(E) = |E|/\varepsilon$ is one granular, and so
+  %
+  \[ \left( \frac{1}{\varepsilon} \int |f(x)|^q\; dx \right)^{1/q} \leq \left( \frac{1}{\varepsilon} \int |f(x)|^p\; dx \right)^{1/p}. \]
+\end{example}
+
+%\begin{example}
+%  Controlling additional properties of the function offers similar properties as for control on the measure space. If $|f(x)| \leq M$ for almost all $x$, then for $p \leq q$,
+  %
+%  \[ \| f \|_q \leq \| f \|_p^{p/q} M^{1 - p/q}. \]
+  %
+%  Conversely, if $|f(x)| \geq M$ whenever $f(x) \neq 0$, then
+  %
+%  \[ \| f \|_p \leq \| f \|_q^{q/p} M^{1-q/p}. \]
+  %
+  
+%\end{example}
+
+\begin{remark}
+  We can often use such results in spaces which are not granular by coarsening the sigma algebra. For instance, the Lebesgue measure is $\varepsilon^d$ granular over the sigma algebra generated by the length $\varepsilon$ cubes whose corner's lie on the lattice $(\mathbf{Z}/\varepsilon)^d$, and if a function is measurable with respect to such a $\sigma$ algebra we call the function $\varepsilon$ granular.
+\end{remark}
+
+\begin{remark}
+  If we let $X = \{ 1, \dots, N \}$, then $X$ is both finite and granular, so all $L^p$ norms are comparable. In particular, if $p \leq q$,
+  %
+  \[ \| f \|_q \leq \| f \|_p \leq N^{1/p - 1/q} \| f \|_q. \]
+  %
+  The left hand side of this inequality becomes sharp when $f$ is concentrated at a single point, i.e. $f(n) = \mathbf{I}(n = 1)$. On the other hand, the left hand side becomes sharp when $f$ is constant, i.e. $f(n) = 1$ for all $n$.
+\end{remark}
+
+\begin{example}
+    We can obtain similar $L^p$ bounds by controlling the functions $f$ involved, rather than the measure space. For instance, if $|f(x)| \leq M$, and $p \leq q$, then then $\| f \|_q \leq \| f \|_p^{p/q} M^{1 - p/q}$, which follows by log convexity. On the other hand, if $|f(x)| \geq M$ on the support of $f$, then $\| f \|_p \leq \| f \|_q^{q/p} M^{1-q/p}$.
+\end{example}
+
+\begin{theorem}
+  If $p_\theta$ lies between $p_0$ and $p_1$, then
+  %
+  \[ L^{p_0}(X) \cap L^{p_1}(X) \subset L^{p_\theta}(X) \subset L^{p_0}(X) + L^{p_1}(X) \]
+\end{theorem}
+\begin{proof}
+  If $\| f \|_{p_0}, \| f \|_{p_1} < \infty$, then for any $p_\theta$ between $p_0$ and $p_1$,
+  %
+  \[ \| f \chi_{|f| \leq 1} \|_{p_\theta}^{p_\theta} = \int_{|f| \leq 1} |f|^{p_\theta} \leq \int_{|f| \leq 1} |f|^{p_0} < \infty \]
+  \[ \| f \chi_{|f| > 1} \|_{p_\theta}^{p_\theta} = \int_{|f| > 1} |f|^{p_\theta} \leq \int_{|f| > 1} |f|^{p_1} < \infty \]
+  %
+  Applying the triangle inequality, we conclude that $\| f \|_{p_\theta} < \infty$. In the case where $p_1 = \infty$, then $f \chi_{|f| > 1}$ is bounded, and must have finite support if $p_0 < \infty$, which shows this integral is bounded. Note the inequalities above show that we can split any function with finite $L^{p_\theta}$ norm into the sum of a function with finite $L^{p_0}$ norm and another with finite $L^{p_1}$ norm.
+\end{proof}
+
+This theorem is important in the study of interpolation theory, because if we have two linear operators $T_{p_0}$ defined on $L^{p_0}(X)$ and $T_{p_1}$ on $L^{p_1}(X)$, and they agree on $L^{p_0}(X) \cap L^{p_1}(X)$, then there is a unique linear operator $T_{p_\theta}$ on $L^{p_\theta}(X)$ which agrees with these two functions, and we can consider the boundedness of such a function with respect to the $L^{p_\theta}$ norms.
+
+The last property of the $L^p$ norms we want to focus on is the principle of \emph{duality}. Given any values of $p$ and $q$ with $1/p + 1/q = 1$, H\"{o}lder's inequality implies that if $f \in L^p(X)$ and $g \in L^q(X)$, then $fg \in L^1(X)$. In particular, for each function $g \in L^q(X)$, the map
+%
+\[ \lambda: f \mapsto \int f(x)g(x)\; dx \]
+%
+is a linear functional on $L^p(X)$. H\"{o}lder's inequality implies that $\| \lambda \| \leq \| g \|_q$. But this is actually an \emph{equality}.
+
+\begin{theorem}
+    For any measurable function $f: X \to \mathbf{C}$ with $1 \leq p < \infty$,
+    %
+    \[ \| f \|_p = \sup \left\{ \int f(x)g(x) : \| g \|_q = 1 \right\}. \]
+    %
+    If the underlying measure space is $\sigma$ finite, then this claim also holds for $p = \infty$.
+\end{theorem}
+\begin{proof}
+    Suppose that $1 \leq p < \infty$. Given $f$, we define
+    %
+    \[ g(x) = \frac{1}{\| f \|_p^{p-1}} \text{sgn}(f(x)) |f(x)|^{p-1}. \]
+    %
+    If $\| f \|_p < \infty$, then
+    %
+    \[ \| g \|_q^q = \frac{1}{\| f \|_p^{pq - q}} \int |f(x)|^{pq-q} = \frac{1}{\| f \|_p^p} \| f \|_p^p = 1, \]
+    %
+    and
+    %
+    \[ \int f(x) g(x) = \frac{1}{\| f \|_p^{p-1}} \int |f(x)|^p = \| f \|_p. \]
+    %
+    On the other hand, suppose $\| f \|_p = \infty$. Then there exists a sequence of step functions $s_1 \leq s_2 \leq \dots \to |f|$. Each $s_k$ lies in $L^p(X)$, but the monotone convergence theorem implies that $\| s_k \|_p \to \infty$. For each $k$, find a function $g_k \geq 0$ with $\| g_k \|_q = 1$, and $\int g_k(x) s_k(x) \geq \| s_k \|_p / 2$. Then
+    %
+    \[ \int g_k(x) \text{sgn}(f(x)) f(x) = \int g_k(x) |f(x)| \geq \int g_k(x) s_k(x) \geq \| s_k \|_p / 2 \to \infty, \]
+    %
+    this completes the proof in this case. 
+
+    Now we take the case $p = \infty$. Given any $f$, fix $\varepsilon > 0$. Then we can find a set $E$ with $0 < |E| < \infty$ such that $|f(x)| \geq \| f \|_\infty - \varepsilon$ for $x \in E$. If $g(x) = \text{sgn}(f(x)) \mathbf{I}_E / |E|$, then $\| g \|_1 = 1$, and
+    %
+    \[ \int f(x) g(x) = \frac{1}{|E|} \int_E |f(x)| \geq \| f \|_\infty - \varepsilon. \]
+    %
+    Taking $\varepsilon \to 0$ completes the claim.
+\end{proof}
+
+\section{Decreasing Rearrangements}
+
+ The properties of a functions distribution are best reflected quite simply in the \emph{distribution function} of the function $f$, i.e. the function $F: [0,\infty) \to [0,\infty)$ given by $F(t) = |\{ x : |f(x)| > t \}|$, and any rearrangement invariant norm on $f$ should be a function of $F$. The function $F$ is right-continuous and decreasing, but has a jump discontinuity whenever $\{ x : |f(x)| = t \}$ is a set of positive measure. We denote distributions of functions $g$ and $h$ by $G$ and $H$.
+
+\begin{lemma}
+  Given a function $f$ and $g$, $\alpha \in \mathbf{C}$, and $t,s > 0$, then
+  %
+  \begin{itemize}
+    \item If $|g| \leq |f|$, then $G \leq F$.
+    \item If $g = \alpha f$, then $G(t) = F(t/|\alpha|)$.
+    \item If $h = f + g$, then $H(t+s) \leq F(t) + G(s)$.
+    \item If $h = fg$, then $H(ts) \leq F(t) + G(s)$.
+  \end{itemize}
+\end{lemma}
+\begin{proof}
+    The first point follows because $\{ x : |g(x)| > t \} \subset \{ x : |f(x)| > t \}$, and the second because $\{ x : |\alpha f(x)| > t \} = \{ x : |f(x)| > t/|\alpha| \}$. The third point follows because if $|f(x) + g(x)| \geq t + s$, then either $|f(x)| \geq t$ or $|g(x)| \geq s$. Finally, if $|f(x) g(x)| \geq ts$, then $|f(x)| \geq t$ or $|g(x)| \geq s$.
+\end{proof}
+
+We can simplify the study of the distribution of $f$ even more by defining the \emph{decreasing rearrangement} of $f$, a decreasing function $f^*: [0,\infty) \to [0,\infty)$ such that $f^*(s)$ is the \emph{smallest} number $t$ such that $F(t) \leq s$. Effectively, $f^*(s)$ is the inverse of $F$:
+%
+\begin{itemize}
+    \item If there is a unique $t$ with $F(t) = s$, then $f^*(s) = t$.
+    \item If there are multiple values $t$ with $F(t) = s$, let $f^*(s)$ be the \emph{smallest} such value.
+    \item If there are no values $t$ with $F(t) = s$, then we pick the first value $t$ with $F(t) < s$.
+\end{itemize}
+%
+We find
+%
+\[ \{ s : f^*(s) > t \} = \{ s : s < F(t) \} = [0,F(t)), \]
+%
+which has measure $F(t)$. This is the most important property of $f^*$; it is a decreasing function on the line which has the same distribution as the function $|f|$. It is also the unique such function which is right continuous. Thus our intuition when analyzing monotone, rearrangement invariant norms is not harmed if we focus on right continuous decreasing functions.
+
+\begin{theorem}
+    The function $f^*$ is right continuous.
+\end{theorem}
+\begin{proof}
+    We note that $F(t) > s$ if and only if $t < f^*(s)$. Since $f^*$ is decreasing, for any $s \geq 0$, we automatically have $f^*(s^+) \leq f^*(s)$. If $f^*(s^+) < f^*(s)$, then
+    %
+    \[ s < F \left( f^*(s^+) \right) \leq F(f^*(s)) \leq s, \]
+    %
+    which gives a contradiction, so $f^*(s) = f^*(s^+)$.
+\end{proof}
+
+\begin{remark}
+    We have a jump discontinuity at a point $s$ wherever $F$ is flat, and $f^*$ is flat wherever $F$ has a jump discontinuity.
+\end{remark}
+
+\section{Weak and Lorentz Norms}
+
+The weak $L^p$ norms are obtained as a slight `refinement' of the $L^p$ norms.
+
+\begin{theorem}
+  If $\phi$ is an increasing, differentiable function on the real line with $\phi(0) = 0$, then
+  %
+  \[ \int_X \phi(|f(x)|) = \int_0^\infty \phi'(t) F(t)\; dt \]
+\end{theorem}
+\begin{proof}
+  An application of Fubini's theorem is all that is needed to show
+  %
+  \begin{align*}
+    \int_X \phi(|f(x)|)\; dx &= \int_X \int_0^{|f(x)|} \phi'(t)\; dt\; dx\\
+    &= \int_0^\infty \phi'(t) \int_{|f(x)| > t}\; dx\; du\\
+    &= \int_0^\infty \phi'(t) F(t)\; dt. \qedhere
+  \end{align*}
+\end{proof}
+
+As a special case we find
+%
+\[ \| f \|_p = \left( p \int_0^\infty F(t) t^p \frac{dt}{t} \right)^{1/p}. \]
+%
+Thus in order for $\| f \|_p$ to be finite, we need $F(t) t^p$ to be integrable with respect to the Haar measure on $\mathbf{R}^+$. For this to be true, $F(t)$ must tend to zero `logarithmically faster' than $1/t^p$. Indeed, we find
+%
+\[ F(t) = |\{ |f|^p > t^p \}| \leq \frac{1}{t^p} \int |f|^p = \frac{\| f \|_p^p}{t^p}, \]
+%
+a fact known as \emph{Chebyshev's inequality}. But if we change the integrality condition to the condition that $F(t) t^p \in L^q(\mathbf{R}^+)$ for some $0 < q \leq \infty$, we obtain a different condition translation monotone invariant space. Thus leads us to the definition of the \emph{Lorentz norms}.
+
+The most basic Lorentz norm is the \emph{weak $L^p$ norm}, denoted by $\| f \|_{p,\infty}$, which is defined to be the smallest value $A$ such that $F(t) \leq (A/t)^p$ for all $t$. We let $L^{p,\infty}(X)$ denote the space of all functions $f$ for which $\| f \|_{p,\infty} < \infty$. By Chebyshev's inequality, $\| f \|_{p,\infty} \leq \| f \|_p$ for any function $f$. The reason that the value $A$ occurs within the brackets is so that the norm is homogenous; if $g = \alpha f$, and $\| f \|_{p,\infty} = A$, then
+%
+\[ G(t) = F(t/|\alpha|) \leq \left( \frac{A |\alpha|}{t} \right)^p, \]
+%
+so $\| \alpha f \|_{p,\infty} = |\alpha| \| f \|_p$. The weak norms do not satisfy a triangle inequality, but they do satisfy a quasitriangle inequality. If $g = f_1 + \dots + f_N$, with $\| f_k \|_{p,\infty} = A_k$, then
+%
+\begin{align*}
+    G(t) &\leq F_1(t/N) + \dots + F_N(t/N)\\
+    &\leq (NA_1/t)^p + \dots + (NA_N/t)^p = \frac{N^p(A_1^p + \dots + A_N^p)}{t^p}.
+\end{align*}
+%
+Thus $\| G \|_{p,\infty} \leq N(A_1^p + \dots + A_N^p)^{1/p}$. If $p \geq 1$, then this is upper bounded by $N(A_1 + \dots + A_N)$, so
+%
+\[ \| G \|_{p,\infty} \leq N \left( \| f_1 \|_{p,\infty} + \dots + \| f_N \|_{p,\infty} \right). \]
+%
+If $p \leq 1$, we instead bound $(A_1^p + \dots + A_N^p)^{1/p}$ by $N^{1/p}(A_1 + \dots + A_N)$, so that
+%
+\[ \| G \|_{p,\infty} \leq N^{1 + 1/p} \left( \| f_1 \|_{p,\infty} + \dots + \| f_N \|_{p,\infty} \right). \]
+%
+The weak norm provides another monotone translation invariant measure, and it oftens comes up when finer tuning is needed in certain interpolation arguments, especially when dealing with maximal functions.
+
+\begin{example}
+  If $f = H \mathbf{I}_E$, with $|E| = W$, then
+  %
+  \[ F(t) = W \cdot \mathbf{I}_{[0,H)}. \]
+  %
+  Thus
+  %
+  \[ \| f \|_{p,\infty} = \left( \sup_{0 \leq t < H} W t^p \right)^{1/p} = W^{1/p} H^p = \| f \|_p. \]
+  %
+  If $f = H_1 \mathbf{I}_{E_1} + H_2 \mathbf{I}_{E_2}$, with $|E_1| = W_1$ and $|E_2| = W_2$, with $H_1 \leq H_2$, then
+  %
+  \[ F(t) = \begin{cases} W_1 + W_2 &: t < H_1, \\ W_2 &: t < H_2, \\ 0 &: \text{otherwise.} \end{cases} \]
+  %
+  Thus
+  %
+  \[ \| f \|_{p,\infty} = \left( \max((W_1 + W_2) H_1^p, W_2 H_2^p) \right)^{1/p} = \max((W_1 + W_2)^{1/p} H_1, W_2^{1/p} H_2). \]
+\end{example}
+
+\begin{example}
+    The function $f(x) = 1/|x|^\alpha$ does not lie in any $L^p(\mathbf{R}^d)$, but lies in $L^{p,\infty}$ precisely when $p = d/\alpha$, since
+    %
+    \[ \left| \{ 1/|x|^{p\alpha} > t \} \right| = \left| \left\{ |x| \leq \frac{1}{t^{1/p\alpha}} \right\} \right|\ \propto_d\ \frac{1}{t^{d/p\alpha}}. \]
+\end{example}
+
+In general, we define the \emph{Lorentz spaces} $L^{p,q}(X)$ as the space of functions such that
+%
+\[ \left( \int (t F^{1/p}(t))^q \frac{dt}{t} \right)^{1/q} < \infty. \]
+%
+For such functions, we can define the Lorentz norm
+%
+\[ \| f \|_{p,q} = \| p t F^{1/p} \|_{L^q(\mathbf{R}^+)} = \| s^{1/p} f^* \|_{L^q(\mathbf{R}^+)}. \]
+%
+The equivalence of these two definitions is verified for simple functions, from which the general case follows from the monotone convergence theorems. As a special case, $\| \cdot \|_{p,\infty}$ is the weak $L^p$ norm, and $\| \cdot \|_{p,p}$ is the standard $L^p$ norm. The Lorentz norm often occurs with other constants attached, but this only scales the Lorentz norm, and is rarely relevant to the problem at hand, since we normally only desire bounds of the form $\| f \|_{p,q} \lesssim_{p,q} A$. The main case are interested in which we haven't already encountered is when $q = 1$, for which
+%
+\[ \| f \|_{p,1} = \int_0^\infty s^{1/p} f^*(s)\; \frac{ds}{s}. \]
+%
+As $q \to 0$, the norm $\| \cdot \|_{p,q}$ becomes a stronger measurement.
+
+\begin{theorem}
+    For $q < r$, $\| f \|_{p,r} \lesssim_{p,q_1,q_2} \| f \|_{p,q}$.
+\end{theorem}
+\begin{proof}
+    First we treat the case $r = \infty$. We have
+    %
+    \begin{align*}
+        s_0^{1/p} f^*(s_0) &= \left( \frac{q}{p} \int_0^{s_0} [s^{1/p} f^*(s_0)]^q \frac{dt}{t} \right)^{1/q}\\
+        &\leq \left( \frac{q}{p} \int_0^{s_0} [s^{1/p} f^*(s)]^q \frac{dt}{t} \right)\\
+        &\leq (q/p)^{1/q} \| f \|_{p,q}.
+    \end{align*}
+    %
+    When $r < \infty$, we can interpolate, calculating
+    %
+    \[ \| f \|_{p,r} = \left( \int_0^\infty [s^{1/p} f^*(s)]^r \frac{ds}{s} \right)^{1/r} \leq \| f \|_{p,\infty}^{1 - q/r} \| f \|_{p,q}^{q/r} \leq (q/p)^{1/q - 1/r} \| f \|_{p,q}. \qedhere \]
+\end{proof}
+
+The fact that multiplying a function by a constant dilates the distribution implies that the Lorentz norm is homogenous. We do not have a triangle inequality for the Lorentz norms, but we have a quasi triangle inequality.
+
+\begin{theorem}
+    All the Lorentz spaces satisfy a quasi triangle inequality. More precisely, if $p,q \geq 1$, then
+    %
+    \[ \| f_1 + \dots + f_N \|_{p,q} \leq N^{1 + [p \leq 1](1/p - 1) + [q \leq 1](1/q - 1)} \left( \| f_1 \|_{p,q} + \dots + \| f_N \|_{p,q} \right). \]
+\end{theorem}
+\begin{proof}
+    We calculate that if $g = f_1 + \dots + f_N$,
+    %
+    \begin{align*}
+    \| g \|_{p,q} &= \left( q \int_0^\infty \left[t G(t)^{1/p} \right]^q \frac{dt}{t} \right)^{1/q}\\
+    &\leq \left( q \int_0^\infty \left[ t (F_1(t/N) + \dots + F_N(t/N))^{1/p} \right]^q \frac{dt}{t} \right)^{1/q}\\
+    &\leq N \left( q \int \left[ t \left( F_1(t) + \dots + F_N(t) \right)^{1/p} \right]^q \frac{dt}{t} \right)^{1/q}.
+  \end{align*}
+  %
+  If $p \geq 1$, then
+  %
+  \[ \left( F_1(t) + \dots + F_N(t) \right)^{1/p} \leq F_1(t)^{1/p} + \dots + F_N(t)^{1/p}, \]
+  %
+  whereas if $p \leq 1$, H\"{o}lder's inequality shows
+  %
+  \[ \left( F_1(t) + \dots + F_N(t) \right)^{1/p} \leq N^{1/p - 1} \left( F_1(t)^{1/p} + \dots + F_N(t)^{1/p} \right), \]
+  %
+  If $q \geq 1$, the two inequalities above, combined with the triangle inequality in $L^q(\mathbf{R}^+)$, yield the required bound. If $q \leq 1$, then we apply the quasitriangle inequality.
+\end{proof}
+
+\begin{theorem}[Stein-Weiss Inequality]
+    For any functions $f_1,\dots, f_N$,
+    %
+    \[ \| f_1 + \dots + f_N \|_{1,\infty} \lesssim \log N \left[ \| f_1 \|_{1,\infty} + \dots + \| f_N \|_{1,\infty} \right]. \]
+\end{theorem}
+\begin{proof}
+    Without loss of generality, assume $\| f_1 \|_{1,\infty} + \dots + \| f_N \|_{1,\infty} = 1$. Fix $t$. For each $k \in [1,N]$, define
+    %
+    \[ g_k(x) = \begin{cases} f_k(x) &: |f_k(x)| \geq t/2, \\ 0 &: \text{otherwise}, \end{cases} \]
+    %
+    and
+    %
+    \[ h_k(x) = \begin{cases} f_k(x) &: |f_k(x)| \leq \| f_k \|_{1,\infty} \cdot (t/2), \\ 0 &: \text{otherwise}. \end{cases} \]
+    %
+    Also define $j_k = f_k - g_k - h_k$. Then write $f = f_1 + \dots + f_N$, $g = g_1 + \dots + g_N$, $h = h_1 + \dots + h_N$, and $j = j_1 + \dots + j_N$. Note that $\| h \|_\infty \leq t/2$, so
+    %
+    \[ \{ x : |f(x)| \geq t \} \subset \{ x : |g(x)| \geq t/2 \} \cup \{ x : |j(x)| \geq t/2 \}. \]
+    %
+    Each $g_k$ is supported on a set of measure at most $\| f_k \|_{1,\infty} \cdot (2/t)$, so $g$ is supported on a set of measure at most $2/t$. In particular, $\{ x : |g(x)| \geq t/2 \}$ has measure at most $2/t$. The measure of $\{ x : |j(x)| \geq t/2 \}$ is bounded
+    %
+    \begin{align*}
+        (2/t) \int |j(x)|\; dx &\leq (2/t) \sum_{k = 1}^N \int |j_k(x)|\\
+        &= (2/t) \sum_{k = 1}^N \int_{\| f_k \|_{1,\infty} (t/2)}^{t/2} \frac{\| j_k \|_{1,\infty}}{s}\; ds\\
+        &= (2/t) \sum_{k = 1}^N \| f_k \|_{1,\infty} \log(1/\| f_k \|_{1,\infty}).
+    \end{align*}
+    %
+    Now the maximum of $x_1 \log(1/x_1) + \dots + x_N \log(1/x_N)$, subject to the constraint that $x_1 + \dots + x_N = 1$, is maximized by taking $x_k = 1/N$ for all $N$, which gives a maximal bound of $\log(N)$. In particular, we find that
+    %
+    \[ (2/t) \sum_{k = 1}^N \| f_k \|_{1,\infty} \log(1/\| f_k \|_{1,\infty}) \leq (2 \log N)/t. \]
+    %
+    Thus in total, we conclude the measure of $\{ x: |f(x)| \geq t \}$ is at most
+    %
+    \[ 2(1 + \log N)/t \lesssim \log N / t. \qedhere \]
+\end{proof}
+
+Compare this \emph{logarithmic} failure to be a norm with the \emph{polynomial} failure to be a norm found in the norms $\| \cdot \|_p$, when $p < 1$. This inequality is, asymptotically in $N$, tight, as we show later on in this chapter, where we show the norm $\| \cdot \|_{1,\infty}$ is not normable.
+
+\section{Dyadic Layer Cake Decompositions}
+
+An important trick to utilizing Lorentz norms is by utilizing a dyadic layer cake decomposition. The dyadic layer cake decompositions enable us to understand a function by breaking it up into parts upon which we can control the height or width of a function. We say $f$ is a \emph{sub step function} with height $H$ and width $W$ if $f$ is supported on a set $E$ with $|E| \leq W$, and $|f(x)| \leq H$. A \emph{quasi step function} with height $H$ and width $W$ if $f$ is supported on a set $E$ with $|E| \sim W$ and on $E$, $|f(x)| \sim H$.
+
+We start by discussing the \emph{vertical dyadic layer cake decomposition}. We define, for each $k \in \mathbf{Z}$, and set
+%
+\[ f_k(x) = f(x) \mathbf{I}(2^{k-1} < |f(x)| \leq 2^k) \]
+%
+Then $f = \sum f_k$, and $f_k$ is a quasi step function with height $2^k$ and width $F(2^{k-1}) - F(2^k)$. On the other hand, we can also perform a \emph{horizontal layer cake decomposition}. If we define $H_k = f^*(2^k)$, and set
+%
+\[ f_k(x) = f(x) \mathbf{I}(H_{k-1} < |f(x)| \leq H_k), \]
+%
+then $f_k$ is a substep function with height $H_k$ and width $2^k$. These decompositions are best visualized with respect to the representation $f^*$ of $f$, in which case the decomposition occurs over particular intervals.
+
+\begin{theorem}
+    The following values $A_1, \dots, A_4$ are all comparable up to a constant depending on $p$ and $q$:
+    %
+    \begin{enumerate}
+        \item \label{onebound} $\| f \|_{p,q} \leq A_1$.
+
+        \item \label{twobound} We can write $f = \sum_{k \in \mathbf{Z}} f_k$, where $f_k$ is a quasi-step function with height $2^k$ and width $W_k$, and
+        %
+        \[ \left( \sum_{k \in \mathbf{Z}} \left[ 2^k W_k^{1/p} \right]^q \right)^{1/q} \leq A_2. \]
+
+        \item \label{threebound} We can write $f = \sum_{k \in \mathbf{Z}} f_k$, where $f_k$ is a sub-step function with height $2^k$ and width $W_k$, and
+        %
+        \[ \left( \sum_{k \in \mathbf{Z}} \left[2^{k} W_k^{1/p} \right]^q \right)^{1/q} \leq A_3. \]
+
+        \item \label{fourbound} We can write $f(x) = \sum_{k \in \mathbf{Z}} f_k$, where $f_k$ is a sub-step function with width $2^k$ and height $H_k$, where $\{ H_k \}$ is a decreasing family of functions, and
+        %
+        \[ \left( \sum_{k \in \mathbf{Z}} \left[H_k 2^{k/p} \right]^q \right)^{1/q} \leq A_4. \]
+    \end{enumerate}
+\end{theorem}
+\begin{proof}
+    It is obvious that we can always select $A_3 \leq A_2$. Next, we bound $A_2$ in terms of $A_1$ by performing a vertical layer cake decomposition on $f$. If we write $f = \sum_{k \in \mathbf{Z}} f_k$, then $f_k$ is supported on a set with measure $W_k = F(2^{k-1}) - F(2^k) \leq F(2^{k-1})$, and so
+    %
+    \begin{align*}
+        \sum_{k \in \mathbf{Z}} [2^k W_k^{1/p}]^q &\leq \sum_{k \in \mathbf{Z}} [2^k F(2^{k-1})^{1/p}]^q\\
+        &\lesssim_q \sum_{k \in \mathbf{Z}} [2^{k-1} F(2^k)^{1/p}]^q\\
+        &\lesssim \sum_{k \in \mathbf{Z}} \int_{2^{k-1}}^{2^k} [tF(t)^{1/p}]^q\; \frac{dt}{t} \lesssim_q \| f \|_{p,q}^q \leq A_1^q.
+    \end{align*}
+    %
+    Thus $A_2 \lesssim_q A_1$. Next, we bound $A_4$ in terms of $A_1$. Perform a horizontal layer cake decomposition, writing $f = \sum f_k$, where $f_k$ is supported on a set with measure $W_k \leq 2^k$, and $H_{k+1} \leq |f_k(x)| \leq H_k$. Then a telescoping sum shows
+    %
+    \begin{align*}
+        H_k 2^{k/p} &= \left( \sum_{m = 0}^\infty (H_{k+m}^q - H_{k+m+1}^q) 2^{kq /p} \right)^{1/q}\\
+        &\lesssim_q \left( \sum_{m = 0}^\infty \int_{H_{k+m+1}}^{H_{k+m}} [t 2^{k/p}]^q \frac{dt}{t} \right)^{1/q}\\
+        &\leq \left( \sum_{m = 0}^\infty \int_{H_{k+m+1}}^{H_{k+m}} [t F(t)^{1/p}]^q \frac{dt}{t} \right)^{1/q}
+    \end{align*}
+    %
+    Thus
+    %
+    \[ \left( \sum_{k \in \mathbf{Z}} [H_k 2^{k/p}]^q \right)^{1/q} \leq \left( \int_0^\infty [t F(t)^{1/p}]^q \frac{dt}{t} \right)^{1/q} \lesssim_q A_1. \]
+    %
+    Thus $A_4 \lesssim_q A_1$. It remains to bound $A_1$ by $A_4$ and $A_3$. Given $A_3$, we can write $|f(x)| \leq \sum 2^k \mathbf{I}_{E_k}$, where $|E_k| \leq W_k$. We then find
+    %
+    \[ F(2^k) \leq \sum_{m = 1}^\infty W_{k+m}. \]
+    %
+    Thus
+    %
+    \[ \int_{2^{k-1}}^{2^k} [t F(t)^{1/p}]^q \frac{dt}{t} \lesssim \left[ 2^k \left(\sum_{m = 0}^\infty W_k \right)^{1/p} \right]^q. \]
+    %
+    Thus if $q \leq p$,
+    %
+    \begin{align*}
+        \| f \|_{p,q} &\lesssim_q \left( \sum_{k \in \mathbf{Z}} \left[2^k \left( \sum_{m = 0}^\infty W_{k+m} \right)^{1/p} \right]^q \right)^{1/q}\\
+        &\leq \left( \sum_{k \in \mathbf{Z}} \sum_{m = 0}^\infty \left[ 2^k W_{k+m}^{1/p} \right]^q \right)^{1/q}\\
+        &\leq \left( \sum_{m = 0}^\infty 2^{-qm} \sum_{k \in \mathbf{Z}} \left[ 2^{k+m} W_{k+m}^{1/p} \right]^q \right)^{1/q}\\
+        &\leq \left( A_3^q \sum_{m = 0}^\infty 2^{-mq} \right)^{1/q} \lesssim_q A_3.
+    \end{align*}
+    %
+    If $q \geq p$, we can employ the triangle inequality for $l^{q/p}$ to write
+    %
+    \begin{align*}
+        \| f \|_{p,q} &\lesssim_q \left( \sum_{k \in \mathbf{Z}} \left[2^k \left( \sum_{m = 0}^\infty W_{k + m}  \right)^{1/p} \right]^q \right)^{1/q}\\
+        &\leq \left( \sum_{m = 0}^\infty \left( \sum_{k \in \mathbf{Z}} 2^{kq} W_{k+m}^{q/p} \right)^{p/q} \right)^{1/p}\\
+        &\leq \left( A_3^p \sum_{m = 0}^\infty 2^{-mq} \right)^{1/p} \lesssim_{p,q} A_3.
+    \end{align*}
+    %
+    The bound of $A_1$ in terms of $A_4$ involves the same `shifting' technique, and is left to the reader.
+\end{proof}
+
+\begin{remark}
+    Heuristically, the theorem above says that if $f = \sum_{k \in \mathbf{Z}} f_k$, where $f_k$ is a quasi-step function with width $H_k$ and width $W_k$, and if either $\{ H_k \}$ and $\{ W_k \}$ grow faster than powers of two, then
+    %
+    \[ \| f \|_{p,q} \sim_{p,q} \left( \sum_{k \in \mathbf{Z}} \left[ H_k W_k^{1/p} \right]^q \right)^{1/q}. \]
+    %
+    Thus the $L^{p,q}$ norm has little interaction between elements of the sum when the sum occurs over dyadically different heights or width, which is another reason why we view the $q$ parameter as a `logarithmic' correction of the $L^p$ norm. In particular, if we can write $f = f_1 + \dots + f_N$, and $q_1 < q_2$, then the last equation, combined with a $l^{q_1}$ to $l^{q_2}$ norm bound, gives
+    %
+    \[ \left( \sum_{k \in \mathbf{Z}} \left[ H_k W_k^{1/p} \right]^{q_1} \right)^{1/q_1} \leq N^{1/q_1 - 1/q_2} \left( \sum_{k \in \mathbf{Z}} \left[ H_k W_k^{1/p} \right]^{q_2} \right)^{1/q_2} \]
+    %
+    This implies
+    %
+    \[ \| f \|_{p,q_2} \lesssim_{p,q_1,q_2} \| f \|_{p,q_1} \lesssim_{p,q_1,q_2} N^{1/q_1 - 1/q_2} \| f \|_{p,q_2}. \]
+    %
+    In particular, this occurs if there exists a constant $C$ such that $C \leq |f(x)| \leq C \cdot 2^N$ for all $x$. On the other hand, if we vary the $p$ parameter, we find that for $p_1 < p_2$,
+    %
+    \[ \left( \sum_{k \in \mathbf{Z}} \left[ H_k W_k^{1/p_1} \right]^q \right)^{1/q} \leq \max(W_k)^{1/p_1 - 1/p_2} \left( \sum_{k \in \mathbf{Z}} \left[H_k W_k^{1/p_2} \right]^q \right)^{1/q}, \]
+    \[ \left( \sum_{k \in \mathbf{Z}} \left[ H_k W_k^{1/p_2} \right]^q \right)^{1/q} \leq \left( \frac{1}{\min(W_k)} \right)^{1/p_1 - 1/p_2} \left( \sum_{k \in \mathbf{Z}} \left[ H_k W_k^{1/p_2} \right]^q \right)^{1/q}. \]
+    %
+    which gives
+    %
+    \[ \min(W_k)^{1/p_1 - 1/p_2} \| f \|_{p_2,q} \lesssim_{p_1,p_2,q} \| f \|_{p_1,q} \lesssim_{p_1,p_2,q} \max(W_k)^{1/p_1 - 1/p_2} \| f \|_{p_2,q}. \]
+    %
+    Both of these inequalities can be tight. Because of the dyadic decomposition of $f$, we find $\max(W_k) \geq 2^N \min(W_k)$, so these two norms can differ by at least $2^{N(1/p_1 - 1/p_2)}$, and at \emph{most} if the $f_k$ occur over consecutive dyadic values, which is \emph{exponential} in $N$. Conversely, if the heights change dyadically, we find that
+    % q = q'p_2/p-1
+    \begin{align*}
+        \left( \sum_{k \in \mathbf{Z}} \left[ H_k W_k^{1/p_2} \right]^q \right)^{1/q} &\leq \left( \sum_{k \in \mathbf{Z}} \left[ H_k W_k^{1/p_2} \right]^{qp_2/p_1} \right)^{(p_1/p_2)/q}\\
+        &\leq \max(H_k)^{1 - p_1/p_2} \left( \sum_{k \in \mathbf{Z}} \left[ H_k W_k^{1/p_1} \right]^q \right)^{(p_1/p_2)/q}
+    \end{align*}
+    %
+    \begin{align*}
+        \left( \sum_{k \in \mathbf{Z}} \left[ H_k W_k^{1/p_1} \right]^q \right)^{1/q} &\lessapprox \left( \sum_{k \in \mathbf{Z}} \left[ H_k W_k^{1/p_1} \right]^{qp_1/p_2} \right)^{(p_2/p_1)/q}\\
+        &\leq \left( \frac{1}{\min(H_k)} \right)^{p_2/p_1 - 1} \left( \sum_{k \in \mathbf{Z}} \left[ H_k W_k^{1/p_2} \right]^q \right)^{(p_2/p_1)/q}
+    \end{align*}
+    %
+    where $\lessapprox$ denotes a factor ignoring polynomial powers of $N$ occuring from the estimate. Thus
+    %
+    \[ \min(H_k)^{p_2 - p_1} \| f \|_{p_1,q}^{p_1} \lessapprox_{p_1,p_2,q} \| f \|_{p_2,q}^{p_2} \lesssim_{p_1,p_2,q} \max(H_k)^{p_2-p_1} \| f \|_{p_1,q}^{p_1} \]
+    %
+    again, these inequalities can be both tight, and $\max(H_k) \geq 2^N \min(H_k)$, with equality if the quasi step functions from which $f$ is composed occur consecutively dyadically.
+\end{remark}
+
+\begin{example}
+    Consider the function $f(x) = |x|^{-\alpha}$. For each $k$, let
+    %
+    \[ E_k = \{ x : 2^{-(k+1)/\alpha} \leq |x| < 2^{-k/\alpha} \} \]
+    %
+    and define $f_k = f \mathbf{I}_{E_k}$. Then $f_k$ is a quasi-step function with height $2^k$, and width $\Theta_d(1/2^{dk/\alpha})$. We conclude that if $p = d/\alpha$, and $q < \infty$,
+    %
+    \[ \| f \|_{p,q} \approx_{p,q,d} \left( \sum_{k = -\infty}^\infty 2^{qk(1 - d/p\alpha)} \right)^{1/q} = \infty. \]
+    %
+    Thus the function $f$ lies exclusively in $L^{p,\infty}(\RR^d)$.
+\end{example}
+
+A simple consequence is H\"{o}lder's inequality for Lorentz spaces.
+
+\begin{theorem}
+    If $0 < p_1,p_2,p < \infty$ and $0 < q_1,q_2,q < \infty$ with
+    %
+    \[ 1/p = 1/p_1 + 1/p_2 \quad \text{and} \quad 1/q = 1/q_1 + 1/q_2, \]
+    %
+    then
+    %
+    \[ \| f g \|_{p,q} \lesssim_{p_1,p_2,q_1,q_2} \| f \|_{p_1,q_1} \| g \|_{p_2,q_2}. \]
+\end{theorem}
+\begin{proof}
+    Without loss of generality, assume $\| f \|_{p_1,q_1} = \| g \|_{p_2, q_2} = 1$. Perform horizontal layer cake decompositions of $f$ and $g$, writing $|f| \leq \sum_{k \in \mathbf{Z}} H_k \mathbf{I}_{E_k}$ and $|g| \leq \sum_{k \in \mathbf{Z}} H_k' \mathbf{I}_{F_k}$, where $|E_k|, |F_k| \leq 2^k$. Then
+    %
+    \[ |fg| \leq \sum_{k,k' \in \mathbf{Z}} H_k H_k' \mathbf{I}_{E_k \cap F_{k'}} \]
+    %
+    For each fixed $k$, $|E_{k + m} \cap F_m| \leq 2^m$, and so
+    %
+    \begin{align*}
+        \left\| \sum_{m \in \mathbf{Z}} H_{k + m} H_m' \mathbf{I}_{E_{k+m} \cap F_m} \right\|_{p,q} &\lesssim_{p,q} \left( \sum_{m \in \mathbf{Z}} [H_{k+m} H_m' 2^{m/p}]^q \right)^{1/q}\\
+        &= \left( \sum_{m \in \mathbf{Z}} \left[ (H_{k+m} 2^{m/p_1}) (H_m 2^{m/p_2}) \right]^q \right)^{1/q}\\
+        &\leq \left( \sum_{m \in \mathbf{Z}} [H_{k+m} 2^{m/p_1} ]^{q_1} \right)^{1/q_1} \left( \sum_{m \in \mathbf{Z}} [H_m' 2^{m/p_2}]^{q_2} \right)^{1/q_2}\\
+        &\lesssim_{p,q,p_1,q_1,p_2,q_2} 2^{-k/p_1}\\
+    \end{align*}
+    %
+    Summing over $k > 0$ gives that
+    %
+    \[ \left\| \sum_{k \geq 0} \sum_{m \in \mathbf{Z}} H_{k+m} H_m' \mathbf{I}_{E_{k+m} \cap F_m} \right\| \lesssim_{p,q,p_1,q_1,p_2,q_2} 1 \]
+    %
+    By the quasitriangle inequality, it now suffices to obtain a bound
+    %
+    \[ \left\| \sum_{k < 0} \sum_{m \in \mathbf{Z}} H_{k+m} H_m' \mathbf{I}_{E_{k+m} \cap F_m} \right\|_{p,q}. \]
+    %
+    This is done similarily, but instead using the bound $|E_{k+m} \cap F_m| \leq 2^{k+m}$.
+\end{proof}
+
+\begin{corollary}
+    If $p > 1$ and $q > 0$, $L^{p,q}(X) \subset L^1_{\text{loc}}(X)$.
+\end{corollary}
+\begin{proof}
+    Let $E$ have finite measure and let $f \in L^{p,q}(X)$. Then the H\"{o}lder's inequality for Lorentz spaces shows
+    % 1 = 1/p + 1/p_2 = 1/q + 1/q_2
+    %
+    \[ \| f \|_{L^1(E)} = \| \mathbf{I}_E f \|_1 \lesssim_{p,q} |E|^{1 - 1/p} \| f \|_{p,q} < \infty. \qedhere \]
+\end{proof}
+
+Finally, we consider the duality of the $L^{p,q}$ norms.
+
+\begin{theorem}
+    Let $1 < p < \infty$ and $1 \leq q \leq \infty$. Then if $f \in L^{p,q}(X)$,
+    %
+    \[ \| f \|_{p,q} \sim \sup \left\{ \int fg : \| g \|_{p',q'} \leq 1 \right\}. \]
+\end{theorem}
+\begin{proof}
+    The upper bound is an easy consequence of H\"{o}lder's inequality. For the case $q = \infty$, we actually prove
+    %
+    \[ \| f \|_{p,\infty} \gtrsim_p \sup \left\{ |E|^{-1/p'} \left| \int_E f \right| : |E| < \infty \right\}, \]
+    %
+    If $F(t_0) \geq (A/t_0)^p$ for some $t_0$, then setting $E_\theta = \{ x : |f(x)| = re^{i\theta}, r > t_0 \}$, we find
+    %
+    \[ \int_0^{2\pi} |E_\theta| \geq (A/t_0)^p. \]
+    %
+    In particular, if $\varepsilon > 0$ is fixed, pidgeonholing shows we can find a set
+    %
+    \[ E = \bigcup_{\eta = \theta}^{\theta + \pi/4} E_\theta \]
+    %
+    such that $|E| \geq (A/t_0)^p/8$. Thus
+    %
+    \begin{align*}
+        |E|^{-1/p'} \left| \int_E f(x)\; dx \right| &\geq |E|^{-1/p'} \text{Re} \left( \int_Ee^{-i\theta} f(x)\; dx \right)\\
+        &\gtrsim |E|^{-1/p'} \int_E |f(x)|\; dx \gtrsim_p t_0 \cdot |E|^{1/p} \gtrsim A.
+    \end{align*}
+    %
+    Now we consider the case with $q < \infty$. Without loss of generality, we may assume $\| f \|_{p,q} = 1$. We may perform a vertical layer cake decomposition, writing $f = \sum_{k \in \mathbf{Z}} f_k$, where $2^{k-1} \leq |f_k(x)| \leq 2^k$, is supported on a set with width $W_k$, and
+    %
+    \[ \left( (2^k W_k^{1/p})^q \right) \sim_{p,q} 1. \]
+    %
+    Define $a_k = 2^k W_k^{1/p}$, and set $g = \sum_{k \in \mathbf{Z}} g_k$, where $g_k(x) = a_k^{q-p} \text{sgn}(f_k(x)) |f_k(x)|^{p-1}$. Then
+    %
+    \begin{align*}
+        \int f(x) g(x) &= \sum_{k \in \mathbf{Z}} \int f_k(x) g_k(x) = \sum_{k \in \mathbf{Z}} a_k^{q-p} \int |f_k(x)|^p\\
+        &\gtrsim_p \sum_{k \in \mathbf{Z}} a_k^{q-p} W_k 2^{kp} = \sum_{k \in \mathbf{Z}} a_k^q \gtrsim_{p,q} 1.
+    \end{align*}
+    %
+    We therefore need to show that $\| g \|_{p',q'} \lesssim 1$. We note $|g_k(x)| \lesssim a_k^{q-p} 2^{kp}$, and has width $W_k$. The gives a decomposition of $g$, but neither the height nor the widths necessarily in powers of two. Still, we can fix this since the heights increase exponentially; define
+    %
+    \[ H_k = \sup_{l \geq 0} a_{k-l}^{q-p} 2^{kp} 2^{-lp/2}. \]
+    %
+    Then $|g_k(x)| \lesssim_{p,q} H_k$, and $H_{k+1} \geq 2^{p/2} H_k$. In particular, if we pick $m$ such that $2^{mp/2} \geq 1$, then for any $l \leq m$, the sequence $H_{km + l}$, as $k$ ranges over values, increases dyadically, and so by the quasitriangle inequality for the $L^{p',q'}$ norm, and then the triangle inequality in $l^q$, we find
+    % W_k = a_k^p/ 2^{kp}
+    \begin{align*}
+        \| g \|_{p',q'} &\lesssim_{m,p,q} \left( \sum [H_k W_k^{1/p'}]^{q'} \right)^{1/q'}\\
+        &\lesssim \left( \sum_{k \in \mathbf{Z}} \left[ \left( \sup_{l \geq 0} a_{k-l}^{q-p} 2^{kp} 2^{-lp/2} \right) (a_k 2^{-k})^{p-1} \right]^{q'} \right)^{1/q'}\\
+        &\lesssim_p \left( \sum_{k \in \mathbf{Z}} \left[ a_k^{p-1} \sum_{l = 0}^\infty a_{k-l}^{q-p} 2^{-lp/2} \right]^{q'} \right)^{1/q'}\\
+        &\lesssim \sum_{l = 0}^\infty 2^{-lp/2} \left( \sum_{k \in \mathbf{Z}} \left[ a_k^{p-1} a_{k-l}^{q-p} \right]^{q'} \right)^{1/q'}.
+    \end{align*}
+    %
+    Applying's H\"{o}lder's inequality shows
+    %
+    \begin{align*}
+        \left( \sum_{k \in \mathbf{Z}} \left[ a_k^{p-1} a_{k-l}^{q-p} \right]^{q'} \right)^{1/q'} &\leq  \left( \sum_{k \in \mathbf{Z}} a_k^q \right)^{(p-1)/q} \left( \sum_{k \in \mathbf{Z}} a_{k-l}^q \right)^{(q-p)/q}\\
+        &\lesssim_{p,q} \| f \|_{p,q}^{q-1} \lesssim_{p,q} 1. \qedhere
+    \end{align*}
+\end{proof}
+
+\begin{remark}
+    This technique shows that if $f = \sum f_k$, where $f_k$ is a quasi-step function with measure $W_k$ and height $2^{ck}$, then we can find $m$ such that $cm > 1$, and then consider the $m$ functions $f^1, \dots, f^m$, where $f_i = \sum f_{km + i}$. Then the functions $f_{km + i}$ have heights which are separated by powers of two, and so the quasi-triangle inequality implies
+    %
+    \begin{align*}
+        \| f \|_{p,q} &\lesssim_m \sum_{i = 1}^m \| f^i \|_{p,q}\\
+        &\lesssim_{p,q} \sum_{i = 1}^m \left( \sum \left[ H_{km + i} W_{km + i}^{1/p} \right]^q \right)^{1/q}\\
+        &\lesssim_m \left( \sum \left[ H_k W_k^{1/p} \right]^q \right)^{1/q}
+    \end{align*}
+    %
+    On the other hand,
+    %
+    \begin{align*}
+        \| f \|_{p,q} &\gtrsim \max_{1 \leq i \leq m} \| f^i \|_{p,q}\\
+        &\sim \max_{1 \leq i \leq m} \left( \sum \left[ H_{km + i} W_{km + i}^{1/p} \right]^q \right)^{1/q}\\
+        &\gtrsim_m \left( \sum \left[ H_k W_k^{1/p} \right]^q \right)^{1/q}.
+    \end{align*}
+    %
+    Thus the dyadic layer cake decomposition still works in this setting.
+\end{remark}
+
+\section{Normability of the Lorentz Spaces}
+
+Though the Lorentz norms do not satisfy the triangle inequality, the space $L^{p,q}(X)$ is still a `Banach-able' space when $p > 1$, and $q \geq 1$. First off, the standard proof shows the norm gives a complete quasimetric, since a Cauchy sequence in the $L^{p,q}$ norm converges to a function almost everywhere, which is easily verified to have finite $L^{p,q}$ norm. The easiest way to define a norm is to through the decreasing rearrangement.
+
+\begin{lemma}
+    For any measurable set $E$,
+    %
+    \[ \int_E |f(x)|\; dx \leq \int_0^{|E|} f^*(t)\; dt. \]
+    %
+    and
+    %
+    \[ \int_{\{ |f(x)| > t \}} |f(x)|\; dx = \int_0^{F(t)} f^*(t)\; dt. \]
+\end{lemma}
+\begin{proof}
+    If $g \leq f$, $g^* \leq f^*$. Thus $(\chi_E f)^* \leq f^*$, so
+    %
+    \[ \int_E |f(x)|\; dx = \int \chi_E |f(x)| = \int_0^\infty (\chi_E f)^*(t)\; dt = \int_0^{|E|} (\chi_E f)^*(t)\; dt \leq \int_0^{|E|} f^*(t)\; dt. \]
+    %
+    On the other hand, $(\chi_E f)^* = f^*$ when $E = \{ |f(x)| > t \}$, which gives the second equality.
+\end{proof}
+
+For a function $f$ and $t > 0$, we define a family of averages
+%
+\[ m(t) = \frac{1}{t} \int_0^t f^*(t)\; dt. \]
+%
+For any fixed $t > 0$, the map $f \mapsto m(t)$ is a norm. Provided our measure space is non-atomic, we have
+%
+\[ m(t) = \sup_{|E| \leq t} \int_E |f(x)|\; d\mu. \]
+%
+We define
+%
+\[ \vvvert f \vvvert_{p,q} = \left( \frac{q}{p} \int_0^\infty [t^{1/p} m(t)]^q \frac{dt}{t} \right)^{1/q} \]
+and
+%
+\[ \vvvert f \vvvert_{p,\infty} = \sup t^{1/p} m(t). \]
+%
+For $q \geq 1$, each of these functions is a norm, simply because the function $m$ is a norm. On the other hand, since $f^*$ is decreasing, $f^*(t) \leq m(t)$ for all $t$, which shows $\vvvert f \vvvert_{p,q} \geq \| f \|_{p,q}$. If $p = 1$ and $q < \infty$, if $\vvvert f \vvvert_{1,q} < \infty$, then $f = 0$, so these norms are effectively useless. If $q = \infty$, then
+%
+\[ \vvvert f \vvvert_{1,\infty} = \| f^* \|_{L^1[0,\infty)} = \| f \|_1, \]
+%
+and therefore doesn't measure the correct norm. But in all other cases, i.e. for $p > 1$ and $q \geq 1$, the norm is comparable to the $L^{p,q}$ norm.
+
+\begin{theorem}
+    If $p > 1$,
+    %
+    \[ \vvvert f \vvvert_{p,q} \leq \frac{p}{p-1} \| f \|_{p,q}. \]
+\end{theorem}
+\begin{proof}
+    We utilize a \emph{Hardy's inequality} technique, which shows that the $L^p$ norm of the averages of a function are comparable to the $L^p$ norm of the function. Applying Minkowski's integral inequality, we conclude that
+    %
+    \begin{align*}
+        \left( \frac{q}{p} \int_0^\infty [t^{1/p} m(t)]^q \frac{dt}{t} \right)^{1/q} &= \left( \frac{q}{p} \int_0^\infty \left( \int_0^1 t^{1/p} f^*(ts)\; ds \right)^q\; \frac{dt}{t} \right)^{1/q}\\
+        &\leq \int_0^1 \left( \int_0^\infty \frac{q}{p} (t^{1/p} f^*(ts))^q\; \frac{dt}{t} \right)^{1/q}\; ds\\
+        &\leq \left( \int_0^1 s^{- 1/p}\; ds \right) \left( \frac{q}{p} \int_0^\infty (t^{1/p} f^*(t))^q\; \frac{dt}{t} \right)^{1/q}\\
+        &\leq \frac{1}{1 - 1/p} \| f \|_{p,q} = \frac{p}{p - 1} \| f \|_{p,q}.
+    \end{align*}
+    %
+    For $q = \infty$, and $t > 0$, we have
+    %
+    \begin{align*}
+        t^{1/p} m(t) &= t^{1/p - 1} \int_0^t f^*(t)\\
+        &\leq (\sup_{s > 0} s^{1/p} f^*(s)) t^{1/p - 1} \int_0^t t^{-1/p}\\
+        &= \frac{1}{1 - 1/p} \| f \|_{p,\infty} = \frac{p}{p-1} \| f \|_{p,\infty}.
+    \end{align*}
+    %
+    since $t$ was arbitrary, this gives the required bound.
+\end{proof}
+
+\begin{remark}
+    When $p = 1$, $q > 1$, the space $L^{p,q}(X)$ is not normable. We prove this when $X = \mathbf{R}$ and $q = \infty$. Indeed, for each $k$, let
+    %
+    \[ f_k(x) = \frac{1}{|x - k|}. \]
+    %
+    Then $\| f_k \|_{1,\infty} \lesssim 1$ is bounded independently of $k$. If $\| \cdot \|$ was a norm giving the same topology as $L^{p,q}(X)$, then if $f = \sum_{k = 0}^{2N} f_k$, the triangle inequality would imply $\| f \| \lesssim N$. But if $|x| \leq N$, there are integers $k_1, \dots, k_N > 0$ such that $|x - k_i| \leq 2i$, so
+    %
+    \[ f(x) \geq \sum_{i = 1}^N \frac{1}{|x - k_i|} \geq \sum_{i = 1}^N \frac{1}{2i} \gtrsim \log(N) \]
+    %
+    so $\| f \|_{1,\infty} \geq N \log N$. Thus there can be no norm equivalent to the $L^{1,\infty}$ quasinorm.
+\end{remark}
+
+\section{Orlicz Spaces}
+
+To develop the class of Orlicz spaces, we note that if $\| f \|_p \leq 1$, and we set $\Phi(t) = t^p$, then
+%
+\[ \int \Phi \left( |f(x)| \right)\; dx = 1. \]
+%
+More generally, given any function $\Phi: [0,\infty) \to [0,\infty)$, we might ask if we can define a norm $\| \cdot \|_\Phi$ such that if $\| f \|_\Phi \leq 1$, then
+%
+\[ \int \Phi \left( |f(x)| \right)\; dx = 1. \]
+%
+Since a norm would be homogenous, this would imply that if $\| f \|_\Phi \leq A$, then
+%
+\[ \int \Phi \left( \frac{|f(x)|}{A} \right)\; dx \leq 1. \]
+%
+If we want these norms to be monotone, we might ask that if $A < B$, then
+%
+\[ \int \Phi \left( \frac{|f(x)|}{B} \right)\; dx \leq \int \Phi \left( \frac{|f(x)|}{A} \right), \]
+%
+and the standard way to ensure this is to ask the $\Phi$ is an increasing function, and to deal with the zero norm case, then $\Phi(0) = 0$. In order for $\| \cdot \|_\Phi$ to be a norm, the set of functions $\{ f : \| f \|_\Phi \leq 1 \}$ needs to be convex, and the standard way to obtain this is to assume that $\Phi$ is convex.
+
+In short, we consider an increasing, convex function $\Phi$ with $\Phi(0) = 0$. We then define
+%
+\[ \| f \|_\Phi = \inf \left\{ A > 0 : \int \Phi \left( \frac{|f(x)|}{A} \right)\; dx \leq 1 \right\}. \]
+%
+This function is a norm on the space of all $f$ with $\| f \|_\Phi < \infty$. It is easy to verify that $\| f \|_\Phi = 0$ if and only if $f = 0$ almost everywhere, and that $\| \alpha f \|_\Phi = |\alpha| \| f \|_\Phi$. To justify the triangle inequality, we note that if
+%
+\[ \int \Phi \left( \frac{|f(x)|}{A} \right) \leq 1 \quad\text{and} \quad \int \Phi \left( \frac{|f(x)|}{B} \right) \leq 1, \]
+%
+then applying convexity gives
+%
+\begin{align*}
+    \int \Phi \left( \frac{|f(x) + g(x)|}{A + B} \right) &\leq \int \Phi \left( \frac{|f(x)| + |g(x)|}{A + B} \right)\\
+    &\leq \int \left( \frac{A}{A + B} \right) \Phi \left( \frac{|f(x)|}{A} \right) + \left( \frac{B}{A + B} \right) \Phi \left( \frac{|g(x)|}{B} \right) \leq 1.
+\end{align*}
+%
+Thus we obtain the triangle inequality.
+
+The spaces $L^p(X)$ for $p \in [1,\infty)$ are Orlicz spaces with $\Phi(t) = t^p$. The space $L^\infty(X)$ is not really an Orlicz space, but it can be considered as the Orlicz function with respect to the `convex' function
+%
+\[ \Phi(t) = \begin{cases} \infty & t > 1, \\ t & t \leq 1. \end{cases} \]
+%
+More interesting examples of Orlicz spaces include
+%
+\begin{itemize}
+    \item $L \log L$, given by the Orlicz norm induced by $\Phi(t) = t \log(2 + t)$.
+    \item $e^L$, defined with respect to $\Phi(t) = e^t - 1$.
+    \item $e^{L^2}$, defined with respect to $\Phi(t) = e^{t^2} - 1$.
+\end{itemize}
+%
+The Orlicz spaces have an interesting duality relation. Given a function $\Phi$, which we assume is \emph{superlinear}, in the sense that $\Phi(x)/x \to \infty$ as $x \to \infty$, define it's \emph{Young dual}, for each $y \in [0,\infty)$
+%
+\[ \Psi(y) = \sup \{ xy - \Phi(x) : x \in [0,\infty) \}. \]
+%
+Then $\Psi$ is a well defined, finite value for each $y$. Furthermore, $\Psi(0) = 0$, and $\Psi$ is increasing. Most importantly, the function is convex, since $\Phi$ is convex, so given any $y,y' \in [0,\infty)$, and $\alpha \in [0,1]$,
+%
+\begin{align*}
+    x[\alpha y + (1 - \alpha) y'] - \Phi(x) &= (\alpha x) y + [(1 - \alpha) x] y' - \Phi(x)\\
+    &\geq \alpha [x y - \Phi(x)] + (1 - \alpha) [xy' - \Phi(x)]
+\end{align*}
+%
+Thus
+%
+\[ \Psi(\alpha y + (1 - \alpha) y') \]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\chapter{Interpolation Theory}
+
+One of the most fundamental tools in the `hard style' of mathematical analysis, involving explicit quantitative estimates on quantities that arises in basic methods of mathematics, is the theory of interpolation. The main goal of interpolation is to take two estimates, and blend them together to form a family of intermediate estimates. Often each estimate will focus on one component of the problem at hand (an estimate in terms of the decay of the function at $\infty$, an estimate involving the growth of the derivative, or the low frequency the function is, etc). By interpolating, we can optimize and obtain an estimate which simultaneously takes into account multiple features of the function.
+
+\section{Convex Interpolation}
+
+The most basic way to interpolate is using the notion of convexity. Given two inequalities $A_0 \leq B_0$ and $A_1 \leq B_1$, for any parameter $0 \leq \theta \leq 1$, if we define the additive weighted averages $A_\theta = (1 - \theta) A_0 + \theta A_1$ and $B_\theta = (1 - \theta) B_0 + \theta B_1$, then we conclude $A_\theta \leq B_\theta$ for all $\theta$. Similarily, we can consider the weighted multiplicative averages $A_\theta = A_0^{1 - \theta} A_1^\theta$ and $B_\theta = B_0^{1 - \theta}B_1^\theta$, in which case we still have $A_\theta \leq B_\theta$. Note that the additive averages are obtained by taking the unique linear function between two values, and the multiplicative averages are obtained by taking the unique log-linear function between two values. In particular, if $A_\theta$ is defined to be any convex function, then $A_\theta \leq (1 - \theta) A_0 + \theta A_1$, and if $B_\theta$ is logarithmically convex, so that $\log B_\theta$ is convex, then $B_\theta \leq B_0^{1 - \theta} B_1^\theta$. Thus convexity provides us with a more general way of interpolating estimates, which is what makes this property so useful in analysis, enabling us to simplify estimates.
+
+\begin{example}
+    For a fixed, measurable function $f$, the map $p \mapsto \| f \|_p$ is a log convex function. This statement is precisely H\"{o}lder's inequality, since the inequality
+    %
+    \[ \| f \|_{\theta p + (1 - \theta) q} \leq \| f \|_p^\theta \| f \|_{q}^{1-\theta} \]
+    %
+    says
+    %
+    \[ \| |f|^{\theta p} |f|^{(1 - \theta) q} \|_1^{1/(\theta p + (1 - \theta) q)} \leq \| f^{\theta p} \|_{1/\theta}^{\theta} \| f^{(1-\theta)q} \|_{1/(1-\theta)}^{1-\theta} \]
+    %
+    which is precisely H\"{o}lder's inequality. Note this implies that if $p_0 < p_\theta < p_1$, then $L^{p_0}(X) \cap L^{p_1}(X) \subset L^{p_\theta}(X)$.
+\end{example}
+
+\begin{example}
+    The weak $L^p$ norm is log convex, because if $F(t) \leq A_0^{p_0}/t^{p_0}$, and $F(t) \leq A_1^{p_1}/t^{p_1}$, then we can apply scalar interpolation to conclude that if $p_\theta = (1 - \alpha) p_0 + \alpha p_1$,
+    %
+    \[ F(t) \leq \frac{A_0^{(1 - \alpha) p_0}A_1^{\alpha p_1}}{t^{(1 - \alpha)p_0 + \alpha p_1}} = \frac{A_\theta^{p_\theta}}{t^{p_\theta}} \]
+    %
+    where $p_\theta$ is the harmonic weighted average between $p_0$ and $p_1$, and $A_\theta$ the geometric weighted average. Using this argument, interpolating slightly to the left and right of $p_\theta$, we can conclude that if $p_0 < p_\theta < p_1$, then $L^{p_0,\infty}(X) \cap L^{p_1,\infty}(X) \subset L^{p_\theta}(X)$.
+\end{example}
+
+\section{Complex Interpolation}
+
+Another major technique to perform an interpolation is to utilize the theory of complex analytic functions to obtain estimates. The core idea of this technique is to exploit the maximum principle, which says that bounding an analytic function at its boundary enables one to obtain bounds everywhere in the domain of the function. The next result, known as Lindel\"{o}f's theorem, is one of the fundamental examples of the application of complex analysis.
+
+\begin{theorem}[The Three Lines Lemma]
+    If $f$ is a holomorphic function on the strip $S = \{ z : \text{Re}(z) \in [a,b] \}$ such that there exists constants $A,B,\delta > 0$ such that for all $z \in S$,
+    %
+    \[ |f(z)| \leq Ae^{Be^{(\pi - \delta)|z|}}. \]
+    %
+    Then the function $M: [a,b] \to [0,\infty)$ given by
+    %
+    \[ M(s) = \sup_{s \in \RR} |f(s + it)| \]
+    %
+    is log convex on $[a,b]$.
+\end{theorem}
+\begin{proof}
+    By a change of variables, we can assume that $a = 0$, and $b = 1$, and we need only show that if there are $A_0, A_1 > 0$ such that
+    %
+    \[ |f(it)| \leq A_0 \quad\text{and}\quad |f(1 + it)| \leq A_1 \quad \text{for all $t \in \RR$}, \]
+    %
+    then for any $s \in [a,b]$ and $t \in \RR$,
+    %
+    \[ |f(s + it)| \leq A_0^{1 - s} A_1^s. \]
+    %
+    By replacing $f(z)$ with the function $A_0^{1-z} A_1^z f(z)$, we may assume without loss of generality that $A_0 = A_1 = 1$, and we must show that $\| f \|_{L^\infty(S)} \leq 1$. If $|f(s + it)| \to 0$ as $|t| \to \infty$, then for large $N$, we can conclude that $|f(s + it)| \leq 1$ for $s \in [a,b]$ and $|t| \geq N$. But then the maximum principle entails that $|f(s + it)| \leq 1$ for $s \in [a,b]$ and $|t| \leq N$, which completes the proof in this case. In the general case, for each $\varepsilon > 0$, define
+    %
+    \[ u_\varepsilon(z) = \exp(- 2 \varepsilon \sin((\pi - \varepsilon) z + \varepsilon/2)). \]
+    %
+    Then if $z = s + it$,
+    %
+    \[ |u_\varepsilon(z)| = \exp(- \varepsilon [e^{(\pi - \varepsilon) t} + e^{-(\pi - \varepsilon) t}] \sin((\pi - \varepsilon) s + \varepsilon/2)), \]
+    %
+    So, in particular, $|u_\varepsilon(z)| \leq 1$, and there exists a constant $C$ such that if $z \in S$,
+    %
+    \[ |u_\varepsilon(z)| \leq e^{- C \varepsilon^2 e^{(\pi - \varepsilon) |z|}} \]
+    %
+    Note that if $\varepsilon < \delta$, then as $|\text{Im}(z)| \to \infty$,
+    %
+    \[ |f(z) u_\varepsilon(z)| \leq A e^{B e^{(\pi - \delta) |z|} - C \varepsilon^2 e^{(\pi - \varepsilon) |z|} } \to 0. \]
+    %
+    Applying the previous case to the function $|f(z) u_\varepsilon(z)|$, we conclude that for any $\varepsilon > 0$,
+    %
+    \[ |f(z)| \leq \frac{1}{|u_\varepsilon(z)|}. \]
+    %
+    Thus
+    %
+    \[ |f(z)| \leq \lim_{\varepsilon \to 0} \frac{1}{|u_\varepsilon(z)|} = 1, \]
+    %
+    which completes the proof.
+\end{proof}
+
+\begin{remark}
+    The function $e^{-ie^{\pi i s}}$ shows that the assumption of the three lines lemma is essentially tight. In particular, this means there is no family of holomorphic functions $g_\varepsilon$ which decays faster than double exponentially, and pointwise approximates the identity as $\varepsilon \to 0$.
+\end{remark}
+
+\begin{remark}
+    Similar variants can be used to show that if $f$ is a holomorphic function on an annulus, then the supremum over circles centered around the origin is log convex in the radius of the circle (a result often referred to as the three circles lemma).
+\end{remark}
+
+\begin{example}
+    Here we show how we can use the three lines lemma to prove that the $L^p$ norms are log convex. If $f = \sum a_n \chi_{E_n}$ is a simple function, then the function
+    %
+    \[ g(s) = \int |f|^s = \sum |a_n|^s |E_n| \]
+    %
+    is analytic in $s$, and satisfies the growth condition of the three lines lemma because each term of the sum is exponential in growth. Since $|g(s)| \leq |g(\sigma)|$, the three lines lemma implies that $g$ is log convex on the real line. By normalizing the function $f$ and the underlying measure, given $p_0$, $p_1$, we may assume $\| f \|_{p_0} = \| f \|_{p_1} = 1$, and it suffices to prove that $\| f \|_{p_\theta} \leq 1$ for all $p_\theta \in [p_0, p_1]$. But the log convexity of $g$ guarantees this is true, since $|g(p)| = \| f \|_p^p$. A standard limiting argument then gives the inequality for all functions $f$.
+\end{example}
+
+\begin{example}
+    Let $f$ be a holmomorphic function on a strip $S = \{ z : \text{Re}(z) \in [a,b] \}$, such that if $z = a + it$, or $z = b + it$, for some $t \in \RR$,
+    %
+    \[ |f(z)| \leq C_1 (1 + |z|)^\alpha. \]
+    %
+    Then there exists a constant $C'$ such that for any $z \in S$,
+    %
+    \[ |f(z)| \leq C_2 (1 + |z|)^\alpha. \]
+\end{example}
+\begin{proof}
+    The function
+    %
+    \[ g(z) = \frac{f(z)}{(1 + z)^\alpha} \]
+    %
+    is holomorphic on $S$, and if $z = a + it$ or $z = b + it$,
+    %
+    \[ |g(z)| \leq \frac{C_1 (1 + |z|)^\alpha}{|1 + z|^\alpha} \lesssim 1. \]
+    %
+    Thus the three lines lemma implies that $|g(z)| \lesssim 1$ for all $z \in S$, so
+    %
+    \[ |f(z)| \lesssim |1 + z|^\alpha \lesssim (1 + |z|)^\alpha. \]
+\end{proof}
+
+\section{Interpolation of Operators}
+
+A major part of modern harmonic analysis is the study of operators, i.e. maps from function spaces to other function spaces. We are primarily interested in studying \emph{linear operators}, i.e. operators $T$ such that $T(f + g) = T(f) + T(g)$, and $T(\alpha f) = \alpha T(f)$, and also \emph{sublinear operators}, such that $|T(\alpha f)| = |\alpha| |T(f)|$ and $|T(f + g)| \leq |Tf| + |Tg|$. Even if we focus on linear operators, it is still of interest to study sublinear operators because one can study the \emph{uniform boundedness} of a family of operators $\{ T_k \}$ by means of the function $T^*(f)(x) = \max (T_k f)(x)$. This is the method of \emph{maximal functions}. Another important example are the $l^p$ sums
+%
+\[ (S^p f)(x) = \left( \sum |T_k(x)|^p \right). \]
+%
+These two examples are specific examples where we have a family of operators $\{ T_y \}$, indexed by a measure space $Y$, and we define an operator $S$ by taking $Sf$ to be the norm of $\{ T_y f \}$ in the variable $y$.
+
+In the theory of operator interpolation, we address the following situation. Given $p_0 < p_\theta < p_1$, and three values $q_0,q_\theta,q_1$, we know that
+%
+\[ L^{p_0,q_0}(X) \cap L^{p_1,q_1}(X) \subset L^{p_\theta,q_\theta}(X) \subset L^{p_0,q_0}(X) + L^{p_1,q_1}(X). \]
+%
+s
+
+
+In our situation, $V$ and $W$ will be the class of measurable functions on measure spaces $X$ and $Y$, and the spaces $V_0$, $V_1$, $W_0$, and $W_1$ will be Lorentz spaces.
+
+In our situation, we will be considering interpolation between the $L^{p,q}$ norms. For instance, we might have $V_0 = L^{p_0,q_0}(X)$, 
+
+two sublinear operators $T_0: X_0 \to Y_0$ and $T_1: X_1 \to Y_1$, such that $T_0(x) = T_1(x)$ for all $x \in X_0 \cap X_1$,
+
+We consider three vector spaces $X$, $Y$, and $Z$, all lying in a common ambient space, such that $X \subset Y + Z$. We equip $X$, $Y$, and $Z$ all with different norms.
+
+We are given a norm space $X$, which can be written as the sum of two other norm spaces $Y + Z$ which have a different norm to $X$. We are given a (not necessarily bounded operator) $T: X + Y \to Z$. Given that $\| T \|_Y$ and $\| T \|_Z$ are finite, what tools enable us to conclude that $\| T \|_X$ is finite? In other cases, we are given a norm space $X$ with a family of norms $\| \cdot \|_\alpha$, and given the boundedness of $T: X \to Y$ in $\| \cdot \|_{p_0}$ and $\| \cdot \|_{p_1}$, we want to obtain boundedness in $\| \cdot \|_{p_\theta}$ for all $p_\theta$ inbetween $p_0$ and $p_1$.
+
+\begin{theorem}[Riesz-Thorin]
+    Let $p_0,p_1 \in (0,\infty]$ and $q_0,q_1 \in [1,\infty]$. Consider a linear operator $T$ mapping elements of $L^{p_0}(X)$ to $L^{q_0}(Y)$, and elements of $L^{p_1}(X)$ to $L^{q_1}(Y)$. Then for any $f \in L^{p_\theta}(X)$, where $p_\theta$ is the weighted harmonic average $1/p_\theta = (1 - \theta)/p_0 + \theta/p_1$, $Tf \in L^{q_\theta}(Y)$, where $q$ is a weighted harmonic average, and
+    %
+    \[ \| T \|_{p_\theta \to q_\theta} \leq \| T \|_{p_0 \to q_0}^{1-\theta} \| T \|_{p_1 \to q_1}^\theta \]
+\end{theorem}
+\begin{proof}
+    If $p_0 = p_1$, the proof follows by the log convexity of the $L^p$ norms of a function. Thus we may assume $p_0 \neq p_1$, so $p_\theta$ is finite in any case of interest. By normalizing the measures on both spaces, we may assume $\| T \|_{p_0,q_0} = \| T \|_{p_1,q_1} = 1$, so it suffices to prove $\| T \|_{p_\theta,q_\theta} \leq 1$. H\"{o}lder's inequality implies
+    %
+    \[ \left| \int_Y (Tf) g \right| \leq \| f \|_{p_0} \| g \|_{q_0'}, \| f \|_{p_1} \| g \|_{q_1'} \]
+    %
+    We now employ some complex interpolation to conclude that whenever $f$ and $g$ are simple functions,
+    %
+    \[ \left| \int_Y (Tf) g \right| \leq \| f \|_{p_\theta} \| g \|_{q_\theta'} \]
+    %
+    To see this, we can normalize so $\| f \|_{p_\theta} = \| g \|_{q_\theta'} = 1$, and write $f = |f| \text{sgn}(f)$. But if we now define
+    %
+    \[ F(s) = \int_Y T(|f|^{(1-s)p_\theta/p_0 + sp_\theta/p_1} \text{sgn}(f)) |g|^{(1-s)q_\theta'/q_0' + sq_\theta'/q_1'} \text{sgn}(g) \]
+    %
+    Then an application of Lindel\"{o}f's theorem implies the result. Since $g$ and $f$ can be taken to approximate all elements of $L^{p_\theta}(X)$ and $L^{q_\theta'}(Y)$, we conclude that the theorem is true for all not-necessarily simple elements of these function spaces. But applying duality, this now implies thath $\| Tf \|_{q_\theta} \leq \| f \|_{p_\theta}$, which was what was required to be proven.
+\end{proof}
+
+Given a linear operator $T$ mapping simple functions on $X$ to measurable functions on $Y$, we say $T$ has {\it strong type} $(p,q)$ if $\| T f \|_q \leq \| f \|_p$ for any simple function $f$. The Hahn-Banach theorem then says $T$ has an extension to a continuous operator from $L^p(X)$ to $L^q(Y)$, and, provided $p$ is finite, or $X$ has finite measure, this extension will be unique. If we consider the {\it strong type} diagram to be all points $(p,q)$ where $T$ is of strong type $(1/p,1/q)$, then the Riesz-Thorin interpolation theorem implies that the intersection of the strong type diagram with $[0,\infty) \times [0,1]$ is convex, and the operator norm $\| T \|_{p,q}$ is a log convex function of $(1/p,1/q)$.
+
+\begin{example}
+    If $T$ is the identity map on functions on $[0,1]$, then because of the fact that $\| f \|_p \leq \| f \|_q$ for $p < q$,
+\end{example}
+
+\begin{example}
+    We know that if $f$ and $g$ are integrable functions, then $f * g$ is an integrable function, and $\| f * g \|_1 \leq \| f \|_1 \| g \|_1$. If we apply Minkowski's integral inequality, then we find that if $f \in L^1(\RR^n)$ and $g \in L^q(\RR^n)$, then
+    %
+    \begin{align*}
+        \| f * g \|_q &= \left( \int |(f * g)(x)|^q\; dx \right)^{1/q} \leq \int \left( \int |f(y)g(x-y)|^q dx\; \right)^{1/q} dy\\
+        &= \int |f(y)| \| g \|_q = \| f \|_1 \| g \|_q
+    \end{align*}
+    %
+    This means $f * g \in L^q(\RR^n)$, and so is, in particular, defined everywhere. H\"{older}'s inequality implies that if $f \in L^q(\RR^n)$ and $g \in L^{q^*}(\RR^n)$, then
+    %
+    \[ \left| \int f(y) g(x-y)\; dy \right| \leq \int |f(y-x)| |g(x)| \leq \int |f(y)|\; dy \int |g(y)|^{q^*}\; dy = \| f \|_q \| g \|_{q^*} \]
+    %
+    Thus $\| f * g \|_\infty \leq \| f \|_q \| g \|_{q^*}$. But this means that the convolution operator $T_g: f \mapsto f * g$ is $(1,q)$, as well as $(q^*,\infty)$ continuous. But now, connecting these two points, and applying the Riesz-Thorin theorem, we conclude that if $f \in L^p(\RR^n)$, with $1/p = \theta/q^* + (1 - \theta) = 1/q^* + (1-\theta)/q = 1 - 1/q + 1/r$, $(f * g) \in L^r(\RR^n)$, and
+    %
+    \[ \| f * g \|_r \leq \| f \|_p \| g \|_q \]
+    %
+    Note that we never used anything about $\RR^n$ here other than it's translational structure, and as such Young's inequality continues to apply in the theory of any modular locally compact group. Indeed, this means if we swap $\mu$ with $\lambda \mu$, then we obtain that
+    %
+    \[ \| f * g \|_r = \lambda^{1 + 1/r} = \lambda^{1/p + 1/q} \| f \|_p \| g \|_p \]
+    %
+    which is a good way of remembering that we must have $1 + 1/r = 1/p + 1/q$. 
+\end{example}
+
+Elias Stein noticed that the Riesz-Thorin theorem can be easily extended to allow bounds over an `analytic family' of operators $T_s$, where $s \in S$, in the sense that for any two test functions $f$ and $g$, $\langle T_s f, g \rangle$ is analytic in $s$, growing slower than doubly exponentially, and we have estimates
+%
+\[ \| T_{it} f \|_{q_0} \leq B_t \| f \|_{p_0}\ \ \ \ \ \| T_{1+it} f \|_{q_1} \leq B_t \| f \|_{p_1} \]
+%
+where $B_t = O(e^{e^{(\pi - \delta)t}})$, then $\| T_\theta f \|_{q_\theta} \leq B_\theta \| f \|_{p_\theta}$.
+
+
+
+
+
+
+\section{Real Interpolation}
+
+The idea of real interpolation is to break functions into various parts, and then applying estimates we have obtained from endpoints to obtain an estimate on the original function. The decomposition normally depends on parameters which can be optimized to give a good result for an estimate of the function in question. Real interpolation is much more flexible than complex interpolation, but complex interpolation obtains cleaner bounds. The classic example of real interpolation is the Marcinkiewiz interpolation theorem.
+
+\begin{theorem}
+    Let $T$ be a sublinear operator defined on $L^{p_0}(X) + L^{p_1}(X)$, and suppose.
+\end{theorem}
+\begin{proof}
+    Let $f \in L^{p_\theta}(X)$ be given. If we fix a $\lambda$, then we can write $f = f \chi_E + f \chi_{E^c}$, where $E = \{ x: |f(x)| \geq \lambda \}$. Then $|E| < \infty$, and so
+    %
+    \[ \| f \chi_E \|_{p_0} \leq |E|^{1/p-1/p_0} \| f \|_p \]
+\end{proof}
+
+
+
+
+
+
+
+
+
+
+
+\chapter{Schwartz Space and Tempered Distributions}
+
+We have already encountered the fact that Fourier transforms are well behaved under differentiation and multiplication by polynomials. If we let $\mathcal{S}(\RR^d)$ denote a class of functions under which to study this phenomenon, it must be contained in $L^1(\RR^d)$ and $C^\infty(\RR^d)$, and also be closed under multiplication by polynomials. The differentiability and polynomial closure imply that the elements of $\mathcal{S}(\RR^d)$ must have rapid decay properties: For any non-negative integer $m$ and multi-index $\alpha$, there exists a constant $C_{\alpha,\beta}$ such that
+%
+\[ |f_\alpha(x)| \leq \frac{C_{\alpha,m}}{1 + |x|^m}. \]
+%
+We take this as a \emph{definition} of the space $\mathcal{S}(\RR^d)$. That is, for each non-negative integer $n$ and $m$, we consider the seminorm
+%
+\[ \| f \|_{n,m} = \sup_{|\beta| \leq n} \| (1 + |x|)^m f_\beta \|_{L^\infty(\RR^d)}. \]
+%
+We then consider
+%
+\[ \mathcal{S}(\RR^d) = \left\{ f: \RR^d \to \RR: \text{for all}\ n,m, \| f \|_{n,m} < \infty \right\}. \]
+%
+Elements of $\mathcal{S}(\RR^d)$ are known as \emph{Schwartz functions}, and $\mathcal{S}(\RR^d)$ is known as the \emph{Schwartz space}. The seminorms naturally give $\mathcal{S}(\RR^d)$ the structure of a Fr\'{e}chet space. Sometimes, it is more convenient to use the equivalent family of seminorms $\| f \|_{\alpha, \beta} = \| x^\alpha f_\beta \|_{L^\infty(\RR^n)}$, because $x^\alpha$ often behaves more nicely under various operations. It is obvious that $\mathcal{S}(\RR^d)$ is separated by the seminorms defined on it, because $\| \cdot \|_{L^\infty(\RR^d)} = \| \cdot \|_{0,0}$ is a norm used to define the space. We now show the choice of seminorms make the space complete.
+
+\begin{theorem}
+    $\mathcal{S}(\RR^d)$ is a complete metric space.
+\end{theorem}
+\begin{proof}
+    Let $\{ f_1,f_2, \dots \}$ be a Cauchy sequence with respect to the seminorms. This implies that for each integer $m$, and multi-index $\alpha$, the sequence of functions $(1 + |x|)^m (f_k)_\alpha$ is Cauchy in $L^\infty(\RR^d)$. Since $L^\infty(\RR^d)$ is complete, there are functions $g_{m,\alpha}$ such that $(1 + |x|)^m (f_k)_\alpha$ converges uniformly to $g_{m,\alpha}$. If we set $f = g_{0,0}$, then it is easy to see using the basic real analysis of uniform continuity that $f$ is infinitely differentiable, and $(1 + |x|)^m f_\alpha = g_{m,\alpha}$. This shows that $f \in C^\infty(\RR^d)$. The sequence $\{ f_k \}$ is bounded in $\mathcal{S}(\RR^d)$, since it is Cauchy. And since $\| f_k - f \|_{n,m} \to 0$ for each $n$ and $m$, this implies that $\| f \|_{n,m} < \infty$ for each $n$ and $m$. Thus $f \in \mathcal{S}(\RR^d)$, and $f_k \to f \in \mathcal{S}(\RR^d)$.
+\end{proof}
+
+\begin{example}
+    The Gaussian function $\phi: \RR^d \to \RR$ defined by $\phi(x) = e^{-|x|^2}$ is Schwartz. For any multi-index $\alpha$, there is a polynomial $P_\alpha$ of degree at most $|\alpha|$ such that $\phi_\alpha = P_\alpha \phi$; this can be established by a simple induction. But this means that for each fixed $\alpha$, $|P_\alpha(x)| \lesssim 1 + |x|^{|\alpha|}$. Since $e^{-|x|^2} \lesssim 1/(1 + |x|)^{m + |\alpha|}$ for any fixed $m$ and $\alpha$, we find
+    %
+    \[ | (1 + |x|)^m \phi_\alpha| \leq (1 + |x|)^m |P_\alpha \phi| \lesssim \frac{1 + |x|^{|\alpha| + m}}{1 + |x|^{|\alpha| + m}} = 1. \]
+    %
+    Since $m$ and $\alpha$ were arbitrary, this shows $\phi$ is Schwartz.
+\end{example}
+
+\begin{example}
+    The space $C^\infty_c(\RR^d)$ consists of all compactly supported $C^\infty$ functions. If $f \in C^\infty_c(\RR^d)$, then $f$ is Schwartz. This is because for each $\alpha$ and $m$, $(1 + |x|)^m f_\alpha$ is a continuous function vanishing outside a compact set, and is therefore bounded.
+\end{example} 
+
+Because of the sharp control we have over functions in $\mathcal{S}(\RR^d)$, almost every analytic operation we want to perform on $\mathcal{S}(\RR^d)$ is continuous. To show that an operator $T$ on $\mathcal{S}(\RR^d)$ is bounded, it suffices to show that for each $n$ and $m$, there is $n'$, $m'$ such that $\| Tf \|_{n,m} \lesssim_{n,m} \| f \|_{n',m'}$. For a functional $\Lambda: \mathcal{S}(\RR^d) \to \RR$, it suffices to show that there exists $n$ and $m$ such that $|\Lambda f| \lesssim \| f \|_{n,m}$. The minimal such choice of $n$ is known as the {\bf order} of $\Lambda$. We normally do not care about the constant behind the operators for these norms, since the norms are not translation invariant and therefore highly sensitive to the positions of various operations. We really just care about proving the existence of such a constant.
+
+\begin{lemma}
+    If $g$ is a function, with $g$ and all it's derivatives subpolynomial, then the map $f \mapsto gf$ is a bounded operator on $\mathcal{S}(\RR^d)$.
+\end{lemma}
+\begin{proof}
+    Fix $n$, and find values $A$ and $M$, depending only on $n$ and $g$, such that for any $|\beta| \leq n$,
+    %
+    \[ |g_\beta(x)| \leq A \cdot (1 + |x|)^M. \]
+    %
+    Consider $|\alpha| \leq n$. Then the Leibnitz formula implies that
+    %
+    \begin{align*}
+        (1 + |x|)^m |(gf)_\alpha| &\leq 2^{|\alpha|} \sum_{\beta \leq \alpha} (1 + |x|)^m |g_\beta f_{\alpha-\beta}|\\
+        &\leq A \cdot 2^n \sum_{\beta \leq \alpha} (1 + |x|)^{m+M} |f_{\alpha-\beta}|\\
+        &\leq A \cdot 4^n \| f \|_{n,m+M}.
+    \end{align*}
+    %
+    Thus $\| gf \|_{n,m} \lesssim_{n,m} \| f \|_{n,m+M}$, which implies the operator is bounded.
+\end{proof}
+
+If $f$ and $g$ are Schwartz functions, and $|\alpha| \leq n$, then the Leibnitz formula again implies that if $k + k' = m$, then
+%
+\begin{align*}
+    (1 + |x|)^m (gf)_\alpha &\lesssim_n \sum_{\beta \leq \alpha} (1 + |x|)^m g_\beta f_{\alpha - \beta} \lesssim_n \| f \|_{n,k} \| g \|_{n,k'}
+\end{align*}
+%
+Thus $\| gf \|_{n,m} \lesssim_{n,m} \| f \|_{n,k} \| g \|_{n,k'}$, so $(f,g) \mapsto fg$ is a continuous bilinear operator on $\mathcal{S}(\RR^d) \times \mathcal{S}(\RR^d)$. Most importantly, we have shown the product of two Schwartz functions is Schwartz.
+
+\begin{theorem}
+    The following sublinear operators are all bounded on $\mathcal{S}(\RR^n)$.
+    %
+    \begin{itemize}
+        \item For each $h \in \RR^n$, the translation operator $(T_h f)(x) = f(x - h)$.
+
+        \item For each $\xi \in \RR^n$, the modulation operator $(M_\xi f)(x) = e(\xi \cdot x) f(x)$.
+
+        \item The $L^p$ norms $\| f \|_{L^p(\RR^n)}$, for $1 \leq p \leq \infty$.
+
+        \item The Fourier transform.
+    \end{itemize}
+    %
+    Furthermore, the Fourier transform is an isomorphism of $\mathcal{S}(\RR^n)$.
+\end{theorem}
+\begin{proof}
+%   Let $(T_h f)(x) = f(x - h)$. We calculate that if $|\alpha| \leq n$, then
+    %
+%   \begin{align*}
+%       (1 + |x|^m) (T_h f)_\alpha &= T_h((1 + |x + h|^m) f_\beta)\\
+%       &\leq 2^m T_h((1 + |x|^m + |h|^m) f_\alpha)\\
+%       &\leq 2^m |h|^m \| f_\alpha \|_{n,0} + 2^m \| f \|_{n,m}.
+%   \end{align*}
+    %
+%   Thus $\| T_h f \|_{n,m} \leq 2^m(1 + |h|^m) \| f \|_{n,m}$, so $T_h$ is continuous.
+
+%   Similarily, we calculate using the Leibnitz formula and the formula for the derivatives of $e(\xi \cdot x)$ that if $|\alpha| \leq n$, then
+    %
+%   \[ (1 + |x|^m) |(e(\xi \cdot x) f)_\alpha| \leq 4^n (2\pi)^n (1 + |\xi|^n) \| f \|_{n,m} \]
+    %
+%   Thus $\| M_\xi f \|_{n,m} \leq (8 \pi)^n (1 + |\xi|^n) \| f \|_{n,m}$.
+
+%   For any Schwartz function $f$, and $|\alpha| \leq n$,
+    %
+%   \[ f(x) \leq \frac{\| f \|_{0,d+1}}{1 + |x|^{d+1}} \]
+    %
+%   Integrating this equation gives
+    %
+%   \[ \| f_\alpha \|_{L^1(\RR^d)} \leq 2^d \| f \|_{0,d+1}. \]
+    %
+%   Thus $\| \cdot \|_1$ is a bounded norm on the space. Interpolation then shows that for any $1 < p < \infty$,
+    %
+%   \[ \| f \|_{L^p(\RR^d)} \leq \| f \|_{L^1(\RR^d)}^{1 - 1/p} \| f \|_{L^\infty(\RR^d)}^{1/p} \leq \| f \|_{L^1(\RR^d)} + \| f \|_{L^\infty(\RR^d)} \leq 2 \| f \|_{0,d+1}. \]
+    %
+%   This implies $\| \cdot \|_{L^p(\RR^d)}$ is bounded.
+
+%   A simple calculation using the Leibnitz formula shows that if $|\alpha| \leq n$,
+    %
+%   \begin{align*}
+%       (1 + |x|^m) |\mathcal{F}(f)_\alpha| &\leq |\mathcal{F}(f)_\alpha| + \sum_{k = 1}^d |x_k^m \mathcal{F}(f)_\alpha|\\
+%       &\leq (2 \pi)^n \left( \| \mathcal{F} f \|_{L^\infty(\RR^d)} + \sum_{k = 1}^d |\mathcal{F}((x^\alpha f)_{me_k})| \right)\\
+%       &\leq n! (2 \pi)^n 2^m (n+1) \max_{0 \leq k \leq d} \max_{1 \leq l \leq m} \left( \| \mathcal{F} f \|_{L^\infty(\RR^d)} + \sum_{k = 1}^n \max_{1 \leq l \leq m} \| \mathcal{F}(f_{le_k}) \|_{L^\infty(\RR^d)} \right)\\
+%       &\leq n! (2 \pi)^n 2^m \left( \| f \|_{L^1(\RR^d)} + \sum_{k = 1}^n \max_{1 \leq l \leq m} \| f_{le_k} \|_{L^1(\RR^d)} \right)\\
+%       &\leq n! (2 \pi)^n 2^m 2^d (n+1) \| f \|_{n,d+1}.
+%   \end{align*}
+
+%   there are constants $c_{\alpha \beta \gamma}$ for each $\gamma \leq \alpha \wedge \beta$ such that
+    %
+%   \begin{align*}
+%       |x^\alpha \mathcal{F}(f)_\beta| &= (2 \pi)^{|\beta|} |x^\alpha \cdot \mathcal{F}(x^\beta f)|\\
+%       &= (2\pi)^{|\beta| - |\alpha|} \mathcal{F}((x^\beta f)_\alpha)\\
+%       &\leq (2\pi)^{|\beta| - |\alpha|} \sum_{\gamma \leq \alpha \wedge \beta} c_{\alpha \beta \gamma} |\mathcal{F}(x^{\beta - \gamma} f_{\alpha - \gamma})|.
+%   \end{align*}
+    %
+%   This calculation shows
+    %
+%   \begin{align*}
+%       \| \mathcal{F} f \|_{\alpha,\beta} &\lesssim_{\alpha,\beta} \sum \| \mathcal{F}(x^{\beta - \gamma} f_{\alpha - \gamma}) \|_{L^\infty(\RR^n)}\\
+%       &\leq \sum \| x^{\beta - \gamma} f_{\alpha - \gamma} \|_{L^1(\RR^n)}.
+%   \end{align*}
+    %
+%   The right hand side is a continuous function of $f$, so the Fourier transform is bounded. The smoothness of the Schwartz space implies that $\mathcal{F}$ is a bijective map. But then the open mapping theorem implies that $\mathcal{F}^{-1}$ is a bounded operation, and therefore $\mathcal{F}$ is a homeomorphism.
+
+    We leave all but the last point as exercises. Here it will be convenient to use the norms $\| \cdot \|_{\alpha,\beta}$ as well as the norms $\| \cdot \|_{n,m}$. If $|\alpha| \leq m$, $|\beta| \leq n$, then we can use the Leibnitz formula to conclude that
+    %
+    \begin{align*}
+        |\xi^\alpha \mathcal{F}(f)_\beta| &\lesssim_{\alpha,\beta} \mathcal{F}((x^\beta f)_\alpha)\\
+        &\lesssim_{\alpha,\beta} \max_{\gamma \leq \alpha \wedge \beta} |\mathcal{F}(x^{\beta - \gamma} f_{\alpha - \gamma})|\\
+        &\lesssim_{\alpha,\beta} \max_{\gamma \leq \alpha \wedge \beta} \| x^{\beta - \gamma} f_\gamma \|_{L^1(\RR^d)}\\
+        &\leq \max_{\gamma \leq \alpha \wedge \beta} \| (1 + |x|)^{|\beta|} f_\gamma \|_{L^1(\RR^d)} \lesssim \| f \|_{|\alpha|,|\beta|+d+1}.
+    \end{align*}
+    %
+    Thus $\mathcal{F}$ is a bounded linear operator on $\mathcal{S}(\RR^d)$. Since all Schwartz functions are arbitrarily smooth, the Fourier inversion formula applies to all Schwartz functions, and so $\mathcal{F}$ is a bijective bounded linear operator with inverse $\mathcal{F}^{-1}$. The open mapping theorem then immediately implies that $\mathcal{F}^{-1}$ is bounded.
+\end{proof}
+
+\begin{corollary}
+    If $f$ and $g$ are Schwartz, then $f * g$ is Schwartz.
+\end{corollary}
+\begin{proof}
+    Since $f * g = \mathcal{F}^{-1}(\mathcal{F}(f) \mathcal{F}(g))$, this fact follows from the fact that the product of two Schwartz functions is Schwartz.
+\end{proof}
+
+Now we get to the interesting part of the theory. We have defined a homeomorphic linear transform from $\mathcal{S}(\RR^d)$ to itself. The theory of functional analysis then says that we can define a dual map, which is a homeomorphism from the dual space $\mathcal{S}(\RR^d)^*$ to itself. Note the inclusion map $C_c^\infty(\RR^d) \to \mathcal{S}(\RR^d)$ is continuous, and $C_c^\infty(\RR^d)$ is dense in $\mathcal{S}(\RR^d)$. This implies that we have an injective, continuous map from $\mathcal{S}^*(\RR^d)$ to $(C_c^\infty)^*(\RR^d)$, so every functional on the Schwarz space can be identified with a distribution. We call such distributions {\bf tempered}. They are precisely the linear functionals on $C_c^\infty(\RR^d)$ which have a continuous extension to $\mathcal{S}(\RR^d)$. Intuitively, this corresponds to an asymptotic decay condition.
+
+\begin{example}
+    For any $f \in L^1_{\text{loc}}(\RR^d)$, we define $f^*$ to be the distribution
+    %
+    \[ f^*(\phi) = \int f(x) \phi(x)\; dx \]
+    %
+    But this distribution is not always tempered. If $f \in L^p(\RR^d)$ for some $p$, then, applying H\"{o}lder's inequality, we obtain that
+    %
+    \[ |f^*(\phi)| \leq \| f \|_{L^p(\RR^d)} \| \phi \|_{L^q(\RR^d)}. \]
+    %
+    Since $\| \cdot \|_{L^q(\RR^d)}$ is a continuous norm on $\mathcal{S}(\RR^d)$, this shows $f^*$ is bounded. More generally, if $f \in L^1_{\text{loc}}(\RR^d)$, and $f(x) (1 + |x|)^{-m}$ is in $L^p(\RR^d)$ for some $m$, then $f^*$ is a tempered distribution. If $p = \infty$, such a function is known as {\bf slowly increasing}.
+\end{example}
+
+\begin{example}
+    For any Radon measure, $\mu$, we can define a distribution
+    %
+    \[ \mu^*(\phi) = \int \phi(x) d\mu(x) \]
+    %
+    But this distribution is not always tempered. If $|\mu|$ is finite, the inequality $\| \mu^*(\phi) \| \leq \| \mu \| \| \phi \|_{L^\infty(\RR^d)}$ gives boundedness. More generally, if $\mu$ is a measure such that $|\mu(x)|/(1 + |x|^\alpha)$ is finite for some $k$, then $\mu$ is known as a {\bf tempered measure}, and also acts as a tempered distribution, since
+    %
+    \[ |\mu^*(\phi)| \leq \| \mu(x)/(1 + |x|^\alpha) \| \| \phi \|_{L^\infty(\RR^d, 1 + |x|^\alpha)}. \]
+\end{example}
+
+\begin{example}
+    Suppose $\Lambda$ is a distribution support on a compact set $K$. Then $\Lambda$ is tempered, since if $\psi$ is a compactly supported bump function on $K$, then for any Schwarz function $\phi$ we can define $\Lambda(\phi) = \Lambda(\psi \phi)$, which is continuous.
+\end{example}
+
+\begin{example}
+    The function $1/x$ is not locally integrable on $\RR$, since it is not defined near the origin. However, we can associate the value with a distribution. If $\phi$ is a Schwartz function, we define the {\bf principal value}
+    %
+    \[ \text{p.v.} \int_{-\infty}^\infty \frac{\phi(x)}{x}\; dx = \lim_{\varepsilon \to 0} \int_{|x| \geq \varepsilon} \frac{\phi(x)}{x}\; dx \]
+    %
+    Since $\int_{\varepsilon \leq |x| \leq 1} dx/x = 0$ for any $\varepsilon \leq 1$, we can write
+    %
+    \[ \int_{|x| \geq \varepsilon} \frac{\phi(x)}{x} = \int_{|x| \geq 1} \frac{\phi(x)}{x} + \int_{\varepsilon \leq |x| \leq 1} \frac{\phi(x) - \phi(0)}{x} \]
+    %
+    Since $\phi$ has rapid decay, the first integral is well defined. Since $\phi$ is differentiable at the origin, the second integral is bounded for all $\varepsilon \geq 0$. But this means that
+    %
+    \[ \lim_{\varepsilon \to 0} \frac{\phi(x)}{x} = \int_{|x| \geq 1} \frac{\phi(x)}{x} + \int_{|x| \leq 1} \frac{\phi(x) - \phi(0)}{x} \]
+    %
+    Thus it is evident that the principal value exists, and
+    %
+    \[ \left| \text{p.v.} \int_{-\infty}^\infty \frac{\phi(x)}{x}\; dx \right| \lesssim \| \phi \|_{L^1(\RR)} + \| \phi' \|_{L^\infty(\RR)} \]
+    %
+    so this functional is a tempered distribution of order 1, and is denoted by $\text{p.v.}(1/x)$. It is intimately connected to the theory of the Hilbert transform. 
+\end{example}
+
+Using the same techniques as for distributions, the derivative $\Lambda_\alpha$ of a tempered distribution $\Lambda$ is tempered, as is $\phi \Lambda$, whenever $\phi$ is a Schwartz function, or $f \Lambda$, where $f$ is a polynomial.
+
+To remind the reader, we think of a distribution $\Lambda$ as corresponding to arbitrarily regular function $f$ such that
+%
+\[ \Lambda(\phi) = \int f(x) \phi(x)\; dx \]
+%
+If we can justify an identity with respect to this operation which removes the reliance of regularity on $f$, we can normally swap $f$ with a general distribution, and use it to define the operation on all distributions.
+
+We now apply this process to define the Fourier transform of a tempered distribution. The multiplication formula
+%
+\[ \int \widehat{f}(x) g(x) = \int f(x) \widehat{g}(x) \]
+%
+provides the perfect situation. It says that for $f \in L^1(\RR^d)$, $\Lambda_{\mathcal{F}(f)}(g) = \Lambda_f(\mathcal{F}(g))$. If we want to generalize the Fourier transform to be defined on distributions, we better have $\mathcal{F}(\Lambda_f) = \Lambda_{\mathcal{F}(f)}$ for all integrable $f$. In particular, this motivates us to define the general Fourier transform of a tempered distribution $\Lambda$ as $\mathcal{F}(\Lambda)(\phi) = \Lambda \left( \mathcal{F}(\phi) \right)$. Similarily, we can define the inverse Fourier transform, which are the dual maps of the Fourier transforms and it's inverse, so they are obviously homeomorphisms of the space of tempered distributions.
+
+\begin{theorem}
+    If $\Lambda$ is tempered,
+    %
+    \[ \mathcal{F}(\Lambda_\alpha) = (-2 \pi i \xi)^\alpha \mathcal{F}(\Lambda)\quad\text{and}\quad \mathcal{F}((-2\pi i \xi)^\alpha \Lambda)) = \mathcal{F}(\Lambda)_\alpha. \]
+\end{theorem}
+
+\begin{example}
+    Consider the constant function $1$. Then
+    %
+    \[ 1(\phi) = \int \phi(x)\; dx \]
+    %
+    and so
+    %
+    \[ \widehat{1}(\phi) = \int \widehat{\phi}(\xi)\; d\xi = \phi(0) = \delta(\phi) \]
+    %
+    so $\widehat{1}$ is the Dirac delta distribution $\delta$. Similarily,
+    %
+    \[ \widehat{\delta}(\phi) = \widehat{\phi}(0) = \int \phi(x)\; dx = 1(\phi) \]
+    %
+    so the Fourier transform of the Dirac delta function is the constant 1 function.
+\end{example}
+
+\begin{example}
+    We know $((-2 \pi i x)^\alpha)^\ft = ((- 2 \pi i x)^\alpha \cdot 1)^\ft = \delta_\alpha$, which essentially provides us a way to compute the Fourier transform of any polynomial.
+\end{example}
+
+\begin{theorem}
+    If $\mu$ is a finite measure, $\widehat{\mu}$ is a uniformly continuous bounded function with $\| \widehat{\mu} \|_{L^\infty(\RR^d)} \leq \| \mu \|$, and
+    %
+    \[ \widehat{\mu}(\xi) = \int e(- x \cdot \xi) d\mu(x) \]
+    %
+    The function $\widehat{\mu}$ is also smooth if $\mu$ has moments of all orders, i.e. $\int |x|^k d\mu(x) < \infty$ for all $k > 0$.
+\end{theorem}
+\begin{proof}
+    Let $\phi \in \mathcal{S}(\RR^d)$. We then calculate that
+    %
+    \[ \widehat{\mu} \cdot \phi \]
+
+    If $f$ is integrable, we can apply Fubini's theorem to conclude
+    %
+    \begin{align*}
+        \int \widehat{f}(x) d\mu(x) &= \int \int f(\xi) e(- \xi \cdot x) d\xi\; d\mu(x)\\
+        &= \int f(\xi) \int e(- \xi \cdot x) d\mu(x)\; d\xi\\
+        &= \int f(\xi) \widehat{\mu}(\xi)\; d\xi
+    \end{align*}
+    %
+    This gives that the distribution $\widehat{\mu}$ is given by integration with respect the required function. It is easy to check that $\| \widehat{\mu} \|_{L^\infty(\RR^d)} \leq \| \mu \|$. Moreover, $\widehat{\mu}$ is continuous, since by the dominated convergence theorem,
+    %
+    \[ \widehat{\mu}(\xi + \eta) - \widehat{\mu}(\xi) = \int e(-\xi \cdot x) (e(- \eta \cdot x) - 1) d\mu(x) \]
+    %
+    as $h \to 0$, the values of the function in the integral converge pointwise to $0$, and so the uniform continuity follows by the dominated convergence theorem. 
+
+    To show $\widehat{\mu}$ is smooth if it has all moments, we calculate that if $|\eta| = 1$, and $t \in \RR$, then
+    %
+    \[ \frac{\widehat{\mu}(\xi + t \eta) - \widehat{\mu}(\xi)}{t} = \int e(- \xi \cdot x)(e(-t \eta \cdot x) - 1)\; d\mu(x). \]
+\end{proof}
+
+Not being compactly supported, we cannot compute the convolution of tempered distributions with all $C^\infty$ functions. Nonetheless, if $\phi$ is Schwartz, and $\Lambda$ is tempered, then the definition $(\Lambda * \phi)(x) = \Lambda(T_x \phi^*)$ certainly makes sense, and gives a $C^\infty$ function satisfying $D^\alpha(\Lambda * \phi) = (D^\alpha \Lambda) * \phi = \Lambda * (D^\alpha \phi)$. This function is slowly increasing, since it has polynomial growth. We know for some $N > 0$, for any Schwartz $\phi$,
+%
+\[ |\Lambda(\phi)| \lesssim \sup \{ |x^\alpha| |D^\beta \phi| : |\alpha|, |\beta| \leq N, k > 0 \} \]
+%
+TODO: FINSIH THIS. Because $\Lambda * \phi$ is tempered, this means that we can consider the Fourier transform $\smash{\widehat{\Lambda * \phi}}$. If $\psi$ is compactly supported, then
+%
+\[ (\Lambda * \phi)^\ft \left(\widehat{\psi} \right) = s \]
+%
+TODO: FINISH, which proves $\widehat{\Lambda * \phi} = \widehat{\Lambda} \widehat{\phi}$.
+
+\begin{example}
+    It is often useful to know the Fourier transform of the radial functions $f(x) = 1/|x|^\alpha$ on $\RR^d$, for $\alpha < d$, so that the function is locally integrable. Since $f$ satisfies a multiplicative symmetry $f(tx) = t^{-\alpha} f(x)$, the multiplicative Haar measure $dt/t$ become very useful in the analysis of this function. We calculate that the multiplicative convolution of this character against a Gaussian gives, for $\alpha > 0$, by a change of variables,
+    %
+    \[ \int_0^\infty t^\alpha e^{- \pi t^2 |x|^2}\; \frac{dt}{t} = \frac{1}{2\pi^{\alpha/2} |x|^\alpha} \int_0^\infty s^{\alpha/2} e^{-s} \frac{ds}{s} = \frac{\Gamma(\alpha/2)}{2 \pi^{\alpha/2} |x|^\alpha} \]
+    %
+    Let $g(x)$ denote the left hand side of the equation. Then if $\phi$ is an arbitrary Schwarz function, for $\alpha < d$, using Fubini's theorem,
+    %
+    \begin{align*}
+        \int g(x) \phi^\vee(x)\; dx &= \int \int \int_0^\infty t^\alpha e^{- \pi t^2 |x|^2}\; \phi(\xi) e(\xi \cdot x)\; \frac{dt}{t}\; d\xi\; dx\\
+        &= \int \phi(\xi) \int_0^\infty t^\alpha \int e^{- \pi t^2 |x|^2} e(\xi \cdot x)\; dx\; \frac{dt}{t}\; d\xi\\
+        &= \int \phi(\xi) \int_0^\infty t^{\alpha - d} e^{- \pi |\xi|^2/t^2}\; \frac{dt}{t}\; d\xi\\
+        &= \int \frac{\Gamma((d-\alpha)/2)}{2\pi^{(d-\alpha)/2} |\xi|^{d - \alpha}} \phi(\xi)\; d\xi
+    \end{align*}
+    %
+    Thus, putting these two calculations together, we conclude
+    %
+    \[ \frac{\Gamma(\alpha/2)}{2 \pi^{\alpha/2}} (1/|x|^\alpha)^\ft = \frac{\Gamma((d-\alpha)/2)}{2 \pi^{(d-\alpha)/2} |\xi|^{d-\alpha}} \]
+    %
+    which can be simplified to
+    %
+    \[ (1/|x|^\alpha)^\ft = \frac{\Gamma((d-\alpha)/2)}{\Gamma(\alpha/2)} \pi^{\alpha-d/2} \frac{1}{|\xi|^{d-\alpha}} \]
+    %
+    Thus the Fourier transforms $|x|^{-\alpha}$ for $\alpha \in (0,d)$ map into themselves. For $\alpha \geq d$, we need to work with principal values TODO:
+\end{example}
+
+\section{Convolution Operators}
+
+It is know that if $T: D(\RR^d) \to C^\infty(\RR^d)$ is any continuous linear functional commuting with translations, it is given by convolution from some distribution. If this convolution is with respect to some tempered distribution, then the transformation extends from a map from $\mathcal{S}(\RR^d)$ to $C^\infty(\RR^d)$. Studying the class of operators which commute with translations is very important because these operators occur again and again in Harmonic analysis. To begin with, with rely on a regularity result on the differentiation of functions in $L^p$ spaces.
+
+\begin{lemma}
+    If $f \in L^p(\RR^d)$, has derivatives in the $L^p$ norm of all orders $\leq d+1$, then $f$ is almost everywhere equal to a continuous function $g$ such that
+    %
+    \[ |g(0)| \lesssim \sum_{|\alpha| \leq n + 1} \| D^\alpha f \|_p \]
+    %
+    where the hidden constant depends only on $n$ and $p$.
+\end{lemma}
+\begin{proof}
+    s
+\end{proof}
+
+\begin{theorem}
+    If $T: L^p(\RR^d) \to L^q(\RR^d)$ is bounded, linear, and commutes with translations, then there exists a unique tempered distribution $\Lambda$ such that $T(\phi) = \Lambda * \phi$ for all $\phi \in \mathcal{S}(\RR^d)$
+\end{theorem}
+\begin{proof}
+    If $T$ commutes with translations, then for any Schwartz function $\phi$, $T\phi$ has derivatives in the $L^q$ norm of all orders, since $\Delta_{h,e}(T \phi) = T(\Delta_{h,e} \phi)$, and $\Delta_{h,e} \phi$ converges to $D_e \phi$ in the $L^q$ norm, since the $L^q$ norm is continuous in Schwartz space. In particular, we find $D^\alpha (T\phi) = T(D^\alpha \phi)$. Thus $T\phi$ is equal to a continuous function $g_\phi$ with
+    %
+    \[ |g_\phi(0)| \lesssim \sum_{|\alpha| \leq n+1} \| D^\alpha(T\phi) \|_q = \sum_{|\alpha| \leq n+1} \| T(D^\alpha \phi) \|_q \leq \| T \| \sum_{|\alpha| \leq n+1} \| D^\alpha \phi \|_q \]
+    %
+    The map $\phi \mapsto g_\phi(0)$ is therefore continuous on $\mathcal{S}(\RR^d)$, and therefore defines a tempered distribution $\Lambda$, and the fact that $T(\phi) = \Lambda * \phi$ then holds by the translation invariance of $T$.
+\end{proof}
+
+\begin{remark}
+    It therefore follows that if $T: L^p(\RR^d) \to L^q(\RR^d)$ is bounded, linear, and commutes with translations, then for any Schwartz function $\phi$, $T\phi$ is $C^\infty$, and is slowly increasing, as is all of it's derivatives.
+\end{remark}
+
+For each $p$ and $q$, we will let $(L^p,L^q)$ denote the space of tempered distributions which define a continuous linear map from $L^p(\RR^d)$ to $L^q(\RR^d)$, in the sense that the map $\phi \mapsto \Lambda * \phi$ is continuous as a map from $\mathcal{S}(\RR^d)$ to $L^q(\RR^d)$, and, by the Hahn-Banach theorem, extends uniquely to a linear map on the whole space. In general, a characterization of such distributions is unknown except in a few situations.
+
+\begin{example}
+    The distributions in $(L^2, L^2)$ are Fourier transforms of elements of $L^\infty(\RR^d)$. The $L^\infty$ norm of the element corresponds to the norm of the convolution operator. To see this, if $\Lambda$ is a distribution, and $\Phi$ is the Gaussian distribution, $\Phi(x) = e^{-\pi|x|^2}$, then $\Lambda * \Phi$ is an $L^2$ function, since $\Phi$ is in $L^2$, and as such we conclude by the Plancherel theorem that $(\Lambda * \Phi)^\ft = \Phi \Lambda^\ft$ is an element of $L^2(\RR^d)$. Thus we can think of $\widehat{\Lambda} = e^{\pi |x|^2} (\Lambda * \Phi)^\ft$ as a function $f$. Plancherel's theorem implies that for any Schwarz function $\phi$,
+    %
+    \[ \| f \widehat{\phi} \|_2 = \| \Lambda * \phi \|_2 \lesssim \| \phi \|_2 = \| \widehat{\phi} \|_2 \]
+    %
+    But this means that $f \in L^\infty(\RR^d)$, for if there is a set $E$ of positive measure where $|f| \geq M$, we can find $\widehat{\phi}$ with $\widehat{\phi} = 1$ on $E$ and with $\| \widehat{\phi} \|_2 = |E| + \varepsilon$, and then $\| f \widehat{\phi} \|_2 \geq M \| \widehat{\phi} \|_2$. Note that over $L^2(\mathbf{T})$, the only convolution operators are given by the distributions given by a Fourier series with bounded coefficients.
+\end{example}
+
+\begin{example}
+    The distributions in $(L^1, L^1)$ are precisely the finite Borel measures. The total variation of the measure corresponds to the norm of the convolution operator. It is clear that if $\mu$ is a Borel measure, then $\| \mu * \phi \|_1 \leq \| \mu \|_1 \| \phi \|_1$. Conversely, if $\Lambda \in (L^1, L^1)$, and $\Phi_\delta$ is the Gauss kernel, then we set $\Lambda_\delta = \Lambda * \Phi_\delta$. By assumption, $\Lambda_\delta$ is an $L^1$ function, and so $\Lambda$, $\| \Lambda_\delta \|_1 \lesssim \| \Phi_\delta \|_1 = 1$. This implies that the $\Lambda_\delta$ are uniformly bounded in $L^1$, so by the Banach Alaoglu theorem, since $L^1(\RR^d)$ embeds itself in $M(\RR^d)$, which is the dual of $C_0(\RR^d)$, some subsequence of the $\Lambda_\delta$ converge weakly to some measure $\mu$. We claim $\Lambda = \Lambda_\mu$. To prove this, fix some Schwartz function $\phi$. If we let $\phi_\delta = \phi * \Phi_\delta$, then $D^\alpha \phi_\delta = (D^\alpha \phi) * \Phi_\delta$ converges uniformly to $D^\alpha \phi$, so $\phi_\delta$ converges to $\phi$ in $\mathcal{S}(\RR^d)$, and so $\Lambda(\phi)$ is the limit of $\Lambda(\phi_\delta)$. But
+    %
+    \begin{align*}
+        \Lambda(\phi_\delta) &= \Lambda(\Phi_\delta * \phi) = (\Lambda * (\Phi_\delta * \phi)^*)(0)\\
+        &= ((\Lambda * \Phi_\delta) * \phi^*)(0)\\
+        &= \Lambda_\delta(\phi)
+    \end{align*}
+    %
+    and we know some subsequence converges to $\int \phi(x) d\mu(x)$. But we know that overall the values converge to $\Lambda(\phi)$, which implies
+    %
+    \[ \Lambda(\phi) = \int \phi(x) d\mu(x) \]
+    %
+    Since $\phi$ was an arbitrary Schwartz function, we can now apply the density of $\mathcal{S}(\RR^d)$ in $L^1(\RR^d)$ to conclude that for any integrable function $f$,
+    %
+    \[ \Lambda(f) = \int f(x) d\mu(x) \]
+    %
+    This classifies the $(L^1, L^1)$ distributions.
+\end{example}
+
+We also have a duality theorem.
+
+\begin{theorem}
+    For any two $(p,q)$, $(L^p,L^q) = (L^{q^*}, L^{p^*})$.
+\end{theorem}
+
+
+
+
+
+
+
+
+
+
+
+
+\chapter{Riemann Theory of Trigonometric Series}
+
+Using the techniques of measure theory, we can actually prove that the Fourier series is essentially the unique way of representing a function on any part of its domain as a trigonometric series.
+
+\begin{lemma}
+  For any sequence $u_n$ and set $E$ of finite measure,
+  %
+  \[ \lim_{n \to \infty} \int_E \cos^2(nx + u_n)\; dx = |E|/2 \]
+\end{lemma}
+\begin{proof}
+  We have
+  %
+  \[ \cos^2(nx + u_n) = \frac{1 + \cos(2nx + 2u_n)}{2} = \frac{1}{2} + \frac{\cos(2nx) \cos(2u_n) - \sin(2nx) \sin(2u_n)}{2} \]
+  %
+  Since $\cos(2u_n)$ and $\sin(2u_n)$ are bounded, we have $\int \chi_E(x) \cos(2nx)$ and $\int \chi_E(x) \sin(2nx) \to 0$ as $n \to \infty$, and the same is true for the latter component of the sum since $\cos(2u_n)$ and $\sin(2u_n)$ are bounded, we conclude that
+  %
+  \[ \int_E \cos^2(nx + u_n) = \int \chi_E(x) \cos^2(nx + u_n) = |E|/2 \]
+  %
+  completing the proof.
+\end{proof}
+
+\begin{theorem}[Cantor-Lebesgue Theorem]
+  If, for some pair of sequences $a_0, a_1, \dots$ and $b_0, b_1, \dots$ are chosen such that
+  %
+  \[ \sum_{n = 0}^\infty a_n \cos(2 \pi nx) + b_n \sin(2 \pi nx) \]
+  %
+  converges on a set of positive measure in $[0,1]$, then $a_n, b_n \to 0$.
+\end{theorem}
+\begin{proof}
+  Let $E$ be the set of points upon which the trigonometric series converges. We write $a_n \cos(2 \pi n x) + b_n \sin(2 \pi n x) = r_n \cos(nx + c_n)$. The result of the theorem is then precisely that $r_n \to 0$. If this is not true, then we must have $\cos(nx + c_n) \to 0$ for every $x \in E$. In particular, the dominated convergence theorem implies that
+  %
+  \[ \lim_{n \to \infty} \int_E \cos(nx + c_n)^2\; dx = 0 \]
+  %
+  Yet we know this tends to $|E|/2$ as $n \to \infty$, which is a contradiction.
+\end{proof}
+
+TODO: EXPAND ON THIS FACT.
+
+
+
+
+
+
+\section{Convergence in $L^p$ and the Hilbert Transform}
+
+We now move onto a more 20th century viewpoint on Fourier series, namely, those to do with operator theory. Under this viewpoint, the properties of convergence are captured under the boundedness of certain operators on function spaces, allowing us to use the modern theory of functional analysis to it's full extent on our problems. However, unlike in most of basic functional analysis, where we assume all operators we encounter are bounded to begin with, in harmonic analysis we more often than not are given an operator defined only on a subset of spaces, and must prove the continuity of such an operator to show it is well defined on all of space. We will illustrate this concept through the theory of the circular Hilbert transform, and its relation to the norm convergence of Fourier series.
+
+A {\bf Fourier multiplier} is a linear transform $T$ associated with a given sequence of scalars $\lambda_n$, for $n \in \mathbf{Z}$. It is defined for any trigonometric polynomial $f = \sum_{|n| \leq N} c_n e_n$ as $Tf = \sum_{|n| \leq N} \lambda_n c_n e_n$. The trigonometric polynomials are dense in $L^p(\mathbf{T})$, for each $p < \infty$. An important problem is determining whether $T$ is therefore figuring out whether the operator can be extended to a {\it continuous operator} on the entirety of $L^p$. Because the trigonometric polynomials are dense in $L^p$, in the light of the Hahn Banach theorem it suffices to prove an inequality of the form $\| Tf \| \lesssim \| f \|$. Here are some examples of Fourier operators we have already seen.
+
+\begin{example}
+    The truncation operator $S_N$ is the transform associated with the scalars $\lambda_n = [|n| \leq N]$. The truncation is continuous, since for any integrable function $f$, the Fourier coefficients are uniformly bounded by $\| f \|_1$, so $\| S_N f \|_1 \leq N \| f \|_1$. Similarily, the F\'{e}jer truncation $\sigma_N$ associated to the multipliers $\lambda_N = [|n| \leq N](1 - |n|/N)$ is continuous on all integrable functions. These operators are easy to extend precisely because the nonzero multipliers have finite support.
+\end{example}
+
+\begin{example}
+    In the case of the Abel sum, $A_r$, associated with $\lambda_n = r^{|n|}$, $A_r$ extends in a continuous way to all integrable functions, since
+    %
+    \[ |A_r f| = \left| \sum r^{|n|} \widehat{f}(n) e_n(t) \right| \leq \| f \|_1 \sum r^{|n|} = \| f \|_1 \left( 1 + \frac{2}{1 - r} \right) \]
+    %
+    Thus the map is bounded.
+\end{example}
+
+To understand whether the truncations $S_N f$ of $f$ converge to $f$ in the $L^p$ norms, rather than pointwise, we turn to the analysis of an operator which is the core of the divergence issue, known as the {\bf Hilbert transform}. It is a Fourier multiplier operator $H$ associated with the coeficients
+%
+\[ \lambda_n = \frac{\text{sgn}(n)}{i} = \begin{cases} +1/i & n > 0 \\ 0 & n = 0 \\ -1/i & n < 0 \end{cases} \]
+%
+Because
+%
+\[ [|n| \leq N] = \frac{\text{sgn}(n + N) - \text{sgn}(n-N)}{2} + \frac{[n = N] + [n = -N]}{2} \]
+%
+we conclude
+%
+\[ S_n f = \frac{i \left( e_{-n} H(e_n f) - e_n H(e_{-n} f) \right)}{2} + \frac{\widehat{f}(n) e_n + \widehat{f}(-n) e_{-n}}{2} \]
+%
+Since the operators $f \mapsto \widehat{f}(n) e_n$ are bounded in all the $L^p$ spaces since they are continuous in $L^1(\mathbf{T})$, we conclude that the operators $S_n$ are uniformly bounded as endomorphisms on $L^p(\mathbf{T})$ provided that $H$ is bounded as an operator from $L^p(\mathbf{T})$ to $L^q(\mathbf{T})$. Since $S_n f$ converges to $f$ in $L^p$ whenever $f$ is a trigonometric polynomial, this would establish that $S_n f$ converges to $f$ in the $L^p$ norm for any function $f$ in $L^p(\mathbf{T})$. Later on, as a special case of the Hilbert transform on the real line, we will be able to prove that $H$ is a bounded operator on $L^p(\mathbf{T})$ for all $1 < p < \infty$, and as a result, we find that $S_N f \to f$ in $L^p$ for all such $p$. Unfortunately, $H$ is not bounded from $L^1(\mathbf{T})$ to itself, and correspondingly, $S_N f$ does not necessarily converge to $f$ in the $L^1$ norm for all integrable $f$.
+
+For now, we explore some more ideas in how we can analyze the Hilbert transform via convolution, the dual of Fourier multipliers. The fact that $\smash{\widehat{f * g} = \widehat{f} \widehat{g}}$ implies that if their is an integrable function $g$ whose Fourier coefficients corresponds to the multipliers of an operator $T$, then $f * g = Tf$ for any trigonometric polynomial $f$, and by the continuity of convolution, this is the unique extension of the Fourier multiplier operator. In the theory of distributions, one generalizes the family of objects one can take the Fourier series from integrable functions to a more general family of objects, such that every sequence of Fourier coefficients is the Fourier series of some {\it distribution}. One can take the convolution of any such distribution $\Lambda$ with a $C^\infty$ function $f$, and so one finds that $\Lambda * f = Tf$ for any trigonometric polynomial $f$. There is a theorem saying that {\it all} continuous translation invariant operators from $L^p(\mathbf{T})$ to $L^q(\mathbf{T})$ are given by convolution with a Fourier multiplier operator. In practice, we just compute the convolution kernel which defines the Fourier multiplier, but it is certainly a satisfying reason to justify the study of Fourier multipliers. For instance, a natural question is to ask which Fourier multipliers result in bounded operations in space.
+
+\begin{theorem}
+    A Fourier multiplier is bounded from $L^2(\mathbf{T})$ to itself if and only if the coefficients are bounded.
+\end{theorem}
+\begin{proof}
+    If a Fourier multiplier is given by $\lambda_n$, then for some trigonometric polynomial $f$,
+    %
+    \[ \| Tf \|_2^2 = \sum \left|\widehat{Tf}(n) \right|^2 = \sum |\lambda_n|^2 \left| \widehat{f}(n) \right|^2 \]
+    %
+    If the $\lambda_n$ are bounded, then we can obtain from this formula the bound
+    %
+    \[ \| Tf \|_2^2 \leq \max |\lambda_n| \| f \|_2^2 \]
+    %
+    Conversely, if $Tf$ is bounded, then
+    %
+    \[ |\lambda_n^2| = \| T(e_n) \|_2^2 \leq \| T \|^2 \]
+    %
+    so the $\lambda_n$ are bounded.
+\end{proof}
+
+\begin{corollary}
+    The Hilbert transform is a bounded endomorphism on $L^2(\mathbf{T})$. Note that we already know that $S_N f \to f$ in the $L^2$ norm.
+\end{corollary}
+
+The terms of the Hilbert transform cannot be considered the Fourier coefficients of any integrable function. Indeed, they don't vanish as $n \to \infty$. Nonetheless, we can use Abel summation to treat the Hilbert transform as convolution with an appropriate operator. For $0 < r < 1$, consider, for $z = e^{it}$,
+%
+\[ K_r(z) = \sum_{n \in \mathbf{Z}} \frac{\text{sgn}(n)}{i} r^{|n|} z^n = K * P_r \]
+%
+Since we know the Hilbert transform is continuous in $L^2(\mathbf{T})$, we can conclude that, in particular, for any $C^\infty$ function $f$,
+%
+\[ H f = \lim_{r \to 1} K * (P_r * f) = \lim_{r \to 1} (K * P_r) * f = \lim_{r \to 1} K_r * f \]
+%
+So it suffices to determine the limit of the $K_r$. We find that
+%
+\begin{align*}
+    \sum_{n = 1}^\infty \frac{(rz)^n - (r \overline{z})^n}{i} &= \frac{r}{i} \left( \frac{1}{\overline{z} - r} - \frac{1}{z - r} \right) = \frac{r}{i} \frac{z - \overline{z}}{|z|^2 - 2r \text{Re}(z) + r^2}\\
+    &= \frac{2r \sin(t)}{1 - 2r \cos(t) + r^2} = \frac{4r \sin(t/2) \cos(t/2)}{(1 - r)^2 + 4r \sin^2(t/2)}\\
+    &= \cot(t/2) + O \left( \frac{(1 - r)^2}{t^3} \right)
+\end{align*}
+%
+Thus $K_r(t)$ tends to $\cot(t/2)$ locally uniformly away from the origin. But
+%
+\[ K_r(t) = \frac{4r \sin(t/2) \cos(t/2)}{(1 - r)^2 + 4r\sin^2(t/2)} = O \left( \frac{t}{(1 - r)^2} \right) \]
+%
+If $f$ is any $C^\infty$ function on $\mathbf{T}$, then
+%
+\[ \left| \int_{|t| \geq \varepsilon} [K_r(t) - \cot(t/2)] f(t) \right| \lesssim (1 - r)^2 \| f \|_\infty \int_{|t| \geq \varepsilon} \frac{dt}{|t|^3} \lesssim \frac{(1 - r)^2 \| f \|_\infty}{\varepsilon^2} \]
+%
+\begin{align*}
+    \left| \int_{|t| < \varepsilon} K_r(t) f(t)\; dt \right| &\leq \int_0^\varepsilon |K_r(t)||f(t) - f(-t)|\\
+    &\lesssim \int_0^\varepsilon |tK_r(t)||f'(0)| \lesssim \frac{|f'(0)|}{(1 - r)^2} \int_0^\varepsilon t^2 \lesssim \| f' \|_\infty \frac{\varepsilon^3}{(1 - r)^2}
+\end{align*}
+%
+\[ \left| \int_{|t| < \varepsilon} \cot(t/2) f(t)\; dt \right| \lesssim \int_0^\varepsilon \frac{|f(t) - f(-t)|}{t} \lesssim \varepsilon f'(0) \]
+%
+Thus
+%
+\[ \left| \int K_r(t) f(t)\; dt - \int \cot(t/2) f(t)\; dt \right| \lesssim \frac{(1 - r)^2}{\varepsilon^2} \| f \|_\infty + \left( \frac{\varepsilon^3}{(1 - r)^2} + \varepsilon \right) \| f' \|_\infty \]
+%
+Choosing $\varepsilon = (1 - r)^\alpha$ for some $2/3 < \alpha < 1$ shows that for sufficiently smooth $f$,
+%
+\[ (Hf)(x) = \lim_{r \to 1} \int \cot(t/2) f(x - t)\; dt \]
+
+
+\section{A Divergent Fourier Series}
+
+Analysis was built to analyze continuous functions, so we would hope the method of fourier expansion would work for all continuous functions. Unfortunately, this is not so. The behaviour of the Dirichlet kernel away from the origin already tells us that the convergence of Fourier series is subtle. We shall take advantage of this to construct a continuous function with divergent fourier series at a point.
+
+To start with, we shall consider the series
+%
+\[ f(t) \sim \sum_{n \neq 0} \frac{e_n(t)}{n} \]
+%
+where $f$ is an odd function equaling $i(\pi - t)$ for $t \in (0,\pi]$. Such a function is nice to use, because its Fourier representation is simple, yet very close to diverging. Indeed, if we break the series into the pair
+%
+\[ \sum_{n = 1}^\infty  \frac{e_n(t)}{n}\ \ \ \ \ \ \ \ \ \ \sum_{n = -\infty}^{-1} \frac{e_n(t)}{n} \]
+%
+Then these series no longer are the Fourier representations of a Riemann integrable function. For instance, if $g(t) \sim \sum_{n = 1}^\infty \frac{e_n(t)}{n}$, then the Abel means
+
+$A_r(f)(t) = $
+
+\section{Conjugate Fourier Series}
+
+When $f$ is a real-valued integrable function, then $\overline{\widehat{f}(-n)} = \widehat{f}(n)$. Thus we formally calculate that
+%
+\[ \sum_{n = -\infty}^\infty \widehat{f}(n) e_n(t) = \text{Re} \left( \widehat{f}(0) + 2\sum_{n = 1}^\infty \widehat{f}(n) e_n(t) \right) \]
+%
+This series defines an analytic function in the interior of the unit circle since the coefficients are bounded. Thus the sum is a harmonic function in the interior of the unit circle. The imaginary part of this sum is
+%
+\[ \text{Im} \left( \widehat{f}(0) + 2\sum_{n = 1}^\infty \widehat{f}(n) e_n(t) \right) = \Re \left( -i \sum_{n = -\infty}^\infty \text{sgn}(n) \widehat{f}(n) e_n(t) \right) \]
+%
+The right hand side is known as the conjugate series to the Fourier series $\widehat{f}(n)$. It is closely related to the study of a function $\tilde{f}$ known as the {\it conjugate function}.
+
+
+
+
+
+
+
+\chapter{Oscillatory Integrals}
+
+The study of oscillatory integrals provides tools enabling one to obtain asymptotics for integrals of the form
+%
+\[ I(\lambda) = \int e(\lambda \Phi(x)) \psi(x)\; dx \]
+%
+where $\Phi$ is the {\bf phase}, and $\psi$ is the amplitude, which are both fixed parameters, and $\lambda$ is allowed to vary. Determining the asymptotics of these integrals as $\lambda \to \infty$ requires control over the cancelling properties of the integral, so certain decomposition techniques often employed, i.e. in the theory of singular integrals, fail completely here.
+
+\begin{example}
+    The most basic example, and most important, example of an oscillatory integral is the Fourier transform
+    %
+    \[ \widehat{f}(\xi) = \int e(-\xi \cdot x) f(x)\; dx \]
+    %
+    More generally, we can obtain another example by taking a finite measure $\mu$, and considering it's Fourier transform
+    %
+    \[ \widehat{\mu}(\xi) = \int e(- \xi \cdot x) d\mu(x)\; dx \]
+    %
+    One of the main applications of the theory of oscillatory integrals is to show that the Fourier transforms of certain measures have fast decay properties.
+\end{example}
+
+\section{The Principle of Stationary Phase}
+
+\subsection{Localization}
+
+The basic principle of the theory of stationary phase is that the asymptotics of the integral are determined by where $\nabla \Phi$ vanishes. One of the principles of oscillatory integrals is that the asymptotics of the theory depend only on the local properties of the function $\Phi$.
+
+\begin{theorem}
+    If $\Phi$ and $\psi$ are smooth, compactly supported functions with $\nabla \Phi(x) \neq 0$ for all $x$ in the support of $\psi$, then $I(\lambda) \lesssim 1/\lambda^N$.
+\end{theorem}
+\begin{proof}
+    Set $a = (\nabla \Phi)/|\nabla \Phi|^2$. Then for any smooth functions $f$ and $g$, integrating by parts, we obtain that
+    %
+    \[ \int \frac{a \cdot \nabla f(x)}{i \lambda} g(x)\; dx = - \int f(x) \frac{(\nabla \cdot (ag))(x)}{i \lambda}\; dx \]
+    %
+    Set
+    %
+    \[ D(f) = (i \lambda)^{-1} (a \cdot \nabla f)\ \ \ \ \ D^*(f) = - (i\lambda)^{-1} (\nabla \cdot (af)) \]
+    %
+    Note that $D(e(\lambda \Phi)) = e(\lambda \Phi)$, so $D^N(e(\lambda \Phi)) = e(\lambda \Phi)$ for all integers $N$, and so
+    %
+    \[ I(\lambda) = \int D^N(e(\lambda \Phi)) \phi = \int e(\lambda \Phi) (D^*)^N(\psi) \]
+    %
+    Taking absolute values in the last integral gives that
+    %
+    \[ |I(\lambda)| \leq \int |(D^*)^N(\psi)| \lesssim \frac{1}{\lambda^N} \]
+    %
+    which gives the required bounds.
+\end{proof}
+
+Of course, if $\Phi$ changes suitably rapidly around a point $x$, in the sense that $\nabla \Phi$ is nonsingular, then as we increase $\lambda$, the oscillatory factor in the integral is allowed to oscillate at a fast enough rate that $\psi$ is effectively constant, and so the integral has so much cancellation that we get rapid decay. Note, however, that this depends on $\psi$ being effectively constant, i.e. smooth. If $\psi$ and $\Phi$ are only $C^N$ functions, then we can only get a $|\lambda|^{-N}$ decay rate. A particularly revealing example is where we take the Fourier transform of the characteristic function of an interval $[a,b]$ (smooth, albeit at the two endpoints where we get a sharp jump), where
+%
+\[ \int_a^b e(- \lambda x)\; dx = \frac{e(\lambda b) - e(\lambda a)}{2 \pi i \lambda} \]
+%
+which has only a rate $1/|\lambda|$ decay. Note, however, if we are taking an oscillatory integral `on an interval' $[a,b]$, where $\psi$ and $\Phi$ are both $C^N$, and for all $n \leq N$, $\Phi^{(n)}(a) = \Phi^{(n)}(b)$ and $\psi^{(n)}(a) = \psi^{(n)}(b)$, then we can still get $1/|\lambda|^N$ decay using the same proof as above, except now the integration by parts must take into account the endpoints of the integral, which now cancel to a suitably high degree.
+
+\section{Scaling}
+
+To hint at the multidimensional theory, we now focus solely on the single-variable theory. This simplifies the situation considerably, and we shall find there is an essentially complete theory of such oscillatory integrals in one dimension. Note that we now have
+%
+\[ D(f) = (i\lambda \phi')^{-1} f'\ \ \ \ \ D^*(f) = -(i \lambda)^{-1} (f/\phi)' \]
+%
+In particular, we attempt to guess the asymptotic development of the oscillatory integral
+%
+\[ \int e(\lambda \phi(x)) \psi(x) \]
+%
+where the derivatives of $\phi$ may vanish at suitable points, yet for a suitably high $n$, $\phi^{(n)}$ does not vanish on the support of $\psi$. In particular, suppose that we want to find the best constant $\alpha$, such that there exists a constant $C_n$ such that for any $\phi$ and interval $[a,b]$ such that $|\phi^{(n)}(x)| \geq 1$ on $(a,b)$, then
+%
+\[ \left| \int_a^b e(\lambda \phi(x))\; dx \right| \leq C_n/|\lambda|^\alpha \]
+%
+If $\phi(x) = x^n$, then the change of variables $y = \beta x$ implies that if we have a best constant $\alpha$ which works for all $\phi$, then we must have $\alpha = 1/k$. Indeed, this estimate, known to Van der Corput, says this result is true.
+
+\begin{theorem}
+    There exists a constant $C_n$ such that if $\phi$ is smooth in $(a,b)$ with $|\phi^{(n)} \geq 1|$ for all $x \in (a,b)$, then
+    %
+    \[ \left| \int_a^b e(\lambda \phi(x)) \right| \leq C_n \lambda^{-1/n} \]
+    %
+    where $n \geq 2$, or $n = 1$, under the extra assumptions that $\phi'$ is monotonic.
+\end{theorem}
+\begin{proof}
+    Consider first $n = 1$. Then, using the operator $D$, we have
+    %
+    \begin{align*}
+        \int_a^b e(\lambda \phi)\; dx &= \int_a^b D(e(i \lambda \phi))\; dx = \int_a^b e(\lambda \phi) D^*(1)\; dx + \frac{e(\lambda b)/\phi'(b) - e(\lambda a)/\phi'(a)}{i \lambda}
+    \end{align*}
+    %
+    The boundary terms are collectively bounded by $2/|\lambda|$, and we can bound the integration term, using the monotonicity of $\phi'$, by
+    %
+    \begin{align*}
+        \left| \int_a^b e(\lambda \phi) D^*(1)\; dx \right| &\leq |\lambda|^{-1} \int_a^b |(1/\phi')'|\; dx \leq |\lambda|^{-1} \left| \int_a^b (1/\phi')'\; dx \right|\\
+        &= |\lambda|^{-1} \left| \frac{1}{\phi'(b)} - \frac{1}{\phi'(a)} \right| \leq |\lambda|^{-1}
+    \end{align*}
+    %
+    so we can set $C_1 = 3$. We now prove the remaining inequalities by induction, using an integration by parts. Suppose that (by replacing $\phi$ with its negation if necessary) $\phi^{(n+1)}(x) \geq 1$ on $[a,b]$. Let $x_0$ be the point at which $|\phi^{(n)}(x)|$ is minimized. Without loss of generality, we may assume that $|\phi^{(n)}(x)$ TODO: FINISH THIS ARGUMENT, GIVES $C_n = 5 \cdot 2^{n-1} - 2$.
+\end{proof}
+
+\begin{remark}
+    If $|\phi^{(n)}(x)| \geq \mu$, then $|\phi^{(n)}(x)/\mu| \geq 1$, and so substituting into the previous result establishes that $|I(\lambda)| \leq C_m / |\mu \lambda|^{1/n}$.
+\end{remark}
+
+\begin{remark}
+    If $n = 1$, and $\phi'$ is not monotonic, we can choose $\phi$ to grow suitably slowly on intervals of the form $[0,\pi] + 2 \pi n$, and $\phi$ to grow much faster on intervals of the form $[\pi, 2\pi] + 2 \pi n$. It then follows that $\int_0^{2 \pi N} \sin(\phi(x))$ is unbounded as we let $N \to \infty$, which prevents us from extending the result completely to the one dimensional case.
+\end{remark}
+
+Continuing in the simpler, one dimensional case, we now consider a {\it nondegenerate} critical point $x$, where $\Phi'(x) = 0$, but $\Phi''(x) \neq 0$. A good instance of this occurs where $\Phi(x) = x^2$, where we find
+%
+\[ \int e(\lambda x^2) \psi(x)\; dx = \sum_{k = 0}^N C_k \lambda^{-1/2-k} + O(|\lambda|^{-3/2-N}) \]
+%
+This is obtained by noting that the Fourier transform of the Gaussian implies
+%
+\[ \int e^{- sx^2} \psi(x)\; dx = (\pi/s)^{1/2} \int e^{- \pi^2 \xi^2/ s} \widehat{\psi}(\xi)\; d\xi \]
+%
+Since both sides are analytic, and they make sense for $\Re(s) > 0$, we can take $s \to -i\lambda$ to conclude that
+%
+\[ \int e(\lambda x^2) \psi(x)\; dx = \left( \frac{\pi}{i \lambda} \right)^{1/2} \int e(-\pi^2 \xi^2/\lambda) \widehat{\psi}(x)\; dx \]
+%
+Expanding the exponential $e(u^2)$ gives the required bounds. Thus we can expect a critical, nondegenerate point to give a $O(\lambda^{-1/2})$ error bound.
+
+\begin{corollary}
+    If an amplitude $\psi$ is present, then
+    %
+    \[ \left| \int_a^b e(\lambda \Phi(x)) \psi(x)\; dx \right| \leq 8 \left( \int_a^b |\psi'(x)|\; dx + |\psi(b)| \right) \lambda^{-1/2} \]
+\end{corollary}
+\begin{proof}
+    Integrating by parts, if $J(x) = \int_a^x e(\lambda \Phi(u))\; du$, then
+    %
+    \[ \int_a^b e(\lambda \Phi(x)) \psi(x)\; dx = J(b)\psi(b) - \int_a^b J(x) \psi'(x)\; dx \]
+    %
+    and then since $|J(x)| \leq 8\lambda^{-1/2}$, the proposition follows. TODO: ADDRESS MULTIDIMENSIONAL CASE.
+\end{proof}
+
+\begin{example}
+    The Bessel functions
+    %
+    \[ J_m(r) = \frac{1}{2\pi} \int_0^{2\pi} e(r \sin(x)) e_m(-x)\; dx \]
+    %
+    occur naturally in many areas of analysis. The definition of the functions can be seen as an oscillatory integral, with $\lambda = r$, $\Phi(x) = \sin(x)$, and $\psi(x) = e_m(-x)/2\pi$. Split $[0,2\pi]$ into two intervals, the first upon which $\cos(x) \geq 1/\sqrt{2}$, the second where $\sin(x) \geq 1/\sqrt{2}$. On the first part, we may apply the corollary above to obtain a $O(r^{-1/2})$ bound, and on the second, we can apply the first to obtain a $O(r^{-1})$ bound. Summing these two bounds up gives the theorem.
+\end{example}
+
+\section{Surface Carried Measures}
+
+\begin{theorem}
+    If a hypersurface $\Sigma$ has non-vanishing Gauss curvature at each point in the support of a surface carried measure $\mu$, then
+    %
+    \[ |\widehat{\mu}(\xi)| = O(|\xi|^{-(d-1)/2}) \]
+    %
+    s
+\end{theorem}
+
+
+
+
+
+\section{Restriction Theorems}
+
+If $f \in L^p(\RR^n)$, then the Hausdorff Young theorem says that $\widehat{f}$ is a function in $L^q(\RR^n)$, where $q$ is the dual of $p$. If $f \in L^1(\RR^n)$, then $\smash{\widehat{f}}$ is actually continuous, so you can meaningfully discuss the behaviour of the Fourier transform when restricted to low dimensional hypersurfaces, for instance, on a sphere of a fixed radius. However, in general $\widehat{f}$ will only be defined almost everywhere, and so it is unclear whether one can form a well defined restriction of the Fourier transform.
+
+The general situation is as follows. If $\mu$ is a measure carried on a compact surface $M$, for a fixed $p$, does there exist an estimate 
+%
+\[ \| \widehat{f} \|_{L^q(M,\mu)} \lesssim \| f \|_{L^p(\RR^n)} \]
+%
+for Schwartz functions $f$. If this is true, we can apply a density argument to show that the restriction operator $\smash{R(f) = \widehat{f}|_M}$ uniquely extends to a well defined continuous linear operator from $L^p(\RR^n)$ to $L^q(M,\mu)$.
+
+We begin by determining a duality result to the restriction calculation. Assuming our functions are suitably regular, we calculate
+%
+\begin{align*}
+    \int_M (Rf)(\xi) \overline{g(\xi)}\; d\mu(\xi) &= \int_M \left( \int_{\RR^n} f(x) e(- \xi \cdot x)\; dx \right) \overline{g(\xi)}\; d\mu(\xi)\\
+    &= \int_{\RR^n} f(x) \overline{\int_M g(\xi) e(\xi \cdot x)\; d\mu(\xi)}\; dx 
+\end{align*}
+%
+which implies the formal adjoint of the map $R$ is the {\bf extension operator}
+%
+\[ (R^* f)(x) = \int_M e(\xi \cdot x) f(\xi) d\mu(\xi) \]
+%
+which extends a function in frequency space supported on $M$ to a function on the entirety of phase space. By duality properties, $R$ is continuous as an operator from $L^p(\RR^n)$ to $L^q(M,\mu)$ if and only if $R^*$ is continuous as an operator from $L^{q^*}(M,\mu)$ to $L^{p^*}(\RR^n)$. We also calculate
+%
+\[ ((R^* R)f)(x) = \int_{\RR^n} \left( \int_M e(\xi \cdot (x-y))\; d\mu(\xi) \right) f(y)\; dy = \left( f * \widecheck{\mu} \right)(x) \]
+%
+So if $R$ is $(p,2)$ continuous, $R^*$ is $(2,p^*)$ continuous, and so $R^*R$ is $(p,p^*)$ continuous. Conversely, if we know that $R^*R$ is $(p,p^*)$ continuous, then we find that for $f \in L^p(\RR^n)$, H\"{o}lder's inequality implies
+%
+\[ \| Rf \|_{L^2(M,\mu)}^2 = (Rf,Rf)_M = ((R^* R)f, f)_{\RR^d} \leq \| R^*R \|_{p \to p^*} \| f \|_p^2 \]
+%
+and so we conclude that $\| R \|_{p \to 2} \leq \sqrt{\| R^* R\|_{p \to p^*}}$.
+
+We now prove that $R$ is $(2n+2/n+3, 2)$ continuous, assuming that $M$ has non-zero Gaussian curvature at each point. The previous paragram implies that it suffices to show that it is enough to show that $R^*R$ is $(p,p^*)$ continuous, where $p = (2n+2)/(n+3)$ and $p^* = (2n+2)/(n-1)$. Since
+%
+\[ (R^*R)(f) = f * \widecheck{\mu} \]
+%
+We shall verify this using Stein's interpolation theorem. Consider the family of kernels $k_s$, where $\smash{k_s = \widecheck{K_s}}$, and $K_s = \gamma_s |x_n - \varphi(x')|^{s-1}_+ \varphi_0(x)$, where $\gamma_s = s(s+1) \dots (s + N) e^{s^2}$
