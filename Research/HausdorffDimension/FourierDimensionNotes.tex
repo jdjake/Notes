@@ -1,14 +1,32 @@
 \documentclass[12pt,reqno]{article}
 
-\usepackage{amsmath}
+%\documentclass[dvipsnames,letterpaper,12pt]{article}
+
+%\usepackage[margin = 1.5in]{geometry}
+\usepackage{amsmath,amssymb,graphicx,mathabx,accents}
+\usepackage{enumerate,mdwlist}
+
+%\setlist[enumerate]{label*={\normalfont(\Alph*)},ref=(\Alph*)}
+
+\numberwithin{equation}{section}
+
 \usepackage{amsthm}
-\usepackage{amssymb}
 
-\usepackage{comment}
-\usepackage{mathtools}
-\usepackage{MnSymbol}
+\usepackage{nag}
 
-\usepackage[margin=1.5in]{geometry}
+\DeclareMathOperator{\minkdim}{\dim_{\mathbf{M}}}
+\DeclareMathOperator{\hausdim}{\dim_{\mathbf{H}}}
+\DeclareMathOperator{\lowminkdim}{\underline{\dim}_{\mathbf{M}}}
+\DeclareMathOperator{\upminkdim}{\overline{\dim}_{\mathbf{M}}}
+
+\DeclareMathOperator{\lhdim}{\underline{\dim}_{\mathbf{M}}}
+\DeclareMathOperator{\lmbdim}{\underline{\dim}_{\mathbf{MB}}}
+
+\DeclareMathOperator{\RR}{\mathbf{R}}
+\DeclareMathOperator{\ZZ}{\mathbf{Z}}
+\DeclareMathOperator{\QQ}{\mathbf{Q}}
+
+\DeclareMathOperator{\B}{\mathcal{B}}
 
 \newtheorem{theorem}{Theorem}
 \newtheorem{lemma}[theorem]{Lemma}
@@ -17,8 +35,6 @@
 \newtheorem{exercise}[theorem]{Exercise}
 \newtheorem{remark}[theorem]{Remark}
 
-\DeclareMathOperator{\RR}{\mathbf{R}}
-\DeclareMathOperator{\ZZ}{\mathbf{Z}}
 \DeclareMathOperator{\EE}{\mathbf{E}}
 \DeclareMathOperator{\PP}{\mathbf{P}}
 
@@ -42,15 +58,15 @@
 
 \maketitle
 
-Recall that a set $X \subset \RR^d$ is a \emph{Salem set} of dimension $s$ if it has Hausdorff dimension $s$, and for every $\varepsilon > 0$, there exists a probability measure $\mu_\varepsilon$ supported on $X$ such that for all $\xi \in \RR^d$,
+Recall that a set $X \subset \RR^d$ is a \emph{Salem set} of dimension $t$ if it has Hausdorff dimension $t$, and for every $\varepsilon > 0$, there exists a probability measure $\mu_\varepsilon$ supported on $X$ such that
 %
 \[ \sup_{\xi \in \RR^d} |\xi|^{s - \varepsilon} |\widehat{\mu_\varepsilon}(\xi)| < \infty. \]
 %
 Our goal in these notes is to obtain, for each set $Z \subset \RR^{dn}$ with Minkowski dimension $s$, a Salem set $X \subset \RR^d$ with dimension
 %
-\[ \frac{nd - s}{s}, \]
+\[ \frac{nd - s}{n}, \]
 %
-such that for each set of $n$ distinct elements $x_1, \dots, x_n \in X$, $(x_1, \dots, x_n) \not \in Z$. We hope that we can rely on the random selection approach of our paper on rough configurations to obtain such a result.
+such that for each set of $n$ distinct elements $x_1, \dots, x_n \in X$, $(x_1, \dots, x_n) \not \in Z$. We rely on a random selection approach, like in our paper on rough configurations, to obtain such a result.
 
 \section{Concentration Inequalities}
 
@@ -73,20 +89,20 @@ The family of random variables $\psi_2(L)$ are known as \emph{subgaussian random
 	%
 	%\[ \psitwo{X - \EE(X)} \lesssim \psitwo{X}. \]
 	
-	\item (Union Bound) If $X_1, \dots, X_N$ are random variables, then
+	%\item (Union Bound) If $X_1, \dots, X_N$ are random variables, then
 	%
-	\[ \psitwo{X_1 + \dots + X_N} \leq \psitwo{X_1} + \dots + \psitwo{X_N}. \]
+	%\[ \psitwo{X_1 + \dots + X_N} \leq \psitwo{X_1} + \dots + \psitwo{X_N}. \]
 	
-	\item (Hoeffding's Inequality): If $X_1, \dots, X_N$ are \emph{independent} random variables, then
+	\item (Hoeffding's Inequality): If $X_1, \dots, X_N$ are \emph{independent} variables, then
 	%
 	\[ \psitwo{X_1 + \dots + X_N} \leq 10 \left( \psitwo{X_1}^2 + \dots + \psitwo{X_N}^2 \right)^{1/2}. \]
 \end{itemize}
 %
-The Orlicz norm is a convenient notation to summarize calculations involving the principle of concentration of measure. Roughly speaking, we can think of a random variable $X$ with $\psitwo{X} \leq A$ as essentially always lying in the interval $[-A,A]$, very rarely deviating outside this interval.
+The Orlicz norm is a convenient notation to summarize calculations involving the principle of concentration of measure. Roughly speaking, we can think of a random variable $X$ with $\psitwo{X} \leq A$ as vary rarely deviating outside the interval $[-A,A]$.
 
 \section{A Family of Cubes}
 
-Fix sequences of integers $\{ K_m : m \geq 1 \}$ and $\{ M_m : m \geq 1 \}$, and set $N_m = K_m M_m$. We then define two sequences of real numbers $\{ l_m : m \geq 0 \}$ and $\{ r_m : m \geq 0 \}$, by
+Fix integer-valued sequences $\{ K_m : m \geq 1 \}$ and $\{ M_m : m \geq 1 \}$, and then set $N_m = K_m M_m$. We then define two sequences of real numbers $\{ l_m : m \geq 0 \}$ and $\{ r_m : m \geq 0 \}$, by
 %
 \[ l_m = \frac{1}{N_1 \dots N_m} \quad\text{and}\quad r_m = \frac{1}{N_1 \dots N_{m-1} M_m}. \]
 %
@@ -148,7 +164,7 @@ We now consider a family of mollifiers, which we will use to smooth out the Four
     %
     \[ \beta(x) = 1 - \alpha(|x|). \]
     %
-    Symmetry considerations imply that $\int \alpha(x) + \beta(x) = 1$, and for each $x \in \RR$,
+    Symmetry considerations imply that $\int_{\RR^d} \alpha(x) + \beta(x) = 1$, and for each $x \in \RR$,
     %
     \begin{equation} \label{equation129410294910}
         \sum_{m \in \ZZ} \alpha(x + m) + \beta(x + m) = 1.
@@ -158,9 +174,7 @@ We now consider a family of mollifiers, which we will use to smooth out the Four
     %
     \[ \psi_0(x) = \alpha(x) + \beta(x), \]
     %
-    then $\psi_0$ satisfies the required constraints, at least in the one dimensional case. In general, define
-    %
-    \[ \psi(x_1, \dots, x_d) = \psi_0(x_1) \dots \psi_0(x_d). \qedhere \]
+    then $\psi_0$ satisfies the required constraints, at least in the one dimensional case. In general, define $\psi(x_1, \dots, x_d) = \psi_0(x_1) \dots \psi_0(x_d)$.
 \end{proof}
 
 Fix some choice of $\psi$ given by Lemma \ref{lemma19020941290}. Since $\psi$ is $C^\infty$ and compactly supported, then for each $t \in [0,\infty)$, we conclude
@@ -201,408 +215,8 @@ Thus, uniformly in $m$, $\widehat{\psi_m}$ decays sharply outside of the box $[-
 
 We now consider a discrete form of the Fourier bound argument, which we can apply iteratively to obtain a Salem set avoiding configurations.
 
-\begin{comment}
-
-\begin{lemma}
-    Fix $s \in [1,dn)$ and $\varepsilon \in [0,(dn-s)/4)$. Let $T \subset [0,1]^d$ be a non-empty, $\DQ_m$ discretized set, and let $\mu_T$ be a smooth probability measure compactly supported on $T$, together with a constant $C > 0$ such that for each $m \in \ZZ^d$,
-    %
-    \[ |\widehat{\mu_T}(m)| \leq C |m|^{c\varepsilon-\frac{dn-s}{2n}}. \]
-    %
-    where
-    %
-    \begin{equation} \label{equation12904901249104910}
-        c \geq 2 + \frac{2s + 3}{2n(dn-s)}.
-    \end{equation}
-    %
-    Let $B \subset \RR^{dn}$ be a non-empty, $\DQ_{m+1}$ discretized set such that
-    %
-    \begin{equation} \label{equation1290419204912090120912}
-       \#(\DQ_{m+1}(B)) \leq (1/l_{m+1})^{s + \varepsilon}.
-    \end{equation}
-    %
-    Then there exists constants $C_1(\mu_T,n,d,s,\varepsilon)$ and $C_2(\mu_T,n,d,s,\varepsilon)$ such that if
-    %
-    % Must depend on d and \mu
-    \begin{equation} \label{equation1095121284102}
-        K_{m+1} \geq C_1(\mu_T,n,d,s,\varepsilon),
-    \end{equation}
-    %
-    and
-    %
-    % Must depend on l_m, d, n, and s
-    \begin{equation} \label{equation5890129048128941891}
-        K_{m+1} \geq C_2(\mu_T,n,d,s,\varepsilon) M_{m+1}^{\frac{s+\varepsilon}{dn - s - \varepsilon}},
-    \end{equation}
-    %
-    then there exists a $\DQ_{m+1}$ discretized set $S \subset T$ together with a smooth probability measure supported on $S$ such that
-    %
-    \begin{enumerate}
-        \item[(A)] For any strongly non-diagonal cube
-        %
-        \[ Q = Q_1 \times \dots \times Q_n \in \DQ_{m+1}(B), \]
-        %
-        there exists $i$ such that $Q_i \not \in \DQ_{m+1}(S)$.
-
-        \item[(B)] For any $m \in \ZZ^d$,
-        %
-        \[ |\widehat{\mu}(m)| \leq \max(1, (C + 10^d l_{m+1}^\varepsilon)) |m|^{\varepsilon-s/2}. \]
-    \end{enumerate}
-    %
-    More precisely, the constants $C_0$ and $C_1$ must be chosen large enough so that \eqref{equation1095121284102} and \eqref{equation5890129048128941891} imply
-    %
-    \begin{equation} \label{equation10491249012}
-        M_{m+1} \geq \left( 3^d \sqrt{d} \cdot l_m \| \nabla \mu \|_{L^\infty(\RR^d)} \right)^2,
-    \end{equation}
-    %
-    \begin{equation} \label{equation19020912390129031290312}
-        %N_{m+1} \geq \left( \frac{3^{dn}}{10 l_m^{s + \varepsilon}} \right)^{\frac{1}{dn - s - \varepsilon}} M_{m+1}^{\frac{s + \varepsilon}{dn - s - \varepsilon}}.
-        K_{m+1} \geq \left( \frac{3^{dn}}{10 l_m^{dn}} \right)^{\frac{2}{dn - s}} M_{m+1}^{\frac{s + \varepsilon}{dn - s - \varepsilon}},
-    \end{equation}
-    %
-    \begin{equation} \label{equation109519029012}
-        K_{m+1} \leq M_{m+1}^{\frac{2dn}{dn - s}},
-    \end{equation}
-    %
-    \begin{equation} \label{equation1940129041}
-        M_{m+1} \geq \exp \left( \frac{10^7 (3dn - s) d^2}{dn - s} \right),
-    \end{equation}
-    %
-    \begin{equation} \label{equation129041902412901290129}
-        M_{m+1}^d K_{m+1}^d \geq A(d + 1 + s/2) 2^{1 + d + s/2} l_m^d,
-    \end{equation}
-    %
-    \begin{equation} \label{equation190512919204912901}
-    \begin{split}
-        K_{m+1}^d M_{m+1}^d \geq \frac{l_m^d 8^d A(d + 1 + s/2)}{1 + s/2},
-    \end{split}
-    \end{equation}
-    %
-    \begin{equation} \label{equation68943893493849}
-        K_{m+1}^d M_{m+1}^d \geq l_m^d 2^{3d + s/2 + 1} B(d + s/2 + 1),
-    \end{equation}
-    %
-    where $A(t) = \sup |\widehat{\mu_T}(\xi)| |\xi|^{t}$, and $B(t) = \sup |\widehat{\psi}(\xi)| |\xi|^t$ for each $t \geq 0$.
-\end{lemma}
-\begin{proof}
-	For each $i \in \Pi_{m+1}^d$, let $j_i$ be a random integer vector chosen from $[K_{m+1}]^d$, such that the family $\{ j_i : i \in \Pi_{m+1}^d \}$ is independent. We define a measure $\nu_S$ by setting, for each $x \in \RR^d$,
-	%
-	\[ d\nu_S(x) = r_{m+1}^d \sum_{i \in \Pi_{m+1}^d} \psi_{m+1}(x - a_{ij_i}) d\mu_T(x). \]
-	%
-	We then normalize, defining
-	%
-	\[ \mu_S = \frac{\nu_S}{\nu_S(\RR^d)}. \]
-	%
-	If we set
-	%
-	\[ S = \bigcup \{ Q \in \DQ_{m+1}^d : \mu_S(Q) > 0 \}, \]
-	%
-	then by definition, $S$ is a $\DQ_{m+1}$ discretized set, $\mu_S$ is supported on $S$, and $S \subset T$. It now suffices to show that with nonzero probability, $\DQ_m(S^n)$ is disjoint from the strongly non diagonal cubes in $\DQ_m(B)$, and $\mu_S$ has the required Fourier decay.
-
-    In our calculations, it will be helpful to decompose the measure $\nu_S$. For each $i \in \Pi_{m+1}(T)$, define a random measure $\nu_i$ by setting
-	%
-	\[ d\nu_i(x) = r_{m+1}^d \psi_{m+1}(x - a_{ij_i}) d\mu_T(x). \]
-	%
-	Then $\nu_S = \sum_{i \in \Pi_{m+1}(T)} \nu_i$.
-
-    First, let's show that $\nu_S$ only needs to be slightly perturbed to become a probability measure. Note that if $j_0,j_1 \in [K_{m+1}]^d$, then
-	%
-	\[ |a_{ij_0} - a_{ij_1}| = |j_0 - j_1| \cdot l_{m+1} \leq \sqrt{d} \cdot K_{m+1} l_{m+1} = \sqrt{d} \cdot r_{m+1}, \]
-	%
-	which, together with \eqref{equation19204910490190190}, implies
-	%
-	\begin{equation} \label{equation92941294129412919}
-	\begin{split}
-		&\left| r_{m+1}^d \int_{\RR^d} \psi_{m+1}(x - a_{ij_0}) \mu_T(x) - r_{m+1}^d \int_{\RR^d} \psi_{m+1}(x - a_{ij_1}) \mu_T(x) \right|\\
-		&\ \ \ \ \ \ \ \ \leq r_{m+1}^d \int_{\RR^d} \psi_{m+1}(x) \left| \mu_T(x + a_{ij_0}) - \mu_T(x + a_{ij_1}) \right|\\
-		&\ \ \ \ \ \ \ \ \leq \sqrt{d} \cdot r_{m+1}^{d+1} \int_{\RR^d} \psi_{m+1}(x) \| \nabla \mu_T \|_{L^\infty(\RR^d)} = \sqrt{d} \cdot r_{m+1}^{d+1} \| \nabla \mu \|_{L^\infty(\RR^d)}.
-	\end{split}
-	\end{equation}
-	%
-	%For each $i \in \Sigma_{m+1}^d$, if we set
-	%
-	%\[ A_i = \EE(\nu_i(\RR^d)) = \frac{1}{N_{n+1}^d} \sum_{j \in [N_{n+1}]^d} \int_{\RR^d} \psi_{m+1}(x - a_{ij}) \mu_T(x)\; dx, \]
-	%
-	Thus $\eqref{equation92941294129412919}$ implies that for each $i$,
-	%
-	\begin{equation} \label{equation491040912491}
-		\| \nu_i(\RR^d) - \EE(\nu_i(\RR^d)) \|_{L^\infty} \leq \sqrt{d} \cdot r_{m+1}^{d+1} \| \nabla \mu \|_{L^\infty(\RR^d)}.
-	\end{equation}
-	%
-	Furthermore, \eqref{equation990249012409129041290} implies
-	%
-	\begin{equation} \label{9921490124912}
-	\begin{split}
-		\sum_{i \in \Pi_{m+1}^d} \EE(\nu_i(\RR^d)) &= r_{m+1}^d \sum\nolimits_{(i,j) \in \Sigma_{m+1}^d} \PP(j_i = j) \int_{\RR^d} \psi_{m+1}(x - a_{ij}) \mu_T(x)\; dx\\
-		&= \frac{r_{m+1}^d}{K_{m+1}^d} \int_{\RR^d} \left( \sum\nolimits_{(i,j) \in \Sigma_{m+1}^d} \psi_{m+1}(x - a_{ij}) \right) \mu_T(x)\; dx\\
-		&= \frac{r_{m+1}^d l_{m+1}^{-d}}{K_{m+1}^d} = 1.
-	\end{split}
-	\end{equation}
-	%
-	For all but at most $3^d \cdot r_{m+1}^{-d}$ indices $i$, $\nu_i = 0$ almost surely. Thus we can apply the triangle inequality together with \eqref{equation491040912491} and \eqref{9921490124912} to conclude that
-	%
-	\begin{equation} \label{equation42214124124102412}
-	\begin{split}
-		\| \nu_S(\RR^d) - 1 \|_{L^\infty} &= \| \sum\nolimits_{i \in \Pi_{m+1}^d} \left[ \nu_i(\RR^d) - \EE(\nu_i(\RR^d)) \right] \|_{L^\infty} \\
-		&\leq \sum\nolimits_{i \in \Pi_{m+1}^d} \| \nu_i(\RR^d) - \EE(\nu_i(\RR^d)) \|_{L^\infty}\\
-		&\leq 3^d \sqrt{d} \cdot r_{m+1}^{-d} r_{m+1}^{d+1} \| \nabla \mu \|_{L^\infty(\RR^d)}\\
-		&= 3^d \sqrt{d} \cdot r_{m+1} \| \nabla \mu \|_{L^\infty(\RR^d)}\\
-        &= \frac{3^d \sqrt{d} \cdot l_m \| \nabla \mu \|_{L^\infty(\RR^d)}}{M_{m+1}}.
-	\end{split}
-	\end{equation}	
-	%
-    Thus \eqref{equation42214124124102412} and \eqref{equation10491249012} imply that $\| \nu_S(\RR^d) - 1 \|_{L^\infty} \leq M_{m+1}^{-1/2}$, or, in other words, that it is almost surely true that
-    %
-    \begin{equation} \label{equation86912904129041290}
-        1 - M_{m+1}^{-1/2} \leq \nu_S(\RR^d) \leq 1 + M_{m+1}^{-1/2}.
-    \end{equation}
-    %
-    This means that for a suitably large choice of $M_{m+1}$, normalizing this measure to a probability measure is neglible to the asymptotics we consider.
-
-	For each $i \in \Pi_{m+1}^d$, let
-	%
-	\[ S_i = \bigcup \{ Q \in \DQ_{m+1}^d: \nu_i(Q) > 0 \}. \]
-	%
-	Then $S = \bigcup_{i \in \Pi_{m+1}^d} S_i$. Because $j_i$ is selected uniformly from $[K_{m+1}]^d$ for each $i$, for any $j \in [K_{m+1}]^d$,
-    %
-    \begin{equation} \label{equation129412904912090}
-        \PP(j_i = j) = K_{m+1}^{-d}.
-    \end{equation}
-    %
-    Since $\psi_{m+1}$ is supported on $[-l_{m+1},l_{m+1}]^d$,
-	%
-	\[ S_i \subset \bigcup \{ R_{i_0} : R_{i_0} \cap R_i \neq \emptyset \}. \]
-	%
-	For any cube $Q_{ij} \in \Sigma_{m+1}^d$, there are at most $3^d$ pairs $(i_0,j_0)$ such that $Q_{i_0j_0} \cap Q_{ij} \neq \emptyset$, and so a union bound together with \eqref{equation129412904912090} gives
-	%
-    \begin{equation} \label{equation5901490129129012409}
-        \PP(Q_{ij} \in \DQ_{m+1}(S)) \leq \sum\nolimits_{Q_{i_0j_0} \cap Q_{ij} \neq \emptyset} \PP(j_{i'} = j') \leq 3^d K_{m+1}^{-d}.
-    \end{equation}
-	%
-	Without loss of generality, removing cubes from $B$ if necessary, we may assume all cubes in $B$ are strongly non-diagonal. Let $Q = Q_{i_1j_1} \times \dots \times Q_{i_nj_n} \in \DQ_{m+1}(B)$ be such a cube. Since $Q$ is strongly diagonal, the events $\{ Q_{i_kj_k} \in S \}$ are independent from one another, which together with \eqref{equation5901490129129012409} implies that
-	%
-    \begin{equation} \label{equation190589012590812892189}
-	   \PP(Q \in \DQ_{m+1}(S^n)) = \PP(Q_{i_1j_1} \in S) \dots \PP(Q_{i_nj_n} \in S) \leq 3^{dn} K_{m+1}^{-dn}.
-    \end{equation}
-	%
-	Taking expectations over all cubes in $B$, and applying \eqref{equation1290419204912090120912} and \eqref{equation190589012590812892189} gives
-	%
-    \begin{equation} \label{equation129041289589128921891289}
-	\begin{split}
-		\EE(\#(\DQ_{m+1}(B) \cap \DQ_{m+1}(S^n))) &\leq 3^{dn} \#(\DQ_{m+1}(B)) \cdot K_{m+1}^{-dn}\\
-		&\leq 3^{dn} l_{m+1}^{-(s + \varepsilon)} K_{m+1}^{- dn}\\
-		&= \frac{3^{dn} M_{m+1}^{s + \varepsilon} l_m^{-(s + \varepsilon)}}{K_{m+1}^{dn - s - \varepsilon}}.
-	\end{split}
-    \end{equation}
-    %
-    We can then apply Markov's inequality with \eqref{equation129041289589128921891289} and \eqref{equation19020912390129031290312} to conclude
-    %
-    \begin{equation} \label{fourierdim2}
-    \begin{split}
-        \mathbf{P}(\DQ_{k+1}(B) \cap \DQ_{k+1}(S^n) \neq \emptyset) &= \mathbf{P}(\# (\DQ_{k+1}(B) \cap \DQ_{k+1}(S^n)) \geq 1)\\
-        &\leq \EE(\#(\DQ_{m+1}(B) \cap \DQ_{m+1}(S^n)))\\
-        &\leq 1/10.
-    \end{split}
-    \end{equation}
-    %
-    Thus $\DQ_{k+1}(S^n)$ is disjoint from $\DQ_{k+1}(B)$ with high probability.
-
-    Now we analyze the Fourier transform of the measure $\nu$ over frequencies with small magnitude. For each $i \in \Pi_{m+1}^d$, and $m \in \ZZ$, define $X_{im} = \widehat{\nu_i}(m) - \widehat{\EE(\nu_i)}(m)$. Applying \eqref{equation50914902149012} gives 
-    %
-    \begin{equation} \label{equation891248921894128942189}
-    \begin{split}
-        \sum_{i \in \Pi_{m+1}^d} \widehat{\EE(\nu_i)}(m) &= \sum_{i \in \Pi_{m+1}^d} l_{m+1}^d \sum_{j \in [K_{m+1}]^d} \int_{\RR^d} e^{- 2 \pi i m \cdot x} \psi_{m+1}(x - a_{ij}) d\mu_T(x)\\
-        &= \int_{\RR^d} e^{-2 \pi i m \cdot x} d\mu_T(x) = \widehat{\mu_T}(m).
-    \end{split}
-    \end{equation}
-    %
-    For each $i$ and $m$, the standard $(L^1,L^\infty)$ bound on the Fourier transform, combined with \eqref{equation491040912491}, shows
-    %
-    \begin{equation} \label{equation12904912049012}
-    \begin{split}
-        \psitwo{X_{im}} &\leq 10 \| X_{im} \|_{L^\infty}\\
-        &\leq 10[\| \nu_i(\RR^d) \|_{L^\infty} + \EE(\nu_i)(\RR^d)]\\
-        &\leq 10^2 \left( \EE(\nu_i)(\RR^d) + r_{m+1}^{d+1} \| \nabla \mu_T \|_{L^\infty(\RR^d)} \right).
-    \end{split}
-    \end{equation}
-    %
-    For a fixed $m$, the family of random variables $\{ X_{im} \}$ are independent. Furthermore, $\sum X_{im} = \widehat{\nu}(m) - \widehat{\EE(\nu)}(m)$. Equations \eqref{equation990249012409129041290} and \eqref{equation129412904912090} imply that
-    %
-    \begin{equation} \label{equation19241902490129021}
-    \begin{split}
-        \EE(\widehat{\nu_S}(m)) &= \frac{r_{m+1}^d}{K_{m+1}^d} \int_{\RR^d} e^{-2 \pi i m \cdot x} \left( \sum_{(i,j) \in \Sigma_{m+1}^d} \psi_{m+1}(x - a_{ij}) \right) d\mu_T(x)\\
-        &= \frac{r_{m+1}^d l_{m+1}^{-d}}{K_{m+1}^d} \int_{\RR^d} e^{-2 \pi i m \cdot x} d\mu_T(x)\\
-        &= \frac{r_{m+1}^d l_{m+1}^{-d}}{K_{m+1}^d} \widehat{\mu_T}(m) = \widehat{\mu_T}(m).
-    \end{split}
-    \end{equation}
-    %
-    Hoeffding's inequality, together with \eqref{equation12904912049012} and \eqref{equation19241902490129021}, imply that
-    %
-    \begin{equation} \label{equation190219024901290129041}
-    \begin{split}
-        & \psitwo{\widehat{\nu}(m) - \widehat{\mu_T}(m)}\\
-        &\ \ \ \ \ \ \ \ \ \ \leq 10^3 \sqrt{d} \left( \left( \sum \EE(\nu_i)(\RR^d)^2 \right)^{1/2} + r_{m+1}^{d/2+1} \| \nabla \mu_T \|_{L^\infty(\RR^d)} \right).
-    \end{split}
-    \end{equation}
-    %
-    Equation \eqref{equation19204910490190190} shows
-    %
-    \begin{equation} \label{equation129401924901290412}
-    \begin{split}
-        \EE(\nu_i)(\RR^d) &= l_{m+1}^d \sum_{j \in [K_{m+1}]^d} \int \psi_{m+1}(x - a_{ij}) d\mu_T(x)\\
-        &\leq r_{m+1}^d \| \mu_T \|_{L^\infty(\RR^d)}.
-    \end{split}
-    \end{equation}
-    %
-    Combining \eqref{equation190219024901290129041} and \eqref{equation129401924901290412} gives
-    %
-    \begin{equation} \label{equation10491204901290}
-        \psitwo{\widehat{\nu}(m) - \widehat{\mu_T}(m)} \leq 10^3 \sqrt{d} \left[ \| \mu_T \|_{L^\infty(\RR^d)} + \| \nabla \mu_T \|_{L^\infty(\RR^d)} \right] r_{m+1}^{d/2}.
-    \end{equation}
-    %
-    We can then apply a union bound over $D = \{ m \in \ZZ^d : |m| \leq 10 l_{m+1}^{-1} \}$, which has cardinality at most $10^{d+1} l_{m+1}^{-d}$, together with \eqref{equation10491204901290} to conclude that
-    %
-    \begin{equation} \label{equation1290421941021290}
-    \begin{split}
-        \PP& \left(\| \widehat{\nu} - \widehat{\mu_T} \|_{L^\infty(D)} \geq r_{m+1}^{d/2} \log(M_{m+1}) \right)\\
-        &\ \ \ \ \ \leq 10^{d+2} \cdot l_{m+1}^{-d} \exp \left( - \frac{\log(M_{m+1})^2}{10^7 d} \right)\\
-        &\ \ \ \ \ = 10^{d+2} l_m^{-d} \exp \left( d \log(M_{m+1} K_{m+1}) - \frac{\log(M_{m+1})^2}{10^7 d} \right).
-    \end{split}
-    \end{equation}
-    %
-    Combined with \eqref{equation109519029012} and \eqref{equation1940129041}, \eqref{equation1290421941021290} implies
-    %
-    \begin{equation} \label{equation0148912489128}
-        \PP \left(\| \widehat{\nu} - \widehat{\mu_T} \|_{L^\infty(D)} \geq r_{m+1}^{d/2} \log(M_{m+1}) \right) \leq 1/10.
-    \end{equation}
-    %
-    Thus $\widehat{\nu}$ and $\widehat{\mu_T}$ are highly likely to differ only by a neglible amount over small frequencies.
-
-    It remains to analyze values of $\widehat{\nu_S}(m)$ when $|m| \geq 10 l_{m+1}^{-1}$. If we define a random measure
-    %
-    \[ \alpha = r_{m+1}^d \sum\nolimits_{\substack{i \in \Pi_{m+1}^d\\d(a_i,T) \leq 2 r_{m+1}^{-1}}} \delta_{a_{ij_i}}, \]
-    %
-    then $\nu_S = (\alpha * \psi_{m+1}) \mu_T$.
-    %Since $\mu_T$ is supported on $T$, we can really truncate the sum defining $\eta$ to $O_d(r_{m+1}^{-d})$ terms such that the convolution identity remains valid.
-    Thus we have $\widehat{\nu_S} = (\widehat{\alpha} \cdot \widehat{\psi_{m+1}}) * \widehat{\mu_T}$. Since $\mu_T$ is compactly supported, we can define, for each $t > 0$,
-    %
-    \[ A(t) = \sup |\widehat{\mu_T}(\xi)| |\xi|^t < \infty. \]
-    %
-    In light of \eqref{equation12901902419209012}, if we define, for each $t > 0$,
-    %
-    \[ B(t) = \sup |\widehat{\psi}(\xi)| |\xi|^t, \]
-    %
-    then
-    %
-    \[ \sup |\widehat{\psi_{m+1}}(\xi)| |\xi|^t = l_{m+1}^{-t} B(t). \]
-    %
-    We now aim to obtain asymptotic bounds on
-    %
-    \[ \widehat{\nu_S}(\eta) = \int \widehat{\mu_T}(\eta - \xi) \widehat{\alpha}(\xi) \widehat{\psi_{m+1}}(\xi)\; d\xi, \]
-    %
-    assuming $\eta \geq 10 l_{m+1}^{-1}$. The measure $\alpha$ is the sum of at most $2^d r_{m+1}^{-d}$ delta functions, so we have $\alpha(\RR^d) \leq 2^d$, so $\| \widehat{\alpha} \|_{L^\infty(\RR^d)} \leq 2^d$. Thus
-    %
-    \begin{equation} \label{equation9942941924912912}
-        |\widehat{\nu_S}(\eta)| \leq 2^d \int |\widehat{\mu_T}(\eta - \xi)| |\widehat{\psi_{m+1}}(\xi)|\; d\xi.
-    \end{equation}
-    %
-    If $|\xi| \leq |\eta|/2$, $|\eta - \xi| \geq |\eta|/2$, so for all $t > 0$, and since \eqref{equation19204910490190190} implies $\| \widehat{\psi_{m+1}} \|_{L^\infty(\RR^d)} \leq 1$, we find
-    %
-    \begin{equation} \label{equation999941204192049012}
-        \int_{0 \leq |\xi| \leq |\eta|/2} |\widehat{\mu_T}(\eta - \xi)| |\widehat{\psi_{m+1}}(\xi)|\; d\xi \leq \frac{A(t) 2^{t-d}}{|\eta|^{t-d}}.
-    \end{equation}
-    %
-    Set $t = d + 1 + s/2$. Equation \eqref{equation999941204192049012}, together with \eqref{equation129041902412901290129}, implies
-    %
-    \begin{equation} \label{equation1111902491209012}
-    \begin{split}
-        \int_{0 \leq |\xi| \leq |\eta|/2} |\widehat{\mu_T}(\eta - \xi)| |\widehat{\psi_{m+1}}(\xi)|\; d\xi &\leq \frac{A(d + 1 + s/2) 2^{1 + s/2} |\eta|^{-1}}{|\eta|^{s/2}}\\
-        &\leq \frac{A(d + 1 + s/2) 2^{1 + s/2} l_{m+1}}{|\eta|^{s/2}}\\
-        &\leq \frac{1}{10 \cdot 2^d} \frac{1}{|\eta|^{s/2}}.
-    \end{split}
-    \end{equation}
-    %
-    Conversely, if $|\xi| \geq 2|\eta|$, then $|\eta - \xi| \geq |\xi|/2$, so for each $t > d$,
-    %
-    \begin{equation} \label{equation5551092491022109}
-    \begin{split}
-        \int_{|\xi| \geq 2|\eta|} |\widehat{\mu_T}(\eta - \xi)| |\widehat{\psi}_{m+1}(\xi)|\; d\xi &\leq \int_{|\xi| \geq 2|\eta|} \frac{A(t) 2^t}{|\xi|^t}\\
-        &\leq 2^d \int_{2|\eta|}^\infty r^{d-1 - t} A(t) 2^t\\
-        &\leq \frac{4^d A(t)}{t - d} |\eta|^{d-t}.
-    \end{split}
-    \end{equation}
-    %
-    Set $t = d + 1 + s/2$. Equation \eqref{equation190512919204912901}, applied to \eqref{equation5551092491022109}, allows us to conclude
-    %
-    \begin{equation} \label{equation123123123}
-        \int_{|\xi| \geq 2|\eta|} |\widehat{\mu_T}(\eta - \xi)| |\widehat{\psi}_{m+1}(\xi)|\; d\xi \leq \frac{1}{10 \cdot 2^d} \frac{1}{|\eta|^{s/2}}.
-    \end{equation}
-    %
-    Finally, if $t > 0$, we use the fact that $\| \widehat{\mu_T} \|_{L^\infty(\RR^d)} \leq 1$ to conclude that
-    %
-    \begin{equation} \label{equation59010491092}
-    \begin{split}
-        \int_{|\eta|/2 \leq |\xi| \leq 2|\eta|} |\widehat{\mu_T}(\eta - \xi)| |\widehat{\psi_{m+1}}(\xi)|\; d\xi &\leq \frac{2^{d+t} B(t)}{|\eta|^{t-d}}.
-    \end{split}
-    \end{equation}
-    %
-    Set $t = d + s/2 + 1$. Then \eqref{equation59010491092} and \eqref{equation68943893493849} imply
-    %
-    \begin{equation} \label{equation2194129}
-        \int_{|\eta|/2 \leq |\xi| \leq 2|\eta} |\widehat{\mu_T}(\eta - \xi)| |\widehat{\psi_{m+1}}(\xi)|\; d\xi \leq \frac{1}{10 \cdot 2^d} \frac{1}{|\xi|^{s/2}}.
-    \end{equation}
-    %
-    Summing up \eqref{equation1111902491209012}, \eqref{equation123123123}, and \eqref{equation2194129}, we conclude from \eqref{equation9942941924912912} that if $|\eta| \geq 10 l_{m+1}^{-1}$, then
-    %
-    \begin{equation} \label{equation12904120941290419029012}
-        |\widehat{\nu_S}(\eta)| \leq \frac{1}{2|\eta|^{s/2}}.
-    \end{equation}
-    %
-    Thus, almost surely, $\widehat{\nu_S}(\eta)$ has fast Fourier decay for $|\eta| \geq 10 l_{m+1}^{-1}$.
-
-    Let us put all our calculations together. In light of \eqref{fourierdim2} and \eqref{equation0148912489128}, there exists some choice of $j_i$ for each $i$, and a resultant non-random pair $(\nu_{S_0}, S_0)$ such that $S_0$ satisfies Property (A) of the Lemma, and for any $m \in \ZZ^d$ with $|m| \leq 10 l_{m+1}^{-1}$,
-    %
-    \begin{equation} \label{equation129419024129}
-        |\widehat{\nu_{S_0}}(m) - \widehat{\mu_T}(m)| \leq r_{m+1}^{d/2} \log(M_{m+1}).
-    \end{equation}
-    %
-    Equation \eqref{equation12904901249104910}, \eqref{equation1095121284102}, and \eqref{equation5890129048128941891} show
-    %
-    \[ r_{m+1}^{d/2} \log(M_{m+1}) \leq l_{m+1}^{-\frac{dn - s}{2n} - c\varepsilon + \varepsilon}. \]
-    %
-    % r_{m+1}^{d/2} \leq l_{m+1}^{(dn - s)/2n - c*eps}
-    % l_m^{s/2n + c*eps} K_{m+1}^{(dn - s)/2n - c*eps} \leq M_{m+1}^{s/2n + c*eps}
-    % A(l_m) K^{(dn - s)/2n - c*eps} <= M^{s/2n + c*eps}
-    %
-    % A(l_m) K^{- c * eps} K^{(dn - s)/2n)} <= M^{s/2n + c*eps}
-    % B(l_m) K^{- c * eps} M^{(dn - s)(s + eps)/2n(dn - s - eps)} <= M^{s/2n + c*eps}
-    % B(l_m) K^{- c * eps} <= M^{s/2n + c*eps}
-    %
-    % s + 2nc*eps - [1 + eps/(dn - s - eps)] (s + eps) >= 0
-    % c >= [2s + 3]/2n(dn-s)
-    %
-    Thus we conclude that if $|m| \leq 10 l_{m+1}^{-1}$,
-    %
-    \begin{align*}
-        |\widehat{\nu_{S_0}}(m)| &\leq r_{m+1}^{d/2} \log(M_{m+1}) + C |m|^{c\varepsilon - \frac{dn-s}{2n}}\\
-        &\leq l_{m+1}^{-\frac{dn-s}{2n}-c\varepsilon + \varepsilon} + C|m|^{c\varepsilon - \frac{dn-s}{2n}}\\
-        &\leq [C + 10^d l_{m+1}^\varepsilon] |m|^{c\varepsilon - \frac{dn-s}{2n}}.
-    \end{align*}
-    %
-    Since $|\widehat{\nu_{S_0}}(m)| \leq |m|^{-\frac{dn-s}{2n}}$ holds automatically for $|m| \geq 10l_{m+1}^{-1}$, this completes the proof.
-\end{proof}
-
-\end{comment}
-
 \begin{lemma} \label{discreteLemma}
-    Fix $s \in [1,dn)$ and $\varepsilon \in [0,(dn-s)/2)$. Let $T \subset [0,1]^d$ be a non-empty, $\DQ_m$ discretized set, and let $\mu_T$ be a smooth probability measure compactly supported on $T$, together with a constant $A \geq 1$ such that for each $m \in \ZZ^d$,
-    %
-    \[ |\widehat{\mu_T}(m)| \leq A \cdot |m|^{a\varepsilon-\frac{dn-s}{2n}}. \]
-    %
-    where
-    %
-    \[ a = \frac{3d + 2dn - 2s}{dn}. \]
-    %
-    Let $B \subset \RR^{dn}$ be a non-empty, $\DQ_{m+1}$ discretized set such that
+    Fix $s \in [1,dn)$ and $\varepsilon \in [0,(dn-s)/2)$. Let $T \subset [0,1]^d$ be a non-empty, $\DQ_m$ discretized set, and let $\mu_T$ be a smooth probability measure compactly supported on $T$. Let $B \subset \RR^{dn}$ be a non-empty, $\DQ_{m+1}$ discretized set such that
     %
     \begin{equation} \label{equation1290419204912090120912}
        \#(\DQ_{m+1}(B)) \leq (1/l_{m+1})^{s + \varepsilon}.
@@ -635,11 +249,22 @@ We now consider a discrete form of the Fourier bound argument, which we can appl
         %
         there exists $i$ such that $Q_i \not \in \DQ_{m+1}(S)$.
 
-        \item[(B)] For any $m \in \ZZ^d$,
+        \item[(B)] If $L = \sup_{m \in \ZZ^d} |m|^{\frac{dn-s}{2n} - a\varepsilon} |\widehat{\mu_T}(m)|$, then
         %
-        \[ |\widehat{\mu}(m)| \leq (1 + M_{m+1}^{-1/2}) [A + 10^d M_{m+1}^{-\varepsilon}] |m|^{c\varepsilon - \frac{dn-s}{2n}}. \]
+        \begin{align*}
+            &\sup_{m \in \ZZ^d} |m|^{a\varepsilon - \frac{dn-s}{2n}} |\widehat{\mu_S}(m)|\\
+            &\ \ \ \ \ \ \leq (1 + 1/2^m) \left( \max\left( 1, L \right) + 10^d M_{m+1}^{-\varepsilon} \right),
+        \end{align*}
+        %
+        where
+        %
+        \[ a = \frac{3d + 2dn - 2s}{dn}. \]
     \end{enumerate}
 \end{lemma}
+
+\begin{remark}
+    To make the statement of \eqref{discreteLemma} more clean, we have hidden the explicit constant $C(\mu_T,n,d,s,\varepsilon)$. But this constant can be made explicit by determining which value $C(\mu_T,n,d,s,\varepsilon)$ must be chosen to ensure that \eqref{equation1095121284102} implies \eqref{equation10491249012}, \eqref{equation194012904129009}, \eqref{equation1940129041}, \eqref{equation129041902412901290129}, \eqref{equation190512919204912901}, \eqref{equation68943893493849}, \eqref{equation1290412904129049102}, and \eqref{equation129301923109} are all satisfied.
+\end{remark}
 
 \begin{proof}[Proof of Lemma \ref{discreteLemma}]
     \renewcommand{\qedsymbol}{}
@@ -649,7 +274,7 @@ We now consider a discrete form of the Fourier bound argument, which we can appl
         \PP(j_i = j) = K_{m+1}^{-d}.
     \end{equation}
     %
-    We define a measure $\nu_S$ such that, for each $x \in \RR^d$,
+    Define a measure $\nu_S$ such that, for each $x \in \RR^d$,
     %
     \[ d\nu_S(x) = r_{m+1}^d \sum\nolimits_{i \in \Pi_{m+1}^d} \psi_{m+1}(x - a_{ij_i}) d\mu_T(x). \]
     %
@@ -661,13 +286,13 @@ We now consider a discrete form of the Fourier bound argument, which we can appl
     %
     \[ S = \bigcup \{ Q \in \DQ_{m+1}^d : \mu_S(Q) > 0 \}, \]
     %
-    then $S$ is $\DQ_{m+1}$ discretized, $\mu_S$ is supported on $S$, and $S \subset T$. Our goal is to show, with non-zero probability, some choice of $\{ j_i \}$ yields a set $S$ satisfying Properties (A) and (B) of the Lemma.
+    then $S$ is $\DQ_{m+1}$ discretized, $\mu_S$ is supported on $S$, and $S \subset T$. Our goal is to show that, with non-zero probability, some choice of $\{ j_i \}$ yields a set $S$ satisfying Properties (A) and (B) of the Lemma.
 
     In our calculations, it will help us to decompose the measure $\nu_S$ into components roughly supported on sidelength $r_{m+1}^d$ cubes. For each $i \in \Pi_{m+1}(T)$, define a measure $\nu_i$ such that for each $x \in \RR^d$,
     %
     \[ d\nu_i(x) = r_{m+1}^d \psi_{m+1}(x - a_{ij_i}) d\mu_T(x). \]
     %
-    Then $\nu_S = \sum_{i \in \Pi_{m+1}^d(T)} \nu_i$. We shall split the proof of the statement into several, more managable lemmas.
+    Then $\nu_S = \sum_{i \in \Pi_{m+1}^d(T)} \nu_i$. We shall split the proof of Properties (A) and (B) of Lemma \ref{discreteLemma} into several, more managable lemmas.
 \end{proof}
 
 \begin{lemma} \label{nuNormalizationLemma}
@@ -677,7 +302,7 @@ We now consider a discrete form of the Fourier bound argument, which we can appl
         M_{m+1} \geq \left( 3^d \sqrt{d} \cdot l_m \| \nabla \mu \|_{L^\infty(\RR^d)} \right)^2,
     \end{equation}
     %
-    then almost surely, $|\nu(\RR^d) - 1| \leq M_{m+1}^{-1/2}$.
+    then almost surely, $|\nu_S(\RR^d) - 1| \leq M_{m+1}^{-1/2}$.
 \end{lemma}
 \begin{proof}
     If $j_0, j_1 \in [K_{m+1}]^d$, then
@@ -726,7 +351,7 @@ We now consider a discrete form of the Fourier bound argument, which we can appl
     \end{split}
     \end{equation}  
     %
-    Thus \eqref{equation42214124124102412} and \eqref{equation10491249012} imply that almost surely, $|\nu_S(\RR^d) - 1| \leq M_{m+1}^{-1/2}$.
+    Thus \eqref{equation10491249012} and \eqref{equation42214124124102412} imply that almost surely, $|\nu_S(\RR^d) - 1| \leq M_{m+1}^{-1/2}$.
 \end{proof}
 
 \begin{lemma} \label{propertyALemma}
@@ -813,7 +438,7 @@ We now consider a discrete form of the Fourier bound argument, which we can appl
     %
     then
     %
-    \[ \PP \left( \| \widehat{\nu_T} - \widehat{\mu_T} \|_{L^\infty(D)} \geq r_{m+1}^{d/2} \log(M_{m+1}) \right) \leq 1/10 \]
+    \[ \PP \left( \| \widehat{\nu_S} - \widehat{\mu_T} \|_{L^\infty(D)} \geq r_{m+1}^{d/2} \log(M_{m+1}) \right) \leq 1/10 \]
 \end{lemma}
 \begin{proof}
     For each $i \in \Pi_{m+1}^d$, and $m \in \ZZ$, define $X_{im} = \widehat{\nu_i}(m) - \widehat{\EE(\nu_i)}(m)$. Applying \eqref{equation50914902149012} gives 
@@ -835,7 +460,7 @@ We now consider a discrete form of the Fourier bound argument, which we can appl
     \end{split}
     \end{equation}
     %
-    For a fixed $m$, the family of random variables $\{ X_{im} \}$ are independent. Furthermore, $\sum X_{im} = \widehat{\nu}(m) - \widehat{\EE(\nu)}(m)$. Equations \eqref{equation990249012409129041290} and \eqref{equation129412904912090} imply that
+    For a fixed $m$, the family of random variables $\{ X_{im} \}$ are independent. Furthermore, $\sum X_{im} = \widehat{\nu_S}(m) - \widehat{\EE(\nu_S)}(m)$. Equations \eqref{equation990249012409129041290} and \eqref{equation129412904912090} imply that
     %
     \begin{equation} \label{equation19241902490129021}
     \begin{split}
@@ -873,7 +498,7 @@ We now consider a discrete form of the Fourier bound argument, which we can appl
     %
     \begin{equation} \label{equation1290421941021290}
     \begin{split}
-        \PP& \left(\| \widehat{\nu} - \widehat{\mu_T} \|_{L^\infty(D)} \geq r_{m+1}^{d/2} \log(M_{m+1}) \right)\\
+        \PP& \left(\| \widehat{\nu_S} - \widehat{\mu_T} \|_{L^\infty(D)} \geq r_{m+1}^{d/2} \log(M_{m+1}) \right)\\
         &\ \ \ \ \ \leq 10^{d+2} \cdot l_{m+1}^{-d} \exp \left( - \frac{\log(M_{m+1})^2}{10^7 d} \right)\\
         &\ \ \ \ \ = 10^{d+2} l_m^{-d} \exp \left( d \log(M_{m+1} K_{m+1}) - \frac{\log(M_{m+1})^2}{10^7 d} \right).
     \end{split}
@@ -882,34 +507,34 @@ We now consider a discrete form of the Fourier bound argument, which we can appl
     Combined with \eqref{equation109519029012} and \eqref{equation1940129041}, \eqref{equation1290421941021290} implies
     %
     \begin{equation} \label{equation0148912489128}
-        \PP \left(\| \widehat{\nu} - \widehat{\mu_T} \|_{L^\infty(D)} \geq r_{m+1}^{d/2} \log(M_{m+1}) \right) \leq 1/10.
+        \PP \left(\| \widehat{\nu_S} - \widehat{\mu_T} \|_{L^\infty(D)} \geq r_{m+1}^{d/2} \log(M_{m+1}) \right) \leq 1/10.
     \end{equation}
     %
-    Thus $\widehat{\nu}$ and $\widehat{\mu_T}$ are highly likely to differ only by a neglible amount over small frequencies.
+    Thus $\widehat{\nu_S}$ and $\widehat{\mu_T}$ are highly likely to differ only by a negligible amount over small frequencies.
 \end{proof}
 
 \begin{lemma} \label{largeFrequencyLemma}
-    If
+    Fix $r > 0$. If
     %
     \begin{equation} \label{equation129041902412901290129}
-        M_{m+1}^d K_{m+1}^d \geq A(d + 1 + s/2) 2^{1 + d + s/2} l_m^d,
+        N_{m+1}^d \geq \frac{10 \cdot 2^{d+1+r/2}}{L} A(d + 1 + r/2),
     \end{equation}
     %
     \begin{equation} \label{equation190512919204912901}
     \begin{split}
-        K_{m+1}^d M_{m+1}^d \geq \frac{l_m^d 8^d A(d + 1 + s/2)}{1 + s/2},
+        N_{m+1}^d \geq \frac{10 \cdot 2^{3d}}{(1 + r/2) L} A(d + 1 + r/2),
     \end{split}
     \end{equation}
     %
     and
     %
     \begin{equation} \label{equation68943893493849}
-        K_{m+1}^d M_{m+1}^d \geq l_m^d 2^{3d + s/2 + 1} B(d + s/2 + 1),
+        N_{m+1}^d \geq \frac{10 \cdot 2^{3d + r/2 + 1}}{L} B(d + r/2 + 1),
     \end{equation}
     %
-    then almost surely, if $|m| \geq 10l_{m+1}^{-1}$,
+    then almost surely, if $|\eta| \geq 10l_{m+1}^{-1}$,
     %
-    \[ |\widehat{\nu_T}(m)| \leq \frac{1}{2|\eta|^{s/2}}. \]
+    \[ |\widehat{\nu_S}(\eta)| \leq \frac{L}{|\eta|^{r/2}}. \]
 \end{lemma}
 \begin{proof}
     Define a random measure
@@ -946,9 +571,10 @@ We now consider a discrete form of the Fourier bound argument, which we can appl
     %
     \begin{equation} \label{equation1111902491209012}
     \begin{split}
-        \int_{0 \leq |\xi| \leq |\eta|/2} |\widehat{\mu_T}(\eta - \xi)| |\widehat{\psi_{m+1}}(\xi)|\; d\xi &\leq \frac{A(d + 1 + s/2) 2^{1 + s/2} |\eta|^{-1}}{|\eta|^{s/2}}\\
-        &\leq \frac{A(d + 1 + s/2) 2^{1 + s/2} l_{m+1}}{|\eta|^{s/2}}\\
-        &\leq \frac{1}{10 \cdot 2^d} \frac{1}{|\eta|^{s/2}}.
+        &\int_{0 \leq |\xi| \leq |\eta|/2} |\widehat{\mu_T}(\eta - \xi)| |\widehat{\psi_{m+1}}(\xi)|\; d\xi\\
+        &\ \ \ \ \ \ \ \leq \frac{A(d + 1 + s/2) 2^{1 + s/2} |\eta|^{-1}}{|\eta|^{s/2}}\\
+        &\ \ \ \ \ \ \ \leq \frac{A(d + 1 + s/2) 2^{1 + s/2} l_{m+1}}{|\eta|^{s/2}}\\
+        &\ \ \ \ \ \ \ \leq \frac{L}{10 \cdot 2^d \cdot |\eta|^{s/2}}.
     \end{split}
     \end{equation}
     %
@@ -965,7 +591,7 @@ We now consider a discrete form of the Fourier bound argument, which we can appl
     Set $t = d + 1 + s/2$. Equation \eqref{equation190512919204912901}, applied to \eqref{equation5551092491022109}, allows us to conclude
     %
     \begin{equation} \label{equation123123123}
-        \int_{|\xi| \geq 2|\eta|} |\widehat{\mu_T}(\eta - \xi)| |\widehat{\psi}_{m+1}(\xi)|\; d\xi \leq \frac{1}{10 \cdot 2^d} \frac{1}{|\eta|^{s/2}}.
+        \int_{|\xi| \geq 2|\eta|} |\widehat{\mu_T}(\eta - \xi)| |\widehat{\psi}_{m+1}(\xi)|\; d\xi \leq \frac{L}{10 \cdot 2^d \cdot |\eta|^{s/2}}.
     \end{equation}
     %
     Finally, if $t > 0$, we use the fact that $\| \widehat{\mu_T} \|_{L^\infty(\RR^d)} \leq 1$ to conclude that
@@ -979,14 +605,10 @@ We now consider a discrete form of the Fourier bound argument, which we can appl
     Set $t = d + s/2 + 1$. Then \eqref{equation59010491092} and \eqref{equation68943893493849} imply
     %
     \begin{equation} \label{equation2194129}
-        \int_{|\eta|/2 \leq |\xi| \leq 2|\eta} |\widehat{\mu_T}(\eta - \xi)| |\widehat{\psi_{m+1}}(\xi)|\; d\xi \leq \frac{1}{10 \cdot 2^d} \frac{1}{|\xi|^{s/2}}.
+        \int_{|\eta|/2 \leq |\xi| \leq 2|\eta} |\widehat{\mu_T}(\eta - \xi)| |\widehat{\psi_{m+1}}(\xi)|\; d\xi \leq \frac{L}{10 \cdot 2^d \cdot |\eta|^{s/2}}.
     \end{equation}
     %
-    Summing up \eqref{equation1111902491209012}, \eqref{equation123123123}, and \eqref{equation2194129}, we conclude from \eqref{equation9942941924912912} that if $|\eta| \geq 10 l_{m+1}^{-1}$, then
-    %
-    \begin{equation} \label{equation12904120941290419029012}
-        |\widehat{\nu_S}(\eta)| \leq \frac{1}{2|\eta|^{s/2}}. \qedhere
-    \end{equation}
+    It then suffices to sum up \eqref{equation1111902491209012}, \eqref{equation123123123}, and \eqref{equation2194129}, and apply \eqref{equation9942941924912912}.
 \end{proof}
 
 \begin{proof}[Proof of Lemma \ref{discreteLemma}, Continued]
@@ -1018,10 +640,10 @@ We now consider a discrete form of the Fourier bound argument, which we can appl
         &\leq -2 \varepsilon.
     \end{align*}
     %
-    Thus, if we assume that
+    Since $\log(M_{m+1}) \leq (2/\varepsilon) M_{m+1}^{\varepsilon/2}$, if we assume that
     %
     \begin{equation} \label{equation1290412904129049102}
-        A(l_m) \leq X^\varepsilon / \log(X)
+        M_{m+1} \geq \left( l_m^{a\varepsilon - \frac{dn-s}{2n} + d/2} 2^{\frac{dn-s}{2n} - a\varepsilon} (2/\varepsilon) \right)^{2/\varepsilon},
     \end{equation}
     %
     then we conclude
@@ -1031,34 +653,51 @@ We now consider a discrete form of the Fourier bound argument, which we can appl
         &\leq M_{m+1}^{-\varepsilon} l_{m+1}^{\frac{dn-s}{2n} - a \varepsilon}
     \end{align*}
     %
-    Thus we conclude that if $|m| \leq 10 l_{m+1}^{-1}$,
+    Applying Lemma \ref{deviationLemma}, we conclude that if $|m| \leq 10 l_{m+1}^{-1}$,
     %
     \begin{align*}
         |\widehat{\nu_{S}}(m)| &\leq |\widehat{\nu_{S}}(m) - \widehat{\mu_T}(m)| + |\widehat{\mu_T}(m)|\\
-        &\leq r_{m+1}^{d/2} \log(M_{m+1}) + A |m|^{c\varepsilon - \frac{dn-s}{2n}}\\
-        &\leq l_{m+1}^{-\frac{dn-s}{2n}-c\varepsilon + \varepsilon} + A|m|^{c\varepsilon - \frac{dn-s}{2n}}\\
-        &\leq [A + 10^d M_{m+1}^{-\varepsilon}] |m|^{c\varepsilon - \frac{dn-s}{2n}}.
+        &\leq r_{m+1}^{d/2} \log(M_{m+1}) + \left( L \right) |m|^{c\varepsilon - \frac{dn-s}{2n}}\\
+        &\leq l_{m+1}^{-\frac{dn-s}{2n}-c\varepsilon + \varepsilon} + \left( L \right)|m|^{c\varepsilon - \frac{dn-s}{2n}}\\
+        &\leq \left[ L + 10^d M_{m+1}^{-\varepsilon} \right] |m|^{c\varepsilon - \frac{dn-s}{2n}}.
     \end{align*}
     %
-    Since $|\widehat{\nu_{S}}(m)| \leq |m|^{-\frac{dn-s}{2n}} \leq |m|^{c\varepsilon - \frac{dn-s}{2n}}$ holds automatically for $|m| \geq 10l_{m+1}^{-1}$, we conclude that for all $m \in \ZZ^d$,
+    Lemma \ref{largeFrequencyLemma} with $r = 2c\varepsilon - (dn - s)/n$ implies that for $|m| \geq 10l_{m+1}^{-1}$,
     %
-    \[ |\widehat{\nu_S(m)}| \leq (A + 10^d M_{m+1}^{-\varepsilon}) |m|^{c\varepsilon - \frac{dn-s}{2n}}. \]
+    \[ |\widehat{\nu_{S}}(m)| \leq L |m|^{c\varepsilon-\frac{dn-s}{2n}} \leq |m|^{c\varepsilon - \frac{dn-s}{2n}}, \]
     %
-    Applying Lemma \ref{nuNormalizationLemma}, we conclude that for all $m \in \ZZ^d$,
+    Thus we conclude that for all $m \in \ZZ^d$,
+    %
+    \[ |\widehat{\nu_S}(m)| \leq (L + 10^d M_{m+1}^{-\varepsilon}) |m|^{c\varepsilon - \frac{dn-s}{2n}}. \]
+    %
+    Applying Lemma \ref{nuNormalizationLemma}, as well as a valid assumption that
+    %
+    \begin{equation} \label{equation129301923109}
+        M_{m+1} \geq 4^m,
+    \end{equation}
+    %
+    we conclude that for all $m \in \ZZ^d$,
     %
     \begin{align*}
-        |\widehat{\mu_S(m)}| &\leq \frac{A + 10^d M_{m+1}^{-\varepsilon}}{1 - M_{m+1}^{-1/2}} |m|^{c\varepsilon - \frac{dn-s}{2n}}\\
-        &\leq (1 + M_{m+1}^{-1/2}) [A + 10^d M_{m+1}^{-\varepsilon}] |m|^{c\varepsilon - \frac{dn-s}{2n}}. \qedhere
+        |\widehat{\mu_S}(m)| &\leq \frac{L + 10^d M_{m+1}^{-\varepsilon}}{1 - M_{m+1}^{-1/2}} |m|^{c\varepsilon - \frac{dn-s}{2n}}\\
+        &\leq (1 + M_{m+1}^{-1/2}) [L + 10^d M_{m+1}^{-\varepsilon}] |m|^{c\varepsilon - \frac{dn-s}{2n}}\\
+        &\leq (1 + 1/2^m) [L + 10^d M_{m+1}^{-\varepsilon}] |m|^{c\varepsilon - \frac{dn-s}{2n}}. \qedhere
     \end{align*}
 \end{proof}
 
 \section{Construction of the Salem Set}
 
-Let us now construct our configuration avoiding set. First, we fix some preliminary parameters. Write $Z \subset \bigcup_{i = 1}^\infty Z_i$, where $Z_i$ has lower Minkowski dimension at most $s$ for each $i$. Then choose an infinite sequence $\{ i_m : m \geq 1 \}$ which repeats every positive integer infinitely many times. Also, choose an arbitrary, decreasing sequence $\{ \varepsilon_m : m \geq 1 \}$, with $\varepsilon_m < (dn - s)/2$ for each $m$.
+Let us now construct our configuration avoiding set. First, we fix some preliminary parameters. Write $Z \subset \bigcup_{i = 1}^\infty Z_i$, where $Z_i$ has lower Minkowski dimension at most $s$ for each $i$. Then choose an infinite sequence $\{ i_m : m \geq 1 \}$ which repeats every positive integer infinitely many times. Also, choose an arbitrary, decreasing sequence of positive numbers $\{ \varepsilon_m : m \geq 1 \}$, with $\varepsilon_m < (dn - s)/2$ for each $m$.
 
 We choose our parameters $\{ M_m \}$ and $\{ K_k \}$ inductively. First, set $X_0 = [0,1]^d$, and $\mu_0$ an arbitrary smooth probability measure supported on $X_0$. At the $m$'th step of our construction, we have found a set $X_{m-1}$ and a measure $\mu_{m-1}$. We then choose $K_m$ and $M_m$ such that
 %
 \[ K_m, M_m \geq C(\mu_{m-1}, n, d, s, \varepsilon_m), \]
+%
+such that
+%
+\begin{equation} \label{equation12901290}
+    M_m \geq 2^{m/\varepsilon_m}
+\end{equation}
 %
 such that
 %
@@ -1074,12 +713,39 @@ Fix $\varepsilon > 0$. For each $m$, define
 %
 \[ A_{m,\varepsilon} = \sup |\widehat{\mu_M}(m)| |m|^{\frac{dn-s}{2n} - \varepsilon}. \]
 %
-Since each measure $\mu_M$ is smooth, all these quantities are finite. Since $\varepsilon_m \to 0$, there is $M$ such that if $m \geq M$, then $a \varepsilon_m \leq \varepsilon$. Property (B) of Lemma \eqref{discreteLemma} implies that for each $m \geq M$,
+Since each measure $\mu_M$ is smooth, all these quantities are finite. Since $\varepsilon_m \to 0$, there is $M$ such that if $m \geq M$, then $a \varepsilon_m \leq \varepsilon$. Property (B) of Lemma \eqref{discreteLemma} thus implies that for each $m \geq M$,
 %
-\[ A_{m+1,\varepsilon} \leq (1 + M_{m+1}^{-1/2})(A_{m,\varepsilon} + 10^d M_{m+1}^{-\varepsilon_{m+1}}). \]
+\[ A_{m+1,\varepsilon} \leq (1 + 2^{-m})(A_{m,\varepsilon} + 10^d M_{m+1}^{-\varepsilon_{m+1}}). \]
 %
-If the sequence $\{ M_m \}$ increases rapidly enough, this recursive relationship guarantees that $\sup_{m \to \infty} A_{m,\varepsilon} < \infty$. Thus, for each $\varepsilon > 0$,
+Since $\prod_{m = 1}^\infty (1 + 2^{-m}) < \infty$, we conclude that
 %
-\[ |\widehat{\mu}(m)| \lesssim_\varepsilon |m|^{\varepsilon - \frac{dn-s}{2n}}.  \]
+\[ \sup_{m \to \infty} A_{m,\varepsilon} \lesssim 10^d \sum_{m = 0}^\infty M_{m+1}^{-\varepsilon_{m+1}}. \]
+%
+If, we assume \eqref{equation12901290}, then the right hand side of the inequality is summable. And so we conclude $\sup_{m \to \infty} A_{m,\varepsilon} < \infty$ for each $\varepsilon > 0$. Thus $X$ has Fourier dimension $(dn - s) / n$.
+
+It is easy to see from our proof that for each $m$,
+%
+\[ \#(\DQ_m(X_m)) = \frac{1}{(M_1 \dots M_m)^d}. \]
+%
+Thus
+%
+\begin{align*}
+    \log_{1/l_m}(\#(\DQ_m(X_m))) &= \frac{d \log(M_1 \dots M_m)}{\log(N_1 \dots N_m)}\\
+    &\sim \frac{d \log(M_m)}{\log(N_m)}\\
+    &= \frac{d \log(M_m)}{\log(M_m) + \log(K_m)}\\
+    &= \frac{d}{1 + \log_{M_m}(K_m)}\\
+    &\sim \frac{d}{1 + \left(\frac{s}{dn - s} + c\varepsilon \right)}\\
+    &= \frac{d}{\frac{dn}{dn - s} + c\varepsilon_m}.
+\end{align*}
+%
+Thus
+%
+\[ \lim_{m \to \infty} \log_{1/l_m}(\#(\DQ_m(X_m))) \leq \frac{dn - s}{n}. \]
+%
+In particular, this means $X$ has lower Minkowski dimension at most $(dn - s)/n$, which, together with the Fourier dimension bound, implies that $X$ is Salem.
+
+\section{K\"{o}rner's Work}
+
+The last sections gives a first, positive result finding Salem sets avoiding rough configurations. However, given the same assumptions, one can find a set $X$ with \emph{Hausdorff dimension} $(dn - s)/(n-1)$ avoiding configurations. Improving the dimension to obtain this result requires a deeper knowledge of the stochastic behaviour of the set $\DQ_{m+1}(B) \cap \DQ_{m+1}(S^n)$, when $N_{m+1}$ is chosen significantly smaller relative to $M_{m+1}$. In the next section, we provide a summary of an argument due to K\"{o}rner, which deals with a very similar situation.
 
 \end{document}
