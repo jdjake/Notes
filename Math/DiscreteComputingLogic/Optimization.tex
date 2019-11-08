@@ -1,53 +1,343 @@
-\input{../style.tex}
+\input{../../style.tex}
 
 \title{Optimization}
 \author{Jacob Denson}
 
 \begin{document}
-    \pagenumbering{gobble}
-    \maketitle
-    \tableofcontents
-    \pagenumbering{arabic}
 
-    \part{Linear Programming}
+\pagenumbering{gobble}
+\maketitle
+\tableofcontents
+\pagenumbering{arabic}
 
-    \chapter{Introduction}
+\chapter{Introduction}
 
-    Most problems in computing science can be described in a specific format. The problem, given an input, has a certain set of feasible outputs. On this output we can place a partial ordering. The problem is then phrased as an optimization -- find the maximum or minimum feasible solution according to the ordering placed on the solutions. Examples of these problems are finding the `shortest' path, the `longest' common subsequence. Since we only have a finite set of solutions, the maximum can always be obtained in these problems.
+Many problems in computing science can be phrased as optimization problems, given some specified set of inputs $X$ and some function $f: X \to Y$, where $Y$ is given a linear ordering. The elements of $X$ are known as \emph{feasible solutions}. The goal of optimization is to try and find a feasible solution $x \in X$ which \emph{maximizes} or \emph{minimizes} the value $f(x)$, i.e. we wish to compute
+%
+\[ \argmin_{x \in X} f(x)\quad\text{or}\quad\argmax_{x \in X} f(x). \]
+%  
+Examples of these problems are finding the `shortest' path, or the `longest' common subsequence. If this minimum or maximum does not exist, we say the problem is \emph{unbounded}. In this generality, finding such solutions in a time efficient manner is simply impossible. But in optimization problems, we often assume $X$, $Y$, and $f$ have some particular structure which makes the problem possible to solve efficiently.
 
-    Linear Programming attempts to provide a general solution to optimization problems with a `linear' structure. We attempt to optimize a linear reward function, subject to linear constraints, where the parameters we attempt to optimize take values in a linear space. We give an example to show this idea in action.
+\part{Linear Programming}
 
-    \begin{example}
-    Suppose we are stocking items at a store. Each item needs to be created from a specific number of ingredients we need to buy, each with a specific stock. For simplicity, suppose we can only stock two items, apple pie, and chocolate bars. Let $a$ be the number of apple pies we make, and $c$ the number of chocolate bars.
+\chapter{Linear Programs}
 
-    For each apple pie we make, we must buy $3$ apples, and use $1/2$ bags of sugar, and for every three chocolate bars, $1$ bag of sugar must be used. Each apple is $\$1$, and each bag of sugar is $\$3$. Then we can model the cost in dollars of the process by the equation
+Linear Programming attempts to provide a general solution to optimization problems with a `linear' structure. In particular,
+%
+\begin{itemize}
+    \item $X$ is a finite dimensional convex polytope, in the sense that there exists $n$ such that $X \subset \RR^n$, and there are finitely many vectors $a_1, \dots, a_m \in \RR^n$ and constants $b_1, \dots, b_m$ such that
     %
-    \[ 9a/2 + 1/3c \]
+    \[ X = \{ x \in \RR^n: A_i \cdot x \leq b_i\ \text{for each $i$} \}. \]
     %
-    However, we are not only buying items, but selling them as well. Each apple pie is sold for $\$6$, and each chocolate bar for $\$1$. The problem is to find the optimal number of applie pies and chocolate bars to make, maximizing the equation
-    %
-    \[ (6 - 9/2)a + (1 - 1/3)c \]
+    If we consider the linear map $Ax = (A_1 \cdot x, \dots, A_m \cdot x)$, then we write the constraints defining $X$ as $Ax \leq b$. The vectors $A_i$ are then the rows of $A$.
 
-    The problem with the current description is that theoretically we could make as many apple pies and chocolate bars as we wanted, making theoretically an unbounded amount of money. Thus we add additional constraints. There is only a limited supply of sugar: we can only buy 50 bags. This means that, if we let $s = 1/2a + 1/3c$ be the number of bags of sugar we buy
-    %
-    \[ 1.2a + 1.3c \leq 50 \]
-    %
-    We can additionally only buy 100 apples
-    %
-    \[ a/3 \leq 100 \]
-    %
-    What's more, it takes time to produce these items. In the time alloted, we can only produce 40 items.
-    %
-    \[ a + c \leq 40 \]
-    %
-    With these constraints, the problem of maximizing revenue becomes much more involved. This is an example of a linear program. If we require the number of apple pies and chocolate bars we make to be integers, then this is an integer linear programming, which is computationally much harder.
-    \end{example}
+    \item The objective function $f$ is a linear functional, i.e. there exists $c \in \RR^n$ such that $f(x) = c \cdot x$.
+\end{itemize}
+%
+Here is an example.
 
-    A linear program is specified by a reward (objective) functional $r \in V^*$, contraint functionals $c_1, \dots, c_n \in V^*$, and a contraint vector $b \in \mathbf{F}^n$ (where $\mathbf{F}$ is either the rational or real numbers). The aim of the linear program is to maximize $r(v)$, subject to the contraints that $c_i(v) \leq b_i$ (the set of all $v$ such that $c_i(v) \leq b_i$ is known as the solution space, and forms a polyhedron, a finite intersection of half planes). For computational purposes, we can choose a $m$ dimensional basis for $V$, and specify the problem with a contraint matrix $M \in M_{n,m}(\mathbf{F})$ and reward functional $r \in \mathbf{R}^m$. Our job is then to maximize $\langle r, v \rangle$, subject to the constraints
+\begin{example}
+    Suppose we are stocking items at a cafe. Each item needs to be created from a specific number of ingredients from our supply room. For simplicity, suppose we can only stock two items, apple pie, and chocolate bars. Let $a$ be the number of apple pies we make, and $c$ the number of chocolate bars. Each apple pie is made from 3 apples, and $1/2$ a bag of sugar. For every 3 chocolate bars, 1 bag of sugar must be used. If we sell an apple pie for 6 dollars, and a chocolate bar for 1 dollar, then our total profit is $6a + b$ dollars. However, we only have 100 apples, and 50 bags of sugar. Thus our choice of $a$ and $b$ must satisfy $3a \leq 100$ and $a/2 + c/2 \leq 50$. To summarize, our goal is then to maximize the linear function $f(a,c) = 6a + b$, over the region
     %
-    \[ \sum M_{ij} v_j \leq b_i \]
+    \[ X = \left\{ (a,c) \in \RR^2: \begin{pmatrix} 3 & 0 \\ 1/2 & 1/3 \end{pmatrix} \begin{pmatrix} a \\ c \end{pmatrix} \leq \begin{pmatrix} 100 \\ 50 \end{pmatrix} \right\}. \]
     %
-    which we write in condensed form as $Mv \leq b$ (which makes sense if we make $\mathbf{R}^n$ into a Riesz space, viewing it as functions over a discrete set of $n$ points). We say a linear program is {\bf infeasible} if the solution space is empty, and unbounded if there is $x_i$ in the solution space such that $r(x_i) \to \infty$.
+    If we require the number of apple pies and chocolate bars we make to be integers, then we obtain an \emph{integer linear program}, which is computationally much harder to solve. Often, a good strategy is to solve the linear program, and then round the solution to a set of integers. In this case, we need to round down the values of $a$ and $b$ we get.
+\end{example}
+
+\begin{example}
+    Here is a more sophisticated problem. Consider forming an assignment of shifts for a job. On each day $i$, there is a need for a certain number of people $p_i$. Each person is assigned a consecutive set of 5 day periods. The goal is then to hire as few people as possible. For each day $i$, we let $x_i$ denote the number of people starting their shift on day $i$. For each day $i$, we then have a constraint that
+    %
+    \[ x_i + x_{i-1} + \dots + x_{i-4} \geq p_i, \]
+    %
+    where the indices $i$ are treated modulo 7. Our goal is then to minimize $x_1 + \dots + x_7$. This, again, is most correctly treated as an integer linear program. But we can find a solution, and then round up.
+\end{example}
+
+\begin{example}
+    Suppose we have a directed graph $G$, with two specified nodes $v_1$ and $v_2$. Each edge $e$ has a certain capacity $c_e$. We image the graph describes a sequence of water pipes, and our goal is to try and push as much water from $v_1$ to $v_2$ as possible. We can solve this using linear programming. We have a variable $x_e$ for each edge $e$. We add the constraint that $0 \leq x_e \leq c_e$, i.e. we can only push at most the capacity through the pipe. For each vertex $v \not \in \{ v_1, v_2 \}$, we consider a \emph{conservation of flow condition}, i.e. if $I_v$ is the set of edges ending at $v$, and $O_v$ is the set of edges beginning at $v$, then $\sum_{e \in I_v} x_e = \sum_{e \in O_v} x_e$. Our goal is then to maximize $\sum_{e \in O_{v_2}} x_e$. This is the \emph{max flow problem}.
+\end{example}
+
+\section{Standard Form}
+
+We often choose to work with linear programs in \emph{standard form}. This is a linear program given by a pair $(A,b)$, such that
+%
+\[ X = \left\{ x \in \RR^n: Ax = b, x \geq 0 \right\}. \]
+%
+Any linear program can be reduced to a linear program of this form by introducing auxilary variables. Given a polytope
+%
+\[ X = \left\{ x \in \RR^n: Ax \leq b \right\}, \]
+%
+where $Ax = (a_1 \cdot x, \dots, a_m \cdot x)$, we introduce a sequence of \emph{slack variables} $s_1, \dots, s_m$, and consider the polytope
+%
+\[ X' = \left\{ (x,s) \in \RR^{n+m}: Ax + s = b, s \geq 0 \right\}. \]
+%
+Clearly the problem of optimizing over $X$ is equivalent to optimizing over $X'$. Given
+%
+\[ X = \left\{ x \in \RR^n:  Ax = b \right\}, \]
+%
+for each $x_i$, we introduce two new variables $x_i^+$, $x_i^-$, and consider the polytope
+%
+\[ X' = \left\{ (x^+,x^-) \in \RR^{2n}: A(x^+ - x^-) = b, x^+, x^- \geq 0 \right\}. \]
+%
+Thus every linear program is \emph{equivalent} to a linear program in standard form, in the sense that for each triple $(A,b,c)$, where $A$ is an $n \times m$ matrix, $b \in \RR^m$, and $c \in \RR^n$, there exists a triple $(A',b',c')$, where $A$ is an $n' \times m'$ matrix, $b' \in \RR^{m'}$, and $c' \in \RR^{n'}$, and there exists a linear transformation $T: \RR^n \to \RR^{n'}$ such that the image of the polytope $\{ x \in \RR^n: Ax \leq b \}$ under $T$ is $\{ x \in \RR^{n'}: A'x = b', x \geq 0 \}$, and moreover, $c \cdot x = c' \cdot T(x)$. Moreover, coming up with the linear transformation $T$ and computing the reduction can all be done in linear time. We also often assume that in standard form, the matrix $A$ has full rank $m$. We can always assume that the rows of $A$ are linearly independant, since either certain inequalities $A_i \cdot x = b_i$ are redundant, or the problem has no feasible solutions.
+
+\chapter{Geometry of Polyhedra}
+
+Given an $m \times n$ matrix $A$ and $b \in \RR^m$, we define a corresponding \emph{polyhedron}
+%
+\[ X = \{ x \in \RR^n: Ax \leq b \} \]
+%
+We now aim to understand the structure of the polyhedron $X$. First, note that this region is \emph{convex}, since $A$ is linear. Thus we can now use the terminology of convex geometry to understand $X$. Recall that $x \in X$ is an \emph{extreme point} if there are $x_1, x_2 \in X$ and $\lambda \in [0,1]$ such that $x = \lambda x_1 + (1 - \lambda) x_2$, then $x_1 = x_2 = x$. Our first goal is to show that $X$ has finitely many extreme points. Given $x \in X$, we say the $i$th constraint is \emph{binding}, or \emph{tight}, if $A_i \cdot x = b_i$, where $A_i$ is the $i$th row of $A$.
+
+Given a particular ordered collection of indices $I = (i_1, \dots, i_k) \subset \{ 1, \dots, m \}^k$, we let $A_I$ be the $k \times n$ matrix whose $j$th row is $A_{i_j}$. Similarily, if $x \in \RR^n$, and $I = (i_1, \dots, i_k) \subset \{ 1, \dots, n \}^k$ then we let $x_I = (x_{i_1}, \dots, x_{i_k})$.
+
+\begin{lemma} \label{bindinglemma}
+    Fix $x \in X$. Let $I = \{ i \in \{ 1, \dots, m \} : A_i x = b_i \}$. Then $x$ is an extreme point if and only if $A_I: \RR^I \to \RR^m$ is injective.
+\end{lemma}
+\begin{proof}
+    Let $x_1, x_2 \in X$ and $\lambda \in [0,1]$ be such that $x = \lambda x_1 + (1 - \lambda) x_2$. If $A_i \cdot x = b_i$, then this forces $A_i \cdot x_1 = A_i \cdot x_2 = b_i$. But this means that
+    %
+    \[ A_I x = A_I x_1 = A_I x_2 \]
+    %
+    so $x = x_1 = x_2$.
+
+    Conversely, if $A_I$ is not injective, there  is a vector $v$ such that $A_I v = 0$. But this means that $A_I (x \pm \varepsilon v) = b_I$. If $i \not \in I$, then $A_i x < b_i$, so if $\varepsilon$ is small enough, $A_i (x \pm \varepsilon v) < b_i$ as well. Thus $x \pm \varepsilon v \in X$ , which shows $x$ is not an extreme point of $V$. 
+\end{proof}
+
+\begin{corollary}
+    Every polyhedron has finitely many extreme points.
+\end{corollary}
+\begin{proof}
+    If $x$ is an extreme point, there are a collection of indices $I$ such that $A_I x = b_I$. But since $A_I$ is injective, this uniquely specifies $x$. Since there are only finitely many choices of index sets $I$, there can only be finitely many extreme points.
+\end{proof}
+
+If $x = \lambda x_1 + (1 - \lambda) x_2$, then $c \cdot x \leq \max(c \cdot x_1, c \cdot x_2)$. In particular, if $X$ has an extreme point, then a maximum solution to a linear program can \emph{always} be chosen to be an extreme point. This gives a method of solving linear programs. Just check the values at all extreme points and take the maximum value. However, this is horribly inefficient, since in $n$ dimensional space, there can be at least $\Theta(m^n)$ extreme points (for instance, the unit cube in $\RR^n$ has $2^n$ extreme points).
+
+Given two extreme points $x_1$ and $x_2$, we say they are \emph{adjacent} if there are $n-1$ linearly independant constraints $A_I$ such that $A_I x_1 = A_I x_2 = b_I$. The line segment which connects $x_1$ and $x_2$ is then known as an \emph{edge} of $X$. An intuitive way to search through the class of extreme points is to move along adjacent extreme points, in such a way that the solution is eventually found.
+
+\section{Polyhedra in Standard Form}
+
+Our analysis is often simplified by considering a polyhedron in standard form, i.e. by the equation
+%
+\[ X = \{ Ax = b, x \geq 0 \}, \]
+%
+where $A$ is a $m \times n$ matrix with rank $m$. Let the columns of $A$ be denoted by $A^1, \dots, A^n \in \RR^m$. Given $I = (i_1, \dots, i_k) \subset \{ 1, \dots, m \}^k$, we let $A^I$ be the $m \times k$ matrix $A^I = (A^{i_1}, \dots, A^{i_k})$.
+
+\begin{lemma}
+    A point $x \in X$ is an extreme point if and only if, there exists a collection of $m$ indices $I$ such that if $i \not \in I$, $x_i = 0$, and $A^I$ is surjective.
+\end{lemma}
+\begin{proof}
+    Assume $A^I$ is surjective. Then let $x = \lambda x_1 + (1 - \lambda)x_2$ with $x_1,x_2 \in X$ and $\lambda \in [0,1]$. If $x_i = 0$, then $(x_1)_i = (x_2)_i = 0$. But then $x$, $x_1$, and $x_2$ all lie in a common $m$ dimensional subspace
+    %
+    \[ V = \{ v \in \RR^n: v_i = 0\ \text{if}\ i \not \in I \}. \]
+    %
+    Now $Av = A^Iv$ for each $v \in V$. Since $A^I$ is surjective, then since $V$ and $\RR^m$ have the same dimension, this means $A$ is actually a bijection restricted to $V$. Since $A x = A x_1 = A x_2 = b$, this means $x = x_1 = x_2$. Thus $x$ is an extreme point of $X$.
+
+    Conversely, suppose $x$ is an extreme point of $X$, and let $I = (i_1, \dots, i_k)$ be the set of all indices such that $x_{i_k} = 0$. Then Lemma \ref{bindinglemma} implies that if $K$ is the kernel of $A$, and
+    %
+    \[ V = \{ v \in \RR^n : v_I = 0 \}, \]
+    %
+    then $V \cap K = (0)$. Thus $A$ has rank $m$ when restricted to $V$. Lemma \ref{bindinglemma} implies that there must be at least $n - m$ indices $i$ such that $x_i = 0$, so $V$ has dimension at most $m$. But since $A$ has rank $m$, this implies that $A$ is invertible when restricted to $V$, which gives the column condition.
+\end{proof}
+
+Thus every extreme point in $X$ corresponds to a basis of $\RR^m$ generated by columns of $A$. Given a particular index set $I = \{ i_1, \dots, i_m \}$ such that $A^I$ is invertible, and the unique point $x \in X$ corresponds to this basis, given by setting $x_i = 0$ if $i \not \in I$, and $x_I = (A_I)^{-1}b_I$. Note also that adjacent extreme points in $X$ correspond to index sets which differ by only a single index. But we need not have $x \geq 0$. We refer to $x$ as a \emph{basic solution}, and if $x \geq 0$, a \emph{basic feasible solution}.
+
+\section{Degeneracy}
+
+An extreme point $x$ to the set $X = \{ x \in \RR^n: Ax \leq b \}$ is called \emph{degenerate} if more than $n$ indices are active at $x$. For instance, in two dimensions, an extreme point is degenerate if it lies at the intersection of three or more edges of the polyhedron. If we instead deal with a polyhedron in standard form, i.e. $X = \{ x \in \RR^n: Ax = b, x \geq 0 \}$, then an extreme point is degenerate if more than $n - m$ components of $x$ are equal to zero.
+
+It is possible for an extreme point to be degenerate with respect to one pair $(A,b)$ such that $X = \{ x \in \RR^n: Ax \leq b \}$, but not degenerate with respect to another pair. However, if we work in standard form, then degeneracy \emph{is} a property of the geometric set, and does not really depend on $A$ and $b$.
+
+\section{Existence of Extreme Points}
+
+We now show extreme points exist for most polyhedra.
+
+\begin{lemma}
+    If
+    %
+    \[ X = \{ x \in \RR^n: Ax \leq b \}, \]
+    %
+    then extreme points exist if and only if $A$ is injective.
+\end{lemma}
+\begin{proof}
+    Consider the polyhedron $X = \{ x \in \RR^n : Ax \leq b \}$. If $A$ is not injective, then there is $v$ such that $Av = 0$. Then for any point $x$, $x + v, x - v \in X$, so $X$ does not have any extreme points. However, if $A$ is injective, and $X$ is non-empty, then given $x \in X$, we consider the index set $I = \{ i : A_ix = b_i \}$. If $\{ A_i : i \in I \}$ spans $\RR^n$, then we already know $x$ is an extreme point. If not, then there exists $v \in \RR^n$ such that $A_i v = 0$ for each $i \in I$. Since $A$ is injective, there must be some $\lambda \in \RR^n$ such that $x + \lambda v$ violates at least one more constraint $j$. Thus we can keep finding values which violate more constraints until we find an extreme point.
+\end{proof}
+
+\begin{remark}
+    If we are given $x \in X$, then the lemma above shows we can find an extreme point of $X$ in polynomial time.
+\end{remark}
+
+Note that the above theorem applies to all polyhedra in standard form, since no such polyhedron contains a line.
+
+\section{Convex Hulls}
+
+For a collection of points $X \subset \RR^n$, it's \emph{convex hull} $\text{Conv}(X)$ is the smallest convex set containing $X$. If $X = \{ x_1, \dots, x_N \}$ is finite, then we can write
+%
+\[ \text{Conv}(X) = \{ \lambda_1 x_1 + \dots + \lambda_N x_N: \lambda_i \in [0,1], \lambda_1 + \dots + \lambda_N = 1 \}. \]
+%
+Note that the extreme points in $\text{Conv}(X)$ form a subset of $\{ x_1, \dots, x_N \}$. In fact, one can reduce this process for polyhedra.
+
+\begin{lemma}
+    Every bounded polyhedron is the convex hull of it's extreme points.
+\end{lemma}
+
+TODO: USE DUALITY THEORY PROOF.
+
+\section{Fourier Motzkin Elimination}
+
+The oldest method for solving linear programs in not efficient, but has interesting theoretical consequences. Consider a polyhedron
+%
+\[ X = \{ x \in \RR^n: Ax \leq b \}. \]
+%
+The idea is to eliminate $x_n$, so we can deal with a lower dimensional polyhedron. The idea here is simple. For each constraint $A_i \cdot x \geq b_i$, rewrite the constraints as
+%
+\[ A_{in} x_n \geq b_i - A_i^0 \cdot x^0 \]
+%
+where $A = (A^0,A^n)$, and $x = (x^0,x_n)$. If we let $d_i = b_i/A_{in}$ and $f_i = A_i^0/A_{in}$, then these equations are equivalent to
+%
+\[ b_i - a_i^0 \cdot x^0 \leq 0\ \text{if $a_{in} = 0$} \]
+\[ d_i - f_i \cdot x^0 \leq x_n\ \text{if $a_{in} > 0$} \]
+\[ d_i - f_i \cdot x^0 \geq x_n\ \text{if $a_{in} < 0$}. \]
+%
+We now consider the polyhedron $Y$ given by the constraints
+%
+\[ b_i - a_i^0 \cdot x^0 \leq 0\ \text{if $a_{in} = 0$}, \]
+%
+\[ d_i - f_i \cdot x^0 \leq d_j - f_j\ \text{if $a_{in} > 0$, $a_{jn} < 0$}. \]
+%
+If $\pi(x_1, \dots, x_n) = (x_1, \dots, x_{n-1})$, then $\pi(X) = Y$. A result of this argument is that the projection of a polyhedron is always a polyhedron. Furthermore, for any finite set of points $x_1, \dots, x_N$, the convex hull of this collection is a polyhedron, since it is the image of
+%
+\[ \{ (\lambda_1, \dots, \lambda_N) : 0 \leq \lambda_i \leq 1, \lambda_1 + \dots + \lambda_N = 1 \}, \]
+%
+under the map $\lambda \mapsto \lambda_1 x_1 + \dots + \lambda_N x_N$.
+
+\chapter{The Simplex Algorithm}
+
+We now describe the simplex algorithm, which gives an efficient method to maximize $c \cdot x$ over a polyhedra given in standard form by
+%
+\[ \{ x : Ax = b, x \geq 0 \}, \]
+%
+where the rows of $A$ are linearly independant. Our goal is to move between adjacent extreme points in an optimal manner.
+
+Given an index set $I = (i_1, \dots, i_m)$ which corresponds to a basic solution $x$ with $x_I = (A^I)^{-1}b$, and $x_i = 0$ if $i \not \in I$. For each $i$, we wish to find a direction $d$ such that $d_i = 1$, $A(x + \theta d) = b$, and $d_j = 0$ for $j \not \in \{ i \} \cup I$. Since $Ax = b$, we must have $Ad = 0$, and so $0 = Ad = A^Id_I + A_i$. Thus $d_I = -(A^I)^{-1}A_i$. We refer to the vector $d$ as the $i$th basic direction.
+
+For small values of $\theta > 0$, $x + \theta d \in X$, since the only indices $j$ other than $i$ for which the values $x_j$ are changed are those with $x_j > 0$. This shift changes the objective function by $\theta (c \cdot d)$, and therefore increases the objective function if $c \cdot d > 0$. We write $c \cdot d = c_i - c_I \cdot (A^I)^{-1} A_i$. We write this as the $i$th \emph{reduced objective value}, denoted $\overline{c_i}$.
+
+\begin{lemma}
+    If $\overline{c} \leq 0$, then $x$ is optimal, and if $x$ is optimal and non-degenerate, $\overline{c} \leq 0$.
+\end{lemma}
+\begin{proof}
+    Suppose $\overline{c} \leq 0$. Let $y \in X$ be another feasible solution, and let $d = y - x$. Then $Ad = 0$. We can rewrite this as
+    %
+    \[ A^I d_I + \sum_{i \not \in I} A_id_i = 0. \]
+    %
+    Thus
+    %
+    \[ d_I = - \sum_{i \not \in I} (A^I)^{-1} A_i d_i. \]
+    %
+    Thus
+    %
+    \[ c \cdot d = c_I \cdot d_I + \sum_{i \not \in I} c_i d_i = \sum_{i \not \in I} (c_i - (A_I)^{-1} A_i) d_i = \overline{c} \cdot d. \]
+    %
+    Since $x_i = 0$ for any $i \not \in I$, and $y_i \geq 0$, $d_i \geq 0$ for any $i \not \in I$. Since $\overline{c} \leq 0$, this implies $c \cdot d \leq 0$. Thus $c \cdot y \leq c \cdot x$.
+
+    On the other hand, suppose $x$ is optimal and non-degenerate. Note that $\overline{c}_i = 0$ if $i \in I$. If $\overline{c}_j > 0$ for some $j$, then by nondegeneracy, $x_j \not \in I$. If we let $d$ be the $j$th direction vector, then $c \cdot d = \overline{c}_j > 0$. If $\theta$ is small enough, then $x + \theta d \in X$, and $c \cdot (x + \theta d) = c \cdot x + \theta c \cdot d > c \cdot x$, so $x$ is not optimal.
+\end{proof}
+
+An index set $I$ is optimal if $A_I^{-1}b \geq 0$, and $\overline{c} \geq 0$. The vector $x = (A_I)^{-1}b$ is then an optimal solution to the linear program.
+
+The idea of the simplex algorithm is to \emph{pivot} between basic feasible solutions. To begin with, we assume that all extreme values are non degenerate. Let $I$ be an index set corresponding to a basic feasible solution $x$. If $\overline{c}_i \leq 0$ for all $i$, then $x$ is optimal. Otherwise, there is some $i$ with $\overline{c}_i > 0$. Consider the $i$th direction vector $d$. We then consider
+%
+\[ x + \theta^* d \in X, \]
+%
+where $\theta^* = \max \{ \theta : x + \theta d \in X \}$. We note that this is easily calculated, since it is equal to $\infty$ if $d \geq 0$, and otherwise equal to
+%
+\[ \min(-x_i/d_i : d_i < 0). \]
+%
+If $\theta^* = \infty$, then the problem is unbounded. Otherwise, we consider $x + \theta^* d$. There is at least one index $j \in I$ such that $x_j + \theta^* d_j = 0$. If we swap this index $j$ with the index $i$, then the resulting index set $I'$ still satisfies the assumption that $A^{I'}$ is invertible. This is because if $A^i = \sum_{k = 1}^m \lambda_k A^{i_k}$ for some constants $\lambda_k$, then $(A^I)^{-1} A^k = \sum_{k = 1}^m \lambda_k (A^I)^{-1} A^{i_k}$. But $(A^I)^{-1} A^{i_k} = e_k$, for each $i_k \in I$,so $-d_I = (A^I)^{-1} A^k = \sum_{k = 1}^m \lambda_k e_k$. But then $(-d_I)_j = \lambda_j \neq 0$. Thus $A^{I'}$ is still invertible. Thus $x + \theta^* d$ is a basic feasible solution. This is a pivot, a single iteration of the simplex algorithm.
+
+Provided there are no degenerate basic feasible solutions, since a pivot always increases the value of the objective function, we never return to an extreme point, and since there are only finitely many, the program is guaranteed to terminate.
+
+\section{Simplex for Degenerate Polyhedra}
+
+We now consider the case of degenerate polyhedra. A modification of the simplex algorithm that works for this degenerate polyhedra must then take into account the following situation.
+%
+\begin{itemize}
+    \item If we choose some direction vector $d$, and there is a basic variable $i \in I$ such that $x_i = 0$, but $d_i < 0$, then $\theta^* = 0$, and we do not change our solution. Nonetheless, our new basis is obtained by swapping $i$ with the new direction index.
+
+    \item Even if $\theta^* > 0$, it is possible that more than one basic variable becomes zero at a new point, so that we have a choice of which index we swap out of the basis.
+\end{itemize}
+%
+The choices of which index to add into a basis, as well as which value $i$ with $c_i > 0$ to add into the basis, are known as \emph{pivoting rules}. Such a rule must be chosen to avoid \emph{cycling}, which can occur if one runs into the same basis more than once. A simple choice is to always choose the value $i$ with the smallest index.
+
+\section{Finding an initial feasible solution}
+
+Given an initial solution $x \in X$, the last chapter gives ways of finding an extreme point, i.e. a basic feasible solution in $X$ with which to start the simplex algorithm. In general, it is not easy to even find a feasible solution. One technique to finding the solution is to consider another linear program. Consider the region of $x$ values such that $Ax = b$ and $x \geq 0$. Without loss of generality, we may assume $b \geq 0$. We consider the problem of minimizing $y_1 + \dots + y_m$, such that $Ax + y = b$, $x \geq 0$, and $y \geq 0$. For this problem, a feasible solution is given by letting $x = 0$, and $y = b$, which gives a basic feasible solution. Thus we can solve the problem using the simplex method. If the original problem has a feasible solution $x$, then setting $y = 0$ gives a solution to this problem. Conversely, if the original problem is unfeasible, then the optimal values of this problem will have $y = 0$, and the resulting values of $x$ can be plugged back into the original problem. This is called the two phase method.
+
+
+
+
+
+
+\chapter{Duality}
+
+Consider minimizing $M(x,y) = x^2 + y^2$ subject to the constraint $x + y = 1$. One way to solve this problem is to introduce a Lagrangian multiplier $\lambda$, and try and optimize the unrestrained problem of maximizing
+%
+\[ L(x,y) = x^2 + y^2 + \lambda (1 - x - y) \]
+%
+over all values of $x, y \in \RR$, which now penalizes having $x + y > 1$ if $\lambda > 0$, and penalizes $x + y < 1$ if $\lambda < 0$. Notice that for each $\lambda$,
+%
+\[ \min_{x + y = 1} M(x,y) = \min_{x + y = 1} L(x,y) \geq \min_{x,y \in \RR} L(x,y). \]
+%
+The latter quantity is easy to calculate for any particular $\lambda$. If the optimum solution to the latter problem actually occured on the line for some particular $\lambda$, we'd actually the optimum on the line. And this should occur for some $\lambda$, since if $\lambda$ is large enough, it becomes too expensive to have $x + y > 1$, and if $\lambda$ is too small, it becomes too expensive to have $x + y < 1$. For each $\lambda$, the optimal solution to the unconstrained problem is obtained by taking $x = y = \lambda/2$. If $\lambda = 1$, then the optimal solution is $(1/2,1/2)$, which is the optimal solution to the original problem.
+
+So now consider the linear programming problem of minimizing $c \cdot x$, such that $Ax = b$, and $x \geq 0$ is a column vector in $\RR^n$. We now consider the \emph{relaxed} problem where the constraint $Ax = b$ is replaced with a penalty $p(b - Ax)$, where $p$ is a row vector in $\RR^n$. We then consider the problem of minimizing $cx + p(b - Ax) = (c - pA)x + pb$, such that $x \geq 0$. The optimum value of $x$ here gives an \emph{lower bound} for the original problem, and if $p$ is chosen correctly, we find it gives the \emph{exact solution} to the original problem. If $c - pA \geq 0$, then this minimum is obtained by setting $x = 0$, which gives the minimum as $pb$. If $c - pA < 0$, then the minimum $-\infty$, so this bound is useless. Thus we are left with the \emph{dual} optimization problem of maximizing $pb$, such that $pA \leq c$.
+
+Notice the dual of a problem in standard form is a problem in the inequality form. Conversely, we can reverse this approach, so that the dual of a problem in inequality form is in standard form. Given the problem of maximizing $cx$ such that $Ax \leq b$, we introduce a penalty $p(c - Ax)$, where $p \geq 0$ since we don't need to penalize having $Ax \leq c$, only $Ax > c$. Thus we want to maximize $cx + p(b - Ax) = (c - pA)x + pb$. If $c - pA \neq 0$, then this problem is unrestrained, and the maximum is equal to $\infty$. If $c - pA = 0$, the optimal value is $pb$. Thus the dual problem is now to minimize $pb$, such that $pA = c$, and $p \geq 0$.
+
+\begin{remark}
+    Note that the dual of the dual of a linear program is equal to the original program.
+\end{remark}
+
+The fact that the values of feasible solutions to the dual problem bound the values of optimal solutions to the original problem is known as \emph{weak duality}. This is not a deep result, but it does imply that if the optimal cost in the original program is $-\infty$, then the dual program must be infeasible, and if the optimal cost in the dual is $\infty$, then the original problem is infeasible. Furthermore, if $x$ and $p$ are feasible solutions in the original and dual problem, and $cx = pb$, then $x$ and $p$ are both \emph{optimal} solutions. A deeper result is \emph{strong duality}.
+
+\begin{theorem}
+    If a linear program has an optimal solution, so does it's dual, and the values of these solutions are equal.
+\end{theorem}
+\begin{proof}
+    Consider a program in standard form, minimizing $cx$ such that $Ax = b$, and $x \geq 0$. Consider the simplex program applies to this problem, which by assumption produces an optimal solution $x$ at an extreme point. Let $B$ be the basis at this point. Then the reduced costs in each direction must be non-negative, so we conclude that $c - c_BB^{-1}A \geq 0$. Let $p = c_BB^{-1}$. Then $pA \leq c$ by definition, so $p$ is a feasible solution to the dual problem. Furthermore, $pb = c_BB^{-1}b = c_Bx_B = cx$. Thus $p$ and $x$ are both optimal solutions.
+\end{proof}
+
+An important relation between primal and dual programs is \emph{complimentary slackness}.
+
+\begin{theorem}
+    Let $x$ and $p$ be feasible solutions to a program and it's dual. These vectors are optimal if and only if $p_i(a_ix + b_i) = 0$ for all $i$, and $(c_j - pa_j) = 0$.
+\end{theorem}
+
+
+
+
+
+\chapter{Blah}
+
+    There are three classes of linear programs:
+    %
+    \begin{itemize}
+        \item It is possible that $X = \emptyset$, in which we call the linear program \emph{unfeasible}.
+
+        \item It is possible that $\sup_{x \in X} f(x) = \infty$, in which case we call the program \emph{unbounded}.
+
+        \item If neither of these conditions hold, then $\sup_{x \in X} f(x) < \infty$, and $\sup_{x \in X} f(x)$ is actually attained since $X$ is closed and $f$ is a linear map, hence $f(X)$ is closed.
+    \end{itemize}
+    %
+    Most importantly for us, linear programs are \emph{effectively solvable}. In 1947, Dantzig developed the simplex method for solving linear programs, and many more effective techniques have been viewed in the meantime.
+
+    It will also often be convenient to work with a linear program in \emph{slack form}. Given a system of inequalities
+    %
+    \[ \sum a_{ij} x_j \leq b_i\ \text{for each $i$}, \]
+    %
+    we can introduce additional variables $y_1, \dots, y_m$, assert that $y_i \geq 0$ for each $i$, and enforce $b_i = \sum a_{ij} x_j + y_i$. The constraints $\sum a_{ij} x_j \leq b_i$ are then guaranteed by the two equations introduced, so we can remove them. The variables $y_1, \dots, y_m$ are known as \emph{slack variables}, because they give the amount of `slack' in the equation $\sum a_{ij} x_j \leq b_i$.
+
+
 
     In a more general form, we allow more fluid constraints for the problem, which can be simplified to the existing problem with little asymptotic cost. For instance, we may allow constraints of the form $c_i(v) \geq b_i$. This can be reduced to the form $-c_i(v) \leq -b_i$, which fits into our current assumptions nicely. We can also allow equalities of the form $c_i(v) = b_i$, which corresponds to two inequalities of the form $c_i(v) \leq b_i$ and $c_i(v) \geq b_i$. Finally, we shall assume there is a basis $x_1, \dots, x_n$ such that, relative to this basis, the constraints $x_i^*(v) \geq 0$ are satisfied for any $v$ in the solution space. In general, if we do not have these constraints on a certain basis $x_1, \dots, x_n$, we may introduce a new linear program on $V \times V$, with constraints (and objective function) induced from $V$ by the map $T: (y,x) \mapsto y-x$. Any maximum solution on this new linear program induces a solution on the original programming by considering the image under $T$, and since each element of $V$ can be written as $y - x$, where $y_i, x_i \geq 0$ for all $i$, we can introduce these new constraints at no fault.
 
@@ -154,6 +444,23 @@
         %
         Where $x_n \in \mathbf{R}^n$ is the state of the system, $y_n \in \mathbf{R}^n$ is the output, and $x'$ is a sequence of values we get to choose to control how the system evolves. We may enforce that $C x_n \leq a$ for some constraint matrix $C$. Given initial conditions $x_0^i = a_i$, we may want to drive the state of the system to a state $b \in \mathbf{R}^n$ at time $N$. If this is possible, we might want to minimize the total pertubation of the system. This turns into an optimization problem, trying to minimize $\sum |c_nx_n|$ subject to the constraints described above.
     \end{example}
+
+
+
+
+
+
+    \chapter{Simplex Method}
+
+    We begin with a system of equations in slack form, i.e. we are given an $m \times n$ matrix $A$ and $b \in \RR^m$ such that
+    %
+    \[ X = \{ x \in \RR^n: x_1, \dots, x_n \geq 0, Ax = b \}, \]
+    %
+    and we wish to maximize $c_1x_1 + \dots + c_nx_n$. We solve this using the simplex method.
+
+    We apply the \emph{dictionary method} to more conveniently describe the simplex method, as introduced by J.E. Strum. With each $x_0 \in X$, we associate a \emph{dictionary}, which is a pair $(A',b')$ such that $A'x = b'$ if and only if $A' x = b'$ for each $x \in \RR^n$. 
+
+    a system of linear equations 
 
 
 
