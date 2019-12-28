@@ -18,9 +18,113 @@ Functional analysis is the interlace of algebra and analysis, in which algebraic
     We rarely analyze a measurable function $f$ in isolation. Instead, we prove theorems about a class of measurable functions defined on the same measurable space. If $f$ and $g$ are measurable, then we may consider their addition $f + g$, their multiplication $fg$, and scaling $\lambda f$ (for $\lambda \in \mathbf{R}$), which are all measurable. Thus the space of measurable functions on a set is a vector space. Similarily, the sum and product of two continuous functions on a topological space is continuous, so, we may consider $C[0,1]$, the space of all continuous, real-valued functions on the unit interval $[0,1]$, as a vector space.
 \end{example}
 
-As is expected in the name, functional analysis mostly applies to functions between topological and algebraic structures, because there is a natural notion of scaling and addition, and we may obtain topological structure based on the various methods of convergence a function can have. The power of functional analysis rests on how strongly the algebraic structure of a space connects to the topology.
+As is expected in the name, functional analysis mostly applies to functions between topological and algebraic structures, because there is a natural notion of scaling and addition, and we may obtain topological structure based on the various methods of convergence a function can have. The power of functional analysis rests on how strongly the algebraic structure of a space connects to the topology of the space.
 
-The most common analytic operations are scaling and rotation. As a result, the most common vector spaces which occur in functional analysis are over the real and complex numbers. To be more specific, a real vector space $V$ is a space equipped with scaling operations $v \mapsto \lambda v$, for $\lambda \in \mathbf{R}$. If $V$ is a real vector space with a specified `counterclockwise twisting' linear transformation $J: V \to V$ with $J^2 = -1$, then there is a natural way to turn $V$ into a complex vector space by defining $(a + ib)v = av + b(Jv)$. The geometry of the complex numbers then enables us to define a counterclockwise twist by any angle $\theta$, by the operation $v \mapsto e^{i\theta} v$. A picky algebraist should note that, if we require our fields to be of characteristic zero, then we will find that the topologically complete criterion forces our vector space to be over the real numbers {\it at least}, so fixing our attention here isn't being too particular.
+The most common analytic operations are scaling and rotation. As a result, the most common vector spaces which occur in functional analysis are over the real and complex numbers. More specifically, real vector spaces $X$ are those equipped with natural scaling operations $x \mapsto \lambda x$ for $\lambda > 0$, combined with `reflection' operators $x \mapsto -x$. If $X$ is a real vector space with a specified `counterclockwise twisting', i.e. a linear map $J: X \to X$ with $J^2 = -1$, then there is a natural way to turn $X$ into a complex vector space by defining $(a + ib)x = ax + b(Jx)$. The geometry of the complex numbers then enables us to define a counterclockwise twist by any angle $\theta$, by the operation $x \mapsto e^{i\theta} x$. Thus we have a natural operation of the complex numbers over the space. 
+
+Moreover, if we work with vector spaces over a field of characteristic zero equipped with a `complete' topological structure, then we should expect the underlying field of the vector space to be of characteristic zero as well. In particular, working over the real numbers {\it at least} isn't too particular a criterion. In these notes, we let $\mathbf{K}$ denote either the real or complex numbers.
+
+
+
+
+
+\chapter{Banach Spaces}
+
+The most natural way to associate a space with topological structure is by associating a metric on the space. There is an even more natural vector space operation on a vector space. We can think of elements of a vector space as `arrows' extending from the origin. Thus a natural way to add a topology is to give these arrows a `length'. More precisely, a {\bf pre-norm} on a vector space $X$ is a map $\| \cdot \|: X \to [0,\infty)$ which is {\it homogenous}, in the sense that for each $\alpha \in \mathbf{K}$ and $x \in X$, $\| \alpha x \| = |\alpha| \| x \|$, satisfies the {\it triangle inequality} $\| x + y \| \leq \| x \| + \| y \|$ for each $x,y \in X$. If in addition, we have $\| x \| = 0$ if and only if $x = 0$, then we say $\| \cdot \|$ is a {\it norm}. A vector space $X$ equipped with a norm is called a {\it norm space}.
+
+On finite dimensional spaces, there is essentially a unique way to define a norm on the space. We say two norms $\| \cdot \|_1$ and $\| \cdot \|_2$ on a vector space $X$ are {\it comparable} if for each $x \in X$, $\| x \|_1 \sim \| x \|_2$. It is a simple consequence of the Heine-Borel theorem that all norms on a finite dimensional space are normable. Thus there is only a single notion of `size' on such spaces. On the other hand, there are many ways to measure the size of a function, or more general vectors in infinite dimensional norm spaces. For instance, we could consider a function $f$ big if there exists $x$ such that $f(x)$ has large magnitude, or if $f$ is large `on average'. This leads to the notions of the $L^p$ and $L^\infty$ norms.
+
+\begin{example}
+    Let $X$ be a measure space. For each $0 < p < \infty$, let $\mathcal{L}^p(X)$ denote the space of all measurable functions $f: X \to \mathbf{K}$ such that
+    %
+    \[ \| f \|_p = \int |f(x)|^p\; dx < \infty. \]
+    %
+    Then Minkowski's inequality tells us that the quantity $\| \cdot \|_p$ is a prenorm on $\mathcal{L}^p(X)$. We notice that if $u$ is a function with $u(x) = 0$ for almost every $x$, then $\| f \|_p = \| f + u \|_p$. In particular, this means that $\| \cdot \|_p$ is a well defined operation on the quotient space of $\mathcal{L}^p(X)$ where functions are identified almost everywhere. Since $\| f \|_p = 0$ if and only if $f(x) = 0$ for almost every $x$, we obtain a norm space, denoted by $L^p(X)$. This is the space where most theorems of functional analysis prove useful.
+\end{example}
+
+\begin{example}
+    Given a measurable function $f$ on a measure space $X$, we can define the $L^\infty$ norm
+    %
+    \[ \| f \|_\infty = \inf \{ t: |f(x)| \leq t\ \text{for almost every $x$} \}. \]
+    %
+    The space of functions with finite $L^\infty$ prenorm is denoted by $\mathcal{L}^\infty(X)$. Considering the quotient space of functions identified almost everywhere, we obtain a norm space $L^\infty(X)$.
+\end{example}
+
+\begin{example}
+    On a compact topological space $K$, we can consider the family of all bounded continous functions from $K$ to $\mathbf{K}$, denoted $C(K)$. The quantity
+    %
+    \[ \| f \|_\infty = \sup \{ |f(x)|: x \in K \}, \]
+    %
+    gives $C(K)$ the structure of a norm space.
+\end{example}
+
+For the purpose of the general theory, one need not know too much measure theory to get by. The most important examples of the $L^p$ spaces for intuition and forming counterexamples are the spaces $l^p$, which is the collection of all sequences $\{ a_n \}$ for which, if $p < \infty$,
+%
+\[ \sum_{n = 1}^\infty a_n^p < \infty, \]
+%
+and for $p = \infty$, $l_\infty$ is the collection of all bounded sequences.
+
+\begin{remark}
+    We will focus on norms in these notes, but prenorms are really no more general. If $X$ is a space with a prenorm $\| \cdot \|$, then the space $X_0 = \{ x \in X: \| x \| = 0 \}$ forms a subspace of $X$. We have $\| x \| = \| x + x_0 \|$ for each $x_0 \in X_0$, so if we form the quotient space $X' = X/X_0$, then the quantity $\| x + X_0 \|$ is well defined, and this is a {\it norm} on $X'$. So results about norms automatically extend to results about prenorms where we identify vectors which differ by an element of $X_0$. For instance, if we
+\end{remark}
+
+For each norm on a space $X$, we can associate a metric given by $d(x,y) = \| x - y \|$. The most powerful theorems of functional analysis deal with the study of norm spaces where the induced metric gives the space $X$ a {\it complete} metric space structure. These spaces are known as {\it Banach spaces}. It is a basic fact of measure theory that the spaces $L^p(X)$ are complete, as is the space $C(K)$.
+
+\begin{theorem}
+    $L^p(X)$ is a Banach space.
+\end{theorem}
+\begin{proof}
+    We leave the $p = \infty$ case to the reader, since the argument is elementary. Let $f_1, f_2, \dots$ be a Cauchy sequence in $L^p(X)$. Then we can find a subsequence $f_{k_i}$ such that for each $m \geq 1$,
+    %
+    \[ \| f_{k_{i+m}} - f_{k_i} \|_p \leq 1/4^k. \]
+    %
+    In particular, this means that the infinite sum
+    %
+    \[ \sum_{i = 1}^\infty |f_{k_{i+1}}(x) - f_{k_i}(x)| \]
+    %
+    converges absolutely for almost all $x$. This is a consequence of the Borel-Cantelli lemma, since if 
+    %
+    \[ E_k = \{ x : |f_{k_{i+1}}(x) - f_{k_i}(x)| \geq 1/2^{pk} \}, \]
+    %
+    then Markov's inequality implies $|E_i| \leq 1/2^{ip}$, and so $\sum_{i = 1}^\infty |E_i| < \infty$. Thus we can define a measurable function $f$ defined almost everywhere by the infinite series
+    %
+    \[ f(x) = f_{k_1}(x) + \sum_{i = 1}^\infty f_{k_{i+1}}(x) - f_{k_i}(x) = \lim_{n \to \infty} f_{k_n}(x). \]
+    %
+    Fatou's lemma and Minkowski's inequality imply that
+    %
+    \begin{align*}
+        \| f - f_{k_i} \|_p &= \left( \int \left| \lim_{n \to \infty} f_{k_n}(x) - f_{k_i}(x) \right|^p\; dx \right)^{1/p}\\
+        &\leq \liminf_{n \to \infty} \left( \int \left| f_{k_n}(x) - f_{k_i}(x) \right|^p \right)^{1/p}\\
+        &\leq \liminf_{n \to \infty} \| f_{k_n} - f_{k_i} \|_p \leq 1/4^k.
+    \end{align*}
+    %
+    Thus $f_{k_i} \to f$ in the $L^p$ norm. Since $\{ f_k \}$ is a Cauchy sequence, it is easy to justify that $f_k \to f$ in the $L^p$ norm. Thus Cauchy sequences converge.
+\end{proof}
+
+\begin{remark}
+    Again, studying Banach spaces is not too much more general than studying norm spaces. Given any norm space $X$, we can always find a Banach space $X'$ containing $X$, such that $X$ is dense in $X'$. One can view the elements of $X' - X$ as `artifical' elements of $X$ that nonetheless are key to understanding the geometric structure of $X$. Provided we are willing to deal with these artifical elements, it suffices without loss of generality to assume in the theory that we are working in a Banach space.
+\end{remark}
+
+\section{Subspaces}
+
+If $Y$ is a subspace of a norm space $X$, then $Y$ obviously has the natural structure of a norm space. We note that if $X$ is a Banach space, then $Y$ is a Banach space under this induced norm if and only if $Y$ is a {\it closed} subspace of $X$. Here are some examples.
+
+\begin{example}
+    Let $c_0 \subset l_\infty$ be the family of all sequences $\{ x_n \}$ such that $\lim_{n \to \infty} x_n = 0$. Then $c_0$ is a closed subspace of $l_\infty$, and is thus a Banach space.
+\end{example}
+
+\begin{example}
+    Let $\mathbf{T}$ be the interval $[-\pi,\pi)$ equipped with the Lebesgue measure. For each $f \in L^p(\mathbf{T})$, and $n \in \mathbf{Z}$, we define
+    %
+    \[ \widehat{f}(n) = \frac{1}{2\pi} \int_{-\pi}^\pi f(x) e^{-nix}\; dx. \]
+    %
+    If
+\end{example}
+
+
+
+
+
 
 \chapter{Hilbert Spaces}
 
@@ -34,7 +138,7 @@ Where $|v|^2 = v_1^2 + v_2^2$ and $|w|^2 = w_1^2 + w_2^2$ can be measured by Pyt
 %
 \[ P_w(v) = \frac{v_1w_1 + v_2w_2}{|w|^2} w \]
 %
-which is the projection of $v$ onto the line spanned by $w$, forms a right angled triangle with $v$ as the hypotenuse, and the equation is just given by the trigonometric identities since the length of $P_w(v)$ is $|v| \cos \theta$. Because of how useful this operation is, in higher dimensions, we define the {\it scalar product} in $\mathbf{R}^n$ by the equation $v \cdot w = v_1w_1 + \dots + v_nw_n$. The length of a vector $v$ is then defined by $|v|^2 = v \cdot v$, and the angle $\theta$ between the vectors by the equation $v \cdot w = |v| |w| \cos \theta$, where the equation makes sense because of the Cauchy Schwarz inequality, which says $|v \cdot w| \leq |v||w|$.
+which is the projection of $v$ onto the line spanned by $w$, forms a right angled triangle with $v$ as the hypotenuse, and the equation is just given by the trigonometric identities since the length of $P_w(v)$ is $|v| \cos \theta$. Because of how useful this operation is, in higher dimensions, we define the {\it scalar product} in $\RR^n$ by the equation $v \cdot w = v_1w_1 + \dots + v_nw_n$. The length of a vector $v$ is then defined by $|v|^2 = v \cdot v$, and the angle $\theta$ between the vectors by the equation $v \cdot w = |v| |w| \cos \theta$, where the equation makes sense because of the Cauchy Schwarz inequality, which says $|v \cdot w| \leq |v||w|$.
 
 Inner product spaces generalize the scalar product on $\mathbf{R}^n$ to more general vector spaces. An inner product associates to any two vectors $v$ and $w$ a real number $\langle v, w \rangle$, which is {\it bilinear}, in the sense that it is linear in each variable once the other vector is fixed, {\it symmetric}, in the sense that $\langle v, w \rangle = \langle w, v \rangle$, and is {\it positive definite}, in the sense that $\langle v, v \rangle > 0$ for $v \neq 0$.
 
