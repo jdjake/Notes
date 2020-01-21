@@ -25,7 +25,7 @@ Examples of these problems are finding the `shortest' path, or the `longest' com
 Linear Programming attempts to provide a general solution to optimization problems with a `linear' structure. In particular,
 %
 \begin{itemize}
-    \item $X$ is a finite dimensional convex polytope, in the sense that there exists $n$ such that $X \subset \RR^n$, and there are finitely many vectors $a_1, \dots, a_m \in \RR^n$ and constants $b_1, \dots, b_m$ such that
+    \item $X$ is a finite dimensional convex polytope, in the sense that $X \subset \RR^n$ for some $n$, and there are finitely many vectors $a_1, \dots, a_m \in \RR^n$ and constants $b_1, \dots, b_m \in \RR$ such that
     %
     \[ X = \{ x \in \RR^n: A_i \cdot x \leq b_i\ \text{for each $i$} \}. \]
     %
@@ -37,7 +37,11 @@ Linear Programming attempts to provide a general solution to optimization proble
 Here is an example.
 
 \begin{example}
-    Suppose we are stocking items at a cafe. Each item needs to be created from a specific number of ingredients from our supply room. For simplicity, suppose we can only stock two items, apple pie, and chocolate bars. Let $a$ be the number of apple pies we make, and $c$ the number of chocolate bars. Each apple pie is made from 3 apples, and $1/2$ a bag of sugar. For every 3 chocolate bars, 1 bag of sugar must be used. If we sell an apple pie for 6 dollars, and a chocolate bar for 1 dollar, then our total profit is $6a + b$ dollars. However, we only have 100 apples, and 50 bags of sugar. Thus our choice of $a$ and $b$ must satisfy $3a \leq 100$ and $a/2 + c/2 \leq 50$. To summarize, our goal is then to maximize the linear function $f(a,c) = 6a + b$, over the region
+    Suppose we are stocking items at a cafe. Each item needs to be created from a specific number of ingredients from our supply room. For simplicity, suppose we can only stock two items, apple pie, and chocolate bars. Let $a$ be the number of apple pies we make, and $c$ the number of chocolate bars. Each apple pie is made from 3 apples, and $1/2$ a bag of sugar. For every 3 chocolate bars, 1 bag of sugar must be used. If we sell an apple pie for 6 dollars, and a chocolate bar for 1 dollar, then our total profit is $6a + b$ dollars. However, we only have 100 apples, and 50 bags of sugar. Thus our choice of $a$ and $b$ must satisfy $3a \leq 100$ and $a/2 + c/2 \leq 50$. To summarize, our goal is then to maximize the linear function
+    %
+    \[ f(a,c) = 6a + b \]
+    %
+    over the region
     %
     \[ X = \left\{ (a,c) \in \RR^2: \begin{pmatrix} 3 & 0 \\ 1/2 & 1/3 \end{pmatrix} \begin{pmatrix} a \\ c \end{pmatrix} \leq \begin{pmatrix} 100 \\ 50 \end{pmatrix} \right\}. \]
     %
@@ -49,7 +53,7 @@ Here is an example.
     %
     \[ x_i + x_{i-1} + \dots + x_{i-4} \geq p_i, \]
     %
-    where the indices $i$ are treated modulo 7. Our goal is then to minimize $x_1 + \dots + x_7$. This, again, is most correctly treated as an integer linear program. But we can find a solution, and then round up.
+    where the indices $i$ are treated modulo 7. Our goal is then to minimize $x_1 + \dots + x_7$. This, again, is most correctly treated as an integer linear program. But we can always find a non-integer valued optimal solution using linear programming, and then round up the values we obtain.
 \end{example}
 
 \begin{example}
@@ -78,7 +82,7 @@ for each $x_i$, we introduce two new variables $x_i^+$, $x_i^-$, and consider th
 %
 \[ X' = \left\{ (x^+,x^-) \in \RR^{2n}: A(x^+ - x^-) = b, x^+, x^- \geq 0 \right\}. \]
 %
-Thus every linear program is \emph{equivalent} to a linear program in standard form, in the sense that for each triple $(A,b,c)$, where $A$ is an $n \times m$ matrix, $b \in \RR^m$, and $c \in \RR^n$, there exists a triple $(A',b',c')$, where $A$ is an $n' \times m'$ matrix, $b' \in \RR^{m'}$, and $c' \in \RR^{n'}$, and there exists a linear transformation $T: \RR^n \to \RR^{n'}$ such that the image of the polytope $\{ x \in \RR^n: Ax \leq b \}$ under $T$ is $\{ x \in \RR^{n'}: A'x = b', x \geq 0 \}$, and moreover, $c \cdot x = c' \cdot T(x)$. Moreover, coming up with the linear transformation $T$ and computing the reduction can all be done in linear time. We also often assume that in standard form, the matrix $A$ has full rank $m$. We can always assume that the rows of $A$ are linearly independant, since either certain inequalities $A_i \cdot x = b_i$ are redundant, or the problem has no feasible solutions.
+Thus every linear program is \emph{equivalent} to a linear program in standard form, in the sense that for each triple $(A,b,c)$, where $A$ is an $n \times m$ matrix, $b \in \RR^m$, and $c \in \RR^n$, there exists a triple $(A',b',c')$, where $A$ is an $n' \times m'$ matrix, $b' \in \RR^{m'}$, and $c' \in \RR^{n'}$, and there exists a linear transformation $T: \RR^n \to \RR^{n'}$ such that the image of the polytope $\{ x \in \RR^n: Ax \leq b \}$ under $T$ is $\{ x \in \RR^{n'}: A'x = b', x \geq 0 \}$, and moreover, $c \cdot x = c' \cdot T(x)$. Moreover, coming up with the linear transformation $T$ and computing the reduction can all be done in linear time. We also often assume that in standard form, the matrix $A$ has full rank $m$. We can always assume that the rows of $A$ are linearly independant, since either certain inequalities $A_i \cdot x = b_i$ are redundant, or the problem has no feasible solutions, and this feasibility is easily checkable using Gaussian elimination.
 
 \chapter{Geometry of Polyhedra}
 
@@ -86,33 +90,45 @@ Given an $m \times n$ matrix $A$ and $b \in \RR^m$, we define a corresponding \e
 %
 \[ X = \{ x \in \RR^n: Ax \leq b \} \]
 %
-We now aim to understand the structure of the polyhedron $X$. First, note that this region is \emph{convex}, since $A$ is linear. Thus we can now use the terminology of convex geometry to understand $X$. Recall that $x \in X$ is an \emph{extreme point} if there are $x_1, x_2 \in X$ and $\lambda \in [0,1]$ such that $x = \lambda x_1 + (1 - \lambda) x_2$, then $x_1 = x_2 = x$. Our first goal is to show that $X$ has finitely many extreme points. Given $x \in X$, we say the $i$th constraint is \emph{binding}, or \emph{tight}, if $A_i \cdot x = b_i$, where $A_i$ is the $i$th row of $A$.
-
-Given a particular ordered collection of indices $I = (i_1, \dots, i_k) \subset \{ 1, \dots, m \}^k$, we let $A_I$ be the $k \times n$ matrix whose $j$th row is $A_{i_j}$. Similarily, if $x \in \RR^n$, and $I = (i_1, \dots, i_k) \subset \{ 1, \dots, n \}^k$ then we let $x_I = (x_{i_1}, \dots, x_{i_k})$.
+We now aim to understand the structure of the polyhedron $X$. First, note that this region is \emph{convex}, since $A$ is linear. Thus we can now use the terminology of convex geometry to understand $X$. Recall that $x \in X$ is an \emph{extreme point} of $X$ if there does not exist $\lambda \in (0,1)$ and $x_1, x_2 \in X - \{ x \}$ such that $x = \lambda x_1 + (1 - \lambda) x_2$. Our first goal is to show that $X$ has finitely many extreme points. Given $x \in X$, we say the $i$th constraint is \emph{binding}, or \emph{tight}, if $A_i \cdot x = b_i$, where $A_i$ is the $i$th row of $A$. Given a particular ordered collection of indices $I = (i_1, \dots, i_k) \subset \{ 1, \dots, m \}^k$, we let $A_I$ be the $k \times n$ matrix whose $j$th row is $A_{i_j}$. Similarily, if $x \in \RR^n$, and $I = (i_1, \dots, i_k) \subset \{ 1, \dots, n \}^k$ then we let $x_I = (x_{i_1}, \dots, x_{i_k})$.
 
 \begin{lemma} \label{bindinglemma}
-    Fix $x \in X$. Let $I = \{ i \in \{ 1, \dots, m \} : A_i x = b_i \}$. Then $x$ is an extreme point if and only if $A_I: \RR^I \to \RR^m$ is injective.
+    Fix $x \in X$, and let $I$ be an ordering of the set
+    %
+    \[ \{ i \in \{ 1, \dots, m \} : A_i x = b_i \}. \]
+    %
+    Then $x$ is an extreme point if and only if $A_I$ is an injective matrix.
 \end{lemma}
+
+\begin{remark}
+    The condition that $A^I$ is injective is equivalent to the condition that the collection of rows $\{ A^i : i \in I \}$ span $\RR^n$.
+\end{remark}
+
 \begin{proof}
-    Let $x_1, x_2 \in X$ and $\lambda \in [0,1]$ be such that $x = \lambda x_1 + (1 - \lambda) x_2$. If $A_i \cdot x = b_i$, then this forces $A_i \cdot x_1 = A_i \cdot x_2 = b_i$. But this means that
+    Let $x_1, x_2 \in X$ and $\lambda \in (0,1)$ be such that $x = \lambda x_1 + (1 - \lambda) x_2$. If $A_i \cdot x = b_i$, then this forces $A_i \cdot x_1 = A_i \cdot x_2 = b_i$. But this means that
     %
     \[ A_I x = A_I x_1 = A_I x_2 \]
     %
     so $x = x_1 = x_2$.
 
-    Conversely, if $A_I$ is not injective, there  is a vector $v$ such that $A_I v = 0$. But this means that $A_I (x \pm \varepsilon v) = b_I$. If $i \not \in I$, then $A_i x < b_i$, so if $\varepsilon$ is small enough, $A_i (x \pm \varepsilon v) < b_i$ as well. Thus $x \pm \varepsilon v \in X$ , which shows $x$ is not an extreme point of $V$. 
+    Conversely, if $A_I$ is not injective, there  is a vector $v$ such that $A_I v = 0$. But this means that $A_I (x \pm \varepsilon v) = b_I$ for each $\varepsilon > 0$. If $i \not \in I$, then $A_i x < b_i$. Thus if $\varepsilon$ is chosen suitably small, then we can also guarantee that $A_i (x \pm \varepsilon v) < b_i$ for all $i \not \in I$. Thus $x \pm \varepsilon v \in X$ , which shows $x$ is not an extreme point of $V$. 
 \end{proof}
+
+\begin{remark}
+    Note that this lemma implies that if $m < n$, then the resulting polytope $X$ cannot have any extreme points.
+\end{remark}
 
 \begin{corollary}
     Every polyhedron has finitely many extreme points.
 \end{corollary}
 \begin{proof}
-    If $x$ is an extreme point, there are a collection of indices $I$ such that $A_I x = b_I$. But since $A_I$ is injective, this uniquely specifies $x$. Since there are only finitely many choices of index sets $I$, there can only be finitely many extreme points.
+    If $x$ is an extreme point, Lemma \ref{bindinglemma} implies there are a collection of indices $I$ such that $A_I x = b_I$, and $A_I$ is an injective matrix. But since $A_I$ is injective, this uniquely specifies $x$. Since there are only finitely many choices of index sets $I$, there can only be finitely many extreme points.
 \end{proof}
 
-If $x = \lambda x_1 + (1 - \lambda) x_2$, then $c \cdot x \leq \max(c \cdot x_1, c \cdot x_2)$. In particular, if $X$ has an extreme point, then a maximum solution to a linear program can \emph{always} be chosen to be an extreme point. This gives a method of solving linear programs. Just check the values at all extreme points and take the maximum value. However, this is horribly inefficient, since in $n$ dimensional space, there can be at least $\Theta(m^n)$ extreme points (for instance, the unit cube in $\RR^n$ has $2^n$ extreme points).
+%If $x = \lambda x_1 + (1 - \lambda) x_2$, then $c \cdot x \leq \max(c \cdot x_1, c \cdot x_2)$. In particular, if $X$ has a maximal solution, then this maximal solution can \emph{always} be chosen to be an extreme point.
+%an extreme point, then a maximum solution to a linear program can \emph{always} be chosen to be an extreme point. This gives a method of solving linear programs. Just check the values at all extreme points and take the maximum value. However, this is horribly inefficient, since in $n$ dimensional space, there can be at least $\Theta(m^n)$ extreme points (for instance, the unit cube in $\RR^n$ has $2^n$ extreme points).
 
-Given two extreme points $x_1$ and $x_2$, we say they are \emph{adjacent} if there are $n-1$ linearly independant constraints $A_I$ such that $A_I x_1 = A_I x_2 = b_I$. The line segment which connects $x_1$ and $x_2$ is then known as an \emph{edge} of $X$. An intuitive way to search through the class of extreme points is to move along adjacent extreme points, in such a way that the solution is eventually found.
+Given two extreme points $x_1$ and $x_2$, we say they are \emph{adjacent} if the collection $\{ A^i: A^i x_1 = A^i x_2 = b_i \}$ spans a vector space of dimension at least $n - 1$. The line segment connecting $x_1$ and $x_2$ is then known as an \emph{edge} of $X$. Points on this edge have tight constraints at all constraints where both $x_1$ and $x_2$ are tight. An intuitive way to search through the class of extreme points is to move along adjacent extreme points, in such a way that the solution is eventually found. This is because the collection of extreme points forms a \emph{connected graph} when considering the above adjacency relation.
 
 \section{Polyhedra in Standard Form}
 
@@ -125,6 +141,7 @@ where $A$ is a $m \times n$ matrix with rank $m$. Let the columns of $A$ be deno
 \begin{lemma}
     A point $x \in X$ is an extreme point if and only if, there exists a collection of $m$ indices $I$ such that if $i \not \in I$, $x_i = 0$, and $A^I$ is surjective.
 \end{lemma}
+
 \begin{proof}
     Assume $A^I$ is surjective. Then let $x = \lambda x_1 + (1 - \lambda)x_2$ with $x_1,x_2 \in X$ and $\lambda \in [0,1]$. If $x_i = 0$, then $(x_1)_i = (x_2)_i = 0$. But then $x$, $x_1$, and $x_2$ all lie in a common $m$ dimensional subspace
     %
@@ -449,6 +466,7 @@ An important relation between primal and dual programs is \emph{complimentary sl
 
 
 
+    \begin{comment}
 
     \chapter{Simplex Method}
 
@@ -499,6 +517,7 @@ An important relation between primal and dual programs is \emph{complimentary sl
         \end{itemize}
     \end{proof}
 
+\end{comment}
 
 
 
