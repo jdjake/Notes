@@ -2347,24 +2347,61 @@ There are two modern tools to estimate oscillatory integrals. The first, the pri
 
 \section{The Principle of Stationary Phase}
 
-The basic principle of the theory of stationary phase is that the asymptotics of the integral are determined by where $\nabla \Phi$ vanishes. The fact that we can reduce our analysis to critical points is because an oscillatory principle whose phase has no critical points exhibits rapid decay. Let us consider a simple example of an oscillatory integral, i.e.
+The basic principle of the theory of stationary phase is that the asymptotics of the integral are determined by the points where $\nabla \Phi$ vanishes. The fact that we can reduce our analysis to critical points is because an oscillatory principle whose phase has no critical points exhibits rapid decay. Let us consider a simple example of an oscillatory integral, i.e.
 %
 \[ I(\lambda) = \int_0^1 e^{i \lambda \phi(x)}\; dx, \]
 %
-where $\phi: [0,1] \to \RR$ is a function. Taking in absolute values shows that $|I(\lambda)| \leq 1$ for all $\lambda$. If $\phi$ is constant, then $I(\lambda) = e^{i \lambda \phi}$ has magnitude one for all $\lambda$, so this inequality is sharp. But if $\phi$ varies, we expect $I$ to decay as $\lambda \to \infty$. For instance, the Esse\'{e}n relates the `evenness' of the distribution of $\phi$ to the \emph{average} decay of $I$.
+where $\phi: [0,1] \to \RR$ is Borel measurable. Taking in absolute values shows that $|I(\lambda)| \leq 1$ for all $\lambda$. If $\phi$ is constant, then $I(\lambda) = e^{i \lambda \phi}$ has magnitude one for all $\lambda$, so this inequality is sharp. But if $\phi$ varies, we expect $I$ to decay as $\lambda \to \infty$, and so we hope to determine what properties guarantee that $|I(\lambda)| \ll 1$. For instance, the Esse\'{e}n concentration inequality relates the lack of concentration of the distribution of $\phi$ to the \emph{average} decay of $I$.
 
 \begin{theorem}[Esse\'{e}n Concentration Inequality]
-  For any $\varepsilon > 0$,
+  Let $\phi: [0,1] \to \RR$ be Borel measurable, and for each $\lambda \in \RR$, set
+  %
+  \[ I(\lambda) = \int_0^1 e^{i \lambda \phi(x)}\; dx. \]
+  %
+  Then for any $\varepsilon > 0$,
   %
   \[ \sup_{\phi_0 \in \RR} |\{ x \in [0,1]: |\phi(x) - \phi_0| \leq \varepsilon \}| \lesssim \varepsilon \int_0^{1/\varepsilon} |I(\lambda)|\; d\lambda. \]
 \end{theorem}
 \begin{proof}
-  Fix $\phi_0$. By replacing $\phi$ with $\phi - \phi_0$, we may assume $\phi_0 = 0$. Similarily, replacing $\phi$ with $\phi/\varepsilon$ enables us to assume $\varepsilon = 1$. Thus we must show
+  For any choice of $\phi_0$, we may replace $\phi$ with $\phi - \phi_0$, reducing the analysis to the case where $\phi_0 = 0$. Similarily, replacing $\phi$ with $\phi/\varepsilon$ reduces us to the situation where $\varepsilon = 1$. Thus we must show
   %
-  \[ |\{ x \in [0,1]: |\phi(x)| \leq \varepsilon \}| \lesssim \varepsilon \int_0^{1/\varepsilon} |I(\lambda)|\; d\lambda. \]
+  \[ |\{ x \in [0,1]: |\phi(x)| \leq 1 \}| \lesssim \int_0^1 |I(\lambda)|\; d\lambda. \]
+  %
+  Now let $\psi$ be an integrable function supported on $[0,1]$. By Fubini's theorem,
+  %
+  \[ \int_0^1 \psi(\lambda) I(\lambda)\; d\lambda = \int_0^1 \widehat{\psi}(- \phi(x) / 2 \pi)\; dx. \]
+  %
+  In particular, this means that
+  %
+  \[ \left| \int_0^1 \widehat{\psi}(- \phi(x) / 2\pi)\; dx \right| \leq \| \psi \|_{L^\infty[0,1]} \int_0^1 |I(\lambda)|\; d\lambda. \]
+  %
+  If we choose a bounded function $\psi$ such that $\widehat{\psi}$ is non-negative, and bounded below on $[-2\pi,2\pi]$, then
+  %
+  \[ \left| \int_0^1 \widehat{\psi}(- \phi(x) / 2 \pi)\; dx \right| \gtrsim |\{ x \in [0,1]: |\phi(x)| \leq 1 \}|, \]
+  %
+  and so the claim follows easily.
 \end{proof}
 
-Thus if $I$ has decay, this automatically implies that $\phi$ cannot be concentrated around any particular point.
+Thus if large cancellation happens in $I(\lambda)$ for the average $\lambda$, this automatically implies that $\phi$ cannot be concentrated around any particular point.  Conversely, we want to show that if $\phi$ is significantly varying, then $I$ exhibits some cancellation properties. The condition that $\phi'$ is bounded below is not sufficient to guarantee cancellation, as the next example shows, if $\phi$ has oscillation at wavelength $1/\lambda$.
+
+\begin{example}
+  Fix $\lambda_0 \in \ZZ$, and let $\phi(x) = 2 \pi x + f(\lambda_0 x) / \lambda_0$, where $f$ is smooth and 1-periodic, $\| f' \|_{L^\infty(\mathbf{R}/\mathbf{Z})} \leq 1$, and
+  %
+  \[ \int_0^1 e^{2 \pi i x + i f(x)}\; dx \neq 0. \]
+  %
+  For instance, we could take $f(x) = x/2$. Then $|\phi'(x)|$ is bounded below independantly of $\lambda_0$. Since $\phi(x + 1/\lambda_0) = \phi(x) + 2 \pi / \lambda_0$, we find $e^{i \lambda_0 \phi(x)}$ is $1/\lambda_0$ periodic. In particular, this means
+  %
+  \[ I(\lambda_0) = \int_0^1 e^{\lambda_0 i \phi(x)} = \int_0^1 e^{2 \pi i x + i f(x)}\; dx. \]
+  %
+  which is comparable to 1, independantly of $\lambda_0$.
+\end{example}
+
+One way to get around this condition is by controlling $\phi''$ in addition to controlling $\phi'$.
+
+\begin{theorem}
+  Let $\phi: \RR \to \RR$ be smooth, with $|\phi'(x)| \geq A$ and $|\phi''(x)| \leq B$ for all $x \in [0,1]$, where $A,B > 0$. Then for all $\lambda > 0$, we find $|I(\lambda)| \lesssim s$ 
+\end{theorem}
+
 
 \begin{theorem}
     If $\Phi$ and $\psi$ are smooth, compactly supported functions with $\nabla \Phi(x) \neq 0$ for all $x$ in the support of $\psi$, then $I(\lambda) \lesssim 1/\lambda^N$.
