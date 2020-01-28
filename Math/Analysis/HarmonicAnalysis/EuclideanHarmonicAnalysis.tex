@@ -1758,6 +1758,621 @@ There are many variants of the real interpolation method, but the general techni
 
 
 
+
+
+
+
+\chapter{The Theory of Distributions}
+
+The theory of distributions is a tool which enables us to justify formal manipulations which occur in harmonic analysis, without the technical issues which occur from having to interpret such manipulations analytically. For instance, the ordinary integral formulation of the Fourier transform is only defined for $L^1$ functions, whereas the theory of tempered distributions enables us to define the Fourier transform of essentially any function we would ever want to take the Fourier transform of. Similarily, we can only classically differentiate a particular class of functions, but the theory of distributions enables us to define the derivative of almost any function that occurs in analysis. These reasons make distribution theory a cornerstone in the formulation of many problems in modern harmonic analysis and partial differential equations.
+
+The power of measure theory is that it enables us to study a very general class of functionsome more. The problem is that as we study more general classes of functions, the operations we can perform on this class become more and more restricted. Nonetheless, $C^\infty_c(\RR^d)$ is dense in every function space we consider, and we can apply all the fundamental analytical operations in this region, obtaining a general result by a density argument. The theory of distributions provides an alternate viewpoint.
+
+The main idea of distribution theory emerges from duality, viewing functions as `integrands' whose properties are understand by integration against a family of `test functions' Recall that for $1 \leq p < \infty$, the dual space of $L^p(\RR^d)$ is $L^q(\RR^d)$. Thus we can think of elements $f \in L^q(\RR^d)$ as `integrands', whose properties can be understood by integration against elements of $L^p(\RR^d)$, i.e. through the linear functional $\Lambda_f$ defined for each $\psi \in L^p(\RR^d)$ by setting
+%
+\[ \Lambda_f(\psi) = \int_{\RR^d} f(x) \psi(x)\; dx. \]
+%
+Similarily, the dual space of $C(K)$, where $K$ is a compact topological space, is the space $M(K)$ of finite Borel measures on $K$. Thus we can think of measures as a family of `generalized functions'. For each measure $\mu \in M(K)$, we consider the linear functional $\Lambda_\mu$, defined for each $\psi \in C(K)$, we set
+%
+\[ \Lambda_\mu(\psi) = \int_K \psi(x) d\mu(x). \]
+%
+Notice that as we shrink the family of test functions, the resultant family of `generalized functions' becomes larger and larger, and so elements can behave more and more erratically. A distribution is a `generalized function' tested against functions in $C_c^\infty(\RR^d)$. Since most operations in analysis can be applied to elements of $C_c^\infty(\RR^d)$, most importantly, differentiation, we can use duality to extend these operations to distributions. Moreover, since $C_c^\infty(\RR^d)$ is contained in most of the other function spaces, distributions are one of the largest family of generalized functions.
+
+From the perspective of physics, viewing functions as integrands is completely natural. Points in space are idealizations which do not correspond to real world phenomena. One can never measure the exact value of some quantity of a function at a point, but rather only understand the function by looking at it's averages over a small region around that point. Thus a `function' can be understood by the averages with respect to a family of integrands, known as test functions, since they test the value of the function over a region. As we make the family of integrands smaller and smaller, a `function' can be behave more and more erratically. A distribution is an `integrand' with respect to the space $C^\infty_c(\RR^d)$ of infinitely differentiable functions with compact support. Since these functions are incredibly analytically nice, distributions are allowed to behave incredibly erratically, but we can still extend the operations of differentiation and integration to them.
+
+\section{The Space of Test Functions}
+
+\begin{remark}
+  This section is technical, and requires a strong knowledge of functional analysis, in particular the theory of locally convex topological spaces. It can be skipped without too much confusion.
+\end{remark}
+
+We fix an open subset $\Omega$ of $\mathbf{R}^n$, and let $C_c^\infty(\Omega)$ denote the family of all smooth functions on $\Omega$ with compact support. Our goal is to equip $C_c^\infty(\Omega)$ with a complete locally convex topology, so that we can consider the dual space $C_c^\infty(\Omega)^*$ of {\emph distributions} on $\Omega$. We could equip $C_c^\infty(\Omega)$ with a locally convex, metrizable topology with respect to the seminorms
+%
+\[ \| f \|_{C^n(\Omega)} = \max_{|\alpha| \leq n} \| D^\alpha f \|_{L^\infty(\Omega)} \]
+%
+However, the resultant topology on $C_c^\infty(\Omega)$ isn't always complete.
+
+\begin{example}
+    Let $\Omega = \mathbf{R}$, pick a bump function $\phi \in C_c^\infty(\RR)$ supported on $[0,1]$ with $\phi > 0$ on $(0,1)$, and define
+    %
+    \[ \psi_m(x) = \phi(x-1) + \frac{\phi(x-2)}{2} + \dots + \frac{\phi(x-m)}{m} \]
+    %
+    Then $\psi_m$ is compactly supported on $[1,m]$, and Cauchy, since for $m_1 \geq m_0$,
+    %
+    \[ \| \psi_{m_0} - \psi_{m_1} \|_{C^n(\mathbf{R})} = \frac{ \max_{r \leq n} \| D^r \phi \|_{L^\infty(\RR^d)}}{m_0+1} \lesssim_n 1/m_0. \]
+    %
+    However, the sequence $\{ \psi_m \}$ does not converge to any element of $C_c^\infty(\RR)$, since the sequence converges uniformly to the function
+    %
+    \[ \psi(x) = \sum_{n = 1}^\infty \psi(x-n) \]
+    %
+    an element of $C^\infty(\mathbf{R})$ which is not compactly supported.
+\end{example}
+
+We can assign $C_c^\infty(\Omega)$ a slightly stronger locally convex topology which makes is complete, but no longer metrizable. The process here is quite general. For each compact set $K \subset \Omega$, the subspace $C_c^\infty(K)$ of smooth functions compactly supported on $K$ is a complete metric space, since limits of functions cannot `escape' the set. Since $C_c^\infty(\Omega) = \bigcup_K C_c^\infty(K)$, we might be able to give $C_c^\infty(\Omega)$ a complete metric space structure by strengthening the topology by forcing limits to lie in a particular set of compact support. We now declare a convex topology, by considering the family of all sets $\{ \phi + W \}$ as a basis, where $\phi$ ranges over all elements of $C_c^\infty(\Omega)$, and $W$ ranges over all convex, balanced subsets of $C_c^\infty(\Omega)$ such that $W \cap C_c^\infty(K)$ is open for each compact set $K \subset \Omega$.
+
+\begin{theorem}
+    This gives a basis of a Hausdorff topology on $C_c^\infty(\Omega)$.
+\end{theorem}
+\begin{proof}
+    If $\phi_1 + W_1$ and $\phi_2 + W_2$ both contain $\phi$, then $\phi - \phi_1 \in W_1$ and $\phi - \phi_2 \in W_2$. The functions $\phi, \phi_1$, and $\phi_2$ are all supported on some compact set $K$. By continuity of multiplication on $C_c^\infty(K)$, and the fact that $W_n \cap C_c^\infty(K)$ is open, there is a small constant $\delta$ such that $\phi - \phi_n \in (1 - \delta) W_n$ for each $n \in \{ 1, 2 \}$. The convexity of the $W_n$ implies that $\phi - \phi_n + \delta W_n \subset W_n$. But then $\phi + \delta W_n \subset \phi_n + W_n$, and so $\phi + \delta (W_1 \cap W_2) \subset (\phi_1 + W_1) \cap (\phi_2 + W_2)$. Thus we have verified the family of sets specified above is a basis. Now we show $C_c^\infty(\Omega)$ is Hausdorff under this topology. Suppose $\phi$ is in every open neighbourhood of the origin, then in particular, for each $\varepsilon > 0$, $\phi$ lies in the set $W_\varepsilon = \{ f \in C_c^\infty(\Omega): \| f \|_{L^\infty(\Omega)} < \varepsilon \}$, and it is easy to see these sets are open. Since $\bigcap_{\varepsilon > 0} W_\varepsilon = \{ 0 \}$, this means $\phi = 0$.
+\end{proof}
+
+\begin{remark}
+    This technique can be formulated more abstractly to give a locally convex topological structure to the direct limit of locally convex spaces. From this perspective, we also see why our metrization doesn't work; if $X = \lim X_n$, with each $X_n$ a locally convex metrizable space, then we cannot give $X$ a complete metrizable topology such that each $X_n$ is an embedding and has empty interior in $X$, because this would contradict the Baire category theorem. In particular, this means that the topology we have given to $C_c(\Omega)$ cannot be metrizable, and therefore the space cannot be first countable. Later we will see a more explicit proof of this.
+\end{remark}
+
+\begin{theorem}
+    $C_c^\infty(\Omega)$ is a locally convex space.
+\end{theorem}
+\begin{proof}
+    Fix $\phi$ and $\psi$, and consider any neighbourhood $W$ of the origin. By convexity, we have $(\phi + W/2) + (\psi + W/2) \subset (\phi + \psi) + W$. This shows addition is continuous. To show multiplication is continuous, fix $\lambda$, $\phi$, and a neighbourhood $W$ of the origin. Then $\phi$ is supported on some compact set $K$, and $W \cap C_c^\infty(K)$ is open, in particular absorbing, so there is $\varepsilon > 0$ such that if $|\alpha| < \varepsilon$, $\alpha \phi \in W/2$. Then if $|\gamma - \lambda| < \varepsilon$, then because $W$ is balanced and convex,
+    %
+    \begin{align*}
+        \gamma \left(\phi + \frac{W}{2(|\lambda| + \varepsilon)} \right) &= \lambda \phi + (\gamma - \lambda) \phi + \frac{\gamma}{2(|\lambda| + \varepsilon)} W\\
+        &\subset \lambda \phi + W/2 + W/2 \subset \lambda \phi + W
+    \end{align*}
+    %
+    so multiplication is continuous.
+\end{proof}
+
+\begin{theorem}
+    For each compact set $K \subset \Omega$, the canonical embedding of $C_c^\infty(K)$ in $C_c^\infty(\Omega)$ is continuous.
+\end{theorem}
+\begin{proof}
+    We shall prove a convex, balanced neighbourhood $V$ is open in $C_c^\infty(\Omega)$ if and only if $C_c^\infty(K) \cap V$ is open in $C_c^\infty(K)$ for each $K$. Since $V$ is open, $V$ is the union of convex, balanced sets $W_\alpha$ with $W_\alpha \cap C_c^\infty(K)$ open in $C_c^\infty(K)$ for each $K$. But then $V \cap C_c^\infty(K) = (\bigcup W_\alpha) \cap C_c^\infty(K)$ is open in $C_c^\infty(K)$. The converse is true by definition of the topology. But this statement means exactly that the map $C_c^\infty(K) \to C_c^\infty(\Omega)$ is an embedding, because it is certainly continuous, and if $W$ is a convex neighbourhood of the origin equal to the set of $\phi$ supported on $K$ with $\| \phi \|_{C^n(K)} \leq \varepsilon$ for some $n$, then the image is the intersection of $C_c^\infty(K)$ with the set of all $\phi$ supported on $\Omega$ satisfying the inequality, which is open. This shows that the map is open onto its image, hence an embedding.
+\end{proof}
+
+It is difficult to see from the definition above why the topology is much stronger than the previous one given. We can see this more numerically by introducing the topology in terms of seminorms. The topology we have given $C_c^\infty(\Omega)$ is the same as the locally convex topology introduced by all norms $\| \cdot \|$ on the space which are continuous when restricted to each $C_c^\infty(K)$. As an example, if we choose an increasing family $U_1, U_2, \dots$ of precompact open sets whose closure is contained in $\Omega$, then any compact set $K$ is contained in some $U_N$ for large enough $N$, and for any increasing sequence $\alpha_1, \alpha_2, \dots$ of positive constants and increasing sequence $k_1, k_2, \dots$ of positive integers the norm
+%
+\[ \| f \| = \min_{\text{supp}(f) \subset U_n} \alpha_n \| f \|_{C^{k_n}(U_n)} \]
+%
+is well defined on $C_c^\infty(\Omega)$ and continuous. But this means that if $f_1, f_2, \dots \to 0$, then $\| f \| \to 0$ for any choice of constants $\alpha_n$ and $k_n$, so asymptotically as we approach the boundary of $\Omega$ (or $\infty$, if $\Omega$ is unbounded), the $L^\infty$ norms of the $f_n$ and all of their derivatives must converge arbitrarily fast outside certain compact sets. The next theorem shows that this implies that the union of the domains $f_n$ must actually be precompact. It is this `uniform compactness' that gives us completeness.
+
+\begin{theorem}
+    $E$ is a bounded subset of $C_c^\infty(\Omega)$ if and only if $E$ is contained in $C_c^\infty(K)$ for some compact set $K$, and there is a sequence of constants $\{ M_n \}$ such that $\| \phi \|_{C^n(\Omega)} \leq M_n$ for all $\phi \in E$.
+\end{theorem}
+\begin{proof}
+    We shall now prove that if $E$ is not contained in some $C_c^\infty(K)$ for any compact set $K \subset \Omega$, then $E$ is not bounded. If our assumption is true, we can find functions $\phi_n \in E$ and a set of points $x_n \in X$ with no limit point such that $\phi_n(x_n) \neq 0$. For each $n$, set
+    %
+    \[ W_n = \left\{ \psi \in C_c^\infty(\RR^d): |\psi(x_n)| < n^{-1} |\phi_n(x_n)| \right\}. \]
+    %
+    Certainly $W_n$ is convex and balanced, and for each compact set $K$, if $\psi \in W_n \cap C_c^\infty(K)$, then there is $\varepsilon > 0$ such that $|\psi(x_n)| < n^{-1} |\phi_n(x_n)| - \varepsilon$. Thus if $\eta \in C_c^\infty(K)$ satisfies $\| \eta \|_{L^\infty(\RR^d)} < \varepsilon$, then $\psi + \eta \in W_n$. In particular, this means $W_n \cap C_c^\infty(K)$ is open in $C_c^\infty(K)$ for each $K$, so $W_n$ is open.
+
+    Now we claim $W = \bigcap_{n = 1}^\infty W_n$ is open. Certainly this set is convex and balanced. Moreover, each compact set $K$ contains finitely many of the points $\{ x_n \}$, so $W \cap C_c^\infty(K)$ can be replaced by a finite intersection of the $W_n$, and is therefore open. Since $\phi_n \not \in nW$ for all $n$, this implies that $E$ is not bounded. The fact that $\| \cdot \|_{C^n(\Omega)}$ specifies the topological structure of $C_c^\infty(K)$ for each compact $K$ now shows that if $E$ is bounded, there exists constants $\{ M_n \}$ such that $\| \phi \|_{C^n(\Omega)} \leq M_n$ for all $\phi \in E$. The converse property follows because $C_c^\infty(K)$ is embedded in $C_c^\infty(\Omega)$.
+\end{proof}
+
+\begin{corollary}
+    $C_c^\infty(\Omega)$ has the Heine Borel property.
+\end{corollary}
+\begin{proof}
+    This follows because if $E$ is bounded and closed, it is a closed and bounded subset of some $C_c^\infty(K)$ for some $K$, hence $E$ is compact since $C_c^\infty(K)$ satisfies the Heine-Borel property (this can be proved by a technical application of the Arzela-Ascoli theorem).
+\end{proof}
+
+\begin{corollary}
+    $C_c^\infty(\Omega)$ is quasicomplete.
+\end{corollary}
+\begin{proof}
+    If $\phi_1, \phi_2, \dots$ is a Cauchy sequence in $C_c^\infty(\Omega)$, then the sequence is bounded, hence contained in some common $C_c^\infty(K)$. Since the sequence is Cauchy, they converge in $C_c^\infty(K)$ to some $\phi$, since $C_c^\infty(K)$ is complete, and thus the $\phi_n$ converge to $\phi$ in $C_c^\infty(\Omega)$.
+\end{proof}
+
+It is often useful to use the fact that we can perform a `separation of variables' to a smooth function. This is done formally in the following manner. Say $f \in C_c^\infty(\RR^d)$ is a {\it tensor function} if there are $f_1, \dots, f_n \in C_c^\infty(\RR)$ such that $f(x) = f_1(x_1) \dots f_n(x_n)$. We write $f = f_1 \otimes \dots \otimes f_n$. Since the product of two tensor functions is a tensor function, the family of all finite sums of tensor functions forms an algebra.
+
+\begin{theorem}
+    Finite sums of tensor functions are dense in $C_c^\infty(\RR^d)$.
+\end{theorem}
+\begin{proof}
+    Recall from the theory of multiple Fourier series that if $f \in C^\infty(\RR^d)$ is $N$ periodic, in the sense that $f(x + n) = f(x)$ for all $x \in \RR^d$ and $n \in (N \ZZ)^d$, then there are coefficients $a_m$ for each $m \in \ZZ^n$ such that $f = \lim_{M \to \infty} S_M f$, where the convergence is dominated by the sminorms $\| \cdot \|_{C^n(\RR^d)}$, for all $n > 0$, and
+    %
+    \[ (S_M f)(x) = \sum_{\substack{m \in \ZZ^d\\|m| \leq M}} a_m e^{\frac{2 \pi i m \cdot x}{N}}. \]
+    %
+    Note that since
+    %
+    \[ e^{\frac{2 \pi i m \cdot x}{N}} = \prod_{k = 1}^d e^{2 \pi i m_ix_i/N} \]
+    %
+    is a tensor product, $S_M f$ is a finite sum of tensor functions. If $\phi \in C_c^\infty(\RR^d)$ is compactly supported on $[-N,N]^d$, we let $f$ be a $10N$ periodic function which is equal to $\phi$ on $[-N,N]^d$. We then find coefficients $\{ a_m \}$ such that $S_M f$ converges to $f$. If $\psi: \RR \to \RR$ is a compactly supported bump function equal to one on $[-N,N]^d$, and vanishing outside of $[-2N,2N]^d$, then $\psi^{\otimes d} S_M f$ converges to $\psi$ as $M \to \infty$, and each is a finite sum of tensor functions.
+\end{proof}
+
+Because $C_c^\infty(\Omega)$ is the limit of metrizable spaces, it's linear operators still have many of the same properties as metrizable spaces.
+
+\begin{theorem}
+    If $T: C_c^\infty(\Omega) \to X$ is a map from $C_c^\infty(\Omega)$ to some locally convex space $X$, then the following are equivalent:
+    %
+    \begin{itemize}
+        \item[(1)] $T$ is continuous.
+        \item[(2)] $T$ is bounded.
+        \item[(3)] If $\{ \phi_n \}$ converges to zero, then $\{ T\phi_n \}$ converges to zero.
+        \item[(4)] For each compact set $K \subset \Omega$, $T$ is continuous restricted to $C_c^\infty(K)$.
+    \end{itemize}
+\end{theorem}
+\begin{proof}
+    We already known that (1) implies (2). If $T$ is bounded, and we have a sequence $\{ \phi_n \}$ converging to zero, then the sequence is bounded, hence contained in some $C_c^\infty(K)$. Thend $T$ is bounded as a map from $C_c^\infty(K)$ to $X$, hence $\{ T\phi_n \} \to 0$. (3) implies (4) holds because each $C_c^\infty(K)$ is metrizable, and any convergent sequence is contained in some common $C_c^\infty(K)$. To prove that (4) implies (1), we let $V$ be a convex, balanced, open subset of $X$. Then $T^{-1}(V) \cap C_c^\infty(K)$ is open for each $K$, and $T^{-1}(V)$ is convex and balanced, so $T^{-1}(V)$ is an open set.
+\end{proof}
+
+Because convergence is so strict in $C_c^\infty(\Omega)$, almost every operation we want to perform on smooth functions is continuous in this space.
+%
+\begin{itemize}
+    \item Since $f \mapsto D^\alpha f$ is a continuous operator from $C_c^\infty(K)$ to itself, it is therefore continuous on the entire space $C_c^\infty(\Omega)$. More generally, any linear differential operator with coefficients in $C_c^\infty(\Omega)$ is a continuous operator from $C_c^\infty(\Omega)$ to itself.
+
+    \item The inclusion $C_c^\infty(\Omega) \to L^p(\Omega)$ is continuous. To prove this, it suffices to prove for each compact $K$, the inclusion $C_c^\infty(K) \to L^p(\Omega)$ is continuous, and this follows because $\| f \|_{L^p(\Omega)} \leq |K|^{1/p} \| f \|_\infty$.
+
+    \item If $f \in L^1(\RR^d)$ is compactly supported, then for any $g \in C_c^\infty(\RR^d)$, $f * g \in C_c^\infty(\RR^d)$. This is because $f * g$ is continuous since $g \in L^\infty(\RR^n)$, and it's support is contained in the algebraic sums of the support of $f$ and $g$, as well as the identity $D^\alpha(f * g) = f * (D^\alpha g)$. In fact, the map $g \mapsto f * g$ is a continuous operator on $C_c^\infty(\RR^n)$. This is because if we restrict our attention to $C_c^\infty(K)$, and $f$ has supported on $K'$, then our convolution operator maps into the compact set $K+K'$, and since
+    %
+    \[ \| D^\alpha (g * f) \|_{L^\infty(K + K')} = \| D^\alpha g * f \|_{L^\infty(K + K')} \leq \| D^\alpha g \|_{L^\infty(K)} \| f \|_{L^1(K')}, \]
+    %
+    we conclude
+    %
+    \[ \| g * f \|_{C^n(K+K')} \leq \| g \|_{C^n(K)} \| f \|_{L^1(K')}, \]
+    %
+    which gives continuity of the operator as a map from $C_c^\infty(K)$ to $C_c^\infty(K+K')$. Since the latter space embeds in $C_c^\infty(\RR^n)$, we obtain continuity of the operator on $C_c^\infty(\RR^n)$.
+\end{itemize}
+
+\begin{theorem}
+    If a map $T: C_c^\infty(K) \to C_c^\infty(\RR^n)$ is continuous, then the image of $C_c^\infty(K)$ is actually $C_c^\infty(K')$ for some compact set $K'$.
+\end{theorem}
+\begin{proof}
+    Suppose there is a sequence $x_1, x_2, \dots$ with no limit point and smooth functions $f_1, f_2, \dots$ compactly supported on $C_c^\infty(K)$ such that $(Tf_n)(x_n) \neq 0$. But then for any sequence $\alpha_n$ whatsoever, we cannot have $\alpha_n Tf_n$ converging to zero, hence $\alpha_n f_n$ cannot converge to zero. But this is clearly not true, for if we let
+    %
+    \[ \alpha_n = \frac{1}{2^n \| f_n \|_{C^n}} \]
+    %
+    Then for any fixed $m$, $\| f_n \|_{C^m}$ is eventually bounded above by $1/2^n$ and therefore converges to zero. Thus such a sequence $x_n$ cannot exist, and therefore the image of $T$ is supported on some compact set $K'$.
+\end{proof}
+
+Thus the topology on the space $C_c^\infty(\RR^d)$ is as strict as can be. As a consequence, we shall see that the weak $*$ topology on $C_c^\infty(\RR^d)^*$ is essentially the weakest notion of convergence available in analysis, which makes it surprising that we still be able to recover the continuity of many operators on the dual space.
+
+\section{The Space of Distributions}
+
+We now have the tools to explain the idea of a distribution. If $f$ is an integrable function defined on some set $\Omega$, then the map
+%
+\[ \Lambda_f(\phi) = \int f(x) \phi(x)\; dx \]
+%
+is a {\it continuous} linear functional defined on $C_c^\infty(\Omega)$. The functional $\Lambda_f$ determines $f$ up to a set of measure zero, and so we identify $\Lambda_f$ with $f$. But even if $f$ satisfies weaker properties like being locally integrable, the definition above defines a continuous linear functional on $C_c^\infty(\Omega)$. The idea of the theory of distributions is to treat any continuous linear functional $\Lambda$ on $C_c^\infty(\Omega)$ as if it were given by integration against a function as nice as possible. Using the properties of integration for these integration, we can usually cheat out a definition of operations usually only applicable to functions that works for all distributions. Thus the operations of analysis generalize to an incredibly large family of objects. As an example, if $f$ was continuously differentiable, then we would find
+%
+\[ \int f'(x) \phi(x)\; dx = - \int f(x) \phi'(x)\; dx \]
+%
+Since the right hand side is defined independantly of how nice the function $f(x)$ is, we could define the {\it derivative} of a continuous linear functional $\Lambda$ as
+%
+\[ \Lambda'(\phi) = - \Lambda(\phi') \]
+%
+and more generally, for a linear functional on $n$ dimensional space, we could define $(D^\alpha \Lambda)(\phi) = (-1)^{|\alpha|} \Lambda(D^\alpha \phi)$.
+
+\begin{example}
+    Let $H(x) = \mathbf{I}(x > 0)$ denote the {\it Heaviside step function}. Then $H$ is locally integrable, and so for any test function $\phi$, we calculate
+    %
+    \[ \int H'(x) \phi(x)\; dx = - \int H(x) \phi'(x) = - \int_0^\infty \phi'(x) = \phi(0) \]
+    %
+    Thus the `derivative' of the Heaviside step function is the Dirac delta. It is not a function, but if we were to think of it as a `generalized function', it would be zero everywhere except at the origin, where it is infinitely peaked.
+\end{example}
+
+\begin{example}
+    Consider the Dirac delta function at the origin, which is the distribution $\delta(f) = f(0)$. Then
+    %
+    \[ \delta'(f) = - \delta(f') = - f'(0) \]
+    %
+    which is a distribution which doesn't arise from integration with respect to a locally integrable function nor a Radon measure. Thus the `derivative' of an infinitely peaked function at the origin is the negation of a derivative.
+\end{example}
+
+In general, we define a {\bf distribution} to be a continuous linear functional on the space of test functions $C_c^\infty(\Omega)$. In the last section, our exploration of continuous linear transformations on $C_c^\infty(\Omega)$ guarantees that a linear functional $\Lambda$ on $C_c^\infty(\Omega)$ is continuous if and only if for every compact $K \subset X$ there is an integer $n_k$ such that $|\Lambda f| \lesssim_K \| f \|_{C^{n_k}}$ for $f \in C_c^\infty(K)$. If one integer $n$ works for all $K$, and $n$ is the smallest integer with such a property, we say that $\Lambda$ is a distribution of \emph{order $n$}. If such an $n$ doesn't exist, we say the distribution has infinite order. If such an $n$ doesn't exist, we say the distribution has infinite order.
+
+\begin{example}
+    If $\mu$ is a locally finite Borel measure, or a finite complex valued measure, then we can define
+    %
+    \[ \Lambda_\mu(\phi) = \int \phi(x) d\mu(x) \]
+    %
+    Thus $\Lambda_\mu$ is a distribution, since if $\phi$ is supported on $K$, then
+    %
+    \[ |\Lambda_\mu(\phi)| \leq \mu(K) \| \phi \|_{L^\infty(K)} \]
+    %
+    Thus $\Lambda_\mu$ is a distribution of order zero.
+\end{example}
+
+\begin{example}
+    Not all distributions arise from functions or measures. For instance, if $\phi \in C_c^\infty(\RR)$, then
+    %
+    \[ \text{p.v} \int \frac{f(x)}{x} = \lim_{\varepsilon \to 0} \int_{|x| > \varepsilon} \frac{f(x)}{x}\; dx \]
+    %
+    exists. This is because the values of $1/x$ on either side of the real axis cancel each other out in the integral. More rigorously, if the support of $\phi$ is contained in $[-N,N]$, then
+    %
+    \[ \left| \int_{|x| > \varepsilon} \frac{\phi(x)}{x} \right| = \left| \int_{\varepsilon < |x| < N} \frac{\phi(x) - \phi(0)}{x} \right| \]
+    %
+    By the mean value theorem, $\phi(x) - \phi(0) = x\phi'(y)$ for some $y$ between zero and $x$, so
+    %
+    \[ \left| \int_{|x| \leq \varepsilon} \frac{\phi(x) - \phi(0)}{x} \right| \leq 2 \varepsilon \| \phi \|_{C^1} \]
+    %
+    From this, we can conclude that the values converge, and that
+    %
+    \[ \left| \text{p.v.} \int \frac{\phi(x)}{x} \right| \lesssim \| \phi \|_{C^1} \]
+    %
+    Thus this linear functional is actually continuous, hence a distribution, and it is not induced by any function or measure. This distribution is the derivative of the distribution induced by the locally integrable function $\log |x|$, since an integration by parts gives
+    %
+    \begin{align*}
+        - \int \log |x| f'(x) &= \lim_{\varepsilon \to 0} \int_{|x| \geq \varepsilon} \log |x| f'(x)\\
+        &= \log \varepsilon \left( f(x) - f(-x) \right) + \int_{|x| \geq \varepsilon} \frac{f(x)}{x} = \text{p.v.} \int \frac{f(x)}{x}\; dx
+    \end{align*}
+\end{example}
+
+As we stated before, given any distribution $\Lambda$, we can define it's {\it derivative} $D^\alpha \Lambda$ to be the distribution
+%
+\[ D^\alpha \Lambda (\phi) = (-1)^{|\alpha|} \Lambda(D^\alpha \phi) \]
+%
+which is continuous since the derivative operation is continuous on $C_c^\infty(\Omega)$. Just as the partial derivatives commutes on $C_c^\infty(\Omega)$, the partial differentiation operation commutes on the the space of distributions, i.e. $D^\alpha D^\beta \Lambda = D^\beta D^\alpha \Lambda$, and we take the common value to be $D^{\alpha + \beta} \Lambda$. If $D^\alpha f$ is continuous, then we already know an integration by parts gives $D^\alpha \Lambda_f = \Lambda_{D^\alpha f}$, so we can think of the distribution derivative as a true generalization of the usual derivative. On the other hand, in general the distribution derivative may disagree with the usual derivative if the function is less well behaved. If $P$ is a polynomial, we have
+%
+\[ P(D)(\Lambda)(\phi) = \Lambda(P(-D)(\phi)) \]
+%
+if we understand the polynomial applications of derivatives linearly.
+
+\begin{example}
+    Let $f$ be a left continuous function on the real line with bounded variation. Then $f'$ exists almost everywhere, and $f' \in L^1(\RR)$. Now by Fubini's theorem, if we let $\mu$ be the measure defined by $\mu([a,b)) = f(b) - f(a)$, then for any $\phi \in C_c^\infty(\RR)$,
+    %
+    \begin{align*}
+        \int_{-\infty}^\infty \phi(x) d\mu(x) &= - \int_{-\infty}^\infty \int_{(x,\infty)} \phi'(y)\; dy\; d\mu(x) = - \int_{-\infty}^\infty \phi'(y) \int_{(-\infty,y)} d\mu(x)\; dy\\
+        &= - \int_{-\infty}^\infty \phi'(y) [f(y) - f(-\infty)] dy
+    \end{align*}
+    %
+    and we know $f(-\infty) = 0$, hence we find $\smash{\Lambda_f' = \Lambda_\mu}$. In particular, we only have $\smash{\Lambda_f' = \Lambda_\mu}$ if $\smash{f dx = \mu}$, which only holds if $f$ is absolutely continuous.
+\end{example}
+
+If $f \in L^1_{\text{loc}}(\RR^n)$, and $g$ is $C^\infty$, then $fg$ is locally integrable. The identity
+%
+\[ \int (f(x)g(x)) \phi(x)\; dx = \int f(x) (g(x) \phi(x))\; dx \]
+%
+enables us to define the product of a $C^\infty(\Omega)$ function with a distribution. Given any distribution $\Lambda$, we define $(f \Lambda)(\phi) = \Lambda(f \phi)$. To see why $f \Lambda$ is a distribution, fix a compact set $K$, and pick $A$ and $N$ such that for any $\phi \in C_c^\infty(K)$, $|\Lambda(f)| \leq A \| f \|_{N,K}$. The Leibnitz rule tells us that
+%
+\[ D^\alpha(f \phi) = \sum_{\lambda + \gamma = \alpha} C_{\lambda \gamma} D^\lambda f D^\gamma \phi \]
+%
+and so
+%
+\[ |\Lambda(f \phi)| \leq A \| f \phi \|_{N,K} \leq N A \left( \max |C_{\lambda \gamma}| \| D^\lambda f \|_{L^\infty(K)} \right) \| \phi \|_{C^N(K)} \]
+%
+so $f \Lambda$ is a distribution with the same order as $\Lambda$. It is important that $f$ is a smooth function, so that $fg$ is smooth for each function $g$.
+
+Since $C_c^\infty(X)^*$ is the dual space of a topological vector space, we can give it a natural topology, the weak $*$ topology. Thus a net of distributions $\Lambda_\alpha$ converges to $\Lambda$ if and only if $\Lambda_\alpha(\phi) \to \Lambda(\phi)$ for all test functions $\phi$. This gives a further topology on the space of measures and functions, and we often write $f_\alpha \to f$ `in the distribution sense' if we have a convergence $\Lambda_{f_\alpha} \to \Lambda_f$ for the corresponding distributions. Since the convergence in $C_c^\infty(\Omega)$ is incredibly strict, convergence of distributions is incredibly weak. The following is quite a surprising result which hints at the generality of the theory of distributions.
+
+\begin{theorem}
+    Suppose that $\Lambda_1, \Lambda_2, \dots$ are a sequence of distributions such that for a fixed test function $\phi$,
+    %
+    \[ \Lambda \phi = \lim \Lambda_n \phi \]
+    %
+    exists. Then $\Lambda$ is a distribution, and $D^\alpha \Lambda_n \to D^\alpha \Lambda$ for each $\alpha$.
+\end{theorem}
+\begin{proof}
+    Fix a compact set $K$. Then the Banach Steinhaus theorem guarantees that $\Lambda$ restricted to $C_c^\infty(K)$ is a continuous functional, and we know this implies $\Lambda$ is continuous in general. The fact that $D^\alpha \Lambda_n \to D^\alpha \Lambda$ is trivial, because for a fixed $\phi$, $D^\alpha \phi \in C_c^\infty(X)$, so
+    %
+    \[ D^\alpha \Lambda(\phi) = (-1)^{|\alpha|} \Lambda(D^\alpha \phi) = (-1)^{|\alpha|} \lim \Lambda_n(D^\alpha \phi) = \lim D^\alpha \Lambda_n(\phi) \]
+    %
+    Thus the sequence weakly converges to $D^\alpha \Lambda$.
+\end{proof}
+
+A similar application of the Banach Steinhaus theorem guarantees that if $g_n \to g$ in $C^\infty(\mathbf{R}^n)$, and $\Lambda_n \to \Lambda$ in the distributional sense, then $g_n \Lambda_n$ converges to $g \Lambda$ in the distributional sense. Thus the space of distributions is a topological $C^\infty(\mathbf{R}^n)$ module.
+
+\section{Localization of Distribuitions}
+
+Just as we can consider the local behaviour of functions around a point, we can consider the local behaviour of a distribution around points, and this local behaviour contains most of the information of the distribution. For instance, given an open subset $U$ of $X$, we say two distributions $\Lambda$ and $\Psi$ are equal on $U$ if $\Lambda \phi = \Psi \phi$ for every test function $\phi$ compactly supported in $U$. We recall the notion of a partition of unity, which, for each open cover $U_\alpha$ of Euclidean space, gives a family of $C^\infty$ functions $\psi_\alpha$ which are positive, {\it locally finite}, in the sense that only finitely many functions are positive on each compact set, and satisfy $\sum \psi_\alpha = 1$ on the union of the $U_\alpha$.
+
+\begin{theorem}
+    If $X$ is covered by a family of open sets $U_\alpha$, and $\Lambda$ and $\Psi$ are locally equal on each $U_\alpha$, then $\Lambda = \Psi$. If we have a family of distributions $\Lambda_\alpha$ which agree with one another on $U_\alpha \cap U_\beta$, then there is a unique distribution $\Lambda$ locally equal to each $\Lambda_\alpha$.
+\end{theorem}
+\begin{proof}
+    Since we can find a $C^\infty$ partition of unity $\psi_\alpha$ compactly supported on the $U_\alpha$, upon which we find if $\phi$ is supported on $K$, then finitely many of the $\psi_\alpha$ are non-zero on $K$, and so
+    %
+    \[ \Lambda(\phi) = \sum \Lambda(\psi_\alpha \phi) = \sum \Psi(\psi_\alpha \phi) = \Psi(\phi) \]
+    %
+    Thus $\Lambda = \Psi$. Conversely, if we have a family of distributions $\Lambda_\alpha$ like in the hypothesis, then we can find a partition of unity $\psi_{\alpha \beta}$ subordinate to $U_\alpha \cap U_\beta$, and we can define
+    %
+    \[ \Lambda(\phi) = \sum \Lambda_\alpha(\psi_{\alpha \beta} \phi) = \sum \Lambda_\beta(\psi_{\alpha \beta} \phi) \]
+    %
+    The continuity is verified by fixing a compact $K$, from which there are only finitely many nonzero $\psi_{\alpha \beta}$ on $K$, and the fact that this definition is independant of the partition of unity follows from the first part of the theorem.
+\end{proof}
+
+In the language of modern commutative algebra, the association of $C_c^\infty(U)^*$ to each open subset $U$ of $\Omega$ gives a sheaf structure to $\Omega$. Given a distribution $\Lambda$, we might have $\Lambda(\phi) = 0$ for every $\phi$ supported on some open set $U$. The complement of the largest open set $U$ for which this is true is called the {\bf support} of $\Lambda$. If $f$ vanishes on a neighbourhood of the support of $\Lambda$, then by definition of the support, $\Lambda f = 0$. The neighbourhood condition is important -- $\delta'$ is supported on $\{ 0 \}$, since $\delta$ is, but it certainly doesn't vanish on $f$ if $f(0) = 0$.
+
+\begin{theorem}
+    If a distribution has precompact support, the distribution has finite order, and extends uniquely to a continuous linear functional on $C^\infty(X)$.
+\end{theorem}
+\begin{proof}
+    Let $\Lambda$ be a distribution supported on a compact set. If $\psi$ is a function with compact support with $\psi(x) = 1$ on the support of $\Lambda$, then $\psi \Lambda = \Lambda$, because for any $\phi$, $\phi - \phi \psi$ is supported on a set disjoint from the support of $\Lambda$. But if $\psi$ is supported on $K$, then there is $N$ such that for any $\phi \in C_c^\infty(K)$,
+    %
+    \[ |\Lambda(\phi)| \lesssim \| \phi \|_{N,K} \]
+    %
+    and so for any other compact set $K$,
+    %
+    \[ |\Lambda(\phi)| = |\Lambda(\phi \psi)| \lesssim \| \phi \psi \|_{N,K} \lesssim \| \psi \|_{C^N(K)} \| \phi \|_{C^N(K)} \]
+    %
+    which shows $\Lambda$ has order $N$. We have shown that $\Lambda$ is continuous with respect to the seminorm $\| \cdot \|_{C^N(K)}$ on $C^\infty(X)$, and so by the Hahn Banach theorem, $\Lambda$ extends uniquely to a continuous functional on $C^\infty(X)$.
+\end{proof}
+
+\begin{example}
+    If $\Lambda(\phi) = \sum_{|\alpha| \leq N} \lambda_\alpha D^\alpha \phi(x)$, then $\Lambda$ is supported on $x$. Conversely, every distribution $\Lambda$ supported on $x$ is of this form. We know $\Lambda$ must have finite order $N$, and consider $\phi$ with $D^\alpha \phi(x) = 0$ for all $|\alpha| \leq N$. We claim $\Lambda(\phi) = 0$. Fix $\varepsilon > 0$, and choose a compact neighbourhood $K$ of the origin with $|D^\alpha \phi(x)| < \varepsilon$ on $K$ for all $|\alpha| = N$. Then for $|\alpha| < N$, the mean value theorem implies that, by induction,
+    %
+    \[ |D^\alpha \phi(x)| \leq \varepsilon n^{N - |\alpha|} |x|^{N-|\alpha|} \]
+    %
+    Find $A$ such that for functions $\phi$ supported on $K$,
+    %
+    \[ |\Lambda(\phi)| \leq A \| \phi \|_{C^N(K)} \]
+    %
+    Fix a bump function $\psi$ with support on the ball of radius one and $\psi(x) = 1$ in a neighbourhood of the origin, and define $\psi_\delta(x) = \psi(x/\delta)$. If $\delta$ is small enough, then $\psi$ is supported on $K$, and because $\Lambda$ is supported on $x$,
+    %
+    \begin{align*}
+        |\Lambda(\phi)| &= |\Lambda(\phi \psi_\delta)| \leq A \| \phi \psi_\delta \|_{C^N(K)}\\
+        &\leq A \sum_{|\alpha + \beta| = N} |c_{\alpha \beta}| \| D^\alpha \phi \|_\infty \| D^\beta \psi_\delta \|\\
+        &\leq A \| \psi \|_{C^N} \sum_{|\alpha + \beta| = N} |c_{\alpha \beta}| \delta^{|\beta| - |\alpha|} \| D^\beta \phi \|_{L^\infty(K)}\\
+        &\leq \varepsilon A \left( \sum_{|\alpha + \beta| = N} |c_{\alpha \beta}| n^{N - |\beta|} \right)
+    \end{align*}
+    %
+    We can then let $\varepsilon \to 0$ to conclude $\Lambda(\phi) = 0$. But this means that $\Lambda(\phi)$ is a linear function of the partial derivatives of $\phi$ with order $\leq N$, completing the proof.
+\end{example}
+
+\begin{example}
+    If $\delta$ is the Dirac delta distribution, then $f \delta = f(0) \delta$ for any smooth function $f$. Thus, in particular, $x \delta = 0$. Conversely, if $\Lambda$ is any distribution with $x \Lambda = 0$, then $\Lambda$ is a multiple of the Dirac delta distribution. To see this, we note that this would imply $\Lambda(f) = 0$ for all functions $f$ such that $f/x$ is also smooth and compactly supported. In particular, this is true if the support of $f$ does not contain the origin. Thus $\Lambda$ is supported on the origin, hence there are constants $a_n$ such that
+    %
+    \[ \Lambda f = \sum_{n = 0}^N a_n f^{(n)}(0) \]
+    %
+    But $(xf)^{(n)}(0) = n f^{(n-1)}(0)$ only vanishes for all $f$ when $n = 0$, so $\Lambda$ is a multiple of the Dirac delta distribution. A more simple way to see this is that if $f$ is compactly supported on $[-N,N]$, the function
+    %
+    \[ g(x) = \frac{f(x) - f(0)}{x} = \int_0^1 f'(tx)\; dt \]
+    %
+    is smooth, and $f = f(0) + xg$. Since $\Lambda$ and $x \Lambda$ have bounded support, they extend uniquely to $C^\infty(\Omega)$, and so $\Lambda f = f(0) \Lambda 1 + \Lambda(xg) = f(0) \Lambda 1$.
+\end{example}
+
+In many other ways, distributions act like functions. For instance, any distribution $\Lambda$ can be uniquely written as $\Lambda_1 + i \Lambda_2$ for two distributions $\Lambda_1, \Lambda_2$ that are real valued for any real-valued smooth continuous function. However, we cannot write a real-valued distribution as the difference of two positive distributions, i.e. those which are non-negative when evaluated at any non-negative functional. Given a non-negative functional $\Lambda$,  we define $\Lambda f$ for a compactly supported continuous function $f \geq 0$ as
+%
+\[ \Lambda f = \sup \{ \Lambda g: g \in C_c^\infty(\mathbf{R}^n), g \leq f \} \]
+%
+and then in general define $\Lambda (f^+ - f^-) = \Lambda f^+ - \Lambda f^-$. Then $\Lambda$ is obviously a positive extension of $\Lambda$ to all continuous functions, and is linear. But then the Riesz representation theorem implies that there is a positive Radon measure such that $\Lambda = \Lambda_\mu$, completing the proof.
+
+\section{Derivatives of Continuous Functions}
+
+One of the main reasons to consider the theory of distributions is so that we can take the derivative of any function we want. We now show that, at least locally, every distribution is the derivative of some continuous function, which means the theory of distributions is essentially the minimal such class of objects which enable us to take derivatives of continuous functions.
+
+\begin{theorem}
+    If $\Lambda$ is a distribution on $\Omega$, and $K$ is a compact set, then there is a continuous function $f$ and $\alpha$ such that for every $\phi$,
+    %
+    \[ \Lambda \phi = (-1)^{|\alpha|} \int_\Omega f(x) (D^\alpha \phi)(x)\; dx \]
+\end{theorem}
+\begin{proof}
+    TODO
+\end{proof}
+
+\begin{theorem}
+    If $K$ is compact, contained in some open subset $V$, which in turn is a subset of $\Omega$, and $\Lambda$ has order $N$, then there exists finitely many continuous functions $f_\beta \in C(\Omega)$ supported on $V$, for each $|\beta| \leq N + 2$, with supports on $V$, and with $\Lambda = \sum D^\beta f_\beta$.
+\end{theorem}
+
+\begin{theorem}
+    If $\Lambda$ is a distribution on $\Omega$, then there exists continuous functions $g_\alpha$ on $\Omega$ such that each compact set $K$ intersects the supports of finitely many of the $g_\alpha$, and $\Lambda = \sum D^\alpha g_\alpha$. If $\Lambda$ has finite order, then only finitely many of the $g_\alpha$ are nonzero.
+\end{theorem}
+
+\section{Convolutions of Distributions}
+
+Using the convolution of two functions as inspiration, we will not define the convolution of a distribution $\Lambda$ with a test function $\phi$, and under certain conditions, the convolution of two distributions. Recall that if $f,g \in L^1(\mathbf{R}^n)$, then their convolution is the function in $L^1(\mathbf{R}^n)$ defined by
+%
+\[ (f * g)(x) = \int f(y) g(x - y)\; dy \]
+%
+If we define the translation operators $(T_y g)(x) = g(x-y)$, then $(f * g)(x) = \int f(y) (T_x g^*)(y)\; dy$, where $g^*$ is the function defined by $g^*(x) = g(-x)$. Thus, if $\Lambda$ is any distribution on $\mathbf{R}^n$, and $\phi$ is a test function on $\mathbf{R}^n$, we can define a function $\Lambda * \phi$ by setting $(\Lambda * \phi)(x) = \Lambda(T_x g^*)$. Notice that since
+%
+\begin{align*}
+    \int (T_x f)(y) g(y)\; dy &= \int f(y-x) g(y)\; dy = \int f(y) g(x+y)\; dy\\
+    &= \int f(y) (T_{-x}g)(y)\; dy
+\end{align*}
+%
+Notice that we can also define the translation operators on distributions by setting $(T_x \Lambda)(\phi) = \Lambda (T_{-x} \phi)$. One mechanically verifies that convolution commutes with translations, i.e. $T_x (\Lambda * \phi) = (T_x \Lambda) * \phi = \Lambda * (T_x \phi)$.
+
+\begin{theorem}
+    $\Lambda * \phi$ is $C^\infty$, and $D^\alpha(\Lambda * \phi) = (D^\alpha \Lambda) * \phi = \Lambda * (D^\alpha \phi)$.
+\end{theorem}
+\begin{proof}
+    It is easy to calculate that
+    %
+    \begin{align*}
+        (D^\alpha \Lambda * \phi)(x) &= (D^\alpha \Lambda)(\phi^*_x) = (-1)^{|\alpha|} \Lambda(D^\alpha (T_x \phi^*))\\
+        &= \Lambda(T_x (D^\alpha \phi)^*) = (\Lambda * D^\alpha \phi)(x)
+    \end{align*}
+    %
+    If $e$ is a unit vector, and we set $\Delta_h = h^{-1} (1 - T_{he})$, then $\Delta_h \phi$ converges to $D_e \phi$ in $C_c^\infty(\mathbf{R}^n)$, and as such,
+    %
+    \begin{align*}
+        \Delta_h(\Lambda * \phi)(x) &= \frac{(\Lambda * \phi)(x) - (\Lambda * \phi)(x - he)}{h}\\
+        &= \frac{\Lambda(T_x \phi^* - T_{-he} (T_x \phi^*)}{h} = \Lambda(T_x(\Delta_h \phi^*))
+    \end{align*}
+    %
+    and this converges to $\Lambda(D_e \phi^*) = (\Lambda * D_e \phi)(x)$ as $h \to 0$. Iteration of this fact gives the general result.
+\end{proof}
+
+\begin{theorem}
+    If $\phi, \psi \in C_c^\infty(\mathbf{R}^n)$, then $\Lambda * (\phi * \psi) = (\Lambda * \phi) * \psi$.
+\end{theorem}
+\begin{proof}
+    Let $\phi$ and $\psi$ be supported on $K$. We calculate
+    %
+    \[ (\phi * \psi)^*(x) = \int \phi^*(x + y) \psi(y)\; dy = \int (T_y \phi)^*(x) \psi(y)\; dy \]
+    %
+    since the map $y \mapsto (T_y \phi)^* \psi(y)$ is continuous, and vanishes out of the compact set $K$, so that we have a $C_c^\infty(K)$ valued integral
+    %
+    \[ (\phi * \psi)^* = \int_K \psi^*(y) T_y \phi^*\; ds \]
+    %
+    This means precisely that
+    %
+    \begin{align*}
+        (\Lambda * (\phi * \psi))(0) &= \Lambda((\phi * \psi)^*) = \int_K \psi^*(y) \Lambda(T_y \phi^*)\; dy\\
+        &= \int_K \psi^*(y) (\Lambda * \phi)(y)\; dy = ((\Lambda * \phi) * \psi)(0)
+    \end{align*}
+    %
+    The commutativity in general results from applying the commutativity of the translation operators.
+\end{proof}
+
+A net $\phi_\alpha$ is known as an {\it approximate identity} in the space of distributions if $\Lambda * \phi_\alpha \to \Lambda$ as distributions for every distribution $\phi$, and an approximate identity in the space of test functions if $\psi * \phi_\alpha \to \psi$ in $C_c^\infty(\mathbf{R}^n)$.
+
+\begin{theorem}
+    If $\phi_\alpha$ is a family of non-negative functions in $C_c^\infty(\mathbf{R}^n)$ which are eventually supported on every neighbourhood of the origin, and integrate to one, then $\phi_\alpha$ is an approximation to the identity in the space of test functions and in the space of distributions.
+\end{theorem}
+\begin{proof}
+    It is easy to verify that if $f$ is a continuous function, then $f * \phi_\delta$ converges locally uniformly to $f$ as $\delta \to 0$. But now we calculate that if $f \in C_c^\infty(\mathbf{R}^n)$, then $D^\alpha(f * \phi_\delta) = (D^\alpha f) * \phi_\delta$ converges locally uniformly to $D^\alpha \phi$, which gives that $f * \phi$ converges to $f$ in $C_c^\infty(\mathbf{R}^n)$. Now if $\Lambda$ is a distribution, and $\psi$ is a test function, then continuity gives
+    %
+    \begin{align*}
+        \Lambda(\psi^*) &= \lim_{\delta \to 0} \Lambda(\phi_\delta * \psi) = \lim_{\delta \to 0} (\Lambda * (\phi_\delta * \psi))(0)\\
+        &= \lim_{\delta \to 0} ((\Lambda * \phi_\delta) * \psi)(0) = \lim_{\delta \to 0} (\Lambda * \phi_\delta)(\psi^*)
+    \end{align*}
+    %
+    and $\psi$ was arbitrary.
+\end{proof}
+
+If $\Lambda$ is a distribution on $\mathbf{R}^n$, then the map $\phi \mapsto \Lambda * \phi$ is a linear transformation from $C_c^\infty(\mathbf{R}^n)$ into $C^\infty(\mathbf{R}^n)$, which commutes with translations. It is also continuous. To see this, we consider a fixed compact $K$, and consider the map from $C_c^\infty(K)$ to $C^\infty(\mathbf{R}^n)$. We can apply the closed graph theorem to prove continuity, so we assume the existence of $\phi_1, \phi_2, \dots$ converging to $\phi$ in $C_c^\infty(K)$ and $\Lambda * \phi_1, \Lambda * \phi_2, \dots$ converges to $f$. It suffices to show $f = \Lambda * \phi$. But we calculate
+%
+\[ f(x) = \lim (\Lambda * \phi_n)(x) = \lim \Lambda(T_x \phi^*_n) = \Lambda (\lim T_x \phi^*_n) = \Lambda(T_x \phi^*) = (\Lambda * \phi)(x) \]
+%
+where we have used the fact that $T_x \phi_n^*$ converges to $T_x \phi^*$ in $C_c^\infty(\mathbf{R}^n)$. Suprisingly, the converse is true.
+
+\begin{theorem}
+    If $L: C_c^\infty(\mathbf{R}^n) \to C^\infty(\mathbf{R}^n)$ and commutes with translations, then there is a distribution $\Lambda$ such that $L(\phi) = \Lambda * \phi$.
+\end{theorem}
+\begin{proof}
+    If $L(\phi) = \Lambda * \phi$, then we would have
+    %
+    \[ \Lambda(\phi) = (\Lambda * \phi^*)(0) = L(\phi^*)(0) \]
+    %
+    and we take this as the definition of $\Lambda$. $\Lambda$ is continuous because all the operations here are continuous, and because $L$ commutes with translations, we conclude
+    %
+    \[ (\Lambda * \phi)(x) = \Lambda(T_x \phi^*) = L(T_{-x} \phi)(0) = L(\phi)(x) \]
+    %
+    which gives the theorem.
+\end{proof}
+
+We now move onto the case where a distribution $\Lambda$ has compact support. Then $\Lambda$ extends to a continuous functional on $C^\infty(\mathbf{R}^n)$, and we can define the convolution $\Lambda * \phi$ if $\phi \in C^\infty(\mathbf{R}^n)$. The same techniques as before verify that translations and derivatives are carried into the convolution.
+
+\begin{theorem}
+    If $\phi$ and $\Lambda$ have compact support, then $\Lambda * \phi$ has compact support.
+\end{theorem}
+\begin{proof}
+    Let $\phi$ and $\Lambda$ be supported on $K$. Then $(\Lambda * \phi)(x) = \Lambda(T_x \phi^*)$. Since $T_x \phi^*$ is supported on $x - K$, for $x$ large enough $x-K$ is disjoint from $K$, and so $\Lambda * \phi$ vanishes outside of $K + K$.
+\end{proof}
+
+\begin{theorem}
+    If $\Lambda$ and $\psi$ have compact support, and $\phi \in C^\infty(\mathbf{R}^n)$, then
+    %
+    \[ \Lambda * (\phi * \psi) = (\Lambda * \phi) * \psi = (\Lambda * \psi) * \phi \]
+\end{theorem}
+\begin{proof}
+    Let $\Lambda$ and $\psi$ be supported on some balanced compact set $K$. Let $V$ be a bounded, balanced open set containing $K$. If $\phi_0$ is a function with compact support equal to $\phi$ on $V + K$, then for $x \in V$,
+    %
+    \[ (\phi * \psi)(x) = \int \phi(x - y) \psi(y)\; dy = \int \phi_0(x - y) \psi(y)\; dy = (\phi_0 * \psi)(x) \]
+    %
+    Thus
+    %
+    \[ (\Lambda * (\phi * \psi))(0) = (\Lambda * (\phi_0 * \psi))(0) = ((\Lambda * \psi) * \phi_0)(0) \]
+    %
+    But $\Lambda * \psi$ is supported on $K + K$, so $((\Lambda * \psi) * \phi_0)(0) = ((\Lambda * \psi) * \phi)(0)$. Now we also calculate
+    %
+    \[ (\Lambda * (\phi * \psi))(0) = ((\Lambda * \phi_0) * \psi)(0) = ((\Lambda * \phi) * \psi)(0) \int (\Lambda * \phi_0)(-y) \psi(y) \]
+    %
+    where the last fact follows because $\Lambda * \phi_0$ agrees with $\Lambda * \phi$ on $K$. The general fact follows by applying the translation operators.
+\end{proof}
+
+Now we come to the grand finale, defining the convolution of two distributions. Given two distributions $\Lambda$ and $\Psi$, one of which has compact support, we define the linear operator
+%
+\[ L(\phi) = \Lambda * (\Psi * \phi) \]
+%
+Then $L$ commutes with translations, and is continuous, because if we have $\phi_1, \phi_2, \dots$ converging to $\phi$ in $C_c^\infty(K)$, then $\Psi * \phi_n$ converges to $\Psi * \phi$ in $C^\infty(\mathbf{R}^n)$. If $\Psi$ is supported on a compact support $C$, then the $\Psi * \phi_n$ have common compact support $C + K$, and actually converge in $C_c^\infty(C + K)$, hence $\Lambda * (\Psi * \phi_n)$ converges to $\Lambda * (\Psi * \phi)$. Conversely, if $\Lambda$ has compact support, then $\Psi * \phi_n$ converges in $C^\infty(\mathbf{R}^n)$, which implies $\Lambda * (\Psi * \phi_n)$ converges to $\Lambda * (\Psi * \phi)$ in $C^\infty(\mathbf{R}^n)$. Thus $L$ corresponds to a distribution, and we define this distribution to be $\Lambda * \Psi$.
+
+\begin{theorem}
+    If $\Lambda$ and $\Psi$ are distributions, one of which has compact support, then $\Lambda * \Psi = \Psi * \Lambda$. Let $S_\Lambda$ and $S_\Psi$, and $S_{\Lambda * \Psi}$ denote the supports of $\Lambda$, $\Psi$, and $\Lambda * \Psi$. Then $\Lambda * \Psi = \Psi * \Lambda$, and $S_{\Lambda * \Psi} \subset S_\Lambda + S_\Psi$.
+\end{theorem}
+\begin{proof}
+    We calculate that for any two test functions $\phi$ and $\psi$,
+    %
+    \[ (\Lambda * \Psi) * (\phi * \psi) = \Lambda * (\Psi * (\phi * \psi)) = \Lambda * ((\Psi * \phi) * \psi) \]
+    %
+    If $\Lambda$ has compact support, then
+    %
+    \[ \Lambda * ((\Psi * \phi) * \psi) = (\Lambda * \psi) * (\Psi * \phi) \]
+    %
+    Conversely, if $\Psi$ has compact support, then
+    %
+    \[ \Lambda * ((\Psi * \phi) * \psi) = \Lambda * (\psi * (\Psi * \phi)) = (\Lambda * \psi) * (\Psi * \phi) \]
+    %
+    We also calculate
+    %
+    \begin{align*}
+        \Psi * ((\Lambda * \phi) * \psi) &= \Psi * (\Lambda * (\phi * \psi)) = \Psi * (\Lambda * (\psi * \phi))\\
+        &= \Psi * ((\Lambda * \psi) * \phi) = (\Psi * \phi) * (\Lambda * \psi)
+    \end{align*}
+    %
+    But since convolution is commutative, we have
+    %
+    \[ ((\Lambda * (\Psi * \phi)) * \psi) = \Lambda * ((\Psi * \phi) * \psi) = \Psi * ((\Lambda * \phi) * \psi) = (\Psi * (\Lambda * \phi)) * \psi \]
+    %
+    Since $\psi$ was arbitrary, we conclude
+    %
+    \[ (\Lambda * \Psi) * \phi = \Lambda * (\Psi * \phi) = \Psi * (\Lambda * \phi) = (\Psi * \Lambda) * \phi \]
+    %
+    and now since $\phi$ was arbitrary, we conclude $\Lambda * \Psi = \Psi * \Lambda$. Now we know convolution is commuatative, we may assume $S_\Psi$ is compact. The support of $\Psi * \phi^*$ lies in $S_\Psi - S_\phi$. But this means that if $S_\phi - S_\Psi$ is disjoint from $S_\Lambda$, which means exactly that $S_\phi$ is disjoint from $S_\Lambda + S_\Psi$, then
+    %
+    \[ (\Lambda * \Psi)(\phi) = (\Lambda * (\Psi * \phi))(0) = 0 \]
+    %
+    and this gives the support of $\Lambda * \Psi$.
+\end{proof}
+
+This means that the convolution of two distributions with compact support also has compact support. This means that if we have three distributions $\Lambda, \Psi$, and $\Phi$, two of which have compact support, then the distributions $\Lambda * (\Psi * \Phi)$ and $(\Lambda * \Psi) * \Phi$ are well defined, so convolution is associative and commutative. We calculate that for any test function $\phi$,
+%
+\[ (\Lambda * (\Psi * \Phi)) * \phi = \Lambda * (\Psi * (\Phi * \phi)) \]
+\[ ((\Lambda * \Psi) * \Phi) * \phi = (\Lambda * \Psi) * (\Phi * \phi) \]
+%
+If $\Phi$ has compact support, then $\Phi * \phi$ has compact support, and so we can move $(\Lambda * \Psi)$ into the equation to prove equality. If $\Phi$ does not have compact support, then $\Lambda$ and $\Psi$ have compact support, and
+%
+\[ \Lambda * (\Psi * \Phi) = \Lambda * (\Phi * \Psi) \]
+%
+and we can apply the previous case to obtain that this is equal to $(\Lambda * \Phi) * \Psi$. Repeatedly applying the previous case brings this to what we want.
+
+\begin{theorem}
+    If $\Lambda$ and $\Psi$ are distributions, then
+    %
+    \[ D^\alpha(\Lambda * \Psi) = (D^\alpha \Lambda) * \Psi = \Lambda * (D^\alpha \Psi) \]
+\end{theorem}
+\begin{proof}
+    The Dirac delta function $\delta$ satisfies
+    %
+    \[ (\delta * \phi)(x) = \int \phi(y) \delta(x-y)\; dy = \phi(x) \]
+    %
+    so $\delta * \phi = \phi$. Now $D^\alpha \delta$ is also supported at $x$, since
+    %
+    \[ (D^\alpha \delta)(\phi) = (-1)^{|\alpha|} \int \delta(x) (D^\alpha \phi)(x)\; dx = (-1)^{|\alpha|} (D^\alpha \phi)(0) \]
+    %
+    which means that for any distribution $\Lambda$, then $(D^\alpha \delta) * \Lambda$ has compact support,
+    %
+    \[ (((D^\alpha \delta) * \Lambda) * \phi)(0) = (D^\alpha \delta)((\Lambda * \phi)^*) = (-1)^{|\alpha|} D^\alpha (\Lambda * \phi)^* = ((D^\alpha \Lambda) * \phi)(0) \]
+    %
+    which verifies that $(D^\alpha \delta) * \Lambda = \delta * (D^\alpha \Lambda)$. But now we find
+    %
+    \[ D^\alpha(\Lambda * \Psi) = (D^\alpha \delta) * \Lambda * \Psi = ((D^\alpha \delta) * \Lambda) * \Psi = D^\alpha \Lambda * \Psi \]
+    \[ D^\alpha(\Lambda * \Psi) = D^\alpha(\Psi * \Lambda) = (D^\alpha \Psi) * \Lambda = \Lambda * (D^\alpha \Psi) \]
+    %
+    which verifies the theorem in general.
+\end{proof}
+
+
+
+
+
+
+
+
 \chapter{Basics of Integral Operators}
 
 
@@ -1780,7 +2395,7 @@ We then consider
 %
 \[ \mathcal{S}(\RR^d) = \left\{ f: \RR^d \to \RR: \text{for all}\ n,m, \| f \|_{n,m} < \infty \right\}. \]
 %
-Elements of $\mathcal{S}(\RR^d)$ are known as \emph{Schwartz functions}, and $\mathcal{S}(\RR^d)$ is known as the \emph{Schwartz space}. The seminorms naturally give $\mathcal{S}(\RR^d)$ the structure of a Fr\'{e}chet space. Sometimes, it is more convenient to use the equivalent family of seminorms $\| f \|_{\alpha, \beta} = \| x^\alpha f_\beta \|_{L^\infty(\RR^n)}$, because $x^\alpha$ often behaves more nicely under various operations. It is obvious that $\mathcal{S}(\RR^d)$ is separated by the seminorms defined on it, because $\| \cdot \|_{L^\infty(\RR^d)} = \| \cdot \|_{0,0}$ is a norm used to define the space. We now show the choice of seminorms make the space complete.
+Elements of $\mathcal{S}(\RR^d)$ are known as \emph{Schwartz functions}, and $\mathcal{S}(\RR^d)$ is known as the \emph{Schwartz space}. The seminorms naturally give $\mathcal{S}(\RR^d)$ the structure of a Fr\'{e}chet space. Sometimes, it is more convenient to use the equivalent family of seminorms $\| f \|_{\alpha, \beta} = \| x^\alpha f_\beta \|_{L^\infty(\RR^d)}$, because $x^\alpha$ often behaves more nicely under various operations. It is obvious that $\mathcal{S}(\RR^d)$ is separated by the seminorms defined on it, because $\| \cdot \|_{L^\infty(\RR^d)} = \| \cdot \|_{0,0}$ is a norm used to define the space. We now show the choice of seminorms make the space complete.
 
 \begin{theorem}
     $\mathcal{S}(\RR^d)$ is a complete metric space.
