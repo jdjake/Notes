@@ -2862,28 +2862,93 @@ Approximation by elements of $C^\infty(\overline{\Omega})$ requires some more ca
 
 
 
+\chapter{Basics of Kernel Operators}
 
-\chapter{Basics of Integral Operators}
+We now consider a very general family of operators, which can be seen as the infinite dimensional analogue of matrix multiplication. We fix two measure spaces $X$ and $Y$, and consider a function $K: X \times Y \to \CC$, which we call a \emph{kernel}. From this kernel, we obtain an induced operator $T_K$ taking functions on $X$ to functions on $Y$, given by the integral formula
+%
+\[ (T_K f)(y) = \int_X K(x,y) f(x)\; dx. \]
+%
+Our goal is to understand what properties of $K$ imply boundedness of the operator $T_K$.
 
+\begin{example}
+  If $X = Y = \RR^d$, equipped with the Lebesgue measure. If we set $K(x,\xi) = e^{2 \pi i \xi \cdot x}$, then we can use this function as a kernel to obtain an integral operator
+  %
+  \[ (T_K f)(\xi) = \int f(x) e^{2 \pi i \xi \cdot x}\; dx. \]
+  %
+  Thus the Fourier transform is a kernel operator.
+\end{example}
 
+\begin{example}
+  Let $X = \{ 1, \dots, N \}$ and $Y = \{ 1, \dots, M \}$, each equipped with the counting measure. Then each kernel $K$ corresponds to an $M \times N$ matrix $A$, with $A_{ij} = K(j,i)$, and then
+  %
+  \[ (T_K f)(m) = \sum_{n = 1}^N f(n) K(n,m) = \sum_{n = 1}^N A_{mn} f(n), \]
+  %
+  so with respect to the standard basis, $T_K$ is just given by matrix multiplication by $A$.
+\end{example}
 
-
-
-
-Using analytic interpolation, we can obtain a weighted version of Schur's test.
+In the case where we are mapping \emph{from} $L^1(X)$, or \emph{into} $L^\infty(Y)$, the conditions on $K$ which determine boundedness are rather trivial. This can be taken as a motivation for introducing the $L^p$ norms, since these norm allow us to study the boundedness properties of $K$ with more detail. Since it is not even obvious that $T_K$ is well defined even for simple functions, in the very weak case where $K$ is measurable, we introduce the sublinear analogue $S_K$, defined by setting
+%
+\[ (S_K f)(y) = \int |f(x)| |K(x,y)|\; dx. \]
+%
+Due to the flexibility of non-negative integrals, this operator is defined for any measurable $f$, though the output may be infinite for various values of $y$.
 
 \begin{theorem}
-  Let $K: X \times Y \to \CC$ be an integral kernel, and suppose there are weights $w_X: X \to [0,\infty)$ and $w_Y: Y \to [0,\infty)$ such that for each $x \in X$ and $y \in Y$,
+  Fix $q \geq 1$. If $\| K \|_{L^q(Y) L^\infty(X)} < \infty$, then $S_K$ is bounded as an operator from $L^1(X)$ to $L^q(Y)$, with operator norm bounded above by $\| K \|_{L^q(Y) L^\infty(X)}$, with equality if $X$ and $Y$ are $\sigma$ finite. Correspondingly, for each $f \in L^1(X)$, we have
   %
-  \[ \int |K(x,y)| w_X(x) dx \leq A w_Y(y) \quad\text{and}\quad \int |K(x,y)| w_Y(y) dy\leq Bw_X(x). \]
+  \[ \int K(x,y) f(x)\; dx < \infty\ \text{for almost every $y$}, \]
   %
-  Then the corresponding integral operators $T_K$ is of strong type $(L^2,L^2)$.
+  and $\| T_K f \|_{L^q(Y)} \leq \| K \|_{L^q(Y) L^\infty(X)} \| f \|_{L^1(X)}$.
 \end{theorem}
 \begin{proof}
-  We apply the Stein-Weiss interpolation theorem. The first estimate says that $\| K w_X / w_Y \|_{L^1(X) L^\infty(Y)} \leq A$, and the second estimate says that $\| K w_Y / w_X \|_{L^1(Y) L^\infty(X)} \leq B$. Thus Schur's test implies $T_{Kw_X/w_Y}$ is bounded from $L^\infty(X)$ to $L^\infty(Y)$, and $T_{Kw_Y/w_X}$ is bounded from $L^1(X)$ to $L^1(Y)$. Thus for each $\theta$, Stein-interpolation implies the operator $T_{K w_X^{2\theta - 1} w_Y^{1-2\theta}}$ is bounded from $L^{1/\theta}(X)$ to $L^{1/\theta}(Y)$. In particular, our result is obtained if we set $\theta = 1/2$.
+  Applying Minkowski's inequality, we conclude that
+  %
+  \begin{align*}
+    \| S_K f \|_{L^q(Y)} &= \left( \left( \int |f(x)| |K(x,y)|\; dx \right)^q \right)^{1/q}\\
+    &\leq \int \left( \int |f(x)|^q |K(x,y)|^q\; dy \right)^{1/q}\; dx\\
+    &\leq \int |f(x)| \| K \|_{L^q(Y)}(x)\; dx\\
+    &\leq \| f \|_{L^1(X)} \| K \|_{L^q(Y) L^\infty(X)}.
+  \end{align*}
+  %
+  To show tightness, consider the first case where $K$ can be written as
+  %
+  \[ \sum_{i = 1}^N \sum_{j = 1}^M a_{ij} \mathbf{I}_{E_i \times F_j}, \]
+  %
+  where $E_1, \dots, E_N$ are disjoint, finite measure sets in $X$, and $F_1, \dots, F_M$ are disjoint, finite measure sets in $Y$. Then there exists $i \in \{ 1, \dots, N \}$ such that for each $x \in E_i$,
+  %
+  \[ \left( \int |K(x,y)|^q\; dy \right)^{1/q} = \left( \sum_{j = 1}^M |a_{ij}|^q |F_j| \right)^{1/q} = \| K \|_{L^q(Y) L^\infty(X)}. \]
+  %
+  If $f = \mathbf{I}_{E_i}$, then $\| f \|_{L^1(X)} = |E_i|$, and
+  %
+  \begin{align*}
+    \left( \left( \int |K(x,y) f(x)|\; dx \right)^q dy \right)^{1/q} &= \left( \sum_{j = 1}^M |F_j| |a_{ij}|^q |E_i|^q \right)^{1/q}\\
+    &= \| f \|_{L^1(X)} \| K \|_{L^q(Y) L^\infty(X)}.
+  \end{align*}
+  %
+  Thus $f$ is an extremizer for $S_K$.
+
+  To show this inequality is tight. Let us first consider the case where $q < \infty$. By a monotone convergence result if $X$ and $Y$ are $\sigma$ finite, we may assume that $X$ and $Y$ have finite measure. It then follows that for each $\varepsilon > 0$, there are functions $u_1, \dots, u_n \in L^1(X)$ and $v_1, \dots, v_n \in L^1(Y)$ such that $\| K - u_1 \otimes v_1 - \dots - u_n \otimes v_n \|_{L^1(X \times Y)} < \varepsilon$.
 \end{proof}
 
-
+\begin{lemma}
+  BLAH
+\end{lemma}
+\begin{proof}
+  Let $\Pi$ be the family of all sets $E \times F \subset X \times Y$, where $E$ is a measurable subset of $X$, and $F$ is a measurable subset of $Y$. Then $\Pi$ is a $\pi$ system, in the sense that if $E_1 \times F_1, E_2 \times F_2 \in \Pi$, then $(E_1 \times F_1) \cap (E_2 \times F_2) = (E_1 \cap E_2) \times (F_1 \cap F_2) \in \Pi$. Now let
+  %
+  \[ \Delta = \left\{ G \subset X \times Y: \left( \begin{array}{c} \text{for all $\varepsilon > 0$, there are simple $u_1, \dots, u_n$} \\ \text{on $X$ and $v_1,\dots, v_n$ on $Y$ such that} \\ \| \mathbf{I}_G - \sum u_i \otimes v_i \|_{L^q(Y) L^\infty(X)} < \varepsilon \end{array} \right) \right\}. \]
+  %
+  If $G \in \Delta$, then $G^c \in \Delta$, since $1 = \mathbf{I}_X \otimes \mathbf{I}_Y$. Thus if $\| \mathbf{I}_G - \sum u_i \otimes v_i \|_{L^q(Y) L^\infty(X)} < \varepsilon$, then
+  %
+  \[ \mathbf{I}_{G^c} - (\mathbf{I}_X \otimes \mathbf{I}_Y - \sum u_i \otimes v_i) = (1 - \mathbf{I}_G) - (1 - \sum u_i \otimes y_i) = \sum u_i \otimes y_i - \mathbf{I}_G, \]
+  %
+  and so $\| \mathbf{I}_{G^c} - (\mathbf{I}_X \otimes \mathbf{I}_Y - \sum u_i \otimes v_i) \|_{L^q(Y) L^\infty(X)} < \varepsilon$. If $G_1, G_2, \dots$ are a disjoint family of sets in $\Delta$, then for each $\varepsilon > 0$, and for each $k$ we can find $u_{k1}, \dots, u_{kN_k}$ and $v_{k1}, \dots, v_{kN_k}$ such that
+  %
+  \[ \| \mathbf{I}_{G_k} - \sum\nolimits_i u_{ki} \otimes v_{ki} \|_{L^q(Y) L^\infty(X)} < \varepsilon / 2^k. \]
+  %
+  By monotone convergence, if $G = \bigcup G_k$, then for each fixed $x$,
+  %
+  \[ \lim_{N \to \infty} \int \mathbf{I}_G(x,y) - \sum_{k = 1}^N \mathbf{I}_{G_k}(x,y)\; dx \]
+\end{proof}
 
 
 
