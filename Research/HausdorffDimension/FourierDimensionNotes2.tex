@@ -61,18 +61,24 @@
 
 \maketitle
 
-Geometric measure theory explores the relationship between the geometry of a subset of Euclidean space, and regularity properties of the family of Borel measures supported on that set. From the perspective of harmonic analysis, it is often popular to explore what structural information can be gathered from the Fourier analytic properties of measures supported on a set. In this paper, we study the relationship between the Fourier dimension of a set and the existence of patterns on the set. In particular, given a `rough pattern', in the sense of \cite{OurPaper}, we construct a family of sets which generically avoids this pattern, and has large Fourier dimension.
+Geometric measure theory explores the relationship between the geometry of a subset of Euclidean space, and regularity properties of the family of Borel measures supported on that set. From the perspective of harmonic analysis, it is often popular to explore what structural information can be gathered from the Fourier analytic properties of measures supported on a set. In this paper, we study the relationship between the Fourier analytic properties of a set and the existence of patterns on the set. In particular, given a `rough pattern', in the sense of \cite{OurPaper}, we construct a family of sets which generically avoids this pattern, and which supports measures with fast Fourier decay.
 
 A useful statistic associated with any finite Borel measure $\mu$ on $\RR^d$ is it's \emph{Fourier dimension} $\fordim(\mu)$, defined as the supremum of all $0 \leq s \leq d$ such that
 %
 \begin{equation} \label{fordim}
-    \sup_{\xi \in \RR^d} |\widehat{\mu}(\xi)| |\xi|^{s/2} < \infty.
+    \sup \left\{ |\widehat{\mu}(\xi)| |\xi|^{s/2} : \xi \in \RR^d \right\} < \infty.
 \end{equation}
 %
-The Fourier dimension of a Borel set $E \subset \RR^d$, denoted $\fordim(E)$, is then the supremum of $\fordim(\mu)$, over all Borel measures $\mu$ supported on $E$. A particularly tractable family of sets in this scheme are \emph{Salem sets}, those sets whose Fourier dimension agrees with their Hausdorff dimension. Most classical constructions of sets with fractional Hausdorff dimension are not Salem sets, often having Fourier dimension zero. Nonetheless, the sets we construct in this paper are Salem.
+The Fourier dimension of a Borel set $E \subset \RR^d$, denoted $\fordim(E)$, is then the supremum of $\fordim(\mu)$, over all Borel measures $\mu$ supported on $E$. This definition is analogous to the definition of the Hausdorff dimension; For $x \in \RR^d$ and $\varepsilon > 0$, we let $B_\varepsilon(x)$ denote the open ball of radius $\varepsilon$ centered at $x$. Then $\hausdim(\mu)$ is the supremum of all $0 \leq s \leq d$ such that
+%
+\begin{equation} \label{hausdim}
+    \sup \left\{ \mu(B_\varepsilon(x)) \cdot \varepsilon^{-\alpha} : x \in \RR^d, \varepsilon > 0 \right\} < \infty,
+\end{equation}
+%
+and then define $\hausdim(E)$ to be the supremum of $\hausdim(\mu)$ over all Borel measure $\mu$ supported on $E$. A particularly tractable family of sets in this scheme are \emph{Salem sets}, those sets whose Fourier dimension agrees with their Hausdorff dimension. Most classical constructions of sets with fractional Hausdorff dimension are not Salem sets, often having Fourier dimension zero. Nonetheless, the sets we construct in this paper are Salem.
 
 \begin{theorem} \label{maintheorem}
-    Let $0 \leq \alpha < dn$, and let $Z \subset \RR^{dn}$ be a countable union of compact sets, each with lower Minkowski dimension at most $\alpha$. Then there exists a Salem set $X \subset [0,1)^d$ with dimension
+    Let $0 \leq \alpha < dn$, and let $Z \subset \RR^{dn}$ be a countable union of compact sets, each with lower Minkowski dimension at most $\alpha$. Then there exists a compact Salem set $X \subset [0,1]^d$ with dimension
     %
     \[ \beta = \min \left( \frac{nd - \alpha}{n-1}, d \right) \]
     %
@@ -101,76 +107,249 @@ then $Z_{m,a}$ is a subset of an $n-1$ dimensional hyperplane, and thus can be e
 %
 such that $(x_1, \dots, x_n) \not \in Z$ for each distinct $x_1, \dots, x_n \in X$. Thus $X$ avoids solutions to $\eqref{intequation}$ for all nonzero $m \in \ZZ^n$ and $a \in \ZZ$. Thus we see Theorem \ref{maintheorem} generalizes K\"{o}rner's result, and thus shows the result depends little on the arithmetic properties of the pattern K\"{o}rner avoids, but rather, depends only on the `thickness' of the family of tuples $(x_1, \dots, x_n)$ satisfying the pattern.
 
-To construct our set, we rely on a Baire-category argument for the purpose of our construction. Thus we consider a complete metric space $X$, whose elements consist of pairs $(E,\mu)$. We then show that for quasi-all elements $(E,\mu) \in X$, $E$ satisfies the conclusions of Theorem \ref{maintheorem}, in the sense that the set of pairs $(E,\mu) \in X$ failing to satisfy the conclusions of Theorem \ref{maintheorem} form a set of first category in $X$. It follows that the family of all pairs $(E,\mu)$ satisfying the conclusions of Theorem \ref{maintheorem} are dense in $X$, and thus the conclusions of Theorem \ref{maintheorem} hold in a `generic' sense for elements of $X$.
-
-Once we have setup the appropriate metric space $X$, our approach is quite similar to our construction in \cite{OurPaper}, relying on a random selection procedure, which is now exploited in this paper to give high probability bounds on the Fourier transform of the measures we study. The use of the Baire category approach in this paper, rather than an algorithmic, `nested set' approach, is mostly of an aesthetic nature, avoiding the complex queuing method and dyadic decomposition strategy required in the nested set approach; our approach can, with some care, be converted into a queuing procedure like in \cite{OurPaper}. But the Baire category argument makes our proof simpler to read, and has the advantage that it indicates that the `generic' behaviour of Salem sets of a specified dimension is to avoid a given rough pattern.
-
-\section{Concentration Inequalities}
-
-Our random construction involves a probabilistic concentration argument. In this section, we setup the notation we will use for this argument. Define a convex function $\psi_2: [0,\infty) \to [0,\infty)$ by setting
+Since we are working with compactly supported sets, working in $\RR^d$ is not significantly different from working in a periodic domain $\TT^d = \RR^d / \ZZ^d$, which has the advantage of being compact. For a finite measure $\mu$ on $\TT^d$, we can define it's Fourier dimension $\fordim(\mu)$ as the supremum of all $0 \leq s \leq d$ such that
 %
-\[ \psi_2(t) = e^{t^2} - 1, \]
+\begin{equation} \label{fordimtorus}
+    \sup_{k \in \RR^d} |\widehat{\mu}(k)| |k|^{s/2} < \infty.
+\end{equation}
 %
-The function $\psi_2$ induces an Orlicz norm on the family of scalar valued random variables over a probability space by setting, for each random variable $X$,
-%
-\[ \psitwo{X} = \inf \left\{ A \in (0,\infty) : \EE(\psi_2(|X|/A)) \leq 1 \right\}. \]
-%
-The family of random variables with $\psitwo{X} < \infty$ are known as \emph{subgaussian random variables}. Here are the important properties of subgaussian random variables which we use in this paper:
-%
-\begin{itemize}
-	\item If $\psitwo{X} \leq A$, then for each $t \geq 0$,
-	%
-	\[ \PP \left( |X| \geq t \right) \leq 10 \exp \left( -t^2/10A^2 \right). \]
-    %
-    Thus Subgaussian random variables have Gaussian tails.
-
-	\item If $|X| \leq A$ almost surely, then $\psitwo{X} \leq 10 A$. Thus bounded random variables are subgaussian.
-
-	%\item (Centering) For any random variable $X$,
-	%
-	%\[ \psitwo{X - \EE(X)} \lesssim \psitwo{X}. \]
-	
-	%\item (Union Bound) If $X_1, \dots, X_N$ are random variables, then
-	%
-	%\[ \psitwo{X_1 + \dots + X_N} \leq \psitwo{X_1} + \dots + \psitwo{X_N}. \]
-	
-	\item If $X_1, \dots, X_N$ are \emph{independent}, then
-	%
-	\[ \psitwo{X_1 + \dots + X_N} \leq 10 \left( \psitwo{X_1}^2 + \dots + \psitwo{X_N}^2 \right)^{1/2}. \]
-    %
-    This is an equivalent way to state \emph{Hoeffding's Inequality}, and we refer to an application of this inequality as an application of Hoeffding's inequality.
-\end{itemize}
-
-Roughly speaking, if $X$ is a random variable with $\psitwo{X} \leq A$, we can think of $X$ as being sharply concentrated in the region $[-A,A]$. The Orlicz norm thus provides a convenient way to quantify concentration phenomena.
-
-\begin{remark}
-    The constants involved in these statements are suboptimal, but will suffice for our purposes. Proofs can be found in Chapter 2 of \cite{Vershynin}.
-\end{remark}
-
-\section{A Complete Metric Space}
-
-\begin{lemma}
-    Quasi-all elements of $\mathcal{G}$ are Salem.
-\end{lemma}
-\begin{proof}
-    For each $\alpha > \beta$, let $A(\alpha,\varepsilon) = \{ (E,\mu) \in \mathcal{G}: H^\alpha(E) = 0 \}$, where $H^\alpha$ is the Hausdorff measure of dimension $\alpha$ on $\RR^d$.
-
-    Let $(E,\mu) \in \mathcal{G}$, where
-    %
-    \[ |\widehat{\mu}(k)| \lesssim \log(1 + |k|)^{1/2} |k|^{-\beta} \]
-
-    Partition $[0,1)^d$ into $\varepsilon^{-d}$ cubes
-\end{proof}
-
-\section{BLAH}
-
-It is a simple consequence of the Poisson summation formula that if $\mu$ is a compactly supported measure on $\RR^d$, then \eqref{fordim} is equivalent to the more discrete condition
+We can then define the Fourier dimension of any Borel set $E \subset \TT^d$ as the supremum of $\fordim(\mu)$, over all Borel measures $\mu$ supported on $E$. Similarily, $\TT^d$ has a natural quotient metric induced from $\RR^d$, so we can consider open balls $B_\varepsilon(x + \ZZ^d)$, and thus define the Hausdorff dimension of finite Borel measures and sets on $\TT^d$. It is a simple consequence of either the Poisson summation formula or the uncertainty principle that if $\mu$ is a compactly supported measure on $\RR^d$, then \eqref{fordim} is equivalent to the more discrete condition
 %
 \begin{equation} \label{discretefordim}
     \sup_{k \in \ZZ^d} |\widehat{\mu}(k)| |k|^{s/2} < \infty.
 \end{equation}
 %
-A proof can be found in \cite[Lemma 39]{myThesis}.
+A proof is given in \cite[Lemma 39]{myThesis}. In particular, if $\mu^*$ is the \emph{periodization} of $\mu$, i.e. the measure on $\TT^d$ such that for any $f \in C(\TT^d)$,
+%
+\[ \int_{\TT^d} f(x)\; d\mu^*(x) = \int_{\RR^d} f(x + \ZZ^d)\; d\mu(x), \]
+%
+Another application of the uncertainty principle or Poisson summation thus shows that $\fordim(\mu^*) = \fordim(\mu)$. Since $\mu$ is compactly supported, it is also simple to see that $\hausdim(\mu^*) = \hausdim(\mu)$. Thus Theorem \ref{maintheorem} is clearly equivalent to it's periodic variant.
+
+\begin{theorem} \label{periodictheorem}
+    Let $0 \leq \alpha < dn$, and let $Z \subset \TT^{dn}$ be a countable union of compact sets, each with lower Minkowski dimension at most $\alpha$. Then there exists a compact Salem set $X \subset \TT^d$ with dimension
+    %
+    \[ \beta = \min \left( \frac{nd - \alpha}{n-1}, d \right) \]
+    %
+    such that for any distinct points $x_1, \dots, x_n \in X$, $(x_1, \dots, x_n) \not \in Z$. Moreover, there is a measure $\mu$ supported on $X$ such that for each $\xi \in \ZZ^d$,
+    %
+    \[ |\widehat{\mu}(\xi)| \leq \log(1 + |\xi|)^{1/2} |\xi|^{-\beta}. \]
+\end{theorem}
+
+To construct our set, we rely on a Baire-category argument for the purpose of our construction. Thus we consider a complete metric space $X$, whose elements consist of pairs $(E,\mu)$, where $E$ is a subset of $\TT^d$, and $\mu$ is a probability measure supported on $E$. We then show that for \emph{quasi-all} elements $(E,\mu) \in X$, the set $E$ satisfies the conclusions of Theorem \ref{periodictheorem}, in the sense that the set of pairs $(E,\mu) \in X$ failing to satisfy the conclusions of Theorem \ref{periodictheorem} form a set of first category in $X$. It follows that Theorem \ref{periodictheorem} holds in a `generic' sense for elements of $X$.
+
+Once we have setup the appropriate metric space $X$, our approach is quite similar to our construction in \cite{OurPaper}, relying on a random selection procedure, which is now exploited in this paper to give high probability bounds on the Fourier transform of the measures we study. The use of the Baire category approach in this paper, rather than an algorithmic, `nested set' approach, is mostly of an aesthetic nature, avoiding the complex queuing method and dyadic decomposition strategy required in the nested set approach; our approach can, with some care, be converted into a queuing procedure like in \cite{OurPaper}. But the Baire category argument makes our proof simpler to read, and has the advantage that it indicates that Salem sets of a specified dimension `generically' avoid a given rough pattern.
+
+\section{Notation}
+
+\begin{itemize}
+%    \item Quasi-all
+
+%    \item $C^\infty[0,1]^d$.
+
+    \item Given a metric space $X$, $x \in X$, and $\varepsilon > 0$, we shall let $B_\varepsilon(x)$ denote the open ball of radius $\varepsilon$ around $x$. For a given set $E \subset X$ and $\varepsilon > 0$, we let
+    %
+    \[ E_\varepsilon = \bigcup_{x \in E} B_\varepsilon(x). \]
+
+    \item We let $\TT^d = \RR^d/\ZZ^d$. Given $x \in \TT$, we let
+    %
+    \[ |x| = \min \{ |x + n| : n \in \ZZ \}, \]
+    %
+    and for $x \in \TT^d$, we let $|x| = \sqrt{|x_1|^2 + \dots + |x_d|^2}$. The standard metric on $\TT^d$ then takes the distance between $x,y \in \TT^d$ is $|x - y|$.
+
+    \item For a positive integer $N$, we let $[N] = \{ 1, \dots, N \}$
+
+    \item We will need to consider a standard mollifier. Throughout the paper, we fix a smooth probability density $\phi \in C^\infty(\TT^d)$ such that $\phi(x) = 0$ for $|x| \geq 2/5$, and such that for each $x \in \TT^d$
+    %
+    \[ \sum_{k \in \{ 0, 1 \}^d} \phi(x + k/2) = 2^d. \]
+    %
+    For each $\varepsilon \in (0,1)$, we can then define $\phi_\varepsilon \in C^\infty(\TT^d)$ by writing
+    %
+    \[ \phi_\varepsilon(x) = \begin{cases} \varepsilon^{-d} \phi(x/\varepsilon) &: |x| < \varepsilon, \\ 0 &: \text{otherwise}. \end{cases} \]
+    %
+    Then $\phi_\varepsilon$ is a smooth probability density, $\phi_\varepsilon(x) = 0$ for $|x| \geq \varepsilon$, and if $\varepsilon = 1/N$, and $x \in \TT^d$,
+    %
+    \begin{equation} \label{equation5550002352124124512}
+        \sum_{k \in [2N]^d} \phi_{1/N}(x + k/2N) = (2N)^d.
+    \end{equation}
+    %
+    As $\varepsilon \to 0$, $\phi_\varepsilon$ converges weakly to the Dirac delta function at the origin, so that for each $k \in \ZZ^d$,
+    %
+    \begin{equation} \label{approximationtoidentitypointwiseconvergence}
+        \lim_{\varepsilon \to 0} \widehat{\phi_\varepsilon}(k) = 1.
+    \end{equation}
+    %
+    Moreover, for each $\alpha > 0$, there exists $C_\alpha > 0$ such that for all $\varepsilon > 0$ and non-zero $k \in \ZZ^d$,
+    %
+    \begin{equation} \label{molificationdecaybound}
+        |\widehat{\phi_\varepsilon}(k)| \leq \frac{C_\alpha}{\varepsilon^\alpha |k|^\alpha},
+    \end{equation}
+    %
+    which can be proven by using the rescaling symmetries of the Fourier transform on $\RR^d$.
+
+    \item Our random construction involves a probabilistic concentration of measure argument. Define a convex function $\psi_2: [0,\infty) \to [0,\infty)$ by setting
+    %
+    \[ \psi_2(t) = e^{t^2} - 1, \]
+    %
+    The function $\psi_2$ induces an Orlicz norm on the family of scalar valued random variables over a probability space by setting, for each random variable $X$,
+    %
+    \[ \psitwo{X} = \inf \left\{ A \in (0,\infty) : \EE(\psi_2(|X|/A)) \leq 1 \right\}. \]
+    %
+    The family of random variables with $\psitwo{X} < \infty$ are known as \emph{subgaussian random variables}. Here are the important properties of subgaussian random variables which we use in this paper:
+    %
+    \begin{itemize}
+        \item If $\psitwo{X} \leq A$, then for each $t \geq 0$,
+        %
+        \[ \PP \left( |X| \geq t \right) \leq 10 \exp \left( -t^2/10A^2 \right). \]
+        %
+        Thus Subgaussian random variables have Gaussian tails.
+
+        \item If $|X| \leq A$ almost surely, then $\psitwo{X} \leq 10 A$. Thus bounded random variables are subgaussian.
+
+    %\item (Centering) For any random variable $X$,
+    %
+    %\[ \psitwo{X - \EE(X)} \lesssim \psitwo{X}. \]
+    
+    %\item (Union Bound) If $X_1, \dots, X_N$ are random variables, then
+    %
+    %\[ \psitwo{X_1 + \dots + X_N} \leq \psitwo{X_1} + \dots + \psitwo{X_N}. \]
+    
+        \item If $X_1, \dots, X_N$ are \emph{independent}, then
+        %
+        \[ \psitwo{X_1 + \dots + X_N} \leq 10 \left( \psitwo{X_1}^2 + \dots + \psitwo{X_N}^2 \right)^{1/2}. \]
+        %
+        This is an equivalent way to state \emph{Hoeffding's Inequality}, and we refer to an application of this inequality as an application of Hoeffding's inequality.
+    \end{itemize}
+    %
+    Roughly speaking, if $X$ is a random variable with $\psitwo{X} \leq A$, we can think of $X$ as being sharply concentrated in the region $[-A,A]$. The Orlicz norm thus provides a convenient way to quantify concentration phenomena.
+    %
+    \begin{remark}
+        The constants involved in these statements are suboptimal, but will suffice for our purposes. Proofs can be found in Chapter 2 of \cite{Vershynin}.
+    \end{remark}
+\end{itemize}
+
+\section{A Complete Metric Space}
+
+Let us construct a metric space appropriate for our task. We proceed analogously to (TODO: KORNER CITE) We begin with two simple metric spaces:
+%
+\begin{itemize}
+    \item We let $\mathcal{E}$ denote the family of all compact subsets of $\TT^d$. If, for two compact sets $E,F \in \mathcal{E}$, we consider their Hausdorff distance
+    %     
+    \[ d_H(E,F) = \inf \{ \varepsilon > 0 : E \subset F_\varepsilon\ \text{and}\ F \subset E_\varepsilon \}, \]
+    %
+    then $(\mathcal{E},d_H)$ forms a complete metric space.
+
+    \item Given any positive sequence of real numbers $\{ A(k) \}$, we let $M(A)$ consist of the class of all finite Borel measures $\mu$ supported on $\TT^d$ such that the quantity
+    %
+    \[ \| \mu \|_A = \sup_{k \neq 0} \frac{|\widehat{\mu}(k)|}{|A(k)|} \]
+    %
+    is finite. Then $\| \cdot \|_A$ is a norm, and $(M(A), \| \cdot \|_A)$ is a Banach space. It is important to note that if there is a sequence of measures $\mu_k \in M(A)$ and $\mu \in M(A)$ such that
+    %
+    \[ \lim_{k \to \infty} \| \mu_k - \mu \|_A = 0, \]
+    %
+    then the sequence $\{ \mu_k \}$ converges weakly to $\mu$. We will assume that the choice of $\{ A(k) \}$ is such that for each $\varepsilon > 0$ there exists $C_\varepsilon > 0$ such that for each $k \neq 0$,
+    %
+    \begin{equation} \label{dimensionbetasequencecondition}
+        \frac{1}{C_\varepsilon} \frac{1}{|k|^{\beta - \varepsilon}} \leq A(k) \leq C_\varepsilon \frac{1}{|k|^{\beta + \varepsilon}}.
+    \end{equation}
+    %
+    In particular, \eqref{dimensionbetasequencecondition} implies that $C^\infty(\TT^d) \subset M(A)$, where $C^\infty(\TT^d)$ is the space of smooth functions with support contained in $\TT^d$.
+\end{itemize}
+%
+From these spaces, we let $X$ be the collection of all pairs $(E,\mu) \in \mathcal{E} \times M(A)$, where $\mu$ is a probability measure with $\text{supp}(\mu) \subset E$, and
+%
+\[ \lim_{|k| \to \infty} \frac{|\widehat{\mu}(k)|}{A(k)} = 0. \]
+%
+It is easy to see $X$ is a closed subset of $\mathcal{E} \times M(A)$ under the product topology, and thus if we consider the product metric
+%
+\[ d_X((E,\mu),(F,\nu)) = \max \left( d_H(E,F), \| \mu - \nu \|_A \right), \]
+%
+then $(X,d_X)$ is a complete metric space. The main reason we enforced that $\widehat{\mu}(k) = o(A(k))$ is so that smooth functions are dense in this space.
+
+\begin{lemma}
+    The set of all $(E,\mu)$ with $\mu \in C^\infty(\TT^d)$ is dense in $X$.
+\end{lemma}
+\begin{proof}
+    We just apply a mollification strategy. Given $(E,\mu) \in X$ and consider $\varepsilon > 0$. For each $\delta > 0$, consider $\mu_\delta = \mu * \phi_\delta$. Then $\mu_\delta \in C^\infty(\TT^d)$, and if $\delta \leq \varepsilon$, then $\mu_\delta$ is supported on $\overline{E_\varepsilon}$, and
+    %
+    \begin{equation} \label{equation9019412094192041}
+        d_H(E,\overline{E_\varepsilon}) \leq \varepsilon.
+    \end{equation}
+    %
+    Since $(E,\mu) \in X$, there is $N$ depending on $\mu$ such that for $|k| \geq N$, $|\widehat{\mu}(k)| \leq \varepsilon A(k)$. For $|k| \geq N$, we thus find that
+    %
+    \begin{equation} \label{equation12}
+        |\widehat{\mu_\delta}(k) - \widehat{\mu}(k)| = |\widehat{\mu}(k)||\widehat{\phi_\delta}(k) - 1| \leq 2 |\widehat{\mu}(k)| \leq 2\varepsilon A(k).
+    \end{equation}
+    %
+    On the other hand, for suitably small $\delta$, \eqref{approximationtoidentitypointwiseconvergence} implies that for $|k| \leq N$,
+    %
+    \[ |\widehat{\phi_\delta}(k) - 1| \leq \varepsilon A(k). \]
+    %
+    But this implies that for $|k| \leq N$,
+    %
+    \begin{equation} \label{equation124}
+        |\widehat{\mu_\delta}(k) - \widehat{\mu}(k)| = |\widehat{\mu}(k)| |\widehat{\phi_\delta}(k) - 1| \leq \varepsilon A(k).
+    \end{equation}
+    %
+    Thus we conclude that for suitably small $\delta$, $\| \widehat{\mu_\delta} - \widehat{\mu} \|_A \leq 2 \varepsilon$. But combining \eqref{equation9019412094192041}, \eqref{equation12}, and \eqref{equation124}, we conclude
+    %
+    \[ d_X((E,\mu), (\overline{E_\varepsilon}), \mu_\delta) \leq 2 \varepsilon. \]
+    %
+    Since $\varepsilon > 0$ was arbitrary, this completes the proof.
+\end{proof}
+
+\begin{lemma}
+    For quasi-all $(E,\mu) \in X$, $\text{supp}(\mu) = E$.
+\end{lemma}
+\begin{proof}
+    For each closed set $K \subset \TT^d$ with nonempty interior, let $A(K)$ be the family of all $(E,\mu) \in X$ such that $E \cap K \neq \emptyset$ and $\mu(K) = 0$. The set $A(K)$ is clearly closed in $X$. Moreover, this set is nowhere dense; Fix $(E,\mu) \in A(K)$ and $\varepsilon > 0$. Then we can find a smooth probability density $\psi \in C^\infty(\TT^d)$ supported on $K^\circ \cap E_\varepsilon$. We then define $\mu_\varepsilon = (1 - \varepsilon) \mu + \varepsilon \psi$. Now
+    %
+    \[ \| \mu - \mu_\varepsilon \|_A \leq \varepsilon \left( \| \mu \|_A + \| \psi \|_A \right) \lesssim \varepsilon. \]
+    %
+    Moreover, $\mu_\varepsilon$ is supported on $\overline{E_\varepsilon}$, so
+    %
+    \[ d_X((E,\mu), (\overline{E_\varepsilon}, \mu_\varepsilon)) \lesssim \varepsilon. \]
+    %
+    If we let $A = \bigcup_{n = 1}^\infty A(K_n)$, where $\{ K_n \}$ is the family of all closed cubes in $\TT^d$ whose corners have rational coordinates, then quasi-all $(E,\mu) \in X$ belong to $A^c$. But $A^c$ is precisely the family of pairs $(E,\mu)$ with $\text{supp}(\mu) = E$.
+\end{proof}
+
+It is a general heuristic that quasi-all elements of a metric space are as `thin as possible'. In particular, we should expect the Hausdorff dimension and Fourier dimension of a generic element of $X$ to be as low as possible. For each $(E,\mu) \in X$, the condition that $\mu \in M(A)$, combined with \eqref{dimensionbetasequencecondition} implies that $\fordim(\mu) \geq \beta$, so we might expect the quasi-all $\mu \in M(A)$ have Fourier dimension \emph{equal to} $\beta$. Since the Hausdorff dimension of a measure is an upper bound for the Fourier dimension, it suffices to show that quasi-all $\mu \in M(A)$ have Hausdorff dimension $\beta$.
+
+\begin{lemma}
+    For quasi-all $(E,\mu) \in X$, $E$ is a Salem set of dimension $\beta$.
+\end{lemma}
+\begin{proof}
+    For each $\alpha > \beta$, let $A(\alpha,\varepsilon) = \{ (E,\mu) \in \mathcal{G}: H^\alpha(E) < \varepsilon \}$, where $H^\alpha$ is the Hausdorff measure of dimension $\alpha$ on $\TT^d$, i.e.
+    %
+    \[ H^\alpha(E) = \lim_{\delta \to 0} \inf \left\{ \sum_{k = 1}^\infty \varepsilon_k^\alpha : E \subset \bigcup_{k = 1}^\infty B_{\varepsilon_k}(x_k)\ \text{and $\varepsilon_k \leq \delta$ for all $k$} \right\}. \]
+    %
+    Then $A(\alpha,\varepsilon)$ is an open set, and
+    %
+    \[ \bigcap_{n = 1}^\infty \bigcap_{m = 1}^\infty A(\beta + 1/n, 1/m) \]
+    %
+    is precisely the family of $(E,\mu) \in X$ such that $E$ has Hausdorff dimension $\beta$. Thus it suffices to show that $A(\alpha,\varepsilon)$ is dense in $X$ for $\alpha > \beta$ and $\varepsilon > 0$.
+
+    So fix $(E,\mu) \in X$ and $\varepsilon > 0$. Without loss of generality, we may assume $\mu \in C^\infty(\TT^d)$. Consider large integers $N$ and $M$, and then construct a family of independant, uniformly distributed random variables $X(k) \in [M]^d$ for each $k \in [2N]^d$. Define a measure $\nu$ such that for each $x \in \TT^d$,
+    %
+    \[ d\nu(x) = \left( \sum_{k \in [2N]^d} \phi_{1/NM}(x - k/2N - X(k)/2NM) \right) \cdot \mu(x)\; dx_1 \dots dx_d. \]
+    %
+    Adding a discrete number of points to the support of $\nu$ if necessary to cover the set $E$ by a $\varepsilon$ net, $\nu$ is supported on a set $F$ with $d_H(E,F) \leq \varepsilon$ which also satisfies
+    %
+    \[ H^\alpha(F) \leq (2N)^d / (NM)^\alpha = 2^d N^{d-\alpha} M^{-\alpha}. \]
+    %
+    We note that
+    %
+    \[ \widehat{\nu}(k) = \sum_{l \in [2N]^d} B_l(k), \]
+    %
+    where
+    %
+    \[ B_l(k) = \sum_{r \in \ZZ^d} \widehat{\mu}(r) e^{2 \pi i (k-r) ()} \widehat{\phi_{1/NM}}(k-r)  \]
+
+    % R(x) = sum a_k e^{2 \pi i k x}
+    % R(x + k/2N + X(k)/2NM)
+\end{proof}
+
+\section{BLAH}
 
 \section{s}
 
@@ -535,7 +714,7 @@ We now proceed to solve a discretized version of Theorem \ref{maintheorem}.
     %
     then
     %
-    \[ \PP \left(S\ \text{\normalfont{does not satisfies Property (A)}} \right) \leq 1/10. \]
+    \[ \PP \left(S\ \text{\normalfont{does not satisfy Property (A)}} \right) \leq 1/10. \]
 \end{lemma}
 \begin{proof}
     For any cube $Q \in \Sigma_{m+1}^d$, there are at most $3^d$ indices $\sigma j \in \Sigma_{m+1}^d$ such that $Q_{\sigma j} \cap Q \neq \emptyset$, and so a union bound together with \eqref{equation129412904912090} gives
