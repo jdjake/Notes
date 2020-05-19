@@ -8,7 +8,7 @@
 
 %\setlist[enumerate]{label*={\normalfont(\Alph*)},ref=(\Alph*)}
 
-%\numberwithin{equation}{section}
+\numberwithin{equation}{section}
 
 \usepackage{amsthm}
 \usepackage{verbatim}
@@ -60,6 +60,8 @@
 \begin{document}
 
 \maketitle
+
+\section{Introduction}
 
 Geometric measure theory explores the relationship between the geometry of a subset of Euclidean space, and regularity properties of the family of Borel measures supported on that set. From the perspective of harmonic analysis, it is often popular to explore what structural information can be gathered from the Fourier analytic properties of measures supported on a set. In this paper, we study the relationship between the Fourier analytic properties of a set and the existence of patterns on the set. In particular, given a `rough pattern', in the sense of \cite{OurPaper}, we construct a family of sets which generically avoids this pattern, and which supports measures with fast Fourier decay.
 
@@ -208,7 +210,7 @@ Once we have setup the appropriate metric space $\mathcal{X}$, our approach is q
 
     \item We will make several uses of \emph{Hoeffding's Inequality} to control the deviations of independent families of random variables. The version of Hoeffding's inequality we use states that if $\{ X_1, \dots, X_N \}$ is an independent family of random variables, such that for each $i$, there exists a constant $A_i \geq 0$ such that $|X_i| \leq A_i$ almost surely, then for each $t \geq 0$,
     %
-    \[ \PP \left( |X_1 + \dots + X_N| \geq t \right) \leq 2 \exp \left(\frac{-t^2}{A_1^2 + \dots + A_N^2} \right). \]
+    \[ \PP \left( |X_1 + \dots + X_N| \geq t \right) \leq 2 \exp \left(\frac{-2t^2}{A_1^2 + \dots + A_N^2} \right). \]
     %
     Proofs are given in many probability textbooks, for instance, in Chapter 2 of \cite{Vershynin}.
 
@@ -375,7 +377,7 @@ It is a general heuristic that quasi-all sets are as `thin as possible' with res
 
     Fix $(E,\mu_0) \in \mathcal{X}$, $\alpha \in (\beta,d)$, $\delta > 0$, and $s > 0$, and consider $\varepsilon > 0$. Without loss of generality, we may assume $\mu_0 \in C^\infty(\TT^d)$. Fix some choice of $\alpha_0 \in (\beta,\alpha)$, chosen to give us an epsilon of room in our argument. Consider a positive integer $N$, and set $M$ equal to the smallest integer larger than $N^\lambda$, where $\lambda = d/\alpha_0 - 1$. Let $\varepsilon_0 = 1/NM$. Then construct an independent family of random variables $\{ j(i) : i \in [2N]^d \}$, where $j(i)$ is uniformly distributed in $[M]^d$ for each $i \in [2N]^d$. Define a measure $\nu$ such that for each $x \in \TT^d$,
     %
-    \[ d\nu(x) = \left( \sum_{i \in [2N]^d} \phi_{\varepsilon_0} \left( x - \frac{i}{2N} - \frac{j(i)}{2NM} \right) \right) d\mu_0(x). \]
+    \[ \nu(x) = \left( \sum_{i \in [2N]^d} \phi_{\varepsilon_0} \left( x - \frac{i}{2N} - \frac{j(i)}{2NM} \right) \right) \mu_0(x). \]
     %
     Then define a normalized probability measure $\mu = \nu / \nu(\TT^d)$. We claim that there is a non-zero probability that $\mu$ is supported on a set $F$ such that, if $N$ is sufficiently large, then $d_{\mathcal{X}}((E,\mu_0),(F,\mu)) \leq \varepsilon$.
 
@@ -456,14 +458,20 @@ All that now remains is to show that quasi-all elements of $\mathcal{X}$ avoid t
 
 \section{Random Avoiding Sets}
 
-Fix $W \subset \TT^d$ with $\lowminkdim(W) \leq \alpha$. Then
-%
-\[ \liminf_{\varepsilon \to 0} \log_\varepsilon |W(\varepsilon)| \leq \alpha. \]
+
 %
 Thus there exists arbitrarily small $\varepsilon > 0$ and arbitrarily small $\delta > 0$ such that
 %
 \[ |W_\varepsilon| \leq \varepsilon^{nd - \alpha - \delta}. \]
 
+
+\begin{lemma}
+    Consider $W \subset \TT^{nd}$ with $\lowminkdim(W) \leq \alpha$, and consider the set
+    %
+    \[ A() \]
+    %
+    \[ \liminf_{\varepsilon \to 0} \log_\varepsilon |W(\varepsilon)| \leq \alpha. \]
+\end{lemma}
 \begin{proof}
     Let $X_1, \dots, X_N$ be uniformly distributed on $\TT^d$. For each $i \in \{ 1, \dots, N \}^n$ such that $i_1, \dots, i_n$ are distinct, consider the random vector $X_i = (X_{i_1}, \dots, X_{i_n})$. Then $X_i$ is uniformly distributed on $\TT^{nd}$, and so
     %
@@ -529,85 +537,86 @@ Which isn't quite enough for what we want.
 
 \section{Appendix: Random Segments of Measures}
 
-Several times, in this paper, we rely on a simple random segmentation applied to a given smooth measure. In this appendix, we collect the properties of this segmentation that are used repeatedly.
+Several times, in this paper, we rely on a simple random segmentation applied to a given smooth measure. Here we collect some simple calculations we use quite often to bound the Fourier transforms of these random segmentations.
 
 \begin{theorem} \label{randomFourierTheorem}
-    Let $\mu_0$ be a smooth measure on $\TT^d$, and let $\phi$ be a mollifier with the properties described in Section \ref{notationSection}. Consider positive integers $N, M$, and set $\varepsilon = 1/NM$. Consider an independant family of random variables $\{ j(i) : i \in [2N]^d \}$, where $j(i)$ is uniformly distributed in $[M]^d$ for each $i$, and then define a smooth measure $\nu$ such that for each $x \in \TT^d$,
+    Let $\mu_0$ be a smooth measure on $\TT^d$, and let $\phi$ be a mollifier with the properties describes in Section \ref{notationSection}. Consider a positive integer $K$, and some $\varepsilon_0 > 0$, and take any independant family of $K$ random vectors $\{ X_i : i \in I \}$ in $\TT^d$, and define a smooth measure
     %
-    \[ d\nu(x) = \left[ \sum_{i \in [2N]^d} \phi_\varepsilon \left( x - \frac{i}{2N} - \frac{j(i)}{2NM} \right) \right]\; d\mu_0(x). \]
+    \[ \nu(x) = \left[ \sum_{i \in I} \phi_{\varepsilon_0}(x - X_i) \right]\; \mu_0(x). \]
     %
-    If we define a probability measure $\mu = \nu / \nu(\TT^d)$, then there exists an integer $N_0$, depending solely on $\mu_0$ and $d$, such that for $N \geq N_0$, the following holds:
+    Then consider the probability measure $\mu(x) = \nu(x) / \nu(\TT^d)$. If, for each $x \in \TT^d$,
+    %
+    \begin{equation} \label{equationA}
+        \frac{1}{K} \sum_{i \in I} \EE\left[ \phi_{\varepsilon_0}(x - X_i) \right] = 1,
+    \end{equation}
+    %
+    then there exists an integer $K_0$ depending solely on $\mu_0$ and $d$, such that for $K \geq K_0$, the following properties hold:
     %
     \begin{itemize}
-        \item[(A)] For each $\varepsilon > 0$, there exists a constant $C$, depending solely on $\mu_0$, $d$, and $\varepsilon$, such that if $|\xi| \geq \max(C, (NM)^{1+\varepsilon})$, then $|\widehat{\mu}(\xi)| \leq |\xi|^{-d/2}$.
+        \item[(A)] Fix $\beta > 0$, and define
+        %
+        \[ D = \{ \xi \in \ZZ^d : |\xi| \leq K^{1/\beta} \}. \]
+        %
+        Then there exists a constant $C$, depending only on $\mu_0$, $d$, and $\beta$, such that with probability greater than or equal to $1/2$,
+        %
+        \[ \| \widehat{\mu_0} - \widehat{\mu} \|_{L^\infty(D)} \leq C K^{-1/2} \log(K)^{1/2}. \]
 
-        \item[(B)] Define
-        %
-        \[ D = \{ k \in \ZZ^d : |k| \leq (NM)^2 \}. \]
-        %
-        Then there exists a constant $C$, depending only on $\mu_0$ and $d$, such that with probability greater than or equal to $1/2$,
-        %
-        \[ \| \widehat{\mu_0} - \widehat{\mu} \|_{L^\infty(D)} \leq C N^{-d/2} \log(NM). \]
+        \item[(B)] For any $\varepsilon_1, \varepsilon_2 > 0$, there exists a constant $C$, depending solely on $\mu_0$, $d$, $\varepsilon_1$, and $\varepsilon_2$, such that if $|\xi| \geq \max \left( C, (1/\varepsilon_0)^{1 + \varepsilon_1} \right)$, then $|\widehat{\mu}(\xi)| \leq \varepsilon_2 \cdot |\xi|^{-d/2}$.
     \end{itemize}
 \end{theorem}
 
-We split our proof of the theorem into several, more managable lemmas.
+\begin{remark}
+    Property (A) gives bounds for the behaviour of $\widehat{\mu}$ on small frequencies, whereas Property (B) bounds the behaviour of $\widehat{\mu}$ on large frequencies.
+\end{remark}
+
+\begin{remark}
+    The simplest example of inputs to which this lemma applies is obtained by fixing two integers $N$ and $M$, letting $I = [2N]^d$ (so $K = N^d$, and for each $i \in [2N]^d$, defining $X_i = i/N + j(i)/NM$, where $j(i)$ is chosen from $[M]^d$ uniformly at random, such that the family $\{ j(i) : i \in [2N]^d \}$ is independant. Equation \eqref{equationA} is then justified by \eqref{equation5550002352124124512}.
+\end{remark}
+
+\begin{remark}
+    Another example is obtaing by considering $K$ independant and uniformly distributed random variables $\{ X_1, \dots, X_K \}$ on $\TT^d$.
+\end{remark}
+
+We split our proof into several, more managable lemmas.
 
 \begin{lemma} \label{nuboundlemma}
     There exists a constant $C$ depending on $\mu_0$ and $d$ such that
     %
-    \[ \PP \left( |\nu(\TT^d) - (2N)^d | \geq C N^{d/2 - 1} \right) \leq 1/10. \]
+    \[ \PP \left( |\nu(\TT^d) - K | \geq C K^{1/2} \right) \leq 1/10. \]
 \end{lemma}
 \begin{proof}
-    For each $i \in [2N]^d$, and $j \in [M]^d$, write
+    For each $i \in \{ 1, \dots, K \}$, set
     %
-    \begin{equation}
-    \begin{split}
-        Y(i,j) &= \int_{\TT^d} \phi_\varepsilon \left( x - \frac{i}{2N} - \frac{j}{2NM} \right)\; d\mu_0(x)\\
-        &= \int_{\TT^d} \phi_\varepsilon(x)\; d\mu_0 \left(x + \frac{i}{2N} + \frac{j}{2NM} \right).
-    \end{split}
+    \[ Y_i = \int_{\TT^d} \phi_{\varepsilon_0}(x - X_i)\; d\mu_0(x). \]
+    %
+    Then
+    %
+    \begin{equation} \label{equation2194012512905}
+        |Y_i| \leq \| \mu_0 \|_{L^\infty(\TT^d)} \lesssim_{\mu_0} 1.
     \end{equation}
     %
-    Note that
+    Moreover,
     %
-    \begin{equation} \label{equation555326}
-        \nu(\TT^d) = \sum_{a \in [2N]^d} Y(a,X_a).
+    \begin{equation} \label{equation12931029}
+        \sum_{i \in I} Y_i = \nu(\TT^d).
     \end{equation}
     %
-    For each choice $j_1, j_2 \in [M]^d$, $|j_1/2NM - j_2/2NM| \lesssim_d 1/N$. Thus H\"{o}lder's inequality, and the mean value theorem applied to $\mu$ imply that
+    The family of random variables $\{ Y_i : 1 \leq i \leq K \}$ are independant, so we can apply Hoeffding's inequality together with \eqref{equation2194012512905} and \eqref{equation12931029} to conclude that there exists a constant $C$ depending only on $\mu_0$ and $d$, such that for any $t \geq 0$,
     %
-    \begin{equation} \label{equation774435}
-    \begin{split}
-        |Y(i,j_1) &- Y(i,j_2)| \lesssim_d N^{-1} \| \phi_\varepsilon \|_{L^1(\TT^d)} \| \nabla \mu_0 \|_{L^\infty(\TT^d)} \lesssim_{\mu_0} N^{-1}.
-    \end{split}
+    \begin{equation} \label{equation190609190249019}
+        \PP \left( |\nu(\TT^d) - \EE(\nu(\TT^d))| \geq t \right) \leq 2 \exp \left( - \frac{5t^2}{C^2 K} \right).
     \end{equation}
     %
-    In particular, this implies $|Y(i,X_i) - \EE(Y(i,X_i))| \lesssim_{d,\mu_0} N^{-1}$. The family of random variables $\{ Y(i,X_i) : i \in [2N]^d \}$ are independant, so we can apply Hoeffding's inequality and apply \eqref{equation555326} to conclude that there exists a constant $C$ depending only on $\mu_0$ and $d$, such that for any $t \geq 0$,
-    %
-    \begin{equation} \label{equation6653921}
-        \PP \left( |\nu(\TT^d) - \EE(\nu(\TT^d))| \geq t \right) \leq 2 \exp \left( - \frac{5 t^2}{C^2 N^{d-2}} \right).
-    \end{equation}
-    %
-    However, \eqref{equation5550002352124124512} implies
-    %
-    \begin{equation} \label{equation9102490120}
-        \EE(\nu(\TT^d)) = \frac{(2NM)^d}{M^d} = (2N)^d,
-    \end{equation}
-    %
-    Thus setting $t = C N^{d/2 - 1}$ completes the proof.
+    Noting that \eqref{equationA} implies $\EE(\nu(\TT^d)) = K$, it suffices to set $t = CK^{1/2}$ in \eqref{equation190609190249019}.
 \end{proof}
 
 \begin{lemma} \label{lemma532952}
     There exists a constant $C$, depending on $\mu_0$ and $d$, such that
     %
-    \[ \PP \left( \| \widehat{\nu} - (2N)^d \widehat{\mu_0} \|_{L^\infty(D)} \geq C N^{d/2} \log(NM)^{1/2} \right) \leq 1/10. \]
+    \[ \PP \left( \| \widehat{\nu} - K \widehat{\mu_0} \|_{L^\infty(D)} \geq C K^{1/2} \log(K)^{1/2} \right) \leq 1/10. \]
 \end{lemma}
 \begin{proof}
-    For each $i \in [2N]^d$, define $\nu_i$ to be the smooth measure such that for each $x \in \TT^d$,
-    %
-    \[ d\nu_i(x) = \phi_\varepsilon \left( x - \frac{i}{2N} - \frac{j(i)}{2NM} \right) d\mu_0(x). \]
-    %
-    Then for each $\xi \in \ZZ^d$, define $X_{i \xi} = \widehat{\nu_i}(\xi)$. For each $i$ and $\xi$, the standard $(L^1,L^\infty)$ bound on the Fourier transform implies
+    For each $i \in \{ 1, \dots, K \}$, let $\nu_i(x) = \phi_{\varepsilon_0}(x - X_i) \mu_0(x)$. Then for each $\xi \in \ZZ^d$, define $X_{i \xi} = \widehat{\nu_i}(\xi)$. For each $i$ and $\xi$, the standard $(L^1,L^\infty)$ bound on the Fourier transform implies
     %
     \begin{equation} \label{equation123102}
     \begin{split}
@@ -615,44 +624,54 @@ We split our proof of the theorem into several, more managable lemmas.
     \end{split}
     \end{equation}
     %
-    Thus the variables $|X_{i \xi}|$ are uniformly bounded by a constant depending only on $\mu_0$. For a fixed $\xi$, the family of random variables $\{ X_{i \xi} : i \in [2N]^d \}$ are independant and moreover,
+    Thus the variables $|X_{i \xi}|$ are uniformly bounded by a constant depending only on $\mu_0$. For a fixed $\xi$, the family of random variables $\{ X_{i \xi} : i \in \{ 1, \dots, K \} \}$ are independant and moreover,
     %
     \begin{equation} \label{equation998321521422}
-        \sum_{i \in [2N]^d} X_{i \xi} = \widehat{\nu}(\xi).
+        \sum_{i \in I} X_{i \xi} = \widehat{\nu}(\xi).
     \end{equation}
     %
     Thus Hoeffding's inequality together with \eqref{equation123102} and \eqref{equation998321521422} imply that
     %
-    \[ \PP \left( \left| \widehat{\nu}(\xi) - \EE(\widehat{\nu}(\xi)) \right| \geq t \right) \leq 2 \exp \left( - \frac{t^2}{2^{d-1} N^{d} \| \mu_0 \|_{L^\infty(\TT^d)}^2} \right) \]
+    \begin{equation} \label{equation19041209}
+        \PP \left( \left| \widehat{\nu}(\xi) - \EE(\widehat{\nu}(\xi)) \right| \geq t \right) \leq 2 \exp \left( \frac{-t^2}{K \| \mu_0 \|_{L^\infty(\TT^d)}^2} \right)
+    \end{equation}
     %
-    for each $t \geq 0$. In particular, applying a union bound over all $|\xi| \leq 10 NM$, we conclude that there exists a constant $C$, depending only on $d$ and $\mu_0$, such that for each $t \geq 0$,
+    for all $t \geq 0$. Applying a union bound to \eqref{equation19041209} over all $|\xi| \leq K^{1/\beta}$, we conclude that there exists a constant $C$, depending only on $d$ and $\mu_0$, such that for each $t \geq 0$,
     %
-    \[ \PP \left( \| \widehat{\nu} - \EE(\widehat{\nu}) \|_{L^\infty(D)} \geq t \right) \leq \exp \left( C \log(NM) - \frac{3 t^2}{C N^d} \right). \]
+    \begin{equation} \label{equation1290419205129051920}
+        \PP \left( \| \widehat{\nu} - \EE(\widehat{\nu}) \|_{L^\infty(D)} \geq t \right) \leq \exp \left( C \log(K)^2 - \frac{5 t^2}{C K} \right).
+    \end{equation}
     %
-    We can make $C$ as large as we want, so in particular, we assume $C \geq 1$. Noting $\EE(\widehat{\nu}) = (2N)^d \widehat{\mu_0}$ and setting $t = C N^{d/2} \log(NM)^{1/2}$ completes the proof.
+    We can make $C$ as large as we want, so in particular, we assume $C \geq 1$. Noting that \eqref{equationA} implies $\EE(\widehat{\nu}) = K \cdot \widehat{\mu_0}$ and setting $t = C K^{1/2} \log(K)^{1/2}$ in \eqref{equation1290419205129051920} completes the proof.
 \end{proof}
 
 We now control the behaviour of $\nu$ at high frequencies.
 
 \begin{lemma} \label{lemma6213}
-    For any $\varepsilon > 0$, there exists a constant $C$ depending on $\varepsilon$, $d$, and $\mu_0$, such that if $|\xi| \geq \max( C, (NM)^{1 + \varepsilon})$, then $|\widehat{\nu}(\xi)| \leq |\xi|^{-d/2}$.
+    For any $\varepsilon > 0$, there exists a constant $C$ depending on $\varepsilon$, $d$, and $\mu_0$, such that if $|\xi| \geq \max( C, (1/\varepsilon_0)^{1 + \varepsilon})$, then $|\widehat{\nu}(\xi)| \leq |\xi|^{-d/2}$.
 \end{lemma}
 \begin{proof}
-    Define a finite measure $\alpha$ such that
+    Define a finite measure
     %
-    \[ d\alpha(x) = \sum_{i \in [2N]^d} \delta \left( x - \frac{i}{2N} - \frac{j(i)}{2NM} \right). \]
+    \[ \alpha(x) = \sum_{i \in I} \delta \left( x - X_i \right). \]
     %
-    Then $\nu = (\alpha * \phi_\varepsilon) \mu$, so
+    Then $\nu = (\alpha * \phi_{\varepsilon_0}) \mu$, so
     %
-    \[ \widehat{\nu} = \left(\widehat{\alpha} \cdot \widehat{\phi_\varepsilon} \right) * \widehat{\mu}. \]
+    \begin{equation} \label{equationB}
+        \widehat{\nu} = \left(\widehat{\alpha} \cdot \widehat{\phi_{\varepsilon_0}} \right) * \widehat{\mu}.
+    \end{equation}
     %
     The standard $(L^1,L^\infty)$ bound for the Fourier transform shows that
     %
-    \[ \| \widehat{\alpha} \|_{L^\infty(\ZZ^d)} \leq \alpha(\TT^d) \leq (2N)^d. \]
+    \begin{equation} \label{equationC}
+        \| \widehat{\alpha} \|_{L^\infty(\ZZ^d)} \leq \alpha(\TT^d) \leq K.
+    \end{equation}
     %
-    Thus for each $\xi \in \ZZ^d$,
+    Combining \eqref{equationB} with \eqref{equationC} shows that for each $\xi \in \ZZ^d$,
     %
-    \[ |\widehat{\nu}(\xi)| \lesssim_d N^d \sum_{\eta \in \ZZ^d} |\widehat{\phi_\varepsilon}(\eta)| |\widehat{\mu_0}(\xi-\eta)|. \]
+    \begin{equation} \label{equationBGQPS23}
+        |\widehat{\nu}(\xi)| \leq K \sum_{\eta \in \ZZ^d} |\widehat{\phi_{\varepsilon_0}}(\eta)| |\widehat{\mu_0}(\xi-\eta)|.
+    \end{equation}
     %
     Since $\mu_0$ is smooth, for any $T > 0$ and $\xi \in \ZZ^d$,
     %
@@ -660,27 +679,31 @@ We now control the behaviour of $\nu$ at high frequencies.
         |\widehat{\mu_0}(\xi)| \lesssim_T |\xi|^{-T}.
     \end{equation}
     %
-    If $|\eta| \leq |\xi|/2$, $|\xi - \eta| \geq |\xi|/2$, so \eqref{equation78234125} implies that $|\widehat{\mu_0}(\xi - \eta)| \lesssim_T |\eta|^{-T}$ for all $T > 0$. Combined with the trivial bound $\| \widehat{\phi_\varepsilon} \|_{L^\infty(\ZZ^d)} \leq 1$ we find that
+    If $|\eta| \leq |\xi|/2$, $|\xi - \eta| \geq |\xi|/2$, so \eqref{equation78234125} implies that $|\widehat{\mu_0}(\xi - \eta)| \lesssim_T |\eta|^{-T}$ for all $T > 0$. Combined with the trivial bound $\| \widehat{\phi_{\varepsilon_0}} \|_{L^\infty(\ZZ^d)} \leq 1$ we find that
     %
-    \[ \sum_{0 \leq |\eta| \leq |\xi|/2} |\widehat{\phi_\varepsilon}(\eta)| |\widehat{\mu_0}(\xi-\eta)| \lesssim_{d,T} \frac{1}{|\xi|^{T-d}}. \]
+    \begin{equation} \label{equation12412AGEIVOOV}
+        \sum_{0 \leq |\eta| \leq |\xi|/2} |\widehat{\phi_{\varepsilon_0}}(\eta)| |\widehat{\mu_0}(\xi-\eta)| \lesssim_{d,T} \frac{1}{|\xi|^{T-d}}.
+    \end{equation}
     %
-    Conversely, if $|\eta| \geq 2 |\xi|$, then $|\xi - \eta| \geq |\eta|/2$, so a simple dyadic partition of the sum onto regions where $|\eta| \sim 2^k |\xi|$ using \eqref{equation78234125}, combined with the trivial bound $\| \widehat{\phi_\varepsilon} \|_{L^\infty(\ZZ^d)} \leq 1$ shows that for each $T > d$,
+    Conversely, if $|\eta| \geq 2 |\xi|$, then $|\xi - \eta| \geq |\eta|/2$, so a simple dyadic partition of the sum onto annular regions where $|\eta| \sim 2^k |\xi|$, each bounded using \eqref{equation78234125}, combined with the trivial bound $\| \widehat{\phi_{\varepsilon_0}} \|_{L^\infty(\ZZ^d)} \leq 1$, shows that for each $T > d$,
     %
-    \[ \sum_{|\eta| \geq 2 |\xi|} |\widehat{\phi_\varepsilon}(\eta)| |\widehat{\mu_0}(\xi-\eta)| \lesssim_{d,T} \frac{1}{|\xi|^{T-d}}. \]
+    \begin{equation} \label{equationADWCP124}
+        \sum_{|\eta| \geq 2 |\xi|} |\widehat{\phi_{\varepsilon_0}}(\eta)| |\widehat{\mu_0}(\xi-\eta)| \lesssim_{d,T} \frac{1}{|\xi|^{T-d}}.
+    \end{equation}
     %
-    Finally, if $|\xi|/2 \leq |\eta| \leq 2|\xi|$, we employ the bound
+    Finally, if $|\xi|/2 \leq |\eta| \leq 2|\xi|$, then we employ \eqref{molificationdecaybound} together with the bound $\| \widehat{\mu_0} \|_{L^\infty(\ZZ^d)} \leq 1$, to conclude that
     %
-    \[ |\widehat{\phi_\varepsilon}(\xi)| \lesssim_{d,T} \frac{(NM)^T}{|\xi|^T}, \]
+    \begin{equation} \label{equationAFVGUREWIS}
+        \sum_{|\xi|/2 \leq |\eta| \leq 2 |\xi|} |\widehat{\phi_{\varepsilon_0}}(\eta)| |\widehat{\mu_0}(\xi-\eta)| \lesssim_{d,T} \frac{(1/\varepsilon_0)^T}{|\xi|^{T-d}} = \frac{1}{|\xi|} \frac{(1/\varepsilon_0)^T}{|\xi|^{T-3d/2}} \frac{1}{|\xi|^{d/2}}.
+    \end{equation}
     %
-    together with the bound $\| \widehat{\mu_0} \|_{L^\infty(\ZZ^d)} \leq 1$, to conclude that
+    If $|\xi| \geq (1/\varepsilon_0)^{T/(T - 3d/2)} = (1/\varepsilon_0)^{1 + O(1/T)}$, we conclude from \eqref{equationAFVGUREWIS} that
     %
-    \[ \sum_{|\xi|/2 \leq |\eta| \geq 2 |\xi|} |\widehat{\phi_\varepsilon}(\eta)| |\widehat{\mu_0}(\xi-\eta)| \lesssim_{d,T} \frac{(NM)^T}{|\xi|^{T-d}} = \frac{1}{|\xi|} \frac{(NM)^T}{|\xi|^{T-3d/2}} \frac{1}{|\xi|^{d/2}}. \]
+    \begin{equation} \label{equationTTCCSSDWETF}
+        \sum_{|\xi|/2 \leq |\eta| \leq 2 |\xi|} |\widehat{\phi_{\varepsilon_0}}(\eta)| |\widehat{\mu_0}(\xi-\eta)| \lesssim_{d,T} \frac{1}{|\xi|} \frac{1}{|\xi|^{d/2}}.
+    \end{equation}
     %
-    If $|\xi| \geq (NM)^{T/(T - 3d/2)} = (NM)^{1 + O(1/T)}$, we conclude that
-    %
-    \[ \sum_{|\xi|/2 \leq |\eta| \geq 2 |\xi|} |\widehat{\phi_\varepsilon}(\eta)| |\widehat{\mu_0}(\xi-\eta)| \lesssim_{d,T} \frac{1}{|\xi|} \frac{1}{|\xi|^{d/2}}. \]
-    %
-    Combining the three inequalities we have established, we conclude that for each $\varepsilon > 0$, if $T$ is taken suitably large relative to $\varepsilon$, there exists a constant $C$ depending only on $\mu_0$, $d$, and $\varepsilon$ such that if $|\xi| \geq (NM)^{1 + \varepsilon}$, then
+    Combining \eqref{equation12412AGEIVOOV}, \eqref{equationADWCP124}, and \eqref{equationTTCCSSDWETF} with \eqref{equationBGQPS23}, we conclude that for each $\varepsilon > 0$, if $T$ is taken suitably large relative to $\varepsilon$, there exists a constant $C$ depending only on $\mu_0$, $d$, and $\varepsilon$ such that if $|\xi| \geq (1/\varepsilon_0)^{1 + \varepsilon}$, then
     %
     \[ |\widehat{\nu}(\xi)| \leq \frac{C}{|\xi|} \frac{1}{|\xi|^{d/2}}. \]
     %
@@ -690,34 +713,38 @@ We now control the behaviour of $\nu$ at high frequencies.
 We are now ready to complete our proof of Theorem \ref{randomFourierTheorem}.
 
 \begin{proof}[Proof of Theorem \ref{randomFourierTheorem}]
-    A union bound applied to the results of Lemmas \ref{nuboundlemma} and \ref{lemma532952} imply that there exists a constant $C$, depending solely on $\mu_0$ and $d$, such that with probability greater than $1/2$, we have
+    A union bound applied to Lemma \ref{nuboundlemma} and Lemma \ref{lemma532952} imply that there exists a constant $C$, depending solely on $\mu_0$ and $d$, such that with probability greater than $1/2$, we have
     %
     \begin{equation}\label{equation491212}
-        |\nu(\TT^d) - (2N)^d| \leq C N^{d/2-1},
+        |\nu(\TT^d) - K| \leq C K^{1/2},
     \end{equation}
     %
     and
     %
     \begin{equation}\label{equation1290129}
-    \| \widehat{\nu} - (2N)^d \widehat{\mu_0} \|_{L^\infty(D)} \lesssim_{\mu_0,d} N^{d/2} \log(NM)^{1/2}.
+    \| \widehat{\nu} - K \widehat{\mu_0} \|_{L^\infty(D)} \lesssim_{\mu_0,d} K^{1/2} \log(K)^{1/2}.
     \end{equation}
     %
     But combining \eqref{equation491212} and \eqref{equation1290129}, we conclude that
     %
-    \begin{align*}
-        \| \widehat{\mu} - \widehat{\mu_0} \|_{L^\infty(D)} &= (2N)^{-d} \| (2N)^d \widehat{\mu} - (2N)^d \widehat{\mu_0} \|_{L^\infty(D)}\\
-        &\lesssim_{\mu_0,d} (2N)^{-d} \| \nu(\TT^d) \widehat{\mu} - (2N)^d \widehat{\mu_0} \|_{L^\infty(\TT^d)} + N^{-d/2-1} \\
-        &= (2N)^{-d} \| \widehat{\nu} - (2N)^d \widehat{\mu_0} \|_{L^\infty(\TT^d)} + N^{-d/2-1}\\
-        &\lesssim_{\mu_0,d} N^{-d/2} \log(NM)^{1/2}. \qedhere
-    \end{align*}
+    \begin{equation} \label{equationGGSDEWTS}
+    \begin{split}
+        \| \widehat{\mu} - \widehat{\mu_0} \|_{L^\infty(D)} &= K^{-1} \| K \widehat{\mu} - K \widehat{\mu_0} \|_{L^\infty(D)}\\
+        &\lesssim_{\mu_0,d} K^{-1} \| \nu(\TT^d) \widehat{\mu} - K \widehat{\mu_0} \|_{L^\infty(\TT^d)} + K^{-1/2} \\
+        &= K^{-1/2} \| \widehat{\nu} - K \widehat{\mu_0} \|_{L^\infty(\TT^d)} + K^{-1/2}\\
+        &\lesssim_{\mu_0,d} K^{-1/2} \log(K)^{1/2}.
+    \end{split}
+    \end{equation}
     %
-    But this implies Property (B). And \eqref{equation491212} implies that for suitably large $N$,
+    But this gives Property (A).
+
+    Equation \eqref{equation491212} implies that for suitably large $K$,
     %
     \begin{equation} \label{equation5291029312}
         \nu(\TT^d) \geq 1.
     \end{equation}
     %
-    Lemma \eqref{lemma6213} implies that for each $\varepsilon > 0$, there exists $C$ depending only on $\mu_0$, $d$, and $\varepsilon$ such that if $|\xi| \geq \max(C, (NM)^{1+\varepsilon})$, then
+    Lemma \ref{lemma6213} implies that for each $\varepsilon > 0$, there exists $C$ depending only on $\mu_0$, $d$, and $\varepsilon$ such that if $|\xi| \geq \max(C, (1/\varepsilon_0)^{1+\varepsilon})$, then
     %
     \begin{equation} \label{equation1249120}
         |\widehat{\nu}(\xi)| \leq |\xi|^{-d/2}.
@@ -727,7 +754,7 @@ We are now ready to complete our proof of Theorem \ref{randomFourierTheorem}.
     %
     \[ |\widehat{\mu}(\xi)| \leq |\widehat{\nu}(\xi)| \leq |\xi|^{-d/2}, \]
     %
-    which proves Property (A).
+    which proves Property (B).
 \end{proof}
 
 \begin{thebibliography}{9}
