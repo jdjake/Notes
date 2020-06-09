@@ -29,6 +29,7 @@
 \DeclareMathOperator{\ZZ}{\mathbf{Z}}
 \DeclareMathOperator{\QQ}{\mathbf{Q}}
 \DeclareMathOperator{\TT}{\mathbf{T}}
+\DeclareMathOperator{\CC}{\mathbf{C}}
 
 \DeclareMathOperator{\B}{\mathcal{B}}
 
@@ -180,11 +181,21 @@ Once we have setup the appropriate metric space $\mathcal{X}$, our approach is q
     %
     \[ \lowminkdim(E) = \liminf_{\varepsilon \to 0} \log_\varepsilon|E_\varepsilon|. \]
 
-    \item We will make several uses of \emph{Hoeffding's Inequality} to control the deviations of independent families of random variables. The version of Hoeffding's inequality we use states that if $\{ X_1, \dots, X_N \}$ is an independent family of mean-zero random variables, such that for each $i$, there exists a constant $A_i \geq 0$ such that $|X_i| \leq A_i$ almost surely, then for each $t \geq 0$,
+    \item In this paper we will need to employ concentration bounds several times. In particular, we use \emph{McDiarmid's inequality}, trivially modified from the standard theorem to work with complex-valued functions. Let $\{ X_1, \dots, X_N \}$ be an independant family of random variables, and consider a measurable function $f: \RR^N \to \CC$. Suppose that for each $i \in \{ 1, \dots, N \}$, there exists a constant $A_i > 0$ such that for $x_1, \dots, x_{i-1}, x_{i+1}, \dots, x_N \in \RR$, and for each $x_i, x_i' \in \RR$,
     %
-    \[ \PP \left( |X_1 + \dots + X_N| \geq t \right) \leq 2 \exp \left(\frac{-t^2}{2(A_1^2 + \dots + A_N^2)} \right). \]
+    \[ |f(x_1, \dots, x_i, \dots, x_N) - f(x_1, \dots, x_i', \dots, x_N)| \leq A_i. \]
     %
-    Proofs are given in many probability textbooks, for instance, in Chapter 2 of \cite{Vershynin}.
+    Then McDiarmid's inequality guarantees that for all $t \geq 0$,
+    %
+    \[ \PP \left( |f(X_1, \dots, X_N) - \EE(f(X_1, \dots, X_N))| \geq t \right) \leq 4 \exp \left( \frac{-2t^2}{A_1^2 + \dots + A_N^2} \right). \]
+    %
+    The complex-valued extension we have just stated is proved easily from the real-valued case by taking a union bound to the inequality for the real and imaginary values of $f$.
+
+    A special case of McDiarmid's inequality is \emph{Hoeffding's Inequality}. The version of Hoeffding's inequality we use states that if $\{ X_1, \dots, X_N \}$ is an independent family of mean-zero random variables, such that for each $i$, there exists a constant $A_i \geq 0$ such that $|X_i| \leq A_i$ almost surely, then for each $t \geq 0$,
+    %
+    \[ \PP \left( |X_1 + \dots + X_N| \geq t \right) \leq 4 \exp \left(\frac{-t^2}{2(A_1^2 + \dots + A_N^2)} \right). \]
+    %
+    Proofs of McDiarmid's inequality are given in many probability textbooks, for instance, in Theorem 3.11 of \cite{VanHandel}.
     \begin{comment}
 
     \item Our random construction involves a probabilistic concentration of measure argument. Define a convex function $\psi_2: [0,\infty) \to [0,\infty)$ by setting
@@ -878,7 +889,7 @@ which will enable us to generically avoid the pattern $Z$.
         \end{equation}
     \end{itemize}
     %
-    Since $\varepsilon_0 \leq K^{-1/\beta_0}$, \eqref{equationGGGISCI11242} implies that
+    Since $\varepsilon_0 \leq K^{-1/\beta_0}$, \eqref{equationGGSC99124} implies that
     %
     \begin{equation} \label{equationDIJIOJIOJ}
         \#(S) \leq 10 K^{1/2}.
@@ -938,14 +949,52 @@ which will enable us to generically avoid the pattern $Z$.
 \end{proof}
 
 \begin{concludingremarks}
-    Let us end this Section by discussing where the loss in Theorem \ref{maintheorem} occurs in our proof, as compared to \cite{OurPaper}. In the last calculation, in order to obtain the bound \eqref{equationGGSCSIAXAXXXSFGG} using the $(L^1,L^\infty)$ bound using the Fourier transform, we were forced to choose parameters in such that $\#(S) \leq K^{1/2}$. However, if we were able to justify that square root cancellation occured in the sum
+    Let us end this Section by discussing where the loss in Theorem \ref{maintheorem} occurs in our proof, as compared to \cite{OurPaper}. In the last calculation, in order to obtain the bound \eqref{equationGGSCSIAXAXXXSFGG}, we were forced to choose parameters in such that $\#(S) \leq K^{1/2}$. However, if we were able to justify that square root cancellation occured in the sum
     %
     \[ \sum_{k \in S} e^{2 \pi i (\xi \cdot x_k)}, \]
     %
     then we would only be forced to pick $\#(S) \leq K$, which would lead to a dimension bound of the form
     %
     \[ \frac{dn - \alpha}{n - 1}. \]
+    %
+    This would give a Salem set with the same dimension as obtained in the main result of Theorem \cite{OurPaper}.
 \end{concludingremarks}
+
+Let
+%
+\[ Y_\xi = \sum_{k \in S} e^{2 \pi i \xi \cdot X_k}, \]
+%
+Then McDiarmid's inequality gives that
+%
+\[ \PP \left( |Y_\xi - \EE(Y_\xi|BLAH)| \geq t | BLAH \right) \leq 4 \exp \left(- \frac{t^2}{4K} \right). \]
+%
+Thus $Y_\xi$ deviates from $\EE(Y_\xi|BLAH)$ at a rate of $K^{1/2}$ with low probability, and a union bound over all $\xi$ gives a deviation of $K^{1/2} \log(K)^{1/2}$ with low probability. If we can show that $|\EE(Y_\xi|BLAH)| \leq K^{1/2}$ with high probability, we're be done!.
+
+As a next step, let's calculate $\EE(Y_\xi)$. Each $X_1, \dots, X_K$ independantly has a probability of being in $S$, and the distribution of $e^{2 \pi i \xi \cdot X_k}$ given that $k \in S$ has a particular distribution. Thus $\EE(Y_\xi|BLAH) = K \PP(k \in S|BLAH) \EE(e^{2 \pi i \xi \cdot X_k}|BLAH, k \in S)$.
+
+If
+%
+\[ W_\varepsilon = \{ (x,y) \in \TT^2: d(x,K^{-1/2} \ZZ) \leq \varepsilon \}, \]
+%
+then $|W_\varepsilon| \leq K^{1/2} \varepsilon$
+
+Let us think about this in a manner discretized as a scale $\varepsilon$. If $\PP(k \in S| BLAH) \geq K^{-1/2} = \varepsilon^{\beta/2}$, then there are at least $\varepsilon^{\beta/2-1}$ different $\varepsilon$-separated values that $X_k$ can take. Thus $e^{2 \pi i X_k}$ can take. Now $e^{2 \pi i \xi \cdot X}$ points in a particular direction on $|\xi| \varepsilon^{-1}$
+
+\begin{comment}
+Suppose we can show that for any $\xi \neq 0$,
+%
+\[ |\widehat{Y_1}(\xi) + \dots + \widehat{Y_N}(\xi)| \lesssim C \left( \| \widehat{Y_1} \|_{L^\infty(\RR^d)}^2 + \dots + \| \widehat{Y_N} \|_{L^\infty(\ZZ^d)}^2 \right)^{1/2}. \]
+%
+In the example we consider, this would then imply
+%
+\[ |Y_1(\xi) + \dots + Y_N(\xi)| \lesssim N^{1/2}. \]
+%
+Thus in the last theorem we can take $N = K$,
+%
+\[ N \leq K^{1 - (2d/\beta)(1 - 1/p)} \]
+%
+If we can set $p \geq 1$, 
+\end{comment}
 
 \begin{comment}
 
@@ -1025,11 +1074,17 @@ Thus at any $x_0$ where $x$ is smooth, we conclude
     Jacob Denson,
     \textit{Cartesian products avoiding patterns}.
 
-\bibitem{Vershynin}
-    Roman Vershynin,
-    \textit{High dimensional probability},
-    Cambridge Series in Statistical and Probabilistic Mathematics,
-    2018.
+%\bibitem{Vershynin}
+%    Roman Vershynin,
+%    \textit{High dimensional probability},
+%    Cambridge Series in Statistical and Probabilistic Mathematics,
+%    2018.
+
+\bibitem{VanHandel}
+    Ramon van Handel
+    \textit{Probability in High Dimensions},
+    ONLINE NOTES,
+    2016.
 
 \bibitem{Ekstrom2014}
     Fredrik Ekstr\"{o}m, Tomas Persson J\"{o}rg Schmeling,
