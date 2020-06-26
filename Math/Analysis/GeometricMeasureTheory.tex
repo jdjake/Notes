@@ -740,9 +740,235 @@ We can even obtain this directly from a Frostman estimate $\mu(B_r(x)) \lesssim 
 	\[ \int_{B(0,R)} |\widehat{\mu}(\xi)|^2\; d\xi \sim R^{d-s}. \]
 \end{remark}
 
-\section{Projection Theorems}
+\chapter{Projection Theorems}
 
-Recall that the Grassmanian manifold $G(n,m)$ is a space parameterizing the family of $m$ dimensional hyperplanes in $\mathbf{R}^n$. The orthogonal group $O(n)$ acts on $G(n,m)$, and we let $\gamma_{nm}$ denote the resultant Borel probablity measure. We then have Marstrand's projection theorem
+In this chapter, we study the dimensional properties of orthogonal projections of sets in $\RR^d$; we begin with the simplest scenario, projection onto a line. In coordinates, the projection can be modelled by selecting $e \in S^{d-1}$, and studying the map $P_e: \RR^d \to \RR$ by setting $P_e(x) = e \cdot x$. For a given set $E$, we want to study the relation between the dimensions of $E$ and the dimensions of it's projections.
+
+Since $P_e$ is Lipschitz, it is easy to see that for any Borel set $E$, $P_e(E)$ has Hausdorff / Minkowski dimension at most the Hausdorff / Minkowski dimension of $E$. The Fourier dimension behaves in quite the opposite way. If $\mu$ is a probability measure compactly supported on $E$, then we can define a probability measure $\mu_e$ compactly supported on $P(E)$, such that
+%
+\[ \int f\; d\mu_e = \int (f \circ P_e)\; d\mu. \]
+%
+For each $\xi \in \RR$, we find that
+%
+\[ \widehat{\mu_e}(\xi) = \int_{\RR} e^{-2 \pi i \xi t} d\mu_e(t) = \int_{\RR} e^{-2 \pi i \xi (e \cdot x)} d\mu(x) = \widehat{\mu}(\xi e). \]
+%
+This means that for each $s > 0$,
+%
+\[ \sup_{\xi \in \RR} |\xi|^s |\widehat{\mu_e}(\xi)| = \sup_{\xi \in \RR} |\xi e|^s |\widehat{\mu}(\xi e)| \leq \sup_{\eta \in \RR^d} |\eta|^s |\widehat{\mu}(\eta)|. \]
+%
+These calculations imply that $\fordim(P_e(E)) \geq \fordim(E)$. It is certainly possible for the projection of a set to increase the Fourier dimension, or decrease the Hausdorff and Minkowski dimension. However, for Salem sets, the upper and lower bounds play off each other quite nicely.
+
+\begin{theorem}
+	If $E$ is a Salem set, then $P_e(E)$ is a Salem set, and $\dim(P_e(E)) = \min(1, \dim(E))$. Furthermore,
+	%
+	\begin{itemize}
+		\item If $\dim(E) > 1$, then $P_e(E)$ has positive Lebesgue measure.
+		\item If $\dim(E) > 2$, then $P_e(E)$ has nonempty interior.
+	\end{itemize}
+\end{theorem}
+\begin{proof}
+	Our calculations show that
+	%
+	\[ \min(1,\dim(E)) \leq \fordim(P_e(E)) \leq \hausdim(P_e(E)) \leq \min(1,\dim(E)). \]
+	%
+	Thus $\fordim(P_e(E) = \hausdim(P_e(E)) = \min(1,\dim(E))$.
+
+	If $\fordim(E) > 1$, then our calculations actually show that we can find a probability measure $\mu$ compactly supported on $P_e(E)$ such that $|\widehat{\mu}(\xi)| \lesssim |\xi|^{-s/2}$ for some $s > 1$. This implies that $\widehat{\mu} \in L^2(\RR^d)$, so the inversion formula implies that $\mu \in L^2(\RR^d)$. Thus the support of $\mu$ must have positive Lebesgue measure.
+
+	If $\fordim(E) > 2$, our calculations actually show that we can find a probability measure $\mu$ compactly supported on $P_e(E)$ such that $|\widehat{\mu}(\xi)| \lesssim |\xi|^{-s/2}$, for $s > 2$. But this implies $\widehat{\mu}$ is an integrable function, hence $\mu$ has a continuous probability density, implying $P_e(E)$ has non-empty interior.
+\end{proof}
+
+\begin{remark}
+	This result can be used to give a simple proof that certain sets are not Salem sets. If $C$ is the Cantor set, then $C \times C \subset \RR^2$ is a set with Hausdorff dimension $2 \log_3(2) > 1$, known as the \emph{Cantor dust}. But if $P: \RR^2 \to \RR$ is given by $P(x,y) = x$, then $P(C \times C) = C$. Since $\dim(C) \neq 1$, $C \times C$ cannot be a Salem set.
+\end{remark}
+
+The above theorem certainly doesn't apply for non Salem sets. However, recall that sets behave like Salem sets `generically'. This doesn't really help us looking at the projections of any \emph{single} set $E$. But a sneaky way of introducing some `generic' properties is to consider a `generic' projection. Thus we might expect that for a \emph{particular} set, a generic projection behaves like a projection of a Salem set.
+
+\begin{theorem}
+	Let $E \subset \RR^d$ be a Borel set, and let $s = \hausdim(E)$. If $s \leq 1$, then $\hausdim(P_e(E)) = s$ for almost every $e \in S^{d-1}$. If $s > 1$, then $P_e(E)$ has positive Lebesgue measure for almost every $e \in S^{d-1}$. And if $s > 2$, then $P_e(E)$ has nonempty interior for almost every $e \in S^{d-1}$.
+\end{theorem}
+\begin{proof}
+	Fix $t < s$. Then we can find a measure $\mu$ compactly supported on $E$ with $I_t(\mu) < \infty$. Now working in spherical coordinates,
+	%
+	\begin{align*}
+		\int_{S^{d-1}} I_t(\mu_e)\; d\sigma(e) &= \int_{S^{d-1}} \int_{\RR} |\widehat{\mu_e}(\xi)|^2 |\xi|^{t-1}\; d\xi\; d\sigma(e)\\
+		&= 2 \int_{S^{d-1}} \int_0^\infty |\widehat{\mu}(\xi e)|^2 |\xi|^{t-1}\; d\xi\; d\sigma(e)\\
+		&\sim_d \int_{\RR^d} |\widehat{\mu}(\nu)|^2 |\nu|^{t-d}\; d\nu = I_t(\mu) < \infty.
+	\end{align*}
+	%
+	Since this integral is finite, the integrand must be finite almost everywhere. Thus $I_t(\mu_e) < \infty$ for almost every $e$, and, since $t$ was arbitrary, this shows that $\hausdim(P_e(E)) \geq s$ for almost every $e$. Since $P^e$ is always Lipschitz, we know $\hausdim(P_e(E)) \leq s$ for all $e$, so we obtain equality.
+
+	If $s > 1$, pick $1 < t < s$. Then we can find a measure $\mu$ compactly supported on $E$ such that for almost every $e \in S^{d-1}$, $I_1(\mu_e) < \infty$. But since
+	%
+	\[ I_1(\mu_e) = \| \widehat{\mu_e} \|_{L^2(\RR^d)}, \]
+	%
+	the Fourier inversion formula implies that $\mu_e \in L^2(\RR^d)$, so it's support has positive Lebesgue measure.
+
+	If $s > 2$, we pick $t > 0$ such that $2 < 2 + t < s$, and conclude that for almost every $e \in S^{d-1}$,
+	%
+	\[ \int |\widehat{\mu_e}(\xi)|^2 |\xi|^{1 + t}\; d\xi < \infty. \]
+	%
+	Since $\| \widehat{\mu_e} \|_{L^\infty(\RR^d)} \leq 1$, H\"{o}lder's inequality implies that $\widehat{\mu_e} \in L^1(\RR^d)$, so that the Fourier inversion theorem implies that $\mu_e$ is continuous. Thus the support of $\mu_e$ must have nonempty interior.
+\end{proof}
+
+Another consequence is a quantitative estimate for the average Lebesgue measure of the projected sets.
+
+\begin{theorem}
+	If $E \in \RR^d$ is Lebesgue measurable, $\mu$ is a probability measure compactly supported on $E$ with $I_1(\mu) < \infty$, then
+	%
+	\[ \int |P_e(A)|\; d\sigma(e) \gtrsim_d \frac{1}{I_1(\mu)}. \]
+\end{theorem}
+\begin{proof}
+	We see that $\widehat{\mu_e} \in L^2(\RR^d)$ for almost every $e \in S^{d-1}$, so $\mu_e \in L^2(\RR^d)$, and Parseval's inequality implies
+	%
+	\[ \| \mu_e \|_{L^2(\RR^d)} = \| \widehat{\mu_e} \|_{L^2(\RR^d)} \sim_d I_1(\mu_e). \]
+	%
+	Cauchy Schwartz implies that
+	%
+	\[ 1 = \| \mu_e \|_{L^1(\RR^d)}^2 \leq |P_e(E)| \| \mu_e \|_{L^2(\RR^d)}^2. \]
+	%
+	Thus we conclude that
+	%
+	\[ \int_{S^{d-1}} \frac{1}{|P_e(E)|} d\sigma(e) \leq \int_{S^{d-1}} \| \mu_e \|_{L^2(\RR^d)}^2\; d\sigma(e) \lesssim_d I_1(\mu). \]
+	%
+	Another application of Cauchy Schwartz implies that
+	%
+	\begin{align*}
+		1 &\lesssim_d \int_{S^{d-1}} d\sigma(e)\\
+		&= \int_{S^{d-1}} \frac{|P_e(E)|^{1/2}}{|P_e(E)|^{1/2}} d\sigma(e)\\
+		&\leq \left( \int_{S^{d-1}} |P_e(E)| d\sigma(e) \right)^{1/2} \left( \int_{S^{d-1}} \frac{1}{|P_e(E)|} d\sigma(e) \right)^{1/2}\\
+		&\leq \left( \int_{S^{d-1}} |P_e(E)| d\sigma(e) \right)^{1/2} \cdot I_1(\mu)^{1/2}.
+	\end{align*}
+	%
+	Rearranging this identity completes the proof.
+\end{proof}
+
+\section{Applications to Falconer's Conjecture}
+
+It seems plausable that if $d \geq 2$, and $E \subset \RR^d$ is Borel, with $\hausdim(E) > d/2$, then the \emph{distance set}
+%
+\[ D(E) = \{ |x - y|: x,y \in E \} \]
+%
+has positive Lebesgue measure, or maybe even has non-empty interior (we know this to be true if $E$ has positive Lebesgue measure). This is Falconer's conjecture. Much remains open about this problem; we do not even know if $\hausdim(D(E)) = 1$ if $\hausdim(E) > d/2$. Here we prove less than state of the art results related to the Falconer conjecture.
+
+Our strategy involves projecting measures on $E$ onto $D(E)$. Given a probability measure $\mu$ compactly supported on $E$, define a measure $\delta(\mu)$ supported on $[0,\infty)$ such that for each $f \in C[0,\infty)$,
+%
+\[ \int_0^\infty f d\delta(\mu) = \int_{\RR^d} \int_{\RR^d} f(|x - y|) d\mu(x) d\mu(y). \]
+%
+Obviously, $\delta(\mu)$ is compactly supported on $D(E)$. This projection smooths out $\mu$, so that $\delta(\mu)$ has a density with respect to the Lebesgue measure.
+
+\begin{lemma}
+	For any compactly supported Borel measure $\mu$ with $I_{(d+1)/2}(\mu) < \infty$, $\delta(\mu)$ is absolutely continuous with
+	%
+	\[ \delta(\mu)(t) = \int_{\RR^d} \widehat{\sigma_t}(\xi) |\widehat{\mu}(\xi)|^2\; d\xi. \]
+\end{lemma}
+\begin{proof}
+	Let us begin with the simple argument in the case where $\mu$ is given by a smooth, compactly supported density $\phi \in C_c^\infty(\RR^d)$. Indeed, a polar coordinate argument shows that for any $f \in C_c[0,\infty)$,
+	%
+	\begin{align*}
+		\int_0^\infty f d\delta(\phi) &= \int_{\RR^d} \int_{\RR^d} f(|x-y|) \phi(x) \phi(y)\; dx\; dy\\
+		&= \int_0^\infty f(t) \left( \int_{\RR^d} \phi(x) \int_{S^{d-1}} \phi(x - e)\; d\sigma_t(e)\; dx \right).
+	\end{align*}
+	%
+	It follows that 
+	%
+	\[ \delta(\phi)(t) = \int_{\RR^d} \phi(x) (\phi * \sigma_t)(x)\; dx. \]
+	%
+	Applying Parseval's formula,
+	%
+	\begin{align*}
+		\delta(\phi)(t) &= \int_{\RR^d} \widehat{\sigma_t}(\xi) |\widehat{\phi}(\xi)|^2 = \int_{\RR^d} \widehat{\sigma}(t \xi) |\widehat{\phi}(\xi)|^2.
+	\end{align*}
+	%
+	Now it suffices to approximate general Borel measures. If $\{ \phi_\varepsilon \}$ is a mollifier, and $\mu_\varepsilon = \mu * \phi_\varepsilon$, then
+	%
+	\[ \delta(\mu_\varepsilon)(t) = \int \widehat{\sigma}(t \xi) |\widehat{\mu}(\xi)|^2 |\widehat{\phi}(\varepsilon t)|\; d\xi \]
+	%
+	Now oscillatory integral techniques verify that $|\widehat{\sigma}(t\xi)| \lesssim_t |\xi|^{-(d-1)/2}$, and since
+	%
+	\[ \int_{\RR^d} |\xi|^{-(d-1)/2} |\widehat{\mu}(\xi)|^2 |\widehat{\phi}(\varepsilon t)|\; d\xi \leq \int_{\RR^d} |\xi|^{-(d-1)/2} |\widehat{\mu}(\xi)|^2 \lesssim_d I_{(d+1)/2}(\mu) < \infty, \]
+	%
+	the dominated convergence theorem implies that for each $t \geq 0$,
+	%
+	\[ \lim_{\varepsilon \to 0} \delta(\mu_\varepsilon)(t) \to \int_{\RR^d} \widehat{\sigma}(t \xi) |\widehat{\mu}(\xi)|^2\; d\xi. \]
+	%
+	A second use of the dominated convergence implies that
+	%
+	\[ \lim_{\varepsilon \to 0} \int_{\RR^d} f(t) \left( \int \widehat{\sigma}(t \xi) |\widehat{\mu}(\xi)|^2 |\widehat{\phi}(\varepsilon \xi)|\; d\xi \right)\; dt = \int_{\RR^d} f(t) \left( \int_{\RR^d} \widehat{\sigma}(t \xi) |\widehat{\mu}(\xi)|^2\; d\xi \right)\; dt. \]
+	%
+	But as $\varepsilon \to 0$, $\mu_\varepsilon$ converges weakly to $\mu$, so $\delta(\mu_\varepsilon)$ converges weakly to $\delta(\mu)$. But clearly this implies that for any $f \in C_c[0,\infty)$,
+	%
+	\[ \int_{\RR^d} f(t) d\delta(\mu)(t) = \int_{\RR^d} f(t) \left( \int_{\RR^d} \widehat{\sigma}(t \xi) |\widehat{\mu}(\xi)|^2\; d\xi \right)\; dt. \qedhere \]
+\end{proof}
+
+\begin{theorem}
+	Suppose $d \geq 2$. If $E \subset \RR^d$ is a Borel set, then
+	%
+	\[ \hausdim(D(E)) \geq \min \left( 1, \hausdim(E) - (d - 1)/2 \right). \]
+	%
+	If, in addition, $\hausdim(E) > (d+1)/2$, then $D(E)$ has nonempty interior.
+\end{theorem}
+\begin{proof}
+	If $\hausdim(E) \geq (d+1)/2$, then we can find a probability measure compactly supported on $E$ with $I_{(d+1)/2}(\mu) < \infty$. But then the integral formula implies $\delta(\mu)$ is continuous, hence the support of $\delta(\mu)$, contained in $D(E)$, has nonempty interior.
+
+	To establish the Hausdorff dimension bound, we require some deeper estimates. Suppose $\mu$ is supported on $B_R(0)$, and, and fix $0 < \eta < r < \infty$. We want to bound
+	%
+	\[ \delta(\mu)[r,r+\eta] = \int_{\RR^d} (\chi_{r\eta} * \mu)\; d\mu, \]
+	%
+	where $\chi_{r\eta}$ is the characteristic function of the annulus $\{ x \in \RR^d: r \leq |x| \leq r + \eta \}$. Again, mollifying and applying Parseval's formula shows that
+	%
+	\[ \delta(\mu)[r,r+\eta] = \int_{\RR^d} \widehat{\chi_{r\eta}}(\xi) |\widehat{\mu}(\xi)|^2\; d\xi. \]
+	%
+	To estimate $\widehat{\chi_{r\eta}}$, we use Bessel function estimates since $\chi_{r\eta}$ is radial. Indeed, we find
+	%
+	\begin{align*}
+		\widehat{\chi_{r\eta}}(\xi) &\lesssim_d |\xi|^{1-d/2} \int_r^{r + \eta} J_{d/2 - 1}(2 \pi |\xi| s) s^{d/2}\; ds\\
+		&= |\xi|^{-d} \int_{r|\xi|}^{(r + \eta)|\xi|} J_{d/2 - 1}(2 \pi u) u^{d/2}\; du.
+	\end{align*}
+	%
+	But $J_{d/2 - 1}(2 \pi u) \lesssim |u|^{-1/2}$, so integration gives
+	%
+	\[ |\widehat{\chi_{r\eta}}(\xi)| \lesssim_d r^{(d-1)/2} \eta |\xi|^{-(d-1)/2}. \]
+	%
+	Since $(s^m J_m)' = s^m J_{m-1}$, we can use the fundamental theorem of calculatus to also obtain a bound
+	%
+	\begin{align*}
+		|\widehat{\chi_{r\eta}}(\xi)| &\lesssim_d |\xi|^{-d} \Big| \left[ (r + \eta)|\xi| \right]^{d/2} J_{d/2}(2 \pi (r + \eta) |\xi|)\\
+		&\quad\quad\quad\quad\quad - (r |\xi|)^{d/2} J_{d/2}(2 \pi r |\xi|) \Big|\\
+		&\lesssim r^{(d-1)/2} |\xi|^{-(d+1)/2}.
+	\end{align*}
+	%
+	We use the first bound for small frequencies, and the second bound for high frequencies. For any $t \in (0,1)$,
+	%
+	\begin{align*}
+		\delta(\mu)[r,r+\eta] &= \int_{\RR^d} \widehat{\chi_{r\eta}}(\xi)|\widehat{\mu}(\xi)|^2\; d\xi\\
+		&= \int_{|\xi| \leq 1/\eta} r^{(d-1)/2} \eta |\xi|^{-(d-1)/2} |\widehat{\mu}(\xi)|^2\; d\xi\\
+		&\quad + \int_{|\xi| > 1/\eta} r^{(d-1)/2} |\xi|^{-(d+1)/2} |\widehat{\mu}(\xi)|^2\\
+		&= r^{(d-1)/2} \eta^t \Bigg( \int_{|\xi| \leq 1/\eta} \eta^{1-t} |\xi|^{-(d-1)/2} |\widehat{\mu}(\xi)|^2\; d\xi\\
+		&\quad\quad\quad\quad\quad\quad\quad\quad + \int_{|\xi| \geq 1/\eta} \eta^{-t} |\xi|^{-(d+1)/2} |\widehat{\mu}(\xi)|^2\; d\xi \Bigg)\\
+		&= r^{(d-1)/2} \eta^t \Bigg( \int_{|\xi| \leq 1/\eta} |\xi|^{(t-1)-(d-1)/2} |\widehat{\mu}(\xi)|^2\; d\xi\\
+		&\quad\quad\quad\quad\quad\quad\quad\quad + \int_{|\xi| \geq 1/\eta} |\xi|^{t - (d+1)/2} |\widehat{\mu}(\xi)|^2\; d\xi \Bigg)\\
+		&= r^{(d-1)/2} \eta^t \int_{\RR^d} |\xi|^{t - (d+1)/2} |\widehat{\mu}(\xi)|^2\; d\xi\\
+		&\lesssim_{t,d} r^{(d-1)/2} \eta^t \cdot I_{t + (d-1)/2}(\mu).
+	\end{align*}
+	%
+	This will suffice to prove the remainder of the theorem.
+
+	To obtain the Hausdorff dimension bounds, it clearly suffices to assume that $(d-1)/2 \leq \hausdim(E) \leq (d+1)/2$, since we have already verified the claim in the case $\hausdim(E) > (d+1)/2$, and the case $\hausdim(E) < (d-1)/2$ is trivial. For any $t \in (0,1)$ with $(d-1)/2 + t < \hausdim(E)$, we can find a probability measure $\mu$ on $E$ with $I_{t + (d-1)/2}(\mu) < \infty$. If $\mu$ is supported on $B_R(0)$, then $\delta(\mu)$ is supported on $[0,2R]$. Thus for any $r < 2R$ and $0 < \eta < r$, $\delta(\mu)[r,r+\eta] \lesssim_{R,\mu} \eta^t$. For any $\varepsilon > 0$ small enough that $\delta(\mu)[\varepsilon,\infty) > 0$, the measure
+	%
+	\[ \nu(U) = \frac{\delta(\mu)(U \cap [\varepsilon,\infty))}{\delta(\mu)[\varepsilon,\infty)} \]
+	%
+	is a Frostman measure of dimension $t$ supported on $D(E)$, so $\hausdim(D(E)) \geq t$.
+\end{proof}
+
+\begin{remark}
+	s
+\end{remark}
+
+
+
+
+Recall that the Grassmanian manifold $G(n,m)$ is a space parameterizing the family of $m$ dimensional hyperplanes in $\mathbf{R}^n$. The orthogonal group $O(n)$ acts on $G(n,m)$, and we let $\gamma_{nm}$ denote the resultant Borel probablity measure on $G(n,m)$ left-invariant under the action of $O(n)$. We then have Marstrand's projection theorem
 
 \begin{theorem}[Marstrand]
 	s
