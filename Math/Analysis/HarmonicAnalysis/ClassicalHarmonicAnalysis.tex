@@ -639,6 +639,42 @@ Then the space $C^{0,\alpha}(\TT^d)$ of all functions satisfying a H\"{o}lder co
     as $y \to 0$ (see Bochner, Lectures on Fourier Integrals).
 \end{remark}
 
+We also have a weaker converse statement.
+
+\begin{theorem}
+    Fix $f \in L^1(\TT^d)$. Then
+    %
+    \[ \| f \|_{C^{0,\alpha}(\TT^d)} \lesssim_d \sup_{n \in \ZZ^d} |n|^{d + \alpha} |\widehat{f}(n)|. \]
+\end{theorem}
+\begin{proof}
+    Let $A = \sup_{n \in \ZZ^d} |n|^{d+\alpha} |\widehat{f}(n)|$. Then $\widehat{f} \in L^1(\ZZ^d)$, so the Fourier inversion formula implies that for almost every $x \in \TT^d$,
+    %
+    \[ f(x) = \sum_{n \in \ZZ^d} \widehat{f}(n) e^{2 \pi i n \cdot x}. \]
+    %
+    Then for $|h| < 1$,
+    %
+    \[ f(x + h) - f(x) = \sum_{n \in \ZZ^d} \widehat{f}(n) e^{2 \pi i n \cdot x} \left( e^{2 \pi i n \cdot h} - 1 \right). \]
+    %
+    Now $|e^{2 \pi i n \cdot h} - 1| \lesssim \min(1, |n| |h|)$, so
+    %
+    \begin{align*}
+        \left| \sum_{ |n| \leq 1/|h|} \widehat{f}(n) e^{2 \pi i n \cdot x} \left( e^{2 \pi i n \cdot h} - 1 \right) \right| &\leq A|h| \sum_{|n| \leq 1/|h|} \frac{1}{|n|^{d - 1 + \alpha}} \lesssim_d A |h| |h|^{\alpha - 1} = A |h|^\alpha
+    \end{align*}
+    %
+    and
+    %
+    \begin{align*}
+        \left| \sum_{ |n| \geq 1/|h|} \widehat{f}(n) e^{2 \pi i n \cdot x} \left( e^{2 \pi i n \cdot h} - 1 \right) \right| &\leq 2A \sum_{|n| \geq 1/|h|} 1/|n|^{d + \alpha}\\
+        &\lesssim_d 2A |h|^\alpha.
+    \end{align*}
+    %
+    Combining these two calculations shows that
+    %
+    \[ |f(x+h) - f(x)| \lesssim_d A |h|^\alpha,  \]
+    %
+    so $\| f \|_{C^{0,\alpha}(\TT^d)} \lesssim_d A$.
+\end{proof}
+
 \section{Convolution and Kernel Methods}
 
 The notion of the convolution of two functions $f$ and $g$ is a key tool in Fourier analysis, both as a way to regularize functions, and as an operator that transforms nicely when we take Fourier series. Given two integrable functions $f$ and $g$, we define
@@ -1239,6 +1275,23 @@ Thus we have the relation  $T_{m+1}(x) = 2xT_m(x) - T_{m-1}(x)$. These polynomia
     and so we have uniformly approximated $f$ by a polynomial.
 \end{proof}
 
+Another proof uses the family of \emph{Landau kernels}
+%
+\[ L_n(x) = c_n \cdot \begin{cases} (1 - x^2)^n &: -1 \leq x \leq 1 \\ 0 &: |x| \geq 1 \end{cases} \]
+%
+where $c_n$ is chosen so that $\int_{-1}^1 L_n(x) = 1$. It is simple to show that the family $\{ L_n \}$ is a
+%
+\begin{align*}
+    \int_{-1}^1 (1 - x^2)^n\; dx \geq &= \sum_{k = 0}^\infty \int_{1/2^{k+1} \leq |x| \leq 1/2^k} (1 - x^2)^n\\
+    &\gtrsim \sum_{k = 0}^\infty \frac{(1 - 1/4^{k+1})^n}{2^k}\\
+    &= \sum_{k = 0}^\infty \exp \left( n \log(1 - 1/4^{k+1}) - k \log(2) \right)\\
+    &\geq \sum_{k = 0}^\infty \exp \left( -n / 4^k \right) / 2^k\\
+    &\gtrsim \sum_{k = \log_4 n}^{\infty} 1/2^k \gtrsim 1/2^{\log_4 n} = 1/n^{1/2}
+\end{align*}
+%
+Thus $\| L_n \|_{L^\infty(\RR)} \leq n^{1/2}$.
+
+
 \section{Exponential Sums and Equidistribution}
 
 The next result uses Fourier analysis to characterize the asymptotic distribution of a certain sequence $a_1, a_2, \dots$. In particular, it is most useful in determining when this distribution is distributed when we consider $2 \pi a_1, 2 \pi a_2, \dots$ as elements of $\TT$, i.e. so we only care about the fractional part of the numbers, or in other terms their behaviour modulo one. We say the sequence is {\it uniformly distributed} if for any interval $I \subset \TT$, $\# \{ 2 \pi a_n \in I : n \leq N \} \sim N |I|$ as $N \to \infty$. By approximating continuous functions by step functions, this implies that if $f: \TT \to \CC$ is continuous, then
@@ -1521,7 +1574,7 @@ for $\xi \in \RR^d$. The basic theory of the Fourier transform in one dimension 
 
 \section{Basic Calculations}
 
-Later, we will interpret the Fourier transform in a very general manner for a very arbitrary class of functions. But first we must interpret the Fourier transform as a Lebesgue integral, and the weakest assumptions we can make in order to do this are that $f$ is an integrable function, i.e. that $f \in L^1(\RR^d)$. During arguments, we can often assume additional regularity properties of $f$, and then apply density arguments to get the result in general. Most of the properties of the Fourier transform are exactly the same as for Fourier series. The only generally novel phenomenon in the basic theory is that the Fourier transform of an integrable function is continuous.
+In order to interpret the Fourier transform as an absolutely convergent integral, we require that we are dealing with integrable assumptions. Thus we analyze functions in $L^1(\RR^d)$. During arguments, we can often assume additional regularity properties of $f$, and then apply density arguments to get the result in general. Most of the properties of the Fourier transform are exactly the same as for Fourier series. However, one novel phenomenon in the basic theory is that the Fourier transform of an integrable function is continuous and vanishes at $\infty$.
 
 \begin{theorem}
     For any $f \in L^1(\RR^d)$, $\smash{\| \widehat{f} \|_{L^\infty(\RR^d)} \leq \| f \|_{L^1(\RR^d)}}$, and $\widehat{f} \in C_0(\RR^d)$.
@@ -1614,7 +1667,7 @@ On the other hand, for a finite measure $\mu$ on $\RR^d$, we can define the Four
 %
 In this case, the family of continuous functions which are the Fourier transforms of finite measures is precisely the family of $f \in C(\RR^d)$ which are \emph{positive definite}, in the sense that for each $x_1,\dots,x_N \in \RR^d$ and $\xi_1,\dots,\xi_N \in \CC$,
 %
-\[ \sum_{i,j} f(x_i - x_j) \xi_i \xi_j \geq 0. \]
+\[ \sum_{i = 1}^N \sum_{j = 1}^N f(x_i - x_j) \xi_i \xi_j \geq 0. \]
 %
 The theorem, proved by Bochner, is best addressed in the more general case of harmonic analysis on locally compact abelian groups, and so we leave the proof of this for another time.
 
@@ -1623,25 +1676,25 @@ Elementary properties of integration give the following relations among the Four
 \begin{itemize}
     \item If $f^*(x) = \overline{f(x)}$ is the conjugate of a function $f$, then
     %
-    \[ \widehat{f^*}(\xi) = \int \overline{f(x)} e(- x \cdot \xi)\; dx = \overline{\int f(x) e(x \cdot \xi)} = \overline{\widehat{f}(-\xi)}. \]
+    \[ \widehat{f^*}(\xi) = \int \overline{f(x)} e^{-2 \pi i x \cdot \xi}\; dx = \overline{\int f(x) e^{2 \pi i \xi \cdot x}} = \overline{\widehat{f}(-\xi)}. \]
     %
     If $f$ is real, the formula above says $\widehat{f}(\xi) = \overline{\widehat{f}(-\xi)}$, and so if we define $a(\xi) = \text{Re}(\widehat{f}(\xi))$, $b(\xi) = \text{Im}(\widehat{f}(\xi))$, then formally we have
     %
-    \[ \int_{-\infty}^\infty \widehat{f}(\xi) e(\xi x)\; d\xi = 2 \int_0^\infty a(\xi) \cos(2 \pi \xi x) - b(\xi) \sin(2 \pi \xi x)\; d\xi. \]
+    \[ \int_{-\infty}^\infty \widehat{f}(\xi) e^{2 \pi i \xi \cdot x}\; d\xi = 2 \int_0^\infty a(\xi) \cos(2 \pi \xi \cdot x) - b(\xi) \sin(2 \pi \xi \cdot x)\; d\xi. \]
     %
     Thus the Fourier representation formula expresses the function $f$ as an integral in sines and cosines.
     
-    \item There is a duality between translation and frequency modulation. For $y \in \RR^d$, we define $(T_y f)(x) = f(x - y)$. If $\xi \in \RR^d$, then we define $(M_\xi f)(x) = e(\xi \cdot x) f(x)$. We then find that
+    \item There is a duality between translation and frequency modulation. For $y \in \RR^d$, we define $(T_y f)(x) = f(x - y)$. If $\xi \in \RR^d$, then we define $(M_\xi f)(x) = e^{2 \pi i \xi \cdot x} f(x)$. We then find that
     %
     \begin{align*}
-        \widehat{T_y f}(\xi) &= \int f(x - y) e(- \xi \cdot x)\; dx\\
-        &= e(- \xi \cdot y) \int f(x) e(- \xi \cdot x)\; dx = (M_{-y} \widehat{f})(\xi).
+        \widehat{T_y f}(\xi) &= \int f(x - y) e^{-2\pi i \xi \cdot x}\; dx\\
+        &= e^{- 2 \pi i \xi \cdot y} \int f(x) e^{- 2 \pi i \xi \cdot x}\; dx = (M_{-y} \widehat{f})(\xi).
     \end{align*}
     %
     and
     %
     \begin{align*}
-        \widehat{M_\xi f}(\eta) = \int e(\xi \cdot x) f(x) e(- \eta \cdot x)\; dx = \widehat{f}(\eta - \xi) = (T_\xi \widehat{f})(\eta).
+        \widehat{M_\xi f}(\eta) = \int e^{2 \pi i \xi \cdot x} f(x) e(- \eta \cdot x)\; dx = \widehat{f}(\eta - \xi) = (T_\xi \widehat{f})(\eta).
     \end{align*}
     %
     Thus we conclude $\mathcal{F} \circ T_y = M_{-y} \circ \mathcal{F}$, and $\mathcal{F} \circ M_\xi = T_\xi \circ \mathcal{F}$.
@@ -1649,9 +1702,9 @@ Elementary properties of integration give the following relations among the Four
     \item Let $T: \RR^d \to \RR^d$ be an invertible linear transformation. Then a change of variables $y = Tx$ gives
     %
     \begin{align*}
-        \widehat{f \circ T}(\xi) &= \int f(Tx) e(-\xi \cdot x)\; dx\\
-        &= \frac{1}{|\det(T)|} \int f(y) e(- \xi \cdot T^{-1}y)\; dy\\
-        &= \frac{1}{|\det(T)|} \int f(y) e(- T^{-T} \xi \cdot y)\; dy\\
+        \widehat{f \circ T}(\xi) &= \int f(Tx) e^{-2 \pi i \xi \cdot x}\; dx\\
+        &= \frac{1}{|\det(T)|} \int f(y) e^{-2 \pi i \xi \cdot T^{-1}y)}\; dy\\
+        &= \frac{1}{|\det(T)|} \int f(y) e^{- 2 \pi i T^{-T} \xi \cdot y}\; dy\\
         &= \frac{1}{|\det(T)|} (\widehat{f} \circ T^{-T})(\xi).
     \end{align*}
     %
@@ -1698,17 +1751,17 @@ which is often a natural space to consider the relation of the Fourier transform
 \begin{proof}
     Note that a change of variables implies
     %
-    \[ (\Delta_h \widehat{f})(\xi) = \int f(x) \frac{e(-h x_k) - 1}{h} e(- \xi \cdot x)\; dx = \widehat{g_h}(\xi), \]
+    \[ (\Delta_h \widehat{f})(\xi) = \int f(x) \frac{e^{-2\pi i h x_k} - 1}{h} e^{-2 \pi i \xi \cdot x}\; dx = \widehat{g_h}(\xi), \]
     %
     where
     %
-    \[ g_h(x) = f(x) \frac{e(h x_k) - 1}{h}. \]
+    \[ g_h(x) = f(x) \frac{e^{2 \pi i h x_k} - 1}{h}. \]
     %
     Note that
     %
-    \[ \left| \frac{e(h x_k) - 1}{h} \right| = O(1 + |x_k|). \]
+    \[ \left| \frac{e^{2 \pi i h x_k} - 1}{h} \right| = O(1 + |x_k|). \]
     %
-    Since $x_k f$ is integrable, we can apply the dominated convergence theorem. Because $(e(h x_k) - 1)/h$ tends to $-2 \pi i x_k f(x)$ as $h \downarrow 0$, the function $g_h$ tends to $-2\pi i x_k f$ in $L^1(\RR^d)$. Taking Fourier transforms, we conclude that $\Delta_h \widehat{f} = \widehat{g_h}$ converges uniformly to $(-2 \pi i x_k f)^\ft(\xi)$.
+    Since $x_k f$ is integrable, we can apply the dominated convergence theorem. Because $(e^{2 \pi i h x_k} - 1)/h$ tends to $-2 \pi i x_k f(x)$ as $h \downarrow 0$, the function $g_h$ tends to $-2\pi i x_k f$ in $L^1(\RR^d)$. Taking Fourier transforms, we conclude that $\Delta_h \widehat{f} = \widehat{g_h}$ converges uniformly to $(-2 \pi i x_k f)^\ft(\xi)$.
 \end{proof}
 
 \begin{remark}
@@ -2139,7 +2192,7 @@ then the family $\{ K_\delta \}$ is an approximation to the identity, and so $(K
 \begin{example}
     We note that
     %
-    \[ \int_{-R}^R e(- \xi x)\; dx = \frac{e(- \xi R) - e(\xi R)}{-2 \pi i \xi} = \frac{\sin(2 \pi \xi R)}{\pi \xi}. \]
+    \[ \int_{-R}^R e^{- 2 \pi i \xi x}\; dx = \frac{e^{-2 \pi i \xi R} - e^{2 \pi i \xi R}}{-2 \pi i \xi} = \frac{\sin(2 \pi \xi R)}{\pi \xi}. \]
     %
     so the Fourier transform of $\chi_{[-R,R]}$ is the \emph{Dirichlet kernel}
     %
@@ -2154,9 +2207,9 @@ then the family $\{ K_\delta \}$ is an approximation to the identity, and so $(K
 
 Thus we now know there are a large examples of functions $\Phi \in C_0(\RR^d)$ with $\Phi(0) = 1$, and such that for any $x$ in the Lebesgue set of $f$,
 %
-\[ f(x) = \lim_{\delta \to 0} \int \widehat{f}(\xi) e(\xi \cdot x) \Phi(\delta x). \]
+\[ f(x) = \lim_{\delta \to 0} \int \widehat{f}(\xi) e^{2 \pi i \xi \cdot x} \Phi(\delta x). \]
 %
-If $\widehat{f}$ is integrable, then the bound $| \widehat{f}(\xi) e(\xi \cdot x) \Phi(\delta \xi) | \leq \| \Phi \|_\infty | \widehat{f}(\xi) |$ implies that we can use the dominated convergence theorem to conclude that for any point $x$ in the Lebesgue set of $f$,
+If $\widehat{f}$ is integrable, then the bound $| \widehat{f}(\xi) e^{2 \pi i \xi \cdot x} \Phi(\delta \xi) | \leq \| \Phi \|_\infty | \widehat{f}(\xi) |$ implies that we can use the dominated convergence theorem to conclude that for any point $x$ in the Lebesgue set of $f$,
 %
 \[ f(x) = \lim_{\delta \to 0} \int \widehat{f}(\xi) e(\xi \cdot x) \Phi(\delta x) = \int \widehat{f}(\xi) e(\xi \cdot x) \]
 %
