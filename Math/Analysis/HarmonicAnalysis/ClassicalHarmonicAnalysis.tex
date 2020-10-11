@@ -365,14 +365,14 @@ One of the most important properties of the Fourier series is that the coefficie
 
     \item For each $s \in \RR^d$, and $m \in \ZZ^d$, and any $f \in L^1(\TT^d)$, define the translation and frequency modulation operators $\text{Trans}_s$ and $\text{Mod}_m$ by setting
     %
-    \[ (\text{Trans}_s f)(t) = f(t + s) \quad\text{and}\quad (\text{Mod}_m f)(t) = e_m(t) f(t). \]
+    \[ (\text{Trans}_s f)(t) = f(t - s) \quad\text{and}\quad (\text{Mod}_m f)(t) = e_m(t) f(t). \]
 
     %
     Similarily, for each function $C: \ZZ^d \to \CC$, for each $m \in \ZZ^d$ and $\xi \in \RR$, define
     %
-    \[ (\text{Trans}_m C)(n) = C(n + m) \quad\text{and}\quad (\text{Mod}_\xi C)(n) = e_\xi(n) C(n). \]
+    \[ (\text{Trans}_m C)(n) = C(n - m) \quad\text{and}\quad (\text{Mod}_\xi C)(n) = e_\xi(n) C(n). \]
     %
-    Then for any $f \in L^1(\TT^d)$, $\widehat{\text{Trans}_s f} = \text{Mod}_s \widehat{f}$, and $\widehat{\text{Mod}_m f} = \text{Trans}_m \widehat{f}$.
+    Then for any $f \in L^1(\TT^d)$, $\widehat{\text{Trans}_s f} = \text{Mod}_{-s} \widehat{f}$, and $\widehat{\text{Mod}_m f} = \text{Trans}_{-m} \widehat{f}$.
 
     \item An easy integration by parts shows that if $f \in C^\infty(\TT^d)$, then for any $k \in \{ 1, \dots, d \}$,
     %
@@ -1688,6 +1688,150 @@ In order to interpret the Fourier transform as an absolutely convergent integral
     Thus $\widehat{\chi_I}(\xi) \to 0$ as $|\xi| \to \infty$. But this implies the Fourier transform of any step function is continuous and vanishes at $\infty$. Since step functions are dense in $L^1(\RR^d)$, a density argument then gives the result for all integrable functions.
 \end{proof}
 
+Elementary properties of integration give the following relations among the Fourier transforms of functions on $\RR^d$. They are strongly related to the translation invariance of the Lebesgue integral on $\RR^d$:
+%
+\begin{itemize}
+    \item If $f^*(x) = \overline{f(x)}$ is the conjugate of a function $f$, then
+    %
+    \[ \widehat{f^*}(\xi) = \int \overline{f(x)} e^{-2 \pi i x \cdot \xi}\; dx = \overline{\int f(x) e^{2 \pi i \xi \cdot x}} = \overline{\widehat{f}(-\xi)}. \]
+    %
+    If $f$ is real, the formula above says $\widehat{f}(\xi) = \overline{\widehat{f}(-\xi)}$, and so if we define $a(\xi) = \text{Re}(\widehat{f}(\xi))$, $b(\xi) = \text{Im}(\widehat{f}(\xi))$, then formally we have
+    %
+    \[ \int_{-\infty}^\infty \widehat{f}(\xi) e^{2 \pi i \xi \cdot x}\; d\xi = 2 \int_0^\infty a(\xi) \cos(2 \pi \xi \cdot x) - b(\xi) \sin(2 \pi \xi \cdot x)\; d\xi. \]
+    %
+    Thus the Fourier representation formula expresses the function $f$ as an integral in sines and cosines.
+    
+    \item There is a duality between translation and frequency modulation. For $y \in \RR^d$, we define $(\text{Trans}_y f)(x) = f(x - y)$. If $\xi \in \RR^d$, then we define $(\text{Mod}_\xi f)(x) = e^{2 \pi i \xi \cdot x} f(x)$. We then find that
+    %
+    \begin{align*}
+        \widehat{\text{Trans}_y f}(\xi) &= \int f(x - y) e^{-2\pi i \xi \cdot x}\; dx\\
+        &= e^{- 2 \pi i \xi \cdot y} \int f(x) e^{- 2 \pi i \xi \cdot x}\; dx = (\text{Mod}_{-y} \widehat{f})(\xi).
+    \end{align*}
+    %
+    and
+    %
+    \begin{align*}
+        \widehat{\text{Mod}_\xi f}(\eta) = \int e^{2 \pi i \xi \cdot x} f(x) e(- \eta \cdot x)\; dx = \widehat{f}(\eta - \xi) = (\text{Trans}_\xi \widehat{f})(\eta).
+    \end{align*}
+    %
+    Thus we conclude $\mathcal{F} \circ \text{Trans}_y = \text{Mod}_{-y} \circ \mathcal{F}$, and $\mathcal{F} \circ \text{Mod}_\xi = \text{Trans}_\xi \circ \mathcal{F}$.
+
+    \item Let $T: \RR^d \to \RR^d$ be an invertible linear transformation. Then a change of variables $y = Tx$ gives
+    %
+    \begin{align*}
+        \widehat{f \circ T}(\xi) &= \int f(Tx) e^{-2 \pi i \xi \cdot x}\; dx\\
+        &= \frac{1}{|\det(T)|} \int f(y) e^{-2 \pi i \xi \cdot T^{-1}y)}\; dy\\
+        &= \frac{1}{|\det(T)|} \int f(y) e^{- 2 \pi i T^{-T} \xi \cdot y}\; dy\\
+        &= \frac{1}{|\det(T)|} (\widehat{f} \circ T^{-T})(\xi).
+    \end{align*}
+    %
+    Thus we conclude that if $T^*: L^1(\RR^d) \to L^1(\RR^d)$ is the operator defined by setting $T^*(f) = f \circ T$, then 
+    %
+    \[ \mathcal{F} \circ T^* = \frac{1}{|\det(T)|} \cdot (T^{-T})^* \circ \mathcal{F}. \]
+
+    \item As a special case of the theorem above, if $a \in \RR$ and $\text{Dil}_a: L^1(\RR^d) \to L^1(\RR^d)$ is the operator defined by setting
+    %
+    \[ (\text{Dil}_a f)(x) = f(ax), \]
+    %
+    then
+    %
+    \[ \widehat{\text{Dil}_a f} = a^{-d} \cdot \text{Dil}_{1/a}\widehat{f} \]
+    %
+    If we dilate by a small value of $a$, then the values of $f$ are traced over more slowly, so $D_a f$ has smaller frequencies. But the magnitude of the Fourier transform over these frequencies is increased to compensate.
+
+    \item Another special case is that if $R \in O_n(\RR)$, then $\widehat{f \circ R}(\xi) = \widehat{f}(R \xi)$, i.e. $\mathcal{F} \circ R^* = R^* \circ \mathcal{F}$. In particular, if $f$ is a radial function, so $f \circ R = f$ for any $R$, then $\widehat{f}(R \xi) = \widehat{f}(\xi)$ for any $R \in O_n(\RR)$, so $\widehat{f}$ is also a radial function. If $f$ is even, so $f(x) = f(-x)$ for all $x$, then $\widehat{f}(\xi) = \widehat{f}(-\xi)$ for all $\xi$, so $\widehat{f}$ is even. Similarily, if $f$ is odd, then $\widehat{f}$ is odd.
+
+    \item Given $f,g \in L^1(\RR^d)$, we define the convolution
+    %
+    \[ (f * g)(x) = \int f(y) g(x-y)\; dy. \]
+    %
+    This convolution possesses precisely the same properties as convolution on $\TT$. Most importantly for us,
+    %
+    \[ \mathcal{F}(f * g) = \mathcal{F}(f) \cdot \mathcal{F}(g), \]
+    %
+    so convolution in phase space is just a product in frequency space.
+
+    \item If $f \in L^1(\RR^d)$ has a weak derivative $D^\alpha f \in L^1(\RR^d)$, then
+    %
+    \[ \widehat{D^\alpha f}(\xi) = (2 \pi i \xi)^\alpha \widehat{f}(\xi). \]
+    %
+    In particular, this is true if $f$ is a \emph{Schwartz function}, i.e. an element of
+    %
+    \[ \mathcal{S}(\RR^d) = \{ f \in C^\infty(\RR^d): |(D_\alpha f)(x)| \lesssim_{\alpha,N} |x|^{-N}\ \text{for all $N, \alpha, x$} \} \]
+    %
+    which is often a natural place to consider the Fourier transform. Conversely, if $f \in L^1(\RR^d)$, and $x^\alpha f \in L^1(\RR^d)$ for some multi-index $\alpha$, then $\widehat{f}$ has a weak derivative $D^\alpha \widehat{f}$ in $L^1(\RR^d)$, and
+    %
+    \[ D^\alpha \widehat{f}(\xi) = \widehat{(-2 \pi i x)^\alpha f}(\xi). \]
+    %
+    In particular, this means that the Fourier transform of a compactly supported element of $L^1(\RR^d)$ lies in $C^\infty(\RR^d)$, and all deriatives of the Fourier transform are integrable.
+\end{itemize}
+
+%\begin{theorem}
+%    If $f \in L^1(\RR^d)$, and $x_k f \in L^1(\RR^d)$, then $\widehat{f}$ has a weak derivative in the $L^\infty$ norm, and $\widehat{f}_k(\xi) = - 2 \pi i (x_k f)^\ft(\xi)$.
+%\end{theorem}
+%\begin{proof}
+%    Note that a change of variables implies
+    %
+%    \[ (\Delta_h \widehat{f})(\xi) = \int f(x) \frac{e^{-2\pi i h x_k} - 1}{h} e^{-2 \pi i \xi \cdot x}\; dx = \widehat{g_h}(\xi), \]
+    %
+%    where
+    %
+%    \[ g_h(x) = f(x) \frac{e^{2 \pi i h x_k} - 1}{h}. \]
+    %
+%    Note that
+    %
+%    \[ \left| \frac{e^{2 \pi i h x_k} - 1}{h} \right| = O(1 + |x_k|). \]
+    %
+%    Since $x_k f$ is integrable, we can apply the dominated convergence theorem. Because $(e^{2 \pi i h x_k} - 1)/h$ tends to $-2 \pi i x_k f(x)$ as $h \downarrow 0$, the function $g_h$ tends to $-2\pi i x_k f$ in $L^1(\RR^d)$. Taking Fourier transforms, we conclude that $\Delta_h \widehat{f} = \widehat{g_h}$ converges uniformly to $(-2 \pi i x_k f)^\ft(\xi)$.
+%\end{proof}
+
+%\begin{remark}
+%   If $f$ no longer has compact support, but $D_k f$ vanishes rapidly at infinity, then we can normally still establish that $D_k f$ is the derivative of $f$ in $L^1(\RR^n)$. Indeed, suppose $|(D_k f)(x)| \leq g(|x|)$, where $g$ is an increasing function with $\int_0^\infty t^{n-1} g(t) < \infty$, then surely $\Delta_h f$ converges to $D_k f$ in $L^1$ on any compact set, which implies that for any $M$, using the mean value theorem again,
+    %
+%   \begin{align*}
+%       \int_{\RR^n} &|(\Delta_h f)(x) - D_k f(x)|\; dx \leq o_M(1) + \int_{|x| > M} |(\Delta_h f)(x)| + |D_k f(x)| \\
+%       &\leq o_M(1) + O \left( \int_{|x| > M} g(|x| + |h|)\; dx \right) = o_M(1) + O \left( \int_M^\infty t^{n-1}g(t)\; dt \right)\\
+%   \end{align*}
+    %
+%   If we choose $M$ large enough that the big $O$ term is $\leq \varepsilon$, then we find $\| \Delta_h f - D_k f \|_1 \leq \varepsilon + o_M(1)$, and taking $\varepsilon \to 0$ shows the convergence. This shows the derivatives exist if, for instance, $f$ is a Schwarz function, since then $|D_k f(x)| \lesssim 1/(1 + |x|^{n+1})$.
+%\end{remark}
+
+%\begin{theorem}
+%    If $f$ has a weak derivative $f_k$ in the $L^1$ norm, $\widehat{f_k}(\xi) = 2 \pi i \xi_k \widehat{f}(\xi)$.
+%\end{theorem}
+%\begin{proof}
+%    It suffices to note that
+    %
+%    \[ \widehat{\Delta_h f}(\xi) = \frac{e(h \xi_k) - 1}{h} \widehat{f}(\xi). \]
+    %
+%    Since $\Delta_h f \to f_k$ in $L^1$, $\widehat{\Delta_h f} \to \widehat{f_k}$ uniformly, and in particular, converges to $\widehat{f_k}$ pointwise. But we know $\widehat{\Delta_h f}$ converges pointwise to $2 \pi i \xi_k \widehat{f}(\xi)$.
+%\end{proof}
+
+%\begin{theorem}
+%   If $X$ is a homogenous space of functions, the $f * K_\delta$ converges to $f$ in the norm associated with $X$.
+%\end{theorem}
+%\begin{proof}
+%   Given a continuous function function $F: \TT \to X$, we define the formal Riemann integral of functions as
+    %
+%   \[ \int_{\TT} F(x)\; dx = \lim_{N \to \infty} \frac{1}{N} \sum_{n = 1}^N F(2 \pi /N) \]
+    %
+%   which exists for the same reason the Riemann integral of a continuous real valued function exists. Now we can consider the formal function theoretic convolution
+    %
+%   \[ \int_{\TT} K_\delta(x) f_x\; dx \]
+    %
+%   This is equal to $K_\delta * f$, because the $L^1$ norm lower bounds the norm on $X$, so that the limit with respect to the $L^1$ norm is the same as with respect to the norm on $X$, and
+    %
+%   \[ s \]
+    %
+%   \[ \int_{\TT} K_\delta(x) f_x\; dx - f = \int_0^{2\pi} K_\delta(x)[f_x - f]\; dx \]
+    %
+%   If we choose 
+%\end{proof}
+%
+%More generally, if we equip a translation invariant subspace of $L^1(\RR^n)$ with a norm lower bounded up to a constant by the $L^1$ norm which turns the space into a Banach space, then $f * K_\delta$ converges to $f$ in that norm. If in addition, the $K_\delta$ satisfy $|K_\delta(x)| \lesssim \delta^{-n}$, and $|K_\delta(x)| \lesssim \delta/|x|^{n+1}$, then $f * K_\delta$ converges to $f$ almost everywhere. 
+
+\section{The Fourier Algebra}
+
 The space
 %
 \[ \mathbf{A}(\RR^d) = \left\{ \widehat{f}: f \in L^1(\RR^d) \right\} \]
@@ -1752,155 +1896,82 @@ In this case, the family of continuous functions which are the Fourier transform
 %
 The theorem, proved by Bochner, is best addressed in the more general case of harmonic analysis on locally compact abelian groups, and so we leave the proof of this for another time.
 
-Elementary properties of integration give the following relations among the Fourier transforms of functions on $\RR^d$. They are strongly related to the translation invariance of the Lebesgue integral on $\RR^d$:
+\section{Basic Convergence Properties}
+
+As we might expect from the Fourier series theory, if $f \in C(\RR) \cap L^1(\RR^d)$ and $\widehat{f} \in L^1(\RR^d)$, then the formula
 %
-\begin{itemize}
-    \item If $f^*(x) = \overline{f(x)}$ is the conjugate of a function $f$, then
-    %
-    \[ \widehat{f^*}(\xi) = \int \overline{f(x)} e^{-2 \pi i x \cdot \xi}\; dx = \overline{\int f(x) e^{2 \pi i \xi \cdot x}} = \overline{\widehat{f}(-\xi)}. \]
-    %
-    If $f$ is real, the formula above says $\widehat{f}(\xi) = \overline{\widehat{f}(-\xi)}$, and so if we define $a(\xi) = \text{Re}(\widehat{f}(\xi))$, $b(\xi) = \text{Im}(\widehat{f}(\xi))$, then formally we have
-    %
-    \[ \int_{-\infty}^\infty \widehat{f}(\xi) e^{2 \pi i \xi \cdot x}\; d\xi = 2 \int_0^\infty a(\xi) \cos(2 \pi \xi \cdot x) - b(\xi) \sin(2 \pi \xi \cdot x)\; d\xi. \]
-    %
-    Thus the Fourier representation formula expresses the function $f$ as an integral in sines and cosines.
-    
-    \item There is a duality between translation and frequency modulation. For $y \in \RR^d$, we define $(\text{Trans}_y f)(x) = f(x - y)$. If $\xi \in \RR^d$, then we define $(\text{Mod}_\xi f)(x) = e^{2 \pi i \xi \cdot x} f(x)$. We then find that
-    %
-    \begin{align*}
-        \widehat{\text{Trans}_y f}(\xi) &= \int f(x - y) e^{-2\pi i \xi \cdot x}\; dx\\
-        &= e^{- 2 \pi i \xi \cdot y} \int f(x) e^{- 2 \pi i \xi \cdot x}\; dx = (\text{Mod}_{-y} \widehat{f})(\xi).
-    \end{align*}
-    %
-    and
-    %
-    \begin{align*}
-        \widehat{\text{Mod}_\xi f}(\eta) = \int e^{2 \pi i \xi \cdot x} f(x) e(- \eta \cdot x)\; dx = \widehat{f}(\eta - \xi) = (\text{Trans}_\xi \widehat{f})(\eta).
-    \end{align*}
-    %
-    Thus we conclude $\mathcal{F} \circ \text{Trans}_y = \text{Mod}_{-y} \circ \mathcal{F}$, and $\mathcal{F} \circ \text{Mod}_\xi = \text{Trans}_\xi \circ \mathcal{F}$.
-
-    \item Let $T: \RR^d \to \RR^d$ be an invertible linear transformation. Then a change of variables $y = Tx$ gives
-    %
-    \begin{align*}
-        \widehat{f \circ T}(\xi) &= \int f(Tx) e^{-2 \pi i \xi \cdot x}\; dx\\
-        &= \frac{1}{|\det(T)|} \int f(y) e^{-2 \pi i \xi \cdot T^{-1}y)}\; dy\\
-        &= \frac{1}{|\det(T)|} \int f(y) e^{- 2 \pi i T^{-T} \xi \cdot y}\; dy\\
-        &= \frac{1}{|\det(T)|} (\widehat{f} \circ T^{-T})(\xi).
-    \end{align*}
-    %
-    Thus we conclude that if $T^*: L^1(\RR^d) \to L^1(\RR^d)$ is the operator defined by setting $T^*(f) = f \circ T$, then 
-    %
-    \[ \mathcal{F} \circ T^* = \frac{1}{|\det(T)|} \cdot (T^{-T})^* \circ \mathcal{F}. \]
-
-    \item As a special case of the theorem above, if $a \in \RR$ and $\text{Dil}_a: L^1(\RR^d) \to L^1(\RR^d)$ is the operator defined by setting
-    %
-    \[ (\text{Dil}_a f)(x) = f(ax), \]
-    %
-    then
-    %
-    \[ \widehat{\text{Dil}_a f} = a^{-d} \cdot \text{Dil}_{1/a}\widehat{f} \]
-    %
-    If we dilate by a small value of $a$, then the values of $f$ are traced over more slowly, so $D_a f$ has smaller frequencies. But the magnitude of the Fourier transform over these frequencies is increased to compensate.
-
-    \item Another special case is that if $R \in O_n(\RR)$, then $\widehat{f \circ R}(\xi) = \widehat{f}(R \xi)$, i.e. $\mathcal{F} \circ R^* = R^* \circ \mathcal{F}$. In particular, if $f$ is a radial function, so $f \circ R = f$ for any $R$, then $\widehat{f}(R \xi) = \widehat{f}(\xi)$ for any $R \in O_n(\RR)$, so $\widehat{f}$ is also a radial function. If $f$ is even, so $f(x) = f(-x)$ for all $x$, then $\widehat{f}(\xi) = \widehat{f}(-\xi)$ for all $\xi$, so $\widehat{f}$ is even. Similarily, if $f$ is odd, then $\widehat{f}$ is odd.
-
-    \item Given $f,g \in L^1(\RR^d)$, we define the convolution
-    %
-    \[ (f * g)(x) = \int f(y) g(x-y)\; dy. \]
-    %
-    This convolution possesses precisely the same properties as convolution on $\TT$. Most importantly for us,
-    %
-    \[ \mathcal{F}(f * g) = \mathcal{F}(f) \cdot \mathcal{F}(g), \]
-    %
-    so convolution in phase space is just a product in frequency space.
-\end{itemize}
-
-Just as with Fourier series, we have a duality between decay of a function and smoothness of it's transform. We say $f$ has a derivative $f_k$ in $L^p(\RR^d)$ if the family of functions
+\[ f(x) = \int_{\RR^d} \widehat{f}(\xi) e(\xi \cdot x)\; dx \]
 %
-\[ (\Delta_h f)(x) = \frac{f(x + h e_k) - f(x)}{h} \]
-%
-converge in $L^p(\RR^d)$ to $f_k$. In the modern language of partial differential equations, $f_k$ is known as the \emph{weak derivative} of $f$. Intuitively, this means that the approximations of $f$ to it's derivative quantitatively converge in the mean to the function $f_k$. Note, however, that even if $f$ has a pointwise partial derivative $f_k$, the differences $\Delta_h f$ may not converge to $f_k$ fast enough to conclude that $f$ has a weak derivative. It is fairly easy to prove using the mean value theorem that if $\Delta_h f$ converges to $f_k$ in the $L^\infty$ norm, and $f$ has compact support, then $f$ has a weak derivative in all other $L^p$ spaces. If $f$ is not compactly supported, but decays rapidly at $\infty$, then the classical derivative may be a weak derivative. In particular, this is true of a Schwartz function, i.e. a function lying in the space
-%
-\[ \mathcal{S}(\RR^d) = \{ f \in C^\infty(\RR^d): |(D_\alpha f)(x)| \lesssim_{\alpha,N} |x|^{-N}\ \text{for all $N, \alpha, x$} \} \]
-%
-which is often a natural space to consider the relation of the Fourier transform to various analytical operations.
+holds for all $x \in \RR^d$. Unlike in the case of the Fourier series, we cannot test our function against trigonometric polynomials. On the other hand, we have a multiplication formula which often comes in useful.
 
-\begin{theorem}
-    If $f \in L^1(\RR^d)$, and $x_k f \in L^1(\RR^d)$, then $\widehat{f}$ has a weak derivative in the $L^\infty$ norm, and $\widehat{f}_k(\xi) = - 2 \pi i (x_k f)^\ft(\xi)$.
+\begin{theorem}[The Multiplication Formula]
+    If $f,g \in L^1(\RR^d)$,
+    %
+    \[ \int f(x) \widehat{g}(x)\; dx = \int \widehat{f}(\xi) g(\xi)\; dx. \]
 \end{theorem}
 \begin{proof}
-    Note that a change of variables implies
+    If $f, g \in L^1(\RR^d)$, then $\widehat{f}$ and $\widehat{g}$ are bounded, continuous functions on $\RR^d$. In particular, $\widehat{f} g$ and $f \widehat{g}$ are integrable. A simple use of Fubini's theorem gives
     %
-    \[ (\Delta_h \widehat{f})(\xi) = \int f(x) \frac{e^{-2\pi i h x_k} - 1}{h} e^{-2 \pi i \xi \cdot x}\; dx = \widehat{g_h}(\xi), \]
-    %
-    where
-    %
-    \[ g_h(x) = f(x) \frac{e^{2 \pi i h x_k} - 1}{h}. \]
-    %
-    Note that
-    %
-    \[ \left| \frac{e^{2 \pi i h x_k} - 1}{h} \right| = O(1 + |x_k|). \]
-    %
-    Since $x_k f$ is integrable, we can apply the dominated convergence theorem. Because $(e^{2 \pi i h x_k} - 1)/h$ tends to $-2 \pi i x_k f(x)$ as $h \downarrow 0$, the function $g_h$ tends to $-2\pi i x_k f$ in $L^1(\RR^d)$. Taking Fourier transforms, we conclude that $\Delta_h \widehat{f} = \widehat{g_h}$ converges uniformly to $(-2 \pi i x_k f)^\ft(\xi)$.
+    \[ \int f(x) \widehat{g}(x)\; dx = \int \int f(x) g(\xi) e(- \xi \cdot x)\; dx\; d\xi = \int g(\xi) \widehat{f}(\xi)\; d\xi. \qedhere \]
 \end{proof}
 
-\begin{remark}
-    In particular, the Fourier transform of a compactly supported function lies in $C^\infty(\RR^d)$, and has weak derivatives of all orders, in all the $L^p$ spaces.
-\end{remark}
+In particular, if $f \in L^1(\RR^d)$ and $\widehat{f} = 0$, then for any $g \in L^1(\RR^d)$,
+%
+\[ \int_{\RR^d} f(x) \widehat{g}(x)\; dx = 0. \]
+%
+If $x_0$ is a continuity point of $f$, then it suffices to choose a function $g$ such that the majority of the mass of $\widehat{g}$ is concentrated at the point $x_0$. A natural choice here is to use a \emph{Gaussian function}.
 
-%\begin{remark}
-%   If $f$ no longer has compact support, but $D_k f$ vanishes rapidly at infinity, then we can normally still establish that $D_k f$ is the derivative of $f$ in $L^1(\RR^n)$. Indeed, suppose $|(D_k f)(x)| \leq g(|x|)$, where $g$ is an increasing function with $\int_0^\infty t^{n-1} g(t) < \infty$, then surely $\Delta_h f$ converges to $D_k f$ in $L^1$ on any compact set, which implies that for any $M$, using the mean value theorem again,
-    %
-%   \begin{align*}
-%       \int_{\RR^n} &|(\Delta_h f)(x) - D_k f(x)|\; dx \leq o_M(1) + \int_{|x| > M} |(\Delta_h f)(x)| + |D_k f(x)| \\
-%       &\leq o_M(1) + O \left( \int_{|x| > M} g(|x| + |h|)\; dx \right) = o_M(1) + O \left( \int_M^\infty t^{n-1}g(t)\; dt \right)\\
-%   \end{align*}
-    %
-%   If we choose $M$ large enough that the big $O$ term is $\leq \varepsilon$, then we find $\| \Delta_h f - D_k f \|_1 \leq \varepsilon + o_M(1)$, and taking $\varepsilon \to 0$ shows the convergence. This shows the derivatives exist if, for instance, $f$ is a Schwarz function, since then $|D_k f(x)| \lesssim 1/(1 + |x|^{n+1})$.
-%\end{remark}
+Let $g(x) = e^{- \pi x^2}$. Then $g \in L^1(\RR)$. Then $g'(x) = - 2 \pi x g(x)$, and since $x g \in L^1(\RR)$,w e conclude that
+%
+\[ \frac{d \widehat{g}(\xi)}{d\xi} = - 2 \pi \xi \widehat{g}(\xi). \]
+%
+Since $\widehat{g}(0) = \int_{-\infty}^\infty e^{- \pi x^2} = 1$, we conclude from solving the ordinary differential equation that
+%
+\[ \widehat{g}(\xi) = e^{- \pi \xi^2} = g(\xi). \]
+%
+Tensorizing, it follows that if $g(x) = e^{-\pi |x|^2}$ is the element of $L^1(\RR^d)$, then
+%
+\[ \widehat{g}(\xi) = e^{- \pi |\xi|^2} = g(x). \]
+%
+In particular, if for $x_0 \in \RR^d$ and $\delta > 0$, we define
+%
+\[ g_{x_0,\delta}(\xi) = e^{- 2 \pi i x_0 \cdot \xi)} g(\delta \xi) \]
+%
+then the symmetries of the Fourier transform imply that
+%
+\[ \widehat{g_{x_0,\delta}}(\xi) = \delta^{-d} e^{-(\pi/\delta^2) |\xi - x_0|^2}. \]
+%
+Thus we conclude that if $\widehat{f} = 0$, then for any $x_0$ and $\delta$,
+%
+\[ \delta^{-d} \int_{\RR^d} f(x) e^{-(\pi/\delta^2) |\xi - x_0|^2} = 0. \]
+%
+A simple approximation as $\delta \to 0$ gives the following result.
 
 \begin{theorem}
-    If $f$ has a weak derivative $f_k$ in the $L^1$ norm, $\widehat{f_k}(\xi) = 2 \pi i \xi_k \widehat{f}(\xi)$.
+    Suppose $f \in L^1(\RR^d)$ and $\widehat{f} = 0$. Then $f$ vanishes at any of it's continuity points. In particular, if $f \in L^1(\RR^d) \cap C(\RR^d)$ and $\widehat{f} = 0$, then $f = 0$.
 \end{theorem}
-\begin{proof}
-    It suffices to note that
-    %
-    \[ \widehat{\Delta_h f}(\xi) = \frac{e(h \xi_k) - 1}{h} \widehat{f}(\xi). \]
-    %
-    Since $\Delta_h f \to f_k$ in $L^1$, $\widehat{\Delta_h f} \to \widehat{f_k}$ uniformly, and in particular, converges to $\widehat{f_k}$ pointwise. But we know $\widehat{\Delta_h f}$ converges pointwise to $2 \pi i \xi_k \widehat{f}(\xi)$.
-\end{proof}
 
-%\begin{theorem}
-%   If $X$ is a homogenous space of functions, the $f * K_\delta$ converges to $f$ in the norm associated with $X$.
-%\end{theorem}
-%\begin{proof}
-%   Given a continuous function function $F: \TT \to X$, we define the formal Riemann integral of functions as
-    %
-%   \[ \int_{\TT} F(x)\; dx = \lim_{N \to \infty} \frac{1}{N} \sum_{n = 1}^N F(2 \pi /N) \]
-    %
-%   which exists for the same reason the Riemann integral of a continuous real valued function exists. Now we can consider the formal function theoretic convolution
-    %
-%   \[ \int_{\TT} K_\delta(x) f_x\; dx \]
-    %
-%   This is equal to $K_\delta * f$, because the $L^1$ norm lower bounds the norm on $X$, so that the limit with respect to the $L^1$ norm is the same as with respect to the norm on $X$, and
-    %
-%   \[ s \]
-    %
-%   \[ \int_{\TT} K_\delta(x) f_x\; dx - f = \int_0^{2\pi} K_\delta(x)[f_x - f]\; dx \]
-    %
-%   If we choose 
-%\end{proof}
+As in the case of the Fourier series, if $f \in L^1(\RR^d)$ and $\widehat{f} \in L^1(\RR^d)$, then the multiplication formula implies that for any $g \in L^1(\RR^d)$ with $\widehat{g} \in L^1(\RR^d)$,
 %
-%More generally, if we equip a translation invariant subspace of $L^1(\RR^n)$ with a norm lower bounded up to a constant by the $L^1$ norm which turns the space into a Banach space, then $f * K_\delta$ converges to $f$ in that norm. If in addition, the $K_\delta$ satisfy $|K_\delta(x)| \lesssim \delta^{-n}$, and $|K_\delta(x)| \lesssim \delta/|x|^{n+1}$, then $f * K_\delta$ converges to $f$ almost everywhere. 
+\[ \int_{\RR^d} \widehat{\widehat{f}}(x) g(x)\; dx = \int_{\RR^d} \widehat{f}(\xi) \widehat{g}(\xi)\; d\xi = \int_{\RR^d} f(x) \widehat{\widehat{g}}(x)\; dx. \]
+%
+If $g = g_{x_0,\delta}$ for some $x_0$ and $\delta$, then it is simple to calculate that $\widehat{\widehat{g}}(x) = g(-x)$. Thus we conclude that for any such function,
+%
+\[ \int_{\RR^d} \widehat{\widehat{f}}(x) g(x)\; dx = \int_{\RR^d} f(-x) g(x)\; dx. \]
+%
+In particular, a similar approximation technique to the last theorem gives the Fourier inversion theorem.
+
+\begin{theorem}
+    Suppose $f \in L^1(\RR^d)$ and $\widehat{f} \in L^1(\RR^d)$. Then for any continuity point $x$ of $f$,
+    %
+    \[ f(x) = \int_{\RR^d} \widehat{f}(\xi) e^{2 \pi i \xi \cdot x}\; dx. \]
+    %
+    In particular, if we also assume $f \in C(\RR^d)$, then the inversion formula holds everywhere.
+\end{theorem}
 
 \section{Alternative Summation Methods}
 
-As we might expect from the Fourier series theory, the formula
-%
-\[ f(x) = \int \widehat{f}(\xi) e(\xi \cdot x)\; dx \]
-%
-does not hold for every integrable $f$, nor even for all continuous $f$. In particular, the Fourier transform of $f$ need not even lie in $L^1(\RR^d)$, so the integral formula may not even make sense. Nonetheless, just as with Fourier series, one can obtain general results by `dampening' the integration.
+As with the Fourier series, we can obtain results for more general functions by `dampening' the integration factor. To do this, we consider `alternate integral' methods which can define the integral of a measurable function that is not necessarily absolutely integrable.
 
 \begin{example}
     Even if $f$ is a non integrable function, the functions $f(x) e^{-\delta |x|}$ may be integrable for $\delta > 0$. If this is the case, we say $f$ is \emph{Abel summable} to a value $A$ if
@@ -2478,6 +2549,45 @@ For functions on $\TT$, it is unclear how to provide examples which show why the
     In order for a bound to hold in terms of $p$ and $q$ uniformly for all values of $r$, we need $r^{-d/p} = r^{d/q-d}$, which means $1/q + 1/p = 1$, so $p$ and $q$ must be conjugates of one another. In the case of $\TT$, a function analogous to $f_r$ can only be defined for small value of $r$, and a uniform estimate can then only hold if $1/p + 1/q \geq 1$.
 \end{example}
 
+If $p > 2$, then for the value $q$ with $1/p + 1/q = 1$, we have $q < p$. It is a principle of Littlewood that translation invariant operators cannot satisfy a $L^p$ to $L^q$ bound.
+
+\begin{theorem}
+    Suppose $T: L^p(\RR^d) \to L^q(\RR^d)$ is a translation invariant continuous operator, where $q < p$. Then $T = 0$.
+\end{theorem}
+\begin{proof}
+    If $T$ was nonzero, we could pick some $f_0 \in L^p(\RR^d)$ such that $Tf_0 \neq 0$. Rescaling $T$ and $f_0$, we may assume without loss of generality that $\| f_0 \|_{L^p(\RR^d)} = \| Tf_0 \|_{L^q(\RR^d)} = 1$. Furthermore, by truncation we may assume that $f_0$ has compact support on some ball $B_R$. But then the supports of the functions $\text{Trans}_{2Rn} f_0$ and $f_0$ are disjoint for $n \in \ZZ^d$, so for any choice of coefficients $\{ a_n \}$,
+    %
+    \[ \left\| \sum_{n \in \ZZ^d} a_n \cdot \text{Trans}_{2R n} f_0 \right\|_{L^p(\RR^d)} = \left( \sum |a_n|^p \right)^{1/p}. \]
+    %
+    Assume that at most $N$ of the coefficients $a_n$ are nonzero. We cannot necessarily assume that $Tf_0$ has compact support but the majority of the mass of $Tf_0$ can still be concentrated on a compact set. For any $\varepsilon > 0$ we can choose $R$ large enough that
+    %
+    \[ \left( \int_{|x| \geq R} |Tf_0(x)|^q \right)^{1/q} \leq \varepsilon. \]
+    %
+    Now for each $B_R$ and $m \in \ZZ^d$,
+    %
+    \[ \left( \int_{x \in 2Rm + B_R} \left| \sum_{n \in \ZZ^d} a_n \text{Trans}_{2Rn} Tf_0(x) \right|^q\; dx \right)^{1/q} \geq \left( |a_m|^q - \varepsilon \sum_{n \neq m} |a_n|^q \right)^{1/q}. \]
+    %
+    If, for a \emph{fixed} sequence $\{ a_n \}$, we choose
+    %
+    \[ \varepsilon \leq \frac{0.5}{\max_{n \in \ZZ^d}|a_n| \cdot \left( \sum_{n \in \ZZ^d} |a_n|^q \right)^{1/q}}. \]
+    %
+    Then we find
+    %
+    \[ \left( \int_{x \in 2Rm + B_R} \left| \sum_{n \in \ZZ^d} a_n \text{Trans}_{2Rn} Tf_0(x) \right|^q\; dx \right)^{1/q} \geq 0.5^{1/q} |a_m| \]
+    %
+    and so summing over all $m$, we conclude that
+    %
+    \[ \| \sum_{n \in \ZZ^d} a_n \text{Trans}_{2Rn} Tf_0 \|_{L^q(\RR^d)} \geq 0.5^{1/q} \left( \sum_{n \in \ZZ^d} |a_n|^q \right)^{1/q}. \]
+    %
+    Thus we conclude that for \emph{any} sequence $\{ a_n \}$ in $l^q(\ZZ^d)$,
+    %
+    \[ \left( \sum_{n \in \ZZ^d} |a_n|^q \right)^{1/q} \lesssim_q \left( \sum_{n \in \ZZ^d} |a_n|^p \right)^{1/p}. \]
+    %
+    where the constant is independent of the sequence. For $q < p$ this is impossible.
+\end{proof}
+
+We can also provide a family of functions whose Fourier transforms contradict an extension of the Hausdorff Young inequality for $p > 2$.
+
 \begin{example}
     Consider the family of functions $f_s(x) = s^{-d/2} e^{- \pi |x|^2/s}$, where $s = 1 + it$ for some $t \in \RR$. One can easily calcluate using analytic continuation and the Fourier transform for the Gaussian that $\widehat{f_s}(\xi) = e^{- \pi s |\xi|^2}$. We calculate
     %
@@ -2535,6 +2645,45 @@ are continuous functions on $\TT^d$ with the same Fourier coefficients. It thus 
 In particular, this holds if $f \in \mathcal{S}(\RR)$.
 
 TODO: Also prove this statement under the assumption that $f$ has bounded variation and $f(t) = [f(t+) + f(t-)]/2$ for all $t \in \RR$.  
+
+\section{Radial Functions}
+
+Suppose $f \in L^1(\RR^d)$ is a radial function. Then $\widehat{f}$ is also a radial function. In particular, if we let
+%
+\[ \| u \|_{L^1([0,\infty), r^{d-1})} = \int_0^\infty r^{d-1} u(r)\; dr \]
+%
+then we have a transform $u \mapsto \tilde{u}$ from $L^1([0,\infty), r^{d-1})$ to $L^\infty[0,\infty)$ where if $f(x) = u(|x|)$, then $\widehat{f}(\xi) = \tilde{u}(|\xi|)$. In particular, we calculate quite simply that
+%
+\[ \tilde{u}(s) = V_d \int_0^\infty r^{d-1} u(r) \left( \int_{S^{d-1}} e^{-2 \pi i x_1 s}\; dx \right). \]
+%
+If one recalls the Bessel functions $\{ J_s \}$, then we have
+%
+\[ \tilde{u}(s) = 2\pi s^{1 - d/2} \int_0^\infty r^{d/2} u(r) J_{d/2-1}(2 \pi s r)\; dr. \]
+%
+If one recalls some Bessel function asymptotics, then one can actually gain some interesting results for the \emph{averaging operator}
+%
+\[ Af(x) = \fint_{S^{d-1}} f(x-y)\; d\sigma(y) \]
+%
+
+\begin{example}
+    Suppose $f_R(x) = \mathbf{I}_{|x| \leq R}$. Then
+    %
+    \[ \widehat{f}(\xi) = 2 \pi |\xi|^{1-d/2} \int_0^R r^{d/2} J_{d/2-1}(2 \pi s r)\; dr. \]
+    %
+    The 
+\end{example}
+
+
+
+
+
+\section{Poisson Integrals}
+
+s
+
+
+
+\chapter{Applications of the Fourier Transform}
 
 \section{Shannon-Nyquist Sampling Theorem}
 
@@ -2597,48 +2746,83 @@ We should not expect $f$ to be obtainable exactly if we undersample, i.e. look a
     One can determine all the coefficients $\{ f(n/\lambda) \}$ if one knows the right hand side for all values $\xi \in \RR$. Thus if $f_1,f_2 \in \mathcal{S}(\RR)$ are distinct functions such that $\widehat{f_1}$ and $\widehat{f_2}$ are supported on $[-1/2,1/2]$, but are equal to one another at a periodization of scale $\lambda$, then $f_1(n/\lambda) = f_2(n/\lambda)$ for any $n \in \ZZ$. This is certainly possible if $\lambda < 1$.
 \end{proof}
 
+We can also get a discretized $L^2$ identity.
+
+\begin{theorem}
+    Suppose $f \in L^2(\RR)$ and $\widehat{f}$ is supported on $[-1/2,1/2]$. Then
+    %
+    \[ \sum_{n = -\infty}^\infty |f(n)|^2 = \int_{-\infty}^\infty |f(x)|^2\; dx. \]
+\end{theorem}
+\begin{proof}
+    Poisson summation applied to $|f(x)|^2$ implies that
+    %
+    \[ \sum_{n = -\infty}^\infty |f(n)|^2 = \sum_{n = -\infty}^\infty \int_{-\infty}^\infty \widehat{f}(\xi) \overline{\widehat{f}(\xi - n)}\; dx = \int_{-1/2}^{1/2} |\widehat{f}(\xi)|^2\; dx = \int_{-\infty}^\infty |f(x)|^2\; dx. \]
+\end{proof}
+
 \section{The Uncertainty Principle}
 
-TODO
+The uncertainty principle gives a constraint preventing both a function and it's Fourier transform from concentrating too tightly in a particular region. In particular, if the mass of a function is concentrated in a region of radius $L$, it is impossible for the mass of the Fourier transform to be concentrated in a region of radius $1/L$. The most fundamental version of the uncertainty principle is due to Heisenberg.
 
-\section{Radial Functions}
-
-Suppose $f \in L^1(\RR^d)$ is a radial function. Then $\widehat{f}$ is also a radial function. In particular, if we let
-%
-\[ \| u \|_{L^1([0,\infty), r^{d-1})} = \int_0^\infty r^{d-1} u(r)\; dr \]
-%
-then we have a transform $u \mapsto \tilde{u}$ from $L^1([0,\infty), r^{d-1})$ to $L^\infty[0,\infty)$ where if $f(x) = u(|x|)$, then $\widehat{f}(\xi) = \tilde{u}(|\xi|)$. In particular, we calculate quite simply that
-%
-\[ \tilde{u}(s) = V_d \int_0^\infty r^{d-1} u(r) \left( \int_{S^{d-1}} e^{-2 \pi i x_1 s}\; dx \right). \]
-%
-If one recalls the Bessel functions $\{ J_s \}$, then we have
-%
-\[ \tilde{u}(s) = 2\pi s^{1 - d/2} \int_0^\infty r^{d/2} u(r) J_{d/2-1}(2 \pi s r)\; dr. \]
-%
-If one recalls some Bessel function asymptotics, then one can actually gain some interesting results for the \emph{averaging operator}
-%
-\[ Af(x) = \fint_{S^{d-1}} f(x-y)\; d\sigma(y) \]
-%
-
-\begin{example}
-    Suppose $f_R(x) = \mathbf{I}_{|x| \leq R}$. Then
+\begin{theorem}[Heisenberg]
+    Suppose $\psi(x), x\psi(x) \in L^2(\RR)$. Then for any $x_0,\xi_0 \in \RR$,
     %
-    \[ \widehat{f}(\xi) = 2 \pi |\xi|^{1-d/2} \int_0^R r^{d/2} J_{d/2-1}(2 \pi s r)\; dr. \]
+    \[ \left( \int_{-\infty}^\infty x^2 |\psi(x)|^2\; dx \right) \left( \int_{-\infty}^\infty \xi^2 |\widehat{\psi}(\xi)|^2\; d\xi \right) \geq \frac{1}{16 \pi^2} \left( \int_{-\infty}^\infty |\psi(x)|^2\; dx \right)^2. \]
+\end{theorem}
+\begin{proof}
+    Normalizing, we may assume that $\int_{-\infty}^\infty |\psi(x)|^2\; dx = 1$ and that $x_0,\xi_0 = 0$. A density argument enables us to assume that $\psi \in \mathcal{S}(\RR)$. Integration by parts shows that
     %
-    The 
-\end{example}
+    \begin{align*}
+        1 &= \int_{-\infty}^\infty |\psi(x)|^2\; dx\\
+        &= - \int_{-\infty}^\infty x \frac{d|\psi(x)|^2}{dx} = - \int_{-\infty}^\infty (x \psi'(x) \overline{\psi(x)} + x \overline{\psi'(x)} \psi(x))\; dx.
+    \end{align*}
+    %
+    Thus
+    %
+    \begin{align*}
+        1 &\leq 2 \int_{-\infty}^\infty |x| |\psi(x)| |\psi'(x)|\; dx\\
+        &\leq 2 \left( \int_{-\infty}^\infty x^2 |\psi(x)|^2\; dx \right)^{1/2} \left( \int_{-\infty}^\infty |\psi'(x)|^2\; dx \right)^{1/2}\\
+        &\leq 4 \pi \left( \int_{-\infty}^\infty x^2 |\psi(x)|^2\; dx \right)^{1/2} \left( \int_{-\infty}^\infty \xi^2 |\widehat{\psi}(\xi)|^2\; d\xi \right)^{1/2}. \qedhere
+    \end{align*}
+\end{proof}
 
+Taking $\psi$ to be a Gaussian shows the constant in this inequality is tight. Let us explain the applications of this uncertainty principle in quantum mechanics. Here the position state of a particle is no longer given by a particular point, but instead given by a state function $\psi$ subject to the normalization condition
+%
+\[ \int_{-\infty}^\infty |\psi(x)|^2\; dx = 1. \]
+%
+It then follows that the position of a particle is nondeterministic, with $|\psi(x)|^2$ giving the probability density function of where the particle is located. If $x_0$ denotes the expected value of the particle, then the variance of the distribution is given by
+%
+\[ \int_{-\infty}^\infty |x - x_0|^2 |\psi(x)|^2\; dx. \]
+%
+On the other hand, the \emph{momentum} of the particule is also nonrandom, and given by $|\widehat{\psi}(\xi)|^2$. Thus the variance of the momentum, if $\xi_0$ is the expectation, is equal to
+%
+\[ \int_{-\infty}^\infty |\xi - \xi_0|^2 |\widehat{\psi}(\xi)|^2\; d\xi. \]
+%
+If we view the variance as a measurement of the uncertainty of each quantity, and denote each variance by $\Delta_x$ and $\Delta_\xi$, then the Heisenberg uncertainty principle tells us that $\Delta_x \cdot \Delta_\xi \geq 1/16 \pi^2$ (actually we have lied by non introducing physical constants into the discussion - we actually have $\Delta_x \cdot \Delta_\xi \geq \hslash / 16 \pi^2$, where $\hslash$ is Planck's constant).
 
-
-
-
-\section{Poisson Integrals}
-
-s
-
-
-
-\chapter{Applications of the Fourier Transform}
+We can also rephrase the uncertainty principle in terms of the differential operator
+%
+\[ L = x^2 - \frac{d^2}{dx^2}. \]
+%
+This operator is known as the \emph{Hermite operator}. Then for any $f \in \mathcal{S}(\RR)$,
+%
+\begin{align*}
+    (Lf,f) &= \int_{-\infty}^\infty x^2 |f(x)|^2 - f''(x) \overline{f(x)}\; dx\\
+    &= \int_{-\infty}^\infty x^2 |f(x)|^2\; dx + \int_{-\infty}^\infty |f'(x)|^2\; dx\\
+    &= \int_{-\infty}^\infty x^2 |f(x)|^2\; dx + 4 \pi^2 \int_{-\infty}^\infty \xi^2 |\widehat{f}(\xi)|^2\; d\xi.
+\end{align*}
+%
+The Heisenberg uncertainty principle thus implies by Young's inequality that
+%
+\begin{align*}
+    (f,f) &\leq 4 \pi \left( \int_{-\infty}^\infty x^2 |f(x)|^2\; dx \right)^{1/2} \left( \int_{-\infty}^\infty \xi^2 |\widehat{f}(\xi)|^2\; d\xi \right)^{1/2}\\
+    &\leq \int_{-\infty}^\infty x^2 |f(x)|^2\; dx + 4 \pi^2 \int_{-\infty}^\infty \xi^2 |\widehat{f}(\xi)|^2\; d\xi = (Lf,f).
+\end{align*}
+%
+Thus the operator $f \mapsto Lf - f$ is positive definite. If we consider the operator
+%
+\[ Af = \frac{df}{dx} + xf \quad\text{and}\quad A^* f = - \frac{df}{dx} + xf \]
+%
+then $A^*A = L - I$. These two operators are called the \emph{annihilation} and \emph{creation} operators respectively.
 
 \section{Applications to Partial Differential Equations}
 
