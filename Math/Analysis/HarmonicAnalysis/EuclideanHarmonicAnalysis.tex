@@ -2137,7 +2137,7 @@ for some constants $C_{\lambda \gamma} > 0$, and so
 %
 \begin{align*}
   |\Lambda(f \phi)| &\lesssim \| f \phi \|_{C^n(K)}\\
-  &\lesssim_n \max_{|\alpha| \leq n} \max_{\lambda + \gamma = \alpha} \| D^\lambda f \|_{L^\infty(K)} \| D^\gamma \phi \|_{L^\infty(K)}\\
+  &\lesssim_n \max_{|\alpha| \leq n} \max_{\lambda + \gamma = \alpha} \| D^\lambda f \|_{L^\infty(K)} \| D^\gamma \phi \|_{L^\infty(K)}\\ 
   &\leq \| f \|_{C^n(K)} \| \phi \|_{C^n(K)},
 \end{align*}
 %
@@ -2938,7 +2938,7 @@ To begin with, a distribution $u$ is \emph{nonsingular} at a point $x \in \RR^d$
 
 \chapter{Differentiation and Averages}
 
-This chapter is about exploring the behaviour of averages of functions. A classical example, given a function $f \in L^1_{\text{loc}}(\RR)$, are the averaging operators
+This chapter is about exploring the behaviour of basic averaging operators. A classical example, given a function $f \in L^1_{\text{loc}}(\RR)$, are the averaging operators
 %
 \[ A_\delta f(x) = \frac{1}{2\delta} \int_{x-\delta}^{x+\delta} f(y)\; dy. \]
 %
@@ -2950,9 +2950,235 @@ then for each $x \in \RR$,
 %
 \[ F'(x) = \lim_{h \to 0} \frac{F(x+h) - F(x)}{h} = \lim_{h \to 0} \frac{1}{h} \int_x^{x+h} f(y)\; dy = f(x). \]
 %
-Our main goal will be study whether pointwise convergence of the averages $A_\delta f$ hold for a more general family of functions or equivalently, studying whether a kind of fundamental theorem of calculus holds for a more general family of functions.
+Our main goal will be study whether pointwise convergence of the averages $A_\delta f$ hold for a more general family of functions or equivalently, studying whether a kind of fundamental theorem of calculus holds for a more general family of measurable functions, which are not necessarily continuous.
 
-Recently, the real-variable analysis of these averages have been shown to generalize to a wide variety of situations, which encompasses the averaging problem above, as well as higher dimensional variants. All that is really required for the basic theory is a basic `covering type argument' that holds in a great many situations. In particular, we choose to work in a \emph{space of homogenous type}. We consider a locally compact topological space $X$. For each $x \in X$ and $\delta > 0$, we fix an open, precompact set $B(x,\delta)$, which we assume to be monotonically increasing in $\delta$. The fundamental properties we require of our balls are that there exists two universal constants $c_1,c_2 > 1$ such that
+The classical family of averaging operators are defined for $\delta > 0$, $f \in L^1_{\text{loc}}(\RR^d)$, and $x \in \RR^d$ by setting
+%
+\[ A_\delta f(x) = \frac{1}{|B(x,\delta)|} \int_{B(x,\delta)} f(y)\; dy, \]
+%
+where $B(x,\delta)$ is the ball of radius $\delta$ centred at $x$. A simple application of Schur's lemma shows that $\| A_\delta f \|_{L^p(\RR^d)} \leq \| f \|_{L^p(\RR^d)}$ for all $1 \leq p \leq \infty$, uniformly in $p$. This uniform bound in $\delta$ is strong enough, together with the density of compactly supported continuous functions is enough to conclude that for any $f \in L^p(\RR^d)$, for $1 \leq p < \infty$, $A_\delta f$ converges to $f$ in $L^p$ norm. This implies that for any $f \in L^p(\RR^d)$, there exists a sequence $\delta_i$ converging to zero such that $A_{\delta_i} f$ converges to $f$ pointwise almost everywhere. In this chapter, we would like to show $A_\delta f$ converges to $f$ pointwise almost everywhere \emph{without taking a subsequence of values $\delta_i$}.
+
+Hardy and Littlewood introduced a powerful technique to study such pointwise convergence problems, known as the \emph{method of maximal functions}. For each $f \in L^1_{\text{loc}}(X)$, we define
+%
+\[ Mf(x) = \sup_{\delta > 0} A_\delta |f|(x) = \sup_{\delta > 0} \frac{1}{|B(x,\delta)|} \int_{B(x,\delta)} |f(y)|\; dy. \]
+%
+The next theorem indicates why obtaining bounds on a maximal operator gives pointwise convergence results.
+
+\begin{theorem}
+  Let $V$ be a quasinorm space, let $0 < q < \infty$, and consider a family of bounded operators $T_t: V \to L^{q,\infty}(X)$. Then we can define the pointwise maximal operator
+  %
+  \[ T_* f(x) = \sup_t |T_t f(x)|. \]
+  %
+  Suppose that for every $f \in L^p(X)$,
+  %
+  \[ \| T_* f \|_{L^{q,\infty}(X)} \lesssim \| f \|_V. \]
+  %
+  Then for any bounded operator $S: V \to L^{q,\infty}(X)$,
+  %
+  \[ \{ x \in V : \lim_{t \to \infty} T_t x(y) = Sx(y)\; \text{for a.e $y$} \} \]
+  %
+  is closed in $V$.
+\end{theorem}
+\begin{proof}
+  Fix a sequence $\{ u_n \}$ in $V$ converging to $u \in V$, and suppose for each $n$,
+  %
+  \[ \lim_{t \to \infty} (T_t u_n)(x) = Su_n(x) \]
+  %
+  holds for almost every $x \in X$. For each $\lambda > 0$, we find
+  %
+  \begin{align*}
+    |\{ x \in X: &\limsup_{t \to \infty} |T_t u(x) - Su(x)| > \lambda \}|\\
+    &\leq |\{ x \in X: \limsup_t |T_t(u - u_n)(x) - S(u - u_n)(x)| > \lambda \}|\\
+    &\leq |\{ x \in X : |T_*(u - u_n)(x)| > \lambda/2 \}| + | \{ x: |S(u - u_n)(x)| > \lambda/2 \} |\\
+    &\lesssim_{p,q} \frac{\| u - u_n \|_V^q}{\lambda^q} + \frac{\| u - u_n \|_V^p}{\lambda^p}.
+  \end{align*}
+  %
+  as $n \to \infty$, this quantity tends to zero. Thus for all $\lambda > 0$,
+  %
+  \[ |\{ x: \limsup_{t \to \infty} |T_t u(x) - Su(x)| > \lambda \}| = 0 \]
+  %
+  Taking $\lambda \to 0$ gives that $\limsup_t |T_t u(x) - Su(x)| = 0$ for almost every $x \in X$. But this means precisely that $T_tu(x) \to Su(x)$ for almost every $x \in X$.
+\end{proof}
+
+Taking $t = \delta$, $T_t = A_\delta$, and $S$ the identity map, the theorem above implies that one way to obtain almost everywhere convergence for the averages we consider is via bounding the maximal operator $M$. Thus we consider a bound of the form
+%
+\[ \left\| \sup_{\delta > 0} A_\delta f \right\|_{L^{q,\infty}(\RR^d)} \lesssim \| f \|_V \]
+%
+for an appropriate norm $\| \cdot \|_V$ and $0 < q < \infty$. We have already obtained a bound
+%
+\[ \sup_{\delta > 0} \| A_\delta f \|_{L^{q,\infty}(\RR^d)} \leq \sup_{\delta > 0} \| A_\delta f \|_{L^q(\RR^d)} \leq \| f \|_{L^q(\RR^d)} \]
+%
+but moving the supremum inside the $L^q$ norm is nontrivial. One way to think about the difference between the two bounds is that the latter uniformly controls the height and width of the functions $A_\delta f$, whereas the former inequality shows that the main contribution to the height and widths of the functions $A_\delta f$ are uniformly supported in similar regions of space.
+
+\section{Covering Methods}
+
+The bound $\| Mf \|_{L^\infty(\RR^d)} \leq \| f \|_{L^\infty(\RR^d)}$ from a direct calculation. Thus there are trivial techniques of bounding the height of the function $Mf$ in terms of the height of the function $f$. The difficult part is obtaining control of the width of $Mf$ in terms of the width of $f$. This can only be obtained up to a certain degree, because unless $f = 0$, $Mf$ is non-vanishing on the entirety of $\RR^d$ so the width of $f$ `explodes'. A slightly more technical calculation shows that we cannot even have a bound of the form $\| Mf \|_{L^1(\RR^d)} \lesssim \| f \|_{L^1(\RR^d)}$. In fact, $\| Mf \|_{L^1(\RR^d)} = \infty$ for any nonzero $f \in L^1(\RR^d)$.
+
+\begin{example}
+  Fix $f \in L^1(\RR^d)$. By rescaling, we may assume without loss of generality that $\| f \|_{L^1(\RR^d)} = 2$. Then, for suitably large $R \geq 1$,
+  %
+  \[ \int_{B_R(0)} |f(x)|\; dx \geq 1. \]
+  %
+  For each $x \in \mathbf{R}^d$, $B_R(0) \subset B_{|x|+R}(x)$ and so
+  %
+  \[ Mf(x) \geq \fint_{B_{|x|+R}(x)} |f(y)|\; dy \gtrsim \frac{1}{(|x| + R)^d} \gtrsim \frac{1}{|x|^d} \]
+  %
+  But this means that
+  %
+  \[ \int_{\RR^d} |Mf(x)| \gtrsim \int_{\RR^d} \frac{1}{|x|^d} = \infty. \]
+  %
+  If we are more careful, we can even find examples of $f \in L^1(\RR^d)$ such that $Mf$ is not even locally integrable. If $f(x) = 1/|x| \log|x|^2$, then the fact that for $x \geq 0$
+  %
+  \begin{align*}
+    \frac{1}{2h} \int_{x-h}^{x+h} \frac{dy}{|y| \log |y|^2} &= \frac{1}{2h} \left( \frac{1}{\log(x-h)} - \frac{1}{\log(x+h)} \right)\\
+    &= \frac{1}{2x \log x} + O \left( \frac{h}{\log x} \right)
+  \end{align*}
+  %
+  implies that
+  %
+  \[ Mf(x) \geq \frac{1}{2x \log x}. \]
+  %
+  Thus $Mf$ isn't integrable about the origin. Note however, that $Mf$ is on the \emph{border} of integrability, which hints at the fact that we have a weak type $(1,1)$ bound.
+\end{example}
+
+The last example shows that $|Mf(x)| \gtrsim |x|^{-d}$. Note, however, that $|x|^{-d}$ is only \emph{barely} nonintegrable. We will also show that $Mf$ is barely nonintegrable by obtaining a bound
+%
+\[ \| Mf \|_{L^{1,\infty}(\RR^d)} \lesssim_d \| f \|_{L^1(\RR^d)}. \]
+%
+Interpolation thus shows that $\| Mf \|_{L^p(\RR^d)} \lesssim_{d,p} \| f \|_{L^p(\RR^d)}$ for all $1 < p \leq \infty$. The standard real-variable technique of obtaining this bound is geometric, applying a covering argument. To obtain the weak-type bound, we must show that the set
+%
+\[ E_\lambda = \{ x \in \RR^d : |Mf(x)| > \lambda \} \]
+%
+is small. If $|Mf(x)| > \lambda$, there is a ball $B$ around $x$ such that
+%
+\[ \int_B |f(y)|\; dy > \lambda |B|. \]
+%
+Clearly $B \subset E_\lambda$. If we could find a large family of \emph{disjoint balls} $B_1,\dots,B_N$ such that this inequality held, such that $\sum |B_i| \gtrsim_d |E_\lambda|$, then we would conclude that
+%
+\[ \| f \|_{L^1(\RR^d)} \geq \sum_{i = 1}^N \int_{B_i} |f(y)|\; dy > \lambda \sum_{i = 1}^N |B_i| \gtrsim_d \lambda |E_\lambda| \]
+%
+which would show $|E_\lambda| \lesssim_d \| f \|_{L^1(\RR^d)} / \lambda$, which would show $\| Mf \|_{L^{1,\infty}(\RR^d)} \lesssim_d \| f \|_{L^1(\RR^d)}$. This intuition is true, and the process through which we obtain the family of disjoint balls $B_1,\dots,B_N$ is through the \emph{Vitali covering lemma}.
+
+This particular technique has been shown to generalize to a wide variety of situations including the maximal ball average. All that is really required for the basic theory is a basic `covering type argument' that holds in a great many situations. In particular, we can generalize this argument to a \emph{space of homogenous type}. We consider a locally compact topological space $X$ together with a nonzero Radon measure. For each $x \in X$ and $\delta > 0$, we fix an open, precompact set $B(x,\delta)$, which we assume to be monotonically increasing in $\delta$. The fundamental property we require of these sets is that there is $c > 0$ such that for any $x \in X$ and $\delta > 0$, if we set
+%
+\[ B^*(x,\delta) = \bigcup \{ B(x',\delta): B(x,\delta) \cap B(x',\delta) \neq \emptyset \}, \]
+%
+then $|B^*(x,\delta)| \leq c |B(x,\delta)|$. In the case of balls in $\RR^d$, $B^*(x,\delta) \subset B^*(x,3\delta)$, and so $|B^*(x,\delta)| \leq 3^d |B(x,\delta)|$, so $c = 3^d$. More generally, if we are working in any metric space $X$, where $B(x,\delta)$ are the balls of radius $\delta$ in this metric space, and our measure satisfies a \emph{doubling condition}
+%
+\[ |B(x,3\delta)| \lesssim |B(x,\delta)| \] 
+%
+for all $x \in X$ and $\delta > 0$, then our assumption holds. We also assume the following two technical assumptions
+%
+\begin{itemize}
+  \item For any $x \in X$,
+  %
+  \[ \bigcap_{\delta > 0} \overline{B}(x,\delta) = \{ x \} \quad\text{and}\quad \bigcup_{\delta > 0} B(x,\delta) = X \]
+
+  \item For any open set $U \subset X$ and $\delta > 0$, the function
+  %
+  \[ x \mapsto |B(x,\delta) \cap U| \]
+  %
+  is a continuous function of $x$.
+\end{itemize}
+%
+These are fairly easily verifiable in any particular instance. It follows from these technical assumptions that $|B(x,\delta)| > 0$ for each $x \in X$ and $\delta > 0$, and moreover, for each $\delta > 0$, and $f \in L^1_{\text{loc}}(X)$, the averaged function $A_\delta f$ given by setting
+%
+\[ A_\delta f(x) = \frac{1}{|B(x,\delta)|} \int_{B(x,\delta)} f(y)\; dy, \]
+%
+is measurable.
+
+\begin{lemma}
+  If $f \in L_1^{\text{loc}}(X)$, then $A_\delta f$ is a measurable function.
+\end{lemma}
+\begin{proof}
+  If $f = a_1 \mathbf{I}_{U_1} + \dots + a_N \mathbf{I}_{U_N}$ is a simple function, where $U_1,\dots,U_N$ are open sets, then
+  %
+  \[ A_\delta f(x) = a_1 \frac{|B(x,\delta) \cap U_1|}{|B(x,\delta)|} + \dots + a_N \frac{|B(x,\delta) \cap U_N|}{|B(x,\delta)|} \]
+  %
+  is a continuous function by our technical assumptions. Next, if $f \geq 0$ is a step function, then there exists a monotonically decreasing family of simple functions $\{ f_n \}$ such that $f_n \to f$ pointwise, then the monotone convergence theorem implies that $A_\delta f_n \to A_\delta f$ pointwise, so $A_\delta f$ is measurable. Finally, decomposing any measurable function into the difference of non-negative measurable functions and then considering pointwise limits of step functions completes the proof.
+\end{proof}
+
+It also follows from our technical assumptions that for any open set $U$ containing $x$, there exists $\delta_0$ such that for $\delta \leq \delta_0$, $\overline{B(x,\delta)} \subset U$. It follows that for any $f \in C(X)$ and $x \in X$,
+%
+\begin{equation} \label{pointwiseaverageconvergence}
+  \lim_{\delta \to 0} A_\delta f(x) = f(x).
+\end{equation}
+%
+If $Mf = \sup_{\delta > 0} A_\delta f$, then we will show
+%
+\[ \| Mf \|_{L^{1,\infty}(X)} \lesssim_c \| f \|_{L^1(X)}. \]
+%
+In particular, this shows that for any $f \in L^1(X)$,
+%
+\[ \lim_{\delta \to 0} A_\delta f(x) = f(x) \]
+%
+for almost every $x \in X$. Since this result is a \emph{local result}, it is easy to verify that the result also holds for any $f \in L^1_{\text{loc}}(X)$, i.e. it also holds for any $f \in L^p(X)$ for $1 \leq p \leq \infty$.
+
+\begin{lemma}[Vitali Covering Lemma]
+    If $B_1, \dots, B_n$ is a finite collection of balls in $X$, then there is a disjoint subcollection $B_{i_1}, \dots, B_{i_M}$ such that
+    %
+    \[ \left| \bigcup_{i = 1}^N B_i \right| \leq c \sum_{j = 1}^M |B_{i_j}|. \]
+\end{lemma}
+\begin{proof}
+  Consider the following greedy selection procedure. Let $B_{i_1}$ be the ball in our collection of maximal radius. Given that we have selected $B_{i_1},\dots,B_{i_k}$, let $B_{i_{k+1}}$ be the ball of largest radius not intersecting previous balls selected if possible. Continue doing this until we cannot select any further balls. If $B_j$ is any ball not chosen by this procedure, it must intersect a ball with radius at least as big as $B_j$ itself. But this means that
+  %
+  \[ \bigcup_{i = 1}^N B_i \subset \bigcup_{j = 1}^M B^*_{i_j}. \]
+  %
+  Thus
+  %
+  \[ \left| \bigcup_{i = 1}^N B_i \right| \leq \sum_{j = 1}^M |B^*_{i_j}| \leq c \sum_{j = 1}^M |B_{i_j}|. \qedhere \]
+\end{proof}
+
+We have already indicated our proof strategy for proving a weak type bound for the maximal operator, but let us now do things more rigorously.
+
+\begin{theorem}
+  For any $f \in L^1(X)$,
+  %
+  \[ \| Mf \|_{L^{1,\infty}(X)} \leq c \| f \|_{L^1(X)}. \]
+\end{theorem}
+\begin{proof}
+  Set
+  %
+  \[ E_\lambda = \{ x \in \mathbf{R}^d: Mf(x) > \lambda \}. \]
+  %
+  Fix a compact subset $K$ of $E_\lambda$ of finite measure. Then $K$ is covered by finitely many balls $B_1,\dots,B_N$ such that on each ball $B_i$,
+  %
+  \[ \int_{B_i} |f(y)|\; dy > \lambda |B_i|. \]
+  %
+  Using the Vitali lemma, extract a disjoint subfamily $B_{i_1},\dots, B_{i_M}$ with
+  %
+  \[ \left| \sum_{j = 1}^M B_{i_j} \right| \leq c \sum_{j = 1}^M |B_{i_j}|. \]
+  %
+  Then
+  %
+  \[ \| f \|_{L^1(X)} > \lambda \sum_{j = 1}^M |B_{j_i}| \geq \frac{\lambda}{c} \left| \bigcup_{j = 1}^M B_{j_i} \right| \geq \frac{\lambda |K|}{c}. \]
+  %
+  Rearranging gives
+  %
+  \[ |K| \leq \frac{c \| f \|_{L^1(X)}}{\lambda}. \]
+  %
+  Since $K$ was arbitrary, inner regularity gives
+  %
+  \[ |E_\lambda| \leq \frac{c \| f \|_{L^1(X)}}{\lambda}. \]
+  %
+  Since $\lambda$ was arbitrary, the proof is complete.
+\end{proof}
+
+\begin{remark}
+  The same covering-type argument also gives the boundedness of the \emph{uncentred} Hardy-Littlewood maximal function
+  %
+  \[ M'f(x) = \sup_{x \in B} \frac{1}{|B|} \int_B |f(y)|\; dy \]
+  %
+  where $B$ ranges over all balls $\{ B(x',\delta) : x' \in X, \delta > 0 \}$. Since the supremum is over more balls, we have $Mf(x) \leq M'f(x)$ for each $x \in X$. If we assume a stronger condition than we did previously, that if $B(x',\delta) \cap B(x,\delta) \neq \emptyset$, then $B(x',\delta) \subset B(x,c\delta)$ (so that $B^*(x,\delta) \subset B(x,c\delta)$), and that $|B(x,c\delta)| \leq c' |B(x,\delta)|$, then we also find $M' f(x) \leq c' Mf(x)$. Thus in these situations, $M$ and $M'$ are roughly equivalent operators. We shall find these assumptions are also useful for generalizing the Calderon-Zygmund type decompositions that come up in the real-variable analysis of singular integrals.
+\end{remark}
+
+\begin{remark}
+  We can exploit the ordering of the real line to show that for any family of intervals $\{ I_\alpha \}$ covering a compact set $K$, there is a subcover $I_1,\dots, I_N$ such that any point in $\RR$ is contained in at most two of the intervals. A modification of the argument above shows this gives the slightly better bound $\| Mf \|_{L^{1,\infty}(\RR)} \leq 2 \| f \|_{L^1(\RR)}$, rather than the bound $\| Mf \|_{L^{1,\infty}(\RR)} \leq 3 \| f \|_{L^1(\RR)}$.
+\end{remark}
+
+\newpage
+
+TODO  The fundamental properties we require of our balls are that there exists two universal constants $c_1,c_2 > 1$ such that
 %
 \begin{enumerate}
   \item[(i)] For any $x_1,x_2 \in X$ and $\delta > 0$, if $B(x_1,\delta) \cap B(x_2,\delta) \neq \emptyset$, then
@@ -2976,195 +3202,15 @@ To avoid technical complications, we assume two further assumptions that are tru
   is a continuous function of $x$.
 \end{enumerate}
 
-\begin{remark}
-  For each $x \in X$ and $\delta > 0$, let $B^*(x,\delta) = \bigcup \{ B(x',\delta) : B(x',\delta) \cap B(x,\delta) \neq \emptyset \}$. Often, assumptions (i) and (ii) can be replaced with the following weaker assumption, that there exists $c > 1$ such that 
-  %
-  \begin{itemize}
-    \item[(i-ii)] $|B^*(x,\delta)| \leq c |B(x,\delta)|$.
-  \end{itemize}
-  %
-  If (i) holds, then $B^*(x,\delta) \subset B(x,c_1\delta)$ and so (ii) implies (i-ii).
-\end{remark}
+\newpage
 
-It follows from these technical assumptions that $|B(x,\delta)| > 0$ for each $x \in X$ and $\delta > 0$. Thus for each $\delta > 0$, and $f \in L^1_{\text{loc}}(X)$, we can consider the averaged function $A_\delta f$ given by setting
-%
-\[ A_\delta f(x) = \frac{1}{|B(x,\delta)|} \int_{B(x,\delta)} f(y)\; dy, \]
-%
-where the integral on the right hand side is interpreted in the Lebesgue sense.
 
-\begin{lemma}
-  If $f \in L_1^{\text{loc}}(X)$, then $A_\delta f$ is a measurable function.
-\end{lemma}
-\begin{proof}
-  If $f = a_1 \mathbf{I}_{U_1} + \dots + a_N \mathbf{I}_{U_N}$ is a simple function, where $U_1,\dots,U_N$ are open sets, then
-  %
-  \[ A_\delta f(x) = a_1 \frac{|B(x,\delta) \cap U_1|}{|B(x,\delta)|} + \dots + a_N \frac{|B(x,\delta) \cap U_N|}{|B(x,\delta)|} \]
-  %
-  is a continuous function by (iv). Next, if $f \geq 0$ is a step function, then there exists a monotonically decreasing family of simple functions $\{ f_n \}$ such that $f_n \to f$ pointwise, then the monotone convergence theorem implies that $A_\delta f_n \to A_\delta f$ pointwise, so $A_\delta f$ is measurable. Finally, decomposing any measurable function into the difference of non-negative measurable functions and then considering pointwise limits of step functions completes the proof.
-\end{proof}
 
-It follows from (iii) that for any open set $U$ containing $x$, there exists $\delta_0$ such that for $\delta \leq \delta_0$, $\overline{B(x,\delta)} \subset U$. It follows that for any $f \in C(X)$ and $x \in X$,
-%
-\begin{equation} \label{pointwiseaverageconvergence}
-  \lim_{\delta \to 0} A_\delta f(x) = f(x).
-\end{equation}
-%
-This pointwise inequality cannot possibly hold for all $f \in L^1_{\text{loc}}(X)$ because $A_\delta f$ only depends on the `distributional behaviour' of $f$, i.e. on the values of $f$ up to a set of measure zero. However, we can still consider whether \eqref{pointwiseaverageconvergence} holds for \emph{almost every} $x \in X$. Hardy and Littlewood introduced a powerful technique to study such problems, known as the \emph{method of maximal functions}. For each $f \in L^1_{\text{loc}}(X)$, we define
-%
-\[ Mf(x) = \sup_{\delta > 0} A_\delta |f|(x) = \sup_{\delta > 0} \frac{1}{|B(x,\delta)|} \int_{B(x,\delta)} |f(y)|\; dy. \]
-%
-The next theorem indicates why obtaining bounds on a maximal operator gives pointwise convergence results.
 
-\begin{theorem}
-  Fix $0 < p \leq \infty$, and let $\{ T_t: L^p(X) \to L^{q,\infty}(X) \}$ be a family of bounded operators. Then we can define the pointwise maximal operator
-  %
-  \[ T_* f(x) = \sup_t |T_t f(x)|. \]
-  %
-  Suppose there exists $0 < q < \infty$ such that we have a bound
-  %
-  \[ \| T_* f \|_{L^{q,\infty}(X)} \lesssim \| f \|_{L^p(X)}. \]
-  %
-  Then the set
-  %
-  \[ \{ f \in L^p(X) : \lim_{t \to \infty} T_t f(y) = f(y)\; \text{a.e} \} \]
-  %
-  is closed in $L^p(X)$.
-\end{theorem}
-\begin{proof}
-  Let $\{ f_n \}$ be a sequence of functions converging in $L^p(X)$ to a function $f$, and suppose for each $n$,
-  %
-  \[ \lim_{t \to \infty} (T_t f_n)(x) = f_n(x) \]
-  %
-  for almost every $x \in X$. For each $\lambda > 0$, we find
-  %
-  \begin{align*}
-    |\{ x \in X: &\limsup_{t \to \infty} |T_t f(x) - f(x)| > \lambda \}|\\
-    &\leq |\{ x \in X: \limsup_t |T_t(f - f_n)(x) - (f - f_n)(x)| > \lambda \}|\\
-    &\leq |\{ x \in X : |T_*(f - f_n)(x)| > \lambda/2 \}| + | \{ x: |(f - f_n)(x)| > \lambda/2 \} |\\
-    &\lesssim_{p,q} \frac{\| f - f_n \|_{L^p(X)}^q}{\lambda^q} + \frac{\| f - f_n \|_{L^p(X)}^p}{\lambda^p}.
-  \end{align*}
-  %
-  as $n \to \infty$, this quantity tends to zero. Thus for all $\lambda > 0$,
-  %
-  \[ |\{ x: \limsup_{t \to \infty} |T_t f(x) - f(x)| > \lambda \}| = 0 \]
-  %
-  Taking $\lambda \to 0$ gives that $\limsup_t |T_t f(x) - f(x)| = 0$ for almost every $x \in X$. But this means precisely that $T_tf(x) \to f(x)$ for almost every $x \in X$.
-\end{proof}
 
-The theorem implies that if we can obtain operator bounds for the maximal operator $M$, then we can obtain almost everywhere convergence for the averages we consider. All that is required is to understand the properties of the maximal operator $T_*$. Of course, Schur's lemma implies that for any $\delta > 0$ and $f \in L^1(X)$,
-%
-\[ \| A_\delta f \|_{L^1(\RR^d)} \leq \| f \|_{L^1(X)}. \]
-%
-Thus for $f \in L^1(X)$, the functions $A_\delta f$ are uniformly bounded in size. Since the inequality $\sup_{\delta > 0} A_\delta f \leq Mf$ holds pointwise, a bound of the form
-%
-\[ \| Mf \|_{L^{q,r}(X)} \lesssim \| f \|_{L^p(X)} \]
-%
-implies
-%
-\[ \| \sup_{\delta > 0} |A_\delta f| \|_{L^{q,r}(X)} \lesssim \| f \|_{L^p(X)}. \]
-%
-Thus a bound on the maximal operator also implies that we can uniformly control the size of $A_\delta f$ in a pointwise sense as well.
+\section{Dyadic Methods and Calderon-Zygmund Decomposition}
 
-An initial hope is that we have a bound $\| Mf \|_{L^1(\RR)} \lesssim \| f \|_{L^1(\RR)}$, but $Mf$ is never integrable except in the trivial case where $f = 0$.
-
-\begin{example}
-  Let $f \in L^1(\mathbf{R}^d)$ be nonzero. Then, for suitably large $R \geq 1$,
-  %
-  \[ \int_{B_R(0)} |f(x)|\; dx \geq 0.5 \| f \|_{L^1(\RR^d)} \]
-  %
-  For each $x \in \mathbf{R}^d$, $B_R(0) \subset B_{|x|+R}(x)$ and so
-  %
-  \[ Mf(x) \geq \fint_{B_{|x|+R}(x)} |f(y)|\; dy \gtrsim \frac{0.5 \| f \|_{L^1(\RR)}}{(|x| + R)^d} \gtrsim \frac{1}{|x|^d} \]
-  %
-  But this means, $Mf$ is non-integrable. In certain cases, $Mf$ isn't even locally integrable. If $f(x) = 1/|x| \log|x|^2$, then the fact that for $x \geq 0$
-  %
-  \begin{align*}
-    \frac{1}{2h} \int_{x-h}^{x+h} \frac{dy}{|y| \log |y|^2} &= \frac{1}{2h} \left( \frac{1}{\log(x-h)} - \frac{1}{\log(x+h)} \right)\\
-    &= \frac{1}{2x \log x} + O \left( \frac{h}{\log x} \right)
-  \end{align*}
-  %
-  implies that
-  %
-  \[ Mf(x) \geq \frac{1}{2x \log x}. \]
-  %
-  Thus $Mf$ isn't integrable about the origin. Note however, that $Mf$ is on the \emph{border} of integrability, which hints at the fact that we have a weak type $(1,1)$ bound.
-\end{example}
-
-It is easy to see that for any $f \in L^\infty(\RR^d)$,
-%
-\[ \| Mf \|_{L^\infty(\RR^d)} \leq \| f \|_{L^\infty(\RR^d)}, \]
-%
-since the average of a function on a ball is bounded by it's maximum on that ball. Our goal is to show that we also have a bound
-%
-\[ \| Mf \|_{L^{1,\infty}(\RR^d)} \lesssim_d \| f \|_{L^1(\RR^d)}. \]
-%
-It thus follows by the Marcinkiewitz interpolation theorem that for any $1 < p < \infty$ and $f \in L^p(\RR^d)$, $Mf \in L^p(\RR^d)$, and that
-%
-\[ \| Mf \|_{L^p(\RR^d)} \lesssim_{p,d} \| f \|_{L^p(\RR^d)}. \]
-%
-The bound from $L^1(\RR^d)$ to $L^{1,\infty}(\RR^d)$ is less trivial than the bound from $L^\infty(\RR^d)$ to $L^\infty(\RR^d)$, as is often the case. For each $\lambda > 0$, we must show
-%
-\[ |\{ x \in \RR^d : Mf(x) \geq \lambda \}| \lesssim_{d,p} \frac{\| f \|_{L^1(\RR^d)}}{\lambda}. \]
-%
-Let $A(\lambda)$ denote the set on the left hand side. By definition of the maximal function, for each $x \in A(\lambda)$ we can find a ball $B_x$ such that
-%
-\[ \int_{B_x} |f(x)| \geq \lambda |B_x|. \]
-%
-Thus for any disjoint collection of balls $\{ B_{x_1}, \dots, B_{x_N} \}$,
-%
-\[ \| f \|_{L^1(\RR^d)} \geq \lambda \sum_{i = 1}^N |B_{x_i}|. \]
-%
-Our proof would be complete if we could find a family of non-overlapping balls with volume proportional to the volume of $A(\lambda)$. Vitali's covering lemma provides precisely this family.
-
-\begin{lemma}[Vitali Covering Lemma]
-    If $B_1, \dots, B_n$ is a finite collection of balls in $\mathbf{R}^d$, then there is a disjoint subcollection $B_{i_1}, \dots, B_{i_m}$ such that
-    %
-    \[ \left| \bigcup B_i \right| \leq 3^d \sum |B_{i_k}| \]
-\end{lemma}
-\begin{proof}
-    We begin with the elementary observation that if $B$ and $B'$ are two intersecting balls with the radius of $B$ greater than the radius of $B'$, then $B'$ is a subset of $3B$. Now, if we choose the balls greedily, picking a ball with maximal radius that doesn't intersect any of our previously chosen balls. It then follows that if $B_{i_1}, \dots B_{i_m}$ are the balls chosen then
-    %
-    \[ \bigcup B_i \subset \bigcup 3B_{i_k} \]
-    %
-    and so
-    %
-    \[ \left| \bigcup B_i \right| \leq \left| \bigcup 3B_{i_k} \right| \leq \sum |3B_{i_k}| = 3^d \sum |B_{i_k}| \]
-    %
-    and we therefore obtain the required inequality.
-\end{proof}
-
-\begin{theorem}
-    The function $Mf$ is measurable, and for any $\alpha > 0$,
-    %
-    \[ |\{ x \in \mathbf{R}^d: Mf(x) > \alpha \}| \leq \frac{3^d}{\alpha} \| f \|_1 \]
-    %
-    Thus $Mf$ has a weak $(1,1)$ bound $\| Mf \|_{L^{1,\infty}(\RR^d)} \leq 3^d \| f \|_1$.
-\end{theorem}
-\begin{proof}
-    The measurability of $Mf$ is easy, because $Mf$ is a lower semicontinuous function, and all lower semicontinuous functions are measurable. If $Mf(x) > \alpha$, then we can choose a ball $B$ containing a point $x$ such that the average of $|f|$ on $B$ is greater than $\alpha$, and then for any $y \in B$, $Mf(y) > \alpha$. Set $E_\alpha = \{ x \in \mathbf{R}^d: Mf(x) > \alpha \}$. Then for each $x$, we can find a ball $B_x$ such that the average of $|f|$ on $B_x$ is greater than $\alpha$. This implies that
-    %
-    \[ |B_x| < \frac{1}{\alpha} \int_{B_x} |f(y)|\ dy \]
-    %
-    Let $K \subset E_\alpha$ be compact. Then $K$ is covered by finitely many of the balls, and applying the Vitali covering lemma, we can find a disjoint collection $B_{x_1}, \dots, B_{x_m}$ of these balls such that
-    %
-    \[ |K| \leq 3^d \sum |B_{x_m}| < \frac{3^d}{\alpha} \int_{\bigcup B_{x_i}} |f(y)|\ dy \leq \frac{3^d}{\alpha} \|f\|_1 \]
-    %
-    Since $K$ is arbitrary, inner regularity says $|E_\alpha| \leq 3^d \| f \|_1/\alpha$.
-\end{proof}
-
-We immediately obtain the Lebesgue differentiation theorem from our discussion of maximal function techniques.
-
-\begin{corollary}
-    If $f \in L^1(\mathbf{R}^d)$, then for almost every $x$,
-    %
-    \[ \lim_{r \to 0} \frac{1}{|B_r(x)|} \int_{B_r(x)} f(y)\ dy = f(x). \]
-\end{corollary}
-
-The integrability of $f$ over all of $\mathbf{R}^d$ isn't {\it really} applied anywhere in the proof of the Lebesgue differentiation theorem. Indeed, we only needed that the integral of $f$ is bounded over suitably small balls. If we define the space of \emph{locally integrable functions} $L^1_{\text{loc}}(\mathbf{R}^d)$ to be all functions $f$ such that $f \chi_B$ is integrable for any ball $B$, then the Lebesgue differentiation theorem continues to hold for any function in $L^1_{\text{loc}}(\RR^d)$. This in particular includes all functions in $L^p(\RR^d)$, for any $1 \leq p \leq \infty$.
-
-\section{Dyadic Methods}
-
-Before we move onto further applications of the Lebesgue density theorem, let us discuss a few more methods to prove the Hardy-Littlewood maximal inequality. First, we apply some dyadic methods for proving the inequality. Recall that the set of dyadic cubes is
+There are many different techniques for showing the boundedness of the maximal operator. Let us consider some \emph{dyadic methods} for proving the inequality. Recall that the set of dyadic cubes is
 %
 \[ \{ Q_{n,k} : n \in \ZZ, k \in 2^n \ZZ^d \} \]
 %
@@ -3172,7 +3218,7 @@ where $Q_{n,k}$ is the cube $[k_1, k_1 + 2^n] \times \dots \times [k_d, k_d + 2^
 %
 \[ M_\Delta f(x) = \sup_{x \in Q} \frac{1}{|Q|} \int_Q |f(y)|\; dy \]
 %
-then we easily obtain the bound $\| M_\Delta f \|_{L^{\infty,1}(\RR^d)} \leq \| f \|_{L^1(\RR^d)}$, with no implicit constant depending on $d$. The bound $\| M_\Delta f \|_{L^\infty(\RR^d)} \leq \| f \|_{L^\infty(\RR^d)}$ is easy, so interpolation gives $\| M_\Delta f \|_{L^p(\RR^d)} \lesssim_p \| f \|_{L^p(\RR^d)}$ for all $1 < p \leq \infty$.
+then we easily obtain the bound $\| M_\Delta f \|_{L^{1,\infty}(\RR^d)} \leq \| f \|_{L^1(\RR^d)}$, with no implicit constant depending on $d$. The bound $\| M_\Delta f \|_{L^\infty(\RR^d)} \leq \| f \|_{L^\infty(\RR^d)}$ is easy, so interpolation gives $\| M_\Delta f \|_{L^p(\RR^d)} \lesssim_p \| f \|_{L^p(\RR^d)}$ for all $1 < p \leq \infty$, with a constant now \emph{independant of dimension}.
 
 If $Q$ is a dyadic cube, then it is contained in a ball $B$ with $|Q| \lesssim_d B$. It follows that for any function $f$ and $x \in \RR^d$,
 %
@@ -3217,167 +3263,52 @@ It follows that for each $x \in \RR^d$, and any function $f$,
 %
 Since the $L^p$ norms are translation invariant, this implies that the dyadic maximal operator and the maximal operator satisfy equivalent bounds, with operator norms differing by a constant depending on $n$. Since we independently obtained bounds on $M_\Delta$, this section provides an alternate proof to the boundedness of $M$.
 
-\section{Bellman Function Methods}
+There is an alternate way to view the operator $M_\Delta$. For each integer $n$, we let $\mathcal{B}(n)$ denote the family of all sidelength $1/2^n$ dyadic cubes. Thus $\mathcal{B}(n)$ gives a decomposition of $\RR^d$ into an almost disjoint union of cubes. If we define the conditional expecation operators
+%
+\[ E_n f(x) = \sum_{Q \in \mathcal{B}(n)} \left( \frac{1}{|Q|} \fint_Q f \right) \cdot \mathbf{I}_Q \]
+%
+then $M_\Delta f = \sup_{n \in \ZZ} E_n f$. In particular, it is easy to see from the bounds on $M_\Delta$ that for any $f \in L^1_{\text{loc}}(\RR^d)$, $\lim_{n \to \infty} E_n f(x) = f(x)$ holds for almost every $x \in \RR^d$. It is simple to conclude from this result a very useful technique, known as the \emph{Calder\'{o}n-Zygmund decomposition}.
 
-It is interesting to ask whether we can obtain bounds of the form
-%
-\[ \| M f \|_{L^p(\RR^d)} \lesssim_{d,p} \| f \|_{L^p(\RR^d)} \]
-%
-without employing any interpolation techniques. This is possible, though nontrivial. We begin with a Bellman function approach, which works best in the dyadic scheme, i.e. proving bounds on $M_\Delta$.
-
-The idea here is to perform an \emph{induction on scales}, i.e. to induct on the complexity of the function $f$. For a fixed $f \in L^p(\RR^d)$, our goal is to obtain bounds of the form
-%
-\[ \left( \int |M_\Delta f(x)|^p\; dx \right)^{1/p} \lesssim \left( \int |f(x)|^p \right)^{1/p} \]
-%
-where the implicit constant is independent of $p$.
-
-We begin by applying some monotone convergence arguments to simplify our analysis. For each $x \in \RR^d$, $|M_\Delta f(x)| = \lim_{m \to -\infty} |M_{\geq m} f(x)|$, where $M_{\geq m}$ is the operator giving a maximal average over all dyadic cubes containing a point with sidelength exceeding $2^m$, and the limit is monotone increasing. It follows that for any $f \in L^p(\RR^d)$,
-%
-\[ \| M_\Delta f \|_{L^p(\RR^d)} = \lim_{m \to -\infty} \| M_{\geq m} f \|_{L^p(\RR^d)}. \]
-%
-Thus if we can obtain a bound
-%
-\[ \| M_{\geq m} f \|_{L^p(\RR^d)} \lesssim \| f \|_{L^p(\RR^d)} \]
-%
-with a bound independant of $m$, we would obtain the required bound on $M_\Delta$. But if we could obtain a bound
-%
-\[ \| M_{\geq 0} f \|_{L^p(\RR^d)} \lesssim \| f \|_{L^p(\RR^d)} \]
-%
-for all $f \in L^p(\RR^d)$, then a rescaling argument, using the fact that
-%
-\[ M_{\geq m} f = \text{Dil}_{1/2^d} M_{\geq 0} \text{Dil}_{2^d} f \]
-%
-shows that we in fact have
-%
-\begin{align*}
-  \| M_{\geq m} f \|_{L^p(\RR^d)} &= 2^{d/p} \| M_{\geq 0} \text{Dil}_{2^d} f \|_{L^p(\RR^d)}\\
-  &\lesssim 2^{d/p} \| \text{Dil}_{2^d} f \|_{L^p(\RR^d)} = \| f \|_{L^p(\RR^d)}.
-\end{align*}
-%
-Thus we need only concentrate on the operator $M_{\geq 0}$. Finally, we note we can \emph{localize} our estimates. Given a function $f$ supported on a dyadic cube $Q$ with sidelength $2^n$, and given $x \not \in Q$, then there exists a smallest value $m_x > n$ such that $x$ is contained in a dyadic cube with sidelength $2^{m_x}$ which also contains $Q$. It then follows that
-%
-\[ (M_{\geq 0} f)(x) = \frac{\int_Q |f(y)|\; dy}{2^{dm_x}} = \frac{\| f \|_{L^1(Q)}}{2^{dm_x}} \]
-%
-For each $m > n$, if we set $E_m = \{ x \in \RR^d: m_x = m \}$, then $E_m$ is contained in a dyadic cube of sidelength $2^m$, so $|E_m| \leq 2^{dm}$. Thus we have
-%
-\begin{align*}
-  \| M_{\geq 0} f \|_{L^p(Q^c)} &= \left( \sum_{m = n+1}^\infty \| M_{\geq 0} f \|_{L^p(E_m)}^p \right)^{1/p}\\
-  &\leq \left( \sum_{m = n+1}^\infty \left( \| f \|_{L^1(Q)}^p / 2^{dpm} \right) 2^{dm} \right)^{1/p}\\
-  &\lesssim_{d,p} \| f \|_{L^1(Q)} 2^{dn(1/p - 1)} = \| f \|_{L^1(Q)} |Q|^{1/p-1} \leq \| f \|_{L^p(Q)}.
-\end{align*}
-%
-Thus, if we obtained the bound $\| M_{\geq 0} f \|_{L^p(Q)} \lesssim \| f \|_{L^p(Q)}$, then we would find
-%
-\begin{align*}
-  \| M_{\geq 0} f \|_{L^p(\RR^d)} &\leq \| M_{\geq 0} f \|_{L^p(Q)} + \| M_{\geq 0} f \|_{L^p(Q^c)} \lesssim \| f \|_{L^p(Q)}.
-\end{align*}
-%
-Thus if $f$ is supported on a dyadic cube $Q$, it suffices to estimate $M_{\geq 0} f$ on the support of $f$. But by a final monotone convergence argument, it suffices to bound such functions, since given any $n$ we can write $[-2^n,2^n]$ as the almost disjoint union of $2^d$ sidelength $2^d$ dyadic cubes $Q_{n,1},\dots,Q_{n,2^d}$. For any $f \in L^p(\RR^d)$, we consider a pointwise limit $f = \lim_{n \to \infty} f_{n,1} + \dots + f_{n,2^d}$, where $f_{n,i}$ is equal to $f$ restricted to $Q_{n,i}$, and the limit is monotone. We also have
-%
-\[ M_{\geq 0} f = \lim_{n \to \infty} M_{\geq 0} f_{n,1} + \dots + M_{\geq 0} f_{n,2^d}. \]
-%
-where the limit is pointwise and monotone, so
-%
-\begin{align*}
-  \| M_{\geq 0} f \|_{L^p(\RR^d)} &= \lim_{n \to \infty} \| M_{\geq 0} f_{n,1} + \dots + M_{\geq 0} f_{n,2^d} \|_{L^p(\RR^d)}\\
-  &\lesssim \lim_{n \to \infty} \| f_{n,1} \|_{L^p(\RR^d)} + \dots + \| f_{n,2^d} \|_{L^p(\RR^d)} \lesssim 2^d \| f \|_{L^p(\RR^d)}.
-\end{align*}
-%
-Thus, after a technical reduction argument, we now show that we only have to establish a bound
-%
-\[ \| M_{\geq 0} f \|_{L^p(Q)} \lesssim \| f \|_{L^p(Q)}, \]
-%
-where $f \in L^p(Q)$, $Q$ is a dyadic cube with sidelength $\geq 1$, and the implicit constant is independant of $Q$.
-
-To carry out the inequality, we perform an \emph{induction on scales}. For each $n \geq 0$, we let $C(n)$ denote the optimal constant such that for any function $f \in L^p(\RR^d)$ supported on a dyadic cube $Q$ of sidelength $2^n$,
-%
-\[ \| M_{\geq 0} f \|_{L^p(Q)} \leq C(n) \cdot \| f \|_{L^p(Q)}. \]
-%
-If $n = 0$, the problem is trivial, since if $Q$ is dyadic with sidelength $1$ and $x \in Q$, then
-%
-\[ M_{\geq 0} f = \fint_Q |f(y)|\; dy \]
-%
-so $\| M_{\geq 0} f \|_{L^p(Q)} = \| f \|_{L^1(Q)}$, and $C(0) = 1$. Our goal is to show that $\sup_{n \geq 0} C(n) < \infty$. Given $f$ supported on a cube $Q$ with sidelength $2^n$, the cube has $2^d$ children $Q_1,\dots,Q_{2^d}$ with sidelength $2^{n-1}$. If we decompose $f = f_1 + \dots + f_{2^d}$ onto these cubes, then by induction we know that
-%
-\[ \| M_{\geq 0} f_i \|_{L^p(Q_i)} \leq C(n-1) \| f_i \|_{L^p(Q_i)}. \]
-%
-Now for $x \in Q_i$,
-%
-\[ (M_{\geq 0} f)(x) = \max \left(M_{\geq 0} f_i(x), \fint_Q |f(y)|\; dy \right). \]
-%
-Thus if $A = \fint_Q |f(y)|\; dy$, then
-%
-\begin{align*}
-  \| M_{\geq 0} f \|_{L^p(Q)} &= \left( \| M_{\geq 0} f \|_{L^p(Q_1)}^p + \dots + \| M_{\geq 0} f \|_{L^p(Q_{2^d})}^p \right)^{1/p}\\
-  &= \left( \| \max(M_{\geq 0} f_1, A) \|_{L^p(Q_1)}^p + \dots + \| \max(M_{\geq 0} f_{2^d}, A) \|_{L^p(Q_{2^d})}^p \right)^{1/p}
-\end{align*}
-%
-The bound $\max(M_{\geq 0} f_i, A) \leq M_{\geq 0} f_i + A$ gives
-%
-\[ \| M_{\geq 0} f \|_{L^p(Q)} \leq C(n-1) \| f \|_{L^p(Q)} + 2^{d/p} |Q|^{1/p} A = (C(n-1) + 2^{d/p}) \| f \|_{L^p(Q)}. \]
-%
-This gives $C(n) \leq C(n-1) + 2^{d/p}$, which is not enough to obtain a uniform bound. The idea here is to include more information in our induction hypothesis which gives control on $\max(M_{\geq 0} f_i, A)$. Since $Q$ contains points not in $Q_i$, we need to treat $A$ as an arbitrary quantity in our hypothesis.
-
-To do this, we introduce \emph{cost functions}. For each $A,B,D > 0$ and any integer $n \geq 0$, we let $V_n(A,B,D)$ be the optimal constant such that
-%
-\[ \| \max(M_{\geq 0} f, A)^p \|_{L^p(Q)} \leq V_n(A,B,D) \]
-%
-For any function $f$ supported on a dyadic cube $Q$ with sidelength $2^n$, with
-%
-\[ \| f \|_{L^1(Q)} = B\quad\text{and}\quad \| f \|_{L^p(Q)} = D. \]
-%
-Our goal will be to show $V_n(A,B,D) \lesssim_p 2^{-dn/p} A + D$ which completes the proof. The role of $B$ is subtle, but will soon become apparan. Of course, we have $\| f \|_{L^1(Q)} \leq 2^{dn(1-1/p)} \| f \|_{L^p(Q)}$, so we have $V_n(A,B,D) = -\infty$ unless $B \leq 2^{dn(1 - 1/p)} D$.
-
-The recursive inequality gives an inequality for the values $V_n(A,B,D)$. TODO: COMPLETE THIS PROOF.
-
-\section{$TT^*$ Arguments}
-
-The method of $TT^*$ arguments enables us to obtain bounds on an operator $T$ by exploiting cancellation between an operator and it's adjoint. However, this approach only works when establishing $L^2$ estimates (or at least where one side of an inequality has a norm induced by an inner product). By monotocity, it suffices to consider maximal operators of the form $\max(A_{r_1} f, \dots, A_{r_N} f)$ (provided the implicit constants are independant of $N$),  and by linearization, it suffices to show that for any measurable function $r: \RR^d \to \{ r_1, \dots, r_N \}$,
-%
-\[ \left( \int |A_{r(x)} f(x)|^p\; dx \right)^{1/p} \lesssim \| f \|_{L^p(\RR^d)} \]
-%
-where the implicit constant is independant of the function $r$. Thus we consider the linearized operator $M_r: L^2(\RR^d) \to L^2(\RR^d)$ obtained by setting
-%
-\[ M_r f(y) = (A_{r(y)} f)(y). \]
-%
-We see easily that $M_r$ is a kernel operator with kernel
-%
-\[ K(x,y) = \frac{1}{|B_{r(y)}(y)|} \mathbf{I}(|x - y| \leq r(y)). \]
-%
-Thus
-%
-\[ M_r^* g(x) = \int_{\RR^d} \frac{\mathbf{I}(|x - y| \leq r(y))}{|B_{r(y)}(y)|} g(y)\; dy, \]
-%
-and so one can verify that
-%
-\begin{align*}
-  |(M_r M_r^* f)(y)| &= \left| \int_{\RR^d} \int_{\RR^d} \frac{\mathbf{I}(|z - x| \leq r(z)) \mathbf{I}(|y - x| \leq r(y))}{|B(z,r(z))| |B(y,r(y))|} f(z)\; dz\; dx \right|\\
-  &= \left| \int_{\RR^d} \int_{\RR^d} \frac{\mathbf{I}(|z - x| \leq r(z)) \mathbf{I}(|y - x| \leq r(y))}{|B(z,r(z))| |B(y,r(y))|} f(z)\; dx\; dz \right|.
-\end{align*}
-%
-For a fixed $z$, the integrand in $x$ vanishes unless $|z - y| \leq r(y) + r(z)$, and in this case we find
-%
-\[ \left| \int_{\RR^d} \frac{\mathbf{I}(|z - x| \leq r(z)) \mathbf{I}(|y - x| \leq r(y))}{|B(z,r(z))| |B(y,r(y))|} \right| \lesssim_d \frac{1}{\max(r(y)^d, r(z)^d)}. \]
-%
-Thus we can write
-%
-\begin{align*}
-  |(M_r M_r^* f)(y)| &\lesssim_d \int_{\RR^d} \left( \int_{\substack{|z - y| \leq r(y) + r(z)\\r(y) \leq r(z)}} \frac{|f(z)|}{r(z)^d} + \int_{\substack{|z - y| \leq r(y) + r(z)\\r(y) \geq r(z)}} \frac{|f(z)|}{r(y)^d}\; dx \right)\\
-  &\lesssim_d M_{2r}|f|(y) + M_{2r}^* |f|(y).
-\end{align*}
-%
-But we verify by rescaling that $\| M_{2r} \| = \| M_{2r}^* \| = \| M_r \|$, so
-%
-\[ \| M_r \|^2 = \| M_r M_r^* \| \lesssim_d \| M_r \|. \]
-%
-But this means that $\| M_r \| \lesssim_d 1$, which gives the bound that we required. Thus we find that the Hardy-Littlewood maximal function is bounded from $L^2(\RR^d)$ to $L^2(\RR^d)$.
-
-
-
-
-
-
-
+\begin{theorem}
+  Given $f \in L^1(\RR^d)$ and $\lambda > 0$, we can write $f = g + b$, where $\| g \|_{L^\infty(\RR^d)} \lesssim_d \lambda$, and there is an almost disjoint family of dyadic cubes $\{ Q_i \}$ such that $g$ is supported on $\bigcup_i Q_i$,
+  %
+  \[ \sum_i |Q_i| \leq \frac{\| f \|_{L^1(\RR^d)}}{\lambda}, \]
+  %
+  and for each $i$,
+  %
+  \[ \int_{Q_i} f(y)\; dy = 0. \]
+  %
+  We also have $\| g \|_{L^1(\RR^d)}, \| b \|_{L^1(\RR^d)} \lesssim \| f \|_{L^1(\RR^d)}$.
+\end{theorem}
+\begin{proof}
+  Write $E = \{ x: M_\Delta f(x) > \lambda \}$. By the dyadic Hardy-Littlewood maximal inequality,
+  %
+  \[ |E| \leq \frac{\| f \|_{L^1(\RR^d)}}{\lambda}. \]
+  %
+  Because $f$ is integrable, $E \neq \mathbf{R}^d$. Thus we can write $E$ as the almost disjoint union of dyadic cubes $\{ Q_i \}$, such that for each $i$,
+  %
+  \[ \int_{Q_i} |f(x)|\; dx > \lambda |Q_i|, \]
+  %
+  and also, if $R_i$ is the parent cube of $Q_i$,
+  %
+  \[ \int_{R_i} |f(x)|\; dx \leq \lambda |R_i|. \]
+  %
+  This can be done by a greedy strategy, taking the union of dyadic cubes of largest sidelength contained in $E$. This means
+  %
+  \[ \int_{Q_i} |f(x)|\; dx \leq \int_{R_i} |f(x)|\; dx \leq \lambda |R_i| \leq 2^d \lambda |Q_i|. \]
+  %
+  Define
+  %
+  \[ g(x) = \begin{cases} f(x) &: x \not \in E, \\ \frac{1}{|Q_i|} \int_{Q_i} f(x)\; dx &: x \in Q_i\ \text{for some $i$}. \end{cases} \]
+  %
+  For almost every $x \in E^c$, $|f(x)| \leq \lambda$, since $E_n f(x) \leq \lambda$ for each $n$, and $E_n f(x) \to f(x)$ as $n \to \infty$ for almost every $x$. Conversely, if $x \in Q_i$ for some $i$, then
+  %
+  \[ \left| \frac{1}{|Q_i|} \int_{Q_i} f(x)\; dx \right| \leq \frac{1}{|Q_i|} \int_{Q_i} |f(x)|\; dx \leq 2^d \lambda. \]
+  %
+  Thus $\| g \|_{L^\infty(\RR^d)} \lesssim_d \lambda$. If we define $b = f - g$, then $b$ is supported on $\bigcup Q_i = E$, and for each $i$,
+  %
+  \[ \int_{Q_i} b(x)\; dx = \int_{Q_i} \left( f(x) - \frac{1}{|Q_i|} \int_{Q_i} f(y)\; dy \right)\; dx = 0. \qedhere \]
+\end{proof}
 
 \section{Lebesgue Density Theorem}
 
@@ -4562,58 +4493,6 @@ and we can apply the previous case to obtain that this is equal to $(\Lambda * \
 
 
 \chapter{Singular Integral Operators}
-
-
-
-\section{The Calderon Zygmund Decomposition}
-
-For a fixed integer $n$, we let $\mathcal{B}(n)$ denote the family of all sidelength $1/2^n$ half open cubes with corners on the lattice $(\mathbf{Z}/2^n)^d$, i.e.
-%
-\[ \mathcal{B}(n) = \{ [a_1,b_1) \times \dots \times [a_d,b_d) : a_i, b_i \in \mathbf{Z}/2^n \} \]
-%
-Thus $\mathcal{B}(n)$ partitions $\mathbf{R}^d$ for each integer $n$. We refer to $\mathcal{B} = \bigcup \mathcal{B}(n)$ as the family of all \emph{dyadic} cubes. An important property is that if $I$ and $J$ are dyadic, either one cube contains the other, or they are completely disjoint. This makes Vitali type covering arguments redundant, because every union of dyadic cubes can be written as the disjoint union of dyadic cubes (except if the union is $\mathbf{R}^d$). Thus we can obtain weak type bounds for the corresponding `dyadic maximal function' very easily, and ignore the dimensional constants previously required.
-
-\begin{theorem}
-  If
-  %
-  \[ (Mf)(x) = \sup_{\substack{I \in \mathcal{B}\\x \in I}} \fint_I |f(x)|\; dx \]
-  %
-  Then $\| Mf \|_{(1,\infty)} \leq \| f \|_1$.
-\end{theorem}
-\begin{proof}
-  Fix $\varepsilon > 0$, and let $E_{\alpha,\varepsilon} = \{ x \in \mathbf{R}^d: Mf(x) > \alpha \}$. Since $f$ is integrable, $E_\alpha \neq \mathbf{R}^d$. Then $E_\alpha$ decomposes into union of dyadic cubes $I_1, I_2, \dots \in \mathcal{B}$, which we can assume are disjoint. Thus
-  %
-  \[ |E_\alpha| = \sum_{k = 1}^\infty |I_k| \leq \frac{1}{\alpha} \sum_{k = 1}^\infty \int_{I_k} |f(y)|\; dy \leq \frac{\| f \|_1}{\alpha}. \qedhere \]
-\end{proof}
-
-Thus we find that if we consider the conditional expectation operators
-%
-\[ E_k f(x) = \sum_{I \in \mathcal{B}(k)} \left( \fint_I f \right) \chi_I \]
-%
-Then $E_k f(x) \to f(x)$ for almost all $x$, if $f \in L^1_{\text{loc}}(\mathbf{R}^d)$. Using this, we can obtain a very useful way to discretize $f$ on dyadic cubes, known as the Calderon-Zygmund decomposition.
-
-\begin{theorem}
-  Given an integrable, non-negative $f$, and $\lambda > 0$, there is a disjoint collection of dyadic cubes $I_1, \dots, I_N$ such that $\sum |I_k| \leq \lambda^{-1} \| f \|_1$, $f(x) \leq \lambda$ for almost every $x \not \in \bigcup I_k$, and for each $k$,
-  %
-  \[ \int_{I_k} f(x)\; dx = 0 \quad \text{and} \quad \lambda < \fint_{I_k} |f(x)| < 2^d \lambda \]
-\end{theorem}
-\begin{proof}
-  Let $M$ be the dyadic maximal operator. Write $E = \{ x: Mf(x) > \lambda \}$. Because $f$ is integrable, $E \neq \mathbf{R}^d$. Thus $E$ is the disjoint union of dyadic cubes $I_1, \dots, I_N$, and we can assume $N$ is minimal, so that if $I_k$ has sidelength $2^i$, then the unique sidelength $2^{i+1}$ dyadic cube $J_k$ containing $I_k$ is not a subset of $E$. By construction, we know that
-  %
-  \[ \lambda < \fint_{I_k} f(x) \]
-  %
-  But also
-  %
-  \[ |I_k| \fint_{I_k} f(x) \leq |J_k| \fint_{J_k} f(x) \leq (2^d |I_k|) \lambda \]
-  %
-  which gives the upper bound on the averages. If $x$ is not contained in any of the cubes $I_1, \dots, I_N$, then $(E_k f)(x) \leq \lambda$ for all $k$, and thus for almost every $x$ not in $I_1, \dots, I_N$, $f(x) \leq \lambda$. The weak bound for the maximal function gives that $\sum |I_k| \leq \lambda^{-1} \| f \|_1$, which completes the proof.
-\end{proof}
-
-A useful way to think about the Calderon Zygmund decomposition is a way to decompose integrable functions $f = f_0 + f_1$, where
-%
-\[ f_0(x) = \begin{cases} \fint_{I_k} f(x) & x \in I_k \\ f(x) & x \not \in I_k \end{cases} \]
-%
-Then $\| f_0 \|_\infty \leq 2^d \lambda$, which combined with the fact that is integrable, implies that $f_0$ is fairly analytically stable. It is the `good part' of $f$. On the other hand, $f_1$ is the `bad part' of $f$, but it is supported on a set with size $\lambda^{-1} \| f \|_1$, and it's average on each of the $I_k$ is equal to zero.
 
 
 
@@ -6601,6 +6480,165 @@ We now prove that $R$ is $(2n+2/n+3, 2)$ continuous, assuming that $M$ has non-z
 We shall verify this using Stein's interpolation theorem. Consider the family of kernels $k_s$, where $\smash{k_s = \widecheck{K_s}}$, and $K_s = \gamma_s |x_n - \varphi(x')|^{s-1}_+ \varphi_0(x)$, where $\gamma_s = s(s+1) \dots (s + N) e^{s^2}$
 
 
+
+
+
+
+
+\chapter{Bellman Function Methods}
+
+It is interesting to ask whether we can obtain bounds of the form
+%
+\[ \| M f \|_{L^p(\RR^d)} \lesssim_{d,p} \| f \|_{L^p(\RR^d)} \]
+%
+without employing any interpolation techniques. This is possible, though nontrivial. We begin with a Bellman function approach, which works best in the dyadic scheme, i.e. proving bounds on $M_\Delta$.
+
+The idea here is to perform an \emph{induction on scales}, i.e. to induct on the complexity of the function $f$. For a fixed $f \in L^p(\RR^d)$, our goal is to obtain bounds of the form
+%
+\[ \left( \int |M_\Delta f(x)|^p\; dx \right)^{1/p} \lesssim \left( \int |f(x)|^p \right)^{1/p} \]
+%
+where the implicit constant is independent of $p$.
+
+We begin by applying some monotone convergence arguments to simplify our analysis. For each $x \in \RR^d$, $|M_\Delta f(x)| = \lim_{m \to -\infty} |M_{\geq m} f(x)|$, where $M_{\geq m}$ is the operator giving a maximal average over all dyadic cubes containing a point with sidelength exceeding $2^m$, and the limit is monotone increasing. It follows that for any $f \in L^p(\RR^d)$,
+%
+\[ \| M_\Delta f \|_{L^p(\RR^d)} = \lim_{m \to -\infty} \| M_{\geq m} f \|_{L^p(\RR^d)}. \]
+%
+Thus if we can obtain a bound
+%
+\[ \| M_{\geq m} f \|_{L^p(\RR^d)} \lesssim \| f \|_{L^p(\RR^d)} \]
+%
+with a bound independant of $m$, we would obtain the required bound on $M_\Delta$. But if we could obtain a bound
+%
+\[ \| M_{\geq 0} f \|_{L^p(\RR^d)} \lesssim \| f \|_{L^p(\RR^d)} \]
+%
+for all $f \in L^p(\RR^d)$, then a rescaling argument, using the fact that
+%
+\[ M_{\geq m} f = \text{Dil}_{1/2^d} M_{\geq 0} \text{Dil}_{2^d} f \]
+%
+shows that we in fact have
+%
+\begin{align*}
+  \| M_{\geq m} f \|_{L^p(\RR^d)} &= 2^{d/p} \| M_{\geq 0} \text{Dil}_{2^d} f \|_{L^p(\RR^d)}\\
+  &\lesssim 2^{d/p} \| \text{Dil}_{2^d} f \|_{L^p(\RR^d)} = \| f \|_{L^p(\RR^d)}.
+\end{align*}
+%
+Thus we need only concentrate on the operator $M_{\geq 0}$. Finally, we note we can \emph{localize} our estimates. Given a function $f$ supported on a dyadic cube $Q$ with sidelength $2^n$, and given $x \not \in Q$, then there exists a smallest value $m_x > n$ such that $x$ is contained in a dyadic cube with sidelength $2^{m_x}$ which also contains $Q$. It then follows that
+%
+\[ (M_{\geq 0} f)(x) = \frac{\int_Q |f(y)|\; dy}{2^{dm_x}} = \frac{\| f \|_{L^1(Q)}}{2^{dm_x}} \]
+%
+For each $m > n$, if we set $E_m = \{ x \in \RR^d: m_x = m \}$, then $E_m$ is contained in a dyadic cube of sidelength $2^m$, so $|E_m| \leq 2^{dm}$. Thus we have
+%
+\begin{align*}
+  \| M_{\geq 0} f \|_{L^p(Q^c)} &= \left( \sum_{m = n+1}^\infty \| M_{\geq 0} f \|_{L^p(E_m)}^p \right)^{1/p}\\
+  &\leq \left( \sum_{m = n+1}^\infty \left( \| f \|_{L^1(Q)}^p / 2^{dpm} \right) 2^{dm} \right)^{1/p}\\
+  &\lesssim_{d,p} \| f \|_{L^1(Q)} 2^{dn(1/p - 1)} = \| f \|_{L^1(Q)} |Q|^{1/p-1} \leq \| f \|_{L^p(Q)}.
+\end{align*}
+%
+Thus, if we obtained the bound $\| M_{\geq 0} f \|_{L^p(Q)} \lesssim \| f \|_{L^p(Q)}$, then we would find
+%
+\begin{align*}
+  \| M_{\geq 0} f \|_{L^p(\RR^d)} &\leq \| M_{\geq 0} f \|_{L^p(Q)} + \| M_{\geq 0} f \|_{L^p(Q^c)} \lesssim \| f \|_{L^p(Q)}.
+\end{align*}
+%
+Thus if $f$ is supported on a dyadic cube $Q$, it suffices to estimate $M_{\geq 0} f$ on the support of $f$. But by a final monotone convergence argument, it suffices to bound such functions, since given any $n$ we can write $[-2^n,2^n]$ as the almost disjoint union of $2^d$ sidelength $2^d$ dyadic cubes $Q_{n,1},\dots,Q_{n,2^d}$. For any $f \in L^p(\RR^d)$, we consider a pointwise limit $f = \lim_{n \to \infty} f_{n,1} + \dots + f_{n,2^d}$, where $f_{n,i}$ is equal to $f$ restricted to $Q_{n,i}$, and the limit is monotone. We also have
+%
+\[ M_{\geq 0} f = \lim_{n \to \infty} M_{\geq 0} f_{n,1} + \dots + M_{\geq 0} f_{n,2^d}. \]
+%
+where the limit is pointwise and monotone, so
+%
+\begin{align*}
+  \| M_{\geq 0} f \|_{L^p(\RR^d)} &= \lim_{n \to \infty} \| M_{\geq 0} f_{n,1} + \dots + M_{\geq 0} f_{n,2^d} \|_{L^p(\RR^d)}\\
+  &\lesssim \lim_{n \to \infty} \| f_{n,1} \|_{L^p(\RR^d)} + \dots + \| f_{n,2^d} \|_{L^p(\RR^d)} \lesssim 2^d \| f \|_{L^p(\RR^d)}.
+\end{align*}
+%
+Thus, after a technical reduction argument, we now show that we only have to establish a bound
+%
+\[ \| M_{\geq 0} f \|_{L^p(Q)} \lesssim \| f \|_{L^p(Q)}, \]
+%
+where $f \in L^p(Q)$, $Q$ is a dyadic cube with sidelength $\geq 1$, and the implicit constant is independant of $Q$.
+
+To carry out the inequality, we perform an \emph{induction on scales}. For each $n \geq 0$, we let $C(n)$ denote the optimal constant such that for any function $f \in L^p(\RR^d)$ supported on a dyadic cube $Q$ of sidelength $2^n$,
+%
+\[ \| M_{\geq 0} f \|_{L^p(Q)} \leq C(n) \cdot \| f \|_{L^p(Q)}. \]
+%
+If $n = 0$, the problem is trivial, since if $Q$ is dyadic with sidelength $1$ and $x \in Q$, then
+%
+\[ M_{\geq 0} f = \fint_Q |f(y)|\; dy \]
+%
+so $\| M_{\geq 0} f \|_{L^p(Q)} = \| f \|_{L^1(Q)}$, and $C(0) = 1$. Our goal is to show that $\sup_{n \geq 0} C(n) < \infty$. Given $f$ supported on a cube $Q$ with sidelength $2^n$, the cube has $2^d$ children $Q_1,\dots,Q_{2^d}$ with sidelength $2^{n-1}$. If we decompose $f = f_1 + \dots + f_{2^d}$ onto these cubes, then by induction we know that
+%
+\[ \| M_{\geq 0} f_i \|_{L^p(Q_i)} \leq C(n-1) \| f_i \|_{L^p(Q_i)}. \]
+%
+Now for $x \in Q_i$,
+%
+\[ (M_{\geq 0} f)(x) = \max \left(M_{\geq 0} f_i(x), \fint_Q |f(y)|\; dy \right). \]
+%
+Thus if $A = \fint_Q |f(y)|\; dy$, then
+%
+\begin{align*}
+  \| M_{\geq 0} f \|_{L^p(Q)} &= \left( \| M_{\geq 0} f \|_{L^p(Q_1)}^p + \dots + \| M_{\geq 0} f \|_{L^p(Q_{2^d})}^p \right)^{1/p}\\
+  &= \left( \| \max(M_{\geq 0} f_1, A) \|_{L^p(Q_1)}^p + \dots + \| \max(M_{\geq 0} f_{2^d}, A) \|_{L^p(Q_{2^d})}^p \right)^{1/p}
+\end{align*}
+%
+The bound $\max(M_{\geq 0} f_i, A) \leq M_{\geq 0} f_i + A$ gives
+%
+\[ \| M_{\geq 0} f \|_{L^p(Q)} \leq C(n-1) \| f \|_{L^p(Q)} + 2^{d/p} |Q|^{1/p} A = (C(n-1) + 2^{d/p}) \| f \|_{L^p(Q)}. \]
+%
+This gives $C(n) \leq C(n-1) + 2^{d/p}$, which is not enough to obtain a uniform bound. The idea here is to include more information in our induction hypothesis which gives control on $\max(M_{\geq 0} f_i, A)$. Since $Q$ contains points not in $Q_i$, we need to treat $A$ as an arbitrary quantity in our hypothesis.
+
+To do this, we introduce \emph{cost functions}. For each $A,B,D > 0$ and any integer $n \geq 0$, we let $V_n(A,B,D)$ be the optimal constant such that
+%
+\[ \| \max(M_{\geq 0} f, A)^p \|_{L^p(Q)} \leq V_n(A,B,D) \]
+%
+For any function $f$ supported on a dyadic cube $Q$ with sidelength $2^n$, with
+%
+\[ \| f \|_{L^1(Q)} = B\quad\text{and}\quad \| f \|_{L^p(Q)} = D. \]
+%
+Our goal will be to show $V_n(A,B,D) \lesssim_p 2^{-dn/p} A + D$ which completes the proof. The role of $B$ is subtle, but will soon become apparan. Of course, we have $\| f \|_{L^1(Q)} \leq 2^{dn(1-1/p)} \| f \|_{L^p(Q)}$, so we have $V_n(A,B,D) = -\infty$ unless $B \leq 2^{dn(1 - 1/p)} D$.
+
+The recursive inequality gives an inequality for the values $V_n(A,B,D)$. TODO: COMPLETE THIS PROOF.
+
+\chapter{$TT^*$ Arguments}
+
+The method of $TT^*$ arguments enables us to obtain bounds on an operator $T$ by exploiting cancellation between an operator and it's adjoint. However, this approach only works when establishing $L^2$ estimates (or at least where one side of an inequality has a norm induced by an inner product). By monotocity, it suffices to consider maximal operators of the form $\max(A_{r_1} f, \dots, A_{r_N} f)$ (provided the implicit constants are independant of $N$),  and by linearization, it suffices to show that for any measurable function $r: \RR^d \to \{ r_1, \dots, r_N \}$,
+%
+\[ \left( \int |A_{r(x)} f(x)|^p\; dx \right)^{1/p} \lesssim \| f \|_{L^p(\RR^d)} \]
+%
+where the implicit constant is independant of the function $r$. Thus we consider the linearized operator $M_r: L^2(\RR^d) \to L^2(\RR^d)$ obtained by setting
+%
+\[ M_r f(y) = (A_{r(y)} f)(y). \]
+%
+We see easily that $M_r$ is a kernel operator with kernel
+%
+\[ K(x,y) = \frac{1}{|B_{r(y)}(y)|} \mathbf{I}(|x - y| \leq r(y)). \]
+%
+Thus
+%
+\[ M_r^* g(x) = \int_{\RR^d} \frac{\mathbf{I}(|x - y| \leq r(y))}{|B_{r(y)}(y)|} g(y)\; dy, \]
+%
+and so one can verify that
+%
+\begin{align*}
+  |(M_r M_r^* f)(y)| &= \left| \int_{\RR^d} \int_{\RR^d} \frac{\mathbf{I}(|z - x| \leq r(z)) \mathbf{I}(|y - x| \leq r(y))}{|B(z,r(z))| |B(y,r(y))|} f(z)\; dz\; dx \right|\\
+  &= \left| \int_{\RR^d} \int_{\RR^d} \frac{\mathbf{I}(|z - x| \leq r(z)) \mathbf{I}(|y - x| \leq r(y))}{|B(z,r(z))| |B(y,r(y))|} f(z)\; dx\; dz \right|.
+\end{align*}
+%
+For a fixed $z$, the integrand in $x$ vanishes unless $|z - y| \leq r(y) + r(z)$, and in this case we find
+%
+\[ \left| \int_{\RR^d} \frac{\mathbf{I}(|z - x| \leq r(z)) \mathbf{I}(|y - x| \leq r(y))}{|B(z,r(z))| |B(y,r(y))|} \right| \lesssim_d \frac{1}{\max(r(y)^d, r(z)^d)}. \]
+%
+Thus we can write
+%
+\begin{align*}
+  |(M_r M_r^* f)(y)| &\lesssim_d \int_{\RR^d} \left( \int_{\substack{|z - y| \leq r(y) + r(z)\\r(y) \leq r(z)}} \frac{|f(z)|}{r(z)^d} + \int_{\substack{|z - y| \leq r(y) + r(z)\\r(y) \geq r(z)}} \frac{|f(z)|}{r(y)^d}\; dx \right)\\
+  &\lesssim_d M_{2r}|f|(y) + M_{2r}^* |f|(y).
+\end{align*}
+%
+But we verify by rescaling that $\| M_{2r} \| = \| M_{2r}^* \| = \| M_r \|$, so
+%
+\[ \| M_r \|^2 = \| M_r M_r^* \| \lesssim_d \| M_r \|. \]
+%
+But this means that $\| M_r \| \lesssim_d 1$, which gives the bound that we required. Thus we find that the Hardy-Littlewood maximal function is bounded from $L^2(\RR^d)$ to $L^2(\RR^d)$.
 
 
 
