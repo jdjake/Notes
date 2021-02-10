@@ -41,7 +41,7 @@ so it suffices to show that
 %
 We will show this via a convolution inequality, which also proves local smoothing results for the wave equation.
 
-Let $\sigma_r$ be the surface measure on the radius $r$ sphere centered at the origin in $\RR^d$. Also fix a nonzero Schwartz function $\psi \in \mathcal{S}(\RR^d)$. Given $x \in \RR^d$ and $r \geq 1$, define $f_{x r} = \text{Trans}_x (\sigma_r * \psi)$. Our goal is to prove the following inequality.
+Let $\sigma_r$ be the surface measure on the radius $r$ sphere centered at the origin in $\RR^d$. Also fix a nonzero, radial Schwartz function $\psi \in \mathcal{S}(\RR^d)$. Given $x \in \RR^d$ and $r \geq 1$, define $f_{x r} = \text{Trans}_x (\sigma_r * \psi)$. Our goal is to prove the following inequality.
 
 \begin{lemma} \label{lemma1}
     For any $a : \RR^d \times [1,\infty) \to \CC$, and $1 \leq p < (2d - 2)/(d+1)$,
@@ -113,9 +113,9 @@ so this bound can only be true if $p \geq 1$, and becomes tight when $p = 1$, wh
 because there can be no constructive interference in the $L^1$ norm. Understanding the sum in Lemma \ref{lemma3} for $1 < p < (2d-2)/(d+1)$ will require an understanding of the interference patterns of annuli with comparable radius. We will use almost orthogonality principles to understand these interference patterns.
 
 \begin{lemma} \label{lemma4}
-    For any $N > 0$, $x_1,x_2 \in \RR^d$, and $r_1,r_2 > 1$,
+    For any $N > 0$, $x_1,x_2 \in \RR^d$ with $|x_1 - x_2| \geq 1$ or $x_1 = x_2$, and $r_1,r_2 > 1$,
     %
-    \[ |\langle f_{x_1r_1}, f_{x_2r_2} \rangle| \lesssim_N (r_1r_2)^{(d-1)/2} (1 + |x_1 - x_2|)^{-(d-1)/2} \sum_{\pm,\pm} (1 + |r_1 \pm r_2 \pm |x_1 - x_2|)^{-N}. \]
+    \[ |\langle f_{x_1r_1}, f_{x_2r_2} \rangle| \lesssim_N (r_1r_2)^{(d-1)/2} (1 + |r_1 - r_2| + |x_1 - x_2|)^{-(d-1)/2} \sum_{\pm,\pm} (1 + ||x_1 - x_2| \pm r_1 \pm r_2|)^{-N}. \]
 \end{lemma}
 
 \begin{remark}
@@ -131,7 +131,65 @@ because there can be no constructive interference in the $L^1$ norm. Understandi
 \end{remark}
 
 \begin{proof}
-    Bessel function calculation.
+%    We may assume $|x_1 - x_2| \geq 1$, for otherwise the inequality holds trivially since unless $|r_1 - r_2| \lesssim 1$, $f_{x_1r_1}$ and $f_{x_2r_2}$ have disjoint support, and if $|r_1 - r_2| \lesssim 1$ then Cauchy Schwartz implies that
+    %
+%    \begin{align*}
+%        |\langle f_{x_1r_1}, f_{x_2r_2} \rangle| &\lesssim (r_1 r_2)^{(d-1)/2}\\
+%        &\lesssim_{N,d} (r_1r_2)^{(d-1)/2} (1 + |r_1 - r_2| + |x_1 - x_2|)^{-(d-1)/2} \sum_{\pm,\pm} (1 + ||x_1 - x_2| \pm r_1 \pm r_2|)^{-N}
+%    \end{align*}
+%
+    We write
+    %
+    \begin{align*}
+        \langle f_{x_1 r_1}, f_{x_2 r_2} \rangle &= \left\langle \widehat{f}_{x_1 r_1}, \widehat{f}_{x_2 r_2} \right\rangle\\
+        &= \int_{\RR^d} \widehat{\sigma_{r_1} * \psi}(\xi) \cdot \overline{\widehat{\sigma_{r_2} * \psi}(\xi)} e^{2 \pi i (x_2 - x_1) \cdot \xi}\; d\xi\\
+        &= (r_1 r_2)^{d-1} \int_{\RR^d} \widehat{\sigma}(r_1 \xi) \overline{\widehat{\sigma}(r_2 \xi)} |\widehat{\psi}(\xi)|^2 e^{2 \pi i (x_2 - x_1) \cdot \xi}\; d\xi.
+    \end{align*}
+    %
+    We have $\widehat{\sigma}(\xi) = C_d |\xi|^{1-d/2} J_{d/2 - 1}(2 \pi |\xi|)$ for some constant $c_d$, where $J_{d/2 - 1}$ is the Bessel function of order $d/2 - 1$. If we write $a(|\xi|) = |\widehat{\psi}(\xi)|^2$ for each $\xi \in \RR^d$ (which is possible because $\psi$ is radial), then we find
+    %
+    \begin{align*}
+        \langle &f_{x_1 r_1}, f_{x_2 r_2} \rangle\\
+        &= C_d (r_1 r_2)^{d/2}\\
+        &\quad\quad \int_{\RR^d} |\xi|^{2 - d} J_{d/2 - 1}(2 \pi r_1 |\xi|) J_{d/2 - 1}(2 \pi r_2 |\xi|) |\widehat{\psi}(\xi)|^2 e^{2 \pi i (x_2 - x_1) \cdot \xi}\; d\xi\\
+        &= C_d (r_1 r_2)^{d/2} |x_2 - x_1|^{1 - d/2}\\
+        &\quad\quad \int_0^\infty s^{d/2 + 1} \cdot a(s) \cdot J_{d/2 - 1}(2 \pi r_1 s) \cdot J_{d/2 - 1}(2 \pi r_2 s) \cdot J_{d/2 - 1}(2 \pi s |x_2 - x_1|)\; ds.
+    \end{align*}
+    %
+    For any $N > 0$, we have an asymptotic expansion
+    %
+    \[ J_{d/2 - 1}(t) = t^{-1/2} \left( \sum_{n = 0}^{N-1} (a_{n,+} e^{it} + a_{n,-} e^{-it}) t^{-n} + O_N(t^{-N}) \right). \]
+    %
+    Thus we find
+    %
+    \begin{align*}
+        \int_0^\infty & s^{1 + d/2} \cdot a(s) \cdot J_{d/2 - 1}(2 \pi r_1 s) \cdot J_{d/2 - 1}(2 \pi r_2 s) \cdot J_{d/2 - 1}(2 \pi s |x_2 - x_1|)\; ds\\
+        &= \sum_{n_1,n_2,n_3 = 0}^{N-1} \sum_{\tau_1,\tau_2,\tau_3 \in \{ \pm 1 \}} c_{d,n,\tau} \cdot r_1^{-1/2-n_1} r_2^{-1/2-n_2} |x_2 - x_1|^{-1/2-n_3}\\
+        &\quad\quad\quad\int_0^\infty s^{(d-1)/2-n_1-n_2-n_3} \cdot a(s) \cdot e^{2 \pi i (\tau_1 r_1  + \tau_2 r_2  + \tau_3 |x_2 - x_1| ) s}\; ds \\
+        &\quad\quad\quad + O_{N,d} \left( (r_1 + r_2 + |x_2 - x_1|)^{-N} \int_0^\infty s^{(d-1)/2-N} \cdot a(s) \right).
+    \end{align*}
+    %
+    If we assume that $|a(s)| \lesssim s^{10N}$ for small $s > 0$, then
+    %
+    \begin{align*}
+        &\left| \int_0^\infty s^{(d-1)/2-n_1-n_2-n_3} \cdot a(s) \cdot e^{2 \pi i (\tau_1 r_1  + \tau_2 r_2  + \tau_3 (x_2 - x_1) ) s}\; ds \right|\\
+        &\quad\quad\quad\lesssim_N (1 + |\tau_1 r_1 + \tau_2 r_2 + \tau_3 (x_2 - x_1)|)^{-5N}.
+    \end{align*}
+    %
+    Thus for $r_1,r_2 > 1$,
+    %
+    \begin{align*}
+        \langle f_{x_1 r_1}, f_{x_2 r_2} \rangle &\lesssim_{N,d} (r_1 r_2)^{(d-1)/2} |x_2 - x_1|^{-(d-1)/2} \sum_{\pm,\pm} (1 + (|x_2 - x_1| \pm r_1 \pm r_2))^{-N}\\
+        &\quad + (r_1r_2)^{d/2} |x_2 - x_1|^{1 - d/2} (r_1 + r_2 + |x_2 - x_1|)^{-5N}\\
+        &\lesssim (r_1 r_2)^{(d-1)/2} |x_2 - x_1|^{-(d-1)/2} \sum_{\pm,\pm} (1 + (|x_2 - x_1| \pm r_1 \pm r_2))^{-N}.
+    \end{align*}
+    %
+    If $|r_2 - r_1| \gtrsim |x_2 - x_1|$, then $f_{x_1r_1}$ and $f_{x_2r_2}$ have disjoint support, which implies $\langle f_{x_1r_1}, f_{x_2r_2} \rangle = 0$. Thus we conclude that
+    %
+    \begin{align*}
+        \langle f_{x_1 r_1}, f_{x_2 r_2} \rangle &\lesssim_{N,d} (r_1 r_2)^{(d-1)/2} (1 + |r_2 - r_1| + |x_2 - x_1|)^{-(d-1)/2}\\
+        &\quad\quad \cdot \sum_{\pm,\pm} (1 + (|x_2 - x_1| \pm r_1 \pm r_2))^{-N}. \qedhere
+    \end{align*}
 \end{proof}
 
 Lemma \ref{lemma4} implies that
