@@ -874,6 +874,256 @@ The first principle is often the most difficult assumption to obtain; the latter
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\chapter{The Schr\"{o}dinger Equation}
+
+In this chapter, we study the \emph{Free Schr\"{o}dinger Equation}
+%
+\[ \partial_t u = (\hbar / 2m) i \Delta u = 0, \]
+%
+where $u: \RR \times \RR^d \to \mathbf{C}$ describes the wave function of a particule under no potential, where $\hslash > 0$ is \emph{Planck's constant}, and $m > 0$ is the mass of the particle. The Schr\"{o}dinger equation is an important example of a \emph{dispersive equation}, which preserve the `mass' of a function, but tend to distribute the solution evenly about physical space rather than to concentrate in a small region.
+
+If $u$ lies in $C^1(\RR,\mathcal{S}(\RR^d))$ and $u_0 = f$, then taking the spatial Fourier transform, solving the resultant ODE, and then taking the inverse Fourier transform gives the representation formula
+%
+\[ u_t(x) = (S_t f)(x) = \int e^{2 \pi i (\xi \cdot x - (\hslash \pi / m) |\xi|^2 t)} \widehat{f}(\xi)\; d\xi. \]
+%
+Unless one is studying the asymptotic behaviour of solutions to the equation as $\hslash \to 0$ or $m \to 0$, it is useful to normalize $\hslash \pi / m = 1$, so that the integral formula is simplest. In other words, it is notationally simplest to study the equation
+%
+\[ \partial_t u = (i/2\pi) \Delta u, \]
+%
+where
+%
+\[ (S_t f)(x) = \int e^{2 \pi i (\xi \cdot x - |\xi|^2 t)} \widehat{f}(\xi)\; d\xi. \]
+%
+This is the \emph{Schr\"{o}dinger evolution operator}.
+
+We immediate see from the formula defining $S_t$ that the operator is self adjoint, and we can extend the definition of $S_t$ to a widen range of functions distributionally (or by considering it in the general scheme of Fourier multipliers). Thus for each $s \geq 0$, $\| S_t f \|_{H^s(\RR^d)} = \| f \|_{H^s(\RR^d)}$. Another useful fact is the symmetry of the equation under \emph{parabolic rescaling}, i.e.
+%
+\[ S_t(\text{Dil}_\lambda f) = \text{Dil}_\lambda (S_{\lambda^2 t} f). \]
+%
+We also have translation invariance, i.e.
+%
+\[ S_t(\text{Trans}_{x_0} f) = \text{Trans}_{x_0} S_t f \]
+%
+and a \emph{modulation symmetry}
+%
+\[ S_t(\text{Mod}_{\xi_0} f)(x) = e^{-2 \pi i |\xi_0|^2 t} \text{Mod}_{\xi_0} \text{Trans}_{-2t \xi_0} (S_t f)(x). \]
+%
+Thus if we modulate the frequency of our initial conditions by $\xi_0$, then the group velocity of the solution to the Schr\"{o}dinger equation is affected by $-2\xi_0$, the modulation is preserved, and we also have an additional modulation in time with frequency $-|\xi_0|^2$. Finally, we note that we can also view $S_t$ as a convolution operator by the kernel
+%
+\[ K_t(x) = e^{- i \pi \text{sgn}(t) d/4} (2|t|)^{-d/2} e^{i \pi |x|^2/2t}, \]
+%
+the \emph{Schr\"{o}dinger kernel}. Thus $S_t f = K_t * f$. For simplicity, we write
+%
+\[ K_t(x) = c_d |t|^{-d/2} e^{i \pi |x|^2/2t}, \]
+%
+where we think of $c_d$ as a constant, whereas actually $c_d$ actually depends on $\text{sgn}(t)$.
+
+The fact that $K_t$ is a Gaussian means we can compute $S_t f$ exactly if $f$ is a Gaussian. More precisely, if $f(x) = \delta^{-d/2} e^{- \pi |x|^2/\delta}$, then
+%
+\begin{align*}
+    S_tf(x) &= c_d (\delta - 2ti)^{-d/2} e^{- \pi |x|^2 / (\delta - 2ti)}\\
+    &= c_d (\delta - 2ti)^{-d/2} e^{-\pi |x|^2 /(\delta + 4t^2 / \delta)} e^{- 2\pi i (|x|^2 / (\delta^2/t + 4t))}
+\end{align*}
+
+Let us analyze the \emph{dispersive nature} of the Schr\"{o}dinger equation further from some basic estimates. The fact that $|K_t(x)| = c_d |t|^{-d/2}$, together with Young's inequality, implies that
+%
+\[ \| S_t f \|_{L^\infty(\RR^d)} = \| K_t * f \|_{L^\infty(\RR^d)} \leq \| K_t \|_{L^\infty(\RR^d)} \| f \|_{L^1(\RR^d)} \lesssim_d |t|^{-d/2} \| f \|_{L^1(\RR^d)}. \]
+%
+Thus if $f$ is integrable, then for any $t \neq 0$, $S_t f$ is bounded, and as $|t| \to \infty$, the height of the function $S_t f$ decays. One can interpolate between this bound and the bound $\| S_t f \|_{L^2(\RR^d)} = \| f \|_{L^2(\RR^d)}$ that we have similar decay from $L^p(\RR^d)$ to $L^{\smash{p^*}}(\RR^d)$ for any $1 \leq p < 2$. Thus the `height' of the function, in a rough sense, decays as $|t| \to \infty$. This is the \emph{dispersive nature} of the Schr\"{o}dinger equation; we have some control over the `width' of a function, often $L^2$ bounds, but the height decays over time.
+
+Fourier extension theory gives up another manifestation of dispersion, in the form of \emph{Strichartz estimates}. The Tomas-Stein theorem immediately gives the following result.
+
+\begin{theorem}[Strichartz Estimate]
+    For any $f \in L^2(\RR^d)$, if $p = 2(d+2)/d$, then
+    %
+    \[ \left( \int_{-\infty}^\infty \int_{\RR^d} |(S_t f)(x)|^{p}\; dx\; dt \right)^{1/p} \lesssim \| f \|_{L^2(\RR^d)}. \]
+\end{theorem}
+
+Let us consider the dispersive nature of this theorem. If $f \in L^2(\RR^d)$, then $S_t f \in L^p(\RR^d)$ for \emph{almost all} $t$. Since $p > 2$, this means that the `height' of $S_t f$ is controlled to a greater qualitative extent for almost all $t$ than by the $L^2$ nature of $f$. moreover, the Strichartz estimate means that $\| S_t f \|_{L^p(\RR^d)}$ has some `decay' in a fuzzy, averaged sense. One way to exploit this decay more precisely is via the uncertainty principle. If $\| f \|_{L^2(\RR^d)} = 1$ and $\widehat{f}$ is concentrated in a neighbourhood of radius $O(R)$ of some $\xi \in \RR^d$ with $|\xi| = R$, then the same is true for $\widehat{S_t f}$ since $S_t f$ is a Fourier multiplier. The uncertainty principle implies that the majority of the mass of $S_t f$ cannot be concentrated on a region of radius smaller than $\Omega(1/R)$. Since $\| S_t f \|_{L^2(\RR^d)} = 1$, the solution has `height' at most $R^{d/2}$ on this concentrated region. But the Strichartz estimate shows that this can only happen on a set of times with `width' at most $O(1/R^2)$. Outside these times, we expect the solution to have height much less than $R^{d/2}$.
+
+It is only slightly more difficult to obtain \emph{mixed norm} Strichartz estimates for solutions to the \emph{non-homogeneous} Schr\"{o}dinger equation
+%
+\[ \partial_t u - (i/2\pi) \Delta u = v. \]
+%
+If $u_0 = f$, where $f \in \mathcal{S}(\RR^d)$, $u \in C^1(\RR,\mathcal{S}(\RR^d))$ and $v \in C(\RR, \mathcal{S}(\RR^d))$. Then we can use Duhamel's formula, which gives the representation formula
+%
+\[ u_t = S_t f + \int_0^t S_{t-s} v_s\; ds. \]
+%
+To obtain mixed norm bounds on $u$, it will be useful to define a pair of exponents $(p_1,p_2)$ to be \emph{Strichartz admissable} if $2/p_1 + d/p_2 = d/2$. A bound of the form
+%
+\[ \| u \|_{L^{p_1}_t L^{p_2}_x} \lesssim \| f \|_{L^2_x} + \| v \|_{L^{q_1'}_t L^{q_2'}_x} \]
+%
+can \emph{only} hold when $(p_1,p_2)$ and $(q_1,q_2)$ are Strichartz admissable pairs, as can be seen by parabolically rescaling solutions to the equation.
+
+
+\begin{theorem}
+  If $2 < p_1,q_1 < \infty$, and $(p_1,p_2)$ and $(q_1,q_2)$ are Strichartz admissable pairs, then
+  %
+  \[ \smash{\| u \|_{\smash{L^{p_1}_t L^{p_2}_x}} \lesssim \| f \|_{L^2(\RR^{d-1})} + \| v \|_{\smash{L^{q_1'}_t L^{q_2'}_x}}.} \]
+\end{theorem}
+
+\begin{proof}
+  It suffices by linearity to prove the theorem first when $f = 0$, then when $v = 0$. If $v = 0$, then it suffices to prove that $\| u \|_{\smash{L^{p_1}_t L^{p_2}_x}} \lesssim \| f \|_{\smash{L^2(\RR^{d-1})}}$. To prove this, we interpolate the dispersion bounds we obtained from the represention of $S_t$ to conclude that
+  %
+  \[ \| K_t * f \|_{\smash{L^p_x}} \lesssim |t|^{-(d/2)(1 - 1/p)} \| f \|_{\smash{L^{p'}_x}} \]
+  %
+  for $2 \leq p \leq \infty$. To prove the result, we rely on a $TT^*$ argument. We write $Sf(x,t) = S_tf(x)$. We calculate then that
+  %
+  \[ S^*g(x) = \int_{-\infty}^\infty (K_{-t} * g_t)(x)\; dt, \]
+  %
+  where $g_t(x) = g(t,x)$. Using the fact that $\{ K_t \}$ is a semigroup, we conclude that
+  %
+  \[ SS^*g(x,t) = (K_t * S^*g)(x) = \int (K_t * (K_{-s} * g_s))(x)\; ds = \int (K_{t-s} * g_s)(x)\; ds. \]
+  %
+  It suffices to prove that $\| SS^* g \|_{\smash{L^{p_1}_t L^{p_2}_x}} \lesssim \| g \|_{\smash{L^{p_1'}_t L^{p_2'}_x}}$.  Minkowski's inequality implies that
+  %
+  \begin{align*}
+    \| SS^* g \|_{L^{p_2}_x} &\leq \left( \int \left| \int (K_{t-s} * g_s)(x)\; ds \right|^{p_2}\; dx \right)^{1/p_2}\\
+    &\leq \int \int_{-\infty}^\infty \| K_{t-s} * g_s \|_{L^{p_2}_x}\; ds\\
+    &\lesssim \int_{-\infty}^\infty |t - s|^{-(d/2)(1 - 1/p_2)} \| g_s \|_{L^{p_2'}_x}\; ds.
+  \end{align*}
+  %
+  Applying the Hardy-Littlewood-Sobolev inequality, we conclude that
+  %
+  \[ \| SS^* g \|_{\smash{L^{p_1}_t L^{p_2}_x}} \lesssim \| g \|_{\smash{L^{p_1'}_t L^{p_2'}_x}}, \]
+  %
+  which completes the proof.
+
+  Now we consider the case $f = 0$. Then
+  %
+  \[ u_t = \int_0^t K_{t-s} v_s\; ds, \]
+  %
+  and our goal is to show that $\| u \|_{\smash{L^{p_1}_t L^{p_2}_x}} \lesssim \| v \|_{\smash{L^{q_1'}_t L^{q_2'}_x}}$. Minkowski's inequality implies that
+  %
+  \[ \| u(t) \|_{\smash{L^{p_2}_x}} \leq \int_{-\infty}^\infty \chi_{[0,t]}(s) \| K_{t-s} v_s \|_{\smash{L^{p_2}_x}}\; ds \leq \int_{-\infty}^\infty \| K_{t-s} v_s \|_{\smash{L^{p_2}_x}}\; ds. \]
+  %
+  Thus
+  %
+  \[ \| u(t) \|_{L^{p_1}_t L^{p_2}_x} \leq \int_{-\infty}^\infty \| K_{t-s} v_s \|_{L^{p_1}_t L^{p_2}_x}\; ds. \]
+  %
+  In the last paragraph we proved that
+  %
+  \[ \| K_{t-s} v_s \|_{L^{p_1}_t L^{p_2}_x} \lesssim \| v_s \|_{L^2_x}, \]
+  %
+  and so
+  %
+  \[ \| u \|_{L^{p_1}_t L^{p_2}_x} \lesssim \int_{-\infty}^\infty \| v_s \|_{L^2_x}\; ds = \| v \|_{L^1_t L^2_x}. \]
+  %
+  But now we can interpolate between the bound
+  %
+  \[ \| u \|_{L^{p_1}_t L^{p_2}_x} \lesssim \| v \|_{L^{p_1'}_t L^{p_2'}_x}, \]
+  %
+  which was essentially proved in the last paragraph, to complete the proof.
+\end{proof}
+
+\section{Nonlinear Schr\"{o}dinger}
+
+Let us use the Strichartz estimates we have developed to obtain estimates for the nonlinear Schr\"{o}dinger equation
+%
+\[ \partial_t u = (i/2\pi)(\Delta u + \lambda |u|^{4/d} u). \]
+%
+The parameter $\lambda$ gives a measure of the `strength' of the nonlinearity of the equation. A useful way to analyze the existence and uniqueness problem for this equation is to apply Duhamel's formula, viewing $(i/2\pi) \lambda |u|^{4/d} u$ as a forcing term and assuming regularity of $u$ to conclude that if $u_0 = f$ lies in $\mathcal{S}(\RR^d)$, then
+%
+\[ u_t = S_t f + (i\lambda/2\pi) \int_0^t S_{t-s}(|u_s|^{4/d} u_s)\; ds. \]
+%
+A \emph{weak} solution to the nonlinear Schr\"{o}dinger is a function satisfying this equation. More precisely, we work with weak solutions $u$ in the Banach space
+%
+\[ X = L^{p_0}(\RR, L^{2p_0}(\RR^d)) \cap L^\infty(\RR, L^2(\RR^d)), \]
+%
+where $p_0 = 1 + 4/d$. The reason for this exponent is that if $u \in X$, then $|u|^{4/d} u \in L^1(\RR,L^2(\RR^d))$, which means that $|u_s|^{4/d} u_s \in L^2(\RR^d)$ for almost every $s$. This means that $S_{t-s}(|u_s|^{4/d} u_s) \in L^2(\RR^d)$ for almost every $s$, and moreover
+%
+\begin{align*}
+    \left\| (i\lambda/2\pi) \int_0^t S_{t-s}(|u_s|^{4/d} u_s)\; ds \right\|_{L^\infty_t L^2_x} &\lesssim \left\| S_{t-s}(|u_s|^{4/d} u_s) \right\|_{L^1_t L^2_x}\\
+    &= \left\| |u|^{4/d} u \right\|_{L^1_t L^2_x}\\
+    &= \left\| u \right\|_{L^1_t L^{2p_0}_x}^{p_0}\\
+    &\leq \| u \|_{L^{p_0}_t L^{2p_0}_x}^{p_0} < \infty.
+\end{align*}
+%
+Similarily, we calculate that $\| S_t f \|_{L^\infty_t L^2_x} = \| f \|_{L^2(\RR^d)}$. Thus, if for $u \in X$ we set
+%
+\[ Au = S_t f + (i\lambda/2\pi) \int_0^t S_{t-s}(|u_s|^{4/d} u_s)\; ds, \]
+%
+then $Au \in L^{p_0}(\RR,L^{2p_0}(\RR^d))$. Since $X \subset L^{p_0}(\RR,L^{2p_0}(\RR^d))$, we can formally say $u$ is a weak solution to the nonlinear Schr\"{o}dinger equation if $Au = u$.
+
+\begin{lemma}
+    There exists $\varepsilon$ depending on $\lambda$ and $d$ such that if $\| f \|_{L^2(\RR^d)} \leq \varepsilon$, then there exists a unique element $u$ of $X$ which is a weak solution to the nonlinear Schr\"{o}dinger equation with initial condition $f$.
+\end{lemma}
+\begin{proof}
+  Let us for simplicity assume that $d = 2$, so $1 + 4/d = 3$. Given $\phi,\psi \in X$ solving the equation, we conclude that
+  %
+  \[ \phi_t - \psi_t = \lambda \int_0^t e^{2 \pi i \Delta (t - s)} \left( |\phi_s|^2 \phi_s - |\psi_s|^2 \psi_s \right)\; ds. \]
+  %
+  Fix an interval $I = [0,T]$. Our Strichartz estimates for the nonhomogeneous Schr\"{o}dinger equation implies that
+  %
+  \[ \| \phi - \psi \|_{L^3_t(I) L^6_x} \lesssim |\lambda| \| |\phi|^2 \phi - |\psi|^2 \psi\|_{L^1_t(I) L^2_x}. \]
+  %
+  Now
+  %
+  \[ |\phi|^2 \phi - |\psi|^2 \psi = \overline{\psi - \phi} \phi^2 + \overline{\psi} (\phi + \psi)(\phi - \psi). \]
+  %
+  Thus we have a pointwise bound
+  %
+  \[ ||\phi|^2 \phi - |\psi|^2 \psi| \lesssim |\psi - \phi| (|\psi|^2 + |\phi|^2) \]
+  %
+  H\"{o}lder's inequality thus implies that
+  %
+  \[ \| |\phi|^2 \phi - |\psi|^2 \psi\|_{L^1_t(I) L^2_x} \lesssim \| \psi - \phi \|_{L^3_t(I) L^6_x} \left( \| \psi \|_{L^3_t(I) L^6_x}^2 + \| \phi \|_{L^3_t(I) L^6_x}^2 \right). \]
+  %
+  Putting this together with the calculation at the beginning of the paragraph, we conclude that if $\psi \neq \phi$ on $I$, then
+  %
+  \[ 1 \lesssim |\lambda| \left( \| \psi \|_{L^3_t(I) L^6_x}^2 + \| \phi \|_{L^3_t(I) L^6_x}^2 \right). \]
+  %
+  As $T \to 0$, $\| \psi \|_{L^3_t(I) L^6_x}, \| \phi \|_{L^3_t(I) L^6_x} \to 0$. Thus if $T$ is suitably small, this equation is impossible, which implies that $\psi = \phi$ on $I$. Applying this technique repeatedly glives global uniqueness.
+
+  To prove existence, we apply a contraction argument. Consider the operator
+  %
+  \[ (A \psi)(x,t) = e^{2 \pi i \Delta t} f + \lambda \int_0^t e^{2 \pi i \Delta (t - s)} ( |\psi_s|^2 \psi_s )\; ds. \]
+  %
+  Then Strichartz estimates implies that there exists a constant $C > 0$ such that
+  %
+  \[ \| A \psi - A \phi \|_{L^3_t L^6_x} \leq C |\lambda| \| \psi - \phi \|_{L^3_t L^6_x}^3 \left( \| \psi \|_{L^3_t L^6_x}^2 + \| \phi \|_{L^3_t L^6_x}^2 \right). \]
+  %
+  Fix $R > 0$. Then if $\| \psi \|_{L^3_t L^6_x}, \| \phi \|_{L^3_t L^6_x} \leq R$, then
+  %
+  \[ |\lambda| \| \psi - \phi \|_{L^3_t L^6_x}^3 \left( \| \psi \|_{L^3_t L^6_x}^2 + \| \phi \|_{L^3_t L^6_x}^2 \right) \leq 8|\lambda| R^4 \| \psi - \phi \|_{L^3_t L^6_x}. \]
+  %
+  Thus if $C |\lambda| R^4 < 1$, we get a contraction map on $\overline{B_R}$, which implies there exists a unique element $\psi$ of $\overline{B_R}$ such that $A\psi = \psi$. But this means $\psi$ is a weak solution to the equation. TODO COMPLETE THIS ARGUMENT WHY IS IT ONLY $A\psi$ THAT NEEDS TO BE BOUNDED IN SERGEY'S NOTES?
+\end{proof}
+
+
+
+
+
+
+
+
 \begin{thebibliography}{9}
 
 \bibitem{evans}
