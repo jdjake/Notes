@@ -253,7 +253,7 @@ In general, we define a \emph{distribution} to be a continuous linear functional
     %
     \[ \Lambda(\phi) = \int_{-\infty}^\infty \frac{\phi(x)}{x}\; dx. \]
     %
-    Such functions are dense in $\mathcal{D}(\RR)$. We claim $\Lambda$ extends to a continuous functional on the entirety of $\mathcal{D}(\RR)$. To prove this, fix $\phi \in C_c^\infty[-N,N]$ vanishing on a neighbourhood $(-\varepsilon,\varepsilon)$ of the origin. Then
+    Such functions are \emph{not} dense in $\mathcal{D}(\RR)$. But we claim $\Lambda$ is bounded on it's domain, and thus extends to at least one continuous functional on the entirety of $\mathcal{D}(\RR)$. To prove this, fix $\phi \in C_c^\infty[-N,N]$ vanishing on a neighbourhood $(-\varepsilon,\varepsilon)$ of the origin. Then
     %
     \[ |\Lambda \phi| = \left| \int_{-\infty}^\infty \frac{\phi(x)}{x}\; dx \right| = \left| \int_{\varepsilon \leq |x| \leq N} \frac{\phi(x) - \phi(0)}{x}\; dx \right|. \]
     %
@@ -261,15 +261,33 @@ In general, we define a \emph{distribution} to be a continuous linear functional
     %
     \[ |\Lambda \phi| \leq N \| \phi \|_{C^1[-N,N]}. \]
     %
-    Since $N$ was arbitrary, it follows that $\Lambda$ is continuous in the topology induced by that of $\mathcal{D}(\RR)$, and thus extends uniquely to a distribution on the entirety of $\mathcal{D}(\RR)$. To be precise, we often denote the application of $\Lambda$ to $\mathcal{D}(\RR)$ as
+    Since $N$ was arbitrary, it follows that $\Lambda$ is continuous in the topology induced by that of $\mathcal{D}(\RR)$, and thus by the Hahn-Banach theorem, extends uniquely to at least one distribution on the entirety of $\mathcal{D}(\RR)$. One canonical choice of $\Lambda$ is the \emph{principal value distribution} $\text{p.v.}(1/x)$, defined such that
     %
-    \[ \text{p.v} \int_{-\infty}^\infty \frac{\phi(x)}{x}\; dx. \]
+    \[ \int_{-\infty}^\infty \text{p.v.}(1/x) \phi(x)\; dx = \lim_{\delta \to 0} \int_{|x| \geq \delta} \phi(x) / x\; dx. \]
     %
-    A simple approximation argument shows that for any $\phi \in \mathcal{D}(\RR)$,
+    We essentially showed that this functional was continuous above. Another choice is the distribution $\lim_{\varepsilon \to 0} 1/(x + i \varepsilon)$, defined such that
     %
-    \[ \Lambda \phi = \lim_{\varepsilon \to 0} \int_{|x| \geq \varepsilon} \frac{\phi(x)}{x}\; dx. \]
+    \[ \int_{-\infty}^\infty \lim_{\varepsilon \to 0} 1/(x + i \varepsilon) \cdot \phi(x)\; dx = \lim_{\varepsilon \to 0} \int_{-\infty}^\infty \phi(x) / (x + i \varepsilon)\; dx. \]
     %
-    The distribution can also be described as the distributional derivative of the locally integrable function $\log |x|$, since an integration by parts shows that for each $\phi \in \mathcal{D}(\RR^d)$,
+    If we pick $\delta = \varepsilon^{1/4}$, then we can show using the fact that $1/x$ and $1/(x + i \varepsilon)$ are not too different for large $x$ that
+    %
+    \begin{align*}
+        \left| \int_{|x| \geq \delta} \frac{\phi(x)}{x} - \int_{-\infty}^\infty \frac{\phi(x)}{x + i\varepsilon} \right| \leq \| \phi \|_1 \cdot \varepsilon^{1/2}.
+    \end{align*}
+    %
+    A contour integral shift shows that
+    %
+    \begin{align*}
+        \int_{-\delta}^\delta \frac{\phi(x)}{x + i\varepsilon} &= \int_{-\delta}^\delta \frac{\phi(0)}{x + i \varepsilon} + O(\delta)\\
+        &= i \pi f(0) + O(\varepsilon / \delta) + O(\delta)\\
+        &= i \pi f(0) + O(\varepsilon^{1/4}).
+    \end{align*}
+    %
+    Taking $\varepsilon \to 0$ (and thus $\delta \to 0$) shows that $\text{p.v}(1/x) = \lim_{\varepsilon \to 0} 1/(x + i \varepsilon) + i \pi \delta$, where $\delta$ is the Dirac delta distribution at the origin.
+
+    More generally, if $\Lambda_1$ and $\Lambda_2$ are two distributions which extend the functional $\Lambda$, then one can show that for any function $\phi$ vanishing away from the origin, $\Lambda_1(\phi) - \Lambda_2(\phi) = 0$. We will later define the \emph{support} of a distribution, and we have shown here that $\Lambda_1 - \Lambda_2$ is supported at $\{ 0 \}$. It follows from later theorems in this chapter than $\Lambda_1 - \Lambda_2$ will be a sum of Dirac delta functions at the origin, and the successive derivatives of the Dirac delta function.
+
+    The distribution $\text{p.v}(1/x)$ can also be described as the distributional derivative of the locally integrable function $\log |x|$, since an integration by parts shows that for each $\phi \in \mathcal{D}(\RR^d)$,
     %
     \begin{align*}
         \int (\log |x|)'\; \phi(x)\; dx &= - \int \log |x| \phi'(x)\; dx\\
@@ -278,7 +296,23 @@ In general, we define a \emph{distribution} to be a continuous linear functional
         &= \text{p.v.} \int \frac{\phi(x)}{x}\; dx.
     \end{align*}
     %
-    This distribution arises most prominantly in the theory of the Hilbert transform.
+    An important elementary application of these distributions arises in the theory of the Hilbert transform.
+\end{example}
+
+\begin{example}
+    One reason we could define a distribution agreeing with $1/x$ away from the origin is because there is a lot of cancellation at the origin from either side of the origin, since $1/x$ switches sign here. One has to rely on other tricks to make sense of a distribution extending $1/x^2$. Indeed, if we write
+    %
+    \[ \Lambda(\phi) = \int \frac{\phi(x)}{x^2} \]
+    %
+    for $\phi$ ranging over all functions vanishing in the neighborhood of the origin, then we can use the mean value theorem to obtain a bound $|\phi(x)| \leq x^2 \| \phi'' \|_\infty$, from which it follows that
+    %
+    \[ \Lambda(\phi) \lesssim \| \phi'' \|_\infty, \]
+    %
+    and so Hahn-Banach extends $\Lambda$ to a family of distributions. One approach is to use the \emph{finite part} (or \emph{Hadamard regularization}) of $1/x^2$, i.e. the distribution $\text{f.p}(1/x^2)$ such that
+    %
+    \[ \int \text{f.p}(1/x^2)\; \phi(x)\; dx = \lim_{\varepsilon \to 0} \left( \int_{|x| \geq \varepsilon} \phi(x)/x^2 \right) - \frac{2 \phi(0)}{\varepsilon}, \]
+    %
+    which gets around the result that the distribution might explode near the origin if $\phi(0) \neq 0$ ($\phi'(0)$ does not cause a problem because of cancellation on both sides of the integral).
 \end{example}
 
 \begin{example}
@@ -964,7 +998,7 @@ Now we get to the interesting part of the theory. We have defined a homeomorphic
   %
   \[ \text{p.v.} \int_{-\infty}^\infty \frac{\phi(x)}{x}\; dx \lesssim \| \phi \|_{C^1(\RR^d)} = \| \phi \|_{\mathcal{S}^{0,1}(\RR^d)} \]
   %
-  and so $\Lambda$ is tempered of order 1.
+  and so $\Lambda$ is tempered of order 1. The $\text{p.v.}$ is called the \emph{principal value} of $1/x$.
 \end{example}
 
 Using the same techniques as for distributions, the derivative $D^\alpha \Lambda$ of a tempered distribution $\Lambda$ is tempered, as is $\phi \Lambda$, whenever $\phi$ is a Schwartz function, or $f \Lambda$, where $f$ is a polynomial. Of course, we can multiply by polynomially increasing smooth functions as well.
@@ -1452,7 +1486,7 @@ Here $a$ is a \emph{symbol} lying in some class $\mathcal{S}^t(U \times \RR^p)$,
 %
 \[ |\nabla_x^n \nabla_\theta^m a(x,\theta)| \lesssim_{n,m} \langle \theta \rangle^{t - m}, \]
 %
-and $\phi \in C^\infty(U \times \RR^d)$ is homogeneous of degree one in $\theta$, such that $(\nabla_x \phi, \nabla_\theta \phi)$ is nonvanishing on the support of $a$.
+and $\phi \in C^\infty(U \times (\RR^d - \{ 0 \}))$ is homogeneous of degree one in $\theta$, such that $(\nabla_x \phi, \nabla_\theta \phi)$ is nonvanishing on the support of $a$.
 
 If $t < -d$, then $I_{a,\phi}$ can be interpreted as an absolutely convergent integral, and in this case $I_{a,\phi}$ is actually a locally integrable function. On the other hand, if $t \geq -d$, then $I_{a,\phi}$ will no longer act as a locally integrable function; for instance, our definition will show that the distribution
 %
@@ -2669,9 +2703,9 @@ Given a pseudodifferential operator $T$ of order one, we consider the \emph{half
 %
 Studying this equation is useful to understanding the operator $T$. In particular, it helps us understand the Fourier transform of $T$, i.e. the family of operators $e^{-2 \pi i t T}$, since this family of operators forms a fundamental solution to the half-wave equation. We will focus on the case where $T$ has order one, is self-adjoint, formally positive, in the sense that for any $f \in C_c^\infty(\RR)$, $(Tf,f) > 0$, and is defined on a compact manifold $M$.
 
-To understand this operator, our goal is to construct a parametrix for the family of operators $e^{-2 \pi i t T}$. Clearly $e^{2 \pi i t T}$ is an inverse operator, but we wish to find an integral formula for this operator. Let $a(x,\xi)$ be the principal symbol for $T$. We shall find that, for $|t| \ll 1$, we can find a parametrix $S(t)$ for $e^{-2 \pi i t T}$ given by a Fourier integral, i.e. such that for $f \in C_c^\infty(\RR^d)$,
+To understand this operator, our goal is to construct an approximate integral formula for the family of operators $e^{-2 \pi i t T}$. That is, we wish to find an operator $S(t)$ such that $S(t) \approx e^{-2 \pi i t T}$. Let $a_1(x,\xi)$ be the principal symbol for $T$. We shall find that, for $|t| \ll 1$, we can find a parametrix $S(t)$ for $e^{-2 \pi i t T}$ given by a Fourier integral, i.e. such that for $f \in C_c^\infty(\RR^d)$,
 %
-\[ S(t) f(x) = \int s(t,x,y,\xi) e^{2 \pi i[\phi(x,y,\xi) + ta(y,\xi)]} f(y)\; dy\; d\xi, \]
+\[ S(t) f(x) = \int s(t,x,y,\xi) e^{2 \pi i[\phi(x,y,\xi) - ta_1(y,\xi)]} f(y)\; dy\; d\xi, \]
 %
 where $s$ is a symbol of order zero, $\phi$ is a symbol of order one, $\phi(x,y,\xi) \approx (x - y) \cdot \xi$ in the sense that for any $\beta$,
 %
@@ -2680,6 +2714,46 @@ where $s$ is a symbol of order zero, $\phi$ is a symbol of order one, $\phi(x,y,
 and $s$ has small enough support near the diagonal so that $\nabla_\xi \phi(x,y,\xi) \gtrsim |x - y|$ for $x$ and $y$ in the support of $s$.
 
 Our first tool for studying this operator is to show that for $t = 0$, we actually get a \emph{pseudodifferential operator}. Provided we can compute what this operator looks like in terms of the symbols involved in our expression, this will give constraints that will enable us to determine what $s$ and $\phi$ should look like.
+
+First, let us understand what conditions ensure that
+%
+\[ (\partial / \partial t + 2 \pi i T) \circ S(t) \]
+%
+is a smoothing operator. In local coordinates, if $T$ has symbol $a(x,\xi)$, then
+%
+\begin{align*}
+    K(t,x,y) &= \int \frac{d}{dt} \left\{ s(t,x,y,\xi) e^{2 \pi i (\phi(x,y,\xi) + t a_1(x,\xi))} \right\}\; d\xi\\
+    &\quad + 2 \pi i \int \int a(x,\xi) s(t,z,y,\eta) e^{2 \pi i ( \xi \cdot (x - z) + \phi(z,y,\eta) + t a_1(z,\eta))}\; dz\; d\xi\; d\eta.
+\end{align*}
+%
+If $\Phi(t,z,y,\eta) = \phi(z,y,\eta) - t a_1(y,\eta)$, then we can write the set term in the definition of the kernel as
+%
+\[ K(t,x,y) = \int (\partial / \partial t + 2 \pi i T) \{ s(t,\cdot,y,\eta) e^{2 \pi i \Phi(t,\cdot, y, \eta)} \}(x)\; d\eta. \]
+%
+At the beginning of our notes on pseudodifferential operators, we were able to build up asymptotics for applications of pseudodifferential operators to oscillating quantities. In fact, these asymptotics imply that
+%
+\begin{align*}
+    e^{-2 \pi i \Phi(t,x,y,\eta)} (2 \pi i T) & \{ s(t,\cdot,y,\eta) e^{2 \pi i \Phi(t,\cdot, y, \eta)} \}(x)\\
+    &= 2 \pi i a_1(x, \nabla_x \Phi(t,x,y,\eta)) \cdot s(t,x,y,\eta)\\
+    &= 2 \pi i a_1(x, \nabla_x \phi(x,y,\eta)) \cdot s(t,x,y,\eta),
+\end{align*}
+%
+modulo symbols of order $-1$ in $\eta$. Thus we can write the kernel of $(\partial / \partial t + 2 \pi i T) S(t)$ as
+%
+\[ (x,y) \mapsto 2 \pi i \int e^{2 \pi i \Phi(t,x,y,\eta)} \Bigg\{ \Big( a_1(y,\eta) - a_1(x, \nabla_x \phi(t,x,y,\eta) \Big) s(t,x,y,\eta) + R \Bigg\} \; d\eta, \]
+%
+where $R$ is a symbol of order $0$. In order for this to be smoothing, it is thus natural to apriori assume that $a_1(y,\eta) = a_1(x,\nabla_x \phi(x,y,\eta))$ for all triples $(x,y,\eta)$. The theory of Hamilton-Jacobi equations shows that there exists a \emph{unique} $\phi(x,y,\eta)$ with this property such that $\phi(x,y,\eta) = 0$ when $|x - y| \lesssim 1$ and $(x - y) \cdot \eta = 0$, and $\nabla_x \phi(x,y,\eta) = \eta$ when $x = y$. This implies that for $|x - y| \lesssim 1$,
+%
+\[ \phi(x,y,\eta) = (x - y) \cdot \eta + O( |x - y|^2 |\eta| ) \]
+%
+Thus we have specified our phase function $\phi$ completely. There is a small inconvenience that $\phi$ might not be differentiable at the origin. However, this does not cause us a problem, since we can replace $\phi$ with a phase supported away from the origin by applying a smooth cutoff; this is no problem, because an operator with kernel
+%
+\[ \int \rho(\eta) e{2 \pi i \Phi(t,x,y,\eta)} s(t,x,y,\eta)\; d\eta, \]
+%
+where $\rho$ is a smooth cutoff.
+
+
+The next Lemma will allow us to obtain a specification of the amplitude defining the operator.
 
 \begin{lemma}
     Consider an operator of the form
@@ -2722,10 +2796,40 @@ Since $I$ is a $\Psi DO$ of order zero, we can find a symbol $a$ of order zero s
 %
 then $T - I$ is a smoothing operator. To ensure that $S(0) - I$ is a smoothing operator, it is natural to insist that $s(0,x,y,\xi) = a(x,y,\xi)$. We note in particular that since $I$ is a $\Psi DO$ with $1$ as a symbol, this implies $s(0,x,x,\xi) - 1$ is a symbol of order $-1$.
 
-Next, we must understand what conditions ensure that
+Next, we note that, if $b(t,x,y,\eta)$ is a symbol of order $k$, then modulo symbols of order $k-1$, we have
 %
-\[ (\partial / \partial t + 2 \pi i T) \circ S(t) \]
+\begin{align*}
+    e^{-2 \pi i \Phi(t,x,y,\eta)} (2 \pi i T) & \{ s(t,\cdot,y,\eta) e^{2 \pi i \Phi(t,\cdot, y, \eta)} \}(x)\\
+    &= 2 \pi i \cdot a(x, \nabla_x \phi(x,y,\eta)) \cdot b(t,x,y,\eta)\\
+    &\quad + \nabla_\eta a(x, \nabla_x \Phi(t,x,y,\eta)) \cdot \nabla_x b(t,x,y,\eta),
+\end{align*}
 %
-is a smoothing operator. The kernel of this operator is
+modulo symbols of order $k-1$. Thus if $U(t)$ is the operator with kernel
 %
-\[ K(t,x,y) = \int  \]
+\[ \int b(t,x,y,\xi) e^{2 \pi i \Phi(t,x,y,\xi)}\; d\xi, \]
+%
+then modulo symbols of order $k-1$ in the integrand, we have
+%
+\begin{align*}
+    (\partial / \partial t + 2 \pi i T) \circ U(t)\\
+    = \int e^{2 \pi i \Phi(t,x,y,\eta)} & \Bigg\{ \frac{\partial b}{\partial t}(t,x,y,\eta) + 2 \pi i a_0(y,\eta) b(t,x,y,\eta)\\
+    &\quad + \nabla_\xi a(x, \nabla_x \Phi(t,x,y,\eta)) \cdot \nabla_x b(t,x,y,\eta) \Bigg\}
+\end{align*}
+
+\newpage
+%
+\begin{align*}
+    e^{-2 \pi i \Phi(t,x,y,\eta)} (2 \pi i T) & \{ b(t,\cdot,y,\eta) e^{2 \pi i \Phi(t,\cdot, y, \eta)} \}(x)\\
+    &= a(x, \nabla_x \Phi(t,x,y,\eta)) b(t,x,y,\eta)\\
+    &\quad + \frac{1}{2 \pi i} \sum_{j = 1}^d D^j_\xi a(x, \nabla_x \Phi(t,x,y,\eta)) D^j_x b(t,x,y,\eta)
+\end{align*}
+
+
+\begin{align*}
+    e^{-2 \pi i \Phi(t,x,y,\eta)} (2 \pi i T) & \{ b(t,\cdot,y,\eta) e^{2 \pi i \Phi(t,\cdot, y, \eta)} \}(x)\\
+    &= \sum_{|\beta| < 2} \frac{1}{\beta! (2 \pi i)^{|\beta|}} D^\beta_\xi a(x, \nabla_x \Phi(t,x,y,\eta)) D^\beta_x b(t,x,y,\eta)\\
+    &\quad - (i/\pi) \sum_{|\beta| = 2} D^\beta_\xi a(x,\nabla_x \Phi(t,x,y,\eta)) D^\beta_y \rho(Z) b(t,x,y,\eta)\\
+    &\quad + R(t,x,y,\eta),
+\end{align*}
+%
+where $R$ is a symbol of order $k-2$.
