@@ -1,4 +1,4 @@
-\documentclass[usenames,dvipsnames,12pt]{beamer}
+\documentclass[handout,usenames,dvipsnames,12pt]{beamer}
 
 \usepackage{tikz}
 \usepackage{tkz-berge}
@@ -64,12 +64,29 @@
 
 
 \title{Algorithmic Aspects of the Brascamp Lieb Inequality}
-\author{Jacob Denson (Based on Gurvits, 2004)}
+\author{Jacob Denson}
+
 \institute{University of Wisconsin Madison}
 
 \begin{document}
 
 \maketitle
+
+\begin{frame}
+
+\begin{itemize}
+    \item \emph{Classical Complexity and Quantum Entanglement}
+
+    Gurvits, 2004.
+    \item \emph{Algorithmic and Optimization Aspects of Brascamp-Lieb Inequalities, Via Operator Scaling}
+
+    Garg, Gurvits, Oliveira, Wigderson, 2016.
+    \item \emph{A Deterministic Polynomial Time Algorithm For Non-Commutative Rational Identity Testing}
+
+    Garg, Gurvits, Oliveira, Wigderson, 2016.
+\end{itemize}
+
+\end{frame}
 
 \begin{frame}
     \frametitle{Lieb's Theorem}
@@ -86,12 +103,12 @@
         \pause
 %        \vspace{-1em}
 %        \small
-        \[ \int_{\RR^n} \prod_{i = 1}^m |f_i(B_i x)|^{p_i}\; dx = (\sum p_i B_i^* A_i B_i)^{-1/2} \]
+        \[ \int_{\RR^n} \prod_{i = 1}^m |f_i(B_i x)|^{p_i}\; dx = \det(\sum p_i B_i^* A_i B_i)^{-1/2} \]
 %        \normalsize
         \pause
 %        \vspace{-0.8em}
 %        \small
-        \[ \prod_{i = 1}^m \| f_i \|_{L^1(\RR^{n_i})}^{p_i} = (\prod_{i = 1}^m \det(A_i)^{p_i})^{-1/2}. \]
+        \[ \prod_{i = 1}^m \| f_i \|_{L^1(\RR^{n_i})}^{p_i} = \det(\prod_{i = 1}^m \det(A_i)^{p_i})^{-1/2}. \]
 %        \normalsize
 
         Thus
@@ -102,7 +119,7 @@
 \end{frame}
 
 \begin{frame}
-    \frametitle{Lieb's Theore}
+    \frametitle{Lieb's Theorem}
 
     \begin{itemize}
         \item Rearranging gives
@@ -113,16 +130,20 @@
         \item Non convex objective, so tricky to optimize (NP hard).
 
         \pause
-        \item Checking Finiteness is also non-obvious.
+        \item Checking Finiteness efficiently also non-obvious.
 
-        \pause
-        \item BCCT gives a family of conditions
-        %
-        \[ \dim(V) \leq \sum p_i \dim(B_i V). \]
-        %
-        Since $0 \leq \dim(V) \leq n$ and $0 \leq \dim(B_i V) \leq n_i$, only finitely many linear conditions on the 
-        \pause
-        \item But there can be exponentially many, so still tricky to compute
+        \begin{itemize}
+            \pause
+            \item BCCT gives a family of conditions to check finiteness.
+            %
+            \[ \dim(V) \leq \sum p_i \dim(B_i V). \]
+            
+            \pause
+            Since $0 \leq \dim(V) \leq n$ and $0 \leq \dim(B_i V) \leq n_i$, only finitely many linear conditions on the exponents $p_i$.
+    
+            \pause
+            \item Can be exponentially many constraints, so inefficient.
+        \end{itemize}
     \end{itemize}
 \end{frame}
 
@@ -134,16 +155,15 @@
 
     \begin{itemize}
         \pause
-        \item A Brascamp-Lieb inequality is \emph{geometric} if each $B_i$ is a projection ($B_i B_i^* = I$), and $\sum_i p_i B_i^* B_i = I$.
+        \item A Brascamp-Lieb inequality is \emph{geometric} if
+        \begin{itemize}
+            \item (Projection Property): $B_i B_i^* = I$.
+
+            \item (Isotropy Property): $\sum_i p_i B_i^* B_i = I$.
+        \end{itemize}
 
         \pause
-        \item H\"{o}lder's inequality and Loomis-Whitney are special cases.
-
-        \pause
-        \item Plugging in $f_i(x) = e^{-\pi |x|^2}$ gives $\text{BL}(B,p) \geq 1$.
-
-        \pause
-        \item (Barthe, 1998), generalizing (Ball, 1989), showed that these functions are extremizers, i.e. $\text{BL}(B,p) = 1$.
+        \item (Barthe, 1998), generalizing (Ball, 1989), showed that if $(B,p)$ is geometric, $\text{BL}(B,p) = 1$.
     \end{itemize}
 \end{frame}
 
@@ -151,7 +171,7 @@
     \frametitle{Operator Rescaling}
 
     \begin{itemize}
-        \item What happens to $\text{BL}(B,p)$ if we `rescale / change coordinates'.
+        \item What happens to $\text{BL}(B,p)$ if we `change coordinates'.
 
         \pause
         \item Fix invertible matrices $M$ and $M_1, \dots, M_m$, and consider the Brascamp-Lieb inequality with matrices $B_i' = M_i B_i M$,
@@ -159,11 +179,10 @@
         \[ \int_{\RR^n} \prod_{i = 1}^m |f_i(M_i B_i M x)|^{p_i}\; dx \leq \text{BL}(B',p) \cdot \prod_{i = 1}^m \| f_i \|_{L^1(\RR^{n_i})}^{p_i}. \]
         %
         \pause
-        \item Then
         %
         \begin{align*}
             \text{BL}(B',p) &= \sup_{A_1,\dots,A_m \succ 0} \frac{\prod_i \det(A_i)^{p_i}}{\det(\sum_i p_i M^* B_i^* M_i^* A_i M_i B_i M)}\\
-            &= \sup_{A_1,\dots,A_m \succ 0} \frac{\prod_i \det((M_i^{-1})^* A_i M_i^{-1})^{p_i}}{\det(M^* (\sum_i p_i B_i^* A_i B_i) M)}\\
+%            &= \sup_{A_1,\dots,A_m \succ 0} \frac{\prod_i \det((M_i^{-1})^* A_i M_i^{-1})^{p_i}}{\det(M^* (\sum_i p_i B_i^* A_i B_i) M)}\\
             &= \det(M)^{-2} \prod_i \det(M_i)^{-2p_i} \cdot \text{BL}(B,p). 
         \end{align*}
     \end{itemize}
@@ -181,17 +200,58 @@
         \[ \text{BL}(B,p) = \det(M)^2 \prod\nolimits_i \det(M_i)^{2p_i}. \]
 
         \pause
-        \item (Bennett, Carbery, Christ, Tao, 2008) Geometric rescaling possible iff the Brascamp-Lieb equation has extremizers.
+        \item (BCCT) Geometric rescaling possible iff extremizers exist.
+    \end{itemize}
+\end{frame}
 
-        \pause
+\begin{frame}
+    \frametitle{Main Result}
+
+    \begin{itemize}
         \item (Garg, Gurvits, Oliveira, Wigderson, 2018) If $\text{BL}(B,p) < \infty$, we can rescale to be {\emph within a $\varepsilon$} of a geometric Brascamp-Lieb equation.
         \begin{itemize}
             \pause
-            \item We can do this algorithmically, i.e. a computer can compute a $\varepsilon$-approximate geometric rescaling in $\text{Poly}(\text{Bits}(B),\log(p),1/\varepsilon)$ computations. 
+            \item We can do this algorithmically, i.e. if $p_i$ are rationals, with common denominator $d$, a computer can compute a $\varepsilon$-approximate geometric rescaling in $\text{Poly}(\text{Bits}(B,p),d,1/\varepsilon)$ computations. 
 
             \pause
             \item
-            Conversely, we can determine if $\text{BL}(B,p) = \infty$ in $\text{Poly}(\text{Bits}(B),\log(p))$ computations.
+            Conversely, we can determine if $\text{BL}(B,p) = \infty$, and find a violating subspace $V$ to the condition $\dim(V) \leq \sum p_i \dim(B_i V)$, in $\text{Poly}(\text{Bits}(B,p),d)$ computations.
+
+            \pause
+            \item Open Problem: Can we can improve this to $\text{Poly}(\text{Bits}(B,p),d,\log(1/\varepsilon))$ computations?
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Analytic Consequences}
+
+    \begin{itemize}
+        \item Typing a single digit is a single unit of computation.
+
+        \pause
+        \begin{itemize}
+            \item Thus given $(B,p)$, either $\text{BL}(B,p) < \infty$, or
+            %
+           \[ \hspace{-3em} 2^{-\text{Poly}(\text{Bits}(B,p),d,\log(1/\varepsilon))} \leq \text{BL}(B,p)) \leq 2^{\text{Poly}(\text{Bits}(B,p),d,\log(1/\varepsilon))}. \]
+        \end{itemize}
+
+        \pause
+        \item Calculation is also stable.
+
+        \pause
+        \begin{itemize}
+            \item Thus we conclude a \emph{continuity bound}:
+            \pause
+
+            \item For each BL input $(B,p)$ with $\text{BL}(B,p) < \infty$, and each $\varepsilon > 0$, \pause if
+            %
+            \[ \| B_1 - B \| \leq \exp \left( - \frac{\text{Poly}(\text{Bits}(B,p), d)}{\varepsilon^3} \right), \]
+            %
+            \pause
+            then
+            %
+            \[ (1 - \varepsilon) \text{BL}(B,p) \leq \text{BL}(B_1,p) \leq (1 + \varepsilon) \text{BL}(B,p). \]
         \end{itemize}
     \end{itemize}
 \end{frame}
@@ -215,65 +275,75 @@
     \frametitle{Computing Permanents (An Analogous Problem)}
 
     \begin{itemize}
+        \pause
         \item Given an $n \times n$ matrix $A$ with non-negative entries, define
         %
         \[ \text{Perm}(A) = \sum\nolimits_{\sigma \in S_n} \prod\nolimits_i A_{i \sigma(i)}. \]
         
         \pause
-        \item This is (maybe suprisingly) NP hard to compute.
+        \item This is (surprisingly) NP hard to compute.
 
         \begin{itemize}
             \pause
-            \item If $R = \text{diag}(\lambda_1, \dots, \lambda_n)$ and $C = \text{diag}(\gamma_1,\dots,\gamma_n)$, then
+            \item If
+            %
+            \footnotesize
+            \[ R = \begin{pmatrix} \lambda_1 & 0 & 0 \\ 0 & \ddots & 0 \\ 0 & 0 & \lambda_n \end{pmatrix} \quad\text{and}\quad C = \begin{pmatrix} \gamma_1 & 0 & 0 \\ 0 & \ddots & 0 \\ 0 & 0 & \gamma_n \end{pmatrix}, \]
+            \normalsize
+            %
+            then
             %
             \begin{align*}
-                \text{Perm}(R A C) &= (\lambda_1 \dots \lambda_n)(\gamma_1 \dots \gamma_n) \text{Perm}(A)\\
-                &= \det(R) \cdot \det(C) \cdot \text{Perm}(A).
+                \text{Perm}(RAC) &= \text{Perm}(\lambda_i A_{ij} \gamma_j)\\
+                &= (\lambda_1 \dots \lambda_n) (\gamma_1 \dots \gamma_n) \text{Perm}(A)\\
+                &= \det(R) \det(C) \text{Perm}(A).
             \end{align*}
-
-            \pause
-            \item (Egorychev, 1981), (Falikman, 1981) If $A$ is \emph{doubly stochastic}, $e^{-n} \leq \text{Perm}(A) \leq 1$.
-
-            \pause
-            \item If $RAC$ is doubly stochastic, then
-            %
-            \[ \text{Perm}(A) \leq \det(R)^{-1} \det(C)^{-1} \leq e^n \cdot \text{Perm}(A), \]
-            %
-            so $\text{Perm}(A) \approx \det(R)^{-1} \det(C)^{-1}$.
         \end{itemize}
+    \end{itemize}
+\end{frame}
+
+
+
+
+
+
+\begin{frame}
+    \frametitle{Computing Permanents (An Analogous Problem)}
+
+    \[ \text{Perm}(RAC) = \det(R) \det(C) \text{Perm}(A). \]
+
+    \begin{itemize}
+        \pause
+        \item (Egorychev, 1981), (Falikman, 1981) If $A$ is \emph{doubly stochastic}, $e^{-n} \leq \text{Perm}(A) \leq 1$.
+
+        \pause
+        \item If $RAC$ is doubly stochastic, then
+        %
+        \[ \text{Perm}(A) \leq \det(R)^{-1} \det(C)^{-1} \leq e^n \cdot \text{Perm}(A), \]
+        %
+        so $\text{Perm}(A) \approx \det(R)^{-1} \det(C)^{-1}$.
     \end{itemize}
 \end{frame}
 
 \begin{frame}
     \begin{itemize}
-        \item We continue this iteration, obtaining a sequence
+        \item Given a non-negative matrix $A_0$, alternatively apply row and column summation, obtaining a sequence
         %
-        \[ A \to A_1 \to A_2 \to \dots. \]
+        \[ A_0 \to A_1 \to A_2 \to \dots. \]
 
         \pause
-        \item Claim: If $\text{Per}(A) > 0$, these matrices become arbitrarily close to being doubly stochastic as $i \to \infty$.
+        \item Claim: If $\text{Per}(A_0) > 0$, $d(A_i, \mathbf{S}) \to 0$, where $\mathbf{S}$ is the family of stochastic matrices.
 
         \pause
-        \item Let $\gamma_i = (\gamma_{i1}, \dots, \gamma_{in})$, be the row / column sums of $A_i$.
+        \item For even (odd) $i$, let $\gamma_{ij}$ be the $j$th row (column) sum of $A_i$, so that $\text{Per}(A_{i+1}) = (\gamma_{i1} \dots \gamma_{in})^{-1} \cdot \text{Per}(A_i)$.
 
+        \pause
+        \item {\bf Two Key Facts Ensuring Convergence}:
         \begin{itemize}
             \pause
-            \item i.e. so that $A_1 = \text{diag}(1/\gamma_0) A$, $A_2 = A_1 \text{diag}(1/\gamma_1)$, etc.
-        \end{itemize}
-
-        \pause
-        \item {\bf Two key facts}:
-        \begin{itemize}
+            \item[(1)] $\text{Per}(A) \leq 1$ if $A$ is partially normalized.
             \pause
-            \item[(1)] $\text{Per}(A_i) \leq 1$ for all $i \geq 1$.
-            \pause
-            \item[(2)] Let $\Delta_i = \sum_j (\gamma_{ij} - 1)^2$.
-            \begin{itemize}
-                \pause
-                \item If $\Delta_i \leq 1$, then $\text{Per}(A_{i+1}) \geq (1 + C \Delta_i) \cdot \text{Per}(A_i)$.
-
-                \item If $\Delta_i \geq 1$, then $\text{Per}(A_{i+1}) \geq (1 + C) \text{Per}(A_i)$.
-            \end{itemize}
+            \item[(2)] If $\Delta_i = \sum_j (\gamma_{ij} - 1)^2$, $\text{Per}(A_{i+1}) \geq (1 + C \Delta_i) \cdot \text{Per}(A_i)$.
         \end{itemize}
 
         \pause
@@ -284,7 +354,7 @@
         %
         \[ P \geq \text{Per}(A_{i+1}) \geq (1 + C \cdot \Delta_i) \cdot \text{Per}(A_i) \geq (1 + C \cdot \Delta_i)(P - \varepsilon). \]
         % C (\varepsilon / P) \geq C_2 \delta_i
-        Thus $\Delta_i \leq (C_0/P) \varepsilon$. Taking $\varepsilon \to 0$ shows $\Delta \to 0$.
+        Thus $\Delta_i \lesssim_{C,P} \varepsilon$. Taking $\varepsilon \to 0$ shows $\Delta_i \to 0$.
     \end{itemize}
 \end{frame}
 
@@ -296,7 +366,7 @@
         \item {\bf Proof that $\text{Per}(A_i) \leq 1$:}
         \begin{itemize}
             \pause
-            \item Simple inductive argument: the hypothesis is that if the rows of a matrix $B$ all sum up to less than one, then $\text{Per}(B) \leq 1$. Now expand along minors (ala the determinant).
+            \item Simple inductive argument: the hypothesis is that if each row of a matrix $B$ all sum up to less than one, then $\text{Per}(B) \leq 1$.
         \end{itemize}
 
         \pause
@@ -318,8 +388,8 @@
                 \text{Per}(A_i) / \text{Per}(A_{i+1}) &= \gamma_1 \dots \gamma_n \\
                 &= (1 + \delta_1) \dots (1 + \delta_n)\\
                 &\leq \exp \left(\sum \delta_i - \sum \delta_i^2/2 + \sum \delta_i^3/3 \right)\\
-                &\leq \exp(0 - \Delta/2 + \Delta^{3/2}/3)\\
-                &= 1 - \Delta / 2 + O(\Delta^{3/2}).
+                &\leq \exp(0 - \Delta_i/2 + \Delta_i^{3/2}/3)\\
+                &= 1 - \Delta_i / 2 + O(\Delta_i^{3/2}).
             \end{align*}
         \end{itemize}
     \end{itemize}
@@ -330,7 +400,7 @@
 
 And now, back to our regularly scheduled programming
 
-\[ \text{BL}(B,p) = \sup_{A_1,\dots,A_m \succ 0} \sqrt{ \frac{\prod_i \det(A_i)^{p_i}}{\det(\sum p_i \cdot B_i^* A_i B_i)}}. \]
+\[ \text{BL}(B,p) = \sqrt{ \sup_{A_1,\dots,A_m \succ 0} \frac{\prod_i \det(A_i)^{p_i}}{\det(\sum p_i \cdot B_i^* A_i B_i)}}. \]
 
 \begin{itemize}
     \pause
@@ -396,27 +466,25 @@ And now, back to our regularly scheduled programming
         \item {\bf Three Key Facts Ensuring Convergence:}
         \begin{itemize}
             \pause
-            \item[(1)] $\text{BL}(B_i,p) \geq 1$ for all $i \geq 1$.
+            \item[(1)] $\text{BL}(B,p) \geq 1$ if $(B,p)$ is partially normalized.
             \pause
-            \item[(2)]:
-
-            \begin{itemize}
-                \item If $1 + \varepsilon \leq \text{BL}(B_i,p) \leq 2$, $\text{BL}(B_{i+1},p) \leq (1 - C_1 \varepsilon^k) \text{BL}(B_i,p)$.
-
-                \item If $\text{BL}(B_i,p) > 2$, then $\text{BL}(B_{i+1},p) \leq (1 - C_2) \text{BL}(B_i,p)$.
-            \end{itemize}
-
-            \pause
-            \item[(3)] If isotropy or projection holds, and $\text{BL}(B_i,p) \leq 2$, then
+            \item[(2)] If $1 + \varepsilon \leq \text{BL}(B_i,p) \leq 2$, then
             %
-            \[ \| \sum p_i B_i^* B_i - I \| + \sum\nolimits_i \| B_i^* B_i - I \| \lesssim \log(\text{BL}(B,p)). \]
+            \[ \text{BL}(B_{i+1},p) \leq (1 - C \varepsilon^s) \text{BL}(B_i,p) \]
+
+            \pause
+            \item[(3)] If isotropy or projection holds, then
+            %
+            \[ \| \sum p_i B_i^* B_i - I \| + \sum\nolimits_i \| B_i^* B_i - I \| \lesssim \log(\text{BL}(B,p)), \]
+            %
+            and so $d(B,\mathbf{G}_p) \lesssim \log(\text{BL}(B,p))$.
         \end{itemize}
 
         \pause
-        \item Thus convergence to the family of geometric Brascamp-Lieb datum occurs as with Sinkhorn iteration provided that $\text{BL}(B,p) < \infty$.
+        \item Thus convergence occurs as with Sinkhorn iteration provided that $\text{BL}(B,p) < \infty$.
 
         \pause
-        \item Obtain (1), (2), and (3) by studying \emph{positive operators}.
+        \item (1), (2), and (3) follow from techniques in the study of \emph{positive operators}.
     \end{itemize}
 
 \end{frame}
@@ -446,14 +514,17 @@ And now, back to our regularly scheduled programming
     \frametitle{Positive Operators}
 
     \begin{itemize}
-        \item A linear map $T: M_n \to M_m$ is \emph{completely positive} if there are $m \times n$ matrices $B_1,\dots,B_K$ such that
+        \item A linear map $T: M_{n_1} \to M_{n_2}$ is \emph{completely positive} if there are $n_2 \times n_1$ matrices $B_1,\dots,B_K$ and $p_i > 0$ such that
         %
-        \[ T(A) = \sum B_i A B_i^*. \]
+        \[ T(A) = \sum p_i B_i A B_i^*. \]
         %
-        For simplicity, focus on the case $n = m$.
+        For simplicity, focus on the case $n_1 = n_2$.
 
         \pause
-        \item Important example: $T(A) = \sum p_i B_i^* A B_i$.
+        \item $T: M_n \to M_n$ is \emph{positive} if $A \succeq 0$ implies $T(A) \succeq 0$.
+
+        \pause
+        \item Another example of positive operators: For a non-negative matrix $S$, $T(A)$ is the diagonal matrix whose entries are precisely the vector $Sa$, where $a$ is the vector formed from the diagonal entries of $A$.
 
         \pause
         \item Given $T$, we have $T^*(A) = \sum B_i^* A B_i$.
@@ -467,18 +538,15 @@ And now, back to our regularly scheduled programming
 
     \begin{itemize}
         \pause
-        \item The \emph{capacity} of a positive operator $T: M_n \to M_n$ is
+        \item (Gurvits, 2004) The \emph{capacity} of a positive operator $T: M_n \to M_n$ is
         %
         \[ \text{Cap}(T) = \inf_{A \succ 0} \frac{\det(TA)}{\det(A)}. \]
 
         \pause
-        \item Capacity introduced in (Gurvits, 2004) in $n = m$ case, in general introduced in (Garg et al, 2018).
+        \item For any Brascamp-Lieb data $(B,p)$, there exists a positive $T: M_n \to M_n$ and $k$ such that $\text{Cap}(T) = 1/\text{BL}(B,p)^{2k}$.
 
         \pause
-        \item For any Brascamp-Lieb data $(B,p)$, there exists a positive $T: M_n \to M_m$ such that $\text{Cap}(T) = 1/\text{BL}(B,p)^2$.
-
-        \pause
-        \item Positive operators are well studied in the quantum information theory literature, so reduction of BL to  this theory gives new insights.
+        \item Positive operators are well studied in the quantum information theory literature, so reduction of BL to  this theory is useful.
     \end{itemize}
 \end{frame}
 
@@ -490,6 +558,13 @@ And now, back to our regularly scheduled programming
         \begin{itemize}
             \pause
             \item $\sum p_i B_i^* B_i = I$ holds iff $T(I) = I$.
+        \end{itemize}
+
+        \pause
+        \item (Projection) Let $T(A) = B_i^* A B_i$.
+        \begin{itemize}
+            \pause
+            \item $B_i B_i^* = I$ if and only if $T^*(I) = I$.
         \end{itemize}
 
         \pause
@@ -511,9 +586,114 @@ And now, back to our regularly scheduled programming
         then $\text{Cap}(T_{M_1,M_2}) = \det(M_1)^2 \det(M_2)^2 \cdot \text{Cap}(T)$.
 
         \pause
-        \item Sinkhorn iteration (alternately iterating $T \mapsto T_{I,T(I)^{-1/2}}$ and $T \mapsto T_{T^*(I)^{-1/2}, I}$) yields a method for rescaling any $T$ with $\text{Cap}(T) > 0$ to be arbitrarily close to a doubly stochastic operator, allowing us to approximate $\text{Cap}(T)$.
+        \item Sinkhorn says to iterate
+        %
+        \[ T \mapsto T_{I,T(I)^{-1/2}} \quad\text{and}\quad T \mapsto T_{T^*(I)^{-1/2}, I}. \]
+
+        \pause
+        \item If $\text{Cap}(T) > 0$, iteration yields a rescaling arbirarily close to a doubly stochastic operator, in $\text{Poly}(\text{Bits}(B), 1/\varepsilon)$ time.
     \end{itemize}
 \end{frame}
+
+
+
+
+\begin{frame}
+
+\frametitle{Upper Bounds For Capacity}
+
+\begin{itemize}
+    \pause
+    \item To guarantee efficiently, we need to show that for partially normalized $T$, $\text{Cap}(T) \geq 1/e^{\text{Poly}(\text{Bits}(B))}$.
+
+    \pause
+    \item (Gurvits, 2004) If $T(A) = \sum B_i A B_i^*$, and $\det(\sum B_i) \neq 0$, then $\text{Cap}(T) \gtrsim (\text{Bits}(B) \cdot n)^{- O(n)}$.
+
+    \pause
+    \item If $\text{Cap}(T) > 0$, there is $d > 0$ and $d \times d$ matrices $C_i$ s.t.
+    %
+    \[ \det(\sum C_i \otimes B_i) \neq 0 \quad\text{and}\quad \text{Bits}(C) \leq \text{Poly}(d,\text{Bits}(B)). \]
+
+    \pause
+    \item 'Fairly simple' to show that if $S(A) = \sum C_i A C_i^*$, and $(S \otimes T)(A) = \sum (C_i \otimes B_i) A (C_i \otimes B_i)^*$, then
+    %
+    \[ \text{Cap}(S \otimes T) \leq \text{Cap}(T)^d \text{Cap}(L)^n. \]
+
+    \pause
+    \item Since $\text{Cap}(L) \leq 1$, it follows that
+    %
+    \[ \text{Cap}(T) \geq \text{Cap}(S)^{1/d} \gtrsim (\text{Poly}(d, Bits(B)) n)^{-O(n)}. \]
+
+    \pause
+    \item Invariant theory shows we can choose $d \leq n^4 [(n+1)!]^2$.
+\end{itemize}
+
+\end{frame}
+
+
+
+
+
+
+
+
+\begin{frame}
+
+\frametitle{The Invariant Theory}
+
+\begin{itemize}
+    \pause
+    \item We have a group action of $\text{SL}_n \times \text{SL}_n$ on tuples $B = (B_1,\dots,B_m)$, such that
+    %
+    \[ (M,N) \circ B = (MB_1N, \dots, MB_mN). \]
+
+    \pause
+    \item Invariant Theory: Find the ring $R$ of all `invariant polynomials' $f(B)$ such that
+    %
+    \[ f((M,N) \circ B) = f(B) \]
+    %
+    for all $(M,N) \in \text{SL}_n \times \text{SL}_n$.
+
+    \pause
+    \item Note: $f_C(B) = \det(\sum C_i \otimes B_i)$ is an invariant polynomial under this action for any $C_i$.
+\end{itemize}
+
+\end{frame}
+
+
+
+
+
+
+\begin{frame}
+
+\frametitle{The Invariant Theory}
+
+\begin{itemize}
+    \pause
+    \item (Nayak and Subrahmanyam, 2010) $R$ is a ring generated by the homogeneous polynomials $f_C(A) = \det(\sum C_i \circ A_i)$, for $d \times d$ matrices $C_i$.
+    \begin{itemize}
+        \pause
+        \item Hilbert showed that for a fairly general family of group actions, $R$ is finitely generated, so we should expect there is some $d_0$ such that $R$ is generated by the polynomials above for $d \leq d_0$.
+
+        \pause
+        \item (Ivanyos, Qiao, Subrahmanyam, 2015) shows $d_0 \lesssim n^4 [(n+1)!]^2$.
+
+        \pause
+        \item Thus if there exists $d \times d$ matrices $C_i$ such that $f_C(B) \neq 0$, then we can choose $d \leq d_0$.
+    \end{itemize}
+\end{itemize}
+
+\end{frame}
+
+
+
+
+
+
+
+
+
 
 \begin{frame}
     \frametitle{Rank Decreasing Operators}
@@ -531,11 +711,9 @@ And now, back to our regularly scheduled programming
 
         \pause
         \item (Gurvits, 2004) $T: M_n \to M_n$ is rank non-decreasing if and only if $\text{Cap}(T) > 0$.
-
-        \pause
-        \item Generalized in (Garg et al, 2018). For $T: M_n \to M_m$, $\text{Cap}(T) > 0$ if and only if $T$ is \emph{fractional rank non-decreasing}.
     \end{itemize}
 \end{frame}
+
 
 \begin{frame}
     \frametitle{Proof Idea}
