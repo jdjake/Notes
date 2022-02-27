@@ -2411,12 +2411,16 @@ Higher dimensional analogues of these results are not as strong. Indeed, we have
 
 \section{Fundamental Solutions}
 
-Let us now discuss the idea of a \emph{fundamental solution} to a partial differential equation, a technique very useful to the study of the existence and uniqueness of such equations. For any differential operator $L = \sum c_\alpha D^\alpha$ with constant coefficients, a \emph{fundamental solution} for $L$ is a distribution $\Phi$ such that $L \Phi = \delta$ is the Dirac delta function at the origin. The reason that fundamental solutions are so useful is that for any compactly supported distribution $v \in \mathcal{E}(\RR^d)^*$, the distribution $u = \Phi * v$ is a distribution satisfying $L u = (L \Phi) * v = \delta * v = v$. Thus fundamental solutions give rise to a natural right inverse to a differential operator.
+Let us now discuss the idea of a \emph{fundamental solution} to a partial differential equation, a technique very useful to the study of the existence and uniqueness of such equations. For any differential operator $L = \sum c_\alpha D^\alpha$ with constant coefficients, a \emph{fundamental solution} for $L$ is a distribution $E$ such that $LE = \delta$ is the Dirac delta function at the origin. The reason that fundamental solutions are so useful is that for any compactly supported distribution $v \in \mathcal{E}(\RR^d)^*$, the distribution $u = E * v$ is a distribution satisfying $L u = (L E) * v = \delta * v = v$. Thus fundamental solutions give rise to a natural right inverse to a differential operator.
 
 \begin{example}
-    Consider Poisson's equation $\Delta u = v$. A natural choice of a fundamental solution for this equation is the \emph{Poisson kernel}
+    Consider Poisson's equation $\Delta u = v$. To determine a fundamental solution, we note that since $\Delta$ is invariant under rotations, as is the Dirac delta, so we might also expect the fundamental solution to be radially symmetric. If $E(x) = f(|x|)$, then Laplace's equation tells us that for $r > 0$,
     %
-    \[ E(x) = \begin{cases} (2\pi)^{-1} \log |x| &: \text{if $d = 2$} \\ \frac{1}{c_d (d-2) |x|^{d-2}} &: \text{if $d > 2$.} \end{cases} \]
+    \[ f''(r) + \frac{n-1}{r} f'(r) = 0. \]
+    %
+    For $d > 2$, this implies that $f(r) = C_1 r^{2-n} + C_2$, and for $d = 2$, $f(r) = C_1 \log(r) + C_2$. We may assume without loss of generality that $C_2 = 0$, since this does not affect the value of $\Delta E$. The correct choice of $C_1$ gives the \emph{Poisson kernel}
+    %
+    \[ E(x) = \begin{cases} - (2\pi)^{-1} \log |x| &: \text{if $d = 2$} \\ \frac{-1}{c_d (d-2) |x|^{d-2}} &: \text{if $d > 2$.} \end{cases} \]
     %
     Here $c_d$ is the volume of the unit ball in $\RR^d$. To prove this, it suffices to show for any $\phi \in C_c^\infty(\RR^d)$,
     %
@@ -2443,7 +2447,21 @@ Let us now discuss the idea of a \emph{fundamental solution} to a partial differ
     %
     For $d = 2$, we have $\nabla E(x) = (2 \pi)^{-1} x/|x|^2$, hence
     %
-    \[ \int_{|x| = \varepsilon} \phi(x) [\nabla E(x) \cdot n(x)] dS = (2 \pi)^{-1} \int_{|x| = \varepsilon} [\phi(0) + O(\varepsilon)] \cdot (1/\varepsilon) = \phi(0) + O(\varepsilon). \]
+    \begin{align*}
+        \int_{|x| = \varepsilon} \phi(x) [\nabla E(x) \cdot n(x)] dS &= (2 \pi)^{-1} \int_{|x| = \varepsilon} [\phi(0) + O(\varepsilon)] \cdot (1/\varepsilon)\\
+        &= \phi(0) + O(\varepsilon).
+    \end{align*}
+    %
+    For $d > 2$, $\nabla E(x) = (1/c_d) |x|^{-d} x$, so
+    %
+    \begin{align*}
+        \int_{|x| = \varepsilon} \phi(x) [\nabla E(x) \cdot n(x)] dS &= (c_d \varepsilon^{d-1})^{-1} \int_{|x| = \varepsilon} \phi(x)\; dS\\
+        &= \phi(0) + O(\varepsilon).
+    \end{align*}
+\end{example}
+
+\begin{example}
+    Consider the d'Alembertian equation $\Box f = \partial_t^2 f - \Delta_x f$. This equation is symmetric with respect to the family of Lorentz transformations, i.e. linear maps from $\RR_t \times \RR^d_x$ to itself preserving the Lorentz form $Q(t,x) = t^2 - |x|^2$. Since $\delta$ and $\Box$ are invariant under such transformations, we expect the fundamental solution of $\Box$ to also be invariant under these Lorentz transformations, i.e. $E(t,x) = f(t^2 - |x|^2)$. The d'Alembertian equation becomes $f''(s) + [(n+1)/2s] f'(s) = 0$, which has solution $f(s) = C_1 s^{(1-n)/2} + C_2$, where $C_1$ and $C_2$ are allowed to depend on $\text{sign}(s)$.
 \end{example}
 
 \begin{example}
@@ -2614,39 +2632,35 @@ where $a_k \in \mathcal{S}^k(U \times \RR^p)$ is homogeneous of order $k$ in $\x
 
 \chapter{Pseudodifferential Operators}
 
-The goal of this chapter is to consider a general family of operators that manipulate space and time \emph{locally}. This is of course impossible to do simultaneously because of the uncertainty principle, but one can do things \emph{pseudolocally}, i.e. the position of the support in time and space is approximately preserved up to a rapidly decaying error. Before we begin, let us consider some basic examples that allow us to control space or time exclusively, to get an idea of what we want out of such a theory.
+The goal of this chapter is to define the calculus of pseudodifferential operators, a general family of operators which allows us to \emph{locally} manipulate the spatial and frequential properties of functions simultaneously. It is impossible to do this completely locally because of the uncertainty principle, but one can do things \emph{pseudolocally}, i.e. the position of the support in time and space is approximately preserved, up to a rapidly decaying error. Before we begin, let us consider some basic examples that allow us to control space or time exclusively, to get an idea of what we want out of such a theory.
 
-The theory of Fourier multipliers can be used to understand constant coefficient differential operators. The most basic spatial multiplier in Fourier analysis are the \emph{position operators} $X^\alpha: \mathcal{S}(\RR^d) \to \mathcal{S}(\RR^d)$ given by
+The most basic spatial multipliers in analysis are the \emph{position operators}, which are the family of unbounded operators $X^\alpha: \mathcal{S}(\RR^d) \to \mathcal{S}(\RR^d)$, defined by setting
 %
-\[ X^\alpha f(x) = x^\alpha f(x) \]
+\[ X^\alpha f(x) = x^\alpha f(x), \]
 %
-and the most basic Fourier multipliers are the \emph{momentum operators}
+and the most basic Fourier multipliers are the \emph{momentum operators} $D^\alpha: \mathcal{S}(\RR^d) \to \mathcal{S}(\RR^d)$, defined by setting
 %
-\[ D^\alpha f(x) = \frac{1}{(2\pi i)^{|\alpha|}} \cdot \partial^\alpha f(x), \]
+\[ D^\alpha f(x) = \frac{1}{(2\pi i)^{|\alpha|}} \cdot \partial^\alpha f(x). \]
 %
-which have the property that $\widehat{D^\alpha f}(\xi) = \xi^\alpha \widehat{f}(\xi)$. If $m \in C^\infty(\RR^d)$ is given, such that $m$ and all it's derivatives are slowly increasing, then we can define a continuous operator $m(X): \mathcal{S}(\RR^d) \to \mathcal{S}(\RR^d)$ by setting
+For each $m \in C^\infty(\RR^d)$ such that all of it's derivatives are slowly increasing, we can define a bounded operator $m(X): \mathcal{S}(\RR^d) \to \mathcal{S}(\RR^d)$ by setting
 %
 \[ m(X) f(x) = m(x) f(x). \]
 %
-We refer to $m$ as the \emph{symbol} of the operator. Similarily, we can define an operator $m(D): \mathcal{S}(\RR^d) \to \mathcal{S}(\RR^d)$ such that
+Under the same conditions as for $m(X)$, we can define an operator $m(D): \mathcal{S}(\RR^d) \to \mathcal{S}(\RR^d)$ by setting
 %
 \[ \widehat{m(D) f}(\xi) = m(\xi) \widehat{f}(\xi). \]
 %
-These give two homomorphisms from the ring of functions $m$ to the ring of continuous operators on $\mathcal{S}(\RR)$. The family of such operators is very useful in analysis, since families of functions are more amenable to intuition than families of operators; for instance, any constant coefficient differential operator can be represented as $m(D)$ for some polynomial $m(x)$. Thus we have a symbolic calculus for the family of operators $\{ X^\alpha \}$ and $\{ D^\alpha \}$. Our goal is to find a symbolic calculus which \emph{combines} the family of operators, so that we can consider operator involving both spatial and frequential information.
+Thus we have found two homomorphisms from a ring of smooth functions on $\RR^d$ to the ring of bounded operators on the space of Schwartz functions.
 
-As a quick utility of this symbolic calculus, given an \emph{elliptic} order $k$ differential operator $L = \sum c_\alpha D^\alpha$, i.e. an operator such that the homogeneous polynomial $\sum_{|\alpha| = k} c_\alpha \xi^\alpha$ has no zeroes except when $\xi = 0$, there exists $R > 0$ such that the associated multiplier $m(\xi) = \sum c_\alpha \xi^\alpha$ satisfies a bound $|m(\xi)| \gtrsim |\xi|^k$ for $|\xi| \geq R$. If $\eta(\xi)$ is a smooth cutoff supported on $|\xi| \geq R$ and equal to one for $|\xi| \geq 2R$, and if we consider the multiplier operator $S$ associated with $m'(\xi) = \eta(\xi) / m(\xi)$, then the symbolic calculus of multiplier operators tells us that $S \circ L - 1$ is a multiplier with a smooth, compactly supported symbol $1 - \eta(\xi)$. This means we have found a \emph{parametrix} for the operator $L$, i.e. an operator which gives an \emph{approximate inverse} for $L$, such that for any tempered distribution $u$,
+The family of such operators is very useful in analysis, since families of functions are more amenable to intuition than families of operators, and we ask questions such as what features of the functions $m$ imply about the resulting operators $m(D)$. Any \emph{constant coefficient} linear differential operator can be represented as $m(D)$ for a suitable polynomial $m(x)$, which allows us to use these results in the regularity theory of partial differential equations. As a quick example of the utility of the calculus, given an \emph{elliptic} order $k$ differential operator $L = \sum c_\alpha D^\alpha$, i.e. an operator such that the homogeneous polynomial $\sum_{|\alpha| = k} c_\alpha \xi^\alpha$ has no zeroes except when $\xi = 0$, there exists $R > 0$ such that the associated multiplier $m(\xi) = \sum c_\alpha \xi^\alpha$ satisfies a bound $|m(\xi)| \gtrsim |\xi|^k$ for $|\xi| \geq R$. If $\eta(\xi)$ is a smooth cutoff supported on $|\xi| \geq R$ and equal to one for $|\xi| \geq 2R$, and if we consider the operator $S = (\eta / m)(D)$, then the symbolic calculus of multiplier operators tells us that $S \circ L - 1$ is a multiplier with a smooth, compactly supported symbol $\eta(\xi) - 1$. This means we have found a \emph{parametrix} for the operator $L$, i.e. an operator $S$ which gives an \emph{approximate inverse} for $L$, such that for any tempered distribution $u$,
 %
 \[ (S \circ L) u(x) = u(x) + (\psi * u)(x), \]
 %
-where $\psi$ is a Schwartz distribution. One can imagine this is very useful in the analysis of the PDE $L$. For instance, this construction implies that for any elliptic operator $T$, and any compactly supported distribution $u \in \mathcal{E}^*(\RR^d)$, $\text{WF}(Tu) = \text{WF}(u)$. One motivation for constructing a symbolic calculus for both families of operators simultaneously is to construct parametrices for elliptic differential operators with \emph{non constant coefficients}.
+where $\psi$ is a Schwartz distribution. One can imagine this is very useful in the analysis of the PDE $L$. For instance, this construction implies that for any elliptic operator $L$, and any compactly supported distribution $u \in \mathcal{E}^*(\RR^d)$, $\text{WF}(Lu) = \text{WF}(u)$. One motivation for constructing a symbolic calculus for both families of operators simultaneously is to construct parametrices for elliptic differential operators with \emph{non constant coefficients}.
 
- If these two families commuted jointly, i.e. $X^\alpha D^\beta = D^\beta X^\alpha$ for all $\alpha$ and $\beta$, then using standard techniques in the theory of operator algebras, we could define a calculus that associates with each function $a(x,\xi)$ a `multiplier operator' $T_a$ such that $a \mapsto T_a$ gives a homomorphism between an algebra of functions and an algebra of operators. Unfortunately, $\{ X^\alpha \}$ and $\{ D^\alpha \}$ do not commute, since we have a commutator relationship
-%
-\[ [X^i, D^j] = X^i D^j f - D^j X^i = \delta_{ij} \cdot f. \]
-%
-Thus the operators do not commute. Nonetheless, the operators $X^i$ and $D^j$ commute `modulo' more regular operators, i.e. the difference between $X^i D^j$ and $D^j X^i$, which are differential operators of order one, is a differential operator of order zero. The goal of the theory of pseudodifferential operators is to associate a symbolic calculus $a \mapsto a(x,D)$ which gives a homorphism `modulo lower order terms'.
+From a more general perspective, the process above is just a special case of the \emph{spectral calculus}, whose goal, for a suitable family of normal operators $A$, produces an isomorphism of $A$ with an algebra of functions on some space $X$, called the \emph{spectrum} of $A$. A natural question is whether we can obtain such a calculus for the family of all operators formed from combinations of the multiplication \emph{and} differentiation operators. This would, in particular, enable us to analyze arbitrary \emph{non constant coefficient} linear differential operators. However, we quickly see that such a theory would not quite work in as standard a way as the spectral calculus provides, because the families of operators $\{ X^\alpha \}$ and $\{ D^\alpha \}$ do \emph{not} commute with one another, i.e. the chain rule implies that $[D^i,X^j] = D^iX^j - X^iD^j = \delta_{ij} \cdot I$. The key thing to notice, that will enable us to obtain a partial spectral theory of such operators, is that these operators commute 'up to lower order terms'. In particular, if we think of $X^\alpha$ and $D^\alpha$ as being operators of \emph{order $|\alpha|$}, then $[D^\alpha,X^\beta]$ is equal to zero, modulo \emph{modulo terms of order $|\alpha| + |\beta| - 1$}. The fact that these operators commute 'up to lower order terms' is what will enable us to obtain a well defined functional calculus combining these two families, the \emph{calculus of pseudodifferential operators}. We will associate, with each suitably regular function $a(x,\xi)$, an operator $a(x,D)$, which is a homomorphism 'modulo lower order terms'.
 
-We now associate with each function $a(x,\xi)$ an operator $a(x,D)$, such that if $a(x,\xi) = \sum c_\alpha(x) \xi^\alpha$, then $a(x,D)$ is precisely the differential operator $\sum c_\alpha(x) D^\alpha$ (from which the notation $a(x,D)$ comes from). This association will generalize the two families of operators above; if $a(x,\xi) = m(x)$, then $a(x,D)$ is the operator given by multiplication by $m$, and if $a(x,\xi) = m(\xi)$, then $a(x,D)$ is a Fourier multiplier operator with symbol $m(\xi)$. To get an idea for what this operator should look like, we calculate that if $a(x,\xi) = \sum_\alpha c_\alpha(x) \xi^\alpha$ is the symbol of a differential operator with nonconstant coefficients, then the corresponding differential operator satisfies
+This association will have the property that if $a(x,\xi) = \sum c_\alpha(x) \xi^\alpha$, then $a(x,D)$ will be the differential operator $\sum c_\alpha(x) D^\alpha$ (this is where the notation $a(x,D)$ comes from). The association will also generalize the two families of multiplier operators; if $a(x,\xi) = m(x)$, then $a(x,D)$ is equal to $m(X)$, and if $a(x,\xi) = m(\xi)$, then $a(x,D)$ is equal to $m(D)$. To get an idea for what this operator should look like, we calculate that if $a(x,\xi) = \sum_\alpha c_\alpha(x) \xi^\alpha$ is the symbol of a differential operator with nonconstant coefficients, then the corresponding differential operator satisfies
 %
 \begin{align*}
     a(x,D) f &= \sum c_\alpha(x) D^\alpha f(x)\\
@@ -2654,7 +2668,9 @@ We now associate with each function $a(x,\xi)$ an operator $a(x,D)$, such that i
     &= \int_{\RR^d} a(x,\xi) e^{2 \pi i \xi \cdot x} \widehat{f}(\xi)\; d\xi.
 \end{align*}
 %
-This is the integral formula with which we will define a general pseudodifferential operator. In the most general setting, for any distribution $a \in \mathcal{D}(\RR^d \times \RR^d)^*$, and any $f \in \mathcal{S}(\RR^d)$ such that $\widehat{f} \in C_c^\infty(\RR^d)$, we can define $a(x,D) f$ to be the distribution such that for $g \in C_c^\infty(\RR^d)$,
+We use this integral formula to define the general operators $a(x,D)$.
+
+In the most general setting, for any distribution $a \in \mathcal{D}(\RR^d \times \RR^d)^*$, and any $f \in \mathcal{S}(\RR^d)$ such that $\widehat{f} \in C_c^\infty(\RR^d)$, we can define $a(x,D) f$ to be the distribution such that for $g \in C_c^\infty(\RR^d)$,
 %
 \[ \langle a(x,D) f, g \rangle = \langle a, \widehat{f} \otimes g \rangle = \int a(x,\xi) \widehat{f}(\xi) g(x)\; d\xi\; dx. \]
 %
