@@ -70,7 +70,7 @@ In this chapter, we discuss common families of \emph{monotone, rearrangement inv
     \item \emph{Rearrangement-Invariance}: If $f$ and $g$ have the same distribution function, then $\| f \| = \| g \|$.
 \end{itemize}
 %
-A monotone rearrangement-invariant norm essentially provides a way of quantifying the height and width of functions on $X$. It has no interest in the `shape' of the objects studied, because of the property of rearrangement invariance. In a particular problem, one picks the norm best emphasizing a particular family of features useful in the problem.
+A monotone rearrangement-invariant norm essentially provides a way of quantifying the height and width of functions on $X$. It has no interest in the `shape' of the objects studied, because of the property of rearrangement invariance. In a particular problem, one picks the norm best emphasizing a particular family of features useful in the problem. Height and width are of course, vague properties; but roughly speaking, the canonical example of a function with height $H$ and width $W$ is a function $f = H \cdot \mathbf{I}_E$, where $|E| = W$. More general functions can be thought of as being composed from a combination of  functions with various heights and widths, and since a unique way to quantify the behaviour of these combinations is not obvious, we will obtain various different ways to quantify how various heights and widths come together.
 
 There are two very useful classes of functions useful for testing the behaviour of translation invariant norms:
 %
@@ -1424,6 +1424,208 @@ There is a generalization of both the Lorentz spaces and the Orlicz spaces, know
 
 
 
+
+
+
+
+
+
+
+
+\chapter{Sobolev Spaces}
+
+Previously, we discussed the rearrangement invariant spaces, which quantify properties of a function $f: X \to Y$ in terms of is `width' and `height'. Here we discuss the `regularity' of functions, i.e. how gradually they change, and the related topic (from a Fourier analytic perspective) of how fast the function `oscillates' (inversely proportional to the `wavelength' of a function. Such properties are certainly not quantified in terms of rearrangement invariant properties, since change and oscillation necessarily imply some topological features of the spaces involved. Here are some canonical, intuitive examples. To introduce them, we fix some function $\phi \in C_c^\infty(\RR)$, which we intuitively think of as having some height $H$ and width $W$:
+%
+\begin{itemize}
+    \item If $\phi \in C_c^\infty(\RR)$, then the function $f(t) = \phi(t) e^{iNt}$ is the canonical example of a function oscillating at a frequency $N$. It has height $H$ and width $W$. However, it's derivative $f'(t) = \phi'(t) e^{iNt} + iN \phi(t) e^{iNt}$ for large $N$ has height roughly proportional to $N \cdot H$ and width roughly proportional to $W$, and as we successively differentiate, the height grows even faster in $N$. This means that the function fails to be `regular' for large $N$.
+
+    \item Let $f(t) = N^{-s} \phi(t) e^{iNt}$, or let $f(t) = N^{-s} \phi(Nt)$. Both of these functions has height $N^{-s} H$ and width $W$, and oscillates at a frequency $N$. But unlike the last examples, the height (e.g. the $L^\infty$ norm) of the function $f^{(k)}(t)$ is uniformly bounded in $t$ provided that $k \leq s$. We therefore think of $f$ as having `$s$ degrees of regularity'.
+
+    \item Let us consider the more complex function $f(x) = \phi(x) |x|^s \mathbf{I}_{x > 0}$. One can break this function up into a sum $\sum_{n = 0}^\infty \phi_n(x) |x|^s$, where $\phi_n(x) = \phi(2^n x) - \phi(2^{n+1} x)$. The function $f_n(x) = \phi_n(x) |x|^s$ behaves very similarily to the function $\phi_n(x) 2^{-ns}$, an example considered in the last bullet with $N = 2^n$. In particular, the function oscillates at a frequency $2^n$, and has $s$ degrees of regularity. Thus we would image $f$ itself has $s$ degrees of regularity, but is composed of many different frequency scales.
+\end{itemize}
+%
+There are various norms that quantify height, width, frequncy scale, and regularity. The most common is the Sobolev norm, though there are various refinements, like the H\"{o}lder norms, Besov norms, Triebel-Lizorkin norms.
+
+\section{H\"{o}lder Spaces}
+
+H\"{o}lder Spaces are a simplified version of Sobolev spaces which account for the height, regularity, and oscillation of a function, but not the width. For $f: \RR^d \to \CC$, and an integer $k \geq 0$, we define
+%
+\[ \| f \|_{C^k(\RR^d)} = \max_{1 \leq i \leq k} \| D^i f \|_{L^\infty(\RR^d)}. \]
+%
+Note that a $C^k$ function might not necessarily lie have finite $C^k(\RR^d)$ norm if it's derivatives are unbounded. We let $C^k_{\text{loc}}$ denote the space of all $C^k$ functions. For instance, $e^x \in C^\infty_\text{loc}(\RR)$, but $e^x \not \in C^\infty(\RR)$. Each of the space $C^k(\RR^d)$, where $k$ is finite, forms a Banach space. The space $C^\infty(\RR^d)$ is a Fr\'{e}chet space.
+
+It is a useful heuristic that only the smallest and largest derivatives really matter when measuring regularity in a space, a fact also tied up to interpolation. For instance, we have the following result in H\"{o}lder spaces.
+
+\begin{theorem}
+    For any function $f: \RR^d \to \CC$,
+    %
+    \[ \| f \|_{C^k(\RR^d)} \sim_{k,d} \| f \|_{L^\infty(\RR^d)} + \| D^k f \|_{L^\infty(\RR^d)}. \]
+\end{theorem}
+\begin{proof}
+    Certainly the right hand side is upper bounded by the left hand side. On the other hand, suppose both $f$ and all it's $k$th order derivatives are bounded by $A$. We will prove by induction that for each $1 \leq i < k$, $\| D^i f \|_{L^\infty(\RR^d)} \lesssim_{i,k,d} \| f \|_{L^\infty(\RR^d)} + \| D^{i+1} f \|_{L^\infty(\RR^d)}$. To do this, we perform a Taylor expansion, writing
+    %
+    \[ \left| f(x+y) - f(x) - \sum_{j = 1}^i D^j f(x) (y,\dots,y) \right| \lesssim \| D^{i+1} f \|_{L^\infty(\RR^d)} \cdot |y|^{i+1}. \]
+    %
+    We have $|f(x+y) - f(x)| \leq 2 \| f \|_{L^\infty(\RR^d)}$. For $i = 1$, this means that
+    %
+    \[ |Df(x)(y)| \lesssim \| f \|_{L^\infty(\RR^d)} + \| D^2 f \|_{L^\infty(\RR^d)} |y|^2, \]
+    %
+    and since $y$ was arbitrary, letting $y$ range over all $|y| = 1$, we have
+    %
+    \[ \| Df \|_{L^\infty(\RR^d)} \lesssim \| f \|_{L^\infty(\RR^d)} + \| D^2 f \|_{L^\infty(\RR^d)}. \]
+    %
+    For $i \geq 2$, and for each $1 \leq j \leq i-1$, we have by induction,
+    %
+    \[ \| D^j f(x) (y,\dots,y) \| \lesssim_d \left( \| f \|_{L^\infty(\RR^d)} + \| D^{j+1} f \|_{L^\infty(\RR^d)} \right) |y|^j \lesssim_d \left( \| f \|_{L^\infty(\RR^d)} + \| D^i f \|_{L^\infty(\RR^d)} \right) |y|^j. \]
+    %
+    Carrying these sums up the Taylor series, we conclude that
+    %
+    Plugging these values in gives that
+    %
+    \[ |D^i f(x)(y,\dots,y)| \lesssim_d \| f \|_{L^\infty(\RR^d)} \left( 1 + |y|^{i-1} \right) + \| D^i f \|_{L^\infty(\RR^d)} \left( |y| + |y|^{i-1} \right) + \| D^{i+1} f \|_{L^\infty(\RR^d)} \cdot |y|^{i+1}. \]
+    %
+    Pick a constant $C \geq 1$ such that the left hand side is upper bounded by $C$ times the right hand side. Then
+    %
+    \[ |D^i f(x)(y,\dots,y)| - C \| D^i f \|_{L^\infty(\RR^d)} \left( |y| + |y|^{i-1} \right) \leq \| f \|_{L^\infty(\RR^d)} \left( 1 + |y|^{i-1} \right) + C \| D^{i+1} f \|_{L^\infty(\RR^d)} \cdot |y|^{i+1} \]
+    %
+    Choosing $y = 10C \cdot z$ for $|z| = 1$ gives
+    %
+    \[ (10C)^i \cdot D^i f(x)(z,\dots,z) - (20C)^{i-1} \| D^i f \|_{L^\infty(\RR^d)} \leq (10 C)^{i+2} \left( \| f \|_{L^\infty(\RR^d)} + \| D^{i+1} f \|_{L^\infty(\RR^d)} \right). \]
+    %
+    Our proof is completed when we notice that
+    %
+    \[ \| D^i f(x) \|_{L^\infty(\RR^d)} \sim_n \sup_{|z| = 1} |D^i f(x)(z,\dots,z)|, \]
+    %
+    so if we pick $C$ large enough depending solely on $d$, we conclude that
+    %
+    \[ \| D^i f \|_{L^\infty(\RR^d)} \lesssim_d \| f \|_{L^\infty(\RR^d)} + \| D^{i+1} f \|_{L^\infty(\RR^d)}. \]
+    %
+    This completes the induction.
+\end{proof}
+
+More generally, for any $0 \leq \alpha \leq 1$, we set $C^{k,\alpha}(\RR^d)$ to be the set of all $C^k$ functions such that $D^k f$ satisfies a H\"{o}lder condition of order $\alpha$, i.e.
+%
+\[ \| f \|_{C^{k,\alpha}(\RR^d)} = \| f \|_{L^\infty(\RR^d)} + \| D^k f \|_{L^\infty(\RR^d)} + \sup_{x \neq y} \frac{D^kf(x) - D^k f(y)}{|x - y|^\alpha}. \]
+%
+For $\alpha > 1$, this norm is finite if and only if $D^k f$ is constant, which is why only the case $\alpha \leq 1$ is interesting. It is simple to see that $C^k(\RR^d)$ is contained in $C^{k,\alpha}(\RR^d)$ for each such $\alpha$. We also have $C^{k,1}(\RR^d) \subset C^{k+1}(\RR^d)$, because of Taylor's formula.
+
+\begin{example}
+    To see the relation between the H\"{o}lder norm and the height, width, frequency scale, etc, consider a bump function $\phi \in C_c^\infty(\RR^d)$, and let $f(t) = A \phi(t/R) e^{Nt}$. Provided that $R \geq 1/N$, we think of this function as having height $A$, width $R$, and frequency $N$ (if $R < 1/N$, the frequency term does not have enough `space' to oscillate). Then $\| f \|_{C^{k+\alpha}(\RR^d)} \lesssim_{\phi,d,k} A N^{k+\alpha}$. Thus $R$ is not measured at all.
+\end{example}
+
+\begin{lemma}
+    An element of $C^{k,1}(\RR^d)$ is precisely an element $f \in C^k(\RR^d)$ such that the distributional derivative $D^{k+1}f$ is an $L^\infty$ tensor.
+\end{lemma}
+\begin{proof}
+    It suffices to prove the case $k = 0$. If $f \in C^{0,1}(\RR^d)$ then $f$ is precisely a bounded, uniformly Lipschitz function. Such functions are absolutely continuous with uniformly bounded derivative defined almost everywhere, and thus the distributional derivative $Df$ lies in $L^\infty$. Conversely, if $f \in L^\infty(\RR^d)$ and $f' \in L^\infty(\RR^d)$, then we have a representation formula
+    %
+    \[ f(x) = \int_0^x f'(y)\; dy, \]
+    %
+    which implies $f$ is Lipschitz.
+\end{proof}
+
+
+
+
+
+
+\chapter{Sobolev Spaces}
+
+Let $\Omega$ be an open subset of $\RR^d$. A natural problem when studying smooth functions $\phi \in C_c^\infty(\Omega)$ is to obtain estimates on the partial derivatives of $\phi$. For instance, one can consider the norms
+%
+\[ \| \phi \|_{C^n(\Omega)} = \max_{|\alpha| \leq n} \| D^\alpha f \|_{L^\infty(\Omega)}. \]
+%
+The space $C_c^\infty(\Omega)$ is not complete with respect to this norm, but it's completion is the space $C^n_b(\Omega)$ of $n$ times bounded continuously differentiable functions on $\Omega$, which still consists of regular functions. Unfortunately, such estimates are only encountered in the most trivial situations. As in the non-smooth case, one can often get much better estimates using the $L^p$ norms of the derivatives, i.e. considering the norms
+%
+\[ \| \phi \|_{W^{n,p}(\Omega)} = \left( \sum_{|\alpha| \leq p} \| D^\alpha \phi \|_{L^p(\Omega)}^p \right)^{1/p}. \]
+%
+As might be expected, $C_c^\infty(\Omega)$ is not complete with respect to the $W^{n,p}(\Omega)$ norm. However, it's completion cannot be identified with a family of $n$ times differentiable functions. Instead, to obtain a satisfactory picture of the compoetion under this norm, a Banach space we will denote by $W^{n,p}(\Omega)$, we must take a distribution approach.
+
+For each multi-index $\alpha$, if $f$ and $f_\alpha$ are locally integrable functions on $\Omega$, we say $f_\alpha$ is a weak derivative for $f$ if for any $\phi \in C_c^\infty(\Omega)$,
+%
+\[ \int_\Omega f_\alpha(x) \phi(x)\; dx = (-1)^{|\alpha|} \int_\Omega f(x) \phi_\alpha(x)\; dx. \]
+%
+In other words, this is the same as the derivative of $f$ viewed as a distribution on $\Omega$. We define $W^{n,p}$ to be the space of all functions $f \in L^p(\Omega)$ such that for each $|\alpha| \leq n$, a weak derivative $f_\alpha$ exists and is an element of $L^p(\Omega)$. We then define
+%
+\[ \| f \|_{W^{n,p}(\Omega)} = \left( \sum_{|\alpha| \leq n} \| f_\alpha \|_{L^p(\Omega)} \right)^{1/p}. \]
+%
+Where this sum is treated as a maximum in the case $p = \infty$. Later on we will be able to show this space is a complete Banach space.
+
+\begin{example}
+  Let $B$ be the open unit ball in $\RR^d$, and let $u(x) = |x|^{-s}$, where $s < n-1$. For which $p$ is $u \in W^{1,p}(B)$? We calculate by an integration by parts that if $\phi \in C_c^\infty(B)$, we fix $\varepsilon > 0$ and write
+  %
+  \[ \int_B \phi_i(x) u(x)\; dx = \int_{|x| \leq \varepsilon} \phi_i(x) u(x) + \int_{\varepsilon < |x| \leq 1} \phi_i(x) u(x). \]
+  %
+  The integral on the $\varepsilon$ ball is neglible since $s < n$. Since $u$ is smooth away from the origin, it's distributional derivative agrees with it's standard derivative, which is
+  %
+  \[ u_i(x) = \frac{- \alpha x_i}{|x|^{s + 2}}. \]
+  %
+  Thus $|u_i| \lesssim 1/|x|^{s + 1}$. An integration by parts gives
+  % in the $i$'th direction, and we calculate $\nabla u(x) = -\alpha x |x|^{-\alpha-2}$. Thus an integration by parts gives
+  %
+  \[ \int_{\varepsilon < |x| \leq 1} \phi_i(x) u(x) = \int_{|x| = \varepsilon} \phi(x) u(x) \nu_i\ dS + \int_{\varepsilon < |x| \leq 1} \frac{s \phi(x) x_i}{|x|^{s + 2}}\; dx, \]
+  %
+  where $\nu_i$ is the normal vector to the sphere pointing inward. Since $s < n-1$, the surface integral tends to zero as $\varepsilon \to 0$. Thus the weak derivative of $u$ is equal to the standard derivative. Consequently, $u \in W^{1,p}(B)$ if $s < n/p - 1$.
+\end{example}
+
+\begin{example}
+  If $\{ r_k \}$ is a countable, dense subset of $B$, then we can define
+  %
+  \[ u(x) = \sum_{k = 1}^\infty \frac{|x - r_k|^{-s}}{2^k} \]
+  %
+  Then $u \in W^{1,p}(B)$ if $0 < \alpha < n/p - 1$, yet $u$ has a dense family of singularities, and thus does not behave like any differentiable function we would think of.
+\end{example}
+
+\begin{theorem}
+  For each $k \in \mathbf{N}$ and $1 \leq p \leq \infty$, $W^{k,p}(\Omega)$ is a Banach space.
+\end{theorem}
+\begin{proof}
+  It is easy to verify that $\| \cdot \|_{W^{k,p}}$ is a norm on $W^{k,p}(\Omega)$. Let $\{ u_n \}$ be a Cauchy sequence in $W^{k,p}(\Omega)$. In particular, this means that $\{ D^\alpha u_n \}$ is a Cauchy sequence in $L^p(\Omega)$ for each multi-index $\alpha$ with $|\alpha| \leq k$. In particular, these are functions $v_\alpha$ such that $D^\alpha u_n$ converges to $v_\alpha$ in the $L^p$ norm for each $\alpha$. Thus it suffices to prove that if $v = \lim u_n$, then $D^\alpha v = v_\alpha$ for each $\alpha$. But this follows because the H\"{o}lder inequality implies that for each fixed $\phi \in C_c^\infty(\Omega)$,
+  %
+  \begin{align*}
+    (-1)^{|\alpha|} \int \phi_\alpha(x) v(x)\; dx &= \lim_{n \to \infty} (-1)^{|\alpha|} \phi_\alpha u_n(x)\; dx\\
+    &= \lim_{n \to \infty} \int \phi(x) (D^\alpha u_n)(x)\; dx\\
+    &= \int \phi(x) v_\alpha(x)\; dx.
+  \end{align*}
+  %
+  Thus $W^{k,p}(\Omega)$ is complete.
+\end{proof}
+
+\section{Smoothing}
+
+It is often useful to be able to approximate elements of $W^{k,p}(\Omega)$ by elements of $C^\infty(\Omega)$. This is mostly possible. If $u \in W^{k,p}(\Omega)$, and $\{ \eta_\varepsilon \}$ is a family of smooth mollifiers, then, viewing $u$ as a function on $\RR^n$ supported on $\Omega$, we can consider the convolution $u^\varepsilon = u * \eta_\varepsilon$, i.e. the function defined by setting
+%
+\[ u^\varepsilon(x) = \int_\Omega u(x - y) \eta_\varepsilon(y)\; dy. \]
+%
+This is just normal convolution, where we identify the function $u$ with the function $u \mathbf{I}_\Omega$ on $\RR^d$. Then $u^\varepsilon$ is a smooth function on $\RR^d$ supported on a $\varepsilon$ thickening of $\Omega$. However, $u^\varepsilon$ does not necessarily converge to $u$ in $W^{k,p}(\Omega)$ as $\varepsilon \to 0$, since the behaviour of the convolution can cause issues at the boundary of $\Omega$, where the distributional derivative $D^\alpha(u \mathbf{I}_\Omega)$ does not behave like a locally integrable function. This is the only problem, however.
+
+\begin{theorem}
+  If $U \Subset \Omega$, then $\lim_{\varepsilon \to 0} \| u^\varepsilon - u \|_{L^p(U)} = 0$.
+\end{theorem}
+\begin{proof}
+  For each $\varepsilon > 0$, let $U^\varepsilon = \{ x \in \Omega: d(x,\partial \Omega) > \varepsilon \}$. If $x \in \Omega^\varepsilon$, then
+  %
+  \[ ((D^\alpha u) * \eta_\varepsilon)(x) = (u_\alpha \mathbf{I}_\Omega * \eta_\varepsilon)(x), \]
+  %
+  since the convolution only depends on the behaviour of $D^\alpha u$ on a $\varepsilon$ ball around $x$, which is contained in the interior of $\Omega$. We can apply standard results about mollifiers to conclude that $u_\alpha \mathbf{I}_\Omega * \eta_\varepsilon$ converges to $u_\alpha \mathbf{I}_\Omega$ in $L^p(\RR^d)$ as $\varepsilon \to 0$. Since $U \Subset \Omega$, we have $U \subset U^\varepsilon$ for small enough $\varepsilon$, and so $(D^\alpha u) * \eta_\varepsilon$ converges to $u_\alpha$ in $L^p(U)$ as $\varepsilon \to 0$. Since this is true for each $\alpha$ with $|\alpha| \leq k$, we obtain the result.
+\end{proof}
+
+If we are a little more careful, then we can fully approximate elements of $W^{k,p}(\Omega)$ by smooth functions on $U$.
+
+\begin{theorem}
+  $C^\infty_c(\Omega) \cap W^{k,p}(\Omega)$ is dense in $W^{k,p}(\Omega)$.
+\end{theorem}
+\begin{proof}
+  Consider a family of open sets $\{ V_n \}$ such that $V_n \Subset \Omega$ for each $n$, and $U = \bigcup V_n$. Then we can consider a smooth partition of unity $\{ \xi_n \}$ subordinate to the cover $\{ V_n \}$. For each $u \in W^{k,p}(\Omega)$, we can write $u = \sum_n u \xi_n$. In particular, this means that for each $\varepsilon > 0$, there is $N$ such that $\| \sum_{n = N+1}^\infty u \xi_n \|_{W^{k,p}(\Omega)} \leq \varepsilon$. For each $n \in \{ 1, \dots, N \}$, we can find $\delta_n$ small enough that the $\delta_n$ thickening of $V_n$ is compactly contained in $\Omega$. If $\varepsilon_n$ is small enough, we find $(u \xi_n)^{\varepsilon_n}$ is supported on the $\delta_n$ thickening of $V_n$, and $\| (u \xi_n)^{\varepsilon_n} - u \xi_n \|_{W^{k,p}(V_n)} \leq \varepsilon / N$. But we then find
+  %
+  \begin{align*}
+    \| u - \sum_{n = 1}^N (u \xi_n)^{\varepsilon_n} \|_{W^{k,p}(\Omega)} \leq \varepsilon + \sum_{n = 1}^N \| u \xi_n - (u \xi_n)^{\varepsilon_n} \|_{W^{k,p}(\Omega)} \leq 2\varepsilon.
+  \end{align*}
+  %
+  Thus $C_c^\infty(\Omega)$ is dense in $W^{k,p}(\Omega)$.
+\end{proof}
+
+Approximation by elements of $C^\infty(\overline{\Omega})$ requires some more care, and additional assumptions on the behaviour of $\partial \Omega$.
 
 
 
@@ -3450,7 +3652,7 @@ In maximum generality, for any tempered distribution $m$ on $\RR^d$ we can defin
 
 Fourier multiplier operators have proved essential to our study of classical Fourier analysis. In particular, we have used Fourier multiplier operators to prove a great many results; the convolution operator by the Poisson kernel is a Fourier multiplier given by the symbol $e^{-|x|}$, and the heat kernel is a Fourier multiplier with symbol $e^{- \pi |x|^2}$. This is no coincidence. It is a general heuristic that any well-behaved translation invariant operator is given by convolution with an appropriate function.
 
-We have already seen in our study of distributions that any translation invariant continuous linear operator $T: C_c^\infty(\RR^d) \to C^\infty(\RR^d)$ is given by convolution with a distribution. If the distribution is tempered, we can take the Fourier transform to conclude that the operator is a Fourier multiplier operator. In fact, if $1 \leq p,q \leq \infty$ and a translation invariant operator $T$ satisfies a bound of the form
+We have already seen in our study of distributions that any translation invariant continuous linear operator $T: C_c^\infty(\RR^d) \to C^\infty_{\text{loc}}(\RR^d)$ is given by convolution with a distribution. If the distribution is tempered, we can take the Fourier transform to conclude that the operator is a Fourier multiplier operator. In fact, if $1 \leq p,q \leq \infty$ and a translation invariant operator $T$ satisfies a bound of the form
 %
 \[ \| Tf \|_{L^q(\RR^d)} \lesssim \| f \|_{L^p(\RR^d)} \]
 %
@@ -3519,7 +3721,7 @@ for any $f \in \mathcal{S}(\RR^d)$, then $T$ is a Fourier multiplier operator. T
     %
     \[ \| Tf \|_{L^q(\RR^d)} \lesssim \| f \|_{L^p(\RR^d)}, \]
     %
-    then $Tf \in C^\infty(\RR^d)$ and is slowly increasing, as is all of it's derivatives.
+    then $Tf \in C^\infty_{\text{loc}}(\RR^d)$ and is slowly increasing, as is all of it's derivatives.
 \end{remark}
 
 
@@ -3576,7 +3778,7 @@ for all $f \in \mathcal{S}(\RR^d)$. This question was of course prominant throug
   for all $f \in \mathcal{S}(\RR^d)$. Then $m = 0$.
 \end{theorem}
 \begin{proof}
-  Suppose $m \neq 0$ and $q < p$. Then there is $f_0 \in \mathcal{S}(\RR^d)$ with $m(D) f_0 \neq 0$. Thus $m(D) f_0$ lies in $C^\infty(\RR^d) \cap L^q(\RR^d)$. Fix a large integer $N$ and pick $x_1,\dots,x_N \in \RR^d$ separated far enough apart that
+  Suppose $m \neq 0$ and $q < p$. Then there is $f_0 \in \mathcal{S}(\RR^d)$ with $m(D) f_0 \neq 0$. Thus $m(D) f_0$ lies in $L^q(\RR^d)$. Fix a large integer $N$ and pick $x_1,\dots,x_N \in \RR^d$ separated far enough apart that
   %
   \[ \left\| \sum_{n = 1}^N \text{Trans}_{x_n} f_0 \right\|_{L^p(\RR^d)} \gtrsim N^{1/p} \| f_0 \|_{L^p(\RR^d)} \]
   %
@@ -3668,7 +3870,7 @@ For other values of $p$ and $q$, finding a simple characterization of $M^p(\RR^d
 %
 lies in $M^p(\RR^d)$, a problem known as the \emph{Bochner-Riesz conjecture}. 
 
-The difficulty here is that $m^\delta$ is singular on the boundary of the unit sphere, which is a large, curved set. Intuition suggests that a smooth Fourier multiplier would have a rapidly decaying Fourier transform, which would therefore be well posed as a convolution operator. One basic instance of this phenomenon occurs if $m \in \mathcal{S}(\RR^d)$. Then $\widehat{m} \in \mathcal{S}(\RR^d)$, hence integrable, and by Young's convolution inequality, it follows that for any $p \leq q$, $\| m \|_{M^{p,q}(\RR^d)} \lesssim 1$, and the induced map from $\mathcal{S}(\RR^d)$ to $M^{p,q}(\RR^d)$ is continuous. Another example is the following calculation: if $\Omega \subset \RR^d$ is bounded and open, $C$ is a fixed constant, and $L: \RR^d \to \RR^d$ is an invertible linear map, then we say $\phi$ is a \emph{bump function adapted to $L(\Omega)$} if $\phi$ is smooth and supported in $L(\Omega)$, and $\nabla^k (\phi \circ L)(x) \leq C$ for all $x \in \Omega$. If $m$ is a bump function adapated to $L(\Omega)$, then it follows that $\| m \|_{M^{p,q}(\RR^d)} \lesssim_{C,\Omega} 1$.
+The difficulty here is that $m^\delta$ is singular on the boundary of the unit sphere, which is a large, curved set. Intuition suggests that a smooth Fourier multiplier would have a rapidly decaying Fourier transform, which would therefore be well posed as a convolution operator. One basic instance of this phenomenon occurs if $m \in \mathcal{S}(\RR^d)$. Then $\widehat{m} \in \mathcal{S}(\RR^d)$, hence integrable, and by Young's convolution inequality, it follows that for any $p \leq q$, $\| m \|_{M^{p,q}(\RR^d)} \lesssim 1$, and the induced map from $\mathcal{S}(\RR^d)$ to $M^{p,q}(\RR^d)$ is continuous. Another example is the following calculation: if $\Omega \subset \RR^d$ is bounded and open, $C$ is a fixed constant, and $L: \RR^d \to \RR^d$ is an invertible linear map, then we say $\phi$ is a \emph{bump function adapted to $L(\Omega)$} if $\phi$ is smooth and supported in $L(\Omega)$, and $|D^k (\phi \circ L)(x)| \leq C$ for all $x \in \Omega$. If $m$ is a bump function adapated to $L(\Omega)$, then it follows that $\| m \|_{M^{p,q}(\RR^d)} \lesssim_{C,\Omega} 1$.
 
 If the multiplier $m$ is only singular on a small set, we can likely still obtain some interesting estimates. For instance, the Hilbert transform, corresponding to the Fourier multiplier $m(\xi) = i \text{sgn}(\xi)$, is singular at $\xi = 0$, but still satisfies the bounds
 %
@@ -3716,7 +3918,7 @@ is finite. Then $m$ has countably many discontinuities, and the variation preven
 The theorem of H\"{o}rmander-Mikhlin is a more sophisticated instance of the smoothness-regularity phenomenon, giving $L^p$ to $L^p$ bounds to Fourier multipliers which decay smoothly away from the origin. There are several formulations of the phenomenon, of greater and greater generality. Without loss of generality, we will assume that $m \in L^\infty(\RR^d)$, since otherwise $m$ cannot lie in any of the spaces $M^p$. Let us state them in increasing order of generality, the former being most easily seen as relating to the smoothness of the multipliers:
 %
 \begin{itemize}
-    \item The multiplier $m$ lies in $C^\infty(\RR^d - \{ 0 \})$, and satisfies
+    \item The multiplier $m$ lies in $C^\infty_{\text{loc}}(\RR^d - \{ 0 \})$, and satisfies
     %
     \begin{equation} \label{hormandermikhlindecayestimate}
         |D^\beta_\xi m(\xi)| \lesssim_\beta |\xi|^{-\beta}
@@ -3953,115 +4155,6 @@ If $m$ is no longer continuous, this theorem only holds for \emph{almost all} sl
 
 \chapter{Sobolev Spaces}
 
-
-
-
-
-
-
-
-
-
-
-
-
-\chapter{Sobolev Spaces}
-
-Let $\Omega$ be an open subset of $\RR^d$. A natural problem when studying smooth functions $\phi \in C_c^\infty(\Omega)$ is to obtain estimates on the partial derivatives of $\phi$. For instance, one can consider the norms
-%
-\[ \| \phi \|_{C^n(\Omega)} = \max_{|\alpha| \leq n} \| D^\alpha f \|_{L^\infty(\Omega)}. \]
-%
-The space $C_c^\infty(\Omega)$ is not complete with respect to this norm, but it's completion is the space $C^n_b(\Omega)$ of $n$ times bounded continuously differentiable functions on $\Omega$, which still consists of regular functions. Unfortunately, such estimates are only encountered in the most trivial situations. As in the non-smooth case, one can often get much better estimates using the $L^p$ norms of the derivatives, i.e. considering the norms
-%
-\[ \| \phi \|_{W^{n,p}(\Omega)} = \left( \sum_{|\alpha| \leq p} \| D^\alpha \phi \|_{L^p(\Omega)}^p \right)^{1/p}. \]
-%
-As might be expected, $C_c^\infty(\Omega)$ is not complete with respect to the $W^{n,p}(\Omega)$ norm. However, it's completion cannot be identified with a family of $n$ times differentiable functions. Instead, to obtain a satisfactory picture of the compoetion under this norm, a Banach space we will denote by $W^{n,p}(\Omega)$, we must take a distribution approach.
-
-For each multi-index $\alpha$, if $f$ and $f_\alpha$ are locally integrable functions on $\Omega$, we say $f_\alpha$ is a weak derivative for $f$ if for any $\phi \in C_c^\infty(\Omega)$,
-%
-\[ \int_\Omega f_\alpha(x) \phi(x)\; dx = (-1)^{|\alpha|} \int_\Omega f(x) \phi_\alpha(x)\; dx. \]
-%
-In other words, this is the same as the derivative of $f$ viewed as a distribution on $\Omega$. We define $W^{n,p}$ to be the space of all functions $f \in L^p(\Omega)$ such that for each $|\alpha| \leq n$, a weak derivative $f_\alpha$ exists and is an element of $L^p(\Omega)$. We then define
-%
-\[ \| f \|_{W^{n,p}(\Omega)} = \left( \sum_{|\alpha| \leq n} \| f_\alpha \|_{L^p(\Omega)} \right)^{1/p}. \]
-%
-Where this sum is treated as a maximum in the case $p = \infty$. Later on we will be able to show this space is a complete Banach space.
-
-\begin{example}
-  Let $B$ be the open unit ball in $\RR^d$, and let $u(x) = |x|^{-s}$, where $s < n-1$. For which $p$ is $u \in W^{1,p}(B)$? We calculate by an integration by parts that if $\phi \in C_c^\infty(B)$, we fix $\varepsilon > 0$ and write
-  %
-  \[ \int_B \phi_i(x) u(x)\; dx = \int_{|x| \leq \varepsilon} \phi_i(x) u(x) + \int_{\varepsilon < |x| \leq 1} \phi_i(x) u(x). \]
-  %
-  The integral on the $\varepsilon$ ball is neglible since $s < n$. Since $u$ is smooth away from the origin, it's distributional derivative agrees with it's standard derivative, which is
-  %
-  \[ u_i(x) = \frac{- \alpha x_i}{|x|^{s + 2}}. \]
-  %
-  Thus $|u_i| \lesssim 1/|x|^{s + 1}$. An integration by parts gives
-  % in the $i$'th direction, and we calculate $\nabla u(x) = -\alpha x |x|^{-\alpha-2}$. Thus an integration by parts gives
-  %
-  \[ \int_{\varepsilon < |x| \leq 1} \phi_i(x) u(x) = \int_{|x| = \varepsilon} \phi(x) u(x) \nu_i\ dS + \int_{\varepsilon < |x| \leq 1} \frac{s \phi(x) x_i}{|x|^{s + 2}}\; dx, \]
-  %
-  where $\nu_i$ is the normal vector to the sphere pointing inward. Since $s < n-1$, the surface integral tends to zero as $\varepsilon \to 0$. Thus the weak derivative of $u$ is equal to the standard derivative. Consequently, $u \in W^{1,p}(B)$ if $s < n/p - 1$.
-\end{example}
-
-\begin{example}
-  If $\{ r_k \}$ is a countable, dense subset of $B$, then we can define
-  %
-  \[ u(x) = \sum_{k = 1}^\infty \frac{|x - r_k|^{-s}}{2^k} \]
-  %
-  Then $u \in W^{1,p}(B)$ if $0 < \alpha < n/p - 1$, yet $u$ has a dense family of singularities, and thus does not behave like any differentiable function we would think of.
-\end{example}
-
-\begin{theorem}
-  For each $k \in \mathbf{N}$ and $1 \leq p \leq \infty$, $W^{k,p}(\Omega)$ is a Banach space.
-\end{theorem}
-\begin{proof}
-  It is easy to verify that $\| \cdot \|_{W^{k,p}}$ is a norm on $W^{k,p}(\Omega)$. Let $\{ u_n \}$ be a Cauchy sequence in $W^{k,p}(\Omega)$. In particular, this means that $\{ D^\alpha u_n \}$ is a Cauchy sequence in $L^p(\Omega)$ for each multi-index $\alpha$ with $|\alpha| \leq k$. In particular, these are functions $v_\alpha$ such that $D^\alpha u_n$ converges to $v_\alpha$ in the $L^p$ norm for each $\alpha$. Thus it suffices to prove that if $v = \lim u_n$, then $D^\alpha v = v_\alpha$ for each $\alpha$. But this follows because the H\"{o}lder inequality implies that for each fixed $\phi \in C_c^\infty(\Omega)$,
-  %
-  \begin{align*}
-    (-1)^{|\alpha|} \int \phi_\alpha(x) v(x)\; dx &= \lim_{n \to \infty} (-1)^{|\alpha|} \phi_\alpha u_n(x)\; dx\\
-    &= \lim_{n \to \infty} \int \phi(x) (D^\alpha u_n)(x)\; dx\\
-    &= \int \phi(x) v_\alpha(x)\; dx.
-  \end{align*}
-  %
-  Thus $W^{k,p}(\Omega)$ is complete.
-\end{proof}
-
-\section{Smoothing}
-
-It is often useful to be able to approximate elements of $W^{k,p}(\Omega)$ by elements of $C^\infty(\Omega)$. This is mostly possible. If $u \in W^{k,p}(\Omega)$, and $\{ \eta_\varepsilon \}$ is a family of smooth mollifiers, then, viewing $u$ as a function on $\RR^n$ supported on $\Omega$, we can consider the convolution $u^\varepsilon = u * \eta_\varepsilon$, i.e. the function defined by setting
-%
-\[ u^\varepsilon(x) = \int_\Omega u(x - y) \eta_\varepsilon(y)\; dy. \]
-%
-This is just normal convolution, where we identify the function $u$ with the function $u \mathbf{I}_\Omega$ on $\RR^d$. Then $u^\varepsilon$ is a smooth function on $\RR^d$ supported on a $\varepsilon$ thickening of $\Omega$. However, $u^\varepsilon$ does not necessarily converge to $u$ in $W^{k,p}(\Omega)$ as $\varepsilon \to 0$, since the behaviour of the convolution can cause issues at the boundary of $\Omega$, where the distributional derivative $D^\alpha(u \mathbf{I}_\Omega)$ does not behave like a locally integrable function. This is the only problem, however.
-
-\begin{theorem}
-  If $U \Subset \Omega$, then $\lim_{\varepsilon \to 0} \| u^\varepsilon - u \|_{L^p(U)} = 0$.
-\end{theorem}
-\begin{proof}
-  For each $\varepsilon > 0$, let $U^\varepsilon = \{ x \in \Omega: d(x,\partial \Omega) > \varepsilon \}$. If $x \in \Omega^\varepsilon$, then
-  %
-  \[ ((D^\alpha u) * \eta_\varepsilon)(x) = (u_\alpha \mathbf{I}_\Omega * \eta_\varepsilon)(x), \]
-  %
-  since the convolution only depends on the behaviour of $D^\alpha u$ on a $\varepsilon$ ball around $x$, which is contained in the interior of $\Omega$. We can apply standard results about mollifiers to conclude that $u_\alpha \mathbf{I}_\Omega * \eta_\varepsilon$ converges to $u_\alpha \mathbf{I}_\Omega$ in $L^p(\RR^d)$ as $\varepsilon \to 0$. Since $U \Subset \Omega$, we have $U \subset U^\varepsilon$ for small enough $\varepsilon$, and so $(D^\alpha u) * \eta_\varepsilon$ converges to $u_\alpha$ in $L^p(U)$ as $\varepsilon \to 0$. Since this is true for each $\alpha$ with $|\alpha| \leq k$, we obtain the result.
-\end{proof}
-
-If we are a little more careful, then we can fully approximate elements of $W^{k,p}(\Omega)$ by smooth functions on $U$.
-
-\begin{theorem}
-  $C^\infty_c(\Omega) \cap W^{k,p}(\Omega)$ is dense in $W^{k,p}(\Omega)$.
-\end{theorem}
-\begin{proof}
-  Consider a family of open sets $\{ V_n \}$ such that $V_n \Subset \Omega$ for each $n$, and $U = \bigcup V_n$. Then we can consider a smooth partition of unity $\{ \xi_n \}$ subordinate to the cover $\{ V_n \}$. For each $u \in W^{k,p}(\Omega)$, we can write $u = \sum_n u \xi_n$. In particular, this means that for each $\varepsilon > 0$, there is $N$ such that $\| \sum_{n = N+1}^\infty u \xi_n \|_{W^{k,p}(\Omega)} \leq \varepsilon$. For each $n \in \{ 1, \dots, N \}$, we can find $\delta_n$ small enough that the $\delta_n$ thickening of $V_n$ is compactly contained in $\Omega$. If $\varepsilon_n$ is small enough, we find $(u \xi_n)^{\varepsilon_n}$ is supported on the $\delta_n$ thickening of $V_n$, and $\| (u \xi_n)^{\varepsilon_n} - u \xi_n \|_{W^{k,p}(V_n)} \leq \varepsilon / N$. But we then find
-  %
-  \begin{align*}
-    \| u - \sum_{n = 1}^N (u \xi_n)^{\varepsilon_n} \|_{W^{k,p}(\Omega)} \leq \varepsilon + \sum_{n = 1}^N \| u \xi_n - (u \xi_n)^{\varepsilon_n} \|_{W^{k,p}(\Omega)} \leq 2\varepsilon.
-  \end{align*}
-  %
-  Thus $C_c^\infty(\Omega)$ is dense in $W^{k,p}(\Omega)$.
-\end{proof}
-
-Approximation by elements of $C^\infty(\overline{\Omega})$ requires some more care, and additional assumptions on the behaviour of $\partial \Omega$.
 
 
 
@@ -4401,7 +4494,7 @@ Thus if large cancellation happens in $I(\lambda)$ for the average $\lambda$, th
     &= \int_0^1 e^{2 \pi i (x + f(x))}\; dx.
   \end{align*}
   %
-  Thus $I(\lambda_0;\phi_{\lambda_0}) \sim 1$, independant of $\phi_0$, despite a uniform lower bound on the derivatives of the family of functiosn $\{ \phi_{\lambda_0} \}$.
+  Thus $I(\lambda_0;\phi_{\lambda_0}) \sim 1$, independant of $\phi_0$, despite a uniform lower bound on the derivatives of the family of functions $\{ \phi_{\lambda_0} \}$.
 \end{example}
 
 One option is a uniform upper bound on $\phi''$, in addition to lower bounding $\phi'$, which eliminates the counterexample above, and yields a positive result.
@@ -4539,28 +4632,25 @@ The Van der Corput lemma also applies here.
 If $a$ is smooth and compactly supported, repeated integration by parts is very successful because there are no boundary terms, and so we get very fast decay as $\lambda \to \infty$.
 
 \begin{theorem}
-    If $a$ and $\phi$ are smooth functions, with $a$ compactly supported, and $|\phi'(x)| \geq \delta$ for all $x$ in the support of $a$, then for all $N > 0$,
+    Let $J$ be an interval, and fix $n > 0$. Consider a real-valued phase function $\phi \in C^{n+1}(\RR)$ with $\phi'(x) \neq 0$ on $J$, and an amplitude $a \in C^{n+1}(\RR)$ with $\text{supp}(a) \subset J$. Then
     %
-    \[ |I(\lambda)| \lesssim_{a,\phi,N} \delta^{-2N} \lambda^{-N}. \]
+    \[ |I(\lambda)| \lesssim_{n,K,\phi} \lambda^{-n} \sum_{k = 0}^n \| a^{(k)} |\phi'|^{k - 2n} \|_{L^\infty(J)}, \]
     %
-    For a fixed $N$, the implicit constant depends only on the support of $a$, and $L^\infty$ upper bounds on the derivatives of $\phi$ up to order $N+1$ (not including $\phi$ itself, which makes sense since the magnitude of the integral is invariant under translation), and upper bounds on the derivatives of $a$ up to order $N$.
-    %More precisely, if $a$ is supported on a region of volume $V$, the $L^\infty$ norms of the derivatives of $\phi$ up to order $N+1$ are bounded by $A$, and the $L^\infty$ norms of the derivatives of $a$ up to order $N$ are bounded by $B$, then
-    %
-    %\[ |I(\lambda)| \lesssim_N \delta^{-2N} A^N B V \lambda^{-N}. \]
+    where the implicit constant is uniformly bounded over a family of phases $\phi$ which are bounded in $C^{n+1}(J)$.
 \end{theorem}
 \begin{proof}
-  A single integration by parts gives
+  When $n = 0$, the result is trivial. The remaining cases we shall prove by induction. A single integration by parts gives
   %
   \begin{align*} I(\lambda) &= \frac{1}{\lambda} \int \frac{a(x)}{2 \pi i \phi'(x)} \frac{d}{dx} \left( e^{2 \pi i \lambda \phi(x)} \right)\\
   &= - \frac{1}{2 \pi i \lambda} \int \frac{d}{dx} \left( \frac{a(x)}{\phi'(x)} \right) e^{2 \pi i \lambda \phi(x)}\\
   &= \frac{1}{2 \pi i \lambda} \int \frac{\phi'(x) a'(x) - a(x) \phi''(x)}{\phi'(x)^2} e^{2 \pi i \lambda \phi(x)}.
   \end{align*}
   %
-  Further integration by parts give, for each $N$, that
+  Applying induction, this quantity is bounded up to a universal constant depending solely on the derivatives of $\phi$ up to order $n-1$ by
   %
-  \[ I(\lambda) = \lambda^{-N} \int \frac{P(x)}{\phi'(x)^{2N}} e^{2 \pi i \lambda \phi(x)}, \]
+  \[ \lambda^{-n} \sum_{k = 0}^{n-1} \left\| \left( \frac{\phi' a' - a \phi''}{(\phi')^2} \right)^{(k)} |\phi'|^{k - 2(n-1)} \right\|_{L^\infty(J)} \]
   %
-  where $P(x)$ is a polynomial, with variables in the derivatives of $\phi$ up to order $N+1$, and derivatives in $a$ up to order $N$, homogeneous of order $N$ of the former variables, and linear in the variables of the latter. Thus we can take in absolute values and integrate to conclude $|I(\lambda)| \lesssim_{a,N} \lambda^{-N}$.
+  and applying the product rule, we see this term is bounded, up to a universal constant depending solely on derivatives of $\phi$ up to order $n$, by the required quantity.
 \end{proof}
 
 \begin{remark}
@@ -4590,12 +4680,12 @@ Thus our heuristics tell us that we should expect $I(\lambda)$ decays on the ord
 \begin{theorem}
   Let $a \in \mathcal{S}(\RR)$. Then
   %
-  \[ I(\lambda) \sim e^{i \pi / 4} (2\lambda)^{-1/2} \sum_{n = 0}^\infty \left( i / 8 \pi \right)^n \frac{a^{(2n)}(0)}{n!} \]
+  \[ I(\lambda) \sim e^{i \pi / 4} (2\lambda)^{-1/2} \sum_{n = 0}^\infty \left( i / 8 \pi \right)^n \frac{a^{(2n)}(0)}{n!} \cdot \frac{1}{\lambda^n} \]
   %
   That is, for each pair of nonnegative integers $N$ and $k$
   %
   \begin{align*}
-    \left( \frac{d}{d\lambda} \right)^k I(\lambda) &= \left( \frac{d}{d\lambda} \right)^k \left\{ e^{i \pi / 4} \cdot (2\lambda)^{-1/2} \sum_{n = 0}^N \left( i / 8 \pi \right)^n \frac{a^{(2n)}(0)}{n!} \right\}\\
+    \left( \frac{d}{d\lambda} \right)^k I(\lambda) &= \left( \frac{d}{d\lambda} \right)^k \left\{ e^{i \pi / 4} \cdot (2\lambda)^{-1/2} \sum_{n = 0}^N \left( i / 8 \pi \right)^n \frac{a^{(2n)}(0)}{n!} \cdot \frac{1}{\lambda^n} \right\}\\
     &\quad\quad + O_{N,m,a}(1/\lambda^{N + m + 3/2}).
   \end{align*}
   %
@@ -4697,7 +4787,7 @@ It requires only a simple change of variables to extend this theorem to arbitrar
   %
   \[ c_0 = \sqrt{ \frac{i}{\phi''(x_0)} } \cdot a(x_0). \]
   %
-  More generally, in this case there exists a sequence of linear differential operators $\{ L_n \}$, with coefficients depending on the derivatives of $\phi$ at $x_0$, such that $c_n = (L_n a)(x_0)$.
+  More generally, in this case there exists a sequence of linear differential operators $\{ L_n \}$, with $L_n$ order $2n$, with coefficients depending on the derivatives of $\phi$ at $x_0$, such that $c_n = (L_n a)(x_0)$.
 \end{theorem}
 \begin{proof}
     Translating our integration variables if necessary, we may assume that the critical point $x_0$ lies at the origin. Partitioning the support of $a$, applying the principle of nonstationary phase away from the critical point, we may assume without loss of generality that $a$ is supported on an arbitrarily small neighborhood of the critical point. In particular, we may assume that $\phi(x) \neq 0$ for all nonzero $x$ in the support of $a$. A coordinate change $x \mapsto -x$ means we may assume that $\phi''(0) > 0$. We can then define a function
@@ -5140,7 +5230,11 @@ When we move from a single variable oscillatory integral to a multivariable osci
 for large $\lambda$. The method of stationary phase becomes significantly more complicated in this setting because the stationary points of the phase function are no longer necessarily isolated. In certain basic situations, such as when the stationary points are isolated and satisfy a nondegeneracy condition, we can obtain asymptotic formulae.
 
 \begin{theorem}
-  Let $\phi$ and $a$ be smooth functions on $\RR^d$, with $a$ compactly supported. If $\nabla \phi$ is nowhere vanishing on the support of $a$, then for each $N > 0$, $|I(\lambda)| \lesssim_N \lambda^{-N}$ for all $N$.
+    Fix a compact set $K$ and a positive integer $n > 0$, and consider an amplitude $a \in C^n(\RR^d)$ with $\text{supp}(a) \subset K$, and a real-valued phase $\phi \in C^{n+1}(\RR^d)$, with $\nabla \phi(x) \neq 0$ on $K$. Then
+    %
+    \[ |I(\lambda)| \lesssim_{n,K,\phi} \sum_{|\alpha| \leq n} \| (D^\alpha a) |\nabla f|^{|\alpha| - 2n} \|_{L^\infty(\RR^d)}. \]
+    %
+    where the implicit constant can be made independant of $\phi$ for a family of phases if the partial derivatives of $\phi$ up to order $n+1$ are uniformly bounded in a neighborhood of $K$.
 \end{theorem}
 
 \begin{proof}
@@ -5158,16 +5252,14 @@ for large $\lambda$. The method of stationary phase becomes significantly more c
     %
     Thus
     %
-    \[ I(\lambda) = \int D^N(e^{2 \pi i \lambda \phi(x)}) a(x)\; dx = \int e^{2 \pi i \lambda \phi(x)} ((D^*)^N a)(x)\; dx. \]
+    \[ I(\lambda) = \int D^n(e^{2 \pi i \lambda \phi(x)}) a(x)\; dx = \int e^{2 \pi i \lambda \phi(x)} ((D^*)^n a)(x)\; dx. \]
     %
     Taking absolute values in the last integral gives that
     %
-    \[ |I(\lambda)| \leq \int |(D^*)^N a(x)|\; dx \lesssim_{\phi,a,N} \frac{1}{\lambda^N}. \qedhere \]
+    \[ |I(\lambda)| \leq \int |(D^*)^n a(x)|\; dx \lesssim_{\phi,a,n} \frac{1}{\lambda^n}, \]
+    %
+    and a more careful analysis of this gives the more precise estimates in the lemma.
 \end{proof}
-
-\begin{remark}
-  The implicit constants for a fixed $N$ can be uniformly bounded given a uniform lower bound on $|\nabla \phi|$, and upper bounds on the derivatives of $\phi$ up to order $N+1$, on $a$ up to order $N$, and on the measure of the support of $a$, just as in the one dimensional case.
-\end{remark}
 
 A tensorization argument establishes stationary phase asymptotics for a quadratic phase.
 
