@@ -1,4 +1,9 @@
-Quotes:
+# The Problems of Philosophy
+# By Bertrand Russell
+
+
+
+## Quotes:
 
 Philosophy, if it cannot *answer* so many questions as we could wish, has at least the power of *asking* questions which increase the interest of the world, and show the strangeness and wonder lying just below the surface even in the commonest things of daily life.
 
@@ -13,7 +18,9 @@ The man who has fed the chicken every day throughout its life at last wrings it 
 
 
 
-Chapter 1: Appearance and Reality
+## Chapter Notes
+
+### Chapter 1: Appearance and Reality
 
 We begin with the following question: Is there any knowledge no 'reasonable' person could doubt? To answer this question, it is natural to begin with what we experience, since some knowledge must be obtained through experience. But if we think critically, we see that almost any knowledge we are predisposed to infer from sensations is incorrect. For instance, in observing a table, it is self evident to us all that the table is brown, rectangular, shiny, smooth, cool, hard to the touch, and makes a distinctive sound when tapped. But all of these facts may be doubted via reason, from which we will come to the conclusion that these properties are not properties of the table itself, but of the *appearance* of the table which we percieve through the senses. Let us argue why this is so:
 
@@ -41,7 +48,7 @@ In the book "Three Dialogues between Hylas and Philonous, in Opposition to Scept
 
 
 
-Chapter 2: The Existence of Matter
+### Chapter 2: The Existence of Matter
 
 In this chapter we try and elaborate on the problem of the existence of matter. In particular, we confront the idea of whether these is anything independant of our mind at all. Our main conclusion is that though we will not be able to strictly prove that everything does not emerge from the mind, there is no reason to suppose that it does.
 
@@ -69,7 +76,7 @@ The goal of philosophy is to perform the process of clarifying, relating, and sy
 
 
 
-Chapter 3: The Nature of Matter
+### Chapter 3: The Nature of Matter
 
 In the previous chapter, we came to the conclusion that we should believe that our sense data corresponds to something external to ourselves. There is something else which causes the appearances we obtain through sensation. So now we ask, what are the properties of that other thing?
 
@@ -90,7 +97,7 @@ It remains to ask if there is anything else we can know about the intrinsic natu
 
 
 
-Chapter 4: Idealism
+### Chapter 4: Idealism
 
 Different philosophers view idealism slightly differently. For our purposes, by idealism we mean the belief that whatever exists must be mental. Despite that common sense tells us this is obviously absurd, this belief is widely held by philosophers (at least in the 1920s). And we have seen that this belief is not entirely groundless, because we can never directly percieve physical objects in themselves, so whatever properties these physical objects have must be absurd.
 
@@ -107,7 +114,7 @@ Come back to the last page or two later on - I didn't understand it.
 
 
 
-Chapter 5: Knowledge by Acquaintance vs Knowledge by Description
+### Chapter 5: Knowledge by Acquaintance vs Knowledge by Description
 
 In the previous chapters, we have found that we should distinguish between two types of knowledge. The first, knowledge *of things*, and the second, knowledge *of truths*, often called judgements. Knowledge of a thing through direct awareness, without any inference of knowledge of truths, we shall call *an acquaintance*, so that we have certain *knowledge by acquaintance*. Thus we have direct acquaintance with sense-data. Knowledge by acquaintance is more simple than any knowledge of truths, and logically independent. Once we see a particular shade of color, we know that sense-data utterly and completely.
 
@@ -129,17 +136,17 @@ Let us now focus on knowledge by description. A *description* is any phrase of t
 
 When we say "The BLAH exists", we are saying there is a single object which satisfies the property described by BLAH, and no other object also satisfies this proeprty. Common words are usually descriptions in disguise. Let us suppose we make some statement about Otto von Bismarck. Provided we can be acquainted with the "I", Bismarck himself may have this statement to designate the individual who he was directly acquainted with. Thus the name fits the use it wishes to have, i.e. a description that refers to an existing object. But any other individual uses the name in a different way, in describing an object they have heard other people call that name through their ears. That person was acquainted with sense data, which was inferred to be caused by Bismarck's mind and body, and a description was formed in the mind as to the body and mind that causes this sense data. It is an important point that any applicable description must be connected to something that we are acquainted with, e.g. "the past" is an object that is only applicable in relation to our memory, "the present" in relation to our sense-data, if we are to obtain any information about the object that description refers to except that which follows logically from the description. On the other hand, logical matters need not be concerned with descriptions that refer to particular objects.
 
-QUESTION: What acquaintances "the future" connect to?
+Question: What acquaintances does 'the future' connect to?
 
-Question: How does Bayesian reasoning `correctly quantify' induction?
-
-
+Question: How does Bayesian reasoning 'correctly quantify' induction?
 
 
 
 
 
-Chapter 6: On Induction
+
+
+### Chapter 6: On Induction
 
 We now know that we know that what we are acquainted with exists, and that what we once knew existed in the past. Objects we are acquainted with gives us our *data*. If we are to draw inferences from this data, we must have some general principles that allow us to do so, i.e. rules that enable us, from the existence of one object A, to infer the existence of some other object B. Without these principles, we would never be able to know anything beyond what we are acquainted with.
 
@@ -170,13 +177,15 @@ Question: How do we quantify this via Bayesian probability, and justify this?
 
 
 
-Meeting Notes 1:
+## Meeting Notes
+
+### Meeting Notes 1:
 	- Does the consequence of the Schr\"{o}dinger's Cat thought experiment show that Schr\"{o}dinger was an idealist? Is the many worlds interpretation of quantum physics idealist?
 
 	- I can't comprehend how external space can be different from internal space. Does science necessitate external space, or just that physical matter exists, and we can comprehend it's properties as an internal space?
 
 
-Meeting Notes 2:
+### Meeting Notes 2:
 
 Science is different from idealism
 Social sciences vs physical sciences
