@@ -203,3 +203,6 @@ Pain Stimuli vs Suffering of the inner mind
 	- Interested in what it means to unite eastern philosophy?
 
 - Does everything have a single kind of idea, or are there different 'spirits'.
+
+### Meeting Notes 3:
+
