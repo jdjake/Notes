@@ -55,19 +55,14 @@
         \item What can one learn about the geometry of a compact set $E \subset \TT^d$ via analytical properties of probability measures $\mu$ supported on $E$?
         \pause
 
-        \item A set $E$ has \emph{Minkowski dimension $s$} if $|N_\delta(E)| \lesssim \delta^{d-s}$.
-        \pause
-
         \item A set $E$ has \emph{Hausdorff dimension $s$} if for any $t < s$, $E$ supports a probability measure $\mu_t$ with
         %
         \[ \sum_{k \neq 0} |\widehat{\mu_t}(k)|^2 |k|^{t-d} < \infty. \]
-        %
-        Very similar to Minkowski dimension, but `multiscale'.
         \pause
 
         \item A set has \emph{Fourier Dimension} $s$ if it supports $\mu_t$ with $|\widehat{\mu_t}(k)| \lesssim |k|^{-t/2}$ for \emph{all} $k$.
 
-        \item $\fordim(E) \leq \hausdim(E) \leq \minkdim(E)$.
+        \item $\fordim(E) \leq \hausdim(E)$.
     \end{itemize}
 \end{frame}
 
@@ -212,9 +207,9 @@
         %
         is invertible. Then there exists $E \subset \TT^d$ with
         %
-        \[ \fordim(E) = \frac{d}{n - 3/4} \]
+        \[ \fordim(E) = \beta = \frac{d}{n - 3/4} \]
         %
-        avoiding solutions to the equation $x_n = f(x_1,\dots,x_{n-1})$.
+        avoiding solutions to $x_n = f(x_1,\dots,x_{n-1})$.
     \end{theorem}
 
     \begin{itemize}
@@ -225,7 +220,123 @@
 \end{frame}
 
 \begin{frame}
+    \frametitle{Aside: Baire Categories vs Probabilities}
+
+    \begin{itemize}
+        \item Result actually show that a \emph{generic} set $E$ with Fourier dimension $s \leq \beta$ avoids solutions to the equation $x_n = f(x_1,\dots,x_{n-1})$.
+
+        \item (Schmerkin, 2017): For any $y_1,\dots,y_n \in \TT^2$, a \emph{random} set of dimension $s > (dn - (d+1))/n$ will almost surely contain a translated, dilated copy of $\{ y_1, \dots, y_n \}$.
+
+        \item A generic set of dimension
+        %
+        \[ \frac{dn - (d+1)}{n - 1/2} \]
+        %
+        avoids translated, dilated copies of $\{ y_1, \dots, y_n \}$.
+
+        \item Thus Baire category and probabilistic notions of `almost everywhere'   do not correspond for sets of dimension
+        %
+        \[ \frac{dn - (d+1)}{n} < s \leq \frac{dn - (d+1)}{n-1/2} \]
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Technical Reduction}
+
+    Theorem holds if we can prove that for any disjoint intervals $I_1,\dots,I_n \subset \TT^d$, there exists arbitrarily large sets $S = \{ x_1,\dots,x_N \}$ such that if $\delta = N^{-1/\beta}$,
+    %
+    \begin{itemize}
+        \item If $x_i \in I_i \cap N_\delta(S)$ for $1 \leq i \leq n$, $x_n \neq f(x_1,\dots,x_{n-1})$.
+        \item For any $|\xi| \leq 1/\delta$,
+        %
+        \[ \left| \frac{1}{N} \sum_i e^{2 \pi i \xi \cdot x_i} \right| \ll N^{-1/2} \]
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{The Construction}
+
+    \begin{itemize}
+        \item For $1 \leq i \leq n$, let $\{ X_{i1}, \dots, X_{iM} \}$ be independently selected from $I_i$.
+        \item Let
+        %
+        \[ \mathcal{B} = \left\{ j_n: \begin{array}{c} |X_{nj_n} - f(X_{1j_1}, \dots, X_{n-1,j_{n-1}})| \leq \delta \\ \text{for some}\ j_1,\dots,j_{n-1} \end{array} \right\}. \]
+        %
+        \item Take $S = \{ X_{ij} \} - \{ X_{nj} : j \in \mathcal{B} \}$.
+        \item Set $N = \#(S)$.
+        \item Then $\mathcal{N}_\delta(S)$ avoids solutions to $x_n = f(x_1,\dots,x_{n-1})$.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Goal}
+
+    \begin{itemize}
+    \item If
+    %
+    \[ Y_\xi = \frac{1}{N} \sum_{x \in S} e^{2 \pi i \xi \cdot x}, \]
+    %
+    then $|Y_\xi| \ll N^{-1/2}$.
+
+    \begin{itemize}
+        \item Step 1: $|Y_\xi - \EE Y_\xi | \ll N^{-1/2}$ with large probability.
+        \item Step 2: $|\EE Y_\xi| \ll N^{-1/2}$.
+    \end{itemize}
+
+    \item Step 1 is obtained through \emph{concentration inequalities}.
+    \item Step 2 is obtained through \emph{oscillatory integral estimates}.
+
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Concentration Inequalities}
+
+    \begin{itemize}
+        \item If $Y = f(X_1,\dots,X_N)$, where $X_1,\dots,X_N$ are independant, and have `equal influence' on $Y$, then $|Y - \EE Y| \lesssim \sqrt{N}$ with high probability.
+
+        \item {\bf Hoeffding's Inequality} If $|X_i| \leq A_i$ for each $i$, and
+        %
+        \[ Y + X_1 + \dots + X_N, \]
+        %
+        then $|X_1 + \dots + X_N | \lesssim (A_1^2 + \dots + A_N^2)^{1/2}$ with high probability.
+
+        \item {\bf McDiarmid's Inequality} If
+        %
+        \[ |f(x_1,\dots,x_i,\dots,x_n) - f(x_1,\dots,x_i',\dots,x_n)| \leq A_i \]
+        %
+        then $|Y - \EE Y| \lesssim (A_1^2 + \dots + A_N^2)^{1/2}$ with high probability.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Bounding $\EE Y_\xi$}
+
+    \begin{itemize}
+        \item We have
+        %
+        \[ \EE(Y_\xi) = \int_{\TT^d} \psi(x_n) e^{2 \pi i \xi \cdot x_n}\; d\PP(x_n), \]
+        %
+        where $d\PP(x) = \PP(j \in \mathcal{B} | X_{nj} = x)$ and $\psi \in C^\infty(\TT^d)$.
+
+        \item If $\beta \leq d/(n-3/4)$,
+        %
+        \[ d\PP(x) = M^{n-1} |f^{-1}(B_\delta(x))| + O(N^{-1/2}), \]
+        %
+        so
+        %
+        \begin{align*}
+            \EE(Y_\xi) &= M^{n-1} \int_{B_r(0)} \int_{\TT^{d(n-1)}} \psi(y,v) e^{2 \pi i \xi \cdot (f(y) - v)}\; dy\; dv\\
+            &\quad + O(N^{-1/2}).
+        \end{align*}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
     \frametitle{Linear Result}
+
+    \begin{itemize}
+        \item Difficulties of estimating $\EE(Y_\xi)$ can be eliminated if $d\mathbf{P}(x)$ is independant of $x$ (so $\EE(Y_\xi) = 0$ for all $\xi \neq 0$). This is true, for instance, if there is some linearity in the equation.
+    \end{itemize}
 
     \begin{theorem}
         Suppose $f$ is Lipschitz. Then there exists $E \subset \TT^d$ with
@@ -236,6 +347,22 @@
         %
         \[ x_n - x_{n-1} = f(x_1,\dots,x_{n-2}). \]
     \end{theorem}
+
+    \begin{itemize}
+        \item One application of this is a higher dimensional generalization of K\"{o}rner's result on sets avoiding $n$ term linear equations.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{In Progress: Subsets of Curves Avoiding Isosceles Triangles}
+
+    \begin{itemize}
+        \item If $\gamma: [0,1] \to \TT^d$ is a smooth curve with $\gamma'$ non-vanishing, then the result we discussed shows there is $E \subset [0,1]$ with $\fordim(E) = 4/9$ such that $\gamma(E)$ does not contain the vertices of an isosceles triangle.
+
+        \item (Fraser Pramanik 2019) show there exists $E \subset [0,1]$ with $\hausdim(E) = 1/2$ such that $\gamma(E)$ does not contain the vertices of an isosceles triangle.
+
+        \item If $\gamma$ has non-vanishing curvature, can one find $E$ such that $\fordim(\gamma(E)) = 4/9$?
+    \end{itemize}
 \end{frame}
 
 \end{document}
