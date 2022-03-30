@@ -1,0 +1,192 @@
+\documentclass{article}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{prop}[theorem]{Proposition}
+
+%\theoremstyle{remark}
+\newtheorem*{example}{Example}
+\newtheorem*{proof*}{Proof}
+
+\theoremstyle{definition}
+\newtheorem*{defi}{Definition}
+\newenvironment{definition}
+    {\begin{samepage}\begin{framed}\begin{defi}}
+    {\end{defi}\end{framed}\end{samepage}}
+
+\title{Proofs in Three Bits or Less}
+\author{Jacob Denson}
+\date{November 24rd, 2017}
+
+\begin{document}
+
+\maketitle
+
+Our story starts with a 21st century problem. Proofs have been getting far too long lately. Displayed below is a graph of the long proofs over history.
+%
+\begin{itemize}
+    \item X 1799: Ruffini's Proof of the insolvability of the quintic. 500 Pages.
+    \item 1890: Killing's classification of simple complex Lie algebras, 180 pages.
+    \item X 1894: Construction of a 65537 Sided Regular Polygon, 200 Pages.
+    \item 1963: The odd order theorem is proven, 255 pages.
+    \item 1966: Resolution of 3-fold singularities, 500 pages.
+    \item 1966: Chandrasekhar's discrete series representation of Lie groups, 150 pages.
+    \item X 1974: Computer proof of 4 Color theorem, 139 pages.
+    \item 1976: Langlands proof of the fundamental equation for Eisenstein series, 337 pages.
+    \item X 1983: The Selberg trace formula, 1322 pages.
+    \item 2000: Almgren's regularity theorem, 955 pages.
+    \item 2000: Lafforgue's theorem on Langland's conjecture, 600 pages.
+    \item 2003: Poincare conjecture, Several hundred pages.
+    \item X 2004: Classification of finite simple groups, 100000-200000 pages.
+    \item X 2005: Kepler's conjecture on sphere packing (computer), hundreds of pages of arguments, plus GIGABYTES of computer calculations.
+    \item 2006: The strong perfect graph theorem, 180 pages
+    \item X 2007: Proof that a perfect game of checkers ends in a draw. YEARS OF CALCULATION.
+    \item 2010: God's theorem, Rubik's cube can be solved in 20 moves or less.
+    \item 2012: Mochizuki's work on Inter-universal Teichm\"{u}ller theorem, hundreds of papers.
+    \item X 2014: Particular case of Erd\"{o}s discrepency conjecture: Original proof 13 Gigabytes, `shortened to' 850 Megabytes.
+    \item X 2016: Boolean pythagorean tribes problem requires 200 TERABYTES of data.
+\end{itemize}
+%
+This is ridiculous! The only solution I can think of is only to accept the simplest proofs in mathematics. Perhaps we should make a mathematical version of twitter, where we can only prove some things in 140 characters or less. There's $26^{140}$ different sequences of characters so it gives us lots to work with. But it turns out that there's a radical way of viewing arguments emerging from problems in crytography, known as \emph{interactive proofs}, whose theory shows that we don't need 140 characters to prove things: we only need three!
+
+The idea is like that party game 20 questions. Suppose we (the \emph{verifier}) wish to determine whether a given statement is true or false by asking questions to a given person, known as a \emph{prover}. Whereas in the case of classical proofs, the prover would give us a big document for us to pore through to obtain knowledge, in interactive proofs we ask a series of yes/no questions to the prover. Given the provers answers, we then determine whether we have sufficient knowledge to know the prover really has a proof of a claim. The fewer the questions we have to ask, the simpler the proof!
+
+The big problem here is that the prover might make errors, or more maliciously, might lie to you when responding to your questions. Thus asking a question such as ``Is the statement true?'' is useless. We must ask \emph{checkable} questions.
+
+So what is the minimum number of questions a verifier needs to ask in order to determine to be fully convinced that a prover know whether a given statement is true or false? To make things technical, how many questions do we need to guarantee that our questions have:
+%
+\begin{itemize}
+    \item \emph{Perfect Completeness}: If a statement is true, then it is possible for the prover to answer questions in a way to convince the verifier that a statement is correct.
+
+    \item \emph{Perfect Soundness}: If a statement is false, then \emph{every} series of answers to our questions will fail to convince the verifier that a statement is true.
+\end{itemize}
+%
+The cost of having a series of questions for a problem which are perfectly complete and sound is inefficiency. For instance, the theorem
+%
+\begin{center} `` This statement cannot be verified without asking a googolplex questions '' \end{center}
+%
+is true (if it was false, it would have to be verifiable, and thus would be true) but requires a googolplex questions to answer. G\"{o}del has some magic that will convert this metamathematical statement into some crazy number theory statement, so this isn't a circular example.
+
+The trick to fixing this is to ask a \emph{random} family of questions, rather than a deterministic family. If we require perfect completeness and soundness, this isn't useful, but with randomness we can introduce weaker conditions:
+%
+\begin{itemize}
+    \item \emph{Imperfect Completeness}: If a statement is true, then there exists a series of answers to any questions we ask, from a randomly chosen family, which will convince us the statement is correct with probability greater than or equal $1/2$.
+
+    \item \emph{Imperfect Soundness}: If a statement is false, then {\it every} series of answers to our questions will fail to convince us with probability greater than $1 - \varepsilon$, for any fixed $\varepsilon > 0$.
+\end{itemize}
+
+\begin{theorem}[The PCP Theorem]
+    For any $\varepsilon > 0$, any class of statements which is `polynomial time checkable' (the class is `in {\bf NP}'), then there exists a method of interactive proof with perfect soundness, and imperfect completeness, that requires only three questions. For $\varepsilon = 0$ (Perfect soundness), there exists an interactive proof that requires $K$ questions, for some universal constant $K$.
+\end{theorem}
+
+An example of a problem `in {\bf NP}' is checking whether a graph is three colorable, since one can check a three coloring in polynomial time (we just check that each edge of the graph does not share a coloring, so checking the coloring takes $|E|$ steps, which is polynomial in the size of the graphs). Similarily, it is not obvious that we can check whether a given integer has exactly 100 prime factors easily %(Remark: it is actually an open problem whether this is easy or not, to all you aspiring number theorists, with a state of the art solution which runs in less than
+%
+%\[ O \left(\exp \sqrt[3]{\frac{64}{9} n (\log n)^2 } \right) \]
+%
+%steps, where $n$ is the number of bits required to specify the number to factorize.
+However, if you give me the prime factorization of the integer, then I can make sure you've given me exactly 100 prime factors, and that these factors multiply to equal the integer. Multiplication of two $n$ bit numbers takes $O(n^2)$ steps, so, if our initial number is expressible in $n$ bits, then we can first check each prime factor has less than $n$ bits, in $O(n)$ steps, multiply all these integers in $100\ O(n^2) = O(n^2)$ steps, and then check whether the product we obtain is equal to the original number, so we can check a given factorization in $O(n^2)$ time. Thus these problems are `feasibly checkable' in polynomial time.
+
+The PCP theorem doesn't say that, in 3 questions, we can obtain a proof of the theorem, but instead that we can verify whether the prover {\it has} a proof of the theorem. For instance, the PCP theorem says that we can determine whether an prover has a decomposition of an integer into 100 prime factors by asking it 3 questions, but we might not be able to determine what this decomposition is in three questions.%Note that asking the prover ``Do you have a decomposition of the integer into 100 prime factors'' is {\it not} a useful question, because the prover might have made a mistake, or lie, and there is no way to check this question is true.
+
+\begin{example}
+    Here is a practical example of the PCP theorem, which has been proposed for scaling the utility of certain digital currencies, like Bitcoin. One problem with digital, non centralized currencies is that there is no central authority deciding when fraud is taking place. The big realization of decentralized currency is that if we have a whole bunch of people volunteering to maintain the ledger of all transactions (in exchange for earning some bitcoins, this is mining), no person can individually break the ledger, because their ledger would disagree with everyone elses ledger. The PCP theorem has been proposed as a potential method for improving the scalability of these ledgers, by making validation that a particular claim is valid answerable in a constant number of questions.
+\end{example}
+
+An interesting way to view the problem is that certain `local' properties of mathematical objects can be encoded in such a way that these local properties become global. Here is an analogy from Dinur's talk on the subject. Imagine if we have a piece of toast, and, by sampling three points at random on the piece of toast, we want to determine whether the toast has jam on it. The encoding process as above can be compared to taking a knife, and smothering it all over the piece of toast, not looking at the bread. If there is any jam on the bread, then the knife will smother the jam all over the piece of toast, and after this, if we have any local jam on the piece of toast, it will now become a global property of the bread, and this can be very easily obtained by sampling three points on the piece of toast.
+
+\begin{example}
+    Three colorability of graphs is a very local property. In particular, a graph can appear to be three colorable, but fail to be three colorable at a single position. If someone said to us they had a three coloring of a graph, and we could only ask them the color of individual vertices, then it would take $|V|$ questions to determine whether the person actually had a three coloring. If you had access to the entire three coloring, it would only take you $O(|V| + |E|)$ steps to check whether a given coloring was actually a three coloring, so the problem of checking a three coloring is computationally feasible, and the PCP theorem guarantees that we can select three questions at random about the prover's proof of the three colorability of the graph, and to a high degree of accuracy, determine whether the prover's proof given is false, or whether the proof is correct. Note that ``Do you have a three coloring'', is NOT a good question to ask in this context, because we have no reason to trust the prover, and if he said ``Yes'' we have no information about his proof. Thus there is a way of encoding the three colorability of a graph in such a way that the local property of failing to be three colorable becomes global.
+\end{example}
+
+\begin{example}
+    The mathematical proof of a mathematical theorem is a {\it very} local property. Proofs can seem correct, but have a single `bug' at a single location which invalidates the entire proof. The PCP theorem says that there is a new way of encoding these proofs such that bugs are globally expressed, and become easy to find.
+\end{example}
+
+We shall find that Fourier-like techniques are very useful for transforming local properties of mathematical objects to global properties. An example of why this is true is that the $L^1$ norm of the Fourier transform of a function (which can be viewed as a particular encoding of a function) controls the $L^\infty$ norm of the original function. The $L^\infty$ norm is a very local property of the original function, whereas the $L^1$ norm of the Fourier transform is a global property, and can be estimated accuracy with a few random samples of the function.
+
+\section{Examples of PCPs}
+
+Here is some formal information which will be useful to reason about PCPs. Once we have predetermined a series of yes/no questions the verifier will pick from to determine if the theorem is correct, then we can index each question by an integer $i$, and then a prover can be identified with a finite series of zeroes and ones $x \in \{ 0, 1 \}^n$, such that $x_i = 1$ if the prover responds yes to question $i$, and $x_i = 0$ if the prover responds no to question $i$. If we ask three questions $i,j$, and $k$, we observe the bits $x_i, x_j$, and $x_k$, and must decide whether we are convinced by these three bits.
+
+\begin{example}
+    Consider determining whether two graphs $G_0$ and $G_1$ with $n$ indexed nodes, are {\it not} isomorphic to one another. While it is easy to provide a proof that two graphs are isomorphic (just give me an isomorphism, and I can check that it is injective, bijective, and an isomorphism in linear time in the size of the graphs), it is {\it not} easy to show that two graphs are not isomorphic. In fact, we don't actually know whether the non isomorphism problem is feasibly checkable (though a proof that it isn't would imply $\mathbf{P} \neq \mathbf{NP}$). However, we can stll obtain an interactive proof of this result, which only asks a single question. Our questions will be of the following variety. Given a graph $H$, we ask
+    %
+    \begin{center} ``If $H$ is isomorphic to $G_0$, output 0. If $H$ is isomorphic to $G_2$, output 0. Otherwise, output an arbitrary result'' \end{center}
+    %
+    (Note that if the graphs are isomorphic, then this question isn't even well formed, and thus cannot be answered correctly). To form our question, we fix an index $i \in \{ 0, 1 \}$, and a permutation $\nu \in S_n$, chosen uniformly at random. Given the graph $G_i$, we form the graph $\nu(G_i)$ by permuting the indices of the nodes of $G_i$. Now we ask the question above for $H = \nu(G_i)$. If the answer is equal to $i$, we are convinced of the statement, and otherwise, we remain unconvinced. If the graphs are not isomorphic, and the prover answers correctly, we are convinced. Thus we have perfect completeness. Now suppose the graphs are isomorphic to one another. Then the random graph $\nu(G_i)$ we obtain is independent of the index $i$, and so for any answer the prover gives, there is a 50\% chance of being caught out, because for each graph $H$ we could pick to ask about, we expect either answer with a 50\% probability. Thus we have imperfect soundness.
+\end{example}
+
+Thus encoding a graph as a partition of all graphs which are isomorphic and nonisomorphic to the graph makes the isomorphism property into a global property. This can be seen as a technique of `smearing' a bunch of checks into a single check. Picking a graph and asking whether it is isomorphic to the original checks a bunch of edges all at once, and this enables us to make local properties global. One problem with this, however, is that the encoding increases the size of the encoding from about $n$ bits to about $n^n$. This is related to the amount of randomness in our problem; in order to determine the probability distribution of our answers, we required a single `coin flip' to determine our index $i$, but $\lg n!$ coin flips to determine $\nu \in S_n$. Thus we require $\lg n! + 1 = O(n \lg n)$ flips, which gives us the $2^{O(n \lg n)} = n^{O(n)}$ proof encoding. An additional fact provided by the PCP theorem is that the random proofs for computationally feasible problems are that we only require $O(\lg n)$ coin flips of randomness for our problem, so that we can only ask at most $2^{O(\lg n)} = n^{O(1)}$ different questions, and so the size of our `global' encodings differs from our original encodings by a polynomial amount. There are results analogous to the PCP theorem which show that any problem which can be checked in {\it exponential time} has an interactive proof asking $K$ questions, but using a polynomial amount of randomness.
+
+\begin{example}
+    Here is an example of a {\bf local proof}, the Blum-Luby-Rosenfeld test, which have perfect completeness, but with local soundness, in the sense that the chance that we are tricked by the wrong solution depends on how `close' the problem is to a real solution. This is the complete opposite of the checkable proofs we have considered previously, which require globally separated soundness. Suppose a prover has a function $f: \mathbf{F}_2^n \to \mathbf{F}_2$ they claim is linear. How many questions do we have to ask before are convinced it is linear. The proof is easy -- we take two uniformly random $x,y \in \mathbf{F}_2^n$ (Note: $2 \log n = O(\log n)$ coin flips), and ask the value of $f(x)$, $f(y)$, and $f(x + y)$. We are convinced the function is linear if $f(x+y) = f(x) + f(y)$. If the function is linear, we always accept. On the other hand, for two functions, define the {\bf Hamming distance}
+    %
+    \[ d(f,g) = \# \{ x \in \mathbf{F}_2^n: f(x) \neq f(y) \} \]
+    %
+    Using Fourier-analytic methods, one can show that if $d(f,g) \geq \varepsilon$ for {\it every} linear function $g$, then $f$ is rejected with probability $\geq \varepsilon$. Thus, though we can get tricked by functions which are close to linear functions, functions which disagree with all linear functions will not trick our tester. This reflects the fact that $d(f,g) = 1/2$ for any two linear functions $f$ and $g$, so linear functions are very discrete in the Hamming metric. Suprisingly, if $d(f,g) = \varepsilon$, where $g$ is some linear function, then using only the values of $f$, we can compute all the values of $g$ correctly with probability $\geq 1 - 2\varepsilon$, even though $f$ is different from $g$ on a deterministic set of inputs. If we wish to calculate $x$, then we uniformly randomly pick $y$, and compute
+    %
+    \[ f(x + y) - f(y) \]
+    %
+    $f(x + y) = g(x + y)$ with probability $1 - \varepsilon$, $f(y) = g(y)$ with probability $1 - \varepsilon$, and so by a union bound, with probability $\geq 1 - 2\varepsilon$, we find
+    %
+    \[ f(x + y) - f(y) = g(x + y) - g(y) = g(x) \]
+    %
+    Thus linear functions are locally correctable, which enables us to move from local solutions to global solutions -- thus, even though linearity is a local property, local correctability allows us to show that if solutions are accepted with high probability, they are close to correct, and in particular, this means there {\it is} a correct solution, and this is all that is important to be convinced by a proof.
+\end{example}
+
+\begin{example}
+    Consider the problem of determining whether a series of quadratic equations over the field $\mathbf{F}_2$ is solvable, i.e. if
+    %
+    \[ x_1^2 + x_2x_3 + x_4^2 = 1\ \ \ x_5^2 + x_2x_6 + x_1^2 = 0 \]
+    %
+    are solvable. This problem is {\bf NP} hard, which means I can check a solution fast, but if you can find a way to solve these equations in polynomial time, you get a million dollars. We will come up with a constant query checkable proof, which, by {\bf NP} hardness, actually means we will have a constant query, probabilistically checkable proof for {\it all} feasibly checkable problems -- this is the first step in proving the PCP theorem (we won't use a logarithmic amount of randomness though). Since $x_i^2 = x_i$, we may assume that all monomials in the equations have two terms. In this case, we can view the quadratic forms as obtained from a bilinear form on $\mathbf{F}_2^n$, and so we can find an $m \times n^2$ matrix $A$, and an $m$ dimensional vector $b$, both with entries in $\mathbf{F}_2$, such that, if for $x \in \mathbf{F}_2^m$, we set $(x \otimes x)_{ij} = x_i x_j$, then we are solving $Ax = b$, where
+    %
+    \[ Ax = \sum A_{kij} (x \otimes x)_{ij} e_k = \sum A_{kij} x_i x_j e_k \]
+    %
+    We will provide an interactive proof of this result. In this case, the equations can fail locally (all but one equation can pass), so this is the first time we need to encode this problem in a nontrivial way that enables us to verify a result. We rely on discrete Fourier analysis type-results. We will ask questions of the following variety:
+    %
+    \begin{itemize}
+        \item For some subset $S$ of indices, what is $\sum_{i \in S} x_i$.
+        \item For some subset $J$ of pairs of indices, what is $\sum_{(i,j) \in J} x_ix_j$.
+    \end{itemize}
+    %
+    Now how do we check that, when we ask our questions, we can really trust the answers? Note that for any subsets $S$ and $T$,
+    %
+    \[ \sum_{i \in S} x_i + \sum_{i \in T} x_i = \sum_{i \in S \Delta T} x_i \]
+    %
+    This is analogous to the linearity tester we just made, and indeed viewing the set of subsets of indices as a vector space over $\mathbf{F}_2$, this shows that the map $S \mapsto \sum_{i \in S} x_i$ should be linear. We start our checkable proof by picking $S$ and $T$ uniformly at random (Remark: uh oh, lots of randomness here!), and testing if the equation above holds, in three queries. By the last example, we know that this test can {\it only} pass with high probability if the sums we obtain are close in Hamming distance to an actual linear function, which we can interpret as a set of sums corresponding to some actual vector in $\mathbf{F}_2^n$, and we also know by local correctness that we can calculate the sums above corresponding to this $x_i$ with high probability with three queries, so we can assume from the outset that the prover isn't lying! It takes three queries each to check that the two sums above correspond to actual values, so we may assume that the queries $\sum_{i \in S} x_i$ correspond to an {\it actual} $x \in \mathbf{F}_2^n$, and the queries $\sum_{(i,j) \in J} x_ix_j$ correspond to an actual vector $\smash{y \in \mathbf{F}_2^{(n^2)}}$. We don't yet know whether $x \otimes x = y$, though, so this is one way the prover could lie to us. However, we can check this, because if this was true, then we would find that for any two $S,T$,
+    %
+    \[ \left( \sum_{i \in S} x_i \right) \left( \sum_{i \in T} x_j \right) = \sum_{(i,j) \in (S \times T)} x_ix_j \]
+    %
+    If we pick two random subsets $S$ and $T$ again, and check whether the sums agree with one another, then they might fail locally, but as with the proof of linearity, if the proof only fails in very particular locations, this means $x \otimes x$ and $y$ are very close to one another, and we can use local correctibility to ensure $y = x \otimes x$. All that remains is to check that each of the quadratic equations was solvable by $x$. This is where all our work becomes powerful. It only takes a single query of the form
+    %
+    \[ \sum_{(i,j) \in J} x_ix_j \]
+    %
+    to check whether a particular quadratic equation holds. If we only were able to ask about the values $x_i$, we would need to make at least $n$ queries. We can't check all the equations, but again, there's a trick to globalize errors. We smear a bunch of equations together by randomly picking a subset.
+\end{example}
+
+\section{Why are PCP testers useful?}
+
+From a practical, cryptologically perspective, it is easy to see why PCP testers are useful, because it means we can efficiently test whether malicious behaviour is going on in the transfer of information between parties. However, why do we care about it as pure mathematicians? The idea is the following, that we have referenced many times in this talk. The most important result in computing science, at least since Turing's incomputability result, is the following.
+
+\begin{theorem}[Cook-Levin Theorem]
+    There exists problems, known as {\bf NP Complete Problems}, such that if we have any question that is easily checked, we can in polynomial time convert it to a question in the {\bf NP} Complete problem. Thus, if an {\bf NP} complete problem can be solved in polynomial time, then {\it all} problems in {\bf NP} are easily solvable, and we conclude {\bf P} = {\bf NP}.
+\end{theorem}
+
+The main example of an NP complete problem is, given a logical formula of the form
+%
+\[ (x_1 \vee x_2 \vee x_4) \wedge (x_5 \vee x_1 \vee x_7) \wedge (x_1 \vee x_2 \vee x_4) \]
+%
+which is a bunch of ANDS of three variables OR'ed together, is it possible to assign truth values to these variables which will make this formula correct. We call this 3SAT. Because the problem is NP complete, it is unlikely we will ever find a solution to this problem that runs efficiently.
+
+However, this isn't the end of the story, because we can change our problem, and rather than ask if the problem is {\it completely} solvable, ask what fraction of the clauses in our problem are solvable, making the problem an optimization problem under constraints. On the face of it, this problem is even more difficult than the original, because it asks us to obtain even more information than the original problem. However, we can cheat by asking ourself to come up with an approximation of the answer. We have an $A$ {\bf approximation algorithm} for this problem, for $A < 1$, if, whenver it is possible to satisfy $B$ clauses, we can find an assignment efficiently that satisfies $\geq AB$ of the clauses. For instance, if we assign each variable true or false uniformly at random, then the probability that each clause is satisfied is $7/8$, so on average $7$ out of $8$ of clauses will be satisfied, and so we have a $7/8$ approximation algorithm for 3SAT.
+
+For problems that are NP hard, unless $P = NP$, we cannot find 1 approximation algorithms. However, the Cook-Levin theorem doesn't appear that we cannot find $1 - \varepsilon$ approximation algorithms for every $\varepsilon$. From the 70s onward, after Cook and Levin proved their result, people tried to adapt their proof to show that certain problems were hard enough that we could not approximate their solutions efficiently arbitrarily close. They attempted to adapt the proof of the Cook-Levin theorem to this problem, but they found a barrier which should now be familiar to us. The theorem encodes any problem as a 3SAT instance, but they found that if a theorem was false, the 3SAT instance that encoded it might still satisfy $1 - \varepsilon$ clauses. In other words, the 3SAT instance failed to be satisfiable locally. The PCP theorem was a major revolution to this approach, which allowed us to encode problems as 3SAT instances such that, if the problem is false, fail on at least $\delta$ clauses for some fixed, universal $\delta$. This implies that we cannot have a $1 - \delta$ approximation algorithm to 3SAT unless $\mathbf{P} = \mathbf{NP}$, because an encoded solution is true if and only if it is true on at least $1 - \delta$ clauses, and so any approximate solution with at least $1 - \delta$ clauses guarantees the 3SAT instance is completely satisfiable. Thus we have a distinct barrier of approximability for 3SAT. The first version of the PCP theorem wasn't able to obtain what $\delta$ was, only that it existed. Using H\r{a}stad's improved version of the PCP theorem only making 3 queries, we can conclude that for any $\varepsilon$, if we had a $7/8 + \varepsilon$ approximation algorithm of the result, then $\mathbf{P} = \mathbf{NP}$. We have a $7/8$ approximation algorithm for 3SAT, so the approximation problem for 3SAT is essentially solved. Almost all inapproximability results proved in the past two decades have reduced their problem to this result.
+
+\end{document}
