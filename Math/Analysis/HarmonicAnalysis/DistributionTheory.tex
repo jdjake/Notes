@@ -2888,7 +2888,11 @@ Any pseudodifferential operator is continuous from $\DD(\RR^d)^\ft$ to $\DD(\RR^
 %
 \[ K_a(x,y) = \int a(x,\xi) e^{2 \pi i \xi \cdot (x - y)}\; d\xi, \]
 %
-where in general the oscillatory integral must be interpreted formally. But as we increase the regularity of $a$, we no longer need to treat this integral quite as formally, and can define the operator for a more general family of functions. Here are some non-comprehensive examples of this phenomenon:
+where in general the oscillatory integral must be interpreted formally. It is also useful to write this kernel in the form $k_a(x,z) = K_a(x,x-z)$, because we then have
+%
+\[ Tf(x) = \int k_a(x,z) f(x-z)\; dz, \]
+%
+which reflects the fact that when $a(x,\xi)$ is independant of $x$, we have a convolution operator. As we increase the regularity of $a$, we no longer need to treat this integral quite as formally, and can define the operator for a more general family of functions. Here are some non-comprehensive examples of this phenomenon:
 %
 \begin{itemize}
     \item Any operator in $\text{Op}(\mathcal{S}(\RR^d \times \RR^d)^*)$ extends uniquely to a continuous linear operator from $\mathcal{S}(\RR^d)$ to $\mathcal{S}(\RR^d)^*$. The Schwartz kernel theorem easily implies that any continuous linear operator from $\mathcal{S}(\RR^d)$ to $\mathcal{S}(\RR^d)^*$ lies in $\text{Op}(\mathcal{S}(\RR^d \times \RR^d)^*)$.
@@ -2922,9 +2926,9 @@ Equivalently, but less formally, if $\psi \in \DD(\RR^d)$, $\widehat{\psi}(0) = 
 %
 If $K(x,y)$ is the kernel of the operator $T_a$, then we may write the formula above as
 %
-\[ a(x,\xi) = \int K(x,y) e^{2 \pi i \xi \cdot (y-x)}\; dy = \int K(x,x - y) e^{-2 \pi i \xi \cdot y}, \]
+\[ a(x,\xi) = \int K(x,y) e^{2 \pi i \xi \cdot (y-x)}\; dy = \int k(x,z) e^{-2 \pi i \xi \cdot z}, \]
 %
-which is sometimes useful, because it reduces the calculation of the symbol $a(x,\xi)$ to the calculation of the Fourier transform of the function $y \mapsto K(x,x-y)$.
+which is sometimes useful, because it reduces the calculation of the symbol $a(x,\xi)$ to the calculation of the Fourier transform of the function $z \mapsto k(x,z)$.
 
 The kernel of a pseudodifferential operator given by a symbol $a(x,\xi)$ of the class above is given by
 %
@@ -2936,17 +2940,23 @@ defined by an oscillatory integral distribution of the form we have discussed pr
 %
 This means that we can actually define $T_a u$ for \emph{any} compactly supported distribution $u$, and we will find that $\text{WF}(T_a u) \subset \text{WF}(u)$. This is the first instance of the \emph{pseudolocal nature} of pseudodifferential operators; these operators roughly preserve the location of the mass and frequency support of a function, but with some additional `fuzz' that is usually neglible to the problem, but must be managed. Here is a quantitative estimate on the kernel showing the pseudolocal nature, which implies that $T_a f$ is a \emph{Schwartz function} whenever $f$ is Schwartz.
 
+The wavefront set calculation implies that $K_a$ agrees with a $C^\infty$ function away from the line $x = y$. Thus if $f \in C_c^\infty(\RR^d)$, and $x \not \in \text{supp}(f)$, then the multiplication formula for tempered distributions implies that
+%
+\[ Tf(x) = \int a(x,\xi) \widehat{f}(\xi) e^{2 \pi i \xi \cdot x}\; d\xi = \int k_a(x,z) f(x-z)\; dz, \]
+%
+where, since the integral on the right hand side vanishes in a neighborhood of $z = 0$, we can actually interpret the right hand integral as an integral against a smooth function. Moreover, we have even better estimates for the behaviour of $k_a$ away from the origin, which reflects the pseudolocal behaviour of the operator.
+
 \begin{theorem}
-    Let $K$ be the kernel given by a pseudodifferential operator of order $t$, and let $z = x - y$. Then for any non-negative integers $n_1$, $n_2$, and $N$, $K$ is a smooth function away from the origin, and
+    Let $K$ be the kernel given by a pseudodifferential operator of order $t$. Then for any non-negative integers $n_1$, $n_2$, and $N$, $K$ is a smooth function away from $z = 0$, and
     %
-    \[ |\nabla^{n_1}_x \nabla^{n_2}_z K(x,y)| \lesssim_{n_1,n_2,N} \frac{1}{|x - y|^{t + d + n_2 + N}}, \]
+    \[ |\nabla^{n_1}_x \nabla^{n_2}_z k_a(x,z)| \lesssim_{n_1,n_2,N} \frac{1}{|z|^{t + d + n_2 + N}}, \]
     %
     provided $t + d + n_2 + N \geq 0$.
 \end{theorem}
 \begin{proof}
     If $a$ is compactly supported in $\xi$, then taking in absolute values in the integral representation of $K$ gives
     %
-    \[ |\nabla^{n_1}_x \nabla^{n_2}_z K(x,y)| \lesssim 1, \]
+    \[ |\nabla^{n_1}_x \nabla^{n_2}_z k(x,z)| \lesssim 1, \]
     %
     so the case is easy. Thus, without loss of generality, in the remainder of the proof we may assume $a(x,\xi) = 0$ for $|\xi| \leq 1$. We can then perform a Littlewood-Paley decomposition, i.e. writing
     %
@@ -2954,22 +2964,53 @@ This means that we can actually define $T_a u$ for \emph{any} compactly supporte
     %
     where $a_n$ is supported on $|\xi| \sim 2^n$. If $K_n$ is the kernel of the pseudodifferential operator corresponding to $a_n$, then
     %
-    \[ K(x,y) = \sum_{n = -\infty}^\infty K_n(x,y). \]
+    \[ k(x,z) = \sum_{n = -\infty}^\infty k_n(x,z). \]
     %
     We claim that
     %
-    \[ |\nabla^{n_1}_x \nabla^{n_2}_z K_n(x,y)| \lesssim_{n,n_1,n_2,N} |x - y|^{-N} 2^{n(t + d + n_2 - N)}. \]
+    \[ |\nabla^{n_1}_x \nabla^{n_2}_z k_n(x,z)| \lesssim_{n,n_1,n_2,N} |z|^{-N} 2^{n(t + d + n_2 - N)}. \]
     %
     This follows from a simple integration by parts, applied to the integral
     %
-    \[ K_n(x,y) = \int \rho(\xi / 2^n) a(x,\xi) e^{2 \pi i \xi \cdot (x - y)}\; d\xi. \]
+    \[ k_n(x,z) = \int \rho(\xi / 2^n) a(x,\xi) e^{2 \pi i \xi \cdot z}\; d\xi. \]
     %
-    Summing up these bounds for sufficiently large $N$ gives the result for $|x - y| \geq 1$ (since for these values of $x$ and $y$ bounds for large $N$ imply bounds for small $N$). For $0 < |x - y| \leq 1$, we break the sum into two parts, i.e. writing
+    Summing up these bounds for sufficiently large $N$ gives the result for $|z| \geq 1$ (since for these values of $x$ and $y$ bounds for large $N$ imply bounds for small $N$). For $0 < |z| \leq 1$, we break the sum into two parts, i.e. writing
     %
-    \[ K(x,y) = \sum_{2^n \leq 1/|x-y|} K_n(x,y) + \sum_{2^n > 1/|x-y|} K_n(x,y). \]
+    \[ k(x,z) = \sum_{2^n \leq 1/|x-y|} k_n(x,z) + \sum_{2^n > 1/|x-y|} k_n(x,z). \]
     %
     For the first sum, we take $N = 0$, and for the second sum, we take $N > t + d + n_2$, which gives the required bounds.
 \end{proof}
+
+For $t < 0$, this bound characterizes
+
+
+If $T$ is a pseudodifferential operator of order $t < 0$ with kernel $K$, the growth condition on $k(x,z)$ implies that, $k(x,z)$ is locally integrable in $z$, and thus for any $f \in C_c^\infty(\RR^d)$,
+%
+\[ Tf(x) = \lim_{\varepsilon \to 0^+} \int_{|z| > \varepsilon} k(x,z) f(x-z)\; dz. \]
+%
+More precisely, the integrability bounds imply the right hand side defines a distribution of order zero agreeing with $K$ everywhere but the origin. But since $K$ is a distribution of order
+
+
+$k(x,z)$ is locally integrable in $z$. Thus for $f \in C_c^\infty(\RR^d)$,
+%
+\[  \lim_{\varepsilon \to 0^+} \int_{|z| > \varepsilon} k(x,z) f(x-z)\; dz \]
+%
+gives a well defined distribution of order zero differing from $k(x,z)$ only at the origin. But 
+
+
+Indeed, $K$ is smooth on $|z| > \varepsilon$, and an integration by parts shows that
+%
+\[ \int_{\varepsilon_1 < |z| < \varepsilon_2} k(x,z) f(x-z) = \int_{\varepsilon_1 < |z| < \varepsilon_2} k(x,z) [f(x) - z \cdot \nabla f(x) + O(|z|^2)] \]
+% = K(x,\varepsilon S) f(x-\varepsilon S)
+
+
+Here is a condition, that for a psuedodifferential operator of order $t \geq 0$ gives a \emph{cancellation condition} on it's behaviour, and for $t < 0$, a bound on how singular the operator is.
+
+\begin{theorem}
+    Suppose $T$ is a pseudodifferential operator of order $t \geq 0$. Then for every multi-index $\alpha$,
+    %
+    \[ D^\alpha \{ T (\text{Dil}_\delta \phi) \} (x) \lesssim \delta^{-t}. \]
+\end{theorem}
 
 TODO: Add discussion from Brian Street's textbook on characterizations of $\Psi DOs$ without the Fourier transform.
 

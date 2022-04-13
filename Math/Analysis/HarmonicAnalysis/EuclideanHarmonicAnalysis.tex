@@ -2056,37 +2056,13 @@ There are many variants of the real interpolation method, but the general techni
 
 
 
-\chapter{Basics of Kernel Operators}
+\chapter{Integral Operators}
 
-We now consider a general family of operators, which can be seen as the infinite dimensional analogue of matrix multiplication. We fix two measure spaces $X$ and $Y$, and consider a function $K: X \times Y \to \CC$, which we call a \emph{kernel}. From this kernel, we obtain an induced operator $T_K$ taking functions on $X$ to functions on $Y$, given, heuristically at least, by the integral formula
+We now consider a very general class of operators, which can be seen as the infinite dimensional analogue of matrix multiplication, replacing summation over coordinates by integration. We fix two measure spaces $X$ and $Y$, and consider a function (or, if $X$ and $Y$ are smooth manifolds, distributions) $K: X \times Y \to \CC$, which we call a \emph{kernel}. From this kernel, if $K$ is suitably regular, we obtain an induced operator $T_K$ taking functions on $X$ to functions on $Y$, given, heuristically at least, by the integral formula
 %
 \[ (T_K f)(y) = \int_X K(x,y) f(x)\; dx. \]
 %
-Our goal is to relate properties of the kernel $K$ to the regularity of the operator $T_K$ with respect to various norms.
-
-\begin{example}
-  Let $X = Y = \RR^d$, equipped with the Lebesgue measure. If we set $K(x,\xi) = e^{2 \pi i \xi \cdot x}$, then using this function as a kernel we can obtain an integral operator
-  %
-  \[ (T_K f)(\xi) = \int f(x) e^{2 \pi i \xi \cdot x}\; dx. \]
-  %
-  In the standard theory of Fourier analysis, we find that if $f \in L^1(\RR)$, then for any $\xi$ the integral
-  %
-  \[ \int f(x) e^{2 \pi i \xi \cdot x} \]
-  %
-  converges absolutely, and is thus well-defined in the sense of a Lebesgue integral. Moreover, for any $f \in L^1(\RR)$,
-  %
-  \[ \| T_K f \|_{L^\infty(\RR)} \leq \| f \|_{L^1(\RR)}. \]
-  %
-  We also know from the classical Hausdorff-Young inequality that if $1 \leq p \leq 2$, then for any $f \in L^1(\RR) \cap L^p(\RR)$,
-  %
-  \[ \| T_K f \|_{L^{p^*}(\RR)} \leq \| f \|_{L^p(\RR)}. \]
-  %
-  In particular, this means that there exists a unique extension of $T_K$ to a bounded operator from $L^p(\RR)$ to $L^{p^*}(\RR)$; note, however, that for a general element $f \in L^p(\RR)$, the integral formula
-  %
-  \[ \int f(x) e^{2 \pi i \xi \cdot x}\; dx \]
-  %
-  is \emph{not well-defined} in the Lebesgue sense. Thus we can only heuristically view the integral formula as defining the integral operator.
-\end{example}
+Our goal is to relate properties of the kernel $K$ to the behaviour of the operator $T_K$.
 
 \begin{example}
   Let $X = \{ 1, \dots, N \}$ and $Y = \{ 1, \dots, M \}$, each equipped with the counting measure. Then each kernel $K$ corresponds to an $M \times N$ matrix $A$, with $A_{ij} = K(j,i)$. For any $f: X \to Y$ we can define a vector $v \in \RR^N$ by setting $v_i = f(i)$, and then
@@ -2096,34 +2072,71 @@ Our goal is to relate properties of the kernel $K$ to the regularity of the oper
   Thus with respect to the standard basis, $T_K$ is just given by matrix multiplication by $A$.
 \end{example}
 
-It turns out that if we map \emph{from} $L^1(X)$, or \emph{into} $L^\infty(Y)$, then the conditions on $K$ determining boundedness are trivial to determine for \emph{most} norms. This is one motivation for introduction the intermediate $L^p$ norms, since these norms enable us to extract more features out of the kernel operator $K$. Before we discuss this, we must first reflect on the fact that without even qualitative knowledge of the kernel $K$ besides it's measurability, it is difficult to know how one might interpret the integral formula defining the operator. A natural trick to begin with is to introduce the sublinear analogue of the kernel operator, i.e. the operator $S_K$ defined by setting
+\begin{example}
+  Let $X = Y = \RR^d$, and let $K(x,y) = e^{2 \pi i x \cdot y}$, then using this function as a kernel we can obtain an integral operator
+  %
+  \[ (T f)(y) = \int f(x) e^{2 \pi i x \cdot y}\; dx. \]
+  %
+  This is just the Fourier transform in disguise. One can define $Tf$ directly by this integral (viewed as a Lebesgue integral) for any $f \in L^1(\RR^d)$, in which the integrand will be absolutely integrable. We also know that for any $f \in L^1(\RR^d)$,
+  %
+  \[ \| T f \|_{L^\infty(\RR^d)} \leq \| f \|_{L^1(\RR^d)}. \]
+  %
+  We also know from the classical Hausdorff-Young inequality that if $1 \leq p \leq 2$, then for any $f \in L^1(\RR^d) \cap L^p(\RR^d)$,
+  %
+  \[ \| T f \|_{L^{p^*}(\RR^d)} \leq \| f \|_{L^p(\RR^d)}. \]
+  %
+  In particular, this means that there exists a unique extension of $T$ to a bounded operator from $L^p(\RR^d)$ to $L^{p^*}(\RR^d)$; note, however, that for a general element $f \in L^p(\RR^d)$, the integral formula
+  %
+  \[ \int f(x) e^{2 \pi i \xi \cdot x}\; dx \]
+  %
+  is \emph{not well-defined} in the Lebesgue sense. Thus we can only heuristically view the integral formula as defining the integral operator. There are two approaches to defining an integral operator $T$ on more general classes of functions. The method above, is to work with a dense family of more regular functions for which the integral formula makes sense, and then to prove uniform estimates in this family of inputs. Another method is to replace the kernel in the integral formula $T$ with a family of kernels converging to our original kernel, and then to prove uniform estimates in this family. For instance, one might instead study the family of truncated Fourier integrals
+  %
+  \[ T_R f(y) = \int_{|x| \leq R} e^{2 \pi i x \cdot y} f(x)\; dx \]
+  %
+  which are well defined for any $f \in L^1_{\text{loc}}(\RR^d)$, and then prove that for $1 \leq p \leq 2$,
+  %
+  \[ \| T_R f \|_{L^{p^*}(\RR^d)} \leq \| f \|_{L^p(\RR^d)} \]
+  %
+  uniformly in $R$, which is sufficient justification to define $Tf$ as the $L^p(\RR^d)$ limit of $T_R f$ as $R \to \infty$, for $f \in L^p(\RR^d)$, since this limit can be easily justified to exist for $f \in L^1(\RR^d) \cap L^p(\RR^d)$.
+\end{example}
+
+
+
+
+
+
+
+
+\section{Schur's Lemma}
+
+It is a useful heuristic that determining the boundedness of the operator $T$ mapping \emph{from} $L^1(X)$, or \emph{into} $L^\infty(Y)$ is almost always trivial. This is one motivation for introducing the intermediate $L^p$ norms, since these norms enable us to extract more features out of the kernel operator $K$. Before we discuss this, we must first reflect on the fact that without even qualitative knowledge of the kernel $K$ besides it's measurability, it is difficult to know how one might interpret the integral formula defining the operator. A natural trick to begin with is to introduce the sublinear analogue of the kernel operator, i.e. the operator $S_K$ defined by setting
 %
-\[ (S_K f)(y) = \int_X |K(x,y)| |f(x)|; dx \]
+\[ (S_K f)(y) = \int_X |K(x,y)| |f(x)|\; dx \]
 %
-The flexibility of the theory of non-negative Lebesgue integrals means this operator is well defined for \emph{any} measurable $f$ (though $S_k f(y)$ may be infinite for particular values of $y$). Moreover, if we are to interpret the integral formula for $(T_K f)(y)$ in the Lebesgue sense, it is necessary and sufficient that $(S_K f)(y) < \infty$.
+The flexibility of the theory of non-negative Lebesgue integrals means this operator is well defined for \emph{any} measurable $f$. Moreover, if we are to interpret the integral formula for $(T_K f)(y)$ in the Lebesgue sense, it is necessary and sufficient that $(S_K f)(y) < \infty$.
 
 \begin{theorem}
   Fix $q \geq 1$. Then
   %
-  \[ \| S_k f \|_{L^q(Y)} \leq \| K \|_{L^q(Y)L^\infty(X)} \| f \|_{L^1(X)}. \]
+  \[ \| S_K f \|_{L^q(Y)} \leq \| K \|_{L^q(Y)L^\infty(X)} \| f \|_{L^1(X)}. \]
   %
-  Thus $T_k f(y)$ are well defined by a Lebesgue integral for almost every $y \in Y$, and
+  Thus $T_K f(y)$ are well defined by a Lebesgue integral for almost every $y \in Y$, and
   %
-  \[ \| T_k f \|_{L^q(Y)} \leq \| K \|_{L^q(Y) L^\infty(X)} \| f \|_{L^1(X)}. \]
+  \[ \| T_K f \|_{L^q(Y)} \leq \| K \|_{L^q(Y) L^\infty(X)} \| f \|_{L^1(X)}. \]
 \end{theorem}
 \begin{proof}
-  The proof is just a simple consequence of Minkowski's inequality, i.e.
+  The proof is a simple consequence of Minkowski's inequality, i.e.
   %
   \begin{align*}
     \| S_K f \|_{L^q(Y)} &= \| K f \|_{L^1(X) L^q(Y)}\\
     &\leq \| Kf \|_{L^q(Y) L^1(X)}\\
     &= \int \left( \int |K(x,y)|^q\; dy \right)^{1/q} |f(x)|\; dx\\
-    &\leq \| K \|_{L^q(Y)L^\infty(X)} \| f \|_{L^1(X)}.
+    &\leq \| K \|_{L^q(Y)L^\infty(X)} \| f \|_{L^1(X)}. \qedhere
   \end{align*}
 \end{proof}
 
 \begin{remark}
-  In a great many situations, this constant is tight. For isntance, suppose
+  In many situations, this result is tight. For instance, suppose
   %
   \[ K = \sum_{i = 1}^N \sum_{j = 1}^M a_{ij} \mathbf{I}_{E_i \times F_j} \]
   %
@@ -2135,7 +2148,7 @@ The flexibility of the theory of non-negative Lebesgue integrals means this oper
   %
   \[ \| T_K f \|_{L^q(Y)} = \left( \sum_{j = 1}^M |a_{ij}|^q |F_j| \right)^{1/q} = \| K \|_{L^q(Y)L^\infty(X)} \| f \|_{L^1(X)}. \]
   %
-  Thus we conclude that for a certain `dense' family of $K$, the inequality above is tight, which gives a strong heuristic that the inequality above is tight for a great many operators $K$, which trivializes the analysis of $L^1(X) \to L^q(Y)$ estimates.
+  Thus we conclude that for a certain `dense' family of kernels $K$, the inequality above is tight. This gives a strong heuristic that the inequality above is tight for a great many operators $K$, which trivializes the analysis of $L^1(X) \to L^q(Y)$ estimates. But it is difficult to come up with a general statement of this form, because we require some regularity in the kernel to even formulate the result.
 \end{remark}
 
 A dual statement trivializes the analysis of bounds from $L^p(X)$ to $L^\infty(Y)$.
@@ -2155,18 +2168,40 @@ A dual statement trivializes the analysis of bounds from $L^p(X)$ to $L^\infty(Y
   \[ \| S_K f \|_{L^\infty(Y)} = \| K f \|_{L^1(X) L^\infty(Y)} \leq \| K \|_{L^{p^*}(X) L^\infty(Y)} \| f \|_{L^p(X)}. \qedhere \]
 \end{proof}
 
-Though trivial, the two kernel bounds can often be applied together with an interpolation argument to give more complicated bounds.
+Though trivial, the two kernel bounds can often be applied together with an interpolation argument to give more sophisticated bounds.
 
 \begin{theorem}[Schur's Test]
-  Suppose that $\| K \|_{L^1(X) L^\infty(Y)} \leq A$ and $\| K \|_{L^1(Y) L^\infty(X)} \leq B$. Then for every $1 \leq p \leq \infty$ and $f \in L^p(X)$, $(T_K f)(y)$ is well defined by an absolutely convergent integral, and
+  Fix $1 \leq r \leq \infty$, and suppose that
   %
-  \[ \| T_K f \|_{L^p(Y)} \leq A^{1 - 1/p} B^{1/p} \| f \|_{L^p(X)}. \]
+  \[ \| K \|_{L^r(X) L^\infty(Y)} \leq A \]
+  %
+  and
+  %
+  \[ \| K \|_{L^r(Y) L^\infty(X)} \leq B. \]
+  %
+  Then if $1 \leq p \leq q \leq \infty$ satisfy $1/p + 1/r = 1/q + 1$, then for $f \in L^p(X)$, $(T_K f)(y)$ is well defined by an absolutely convergent integral for almost every $y$, and
+  %
+  \[ \| T_K f \|_{L^q(Y)} \leq A^{r/q} B^{1 - r/q} \| f \|_{L^p(X)}. \]
 \end{theorem}
 \begin{proof}
-  The previous two results imply that $S_K$ is bounded from $L^1(X)$ to $L^1(Y)$ and from $L^\infty(X)$ to $L^\infty(Y)$. Real interpolation (since $S_K$ is sublinear) shows that $S_K$ is bounded from $L^p(X)$ to $L^p(Y)$ for all $1 \leq p \leq \infty$. Thus the operator $T_K$ is well defined by Lebesgue integrals for $f \in L^p(X)$. Applying the Riesz-Thorin interpolation theorem to $T_K$, which satisfies the bounds $\| T_K f \|_{L^1(Y)} \leq A \| f \|_{L^1(X)}$ and $\| T_K f \|_{L^\infty(Y)} \leq B \| f \|_{L^\infty(X)}$, we obtain the required result.
+  The previous two results imply that $S_K$ is bounded from $L^1(X)$ to $L^r(Y)$ and from $L^{r^*}(X)$ to $L^\infty(Y)$. Real interpolation (we cannot use complex interpolation since $S_K$ is sublinear) shows that $S_K$ is bounded from $L^p(X)$ to $L^q(Y)$ for the $p$ and $q$ satisfying the conditions above. This means $S_K f(x)$ is well defined for almost every $x \in X$, so the operator $T_K$ is well defined by Lebesgue integrals for $f \in L^p(X)$. Applying the Riesz-Thorin interpolation theorem to $T_K$, which satisfies the bounds
+  %
+  \[ \| T_K f \|_{L^r(Y)} \leq A \| f \|_{L^1(X)} \]
+  %
+  and
+  %
+  \[ \| T_K f \|_{L^\infty(Y)} \leq B \| f \|_{L^r(X)}, \]
+  %
+  we obtain the required result.
 \end{proof}
 
-For $1 < p < \infty$, we do not expect Schur's test to be sharp in general. But a good heuristic is that it is sharp provided that
+\begin{example}
+    Here is a version of Schur's Lemma that is more hands on and illustrative of the result. Let $M$ be an $m \times n$ matrix, such that the sums of the absolute values of the entries of $M$ on each row are upper bounded by $A$, and the sums of the absolute values of the entries of $M$ on each column are upper bounded by $B$. Then for $x \in \RR^n$, we have
+    %
+    \[ |Mx| \leq \sqrt{AB} \cdot |x|. \]
+\end{example}
+
+For $1 < p < \infty$, we do not expect Schur's test to be sharp in general. But a good heuristic is that a variant of the inequality can be made to be sharp provided that two properties hold:
 %
 \begin{itemize}
   \item For all $y \in Y$,
@@ -2180,7 +2215,7 @@ For $1 < p < \infty$, we do not expect Schur's test to be sharp in general. But 
   \item There is little oscillation in the kernel $K$.
 \end{itemize}
 %
-Assuming $X$ and $Y$ have finite measure, from the first property we conclude that
+Assuming for simplicity that $X$ and $Y$ have finite measure, from the first property we conclude that
 %
 \[ A |Y| \approx B |X|. \]
 %
@@ -2218,11 +2253,43 @@ and
 %
 \[ \int_Y K(x,y) v(y)\; dy = A^p w(x)^{p-1}. \]
 %
-Using these estimates, a weighted variant of Schur's lemma gives the bound $\| T_K f \|_{L^p(X)} \leq A \| f \|_{L^p(X)}$, which shows that the two weighted identities above contain as much information as the original bound.
+Using these estimates, a weighted variant of Schur's lemma gives the bound
+%
+\[ \| T_K f \|_{L^p(X)} \leq A \| f \|_{L^p(X)}, \]
+%
+which shows that the two weighted identities above contain as much information as the original bound.
 
-TODO: Fill in rest of Tao's notes.
+As another example of the trivial nature of the boundedness of kernel operators from $L^1(X)$, let us consider a version of Schur's Lemma that characterizes the boundedness from the $L^1(X)$ norm to the $L^q(Y)$ norm, and \emph{restricted strong type bounds} from $L^p(X)$ to $L^\infty(Y)$.
 
+\begin{theorem}
+    Fix $1 < p,q < \infty$. Then
+    %
+    \[ \| S_K f \|_{L^{q,\infty}(Y)} \leq \| K \|_{L^\infty(Y) L^{q,\infty}(X)} \| f \|_{L^1(X)}. \]
+    %
+    Thus $T_K f$ is well-defined by a Lebesgue integral almost everywhere for any $f \in L^1(X)$, and
+    %
+    \[ \| T_K f \|_{L^{q,\infty}(Y)} \leq \| K \|_{L^\infty(Y) L^{q,\infty}(X)} \| f \|_{L^1(X)}. \]
+    %
+    For any set $E \subset X$ of finite measure,
+    %
+    \[ \| S_K \mathbf{I}_E \|_{L^\infty(Y)} \leq \| K \|_{L^\infty(X) L^{p,\infty}(Y)} |E|^{1/p}. \]
+    %
+    In particular, if
+    %
+    \[ \| K \|_{L^\infty(Y) L^{r,\infty}(X)} \leq A, \]
+    %
+    and
+    %
+    \[ \| K \|_{L^\infty(X) L^{r,\infty}(Y)} \leq B, \]
+    %
+    for some $1 < r < \infty$, then we find that for any $1 < p < q < \infty$ with $1/p + 1/r = 1/q + 1$,
+    %
+    \[ \| S_K f \|_{L^{q,s}(X)} \lesssim_{p,q,r,s} A^{r/q} B^{1 - r/q} \| f \|_{L^{p,s}(Y)}. \]
+\end{theorem}
 
+\begin{example}
+    TODO: Hardy Littlewood Sobolev (Endpoint)
+\end{example}
 
 
 
@@ -3778,14 +3845,62 @@ We now wish to study conditions on $m$ which guarantee bounds of the form
 %
 \[ \| m(D) f \|_{L^q(\RR^d)} \lesssim \| f \|_{L^p(\RR^d)}. \]
 %
-for all $f \in \mathcal{S}(\RR^d)$. This question was of course prominant throughout the study of Harmonic analysis, but the explicit problem of studying general multipliers was pushed forwards by analysts like H\"{o}rmander in the 1960s. Littlewood's principle tells us that the only interesting case occur with `the larger exponent on the left'.
+for all $f \in \mathcal{S}(\RR^d)$. This question was of course prominant throughout the study of Harmonic analysis, but the explicit problem of studying general multipliers was pushed forwards by analysts like H\"{o}rmander in the 1960s.
+
+\begin{example}
+    Let $K_\lambda(x) = |x|^{\gamma - d}$, where $0 < \gamma < d$. Then $K_\lambda \in L^{r,\infty}(\RR^d)$ for $r = d/(d - \gamma)$. Thus the weak-type variant of Young's inequality implies that
+    %
+    \[ \| f * K_\lambda \|_{L^q(\RR^d)} \lesssim \| f \|_{L^p(\RR^d)} \]
+    %
+    for $1/p = 1/q + \gamma/d$. Thus $\widehat{K_\lambda} \in M^{p,q}(\RR^d)$ for this range. The homogeneity of the convolution, i.e. the fact that
+    %
+    \[ f * K_\lambda = t^{-\gamma} (\text{Dil}_t f) * K_\lambda \]
+    %
+    implies that this is the only range of $p$ and $q$ such that $\widehat{K_\lambda} \in M^{p,q}(\RR^d)$.
+\end{example}
+
+\begin{lemma}
+    If $m_1 \in L^r(\RR^d)$ and $m_2 \in L^{r^*}(\RR^d)$, then for $1 \leq p \leq 2$ and $1/p - 1/2 = 1/r$,
+    %
+    \[ \| m_1 * m_2 \|_{M^p(\RR^d)} \leq \| m_1 \|_{L^r(\RR^d)} \| m_2 \|_{L^{r^*}(\RR^d)}. \]
+\end{lemma}
+\begin{proof}
+    We apply complex interpolation, first addressing the case where $p = 1$ and $r = 2$, and then secondly addressing the case where $p = 2$ and $r = \infty$. To prove the first case, we note that
+    %
+    \begin{align*}
+        \| m_1 * m_2 \|_{M^1(\RR^d)} &= \| \widehat{m_1 * m_2} \|_{L^1(\RR^d)}\\
+        &= \| \widehat{m_1} \widehat{m_2} \|_{L^1(\RR^d)}\\
+        &\leq \| \widehat{m_1} \|_{L^2(\RR^d)} \| \widehat{m_2} \|_{L^2(\RR^d)}\\
+        &= \| m_1 \|_{L^2(\RR^d)} \| m_2 \|_{L^2(\RR^d)}.
+    \end{align*}
+    %
+    For $p = 2$ and $r = \infty$, we simply calculate
+    %
+    \[ \| m_1 * m_2 \|_{M^2(\RR^d)} = \| m_1 * m_2 \|_{L^\infty(\RR^d)} \leq \| m_1 \|_{L^\infty(\RR^d)} \| m_2 \|_{L^1(\RR^d)}. \]
+    %
+    But now for an arbitrary $f \in \mathcal{S}(\RR^d)$, and $m_1, m_2 \in C_c^\infty(\RR^d)$, the quantity
+    %
+    \[ \| (m_1 * m_2) f \|_{L^p(\RR^d)} = \left( \left| \int (m_1 * m_2)(\xi) \widehat{f}(\xi) e^{2 \pi i \xi \cdot x}\; d\xi \right|^p\; dx  \right)^{1/p} \]
+    %
+    is holomorphic in $p$, and so we can apply complex interpolation to prove that
+    %
+    \[ \| (m_1 * m_2) f \|_{L^p(\RR^d)} \leq \| m_1 \|_{L^r(\RR^d)} \| m_2 \|_{L^{r^*}(\RR^d)} \| f \|_{L^p(\RR^d)}. \]
+\end{proof}
+
+In general, a characterization of the tempered distributions which give bounded convolution operators is unknown except in a few very particular situations. For each $1 \leq p \leq q \leq \infty$, we let $\| m \|_{M^{p,q}(\RR^d)}$ denote the operator norm of $m(D)$ from $\mathcal{S}(\RR^d)$ to $\mathcal{S}(\RR^d)^*$, via the $L^p(\RR^d)$ norm in the input, and via the $L^q(\RR^d)$ norm in the output, i.e. it is the smallest quantity $\| m \|_{M^{p,q}(\RR^d)}$ such that
+%
+\[ \| m(D) f \|_{L^q(\RR^d)} \leq \| m \|_{M^{p,q}(\RR^d)} \| f \|_{L^p(\RR^d)} \]
+%
+for all $f \in \mathcal{S}(\RR^d)$. If $1 \leq p < \infty$, then the Hahn-Banach density theorem shows every element of $M^{p,q}(\RR^d)$ extends uniquely to an operator from $L^p(\RR^d)$ to $L^q(\RR^d)$ with the same operator norm. If $p = \infty$, then every such operator extends to a map from $L^\infty(\RR^d)$ to $L^q(\RR^d)$ with the same operator norm, but this extension need not be unique. We let $M^{p,q}(\RR^d)$ be the set of tempered distributions for which the bound is finite. For simplicity, we also let $M^p(\RR^d)$ denote $M^{p,p}(\RR^d)$. All of these spaces are Banach spaces. By symmetries of the Fourier transform, it is easy to check that translations, modulations, and dilations all preserve the space $M^{p,q}(\RR^d)$, though dilations need not preserve the $M^{p,q}$ norm unless $p = q$. Thus we have a family of Banach Algebras $M^p(\RR^d)$. On these spaces, translation, dilation, conjugation, and modulation are all isometries, so this space is highly symmetric.
+
+Littlewood's principle tells us that the only interesting case occur with `the larger exponent on the left'.
 
 \begin{theorem}
   Fix $1 \leq q < p \leq \infty$, and suppose $m$ is a tempered distribution on $\RR^d$ satisfying a uniform bound
   %
   \[ \| m(D) f \|_{L^q(\RR^d)} \lesssim \| f \|_{L^p(\RR^d)} \]
   %
-  for all $f \in \mathcal{S}(\RR^d)$. Then $m = 0$.
+  for all $f \in \mathcal{S}(\RR^d)$. Then $m = 0$. In other words, $M^{p,q}(\RR^d) = 0$ for $q < p$.
 \end{theorem}
 \begin{proof}
   Suppose $m \neq 0$ and $q < p$. Then there is $f_0 \in \mathcal{S}(\RR^d)$ with $m(D) f_0 \neq 0$. Thus $m(D) f_0$ lies in $L^q(\RR^d)$. Fix a large integer $N$ and pick $x_1,\dots,x_N \in \RR^d$ separated far enough apart that
@@ -3799,14 +3914,8 @@ for all $f \in \mathcal{S}(\RR^d)$. This question was of course prominant throug
   Translation invariance of convolution shows $N^{1/q} \lesssim N^{1/p}$, which is impossible for suitably large $N$. Thus $m = 0$.
 \end{proof}
 
-In general, a characterization of the tempered distributions which give bounded convolution operators is unknown except in a few very particular situations. For each $1 \leq p \leq q \leq \infty$, we let $\| m \|_{M^{p,q}(\RR^d)}$ denote the operator norm of the multiplier operator $m(D)$ from $L^p(\RR^d)$ to $L^q(\RR^d)$, i.e. the smallest quantity such that
-%
-\[ \| m(D) f \|_{L^q(\RR^d)} \leq \| m \|_{M^{p,q}(\RR^d)} \| f \|_{L^p(\RR^d)} \]
-%
-for all $f \in \mathcal{S}(\RR^d)$. We let $M^{p,q}(\RR^d)$ be the set of tempered distributions for which the bound is finite. For simplicity, we also let $M^p(\RR^d)$ denote $M^{p,p}(\RR^d)$. These all form Banach spaces. By symmetries of the Fourier transform, it is easy to check that translations, modulations, and dilations all preserve the space $M^{p,q}(\RR^d)$, though dilations need not preserve the $M^{p,q}$ norm unless $p = q$.
-
 \begin{example}
-    We claim that $M^{2,2}(\RR^d) = L^\infty(\RR^d)$, in the sense that the two spaces consist of the same family of distributions, and the norms on both spaces are equal, i.e. $\| m \|_{M^{2,2}(\RR^d)} = \| m \|_{L^\infty(\RR^d)}$. To see this, let
+    We claim that $M^{2,2}(\RR^d) = L^\infty(\RR^d)$, in the sense that the two spaces consist of the same family of distributions, and the norms on both spaces are equal, i.e. $\| m \|_{M^{2,2}(\RR^d)} = \| m \|_{L^\infty(\RR^d)}$. To see this, suppose either $m \in M^{2,2}(\RR^d)$ or $m \in L^\infty(\RR^d)$, and let
   %
   \[ \Phi(x) = e^{- \pi |x|^2} \]
   %
@@ -3814,15 +3923,17 @@ for all $f \in \mathcal{S}(\RR^d)$. We let $M^{p,q}(\RR^d)$ be the set of temper
   %
   \[ \widehat{m(D) \Phi} = \Phi \cdot m. \]
   %
-  Since $\Phi \in L^2(\RR^d)$, $m(D) \Phi \in L^2(\RR^d)$, and so $\Phi \cdot m \in L^2(\RR^d)$. But since $1/\Phi \in L^\infty_{\text{loc}}(\RR^d)$, this implies that $m \in L^1_{\text{loc}}(\RR^d)$. But now the result follows by Parseval's inequality, since a bound
+  Since $\Phi \in L^2(\RR^d)$, $\Phi \cdot m \in L^2(\RR^d)$. But since $1/\Phi \in L^\infty_{\text{loc}}(\RR^d)$, this implies that $m \in L^1_{\text{loc}}(\RR^d)$.
+
+  Now we know $m$ is locally integrable, we can obtain the general result by Parseval's inequality, since a bound of the form
   %
   \[ \| m(D) f \|_{L^2(\RR^d)} \leq C \| f \|_{L^2(\RR^d)} \]
   %
-  holds for all $f \in L^2(\RR^d)$ if and only if
+  holds for all $f \in \mathcal{S}(\RR^d)$ if and only if
   %
-  \[ \| m \cdot g \|_{L^2(\RR^d)} \leq C \| g \|_{L^2(\RR^d)}, \]
+  \[ \| m \cdot g \|_{L^2(\RR^d)} \leq C \| g \|_{L^2(\RR^d)} \]
   %
-  so we have reduced the study of boundedness of a multiplier on $L^2(\RR^d)$ to the study of H\"{o}lder's inequality.
+  for all $g \in \mathcal{S}(\RR^d)$. The former bound is equivalent to $\| m \|_{M^{2,2}(\RR^d)} \leq C$, and the second bound is equivalent to $\| m \|_{L^\infty(\RR^d)} \leq C$ by H\"{o}lder's inequality.
 \end{example}
 
 For any tempered distribution $m$ and $f,g \in \mathcal{S}(\RR^d)$, the fact that the Fourier transform is self adjoint implies that
@@ -3833,33 +3944,57 @@ For any tempered distribution $m$ and $f,g \in \mathcal{S}(\RR^d)$, the fact tha
   &= \langle f, \overline{m}(D) g \rangle.
 \end{align*}
 %
-Thus we have an adjoint relation $m(D)^* = \overline{m}(D)$, which gives a natural duality theory for Fourier multiplier operators.
+Thus we have an adjoint relation $m(D)^* = \overline{m}(D)$, which gives a natural duality theory for Fourier multiplier operators. In particular, this means that if $R$ is the reflection operator $[Ru](x) = u(-x)$, then
+%
+\[ m(D) f = [(R \circ m^*(D) \circ R) f^*]^*. \]
+%
+In particular, for any $0 < p \leq \infty$, $\| m(D) f \|_{L^p(\RR^d)} = \| m(D)^* Rf^* \|_{L^p(\RR^d)}$.
 
 \begin{theorem}
-  For any $1 \leq p,q \leq \infty$ and any tempered distribution $m$,
+  For any $1 \leq p \leq q < \infty$ and any tempered distribution $m$,
   %
   \[ \| m \|_{M^{p,q}(\RR^d)} = \| m \|_{M^{q^*,p^*}(\RR^d)}. \]
 \end{theorem}
 \begin{proof}
-  Using the adjoint relation, if
-  %
-  \[ \| m(D) f \|_{L^q(\RR^d)} \lesssim \| f \|_{L^p(\RR^d)} \]
-  %
-  then
-  %
-  \[ \| m^*(D) f \|_{L^{p^*}(\RR^d)} \lesssim \| f \|_{L^{q^*}(\RR^d)} \]
-  %
-  But it is easy to calculate that if we set $[Ru](x) = u(-x)$, then for any $x \in \RR^d$,
-  %
-  \[ [m^*(D) f](x) = [m(D)(Rf^*)(-x)]^* \]
-  %
-  and so $\| m^*(D) f \|_{L^{p^*}(\RR^d)} = \| m(D) f \|_{L^{p^*}(\RR^d)}$.
+    It will suffice to prove by duality that
+    %
+    \[ \| m \|_{M^{q^*,p^*}(\RR^d)} \leq \| m \|_{M^{p,q}(\RR^d)}. \]
+    %
+    Assume without loss of generality that $\| m \|_{M^{p,q}(\RR^d)} < \infty$. Given $f \in \mathcal{S}(\RR^d)$, we know $m(D) f \in C^\infty_{\text{loc}}(\RR^d) \cap L^q(\RR^d)$. If $p \neq \infty$, then
+    %
+    \[ \| m(D) f \|_{L^{p^*}(\RR^d)} = \sup \left\{ \int m(D)f(x) g(x)\; dx : g \in \mathcal{S}(\RR^d), \| g \|_{L^p(\RR^d)} < \infty \right\}. \]
+    %
+    Given any such $g \in \mathcal{S}(\RR^d)$, we have by H\"{o}lder's inequality,
+    %
+    \begin{align*}
+        \int m(D)f(x) g(x)\; dx &= \int f(x) m^*(D) g(x)\; dx\\
+        &\leq \| f \|_{L^{q^*}(\RR^d)} \| m^*(D) g \|_{L^q(\RR^d)}\\
+        &\leq \| m \|_{M^{p,q}(\RR^d)} \| f \|_{L^{q^*}(\RR^d)}.
+    \end{align*}
+    %
+    Thus we conclude that
+    %
+    \[ \| m(D) f \|_{L^{p^*}(\RR^d)} \leq \| m \|_{M^{p,q}(\RR^d)} \| f \|_{L^{q^*}(\RR^d)} \]
+    %
+    and thus $\| m \|_{M^{q^*,p^*}(\RR^d)} \leq \| m \|_{M^{p,q}(\RR^d)}$. On the other hand, if $p = \infty$, then $q = \infty$ (or else the inequality is trivial). If $\| m \|_{M^{\infty,\infty}(\RR^d)} < \infty$, then it follows that for any $f \in \mathcal{S}(\RR^d)$, $m(D) f \in C^\infty(\RR^d)$. It therefore follows by smoothness that
+    %
+    \[ |m(D) f(0)| \leq \| m(D) f \|_{L^\infty(\RR^d)} \leq \| m \|_{M^{\infty,\infty}(\RR^d)} \| f \|_{L^\infty(\RR^d)}. \]
+    %
+    A consequence of this is that for all $f \in \mathcal{S}(\RR^d)$,
+    %
+    \[ \left| \int \widehat{m}(x) f(x)\; dx \right| \leq \| m \|_{M^{\infty,\infty}(\RR^d)} \| f \|_{L^\infty(\RR^d)}. \]
+    %
+    This means $\widehat{m}$ is a distribution of order zero, and is therefore equal to some Radon measure $\mu$. Moreover, the bound actually implies that $\mu$ is a finite Borel measure, with total variation at most $\| m \|_{M^{\infty,\infty}(\RR^d)}$. But then Young's inequality implies that
+    %
+    \[ \| \widehat{m} * f \|_{L^1(\RR^d)} \leq \| \widehat{m} \|_{M(\RR^d)} \| f \|_{L^1(\RR^d)} \leq \| m \|_{M^{\infty,\infty}(\RR^d)} \| f \|_{L^1(\RR^d)}. \]
+    %
+    Thus $\| m \|_{M^{1,1}(\RR^d)} \leq \| m \|_{M^{\infty,\infty}(\RR^d)}$, which completes the proof of duality.
 \end{proof}
 
-In particular, if $1 \leq p \leq \infty$ and $m \in M^p(\RR^d)$, then also $m \in M^{p^*,p^*}(\RR^d)$ and so Riesz-interpolation implies $m \in M^{2,2}(\RR^d)$. Thus if we are studying $L^p$ to $L^p$ boundedness for any $1 \leq p \leq \infty$, we may restrict our attention to bounded Fourier multipliers.
+In particular, if $1 \leq p \leq \infty$ and $m \in M^p(\RR^d)$, then also $m \in M^{p^*}(\RR^d)$ and so Riesz-interpolation implies $m \in M^{2}(\RR^d)$. Thus if we are studying $L^p$ to $L^p$ boundedness for any $1 \leq p \leq \infty$, we may restrict our attention to Fourier multipliers with a bounded symbol. More generally, this interpolation approach shows that $M^p(\RR^d)$ is a larger space of multipliers the closer $p$ is to two. Thus $M^2(\RR^d) = L^\infty(\RR^d)$ is the largest family, and $M^1(\RR^d) = M^\infty(\RR^d)$ is the smallest family of multipliers bounded on some $M^p(\RR^d)$. The next example shows this smallest space is equal to $\widehat{L^1(\RR^d)}$.
 
 \begin{example}
-    The only remaining space which we can completed characterize are the spaces $M^{1,q}(\RR^d) = M^{p,\infty}(\RR^d)$, where $1 \leq p,q \leq \infty$, which we can write as $\widehat{L^q(\RR^d)}$ for $q > 1$, and the set $M(\RR^d)$ of all finite Borel measures for $q = 1$. Moreover, in the case $q > 1$ we have
+    The only remaining space which we can completely characterize are the spaces $M^{1,q}(\RR^d)$ (and thus $M^{q^*,\infty}$), where $1 \leq q \leq \infty$. In this case, $M^{1,q}(\RR^d) = \widehat{L^q(\RR^d)}$ for $q > 1$, and $M^{1,1}(\RR^d) = \widehat{M(\RR^d)}$, the set of all finite Borel measures. Moreover, in the case $q > 1$ we have
     %
     \[ \| m \|_{M^{1,q}(\RR^d)} = \| \widehat{m} \|_{L^q(\RR^d)} \]
     %
@@ -3874,13 +4009,33 @@ In particular, if $1 \leq p \leq \infty$ and $m \in M^p(\RR^d)$, then also $m \i
     Applying the Banach-Alaoglu theorem, the family $\{ K * \phi_\varepsilon \}$ has a weak $*$ convergent subsequence in $L^q(\RR^d)^{**}$. Thus there is $\lambda \in L^q(\RR^d)^{**}$ and $\varepsilon_i \to 0$ such that $K * \phi_{\varepsilon_i} \to \lambda$. But this means that $K * \phi_{\varepsilon_i}$ converges to $\lambda$ distributionally. It also converges to $K$ distributionally, so $K = \lambda \in (L^q(\RR^d))^{**}$. If $q > 1$, then $(L^q(\RR^d))^{**} = L^q(\RR^d)$, with the same norm, and $(L^1(\RR^d))^{**} = M(\RR^d)$.
 \end{example}
 
-For other values of $p$ and $q$, finding a simple characterization of $M^p(\RR^d)$ is a much more subtle task. For instance, it still remains an open question to determine the values of $p$ and $\delta$ for which the multiplier
+Another case where the multiplier problem is trivial is for $m \in L^\infty(\RR^d)$ with $\widehat{m} \geq 0$. This is related to the fact that the study of kernels which are non-negative and homogeneously distributed is also trivial, though the fact that we are working over a space with infinite measure complicates the analysis somewhat. To argue more precisely, by Lemma \ref{positivel1linfinitylemma}, $\| m \|_{L^\infty(\RR^d)} = \| \widehat{m} \|_{L^1(\RR^d)}$, and so for $1 \leq p \leq \infty$,
 %
-\[ m^\delta(\xi) = \max((1 - |\xi|^2)^\delta,0) \]
+\[ \| \widehat{m} \|_{L^1(\RR^d)} = \| m \|_{M^2} \leq \| m \|_{M^p} \leq \| m \|_{M^1} = \| \widehat{m} \|_{L^1(\RR^d)}, \]
 %
-lies in $M^p(\RR^d)$, a problem known as the \emph{Bochner-Riesz conjecture}. 
+so $\| m \|_{M^p} = \| \widehat{m} \|_{L^1(\RR^d)}$ for all $p \in [1,\infty]$.
 
-The difficulty here is that $m^\delta$ is singular on the boundary of the unit sphere, which is a large, curved set. Intuition suggests that a smooth Fourier multiplier would have a rapidly decaying Fourier transform, which would therefore be well posed as a convolution operator. One basic instance of this phenomenon occurs if $m \in \mathcal{S}(\RR^d)$. Then $\widehat{m} \in \mathcal{S}(\RR^d)$, hence integrable, and by Young's convolution inequality, it follows that for any $p \leq q$, $\| m \|_{M^{p,q}(\RR^d)} \lesssim 1$, and the induced map from $\mathcal{S}(\RR^d)$ to $M^{p,q}(\RR^d)$ is continuous. Another example is the following calculation: if $\Omega \subset \RR^d$ is bounded and open, $C$ is a fixed constant, and $L: \RR^d \to \RR^d$ is an invertible linear map, then we say $\phi$ is a \emph{bump function adapted to $L(\Omega)$} if $\phi$ is smooth and supported in $L(\Omega)$, and $|D^k (\phi \circ L)(x)| \leq C$ for all $x \in \Omega$. If $m$ is a bump function adapated to $L(\Omega)$, then it follows that $\| m \|_{M^{p,q}(\RR^d)} \lesssim_{C,\Omega} 1$.
+Essentially for any other family of multipliers, it is still incredibly difficult to determine conditions when, especially when $d > 1$. For instance, it still remains a major open question in harmonic analysis, for $d > 2$, to determine the values of $p \in [1,\infty]$ and $\delta > 0$ for which the multiplier
+%
+\[ m^\delta(\xi) = (1 - |\xi|^2)^\delta_+ = \max((1 - |\xi|^2)^\delta,0) \]
+%
+lies in $M^p(\RR^d)$, a problem known as the \emph{Bochner-Riesz conjecture}.
+
+The difficulty which causes $m^\delta$ to be unbounded is that it is singular on the boundary of the unit sphere, which is a large, curved set, upon which $m^\delta$ has $\delta$ degrees of regularity in the direction tangential to the sphere. Intuition suggests that a smooth Fourier multiplier would have a rapidly decaying Fourier transform, which would therefore be well posed as a convolution operator. One basic instance of this phenomenon occurs if $m \in \mathcal{S}(\RR^d)$. Then $\widehat{m} \in \mathcal{S}(\RR^d)$, hence integrable, and by Young's convolution inequality, it follows that for any $p \leq q$, $\| m \|_{M^{p,q}(\RR^d)} \lesssim 1$, and the induced map from $\mathcal{S}(\RR^d)$ to $M^{p,q}(\RR^d)$ is continuous. Another example is the following calculation: if $\Omega \subset \RR^d$ is bounded and open, $C$ is a fixed constant, and $L: \RR^d \to \RR^d$ is an invertible linear map, then we say $\phi$ is a \emph{bump function adapted to $L(\Omega)$} if $\phi$ is smooth and supported in $L(\Omega)$, and $|D^k (\phi \circ L)(x)| \leq C$ for all $x \in \Omega$. If $m$ is a bump function adapated to $L(\Omega)$, then it follows that $\| m \|_{M^{p,q}(\RR^d)} \lesssim_{C,\Omega} 1$.
+
+It is important to note that it is mainly qualitative information that is of interest here. This is because $\| m \circ A \|_{M^p(\RR^d)} = \| m \|_{M^p(\RR^d)}$ for any multiplier $m$ and invertible linear transformation $A$. Thus despite the fact that a singularity can become quantitatively more singular as we focus in on it by introducing an appropriate transformation $A$, the $M^p(\RR^d)$ norm stays the same.
+
+\begin{example}
+    Consider the sawtooth function $m(\xi) = \text{sgn}(\xi) \max(1 - |\xi|, 0)$. For each $R > 0$, consider $m_R(\xi) = \text{sgn}(\xi) \max(1 - |\xi/R|, 0)$. Then $m_R$ converges pointwise almost everywhere to $m_\infty(\xi) = \text{sgn}(\xi)$, and actually $m_R(D)$ converges to $m_\infty(D)$ distributinally. Here $m_\infty(D)$ is just the Hilbert transform. Now $\| m_R \|_{M^p(\RR^d)} = \| m \|_{M^p(\RR^d)}$ for all $p \in [1,\infty]$, so we might expect that $\| m \|_{M^p(\RR^d)} = \| m_\infty \|_{M^p(\RR^d)}$. Certainly the distributional limiting process implies that
+    %
+    \[ \| m_\infty \|_{M^p(\RR^d)} \leq \| m \|_{M^p(\RR^d)}. \]
+    %
+    Conversely, $m(\xi) = a(\xi) m_\infty(\xi)$, where $a(\xi) = \max(1 - |\xi|,0)$ is a tent function. Now $\widehat{a}(x) = \text{sinc}(x)^2$ is non-negative, so in particular, this means that for any $p$, $\| a \|_{M^p(\RR^d)} = \| a \|_{L^\infty(\RR^d)} = 1$. But this means that
+    %
+    \[ \| m \|_{M^p(\RR^d)} \leq \| a \|_{M^p(\RR^d)} \| m_\infty \|_{M^p(\RR^d)} \leq \| m_\infty \|_{M^p(\RR^d)}, \]
+    %
+    which completes the proof.
+\end{example}
 
 If the multiplier $m$ is only singular on a small set, we can likely still obtain some interesting estimates. For instance, the Hilbert transform, corresponding to the Fourier multiplier $m(\xi) = i \text{sgn}(\xi)$, is singular at $\xi = 0$, but still satisfies the bounds
 %
@@ -3894,7 +4049,7 @@ Now suppose $m \in L^\infty(\RR^d)$ has \emph{bounded variation}, which means th
 %
 \[ V(m) = \sup_{\xi_1 < \dots < \xi_N} \sum_{i = 1}^{N-1} |m(\xi_{i+1}) - m(\xi_i)|. \]
 %
-is finite. Then $m$ has countably many discontinuities, and the variation prevents too much nonsmoothness. In this case, we can obtain an operator norm bound.
+is finite. Then $m$ has countably many discontinuities, and the variation upper bound prevents $m$ from being too nonsmooth. In this case, we can obtain an operator norm bound.
 
 \begin{theorem}
   For any symbol $m$ on $\RR$, and any $1 < p < \infty$,
@@ -3955,7 +4110,7 @@ The theorem of H\"{o}rmander-Mikhlin is a more sophisticated instance of the smo
     \[ \sup_{R > 0} \int |\mathcal{F}( \varphi \text{Dil}_R m)(x)| (1 + |x|)^{\varepsilon}\; dx < \infty.  \]
 \end{itemize}
 %
-If the second last point holds, the $\varepsilon$ in the last point can be chosen to be any number smaller than $\alpha - d/2$.
+If the second last point holds, the $\varepsilon$ in the last point can be chosen to be any number smaller than $\alpha - d/2$. This result is closely related to the theory of singular integrals. In particular, under the first two assumptions,
 
 \begin{theorem}
     Consider $m \in L^\infty(\RR^d)$ and suppose there exists $\varepsilon > 0$ and $\varphi$ as above with
@@ -4082,29 +4237,34 @@ One might ask whether multipliers operators need at least \emph{some} regularity
     TODO
 \end{proof}
 
-On the other hand, if $q > 2$, then $M^{p,q}(\RR^d)$ contains distributions of positive order (distributions in $M_{\text{loc}}(\RR^d)$). We will show an explicit examples for $d \geq 4$, and non constructive examples otherwise.
+On the other hand, if $q > 2$, then $M^{p,q}(\RR^d)$ contains distributions of positive order. We will show an explicit examples for large $d \geq 4$, and non constructive examples otherwise.
 
 \begin{example}
-    Recall that the surface measure $\sigma$ on the sphere in $\RR^d$ satisfies $|\widehat{\sigma}(\xi)| \lesssim_d |\xi|^{\frac{1-d}{2}}$. Consider the multiplier corresponding to the distribution $\Lambda = \partial \sigma / \partial x$, which is not a distribution of order zero. On the other hand, $|\widehat{\Lambda}(\xi)| \lesssim_d |\xi|^{\frac{3-d}{2}}$. Provided $d \geq 4$, this implies that $\| \widehat{\Lambda} \|_{L^q(\RR^d)} < \infty$ for $(d-3)/2 q > d$, i.e. for $q > 2d/(d-3) = 2 + 6/(d-3)$, and thus $\| \Lambda \|_{M^{1,q}(\RR^d)} < \infty$ for this range. Taking $d$ appropriately large, applying duality, and iterpolating gives, for each $\varepsilon > 0$, a distribution $\Lambda$ lying in $M^{p,q}(\RR^d)$ for any $p \leq 2 - \varepsilon$ and any $q \geq 2 + \varepsilon$.
+    Recall that the surface measure $\sigma$ on the sphere in $\RR^d$ satisfies
+    %
+    \[ |\widehat{\sigma}(\xi)| \lesssim_d |\xi|^{- \frac{d-1}{2}}. \]
+    %
+    Consider the multiplier corresponding to the distribution $\Lambda = \partial \sigma / \partial r$, which is not a distribution of order zero. On the other hand, $|\widehat{\Lambda}(\xi)| \lesssim_d |\xi|^{-\frac{d-3}{2}}$. Provided $d \geq 4$, this implies that $\| \widehat{\Lambda} \|_{L^q(\RR^d)} < \infty$ for $(d-3)/2 q > d$, i.e. for $q > 2d/(d-3) = 2 + 6/(d-3)$, and thus $\| \Lambda \|_{M^{1,q}(\RR^d)} < \infty$ for this range. For each $\varepsilon > 0$, if we take $d$ appropriately large, apply duality, and iterpolate, for each $\varepsilon > 0$, we obtain a distribution $\Lambda$ of positive order, which lies in $M^{p,q}(\RR^d)$ for all $(p,q)$ with $p < 2 - \varepsilon$ and $q > 2 + \varepsilon$.
 \end{example}
 
 \begin{example}
-    Our other, non constructive examples apply Baire category arguments. Fix $\eta \in C_c^\infty(\RR^d)$, and for any $\lambda > 0$, let $m_\lambda(\xi) = \eta(\xi) e^{2 \pi i \lambda |\xi|^2}$. We claim that if $K_\lambda = \widehat{m_\lambda}$, then $\| K_\lambda \|_{L^\infty(\RR^d)} \lesssim \lambda^{-1/2}$. This follows from a simple oscillatory integral argument. Thus it follows that $\| m_\lambda \|_{M^{1,2}(\RR^d)} \lesssim 1$ and $\| m_\lambda \|_{M^{1,\infty}} \lesssim \lambda^{-1/2}$. Interpolating these bounds gives, for each $q > 2$, a bound of the form $\| m_\lambda \|_{M^{1,q}(\RR^d)} \lesssim \lambda^{-\varepsilon}$ $for some $$\varepsilon > 0$. If $M^{1,q}(\RR^d)$ solely contained elements of $M_{\text{loc}}(\RR^d)$, if $\chi \in C_c^\infty(\RR^d)$ equal to one in a neighborhood of the support of $\eta$, then the operator $m \mapsto \chi m$ would be a bounded operator from $M^{1,q}(\RR^d)$ to $M(\RR^d)$ by the closed graph theorem. But this would imply that for $q > 2$,
+    Our other, non constructive examples apply Baire category arguments. Fix $\eta \in C_c^\infty(\RR^d)$, and for any $\lambda > 0$, let $m_\lambda(\xi) = \eta(\xi) e^{2 \pi i \lambda |\xi|^2}$. We claim that if $K_\lambda = \widehat{m_\lambda}$, $\| K_\lambda \|_{L^\infty(\RR^d)} \lesssim \lambda^{-d/2}$. This follows from a simple oscillatory integral argument. Also $K_\lambda$ will be essentially supported on a ball of radius $O(\lambda)$ at the origin, so one can show from this that $\| K_\lambda \|_{L^1(\RR^d)} \lesssim \lambda^{d/2}$. Thus $\| m_\lambda \|_{M^{1,\infty}} \lesssim \lambda^{-d/2}$ and $\| m_\lambda \|_{M^{1,1}} = \| m_\lambda \|_{M^{\infty,\infty}} \lesssim \lambda^{d/2}$. Interpolating gives for $q > 2$ and $q \geq p$, a bound of the form $\| m_\lambda \|_{M^{p,q}(\RR^d)} \lesssim \lambda^{-\varepsilon}$ for some $\varepsilon > 0$. If $M^{p,q}(\RR^d)$ solely contained distributions of order zero, if $\chi \in C_c^\infty(\RR^d)$ is a bump function equal to one in a neighborhood of the support of $\eta$, then the operator $m \mapsto \chi m$ would be a bounded operator from $M^{p,q}(\RR^d)$ to $M(\RR^d)$ by the closed graph theorem. But this would imply that
     %
     \[ \| \eta \|_{L^1(\RR^d)} = \| \chi m_\lambda \|_{M(\RR^d)} \lesssim \| m_\lambda \|_{M^{1,q}(\RR^d)} \lesssim \lambda^{-\varepsilon}, \]
     %
-    which certainly cannot be true.
+    which certainly cannot be true. Thus $M^{p,q}(\RR^d)$ contains distributions of positive order for $q > 2$ and $p < 2$.
 \end{example}
 
-De Leeuw's theorem shows slices of continuous $d+1$ dimensional multipliers are bounded by the original mutiplier.
+De Leeuw's theorem shows slices of continuous $d+1$ dimensional multipliers are bounded by the original mutiplier, so that we might view multipliers in higher dimensions as more complicated than lower dimensional multipliers.
 
 \begin{theorem}
-  Let $m \in C(\RR^{d+1})$. For each $\xi_0 \in \RR$ define $m_0 \in C(\RR^d)$ by setting
+  Let $m \in C(\RR^{d+1})$. Fix $\xi_0 \in \RR$, and define $m_0 \in C(\RR^d)$ by setting
   %
   \[ m_0(\xi) = m(\xi,\xi_0). \]
   %
   Then for any $1 \leq p \leq \infty$, $\| m_0 \|_{M^p(\RR^d)} \leq \| m \|_{M^p(\RR^{d+1})}$.
 \end{theorem}
+
 \begin{proof}
   Without loss of generality, assume $\xi_0 = 0$. For $\lambda > 0$ set
   %
@@ -4126,6 +4286,18 @@ De Leeuw's theorem shows slices of continuous $d+1$ dimensional multipliers are 
   %
   \[ \lim_{\lambda \to \infty} |\langle (m \circ L_\lambda)(D) f, g \rangle| = \langle (m \circ L_\infty)(D) f, g \rangle. \qedhere \]
 \end{proof}
+
+\begin{example}
+    If the cone multiplier
+    %
+    \[ m_\lambda(\xi,\eta) = \left( 1 - \frac{|\xi|^2}{|\eta|^2} \right)^\lambda_+ \]
+    %
+    lies in $M^p(\RR^{d+1})$, then the corresponding Bochner-Riesz multiplier
+    %
+    \[ m_\lambda(\xi) = \left( 1 - |\xi|^2 \right)^\lambda_+ \]
+    %
+    lies in $M^p(\RR^d)$.
+\end{example}
 
 If $m$ is no longer continuous, this theorem only holds for \emph{almost all} slices of the function.
 
@@ -4159,6 +4331,160 @@ If $m$ is no longer continuous, this theorem only holds for \emph{almost all} sl
     %
     which completes the proof (modulo a separability argument).
 \end{proof}
+
+\section{Transference}
+
+One can view the last result of the last section as a \emph{transference theorem}, showing that the study of the boundedness of multipliers becomes harder in higher dimensions (since a higher dimensional result implies a corresponding lower dimensional result for the slices). Our goal now is to analyze a similar correspondence between the theory of multipliers on $\RR^d$ and the theory of multipliers on $\TT^d$.
+
+Let us briefly describe the analogous properties of multipliers on $\TT^d$ that we have proved for $\RR^d$. There exists a theory of Schwartz and tempered sequences $\{ a_m : m \in \ZZ^d \}$ analogous to that of Schwartz functions and tempered distributions on $\TT^d$ and $\RR^d$, such that the Fourier transform induces an isomorphism between Schwartz functions on $\TT^d$ and Schwartz sequences on $\ZZ^d$, and tempered distributions on $\TT^d$ with tempered sequences on $\ZZ^d$. One can take the convolution in both spaces. If $T: C^\infty(\TT^d) \to C^\infty(\TT^d)$ is any continuous operator commuting with translations, then there exists a distribution $\Lambda$ on $\TT^d$ such that $Tf = \Lambda * f$ for any $f \in C^\infty(\TT^d)$. Applying the Fourier transform, for any such operator there is also a tempered sequence $\{ a_m : m \in \ZZ^d \}$ such that
+%
+\[ \widehat{Tf}(n) = a_n \widehat{f}(n), \]
+%
+so we have a theory of Fourier multipliers on $\TT^d$. For any $1 \leq p,q \leq \infty$, we let $M^{p,q}(\ZZ^d)$ denote the family of all tempered sequences $\{ a_m \}$ such that the induced Fourier multiplier operator $T$ is bounded from the $L^p(\TT^d)$ norm to the $L^q(\TT^d)$ norm on smooth functions, with the associated operator norm giving the space a topology. Similarily, we define $M^p(\ZZ^d) = M^{p,q}(\ZZ^d)$. We have $M^{p,q}(\ZZ^d) = M^{q^*,p^*}(\ZZ^d)$ for all $1 \leq p,q \leq \infty$. As for multipliers on $\RR^n$, we have $M^2(\ZZ^d) = l^\infty(\ZZ^d)$, and $M^{1,q}(\ZZ^d) = M^{q^*,\infty}(\ZZ^d) = \widehat{L^q(\TT^d)}$ for $q > 1$, and $M^{1,1}(\ZZ^d) = M^{\infty,\infty}(\ZZ^d) = \widehat{M(\TT^d)}$.
+
+Our goal is to relate the boundedness of multipliers on $\TT^d$ to the boundedness of associated multipliers on $\RR^d$, and vice versa. To begin with, we show that bounded multipliers on $\RR^d$ induce bounded multipliers on $\TT^d$.
+
+\begin{theorem}
+    Suppose $m \in M^p(\RR^d)$, and every point in $\RR^d$ is a Lebesgue point of $m$. Then for all $R > 0$, the sequence $a_R(n) = m(n/R)$ lies in $M^p(\ZZ^d)$, and $\| a_R \|_{M^p(\ZZ^d)} \leq \| m \|_{M^p(\RR^d)}$.
+\end{theorem}
+
+\begin{remark}
+    Every function can be altered on a set of measure zero in order to satisfy the assumptions of this theorem, as the theory of the Hardy-Littlewood maximal function indicates.
+\end{remark}
+
+\begin{proof}
+    Without loss of generality, by rescaling we may assume that $R = 1$. The case $p = 1$ and $p = \infty$ follows from Poisson sumation and the characterizations of $M^1(\RR^d)$ and $M^1(\ZZ^d)$. Thus we may assume $1 < p < \infty$. 
+
+    Here the proof follows from a general identity, that for any pair of trigonometric periodic polynomials $f$ and $g$, if $\Phi_\delta(x) = e^{- \pi \delta |x|^2}$, if $T$ is a Fourier multiplier on $\RR^d$ with symbol $m(\xi)$, and $S$ is a Fourier multiplier on $\ZZ^d$ with symbol $m(n)$, then for any $\alpha,\beta > 0$ with $\alpha + \beta = 1$,
+    %
+    \[ \lim_{\delta \to 0} \delta^{d/2} \int_{\RR^d} T \{ f \Phi_{\alpha \delta} \} \cdot \overline{ g \Phi_{\beta \delta} } = \int_{\TT^d} Sf \cdot \overline{g}\; dx.  \]
+    %
+    To obtain the identity, it suffices to assume by linearity that $f(x) = e^{2 \pi i n_1 \cdot x}$ and $g(x) = e^{2 \pi i n_2 \cdot x}$ for two integers $n_1$ and $n_2$. If $n_1 = n_2 = n$, we therefore have to prove that the left hand side is equal to $m(n)$, and if $n_1 \neq n_2$, we have to prove the left hand side is equal to zero. By the multiplication formula, the left hand side is
+    %
+    \[ \lim_{\delta \to 0} \delta^{d/2} (\delta \alpha)^{-d/2} (\delta \beta)^{-d/2} \int_{\RR^d} m(\xi) \cdot \Phi_{1/\alpha \delta}(\xi - n_1) \Phi_{1/\beta \delta}(\xi - n_2) = \lim_{\delta \to 0} (\alpha \beta \delta)^{-d/2} \int_{\RR^d} m(\xi) \Phi_{1/\alpha \delta}(\xi - n_1) \Phi_{1/\beta \delta}(\xi - n_2). \]
+    %
+    If $n_1 = n_2 = n$, then
+    %
+    \[ \Phi_{1/\alpha \delta}(\xi - n_1) \Phi_{1/\beta \delta}(\xi - n_2) = (\alpha \beta \delta)^{-n/2} \Phi_{1/\alpha \beta \delta}(\xi - n), \]
+    %
+    is an approximation to the identity as $\delta \to 0$, yielding the result. On the other hand, if $n_1 \neq n_2$, then the two Gaussian functions are primarily supported on disjoint sets, which yields the result in this case as well.
+
+    Returning to the general proof, we note that it suffices to prove by density and duality that for any trigonometric polynomials $f$ and $g$, 
+    %
+    \[ \left| \int Sf(x) \overline{g(x)}\; dx \right| \leq \| m \|_{M^p(\RR^d)} \| f \|_{L^p(\RR^d)} \| g \|_{L^{p^*}(\RR^d)}. \]
+    %
+    But the identity above gives that
+    %
+    \begin{align*}
+        \left| \int Sf(x) \overline{g(x)}\; dx \right| &\leq \lim_{\delta \to 0} \delta^{d/2} \left| \int \int_{\RR^d} T \{ f \Phi_{\alpha \delta} \} \cdot \overline{ g \Phi_{\beta \delta}} \right|\\
+        &\leq \lim_{\delta \to 0} \delta^{d/2} \| m \|_{M^p(\RR^d)} \| f \Phi_{\alpha \delta} \|_{L^p(\RR^d)} \| g \Phi_{\beta \delta} \|_{L^{p^*}(\RR^d)}\\
+        &= \| m \|_{M^p(\RR^d)} \| f \|_{L^p(\TT^d)} \| g \|_{L^{p^*}(\TT^d)}. \qedhere
+    \end{align*}
+\end{proof}
+
+It is clearly not true that if $\{ m(n) : n \in \ZZ^d \}$ gives an element of $M^p(\ZZ^d)$, then $m$ is in $M^p(\TT^d)$, since $m$ can be poorly behaved away from the integers. But if $\{ m(n/R) : n \in \ZZ^d \}$ is uniformly in $M^p(\ZZ^d)$, we can prove that $m$ is in $M^p(\TT^d)$ given weak continuity assumptions.
+
+\begin{theorem}
+    Suppose $m$ is Riemann integrable, $1 \leq p \leq \infty$, and we define $a_R(n) = m(n/R)$. Then
+    %
+    \[ \| m \|_{M^p(\RR^d)} \leq \sup_{R > 0} \| a_R \|_{M^p(\ZZ^d)}. \]
+\end{theorem}
+\begin{proof}
+    Fix $f,g \in C_c^\infty(\RR^d)$. Then for suitably large $R$, $\text{Dil}_{1/R} f$ and $\text{Dil}_{1/R} g$ are supported in $[-1/2,1/2]^d$. Define the periodic functions
+    %
+    \[ \tilde{f}_R(x) = \sum_{n \in \ZZ^d} \text{Dil}_{1/R} f(x - n) \quad\text{and}\quad \tilde{g}_R(x) = \sum_{n \in \ZZ^d} \text{Dil}_{1/R} g(x - n). \]
+    %
+    Then
+    %
+    \begin{align*}
+        \int m(D) f(x) \overline{g}(x) &= \int m(\xi) \widehat{f}(\xi) \overline{\widehat{g}(\xi)}\\
+        &= \lim_{R \to \infty} R^{-d} \sum_{n \in \ZZ^d} b(n/R) \widehat{f}(n/R) \overline{\widehat{g}(n/R)}\\
+        &= \lim_{R \to \infty} R^d \sum_{n \in \ZZ^d} b(n/R) \widehat{\tilde{f}_R}(n) \widehat{\tilde{g}_R(n)}\\
+        &\leq \lim_{R \to \infty} R^d \| a_R \|_{M^p(\ZZ^d)} \| \tilde{f}_R \|_{L^p(\TT^d)} \| \tilde{g}_R \|_{L^{p^*}(\TT^d)}\\
+        &\leq \lim_{R \to \infty} \| a_R \|_{M^p(\ZZ^d)} \| f \|_{L^p(\RR^d)} \| g \|_{L^{p^*}(\RR^d)}.
+    \end{align*}
+\end{proof}
+
+\begin{example}
+    The Hilbert transform $H$ is a Fourier multiplier with symbol $i \text{sgn}(\xi)$. Since it is homogeneous, Riemann integrable, and every point is a Lebesgue point, the theory of boundedness from $L^p(\RR^d)$ to $L^p(\RR^d)$ is equivalent to the boundedness of the periodic version of the Hilbert transform from $L^p(\TT^d)$ to $L^p(\TT^d)$.
+\end{example}
+
+Similarily, we see that the convergence in $L^p(\TT^d)$ of various Fourier series (Dirichlet sums, spherical summation, square summation, and so on) are equivalent to the associated problems of the convergence of the Fourier transform in $L^p(\RR^d)$.
+
+Many problems in harmonic analysis deal not only with the boundedness of Fourier multipliers, but also the boundedness of a maximal function associated with a family of multipliers (e.g. the almost everywhere convergence of Fourier series is connected with the properties of the maximal function $Mf = \sup_{R > 0} S_R f$, where $S_R$ is the partial summation operator. Let us proof a transference result for maximal functions associated with dilations of multiplier operators.
+
+\begin{theorem}
+    Fix a bounded, Riemann integrable function $m$ on $\RR^d$ such that every $\xi \in \RR^d$ is a Lebesgue point of $m$. Define the maximal functions $Mf = \sup_{R > 0} m(D/R) f$ on $\RR^d$, and the maximal function $Nf = \sup_{R > 0} T_R f$, where $T_R$ is the Fourier multiplier operator on $\TT^d$ associated with the sequence $a_R(n) = m(n/R)$. Then $M$ is bounded from the $L^p(\RR^d)$ norm to itself if and only if $N$ is bounded from the $L^p(\RR^d)$ norm to itself.
+\end{theorem}
+\begin{proof}
+    It suffices to show that a uniform family of estimates of the form
+    %
+    \[ \| \sum_{i = 1}^K c_i m(D/R_i) f \|_{L^p(\RR^d)} \lesssim \sum |c_i| \]
+    %
+    uniform in $K$ and $R_1, \dots, R_K$, is equivalent to a uniform family of estimates of the form
+    %
+    \[ \| \sum_{i = 1}^K c_i T_{R_i} f \|_{L^p(\RR^d)} \lesssim \sum |c_i|, \]
+    %
+    which is uniform in $K$ and $R_1, \dots, R_K$. In the first case, we may assume without loss of generality that $f \in C_c^\infty(\RR^d)$, and in the second, that $f$ is a trigonometric polynomial. The proof then follows by essentially the analogous techniques to above.
+\end{proof}
+
+\begin{remark}
+    One can also show that transference holds between maximal functions bounded merely from $L^p(\RR^d)$ to $L^{p,\infty}(\RR^d)$, using the duality of Lorentz spaces in much the same way.
+\end{remark}
+
+Here are some other examples of transference.
+
+\begin{example}
+    TODO: ELABORATE ON THIS. For a given family of coefficients $\{ a_m : m \in \ZZ^d \}$, consider the periodization operator
+    %
+    \[ Tf = \sum_{m \in \ZZ^d} a_m \text{Trans}_m f. \]
+    %
+    Then, roughly speaking, $T$ is a Fourier multiplier operator with symbol $m(\xi) = \sum a_m e^{-2 \pi i \xi \cdot m}$, where this sum must be interpreted in a non-standard sense if the sum $\{ a_m \}$ does not converge, which means we might end up obtaining a tempered distribution $m$ rather than a function. But certainly $T$ is well defined for  any compactly supported input, since then the sum is locally finite. Let us assume $T$ is bounded on these inputs in the $L^p$ norm for some $1 < p < \infty$ with operator norm $A$, and thus extends uniquely to a bounded operator from $L^p(\RR^n)$ to itself. If we consider any family of coefficients $\{ c_m : m \in \ZZ^d \}$, and consider, for $\varepsilon < 1$, the function
+    %
+    \[ f(x) = \sum_{m \in \ZZ^d} c_m \varepsilon^{-d/p} \mathbf{I} \left(x \in \prod_{i = 1}^d [m_i, m_i + \varepsilon] \right), \]
+    %
+    then $\| f \|_{L^p(\RR^d)} = \| c \|_{l^p(\ZZ^d)}$. If $\| c_m \|_{l^p(\ZZ^d)}$, it follows by continuity that it must be true that
+    %
+    \begin{align*}
+        Tf(x) &= \sum_{k \in \ZZ^d} \sum_{m + n = k} c_m a_n \varepsilon^{-d/p} \mathbf{I} \left( x \in \prod_{i = 1}^d [k_i, k_i + \varepsilon] \right)\\
+        &= \sum_{k \in \ZZ^d} (a * c)(k) \varepsilon^{-d/p} \mathbf{I} \left( x \in \prod_{i = 1}^d [k_i, k_i + \varepsilon] \right).
+    \end{align*}
+    %
+    It follows that
+    %
+    \[ \| Tf \|_{L^p(\RR^d)} = \| a * c \|_{l^p(\ZZ^d)}. \]
+    %
+    Thus we conclude that $\| a * c \|_{l^p(\ZZ^d)} \leq A \| c \|_{l^p(\ZZ^d)}$. Conversely, suppose convolution with $a$ is bounded from $l^p(\ZZ^d)$ to $l^p(\ZZ^d)$ with norm $A$. Then
+    %
+    \[ \left( \sum_{k \in \ZZ^d} |Tf(x+k)|^p \right)^{1/p} = \left( \sum_{k \in \ZZ^d} \left| \sum_m a_m f(x + k - m) \right|^p \right)^{1/p} \leq A \left( \sum_k |f(x + k)|^p \right)^{1/p}. \]
+    %
+    But
+    %
+    \begin{align*}
+        \| Tf \|_{L^p(\RR^d)} &= \left( \int_{[0,1]^d} \left( \sum_{k \in \ZZ^d} |Tf(x+k)|^p \right) \right)^{1/p}\\
+        &\leq A \left( \int_{[0,1]^d} \sum_k |f(x+k)|^p \right)^{1/p}\\
+        &= A \| f \|_{L^p(\RR^d)}.
+    \end{align*}
+    %
+    Thus we conclude that $T$ is bounded if and only if the associated discrete convolution operator is bounded. Thus we have shown studying the boundedness of multiplier operators associated to symbols with domain $\TT^d$, e.g. convolution operators from $l^p(\ZZ^d)$ to $l^q(\ZZ^d)$, via Fourier multiplier operators with \emph{periodic} symbols in the domain $\RR^d$. More precisely, we can define $M^{p,q}(\ZZ^d)$ to be the set of all distributions $f$ on $\TT^d$ such that convolution with $\widehat{f}$ gives a bound from $L^p(\ZZ^d)$ to $L^q(\ZZ^d)$ in a suitable domain so we can interpret this convolution, e.g. for compactly supported sequences. It then follows that $M^p(\ZZ^d)$ is isomorphic to the family of periodic symbols in $M^p(\RR^d)$.
+\end{example}
+
+\begin{example}
+    Next, consider $m \in M^p(\RR^d)$ with compact support in $[0,1]^d$, and consider the periodization
+    %
+    \[ m_P(\xi) = \sum_{n \in \ZZ^d} m(\xi - n). \]
+    %
+    We claim that $m_P \in M^p(\RR^d)$. TODO (Look up Jodeit Paper?).
+\end{example}
+
+
+
+
+
+
+
+
+
 
 
 
