@@ -13,6 +13,8 @@ Most philosophers, rightly or wrongly, believe that philosophy can do much more 
 
 The man who has fed the chicken every day throughout its life at last wrings it neck instead, showing that more refined views as to the uniformity of nature would have been useful to the chicken.
 
+When Swift invites us to consider the race of Struldbugs who never die, we are able to acquiesce in imagination. But a world where two and two make five seems quite on a different level. We feel that such a world, if there were one, would upset the whole fabric of our knowledge and reduce us to utter doubt.
+
 
 
 
@@ -24,7 +26,7 @@ The man who has fed the chicken every day throughout its life at last wrings it 
 
 We begin with the following question: Is there any knowledge no 'reasonable' person could doubt? To answer this question, it is natural to begin with what we experience, since some knowledge must be obtained through experience. But if we think critically, we see that almost any knowledge we are predisposed to infer from sensations is incorrect. For instance, in observing a table, it is self evident to us all that the table is brown, rectangular, shiny, smooth, cool, hard to the touch, and makes a distinctive sound when tapped. But all of these facts may be doubted via reason, from which we will come to the conclusion that these properties are not properties of the table itself, but of the *appearance* of the table which we percieve through the senses. Let us argue why this is so:
 
-- We all agree the table is brown. But if we change the lighting in the room, the precise colour of brown will change. If we fix the lighting, and move around the room, the color of the table will appear to change. The color of the table is also not homogeneous, and so because of the perspective change no two vantage points will give the same distribution of colors which make up the table. A color blind person would not be able to identify that the table is brown, so that without an internal faculty of color-sensing, we would not be able to sense the color of the table. Thus the *exact* shade of brown which makes up the color of the table seems not to be an inherent property of the table, but a property relating to the combination of the table, the lighting of the room it lies in, and the spectator experiencing the color of the table.
+- We all agree the table is brown. But if we change the lighting in the room, the precise colour of brown will change. If we fix the lighting, and move around the room, the color of the table will appear to change. The color of the table is also not homogeneous, and so because of the perspective change no two vantage points will give the same distribution of colors which make up the table. A color blind person would not be able to identify that the table is brown, so that without an internal faculty of color-sensing, we would not be able to sense the color of the table. Thus the brownness which makes up the color of the table seems not to be an inherent property of the table, but a property relating to the combination of the table, the lighting of the room it lies in, and the spectator experiencing the color of the table.
 
 - The table appears smooth to our natural senses, but if we examine the table under a microscope, we see via a finer resolution that the table is jagged and rough. We might then feel like this is the *canonical* texture of the table, though zooming in would reveal the table is made from a discrete arrangement of atoms rather than a continuous structure. Thus the smoothness of the table is not a property of the table, but is a property both of the table, and the type of perception we use to experience the table.
 
@@ -163,6 +165,80 @@ To be more precise, when we use these arguments are apply the principle of induc
 We cannot use experience to disprove the principle of induction. Nor can we use experience to prove the principle of induction, because the induction principle only gives us knowledge about objects which have not yet been examined, and so we cannot know anything else about. But, because all of our knowledge of the future, or the unknown, rests on this principle, it is very difficult to deny. The existence and applicability of such beliefs are the most difficult and debated topics in philosophy.
 
 Question: How do we quantify this via Bayesian probability, and justify this?
+
+
+
+
+
+
+
+
+
+### Chapter 7: On Our Knowledge of General Principles
+
+Everyone believes the principle of induction, despite the fact that it is not possible to verify it in experience. Here we consider other principles with this property. If our theory of knowledge is to best understood, we must critically examing these principles:
+
+- Modus Ponens (Deducing that the truth of a statement 'A implies B' and the truth of the statement 'A' must mean the statement 'B' is true) is used in all theoretical arguments. Without the principle, an argument (in the greek sense) itself would be meaningless, since it would not be necessary to accept the conclusion of the argument if the premises were true.
+
+- The law of identity: 'A implies A'.
+
+- The law of contradiction: 'Nothing can be both true and false'.
+
+- The law of excluded middle: 'Everything must be either true or false'.
+
+A classical argument in philosophy is that between the *empiricists* (e.g. such as the British philosophers Locke, Berkeley, and Hume), who believed all knowledge derives from experience, and the *rationalists* (e.g. Descartes and Leibnitz) who believed that in addition to experiential knowledge, we also had certain innate knowledge. We have already argued that some principles we definitely believe cannot be derived from experience, which favors the rationalist side.  On the other hand, it is only experience that causes us to direct our attention to these general laws, even those this experience cannot possibly give us knowledge of these laws. Knowledge which cannot be proved by experience we call *a priori knowledge*.
+
+Russell believes that we cannot possibly deduce the knowledge of the existence of something without some foundation in experiential knowledge. Rationalists believed this could be done, e.g. Descartes' purely rational argument for the existence of god? A priori knowledge can only deduce the connections between the existence of things (e.g. the existence of a baby implies the existence of a mother).
+
+Question: How do we know this is true?
+
+Another kind of a priori judgements are those of desirability / those of an ethical nature. Knowledge as to how useful something is can be obtained from experience, but partially something is useful because it results in some end that we find intrinsically desirable. These desires may be induced by experience, but their existence cannot be justified by experience. This is discussed in detail in ethics, where the distinction from *what is* (empirical judgements) are separated from *what ought to be* (normative judgements).
+
+Mathematics is a priori. Some empiricists percieve it not to be, i.e. we learn that two and two make four by observing examples of where two and two make four. But this is clearly not how we actually do justify this to ourselves. But there are several reasons why this is not necessarily a great argument:
+
+- After enough experience, our brain percieves two things as representatives of the abstract quantity of two, and we then utilize the general principle that two and two are four. Thus any instance of this principle becomes typical. We do not continue empirically observing that two and two are four after that, increasing our belief in that property more and more as we keep observing the situation. Our certainty is so great that we cannot possibly increase it further. Thus we have a certain belief rather than an inductive belief.
+
+- We also believe that this proposition would be true 'in all possible worlds'.
+
+This differs from a statement such as 'All men are mortal', where we believe this statement because we have no experience of a person older than 150 years, and there are certain physiological principles which argue that a person's body should eventually decay. In another world, we can imagine an immortal man, e.g. in fiction. This is a statement which we verify empirically, vs. a priori.
+
+It is often better to proceed to the truth of judgements via inductive methods than via deductive methods. For instance, the classic proof that "Socrates is mortal" can be deduced from the statement that "All men are mortal". But we only know all men are mortal through inductive knowledge, and thus only to some degree of certainty, and the statement "Socrates is mortal" can be verified by induction, and is a weaker statement than the statement that all men are mortal. Thus we should verify Socrates is mortal inductively rather than verify All men are mortal inductively first, and then deduce that Socrates is mortal.
+
+Question: Is Newtonian Physics also of this nature?
+
+Question: Is it really better to inductively determine that Socrates is mortal? How would one inductively verify this?
+
+
+
+
+
+
+
+
+
+
+
+### Chapter 8: A Priori Knowledge is Possible
+
+Immanuel Kant is generally regarded as one of the greatest modern philosopher. His most unique contribution to philosophy was the 'critical method', which, under the assumption that we know certain knowledge, deduces other a priori metaphysical knowledge that is necessary to obtain that knowledge. One might doubt some applications of this method, but one cannot doubt some of Kant's more concrete claims: that some a priori synthetic knowldege is possible. The method also shows how important the theory of knowledge is to general philosophy.
+
+Before Kant, most people believed the only a priori knowledge was analytic. For instance, Hume came up with a legitimate argument that the law of cause and effect was not analytic, e.g. that an effect could not be logically deduced from a cause. He was therefore led to believe that the law of cause and effect could not be a priori knowledge. This bothered Kant, who was educated in the rationalist tradition.
+
+Certainly, there exist synthetic a priori beliefs. For instance, Kant famously argued that 7 + 5 = 12 is not an analytic statement, because 7 and 5 must be put together to make 12. There is nothing in the concept of 12 that tells us that it is made up of 7 and 5.
+
+Question: Do You Believe This?
+
+Another objection to the empiricists is that experience is particular, whereas much knowledge is general. As we discussed with induction, it seems very strange that we could know something about things which we have no experience of, e.g. we do not know the people living in London in 200 years, but we know if we put two of them together with another two they make four.
+
+Kant's system distinguishes two elements to an analysis of metaphysics. The first, the 'thing in itself', is the physical object under consideration. The second object, the 'phenomenon' is due to our nature reacting to the sense data we percieve of the thing in itself. One interesting point Kant makes is that the act of percieving time and space, and of making relations with our sensations, come out of our a priori faculties. This is why we can justify that all phenomena we experience exist in time and space, because these are core faculties of our percieving of these objects in our mind.
+
+A quirk of Kant's system is that, because we can only ever percieve and think about phenomena (sensations cause us to think about phenomena, not things in themselves), we can have no a priori knowledge of the outside world. We have no idea at all whether things in themselves exist in time and space, rather than us just percieving them to have these properties via the faculties of time and space we have a priori in our mind. Thus a priori propositions cannot be applied to any object in itself, only to phenomena. Kant thus severely limits the scope of his analysis.
+
+Question: How can we have inductive knowledge of 'the thing in itself' if we only ever percieve a phenomena.
+
+Russell identifies several problems with Kant's arguments. First, Kant's argument gives us no greater certainty of a priori knowledge. The fact that the principle that 'two and two make four' comes from ourselves and our mental faculties does not tell us anything about whether that principle may be justified in the future, since our mind may change in the future. One might argue that this argument does not hold in a Kantian sense, since in this system the mind exists outside of time, and only percieves phenomena in time via its mental faculties. But a Kantian will still have to acknowledge that the time related to an object is still related to the principles behind phenomena, and so the argument still stands in this sense.
+
+We must also correct a common misconception among philosophers that a priori knowledge is related to 'what we can think'. It is a principle about the real world. Thus the law of contradiction does not state that 'the mind cannot percieve something as being true and being false' It is a belief that that something really is either true or false. When we say two and two make four, we are not asserting that the mind naturally believes that two and two make four. We are asserting that two and two really do make four. Kant believes that relations are the work of the mind, and do not exist in the physical world. But when we say "We are in our room", we are asserting a truth about the physical world, and not about a relation of things that exists in our mind. Thus objects like relations, and a priori truths, must exist in a world neither mental or physical. This is the world of universals.
 
 
 
