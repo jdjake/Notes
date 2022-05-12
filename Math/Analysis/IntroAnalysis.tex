@@ -1223,6 +1223,114 @@ Thus $V_{n+2} = (n/2\pi) V_n$, which is very similar to the recurrence defining 
 %
 satisfies the required recurrence, and has the same initial conditions as $V_n$. We conclude that this is {\it actually} the formula for $V_n$.
 
+\section{Convexity}
+
+A function $f:(a,b) \to \mathbf{R}$ is convex when the line segment between $(a,f(a))$ and $(b,f(b))$ lies above the graph of $f$. The line segment connecting these two points is described by
+%
+\[ \{ (\lambda a + (1 - \lambda) b, \lambda f(a) + (1 - \lambda) f(b)) : 0 \leq \lambda \leq 1 \} \]
+%
+and we require that $(\lambda a + (1 - \lambda)b, f(\lambda a + (1 - \lambda)b)$ lies below the corresponding point on the line defined above. This is satisfied exactly when we have a certain inequality:
+
+A function $f:U \to \mathbf{R}$ is {\bf convex} on $(a,b)$ if, for any $a \leq x < y \leq b$, and $0 \leq \lambda \leq 1$, we have
+    %
+    \begin{equation} \label{convex1} f(\lambda x + (1 - \lambda) y) \leq \lambda f(x) + (1 - \lambda) f(y) \end{equation}
+    %
+    By rewording the definition, convexity is also satisfied when, for $a \leq x < y < z \leq b$,
+    %
+    \begin{equation} \label{convex2} \frac{f(y) - f(x)}{y - x} \leq \frac{f(z) - f(y)}{z - y} \end{equation}
+    %
+    Geometrically, this equation says that the slope of the tangent line from $(x, f(x))$ to $(y, f(y))$ is smaller than the tangent line from $(y, f(y))$ to $(z, f(z))$.
+
+\begin{lemma}
+    A $C^1$ convex function's derivative is non-decreasing on $(a,b)$.
+\end{lemma}
+\begin{proof}
+    Suppose $f$ is a $C^1$ function, and $f'$ is non-decreasing, then consider any $a \leq x < y < z \leq b$. Then $f'(x) \leq f'(y) \leq f'(z)$. Applying the mean value theorem, we conclude there is $t \in (x,y)$, and $u \in (y,z)$, for which
+    %
+    \begin{equation} \label{convexderivative} f'(t) = \frac{f(y) - f(x)}{y - x}\ \ \ \ \ f'(u) = \frac{f(z) - f(y)}{z - y} \end{equation}
+    %
+    And since $t < u$, (\ref{convexderivative}) implies $f'(t) \leq f'(u)$, i.e. (\ref{convex2}) is satisfied.
+
+    If $f$ is $C^1$ and convex, then surely $f'$ is non-decreasing. Fix $a \leq x < y \leq b$. In (\ref{convex2})), letting $y$ converge to $x$, we obtain
+    %
+    \begin{equation} \label{yconvergeleft} f'(x) = \lim_{y \to x^+} \frac{f(y) - f(x)}{y - x} \leq \lim_{y \to x} \frac{f(z) - f(y)}{z - y} = \frac{f(z) - f(x)}{z - x} \end{equation}
+    %
+    Conversely, letting $y \to z$, we obtain
+    %
+    \begin{equation} \label{yconvergeright} f'(y) = \lim_{y \to z^-} \frac{f(z) - f(y)}{z - y} \geq \lim_{y \to z} \frac{f(y) - f(x)}{y - x} = \frac{f(z) - f(x)}{z - x} \end{equation}
+    %
+    And in tandem, (\ref{yconvergeleft}), (\ref{yconvergeright}) and (\ref{convex2}) imply that $f'(x) \leq f'(y)$.
+\end{proof}
+
+\begin{example}
+    $\exp: \mathbf{R} \to \mathbf{R}$ is convex on $(-\infty, \infty)$, since $\exp'' = \exp > 0$.
+\end{example}
+
+\begin{lemma}
+    A function is continuous on the open segments where it is convex.
+\end{lemma}
+
+The most important inequality in analysis is the triangle inequality, undershadowed by the Schwarz inequality. Almost as important is Jensen's inequality. Despite its importance, the proof is fairly simple and intuitive. Consider the center of mass of an object.
+
+\begin{theorem}[Jensen's Inequality]
+    Let $(\Omega, \mathbf{P})$ be a probability space. If $X \in L^1(\mathbf{P})$, where $a < X< b$, and if $f$ is a real function, convex on $(a,b)$, then
+    %
+    \begin{equation} \label{jensen} f(\mathbf{E}[X]) \leq \mathbf{E}[f \circ X] \end{equation}
+\end{theorem}
+\begin{proof}
+    Since $a < X < b$, $a < \mathbf{E}[X] < b$. Let
+    %
+    \[ \beta = \sup_{a < x < \mathbf{E}[X]} \frac{g(\mathbf{E}[X]) - g(x)}{\mathbf{E}[X] - x} \]
+    %
+    For any $a < x < y$, $g(x) + \beta(\mathbf{E}[X] - x) \geq g(y)$. But also, by the right side of $(\ref{convex2})$, for any $z > y$, $g(z) - \beta(z - \mathbf{E}[X]) \geq g(\mathbf{E}[X])$. For any $\omega \in \Omega$, we may restate these equations as as
+    %
+    \[ g(f(\omega)) - \beta(f(\omega) - y) \geq g(y) \]
+    %
+    But then taking expectations, we obtain (\ref{jensen}).
+\end{proof}
+
+Jensen's inequality is incredibly useful. To see this, consider some examples.
+
+\begin{example}
+    We have seen the exponential function is convex. Hence for any $L_1(\mathbf{P})$, where $\mathbf{P}$ is a probability measure, we have
+    %
+    \begin{equation} \label{harmonic} exp\left(\int f d\mathbf{P} \right) \leq \int e^f d\mathbf{P} \end{equation}
+    %
+    Let $\mathbf{P}$ be the uniform measure over a finite set $\{ x_1, x_2, \dots, x_n \}$. Then (\ref{harmonic})) tells us that
+    %
+    \[ e^{f(x_1)/n}e^{f(x_2)/n} \dots e^{f(x_n)/n} \leq \frac{\sum e^{f(x_i)}}{n} \]
+    %
+    If we let $x_i$ be real numbers, and $f(x_i) = \log(x_i)$, we conclude
+    %
+    \[ (x_1x_2 \dots x_n)^{1/n} \leq \frac{\sum x_i}{n} \]
+    %
+    In other words, the geometric mean is always smaller than the arithmetic mean.
+\end{example}
+
+Jensen's inequality implies so many other inequalities in analysis.
+
+    Let $1 \leq p \leq \infty$. We say $1 \leq q \leq \infty$ is the {\bf conjugate} of $p$ if $p^{-1} + q^{-1} = 1$, and write $q = p'$.
+
+\begin{theorem}[H\"{o}lder]
+    If $p' = q$, $(\Omega,\mu)$ is a measure space, and $f,g$ are positive measurable functions on $\Omega$, then
+    %
+    \begin{equation} \label{holder} \| fg \|_1 \leq \| f \|_p \| g \|_q \end{equation}
+\end{theorem}
+\begin{proof}
+    Let $A,B$ be the values on the right hand side of (\ref{holder})). If $A = 0$, then $f = 0$ almost everywhere, so that the theorem is trivial. Symmetry shows that the same is true if $B = 0$, so assume $A, B \neq 0$. Define $F = f/A$, and $G = g/B$. Then
+    %
+    \[ \left( \int F^p d\mu \right)^{1/p} = A^{-1} \left( \int f^p d\mu \right)^{1/p} = 1\ \ \ \ \ \left( \int G^q d\mu \right)^{1/q} = B^{-1} \left( \int g^q d\mu \right)^{1/q} = 1 \]
+    %
+    For any $x$, there is a number $s$ such that $e^{s/p} = F(x)$, and $t$ such that $e^{t/q} = G(x)$. By the convexity of the exponential function, $e^{s/p + t/q} \leq e^s p^{-1} + e^t q^{-1}$. Thus $FG \leq p^{-1} F^p + q^{-1} G^q$, and thus by integrating,
+    %
+    \[ \int FG\ d\mu \leq p^{-1} + q^{-1} = 1 \]
+\end{proof}
+
+\begin{corollary}[Minkowski]
+    For
+    \[ \| f + g \|_p \leq \| f \|_p + \| g \|_p \]
+\end{corollary}
+
 \chapter{Vector Calculus}
 
 \section{Surface Integration}
