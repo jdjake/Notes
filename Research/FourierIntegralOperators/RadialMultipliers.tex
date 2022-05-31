@@ -890,11 +890,17 @@ where $E_\lambda$ is the projection operator onto the eigenspace corresponding t
 %
 \[ A_p(h) = \left( \int_{-\infty}^\infty |\widehat{h}(t)|^p (1 + |t|)^{(d-1)(1 - p/2)}\; dt \right)^{1/q} \]
 %
-is finite, which is a necessary condition for the multiplier $h(\sqrt{-\Delta})$ to be bounded on $\RR^d$, and thus by the result of Mityagin, necessary for the family of operators $\{ T_R : R > 0 \}$ to be uniformly bounded in $R$.
+is finite, which is a necessary condition for the multiplier $h(\sqrt{-\Delta})$ to be bounded on $L^p(\RR^d)$ or $L^{p^*}(\RR^d)$, and thus by the result of Mityagin, necessary for the family of operators $\{ T_R : R > 0 \}$ to be uniformly bounded in $R$ on $L^p(S^n)$ or $L^{p^*}(S^n)$.
+
+\section{Attempt \# 1: Exploiting Local Smoothing}
 
 To exploit the fact that $A_p(h)$ is finite, we apply the Fourier transform to the sum defining $T_R$, writing $T_R f$ as the vector valued integral
 %
 \[ T_R f = \int_{-\infty}^\infty R \widehat{h}(R t) (e^{2  \pi i t \sqrt{-\Delta}} f). \]
+%
+Thus we have connected the problem to the study of the wave propogators $\{ e^{2 \pi i t \sqrt{-\Delta}} \}$, which give solution operators solving the equation
+%
+\[ \frac{\partial}{\partial t} = 2 \pi i \sqrt{-\Delta}. \]
 %
 Now H\"{o}lder's inequality, together with the fact that the wave propogators $\{ e^{2 \pi i t \sqrt{-\Delta}} \}$ is periodic on $S^n$ with periodicity $1$, and the fact that $1 < p < 2d/(d+1)$, we write
 %
@@ -914,27 +920,57 @@ where $S^\infty_t$ is a \emph{smoothing operator}, i.e. an integral operator wit
 %
 \[ S^\infty_t f(x) = \int K(t,x,y) f(y)\; dy, \]
 %
-where $K \in C^\infty([0,1] \times S^n \times S^n)$, and where
+where $K \in C^\infty([0,1] \times S^n \times S^n)$, and where we can locally write
 %
 \[ T_t f(x) = \int_{\RR^n} a(t,x,y,\xi) e^{2 \pi i \Phi(x,y,\xi)} f(y)\; d\xi\; dy \]
-%
+% p(x,\xi) = \sqrt{-\Delta}
 for some symbol $a \in S^0$, and some symbol $\Phi \in S^1$ satisfying
 %
-\[ \Phi(x,y,s,\xi) = (x - y) \cdot \xi + s g_y(\xi,\xi) + O(|x - y|^2 |\xi|), \]
+\[ \Phi(x,y,t,\xi) = (x - y) \cdot \xi + t g_y(\xi,\xi) + O(|x - y|^2 |\xi|). \]
 %
-where $g$ is the Riemmanian metric of $S^n$. In particular, if we work with the coordinates $z_{\pm}$ in the strict upper and lower hemispheres given by
+To calculate the canonical relation of this operator, we look at the principal symbol of the operator $\sqrt{-\Delta}$. If $g$ is the metric of $S^n$, then the principal symbol will be
 %
-\[ z_{\pm}^{-1}(t_1,\dots,t_n) = (t_1,\dots,t_n, \pm (1-t_1^2 - \dots - t_n^2)^{1/2}), \]
+\[ p(x,\xi) = C \left( \sum g_{ij}(x) \xi^i \xi^j \right)^{1/2} = C |\xi| \]
 %
-then in coordinates we have
+for an appropriate constant $C$ (TODO: Determine this more precisely). One can calculate (see Remark in Section 4.1 Sogge's book) that the canonical relation of the family of operators $\{ T_t \}$ is given by
 %
-\[ g_y(\xi,\xi) = |\xi|^2 - (1 - |y|^2)^{-1/2} |y \cdot \xi|^2, \]
+\[ \mathcal{C} \subset \{ (x,t,\xi,\tau,y,\eta) : (y,\eta) = \phi_t(x,\xi), \tau = p(x,\xi) \}, \]
 %
-and so in these coordinates we have the explicit form
+where $t \mapsto \phi_t(x,\xi)$ is the geodesic travelling at a velocity of $2\pi$ which starts at $x$, and travels in the direction given by $\xi$. We claim this canonical relation satisfies the cinematic curvature condition. Indeed, the projections $\Pi_{y,\eta}: \mathcal{C} \to T^* S^n$ and $\Pi_{x,t}: \mathcal{C} \to T^* S^n$ are both submersions, so the Fourier integral operator is nondegenerate. For each pair $(x_0,t_0)$, the cone
 %
-\[ \Phi(x,y,s,\xi) = (x - y) \cdot \xi + t |\xi|^2 - t (1 - |y|^2)^{-1/2} |y \cdot \xi|^2 + O(|x - y|^2 |\xi|). \]
+\[ \mathcal{C}_{x_0,t_0} = \{ (\xi,\tau) : |\xi| = C^{-1} \tau \} \]
 %
-TODO: IS THIS EXPLICIT FORM USEFUL?
+is an $n$ dimensional hypersurface in $T_{x_0,t_0}^*((-1,1) \times S^n)$, and it is easy to see this hypersurface is curved for all $t$. The endpoint local smoothing conjecture claims that if $f \in L^{p^*}(S^{n-1})$ for precisely the range of $p$ we care about in the radial multiplier conjecture, then $T f \in L^{p^*}_{-\alpha_p}((-1,1) \times S^{n-1})$, where $\alpha_p = n(1/2 - 1/p^*) - 1/2 = n(1/p - 1/2) - 1/2$. In particular, if we assume that Sobolev norms work on $S^n$ the same way they work on $\RR^n$, this means that if $f \in L^{p^*}(S^{n-1})$ has frequency supported on $|\xi| \leq L$, then
+%
+\[ \| T_R f \|_{L^{p^*}(\RR^d)} \lesssim \| f \|_{L^{p^*}(\RR^d)_{\alpha_p}} \lesssim L^{\alpha_p} \| f \|_{L^{p^*}(\RR^d)}. \]
+%
+Thus we see that local smoothing is pretty hopeless in proving the result we need to prove for general $f$.
+
+The only non optimal inequality we applied here was H\"{o}lder's inequality, which would be tight if there exists a non-negative function $\gamma$ such that
+%
+\[ |e^{2 \pi i t \sqrt{-\Delta}} f|^{p^*} (1 + |Rt|)^{-(d-1)\frac{(2-p)}{2(p-1)}} = \gamma(x)^{p^*} |\widehat{h}(Rt)|^p (1 + |Rt|)^{(d-1)(1-p/2)}, \]
+%
+i.e. where
+%
+\[ |e^{2 \pi i t \sqrt{-\Delta}} f(x)| = \gamma(x) (1 + |Rt|)^{(d-1) \frac{(2-p)}{2}} |\widehat{h}(Rt)|^{1/p^*}. \]
+
+TODO: Think about why local smoothing is useless. Is the theorem trivial if H\"{o}lder's inequality is applied?
+
+%where $g$ is the Riemmanian metric of $S^n$. In particular, if we work with the coordinates $z_{\pm}$ in the strict upper and lower hemispheres given by
+%
+%\[ z_{\pm}^{-1}(t_1,\dots,t_n) = (t_1,\dots,t_n, \pm (1-t_1^2 - \dots - t_n^2)^{1/2}), \]
+%
+%then in coordinates we have
+%
+%\[ g_y(\xi,\xi) = |\xi|^2 - (1 - |y|^2)^{-1/2} |y \cdot \xi|^2, \]
+%
+%and so in these coordinates we have the explicit form
+%
+%\[ \Phi(x,y,s,\xi) = (x - y) \cdot \xi + t |\xi|^2 - t (1 - |y|^2)^{-1/2} |y \cdot \xi|^2 + O(|x - y|^2 |\xi|). \]
+%
+%TODO: IS THIS EXPLICIT FORM USEFUL?
+
+\section{Junk}
 
 Rescaling and applying H\"{o}lder's inequality, we have
 %

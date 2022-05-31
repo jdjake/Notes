@@ -954,23 +954,34 @@ There is a certain duality going on here. Distributions can be viewed as linear 
 
 For more general operators that are translation invariant, we cannot represent all operators via convolution by distributions. A significantly more general family of operators can be found if, instead of considering operators of the form
 %
-\[ T\phi(y) = \int \Lambda(y - x) \phi(x)\; dx \]
+\[ T\phi(x) = \int \Lambda(x - y) \phi(y)\; dy \]
 %
 we instead study \emph{kernel} operators
 %
-\[ T\phi(y) = \int K(x,y) \phi(x)\; dx \]
+\[ T\phi(x) = \int K(x,y) \phi(y)\; dy \]
 %
 where $K$ is a distribution on $\Omega_1 \times \Omega_2$ and $\phi \in \DD(\Omega_1)$. To formally interpret the output of this operator, we need to test it against another bump function, i.e. for $\psi \in \DD(\Omega_2)$ we consider
 %
-\[ \int T\phi(y) \psi(y)\; dy = \int K(x,y) \phi(x) \psi(y)\; dx\; dy, \]
+\[ \int T\phi(x) \psi(x)\; dx = \int K(x,y) \psi(x) \phi(y)\; dx\; dy, \]
 %
-which is $K$ tested against $\phi \otimes \psi$. Thus $T\phi$ is naturally a distribution on $\RR^m$, and this definition naturally gives a continuous map from $\DD(\RR^n)$ to $\DD^*(\RR^m)$. In 1953, Schwartz showed that essentially every linear operator encountered in Euclidean analysis is of this form, which explains the prevalence of kernel operators in analysis.
+which is $K$ tested against $\phi \otimes \psi$. Thus $T\phi$ is naturally a distribution on $\RR^m$, and this definition gives a continuous map $T: \DD(\RR^n) \to \DD^*(\RR^m)$. The behaviour of the operator $T$ uniquely determines the distribution $K$, and we call $K$ the \emph{Schwartz kernel} of $T$. In 1953, Schwartz showed that essentially every linear operator encountered in Euclidean analysis is of this form, which explains the prevalence of kernel operators in analysis.
 
 \begin{theorem}
   Let $T: \DD(\Omega_1) \to \DD^*(\Omega_2)$ be a continuous linear operator. Then there exists a unique distribution $K \in \DD^*(\Omega_1 \times \Omega_2$ such that for $\phi \in \DD(\RR^n)$ and $\psi \in \DD(\RR^m)$,
   %
   \[ \int T\phi(y) \psi(y)\; dy = \int K(x,y) \phi(x) \psi(y)\; dx\; dy. \]
 \end{theorem}
+\begin{proof}
+    TODO
+\end{proof}
+
+\begin{remark}
+    When $\Omega_1 = \Omega_2 = \RR^d$ it is often more elegant to work with a representation of kernel operators in \emph{convolution form}, i.e. writing
+    %
+    \[ T \phi(x) = \int k(x,z) \phi(x-z)\; dz \]
+    %
+    which is just another way to represent the operators above by considering the change of variables $z = x - y$, i.e. we have $k(x,z) = K(x,x-z)$, or $K(x,y) = k(x,x-y)$. We call $k$ the \emph{Schwartz convolution kernel} associated with the operator $T$. 
+\end{remark}
 
 Looking at the properties of kernels defining an operator is often a useful technique to gain insight in how an operator behaves, since one can study the singularities and smoothness of the kernel separately from the operator itself.
 
@@ -1588,17 +1599,39 @@ Because of the dilation symmetry of the Fourier transform, the family of homogen
 
 \section{Test Functions on a Manifold}
 
-Most of the theory of distributions generalizes easily to a smooth manifold $M$. One can define the topology on $C^\infty(M)$ such that for each compact set $K \subset M$, and each family of smooth vector fields $X_1,\dots,X_k$ defined on a neighborhood of $K$, we have a seminorm
-%
-\[ \rho_{K,X}(f) = \| (X_1 \circ \dots \circ X_k) f \|_{L^\infty(K)}. \]
-%
-This induces a relative topology on $C_c^\infty(U)$ for any open set $U$ with $\overline{U}$ closed. The inductive limit gives the topology on the space $C_c^\infty(M)$ of compactly supported test functions. We define $\DD^*(M)$ to be the dual of $C_c^\infty(M)$, the space of distributions on $M$, and let $\mathcal{E}^*(M)$ to be the dual of $C^\infty(M)$. One can define the support of a distribution on a manifold, and $\mathcal{E}^*(M)$ can then be seen as the space of compactly supported distributions on $M$. It is more difficult to build a canonical definition of the space $\mathcal{S}^*(M)$ of tempered distributions; there is no natural direction to measure the rate of decay of a function, so it is difficult to even define the Schwartz space $\mathcal{S}(M)$. Thus to do the things one does in Schwartz space on a general manifold (Fourier-type arguments), one must either work locally, or on a compact manifold where $C^\infty(M)$ should coincide with $\mathcal{S}(M)$.
+For a general smooth manifold $M$, it is unnatural to define the space of test functions $\mathcal{D}(M)$ to be $C_c^\infty(M)$. This is because there is no natural inclusion map from $C^\infty(M)$ to this dual, given that there is no natural definition of integration on a manifold $M$. Thus one cannot naturally think of the dual of $C_c^\infty(M)$ as being a space of `generalized functions' on $M$.
 
-In the general setting of a manifold, there is no natural way to embed $C^\infty(M)$ in $\DD^*(M)$, nor embed $C_c^\infty(M)$ in $\mathcal{E}^*(M)$, since there is no natural way to integrate the product of two functions on a manifold. Nonetheless, given any smooth, non-vanishing positive density $\omega$ on $M$, we can define, for $f \in C_c^\infty(M)$ and $g \in C^\infty(M)$,
+We remedy this, we work with \emph{scalar densities} rather than scalar-valued functions. Recall that on any manifold $M$, we can define a line bundle $\text{Vol}(TM)$, and scalar densities are sections of this line bundle. In coordinates, a scalar density corresponds to a family of functions $\omega_x \in C^\infty(U)$ for each coordinate chart $(x,U)$, such that for any other coordinate chart $(y,V)$, on $U \cap V$,
 %
-\[ \langle f, g \rangle = \int_M f(x) g(x) d\omega(x). \]
+\[ \omega_y = \omega_x \cdot \left| \det \left( \frac{\partial y^i}{\partial x^j} \right) \right|. \]
 %
-This is a continuous bilinear map, and thus induces a canonical way to embed the functions as distributions.
+We define $\mathcal{D}(M)$ to be the space of all compactly supported smooth scalar densities, which we can equip with a natural locally convex structure analogous to the topology on the space of test functions in Euclidean space. Given any $f \in C^\infty(M)$, and any $\omega \in \mathcal{D}(M)$, the quantity
+%
+\[ \langle f, \omega \rangle = \int_M f \cdot \omega \]
+%
+is well defined, where the integral on the right is defined by working in local coordinates. Moreover, the map $\omega \mapsto \langle f, \omega \rangle$ is then a continuous linear functional on $\mathcal{D}(M)$. Thus we have a continuous inclusion $C^\infty(M) \to \mathcal{D}(M)^*$, which means it makes sense to define $\mathcal{D}(M)^*$ be the space of generalized functions on $M$.
+
+\begin{remark} 
+    If it helps to think more generally, given a smooth line bundle $E$ over $M$, we define $\mathcal{D}(M,E)$ to be the space of all smooth, compactly supported sections of $E^*$, the \emph{dual} line bundle to $E$. Then the space $\Gamma(E)$ of all smooth sections of $E$ is naturally included in $\mathcal{D}(M,E)^*$, which we call the space of \emph{generalized sections} of $E$.
+
+    As an example of this approach, we can consider the line bundle $\text{Vol}^\alpha(TM)$ for each $0 \leq \alpha \leq 1$, whose sections $\omega$ consist of \emph{scalar densities of order $\alpha$}, which transform in coordinates via the relation
+    %
+    \[ \omega_y = \omega_x \cdot \left| \det \left( \frac{\partial y^i}{\partial x^j} \right) \right|^\alpha. \]
+    %
+    Thus $\text{Vol}(TM) = \text{Vol}^1(TM)$, and $TM = \text{Vol}^0(TM)$. The dual bundle to $\text{Vol}^\alpha(TM)$ can naturally be identified with $\text{Vol}^{1-\alpha}(TM)$ since if $\omega$ is a scalar density of order $\alpha$, and $\eta$ is a scalar density of order $1 - \alpha$, then $\omega \eta$ is a scalar density of order one, and thus can be integrated on $M$ in an invariant manner. Thus we can define the space $\mathcal{D}^\alpha(M)^*$ of generalized scalar densities of order $\alpha$ to be the dual to the space of compactly supported scalar densities of order $1 - \alpha$.
+\end{remark}
+
+Much of the basic theory of distributions follows for distributions on manifolds. In particular, a version of the Schwartz kernel theorem holds, i.e. for any smooth manifolds $M$ and $N$, and any continuous linear operator $T: C_c^\infty(M) \to \mathcal{D}(N)^*$, there exists a generalized section $K$ of $\text{Vol}(M) \oplus TN$ such that for any smooth, compactly supported function $f$ on $M$, we formally have
+%
+\[ Tf(x) = \int K(x,y) f(y)\; dy, \]
+%
+in the sense that for any smooth, compactly supported scalar density $\omega$ on $N$,
+%
+\[ \langle Tf, \omega \rangle = \int \omega(x) K(x,y) f(y)\; dx\; dy. \]
+%
+The idea of the proof is to work locally in coordinates, applying the Schwartz kernel theorem in Euclidean space, and then noting that the kernels patch together if we viwe them as sections of $\text{Vol}(M) \oplus TN$.
+
+It is more difficult to see how one would build a canonical definition of the space $\mathcal{S}^*(M)$ of tempered distributions on a manifold $M$, because there is no natural direction to measure the rate of decay of a function. Thus it is often wiser to do the things one does in Schwartz space (e.g. Fourier-type arguments) by working locally in coordinates, or on a compact manifold, where $C^\infty(M)$ should coincide with $\mathcal{S}(M)$.
 
 \section{Paley-Wiener Theorem}
 
@@ -1626,7 +1659,7 @@ TODO: See Rudin, Functional Analysis.
 
 Suppose $u$ is a distribution on $\RR^d$. The \emph{singular support} of $u$ is the set of points $x_0 \in \RR^d$ which \emph{do not} have an open neighbourhood upon which $u$ acts as integration against a $C^\infty$ function. Understanding the singular support of a distribution, and how to control it, is often a useful perspective in harmonic analysis; to reduce the study of $u$ to the study of a $C^\infty$ function one need only smoothen around the singular support of $u$.
 
-The smoothess of a distribution is linked to the decay of it's Fourier transform. In particular, suppose there is a compactly supported bump function $\phi \in C^\infty(\RR^d)$ with $\phi(x) = 1$ in a neighbourhood of some point $x_0 \in \RR^d$. Since $\phi u$ is compactly supported, the Paley-Wiener theorem implies $\widehat{\phi u}$ is an entire function with polynomial growth at infinity. The Fourier inversion formula implies that $\phi u \in \DD(\RR^d)$ if and only if for all $N \geq 0$, $|\widehat{\phi u}(\xi)| \lesssim_N |\xi|^{-N}$. Thus we can infer the singular support of $u$ via purely spectral means, provided we are first able to localize about a point.
+The smoothess of a distribution is linked to the decay of it's Fourier transform. In particular, suppose there is a compactly supported bump function $\phi \in C^\infty(\RR^d)$ with $\phi(x) = 1$ in a neighbourhood of some point $x_0 \in \RR^d$. Since $\phi u$ is compactly supported, the Paley-Wiener theorem implies $\widehat{\phi u}$ is an entire function with polynomial growth at infinity. The Fourier inversion formula implies that $\phi u \in \DD(\RR^d)$ if and only if for all $N \geq 0$, $|\widehat{\phi u}(\xi)| \lesssim_N |\xi|^{-N}$. Thus we can infer the singular support of $u$ via purely spectral means, provided we localize about a point.
 
 We can therefore gain more detailed information about singularities of a distribution $u$ through the Fourier transform. If $x_0$ is a singularity of $u$, then for any bump function $\phi \in C^\infty(\RR^d)$ with $\phi(x) = 1$ in a neighbourhood of $x_0$, there must exist some direction in frequency space on which $\widehat{\phi u}$ does not decay. However, this does not mean that $\phi$ is unable to decay in certain directions; there might exist a conical neighbourhood $U$ about the origin containing some frequency $\xi_0$ such that for all $\xi \in U$ and all $N > 0$,
 %
@@ -1692,7 +1725,7 @@ It is simple to verify via a compactness argument that if $\Gamma(u) = \emptyset
   Choosing the parameter $M$ and $N$ appropriately, we obtain the required bound which shows that $\xi_0 \not \in \Gamma(\phi u)$.
 \end{proof}
 
-This fact means we can obtain a consistant localization about a point. If $u$ is a distribution, $\phi_1,\phi_2 \in \DD(\RR^d)$ are given, and the support of $\phi_2$ is compactly supported on the support of $\phi_1$, then $\phi_2/\phi_1 \in \DD(\RR^d)$, and so we conclude that
+This fact means that for each distribution $u$, and any pair of distributions $\phi_1,\phi_2 \in \DD(\RR^d)$ such that $\text{supp}(\phi_2)$ is contained in the interior of the support of $\phi_1$, then $\phi_2/\phi_1 \in \DD(\RR^d)$, and so we conclude that
 %
 \[ \Gamma(\phi_2 u) = \Gamma((\phi_2/\phi_1) \phi_1 u) \subset \Gamma(\phi_1 u). \]
 %
@@ -1700,11 +1733,15 @@ Thus if $u$ is a distribution, and $x \in \RR^d$, then we define $\Gamma_x(U)$ t
 %
 \[ \bigcap \left\{ \Gamma(\phi u) : \phi \in \DD(\RR^d), x \in \text{supp}(\phi) \right\}. \]
 %
-It is simple to see that if $\{ \phi_n \}$ is a sequence in $\DD(\RR^d)$ such that $\text{supp}(\phi_{n+1})$ is compactly supported in $\text{supp}(\phi_n)$ for each $n$, and if $\bigcap \text{supp}(\phi_n) = \{ x \}$, then $\Gamma_x(u) = \lim_{n \to \infty} \Gamma(\phi_n u)$. Finally, we define
+If $\{ \phi_n \}$ is a sequence in $\DD(\RR^d)$ such that $\text{supp}(\phi_{n+1})$ is compactly supported in $\text{supp}(\phi_n)$ for each $n$, and if $\bigcap \text{supp}(\phi_n) = \{ x \}$, then $\Gamma_x(u) = \lim_{n \to \infty} \Gamma(\phi_n u)$. Finally, we define
 %
 \[ \text{WF}(u) = \{ (x,\xi): \xi \in \Gamma_x(u) \}. \]
 %
 This is the \emph{wavefront set} of $u$.
+
+%\begin{remark}
+%    The theory of wavefront sets can also be defined via a sheaf theoretic framework. The distributions on a manifold form a sheaf $\DD^*$, since one can restrict and glue distributions defined on open subsets of a manifold. Similarily, the smooth functions on a manifold form a sheaf $C^\infty$, which is a subsheaf of $\DD^*$. Thus we can consider the quotient sheaf $\mathcal{F} = \DD^* / C^\infty$.
+%\end{remark}
 
 \begin{lemma}
     If $u$ is a distribution, then $\pi_x(\text{WF}(u))$ is the singular support of $u$. If $u$ is compactly supported, then $\pi_\xi(\text{WF}(u)) = \Gamma(u)$.
@@ -1718,36 +1755,49 @@ This is the \emph{wavefront set} of $u$.
 \begin{example}
   Suppose $u$ is a homogenous distribution which is $C^\infty$ away from the origin. Then $\widehat{u}$ is homogenous and $C^\infty$ away from the origin, and we claim that
   %
-  \[ \text{WF}(u) = \{ (0,\xi): \xi \in \text{supp}(\widehat{u}) \}. \]
+  \[ \text{WF}(u) = \{ (0,\xi): \xi \in \text{supp}(\widehat{u}) \} = \{ 0 \} \times \Gamma(u). \]
   %
-  Since the singular support of $u$ is $\{ 0 \}$, we know $\text{WF}(u) \subset \{ 0 \} \times \RR^d$, and so it suffices to calculate $\Gamma_0(u)$. Fix a radial function $\phi \in \DD(\RR^d)$. Let $\phi_t(x) = t^{-d} \phi(tx)$, let $\psi(\xi) = \widehat{\phi}(\xi)$, and let $\psi_t(\xi) = \widehat{\phi_t}(\xi) = \psi(\xi/t)$. If $v$ is the homogeneous distribution given by the Fourier transform of $u$, then
+  Since the singular support of $u$ is $\{ 0 \}$, we know $\text{WF}(u) \subset \{ 0 \} \times \RR^d$, and so it suffices to calculate $\Gamma_0(u)$. Fix a non-negative radial function $\phi \in \DD(\RR^d)$ such that $\widehat{\phi}$ is a non-negative Schwartz function with total mass one. Let $\phi_t(x) = \phi(tx)$, let $\psi(\xi) = \widehat{\phi}(\xi)$, and let $\psi_t(\xi) = \widehat{\phi_t}(\xi) = t^{-d} \psi(\xi/t)$. Set $u_t = \psi_t u$. Then
   %
-  \[ v_t = \widehat{\phi_t u} = \psi_t * v \]
+  \[ \Gamma_0(u) = \lim_{t \to \infty} \Gamma(u_t). \]
   %
-  If $\xi \notin \text{supp}(v)$, then it is obvious that $(0,\xi) \in \text{WF}(u)$. Conversely, if $(0,\xi) \notin \text{WF}(u)$, then for suitably large $t$, there is an open cone $U_t \subset \RR^d$ containing $\xi$ such that $v_t(\eta) \lesssim_{t,N} |\eta|^{-N}$ for all $\eta \in U_t$. Now if $v$ is homogeneous of degree $s$, then
+  If $v$ is the homogeneous distribution given by the Fourier transform of $u$, and $v_t$ is the Fourier transform of $u_t$, then
   %
-  \begin{align*}
-    (\psi_t * v)(r \eta) &= \int v(\eta') \psi_t \left( r \eta - \eta' \right) d \eta'\\
-    &= r^{d+s} (v * \text{Dil}_r \psi_t)(\eta),
-  \end{align*}
+  \[ v_t = \widehat{\phi_t u} = \psi_t * v. \]
   %
-  where $\text{Dil}_r \psi_t(\eta) = \psi_t(r\eta)$. But this means that
+  Since $\phi_t u$ is no longer homogeneous, neither are the distributions $\{ v_t \}$. But they do satisfy the homogeneity relations
   %
-  \[ |r^d (v * \text{Dil}_r \psi_t)(\eta)| \lesssim_{t,N} r^{-N-s}. \]
+  \[ v_t(\xi) = (t/r)^s \text{Dil}_{t/r} v_r \]
   %
-  As $r \to \infty$, $r^d (v * \text{Dil}_r \psi_t)(\eta) \to v(\eta)$. Taking $r \to \infty$, choosing $N > -s$, we conclude that $v(\eta) = 0$. Thus we find that $v$ vanishes on $U_t$. Thus $\xi \not \in \text{supp}(v)$, which completes the argument.
-\end{example}
+  for any $t,r > 0$. In particular, we see from this that $\Gamma(u_t) = \Gamma(u_r)$ for all $t,r > 0$. Thus $\Gamma_0(u) = \Gamma(u_t)$ for any $t > 0$. If $v$ vanishes in a neighborhood of $\xi_0$, then it vanishes in a conical neighborhood of $\xi_0$. It thus follows that $v_t$ vanishes in a conical neighborhood of $\xi_0$ if we pick $t$ to be sufficiently small, and thus $\xi_0 \not \in \Gamma(u_t) = \Gamma_0(u)$. Conversely, if $\xi_0 \not \in \Gamma_0(u)$, then for all $t > 0$, there is an open cone $U_t \subset \RR^d$ containing $\xi_0$ such that $|v_t(\eta)| \lesssim_{t,N} |\eta|^{-N}$ for all $\eta \in U_t$. The homogeneity relation above implies that we actually have
+  %
+  \[ |v_t(\eta)| \lesssim_N t^{N + |s|} |\eta|^{-N}. \]
+  %
+  for all $\eta \in U_1$. As $t \to 0$, $|v_t(\eta)| \to |v(\eta)|$, and if $N$ is taken larger than $|s|$ in the inequality above, this implies that
+  %
+  \[ |v(\eta)| \lesssim_N \limsup_{t \to 0} t^{N + |s|} |\eta|^{-N} = 0. \]
+  %
+  Thus $v(\eta) = 0$ for all $\eta \in U_1$, so in particular, $\xi_0 \not \in \text{supp}(v)$.
 
-\begin{example}
-    Thus if $\delta$ is the Dirac delta function at the origin in $\RR^d$, which is homogeneous of degree $-d$, then $\widehat{\delta}(\xi) = 1$, hence $\text{WF}(\delta) = \{ 0 \} \times \RR^d$.
-\end{example}
+  Here are some special cases of the above example:
+  %
+  \begin{itemize}
+    \item If $\delta$ is the Dirac delta distribution at the origin in $\RR^d$, then $\widehat{\delta}$ is the constant function, and so
+    %
+    \[ \text{WF}(\delta) = \{ 0 \} \times \RR^d. \]
 
-\begin{example}
-    If $u(x) = \text{p.v}(1/x)$ is the distribution on $\RR$, then
+    \item If $u(x) = \text{p.v}(1/x)$, then $\widehat{u}(\xi) = -i \pi \text{sgn}(\xi)$, and so
     %
-    \[ \widehat{u}(\xi) = -i \pi \cdot \text{sgn}(\xi). \]
+    \[ \text{WF}(u) = \{ 0 \} \times \RR. \]
+
+    \item If $H \subset \RR^d$ is a plane, and $\sigma_H$ is the distribution given by integration against the surface measure on $H$, then $\sigma_H$ is homogeneous, and we claim that $\widehat{\sigma}_H = \sigma_{H^\perp}$, from which the argument above implies that
     %
-    Thus $\text{WF}(u) = \{ 0 \} \times \RR$.
+    \[ \Gamma_0(\sigma_H) = H^\perp. \]
+    %
+    Since $\sigma_H$ is invariant under translation by elements of $H$, it follows that for any $x \in H$, $\Gamma_x(\sigma_H) = H^\perp$. But $\sigma_H$ is $C^\infty$ away from $H$, so
+    %
+    \[ \text{WF}(u) = H \times H^\perp. \]
+  \end{itemize}
 \end{example}
 
 The fact that $(x_0,\xi_0) \not \in \text{WF}(u)$ implies precisely that there exists a neighbourhood $U_0$ of $x_0$ such that for any $\phi \in C_c^\infty(U_0)$, and any $N > 0$,
@@ -1821,27 +1871,7 @@ There is a simple relation between the wavefront set of $u$ and $f^* u$. We cons
     we conclude that $|\widehat{f^*(u \phi)}(\lambda \xi) \lesssim_N \lambda^{-N}$, which implies $(x_0,\xi_0) \in \text{WF}(f^*(u))$. Thus $\text{WF}(f^* u) \subset f^*(\text{WF}(u))$. The converse statement that $f^*(\text{WF}(u)) \subset \text{WF}(f^* u)$ is obtained by symmetry.
 \end{proof}
 
-Using this change of variables formula, we see that the wavefront set transforms under a change of coordinates like a covector. Since this gives an invariant definition, we can define the wavefront set of distributions on any smooth manifold $M$, and the wavefront set will then be a closed, conical subset of $T^* M$. In the next, optional section, we develop this theory, defining the faimly of distributions on a manifold.
-
-\section{Wavefront Sets on Manifolds}
-
-The lack of a natural volume form on a manifold $M$ prevents us from obtaining a canonical, invariant definition of integration on a manifold, which enables us to define the family of distributions from compactly supported, smooth test functions on the manifold.
-
-Recall that for any manifold $M$, we can define a one-dimension bundle $\text{Vol}(TM)$, sections of which we call \emph{scalar densities}. In coordinates, a scalar density corresponds to a family of functions $\omega_x \in C^\infty(U)$ for each coordinate chart $(x,U)$ such that for any other coordinate chart $(y,V)$, on $U \cap V$,
-%
-\[ \omega_y = \omega_x \cdot \left| \det \left( \frac{\partial y^i}{\partial x^j} \right) \right|. \]
-%
-Given any $f \in C^\infty(M)$, and any \emph{compactly supported} scalar density $\omega \in \Gamma(\text{Vol}(TM))$, the quantity
-%
-\[ \langle f, \omega \rangle = \int_M f \cdot \omega \]
-%
-is well defined. We can equip the family of \emph{compactly supported} scalar densities with a topology analogous to the topology on the family of compactly supported test functions on some open subset of Euclidean space. The operator $\omega \mapsto \langle f, \omega \rangle$ is then continuous, and so we can view $C^\infty(M)$ as a subfamily of the continuous dual of the space of compactly supported scalar densities. We therefore obtain a satisfactory, coordinate independent definition of $\DD^*(M)$ on any manifold $M$. With this definition, the theory of wavefront sets follows pretty much automatically by working in coordinates. For instance, an analogous version of the Schwartz kernel theorem holds, and for each $u \in \DD^*(M)$, we have a natural closed, conic subset $\text{WF}(u)$ of $T^*M$. The local theory is essentially the same as the Euclidean space, so for simplicity, we stick to this case in the sequel.
-
-\begin{remark}
-    We can define a bundle $\text{Vol}^\alpha(TM)$ for each $0 \leq \alpha \leq 1$ of \emph{scalar densities of order $\alpha$}, such that $\text{Vol}(TM) = \text{Vol}^1(TM)$, and $C^\infty(M) = \text{Vol}^0(TM)$. We have a natural bilinear pairing $\text{Vol}^\alpha(TM) \times \text{Vol}^{1-\alpha}_c(TM) \to \RR$, where $\text{Vol}^{1-\alpha}_c(TM)$ is the family of compactly supported scalar densities of order $1 - \alpha$. Equipping $\text{Vol}^{1-\alpha}_c(TM)$ enables us to define the family $(\DD^\alpha)'(M)$ of distributional scalar densities as the dual of $\text{Vol}^{1-\alpha}_c(TM)$. There is a similar theory of wavefront sets for this family.
-\end{remark}
-
-The theory of wavefront sets can also be considered in a sheaf theoretic framework. Given a manifold $M$, consider the `unit' tangent bundle $U(M)$, which, as a space, is the quotient of $TM$ identifying vectors which are constant multiplers of one another. We can view the family of distributions on a manifold as sections of a sheaf $\DD^*$, since one can restrict and glue distributions defined on open subsets of a manifold. Similarily, the smooth functions on a manifold form a sheaf $C^\infty$, which is a subsheaf of $\DD^*$. The sheaf $\DD^*$ is flasque, so we can restrict ourselves to studying global sections. Given an open subset $V$ of $U(M)$, we consider the family $\mathcal{F}(U)$ of all \emph{equivalence classes} of distributions in $\DD^*(M)$, where $u$ and $v$ are identified if $\text{WF}((u - v) \cap V) = \emptyset$. It is simple to see that $\mathcal{F}$ gives the structure of a \emph{presheaf}. Global sections of this presheaf corresponds to elements of $\DD^*(M) / C^\infty(M)$, and the support of any $u \in \DD^*(M)$ in $\mathcal{F}$ is then $\text{WF}(u)$.
+Using this change of variables formula, we see that the wavefront set transforms under a change of coordinates like a covector. Since this gives an invariant definition, we can define the wavefront set of distributions on any smooth manifold $M$, and the wavefront set will then be a closed, conical subset of $T^* M$.
 
 \section{Oscillatory Integral Distributions}
 
@@ -1849,27 +1879,31 @@ In this section, we consider distributions on an open subset $U$ of $\RR^d$, for
 %
 \[ I_{a,\phi}(x) = \int a(x,\theta) e^{2 \pi i \phi(x,\theta)}\; d\theta. \]
 %
-Here $a$ is a \emph{symbol} lying in some class $\mathcal{S}^t(U \times \RR^p)$, i.e. satisfying bounds of the form
+Here $a$ is a \emph{symbol} lying in some class $\mathcal{S}^t(U \times \RR^p)$, i.e. a smooth function satisfying bounds of the form
 %
 \[ |\nabla_x^n \nabla_\theta^m a(x,\theta)| \lesssim_{n,m} \langle \theta \rangle^{t - m}, \]
 %
-and $\phi \in C^\infty(U \times (\RR^d - \{ 0 \}))$ is homogeneous of degree one in $\theta$, such that $(\nabla_x \phi, \nabla_\theta \phi)$ is nonvanishing on the support of $a$.
+and $\phi \in C^\infty(U \times (\RR^p - \{ 0 \}))$ is homogeneous of degree one in $\theta$, and $d\phi$ is nonvanishing on the support of $a$.
 
-If $t < -d$, then $I_{a,\phi}$ can be interpreted as an absolutely convergent integral, and in this case $I_{a,\phi}$ is actually a locally integrable function. On the other hand, if $t \geq -d$, then $I_{a,\phi}$ will no longer act as a locally integrable function; for instance, our definition will show that the distribution
+If $t < -d$, then the integrand formally defining $I_{a,\phi}$ is absolutely integrable, and interpreting $I_{a,\phi}$ as a Lebesgue integral gives us a locally integrable function $I_{a,\phi}$. But for $t \geq -d$, the integral defining $I_{a,\phi}$ need not be locally integrable; for instance, our definition will show that the distribution
 %
 \[ \int_{\RR^d} \xi^t e^{2 \pi i x \cdot \xi}\; d\xi \]
 %
 acts on functions as a constant multiple of the differential operator $D^t$.
 
-To define the oscillatory integral distribution rigorously, we fix $\psi \in \DD(\RR^d)$, and $\rho \in \DD(\RR^p)$, equal to one in a neighborhood of the origin. We claim that the quantity
+To define the oscillatory integral distribution rigorously, we fix $\psi \in \DD(\RR^d)$, and $\rho \in \DD(\RR^p)$, equal to one in a neighborhood of the origin. The integral
+%
+\[ \int a(x,\theta) \psi(x) \rho(\theta / R) e^{2 \pi i \phi(x,\theta)}\; d\theta \]
+%
+is then well defined, and we claim that the limit
 %
 \[ \lim_{R \to \infty} \int a(x,\theta) \psi(x) \rho(\theta / R) e^{2 \pi i \phi(x,\theta)}\; d\theta \]
 %
-exists, and is independent of the choice of bump function $\rho$. This will be our definition of
+exists and is independent of the choice of $\rho$. We can then define this limit to be
 %
-\[ \int I_{a,\phi}(x) \psi(x)\; dx. \]
+\[ \int I_{a,\phi}(x) \psi(x)\; dx \]
 %
-To prove the limit exists, we fix $R_1 \leq R_2$, and let $\tilde{\rho}(\theta) = \rho(\theta/R_2) - \rho(\theta/R_1)$. Then $\tilde{\rho}$ is supported on $R_1 \lesssim |x| \lesssim R_2$. Assume first that $R_2 \leq 2R_1$. Rescaling, we find that if $\eta(x,\theta) = a(x,R_2 \theta) \psi(x) \rho(\theta)$, then
+and this defines $I_{a,\phi}$ as a distribution. To prove the limit exists, we fix $R_1 \leq R_2$, and let $\tilde{\rho}(\theta) = \rho(\theta/R_2) - \rho(\theta/R_1)$. Then $\tilde{\rho}$ is supported on $R_1 \lesssim |x| \lesssim R_2$. Assume first that $R_2 \leq 2R_1$. Rescaling, we find that if $\eta(x,\theta) = a(x,R_2 \theta) \psi(x) \rho(\theta)$, then
 %
 \begin{align*}
     \int_{\RR^n} \int_{\RR^p} e^{2 \pi i \phi(x,\theta)} a(x,\theta) \psi(x) \tilde{\rho}(\theta) &= R_2^m \int_{\RR^n} \int_{\RR^p} e^{2 \pi i R_2 \phi(x,\theta)} a(x,R_2 \theta) \psi(x) \tilde{\rho}(\theta)\\
@@ -1880,7 +1914,7 @@ Then $\eta$ is supported on $1/2 \lesssim |\theta| \lesssim 1$ and $|x| \lesssim
 %
 \[ |\nabla^n_x \nabla^m_\theta \eta(x,\theta)| \lesssim_{n,m} R_2^t \cdot |\nabla^n_x \psi(x)|, \]
 %
-where the bound is independant of $R_1$ and $R_2$. Since $\nabla_x \phi$ and $\nabla_\theta \phi$ have no common zeroes on the support of $a$, and thus $\psi$, we can apply the principle of stationary phase to conclude that
+where the bound is independant of $R_1$ and $R_2$. Since $\nabla_x \phi$ and $\nabla_\theta \phi$ have no common zeroes on the support of $a$, we can apply the principle of stationary phase to conclude that
 %
 \[ \left| R_2^p \int_{\RR^n} \int_{\RR^p} e^{2 \pi i R_2 \phi(x,\theta)} \eta(x,\theta) \right| \lesssim_N R_2^{p + m - N} \cdot \| \nabla^{\leq N} \psi \|_{L^\infty(\RR^d)}. \]
 %
@@ -1899,23 +1933,91 @@ If we choose $N > p + m$, then we conclude that
     &\lesssim R_1^{p + t - N} \| \nabla^{\leq N} \psi \|_{L^\infty(\RR^d)}.
 \end{align*}
 %
-In particular, this quantity tends to zero as $R_1 \to \infty$, which gives convergence of the limit, and also gives boundedness, showing $I_{a,\phi}$ is a distribution of order $N$, where $N$ is the smallest integer bigger than $p + m$. A very similar argument shows that if $\rho$ is equal to zero in a neighborhood of the origin, then
+In particular, this quantity tends to zero as $R_1 \to \infty$, which gives convergence of the limit, and also gives boundedness, showing $I_{a,\phi}$ is a distribution of order $\leq N$, where $N$ is the smallest integer bigger than $p + m$. A very similar argument shows that if $\rho \in C_c^\infty(\RR^p)$ is equal to zero in a neighborhood of the origin, then
 %
-\[ \lim_{R \to \infty} \int_{\RR^n} \int_{\RR^p} e^{2 \pi i \phi(x,\theta)} a(x,\theta) \phi(x) \rho(\theta) \phi(x) = 0. \]
+\[ \lim_{R \to \infty} \int_{\RR^n} \int_{\RR^p} e^{2 \pi i \phi(x,\theta)} a(x,\theta) \psi(x) \rho(\theta / R)\; dx = 0. \]
 %
 It follows from the above observation that the definition is independent of the original choice of $\rho$. It is left as an exercise to show that the map $a \mapsto I_{a,\phi}$ is continuous from $S^t(U \times \RR^p)$ to $\DD^*(U)$.
 
-Let us now consider the wavefront set of $I_{a,\phi}$. If $\psi$ is a bump function supported in a neighbourhood of some point $x_0$, then
+\begin{remark}
+    If $M$ is a manifold, and $E$ is a vector bundle over $M$, then for any homogeneous phase $\phi \in C^\infty(E - \{ 0 \})$ and any symbol $a \in \mathcal{S}^t(E^*)$, we can consider the oscillatory integral distribution formally defined by the integral
+    %
+    \[ I_{a,\phi}(x) = \int_{E_x} a(x,\theta) e^{2 \pi i \phi(x,\theta)}\; d\theta, \]
+    %
+    which is a distribution on $M$.
+\end{remark}
+
+Let us now consider the wavefront set of $I_{a,\phi}$. If $\psi$ is a bump function supported in a neighbourhood of some point $x_0$, then rescaling gives
 %
 \[ \widehat{I_{a,\phi} \psi}(\lambda \xi_0) = \lambda^d \int \int e^{2 \pi i \lambda (\phi(x,\theta) - x \cdot \xi_0)} a(x,\lambda \theta) \psi(x)\; dx\; d\theta. \]
 %
-Since $\psi$ is compactly supported, the method of stationary phase would imply this integral would decay rapidly as $\lambda \to \infty$ if $\nabla_\theta \phi(x_0,\theta_0) \neq 0$, or if $\nabla_\theta \phi(x_0,\theta_0) = 0$, but $\nabla_x \phi(x,\theta) \neq \xi_0$, provided that $\psi$ was supported on a small enough neighbourhood of $x_0$. Thus
+This is an oscillatory integral, and the phase is non-stationary in the $x$ and $\theta$ variables provided that the support of $\psi$ is small enough, and $\nabla_\theta \phi(x_0,\theta_0) \neq 0$, or if $\nabla_\theta \phi(x_0,\theta_0) = 0$, but $\nabla_x \phi(x_0,\theta_0) \neq \xi_0$, provided that $\psi$ is supported on a small enough neighborhood of $x_0$. Thus we are lead to conclude that
 %
 \[ \text{WF}(I_{a,\phi}) \subset \{ (x_0,\nabla_x \phi(x_0,\theta_0)): (x_0,\theta_0) \in \text{ess supp}(a)\ \text{and}\ \nabla_\theta \phi(x_0,\theta_0) = 0 \}. \]
 %
 Here $\text{ess supp}(a)$ is the complement of the set of pairs $(x_0,\theta_0)$ which have a conical neighborhood upon which $a$ lies in $S^{-\infty}$.
 
-Near the wavefront set, we can compute an asymptotic formula which characterizes the behaviour of the distribution near the wavefront set up to integration against a function in $C^\infty(U)$.
+\begin{theorem}
+    If $a \in \mathcal{S}^t(U \times \RR^p)$, and $\phi \in C^\infty(U \times \RR^p)$ is a phase satisfying the standard conditions to define the oscillatory integral distribution $I_{a,\phi}$, then
+    %
+    \[ \text{WF}(I_{a,\phi}) \subset \{ (x_0,\nabla_x \phi(x_0,\theta_0)): (x_0,\theta_0) \in \text{ess supp}(a)\ \text{and}\ \nabla_\theta \phi(x_0,\theta_0) = 0 \} \]
+\end{theorem}
+\begin{proof}
+    Fix $(x_0,\xi_0) \in T^* U$, and suppose that for all $(x_0,\theta_0) \in U \times \RR^p$, either $\nabla_\theta \phi(x_0,\theta_0) \neq 0$, $\nabla_x \phi(x_0,\theta_0) \neq \xi_0$, or $(x_0,\theta_0) \not \in \text{ess supp}(a)$. Without loss of generality, we can assume that this third condition never holds, by decomposing $a$ as the sum of a symbol in $\mathcal{S}^{-\infty}$ and a symbol where $a$ vanishes in a neighborhood of any point $(x_0,\theta_0)$ with $\nabla_\theta \phi(x_0,\theta_0) = 0$ and $\nabla_x \phi(x_0,\theta_0) = \xi_0$, and if $a \in \mathcal{S}^{-\infty}$, then $I_{a,\phi} \in C^\infty(U)$. Write
+    %
+    \[ \widehat{I_{a,\phi} \psi}(\lambda \xi_0) = \lambda^d \int \int e^{2 \pi i \lambda \tilde{\phi}(x,\theta;\xi_0)} \tilde{a}_\lambda(x,\theta)\; dx\; d\theta \]
+    %
+    where $\tilde{a}_\lambda(x,\theta) = a(x, \lambda \theta) \psi(x)$, and write $\tilde{\phi}(x,\theta;\xi) = \phi(x,\theta) - x \cdot \xi$. If $Z$ is the set of all $\theta \in \RR^p$ with $|\theta| = 1$ such that $\nabla_\theta \phi(x_0,\theta) = 0$, then $Z$ is closed, and thus compact. Since $\nabla_x \phi(x_0,\theta) \neq \xi_0$ for all $\theta \in Z$, it follows by compactness that
+    %
+    \[ |\nabla_x \phi(x_0,\theta) - t \xi_0| \gtrsim 1 \]
+    %
+    for all $\theta \in Z$ and all $t > 0$. By homogeneity, for any $\theta \in \RR^p - \{ 0 \}$ such that $\nabla_\theta \phi(x_0,\theta) = 0$,
+    %
+    \[ |\nabla_x \phi(x_0,\theta) - \xi_0| \gtrsim |\theta|. \]
+    %
+    By reducing the implicit constant slightly, we may assume that there is $\varepsilon > 0$ such that for any $x \in \RR^d$ and $\xi \in \RR^d$ with $|x - x_0| \leq \varepsilon$ and $|\xi - \xi_0| \leq \varepsilon$, and any $\theta \in \RR^p - \{ 0 \}$ such that $|\nabla_\theta \phi(x_0,\theta)| \leq \varepsilon$, then
+    %
+    \[ |\nabla_x \phi(x,\theta) - \xi| \gtrsim |\theta|. \]
+    %
+    Now if $\psi$ has support in a $\varepsilon$ neighborhood of $x_0$, it follows that for all $x \in \text{supp}(\psi)$ and any $\theta \in \RR^p$,
+    %
+    \[ |\nabla_{x,\theta} \tilde{\phi}(x,\theta,\xi)| \gtrsim 1. \]
+    %
+    The principle of nonstationary phase thus guarantees that for any $N > 0$,
+    %
+    \[ |\widehat{I_{a,\phi} \psi}(\lambda \xi_0)| \lesssim_{\phi,N} \lambda^{-N} \sup_{|\alpha| \leq N} \| D^\alpha_{x,\theta} \tilde{a}_\lambda(x,\theta) |\nabla_{x,\theta} \tilde{\phi}(x,\theta;\xi)|^{|\alpha| - 2N} \|_{L^\infty(U \times \RR^p)}. \]
+    %
+    Now
+    %
+    \[ |\nabla_{x,\theta} \tilde{\phi}(x,\theta;\xi)| = |\nabla_x \phi(x,\theta) - \xi| \lesssim 1, \]
+    %
+    and if $D^\alpha_{x,\theta} = D^{\alpha_1}_x D^{\alpha_2}_\theta$, then $D^\alpha_{x,\theta} \tilde{a}_\lambda(x,\theta)$ is a finite sum of $O(\alpha)$ terms, each of the form
+    %
+    \[ \lambda^{|\alpha_2|} D^{\beta_1}_x D^{\alpha_2}_\theta a(x,\lambda \theta) D^{\beta_2}_x \psi(x), \]
+    %
+    and
+    %
+    \[ |\lambda^{|\alpha_2|} D^{\beta_1}_x D^{\alpha_2}_\theta a(x,\lambda \theta) D^{\beta_2}_x \psi(x)| \lesssim_{\beta_1,\beta_2} \lambda^{|\alpha_2|} \langle \lambda \rangle^{t - |\alpha_2|} \lesssim \langle \lambda \rangle^t \]
+    Thus we conclude that
+    %
+    \[ |\widehat{I_{a,\phi} \psi}(\lambda \xi)| \lesssim_{\phi,\psi,N} \langle \lambda \rangle^{t - N}. \]
+    %
+    Thus $\xi_0 \not \in \text{WF}(I_{a,\phi})$.
+\end{proof}
+
+\begin{example}
+    If we set $\phi(x,\xi) = - 2 \pi x \cdot \xi$, and $a(x,\xi) = a(\xi)$ is a symbol depending only on the $\xi$ variable, then
+    %
+    \[ I_{a,\phi}(x) = \int a(\xi) e^{- 2 \pi i x \cdot \xi}\; d\xi \]
+    %
+    is the Fourier transform of $a$. The result we have just calculated shows that for any symbol $a$,
+    %
+    \[ \text{WF}(I_{a,\phi}) \subset \{ 0 \} \times \RR^n. \]
+    %
+    Thus the Fourier transform of any symbol is smooth away from the origin. This result should be compared to the standard result that the Fourier transform of a homogeneous distribution which is $C^\infty$ away from the origin is also homogeneous and $C^\infty$ away from the origin.
+\end{example}
+
+Near the wavefront set of an oscillatory integral distribution, we can compute an asymptotic formula which characterizes the behaviour of the distribution near the wavefront set up to integration against a function in $C^\infty(U)$.
 
 \begin{theorem}
     Consider a phase function $\phi_1$. Fix $(x_0,\theta_0) \in U \times \RR^p$ such that $\nabla_\theta \phi_1(x_0,\theta_0) = 0$. Let $\xi_0 = \nabla_x \phi_1(x_0,\theta_0)$. Consider any phase function $\phi_2 \in C^\infty(U \times \RR^q)$ and $\sigma_0 \in \RR^q$ with
@@ -1932,25 +2034,17 @@ Near the wavefront set, we can compute an asymptotic formula which characterizes
     Here $a_k(\sigma,\lambda)$ is a linear differential operator in $a$ and $u$ at $(x(\sigma), \theta(\sigma), \sigma)$
 \end{theorem}
 
-\begin{example}
-    If we set $\phi(x,\xi) = x \cdot \xi$, then we find that for any symbol $a$,
-    %
-    \[ \text{WF}(I_{a,\phi}) \subset \{ 0 \} \times \RR^n \]
-    %
-    Thus we conclude that $I_{a,\phi}$ is smooth away from the origin. If $a(x,\theta) = a(x)$, then this result says that the Fourier transform of any symbol is smooth away from the origin. This should be compared to the result that the Fourier transform of a homogeneous distribution which is $C^\infty$ away from the origin is $C^\infty$.
-\end{example}
-
-The phase $\phi$ of an oscillatory integral distribution is called \emph{nondegenerate} if whenever $\nabla_\theta \phi(x,\theta) = 0$, the matrix $D(\nabla_\theta \phi)(x,\theta)$ has full rank $p$. It follows that
+The phase $\phi$ of an oscillatory integral distribution is called \emph{nondegenerate} if whenever $\nabla_\theta \phi(x,\theta) = 0$, the matrix $D_{x,\theta}(\nabla_\theta \phi)(x,\theta)$ has full rank $p$. It follows that
 %
 \[ \Sigma_\phi = \{ (x,\theta): \nabla_\theta \phi(x,\theta) = 0 \} \]
 %
-is a $d$ dimensional submanifold of $U \times \RR^p$. Moreover, the map $f$ from $\Sigma_\phi$ to $U \times \RR^d$ given by $(x,\theta) \mapsto (x,\nabla_x \phi(x,\theta))$ is an immersion, the image $f(\Sigma_\phi)$ being denoted $\Lambda_\phi$. To verify the map is an immersion, we note that at a point $(x,\theta)$ the tangent space of $\Sigma_\phi$ consists of vectors $(v,w) \in \RR^d \times \RR^p$ such that
+is a $d$ dimensional submanifold of $U \times \RR^p$. Moreover, the map $f$ from $\Sigma_\phi$ to $U \times \RR^d$ given by $(x,\theta) \mapsto (x,\nabla_x \phi(x,\theta))$ is an immersion, the immersed submanifold in the image being denoted by $\Lambda_\phi \subset T^* U$. To verify the map is an immersion, we note that at a point $(x,\theta)$ the tangent space of $\Sigma_\phi$ consists of vectors $(v,w) \in \RR^d \times \RR^p$ such that
 %
 \[ D_x \nabla_\theta \phi(x,\theta) \cdot v + D_\theta \nabla_\theta \phi(x,\theta) \cdot w = 0. \]
 %
 Now
 %
-\[ Df(x,\theta)(v,w) = (v, D_x \nabla_x \phi(x,\theta) \cdot v + D_\theta \nabla_x \phi(x,\theta) \cdot w ). \]
+\[ D_{x,\theta}f(x,\theta)(v,w) = (v, D_x \nabla_x \phi(x,\theta) \cdot v + D_\theta \nabla_x \phi(x,\theta) \cdot w ). \]
 %
 Thus if $(v,w)$ lies in the tangent space and $Df(x,\theta)(v,w) = 0$, then $v = 0$, which implies
 %
@@ -1958,7 +2052,7 @@ Thus if $(v,w)$ lies in the tangent space and $Df(x,\theta)(v,w) = 0$, then $v =
 %
 Since mixed partials commute, this says exactly that $D(\nabla_\theta \phi)^T \cdot w = 0$. The full rank condition thus implies that $w = 0$. Thus $(v,w) = 0$, completing the argument that $f$ is an immersion.
 
-Many properties about the phase function can be summarized via the immersed manifold $\Lambda_\phi$. For instance, given a function $\psi(x,\sigma)$, the function $\eta(x,\theta,\sigma) = \phi(x,\theta) - \psi(x,\sigma)$ has a nondegenerate stationary point as a function of $x$ and $\theta$ at a point $(x_0,\theta_0,\sigma_0)$ if and only if $\phi$ is nondegenerate phase function in a neighborhood of $(x_0,\theta_0)$, and the covector field $d_x \psi$ intersects $\Lambda_\phi$ transversally at $(x_0,\xi_0)$, where $\xi_0 = \nabla_x \phi(x_0,\theta_0) = \nabla_x \psi(x_0,\sigma_0)$. In particular, we see that nondegenerate phase functions are `generic'.
+%Many properties about the phase function can be summarized via the immersed manifold $\Lambda_\phi$. For instance, given a function $\psi(x,\sigma)$, the function $\eta(x,\theta,\sigma) = \phi(x,\theta) - \psi(x,\sigma)$ has a nondegenerate stationary point as a function of $x$ and $\theta$ at a point $(x_0,\theta_0,\sigma_0)$ if and only if $\phi$ is nondegenerate phase function in a neighborhood of $(x_0,\theta_0)$, and the covector field $d_x \psi$ intersects $\Lambda_\phi$ transversally at $(x_0,\xi_0)$, where $\xi_0 = \nabla_x \phi(x_0,\theta_0) = \nabla_x \psi(x_0,\sigma_0)$. In particular, we see that nondegenerate phase functions are `generic'.
 
 TODO: If $I_{a_1,\phi_1} = I_{a_2,\phi_2}$, prove that $\Lambda_{\phi_1} = \Lambda_{\phi_2}$.
 
@@ -1968,9 +2062,9 @@ The converse is also true.
     Suppose $\phi_1$ and $\phi_2$ are nondegenerate phase functions on $U \times \RR^{p_1}$ and $U \times \RR^{p_2}$. Let 
 \end{theorem}
 
-The immersed manifold $\Lambda_\phi$ of $U \times \RR^d$ actually has a particular geometric character. Consider the two form
+The manifold $\Lambda_\phi$ of $U \times \RR^d$ actually has special geometric structure. Consider the two form
 %
-\[ \sigma = dx^1 \wedge d\xi^1 + \dots + dx^d \wedge d\xi^d. \]
+\[ \sigma = d\xi^1 \wedge dx^1 + \dots + d\xi^d \wedge dx^d. \]
 %
 The $\sigma = d\omega$, where $\omega = \xi^1 dx^1 + \dots + \xi^d dx^d$. We claim that for any $p =(x,\theta) \in \Sigma_\phi$, and any $v,w \in T_p \Sigma_\phi$, $\sigma(f_* v, f_* w) = 0$. To see this, we calculate that
 %
@@ -1980,15 +2074,33 @@ and
 %
 \[ f^* \omega = \nabla_x \phi \cdot dx = d \phi - \nabla_\theta \phi \cdot d\theta. \]
 %
-On $\Sigma_\phi$, $\nabla_\theta \phi = 0$, so $f^* \omega = d \phi$, and so $f^*(\sigma) = d(f^* \omega) = d^2 \phi = 0$. Thus $\Lambda_\phi$ is a Lagrangian submanifold of $T^* \RR^d$.
+On $\Sigma_\phi$, $\nabla_\theta \phi = 0$, so $f^* \omega = d \phi$, and so $f^*(\sigma) = d(f^* \omega) = d^2 \phi = 0$. Thus $\Lambda_\phi$ is a \emph{Lagrangian submanifold} of $T^* \RR^d$ with respect to the two form $\sigma$.
 
-For any phase function $\phi$ (possibly degenerate), we can define $\Sigma_\theta = \{ (x,\theta): \nabla_\theta \phi(x,\theta) = 0 \}$, and thus the set $\Lambda_\phi$. If $\Lambda_\phi$ is an immersed Lagrangian submanifold, we say $I_{a,\phi}$ is a \emph{Lagrangian distribution}. A degenerate example is given when $p = d+1$, and for $\theta = (\tilde{\theta}, \theta_{d+1})$, $\phi(x,\theta) = x \cdot \tilde{\theta}$. Then $\Lambda_\phi = \{ 0 \} \times \RR^d$, which is Lagrangian.
+For any phase function $\phi$ (possibly degenerate), we can define
+%
+\[ \Sigma_\phi = \{ (x,\theta): \nabla_\theta \phi(x,\theta) = 0 \} \]
+%
+\[ \Lambda_\phi = \{ (x,\nabla_x \phi(x,\theta)) : \nabla_\theta \phi(x,\theta) = 0 \}. \]
+%
+If $\Lambda_\phi$ is an immersed Lagrangian manifold (though not necessarily an immersion through the map $f: \Sigma_\phi \to \Lambda_\phi$), we say $I_{a,\phi}$ is a \emph{Lagrangian distribution}. The phase $\phi$ might be degenerate in this case.
+
+\begin{example}
+    A degenerate example of a Lagrangian distribution is given for $p = d + 1$, $\theta = (\theta_0, \theta_1)$ with $\theta_0 \in \RR^d$ and $\theta_1 \in \RR$, and
+    %
+    \[ \phi(x,\theta) = x \cdot \theta_0, \]
+    %
+    then $\phi$ defines a Lagrangian distribution $I_{a,\phi}$ for any symbol $a$, provided that $a(x,\theta)$ vanishes for any $\theta$ in a cone containing the $\theta_1$ axis. Now $\Sigma_\phi = \{ 0 \} \times \RR^{d+1}$, and $\Lambda_\phi = \{ 0 \} \times \RR^d$, which is a Lagrangian manifold. Thus the distributions
+    %
+    \[ I_{a,\phi}(x) = \int a(x,\theta_0,\theta_1) e^{2 \pi i x \cdot \theta_0}\; d\theta_0\; d\theta_1 \]
+    %
+    are Lagrangian.
+\end{example}
 
 If $f: U \to V$ is a diffeomorphism between open subsets of $\RR^d$, and we equip $T^* U$ with coordinates $(x,\xi)$, and $T^* V$ with coordinates $(y,\eta)$, then we obtain an isomorphism $g: T^* U \to T^* V$ mapping $(x,\xi)$ in $T^* V$ to $(x, (Df(x)^T)^{-1} \eta)$ in $T^* U$. Under this correspondence, if we consider the two-form $\omega_V = \sum \eta_i \wedge dy^i$ on $U$, then
 %
 \[ g^* \omega_V = \sum (\eta^i \circ g) \cdot d(y^i \circ g) = \sum ((Df(x)^T)^{-1} \xi)_i df^i(x) = \sum \xi_i dx^i. \]
 %
-Thus the Lagrangian form is invariant under coordinate changes, and can thus be well defined on the cotangent bundle of any manifold $M$. Thus we can discuss the Lagrangian submanifolds of $T^* M$ for any manifold $M$.
+Thus the Lagrangian form is invariant under coordinate changes, and can thus be well defined on the cotangent bundle of any manifold $M$. Thus we can discuss Lagrangian submanifolds of $T^* M$ for any manifold $M$, and Lagrangian distributions on manifolds.
 
 \begin{example}
     Consider a one-form $\psi$ on $M$, i.e. a smooth function $\psi: M \to T^* M$. Working in coordinates $(x,\xi)$ on $T^* M$, we have
@@ -2007,7 +2119,7 @@ A subset $\Gamma$ of $\Omega \times \RR^d$ is \emph{conic} if $(x,\xi) \in \Gamm
 where $V$ is a closed conic set disjoint from $\Gamma$. Then $\DD^*_\Gamma(\Omega)$ is a Fr\'{e}chet space. To analyze this space, we require a lemma about general distributions.
 
 \begin{lemma}
-    Let $\mathcal{U}$ be a family in $\DD^*(\Omega)$ such that $\sup_{u \in \mathcal{U}} |u(\phi)| < \infty$. Then for any $\phi \in \DD(\Omega)$, there exists $m > 0$ such that for any $\xi \in \mathbf{R}^d$,
+    Let $\mathcal{U}$ be a family in $\DD^*(\Omega)$ such that $\sup_{u \in \mathcal{U}} |u(\phi)| < \infty$ for all $\phi \in \DD(\Omega)$. Then for any $\phi \in \DD(\Omega)$, there exists $m > 0$ such that for any $\xi \in \mathbf{R}^d$,
     %
     \[ |\widehat{\phi u}(\xi)| \lesssim (1 + |\xi|)^m, \]
     %
@@ -2018,7 +2130,15 @@ where $V$ is a closed conic set disjoint from $\Gamma$. Then $\DD^*_\Gamma(\Omeg
     In particular, $\widehat{\phi u_n}$ converges to $\widehat{\phi u}$ on compact subsets.
 \end{lemma}
 \begin{proof}
-    This result follows from a previous result we proved about bounded and convergent families of distributions and bounds in terms of the norm spaces $C^m_c(K)$ for a compact subset $K$ of $\Omega$, when we plug in the test function $\phi e^{-2 \pi i \xi \cdot x}$.
+    For any compact set $K \subset \Omega$, the assumptions imply there exists $m$ such that for $u \in \mathcal{U}$ and $\phi \in C_c^\infty(K)$,
+    %
+    \[ |u(\phi)| \lesssim \| \phi \|_{C^m(K)}. \]
+    %
+    This is a result we have proven earlier following from the uniform boundedness principle. If $\phi$ is supported on $K$, then
+    %
+    \[ |u(\phi e^{-2 \pi i \xi \cdot x})| \lesssim \| \phi e^{-2 \pi i \xi \cdot x} \|_{C^m(K)} \lesssim (1 + |\xi|)^m. \]
+    %
+    A similar argument shows the result for a convergent sequence.
 \end{proof}
 
 \begin{theorem}
@@ -2192,6 +2312,14 @@ Thus the tensor product of any two distributions is well defined. It is simple t
 %
 obtained by isolating each variable separately with a bump function and then tensoring the Fourier transform.
 
+\begin{example}
+    Given $\phi,\psi \in \DD(\Omega)$, we have
+    %
+    \[ \phi \cdot \psi = i^*(\phi \otimes \psi), \]
+    %
+    where $i(x) = (x,x)$, which gives us another way to define the product of distributions by a tensoring, combined with a pullback.
+\end{example}
+
 Finally, we define the pushforward of a distribution. This is most naturally defined distributionally. Given a smooth map $f: \Omega \to \Psi$, $\phi \in \DD(\Omega)$, and $\psi \in \DD(\Psi)$, we define
 %
 \[ \int f_* \phi(y) \psi(y) dy = \int \phi(x) \psi(f(x))\; dx. \]
@@ -2210,15 +2338,11 @@ We have already show that for such an oscillatory integral, provided that $(f(x_
 %
 Now we have defined pushforward, pullback, and tensoring, let us see how they can be used to define useful operations on distributions.
 
-\begin{example}
-    Given $\phi,\psi \in \DD(\Omega)$, we have
-    %
-    \[ \phi \cdot \psi = i^*(\phi \otimes \psi), \]
-    %
-    where $i(x) = (x,x)$, which gives us another way to define the product of distributions by a tensoring, combined with a pullback.
-\end{example}
+Let us consider an important example which occurs in the theory of kernel operators. Recall that the Schwartz kernel theorem says that if $T: \DD(\Omega) \to \DD^*(\Psi)$ is any continuous linear map, then there exists a distribution $K \in \DD^*(\Omega \times \Psi)$ such that, formally speaking,
+%
+\[ T\phi(x) = \int K(x,y) \phi(y)\; dy \]
 
-Let us consider an important example which occurs in the theory of kernel operators. Recall that the Schwartz kernel theorem says that if $T: \DD(\Omega) \to \DD^*(\Psi)$ is any continuous linear map, then there exists a distribution $K \in \DD^*(\Omega \times \Psi)$ such that for any $\phi \in \DD(\Omega)$ and $\psi \in \DD(\Psi)$,
+for any $\phi \in \DD(\Omega)$ and $\psi \in \DD(\Psi)$,
 %
 \[ \int T\phi(y) \psi(y)\; dy = \int K(x,y) \phi(x) \psi(y)\; dx\; dy. \]
 %
@@ -2251,13 +2375,13 @@ where
 is the \emph{wavefront relation} of $K$, and the composition $R \circ E$ of a subset $E$ of $\Omega \times \RR^n$ and a subset $R$ of $(\Omega \times \Psi) \times (\RR^n \times \RR^m)$ is defined to be the set of $(y,\eta) \in \Psi \times \RR^m$ such that $(x,\xi) \in E$ for some $x$ and $\xi$, and $(x,\xi;y,\eta) \in R$. A simple way to remember the results of this construction is that $K$ can be applied to any distribution $u$ such that $\text{WF}'(K) \circ (\text{WF}(u) \cup 0_\Omega)$ contains no zero vector, and then $\text{WF}(Ku)$ is equal to this composition.
 
 \begin{example}
-    Consider a Psuedodifferential operator $T$ given by a symbol $a$, i.e.
+    Consider a pseudodifferential operator $T$ given by a symbol $a$, i.e.
     %
-    \[ T\phi(y) = \int a(y,\xi) \widehat{\phi}(\xi) e^{2 \pi i \xi \cdot y}\; d\xi = \int a(y,\xi) \phi(x) e^{2 \pi i \xi \cdot (y - x)}\; d\xi\; dx. \]
+    \[ T\phi(x) = \int a(x,\xi) \widehat{\phi}(\xi) e^{2 \pi i \xi \cdot x}\; d\xi = \int a(x,\xi) \phi(y) e^{2 \pi i \xi \cdot (x - y)}\; d\xi\; dy. \]
     %
     We can also think of $T$ as a kernel operator with kernel
     %
-    \[ K(x,y) = \int a(y,\xi) e^{2 \pi i \xi \cdot (y - x)} \; d\xi. \]
+    \[ K(x,y) = \int a(x,\xi) e^{2 \pi i \xi \cdot (x - y)} \; d\xi. \]
     %
     The kernel is a distribution defined by an oscillatory integral distribution, and our calculations for such distributions show that
     %
@@ -2267,7 +2391,7 @@ is the \emph{wavefront relation} of $K$, and the composition $R \circ E$ of a su
     %
     \[ \text{WF}'(K) \subset \{ (x,\xi;x,\xi) : x \in \Omega, \xi \in \RR^n - \{ 0 \} \}. \]
     %
-    In particular, $\text{WF}'(K)$, viewed as a relation, contains no zero vectors, and so $Tu$ is well defined for any compactly supported distribution $u$. Moreover, we find $\text{WF}(Tu) \subset \text{WF}(u)$. This is part of the \emph{pseudolocal} nature of pseudodifferential operators; when $T$ is applied to some distribution $u$ supported near $(x_0,\xi_0)$ in phase space, we should expect the same will be true of $Tu$.
+    In particular, $\text{WF}'(K)$, viewed as a relation, contains no zero vectors, and so we find that $T$ extends to a continuous operator from $\mathcal{E}(\RR^d)^*$ to $\mathcal{D}(\RR^d)^*$. Moreover, for any compactly supported distribution $u$, we find $\text{WF}(Tu) \subset \text{WF}(u)$. This is part of the \emph{pseudolocal} nature of pseudodifferential operators; when $T$ is applied to some distribution $u$ supported near $(x_0,\xi_0)$ in phase space, we should expect the same will be true of $Tu$.
 \end{example}
 
 \begin{example}
@@ -2825,6 +2949,10 @@ where $a_{t-n} \in S^{\text{Re}(t) - n}(U \times \RR^p)$ is homogeneous of degre
 %
 where $a_{t-hn} \in S^{\text{Re}(t) - hn}(U \times \RR^p)$ is homogeneous of degree $t-hn$.
 
+\begin{remark}
+    Let $M$ be a manifold, and let $E$ be a vector bundle over $M$. We can define the space $\mathcal{S}^t_{\text{loc}}(E)$ of symbols of order $t$ on $E$ to be the family of all scalar functions $a$ on $E$ which are symbols of order $t$ in local coordinates. These have a very similar theory of the theory we have expounded above. In particular, one can consider asymptotic developments of symbols.
+\end{remark}
+
 
 
 
@@ -2878,7 +3006,7 @@ We use this integral formula to define the general operators $a(x,D)$. In the mo
 %
 \[ \langle a(x,D) f, g \rangle = \langle a, \widehat{f} \otimes g \rangle = \int a(x,\xi) \widehat{f}(\xi) g(x)\; d\xi\; dx. \]
 %
-We call any operator $T$ which can be given in the form $a(x,D)$ a \emph{Pseudodifferential operator}. The symbol $a$ is unique, which essentially follows because $\DD(\RR^d) \otimes \DD(\RR^d)$ is dense in $\DD(\RR^d \times \RR^d)$. For any set $S$ of distributions on $\RR^d \times \RR^d$, the notation $\text{Op}(S)$ is often used to denote the family of all pseudodifferential operators defined by an element of $S$.
+We call any operator $T$ which can be given in the form $a(x,D)$ a \emph{pseudodifferential operator}. The symbol $a$ is unique, which essentially follows because $\DD(\RR^d) \otimes \DD(\RR^d)$ is dense in $\DD(\RR^d \times \RR^d)$. For any set $S$ of distributions on $\RR^d \times \RR^d$, the notation $\text{Op}(S)$ is often used to denote the family of all pseudodifferential operators defined by an element of $S$.
 
 \begin{example}
     Consider the Laplacian $\Delta$ on $\RR^n$. Then $\Delta$ is the pseudodifferential operator on $\RR^n$ of order two, corresponding to the symbol $a(x,\xi) = - 4\pi^2 |\xi|^2$. Since $\Delta$ is a constant coefficient operator, it just acts as a Fourier multiplier. If $\Delta u = f$, then, modulo a harmonic function, which is arbitrarily smooth, $u = \Phi * f$, where $\Phi$ is a fundamental solution to the Laplacian. The operator $f \mapsto \Phi * f$ is a pseudodifferential operator with symbol $b(x,\xi) = \text{f.p}(1/4\pi^2 |\xi|^2)$. 
@@ -2892,29 +3020,31 @@ where in general the oscillatory integral must be interpreted formally. It is al
 %
 \[ Tf(x) = \int k_a(x,z) f(x-z)\; dz, \]
 %
-which reflects the fact that when $a(x,\xi)$ is independant of $x$, we have a convolution operator. As we increase the regularity of $a$, we no longer need to treat this integral quite as formally, and can define the operator for a more general family of functions. Here are some non-comprehensive examples of this phenomenon:
+which reflects the fact that when $a(x,\xi)$ is independant of $x$, $k_a$ is a function of $z$, and then $Tf = k_a * f$ is a convolution operator. As we increase the regularity of $a$, we no longer need to treat this integral quite as formally, and can define the operator for a more general family of functions. Here are some non-comprehensive examples of this phenomenon:
 %
 \begin{itemize}
-    \item Any operator in $\text{Op}(\mathcal{S}(\RR^d \times \RR^d)^*)$ extends uniquely to a continuous linear operator from $\mathcal{S}(\RR^d)$ to $\mathcal{S}(\RR^d)^*$. The Schwartz kernel theorem easily implies that any continuous linear operator from $\mathcal{S}(\RR^d)$ to $\mathcal{S}(\RR^d)^*$ lies in $\text{Op}(\mathcal{S}(\RR^d \times \RR^d)^*)$.
+    \item If $a$ is a tempered distribution, then $a(x,D)$ extends to a continuous linear operator from $\mathcal{S}(\RR^d)$ to $\mathcal{S}(\RR^d)^*$. The Schwartz kernel theorem implies that any continuous linear operator from $\mathcal{S}(\RR^d)$ to $\mathcal{S}(\RR^d)^*$ is of this form.
 
-    \item As we will soon see, any operator in $\text{Op}(\mathcal{S}^t_{\text{loc}}(\RR^d \times \RR^d))$ for some $t$ extends uniquely to a continuous operator from $\mathcal{E}(\RR^d)^*$ to $\DD(\RR^d)^*$, and any operator in $\text{Op}(\mathcal{S}^t(\RR^d \times \RR^d))$ extends to a continuous operator from $C_c^\infty(\RR^d)$ to $\mathcal{S}(\RR^d)$.
+    \item If $a$ is a local symbol of order $t$ on $\RR^d \times \RR^d$, i.e. $a \in \mathcal{S}^t_{\text{loc}}(\RR^d \times \RR^d)$, then $a(x,D)$ extends to a continuous operator from $\mathcal{E}(\RR^d)^*$ to $\DD(\RR^d)^*$.
 
-    \item Any operator in $\bigcap_{t \in \RR} \text{Op}(\mathcal{S}^t_{\text{loc}}(\RR^d \times \RR^d))$ has a kernel in $C^\infty(\RR^d \times \RR^d)$, and extends uniquely to a continuous operator from $\mathcal{E}(\RR^d)$ to $C^\infty(\RR^d)$. We call these operators \emph{smoothing operators}.
+    \item If $a$ is a symbol of order $t$ on $\RR^d \times \RR^d$ for some $t$, i.e. $a \in \mathcal{S}^t(\RR^d \times \RR^d)$, then $a(x,D)$ extends to a continuous operator from $C_c^\infty(\RR^d)$ to $\mathcal{S}(\RR^d)$.
+
+    \item If $a \in \mathcal{S}^{-\infty}_{\text{loc}}(\RR^d \times \RR^d) = \lim_{t \to -\infty} \mathcal{S}^t_{\text{loc}}(\RR^d \times \RR^d)$, then we will see later in this chapter that $a(x,D)$ has a kernel in $C^\infty(\RR^d \times \RR^d)$, and extends uniquely to a continuous operator from $\mathcal{E}(\RR^d)^*$ to $C^\infty_{\text{loc}}(\RR^d)$. We call these operators \emph{smoothing operators}.
 \end{itemize}
 %
 We will mostly focus on pseudodifferential operators defined by various symbol classes, which will give us a more sophisticated calculus.
 
 \section{Basic Definitions}
 
-Consider any smooth function $a \in C^\infty(\RR^d \times \RR^d)$ such that for any $n_1,n_2,m \geq 0$,
+Consider any symbol $a \in \mathcal{S}^t(\RR^d \times \RR^d)$, i.e. a smooth function $a \in C^\infty(\RR^d \times \RR^d)$ such that for any $n_1,n_2,m \geq 0$,
 %
 \[ |\nabla_x^{n_1} \nabla_y^{n_2} \nabla_\xi^m a(x,\xi)| \lesssim_{n,m} \langle \xi \rangle^{t - m}, \]
 %
-where the implicit constant is \emph{uniform} in $x$. We call such a function a \emph{symbol} of order $t$, and denote the family of such symbols by $\mathcal{S}^t(\RR^d \times \RR^d)$. From this function, we can define a continuous operator $T_a: \mathcal{S}(\RR^n) \to C^\infty_{\text{loc}}(\RR^n)$ by setting
+where the implicit constant is \emph{uniform} in $x$. We call such a function a \emph{symbol} of order $t$, and denote the family of such symbols by $\mathcal{S}^t(\RR^d \times \RR^d)$. From this function, we can define a continuous operator $T_a: \mathcal{S}(\RR^d) \to C^\infty_{\text{loc}}(\RR^d)$ by setting
 %
 \[ T_a f(x) = \int a(x,\xi) e^{2 \pi i \xi \cdot x} \widehat{f}(\xi)\; d\xi, \]
 %
-where, since $\widehat{f}$ decays rapidly in $\xi$, we can now interpret the integral as a usual Riemann / Lebesgue integral.
+which is a function lying in $C^\infty_{\text{loc}}(\RR^d)$ because $\widehat{f}$ is rapidly decaying, and we can interpret the integral above as the usual Riemann / Lebesgue integral.
 
 To actually recover the symbol from an operator, we have several methods. Formally, we can calculate that
 %
@@ -2924,11 +3054,11 @@ Equivalently, but less formally, if $\psi \in \DD(\RR^d)$, $\widehat{\psi}(0) = 
 %
 \[ a(x,\xi) = \lim_{R \to \infty} \text{Mod}_{-\xi} T_a(\text{Mod}_{\xi} \text{Dil}_R \psi) (x). \]
 %
-If $K(x,y)$ is the kernel of the operator $T_a$, then we may write the formula above as
+We may write the formula above as
 %
-\[ a(x,\xi) = \int K(x,y) e^{2 \pi i \xi \cdot (y-x)}\; dy = \int k(x,z) e^{-2 \pi i \xi \cdot z}, \]
+\[ a(x,\xi) = \int K_a(x,y) e^{2 \pi i \xi \cdot (y-x)}\; dy = \int k_a(x,z) e^{-2 \pi i \xi \cdot z}, \]
 %
-which is sometimes useful, because it reduces the calculation of the symbol $a(x,\xi)$ to the calculation of the Fourier transform of the function $z \mapsto k(x,z)$.
+which is sometimes useful, because it reduces the calculation of the symbol $a(x,\xi)$ to the calculation of the Fourier transform of $k_a(x,z)$ in the $z$ variable.
 
 The kernel of a pseudodifferential operator given by a symbol $a(x,\xi)$ of the class above is given by
 %
@@ -2940,11 +3070,11 @@ defined by an oscillatory integral distribution of the form we have discussed pr
 %
 This means that we can actually define $T_a u$ for \emph{any} compactly supported distribution $u$, and we will find that $\text{WF}(T_a u) \subset \text{WF}(u)$. This is the first instance of the \emph{pseudolocal nature} of pseudodifferential operators; these operators roughly preserve the location of the mass and frequency support of a function, but with some additional `fuzz' that is usually neglible to the problem, but must be managed. Here is a quantitative estimate on the kernel showing the pseudolocal nature, which implies that $T_a f$ is a \emph{Schwartz function} whenever $f$ is Schwartz.
 
-The wavefront set calculation implies that $K_a$ agrees with a $C^\infty$ function away from the line $x = y$. Thus if $f \in C_c^\infty(\RR^d)$, and $x \not \in \text{supp}(f)$, then the multiplication formula for tempered distributions implies that
+The wavefront set calculation implies that $K_a$ agrees with a $C^\infty$ function away from the line $x = y$, and so $k_a$ agrees with a $C^\infty$ function away from the line $z = 0$. Thus if $f \in C_c^\infty(\RR^d)$, and $x \not \in \text{supp}(f)$, then the multiplication formula for tempered distributions implies that
 %
-\[ Tf(x) = \int a(x,\xi) \widehat{f}(\xi) e^{2 \pi i \xi \cdot x}\; d\xi = \int k_a(x,z) f(x-z)\; dz, \]
+\[ T_af(x) = \int a(x,\xi) \widehat{f}(\xi) e^{2 \pi i \xi \cdot x}\; d\xi = \int k_a(x,z) f(x-z)\; dz, \]
 %
-where, since the integral on the right hand side vanishes in a neighborhood of $z = 0$, we can actually interpret the right hand integral as an integral against a smooth function. Moreover, we have even better estimates for the behaviour of $k_a$ away from the origin, which reflects the pseudolocal behaviour of the operator.
+where, since the integral on the right hand side vanishes in a neighborhood of $z = 0$, we can actually interpret the right hand integral as a Lebesgue integral against a smooth function rather than a formal integral. Moreover, we have even better estimates for the behaviour of $k_a$ away from the origin, which reflects the pseudolocal behaviour of the operator.
 
 \begin{theorem}
     Let $K$ be the kernel given by a pseudodifferential operator of order $t$. Then for any non-negative integers $n_1$, $n_2$, and $N$, $K$ is a smooth function away from $z = 0$, and
@@ -2954,9 +3084,9 @@ where, since the integral on the right hand side vanishes in a neighborhood of $
     provided $t + d + n_2 + N \geq 0$.
 \end{theorem}
 \begin{proof}
-    If $a$ is compactly supported in $\xi$, then taking in absolute values in the integral representation of $K$ gives
+    If $\text{supp}_\xi(a)$ is compact, then because $k_a$ is the Fourier transform of $a$ in the $\xi$ variable, we conclude that for any $N \geq 0$,
     %
-    \[ |\nabla^{n_1}_x \nabla^{n_2}_z k(x,z)| \lesssim 1, \]
+    \[ |\nabla^{n_1}_x \nabla^{n_2}_z k_a(x,z)| \lesssim_N 1 / |z|^N, \]
     %
     so the case is easy. Thus, without loss of generality, in the remainder of the proof we may assume $a(x,\xi) = 0$ for $|\xi| \leq 1$. We can then perform a Littlewood-Paley decomposition, i.e. writing
     %
@@ -2981,8 +3111,58 @@ where, since the integral on the right hand side vanishes in a neighborhood of $
     For the first sum, we take $N = 0$, and for the second sum, we take $N > t + d + n_2$, which gives the required bounds.
 \end{proof}
 
-For $t < 0$, this bound characterizes
+For $t < 0$, this bound characterizes those kernels $k_a$ of pseudodifferential operators of order $t$.
 
+\begin{lemma}
+    Let $T: \mathcal{S}(\RR^d) \to \mathcal{S}(\RR^d)^*$ be an operator with Schwartz convolution kernel $k \in \mathcal{S}(\RR^d \times \RR^d)^*$, which agrees with a $C^\infty$ function away from the plane $\{ z = 0 \}$, such that for some $t < 0$, and any indices $n_1,n_2,N \geq 0$, the kernel $k$ satisfies the growth condition
+    %
+    \[ \sup \left\{ |z|^{t + d + n_2 + N} |\nabla^{n_1}_x \nabla^{n_2}_z k(x,z)| : x \in \RR^d, z \in \RR^d - \{ 0 \} \right\} < \infty. \]
+    %
+    This implies that for each $\phi \in C_c^\infty(\RR^d)$, the limit
+    %
+    \[ \lim_{\varepsilon \to 0^+} \int_{|z| > \varepsilon} k(x,z) \phi(z)\; dz \]
+    %
+    exists, and we assume that this is equal to
+
+    Then $k$ is the kernel of some pseudodifferential operator of order $t$. If $t \geq 0$, and $k$ satisfies the inequalities above, and in addition, for any bounded subset $\mathcal{B}$ of $C_c^\infty(\RR^d)$, satisfies the \emph{cancellation conditions}
+    %
+    \[ \sup \left\{ R^{-t} \left| \int D^\alpha_x k(x,z) \cdot \phi(z/R)\; dz \right| : x \in \RR^d, z \in \RR^d - \{ 0 \}, \phi \in \mathcal{B} \right\} < \infty, \]
+    %
+    where the implicit constant is a continuous seminorm on $C_c^\infty(\RR^d)$ for each multi-index $\alpha$, then $k$ is the kernel of some pseudodifferential operator of order $t$.
+\end{lemma}
+\begin{proof}
+    For $t < 0$, we make the family of all such kernels above into a Fr\'{e}chet space $X_t$ by taking the optimal implicit constants in the growth condition inequalities above as seminorms. For $t \geq 0$, we make $X_t$ into a locally convex space by taking those implicit constants as seminorms, as well as taking, for each bounded set $\mathcal{B}$, the implicit constants in the cancellation condition as a seminorm. For $t < 0$, the growth conditions on elements of $X_t$ imply we have a continuous inclusion $X_t \to L^\infty_x(\RR^d) L^1_z(\RR^d) \to \mathcal{S}(\RR^d \times \RR^d)^*$. For $t \geq 0$,
+
+    Let $k \in X_t$ be a kernel, and let $a(x,\xi)$ be the Fourier transform of the kernel in the $z$-variable. If we split up $k = k_0 + k_\infty$ and thus write $a = a_0 + a_\infty$, where $k_0$ is supported on $|z| \leq 2$, and $k_\infty$ on $|z| \geq 1$, then we see that, because $k_0$ is compactly supported, $a_0$ is smooth, and because $k_\infty$ is rapidly decaying away from the origin, $a_\infty$ is smooth. Thus $a \in C^\infty(\RR^d \times \RR^d)$ for any $k \in X_t$.
+
+    Now set $k_R(x,z) = k(x,z/R)$ for each $R > 0$. The family
+    %
+    \[ \{ R^{-t-d} k_R : R > 0 \} \]
+    %
+    is then a bounded set in $X_t$, since, for instance,
+    %
+    \[ \sup \{ |z|^{t+d+n_2+N} |\nabla_x^{n_1} \nabla_z^{n_2} k_R(x,z)| \} = R^{t + d + N} \sup \{ |z|^{t + d + n_2 + N} |\nabla_x^{n_1} \nabla_z^{n_2} k(x,z)| \} \]
+
+
+    Suppose we can prove that $|a(x,\xi)| \leq C(a)$ for all $x \in \RR^d$, and $1/2 \leq |\xi| \leq 2$, where $a \mapsto C(a)$ is a continuous seminorm on $X$. If we set
+    %
+    \[ a_R(x,\xi) = \int k_R(x,z) e^{-2 \pi i \xi \cdot z}, \]
+    %
+    then we will then have actually proved that $|a_R(x,\xi)| \leq C(a) R^{t+d}$ for all $R > 0$ and $1/2 \leq |\xi| \leq 2$. Since $a_R(x,\xi) = R^d a(x,R \xi)$, this implies that
+    %
+    \[ |a(x,\xi)| \lesssim_t C(a) |\xi|^t \]
+    %
+    for all $\xi$. Since $k \mapsto D^\alpha_x D^\beta_z k$ is a continuous operator on $X_t$ to $X_{t - |\beta|}$, this means we will have actually proved that
+    %
+    \[ |\nabla^{n_1}_x \nabla^{n_2}_z a(x,\xi)| \lesssim_t C_{n_1,n_2}(a) |\xi|^{t-n_2}. \]
+    %
+    Thus we have proved that $a \in \mathcal{S}^t(\RR^d \times \RR^d)$. For $t < 0$, to show that the bounds on $1/2 \leq |\xi| \leq 2$ hold, we just note that we can take $C(a) = \| k \|_{L^\infty_x L^1_z}$, which is a continuous seminorm on $X_t$ because
+    %
+    \[ \int |k(x,z)|\; dz \leq \sup_{x \in \RR^d, |z| \leq 1} |k(x,z)| |z|^{t + d} + \sup_{x \in \RR^d, |z| \geq 1} |k(x,z)| |z|^{d+1}. \]
+    %
+
+    TODO: Ask Andreas about this.
+\end{proof}
 
 If $T$ is a pseudodifferential operator of order $t < 0$ with kernel $K$, the growth condition on $k(x,z)$ implies that, $k(x,z)$ is locally integrable in $z$, and thus for any $f \in C_c^\infty(\RR^d)$,
 %
