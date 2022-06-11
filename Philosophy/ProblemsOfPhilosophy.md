@@ -17,6 +17,13 @@ When Swift invites us to consider the race of Struldbugs who never die, we are a
 
 We do not know who will be the inhabitants of London a hundred years hence; but we know that any two of them and any other two of them will make four of them.
 
+The world of being is unchangeable, rigid, exact, delightful to the mathematician, the logician, the builder of metaphysical systems, and all who love perfection more than life. The world of existence is fleeting, vague, without sharp boundaries, without any clear plan or arrangement, but it contains all thoughts and feelings, all the data of sense, and all physical objects, everything that can do either good or harm, everything that makes any difference to the value of life and the world. According to our temperaments, we shall prefer the contemplation of the one or of the other. The one we do not prefer will probably seem to us a pale shadow of the one we prefer, and hardly worthy to be regarded as in any sense real. But the truth is that both have the same claim on our impartial attention, both are real, and both are important to the metaphysician.
+
+
+
+
+
+
 
 
 
@@ -246,6 +253,51 @@ We must also correct a common misconception among philosophers that a priori kno
 
 ### Chapter 9: The World of Universals
 
+In the last chapter we justified reasons to believe in objects that are neither mental, nor physical, nor sense data. These are the *universals*. We begin by discussing what kinds of objects are universals, and then discuss their nature. This chapter will mainly be a discussion of Plato's interpretation of universals, i.e. what is called the theory of forms. Sometimes these objects are called ideas, but this is confusing, since these objects are not necessarily mental.
+
+When we consider the concept of justice, we begin by considering various intentions / actions, and then determine whether they are just or not. The common nature of these objects compromises a pure object, known as justice, which particulars take on when they become just. A more concrete example would be the property of 'whiteness'. We have discussed that this property is not a property of physical objects, but of our sense data. But we are quick to say we see whiteness in an object. The property of justice and whiteness cannot be identified with a physical object, it is something that other objects partake in. It is also not mutable, existing independently of time and space. Thus the world of universals is quite different from other objects. We call non universal objects *particulars*.
+
+QUESTION: Can justice be an opinion?
+
+It is easy and natural for the theory of universals to take on a mystical character, e.g. stating that universals live in heaven. But this is not necessary, we can study universals purely based in logical thinking.
+
+All judgements involve universals, since no statement can be made that does not involve a universal in some kind. The simplest example might be the phrase "I like this", but even the term "like" denotes a universal, which gives a relation of preference between objects. It therefore seems strange that universals seem so unnatural to our thinking.
+
+This is because we are likely to focus on particulars in judgements. For instance, in evaluating the claim "Charles I's head was cut off", we naturally concentrate on an image of Charles I's head, i.e. a particular substantiating the universals of "head", "cut", and "possession". That this thought process is natural has been used by empiricists like Berkeley and Hume deny the existence of universals. When we think of the concept of 'whiteness', what we are really thinking of is a particular white object, and when reasoning about whiteness, we are therefore just reasoning about a particular white object, taking care not to assume things that are not true of other white objects. While this might be true of our mental processes, without the existence of universals, it becomes very difficult to ask how we *know* an object is white. One might argue by claiming an object is white if it resembles other white objects, but then one has reduced the problem to determining when we know when one object resembles another object. Thus *resemblence* is in this case a fundamental universal. And once we have acknowledge this universal, it becomes too laborious to try and eliminate other universals from existing.
+
+Lots of metaphysics since Spinoza has neglected to acknowledge the existence of universals that give relations between two or more objects. The belief was that every proposition can be regarded as an attribute of a single object. Thus it was thought that relations cannot exist, which implies that there can only be a single object in the universe, or at least, a multitude of objects that cannot relate to one another in any way. The first of these views, advocated by Spinoza and still held by contemporary philosophers such as Bradley, and is known as *monism*. The second, advocated by Leibnitz, but not really very common these days, is called *monadism*, because each of the isolated objects is called a monad. In fact, as we have seen in the last paragraph, it is harder to prove the existence of *qualities*, i.e. universal properties, than it is to prove the existence of universal relations, like resemblence.
+
+We must next argue that universals are not mental objects, i.e. that their properties are independent of thought. For instance, it seems unnatural to see the relation "north" in the statement "Edinburgh is north of London" as being purely mental. The truth or falsity of this judgement does not seem to be effected in any way by our mental processes. The statement would remain true even if all minds were to suddenly vanish from the world. Thus the concept of northness cannot be mental, since it is a constituent part of the facts. Thus we must apprehend the notion of northness, rather than create it in our minds. But the universal property of "northness" is not a physical object. It does not exist in a particular time or place. It does not exist in Edinburgh, nor in London. We shall therefore say that universal do not exist, they *subsist* or *have being*.
+
+That universals are not physical objects is one of the main reasons why we percieve universals to be mental objects. We can certainly think of a universal, but the universal does not exist in our minds. If we are thinking of whiteness, it is not "whiteness" that is in our minds, but the "act of thinking about whiteness". We have returned to the problems in Berkeley's idealist argument.
+
+
+
+
+
+### Chapter 10:	On Our Knowledge of Universals
+
+Universals, like particulars, can be known by acquaintance or by description. We learn about whiteness by being acquainted with white things, and we eventually learn to abstract the concept of whiteness. We might call a universal which we can learn about in this manner a *sensible quality*. Similarily, I hear three chimes, and I am acquainted with the universal quality of being before or after something.
+
+We shall now argue that all a priori knowledge deals with universals. The statement "two and two make four" is a priori, but involves only the universals "two" and "four", and no particular things. Indeed, if we know things by description, our a priori reasoning about these objects is really in terms of the descriptive claims we make about these objects, i.e. the universal properties these objects satisfy.
+
+What seems strange about such statements is that they seem to control experience, i.e. they tell us that if you put a pair of people together in a room with another pair of people, then that room contains four people. But no fact independent of experience can tell us anything about experience. While we may know a priori that two and two make four, we do not know a priori that Brown and Jones make two, or that Robinson and Smith make two, so we cannot conclude a priori that Brown and Jones and Robinson and Smith make four. 
+
+Question: I don't know if I agree.
+
+An empirical claim is justified by the evidence. A universal claim can be applied by empirically verifying that some objects are described by certain universal claims.
+
+It might seem that a priori claims give us knowledge about objects we have never percieved. For instance, we believe the statement "the product of two integers, each never concieved by any human, is bigger than 100", but we can never give a particular instance to empirically verify this claim in practice. Thus one might be lead to deny the truth of such claims. But such claims are vital to what is known about the world: we are never acquainted directly with physical objects, but we use knowledge claims about them via knowledge by description.
+
+Let us now summarize what we have learned about knowledge:
+
+- We must distinguish between knowledge of object, and knowledge of truths.
+
+- We can know objects via acquaintance, or via description (and thus via knowledge of truths).
+
+- We have immediate, or intuitive knowledge, of some truths, sometimes called 'self evident', as well a sdeductive knowledge obtained from reasoning about this intuitive knowledge.
+
+We now move on to a deeper analysis of the scope of intuitive knowledge, in much the same way we analyzed the scope of knowledge by acquaintance. One problem not present with acquaintance is the possiblity of error. Many intuitive truth claims turn out to be incorrect.
 
 
 
