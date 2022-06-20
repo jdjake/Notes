@@ -19,6 +19,9 @@ We do not know who will be the inhabitants of London a hundred years hence; but 
 
 The world of being is unchangeable, rigid, exact, delightful to the mathematician, the logician, the builder of metaphysical systems, and all who love perfection more than life. The world of existence is fleeting, vague, without sharp boundaries, without any clear plan or arrangement, but it contains all thoughts and feelings, all the data of sense, and all physical objects, everything that can do either good or harm, everything that makes any difference to the value of life and the world. According to our temperaments, we shall prefer the contemplation of the one or of the other. The one we do not prefer will probably seem to us a pale shadow of the one we prefer, and hardly worthy to be regarded as in any sense real. But the truth is that both have the same claim on our impartial attention, both are real, and both are important to the metaphysician.
 
+But for the fact of memory in this sense, we should not know there was a past at all, nor should we be able to understand the word 'past', any more than a blind man can understand the word "light". Thus there must be intuitive judgements of memory.
+
+As it is, the test of coherence condemns the dreams, and confirms the waking life.
 
 
 
@@ -298,6 +301,89 @@ Let us now summarize what we have learned about knowledge:
 - We have immediate, or intuitive knowledge, of some truths, sometimes called 'self evident', as well a sdeductive knowledge obtained from reasoning about this intuitive knowledge.
 
 We now move on to a deeper analysis of the scope of intuitive knowledge, in much the same way we analyzed the scope of knowledge by acquaintance. One problem not present with acquaintance is the possiblity of error. Many intuitive truth claims turn out to be incorrect.
+
+
+
+
+
+
+### Chapter 11: On Intuitive Knowledge
+
+It is a common belief that it is only rational to belief things that are justified by an argument. Almost all of our beliefs are of this form. But all arguments rest on assumptions, and if we continue following the justification of assumptions, it seems we must eventually be lead to consider principles that cannot be argued to be true. For instance, we have found the principle of induction, or modus ponens, to be such a principle.
+
+Other principles also seem self evident, even if we can prove them from other assumptions. For instance, the rules of logical are not independent from one another, and despite the fact that we can prove 2 + 2 = 4 from the Peano axioms, it also seems self evident. More controversially, some ethical principles also seem self evident, e.g. "we should do what is good".
+
+Particular cases of a general principle are more self evident than that principle itself. For instance "a rose cannot be both red and not red" is more self evident than the principle of contradiction itself. This seems to be the case because we build up the mental faculty of recognizing a general property as self evident from viewing many particulars of that general property.
+
+QUESTION: Do you feel this is the case? I feel like I recognize the principle of contradiction before I recognize
+
+Another way we obtain self evident truths are judgements of memory. We first note that when we remember something, the image that we see in our consciousness is not the memory itself, because the image is in the present, and the object we remember is in the past. Memory must therefore constitute a process of self evident truth where we identify an image in our mind as having been caused by some past experience.  Without this self evident judgement of an image as coming from a memory, we would never even be able to think about the past at all. Our ability to remember what caused an image to pop into our minds degrades over time though, so that the trustworthyness of our judgements of the cause of a memory degrade over time. In some cases this might be because the memory was itself true, but caused by something else, e.g. George IV was said to have believed he was at the battle of Waterloo because so many people used to say it to him. He was remembering the memory of people telling him rather than the experience of the battle itself.
+
+QUESTION: What would it mean to misjudge something as a memory?
+
+Judgements are not both self-evident and non self-evident. It seems there is a gradation of things, e.g. being more self evident than other things. If we identify two contradictory self-evident facts, we will discount the one that is less self-evident. Self-evidence is important in the theory of knowledge precisely because it can be fallible, or else self-evidence would correspond exactly with the truth of things, and we would not need to distinguish between the concepts. We will return to the correspondence with self-evidence and truth in two Chapters, after we discuss the concept of truth itself.
+
+
+
+
+
+
+
+
+
+### Chapter 12: Truth and Falsehood
+
+There is a dualism between truth and falsity when it comes to judgements. This is not the case with acquaintance. Whatever we are acquainted with, we are acquainted with. It is not possible to be misacquainted with something, though it is possible to draw incorrect conclusions from an acquaintance. It is possible for a belief to be either truth or false. In order to further discuss how to determine when something self evident is true or false, we must first discuss what it actually means for something to be true or false.
+
+We note that any theory of truth *must* account for a theory of false statements, which is what makes an analysis of truth different from an analysis of acquaintance. Truth must also depend on something independent of a belief itself; no matter how self evident a belief is, it can still be false. Thus we are lead to the *correspondence* theory of truth: a belief is true if it corresponds to a 'fact'. This is partly a reason why thoughts can never truly know when something is true or not, since truth corresponds to something outside of the mental faculty.
+
+Some philosophers believe in a *coherence* theory of truth. A judgement is true if it is compatible with all other judgements. But this means that truth is not universal: there can certainly exist two different compatible families of judgements. Another problem with the theory is an implicit circularity. To discard truths that are incoherent, we must already believe in the truth of the principle of contradiction. Thus we could never judge the truth of the principle of contradiction itself via the coherence theory of truth.
+
+It cannot be true that a belief is a relation between a person and an object: 'the judgement is believed'. This would mean that one would have to account in the theory for objects that are not so. For instance, if I were to believe, incorrectly, that "Desmond loves Cassio", then my belief would be a relation between myself and "Desmond's love for Cassio", which means that "Desmond's love for Cassio" would have to exist in itself. In fact, in order to account for falsehood, relation must therefore have to involve more than just a person, and a judgement. 
+
+Let us now precisely define truth. A mind, or *subject* makes a judgement, and that judgement involves certain *terms*, also called *objects*. The relations, put together with the objects, either make up a complex whole that exists, or they do not make up a complex whole. And it is this existence which is what we call truth. False statements involve terms that do not 'fit together' to make a complex whole in reality. That complex whole is a *fact*. Thus we conclude that a judgement is true when it corresponds to a fact.
+
+NOTE: The theory of forms is really doing a lot of legwork here.
+
+Question: How does this get around the above problem. What if Desmond doesn't exist? Or Cassio? I Guess the underlying objects in everything we formulate must be apperceptions, so that the statmenet "Desmond's love for Cassio" really involves all apperceptions that made us believe Desmond and Cassio and love exist, and that there are additional assumptions that these apperceptions themselves make up a complex whole in that they are relation to the concepts of Desmond, of Cassio, and of the love relation.
+
+
+
+
+
+### Chapter 13: Knowledge, Error, and Probable Opinion
+
+Now we have defined truth and falsity, the ultimate question of epistemology arises. How can we know when a belief is *knowledge*? Of course, this requires us to analyze what we mean by knowledge.
+
+We might say that knowledge is a true belief, but this does not agree with how the word knowledge is used in everyday language. For instance, if someone flips a coin to predict the results of a football match happening next week, we do not believe that person has knowledge of the results of a football match, even if the prediction turns out to be correct. Similarily, if we deduce a statement from fallacious reasoning, we would not call that statement knowledge, even if that statement itself was true.
+
+We might also say that knowledge is a statement derived from correct logical principles, from assumptions that are true. But the assumptions should be *known*, not just true, or we return to the problems from the previous paragraph, and then our definition becomes circular, since one must know the assumptions in the first place. One way to fix this might be to distinguish between *derivative* knowledge and *intuitive* knowledge. This is mostly agreeable, but it means we must now also understand what is meant by intuitive knowledge.
+
+Before we do that, we must notice and remedy one objection to the derivative knowledge given above. Often we obtain knowledge of something by deriving something from intuitive knowledge that could be obtained deductively. If we read that "The King is Dead", we believe intuitively that the king is dead, without every consciously going through the deductive argument that our sense data we obtained by looking at the characters that compose the english language was obtained from news print announcing the kings death. We might call this *psychological inference*. Thus we must accept some intuitive knowledge as derivative, provided there *is* a deductive argument from other intuitive knowledge, and a person, upon reflective, could find this deductive argument.
+
+Note: Does this resolve the Tortoise and Achilles paradox?
+
+We obtained a theory of deductive knowledge by recourse into intuitive knowledge, but intuitive knowledge does not have any backup in this regard. We begin by acknowledging that the *absolutely self-evident knowledge* we can obtain are those obtained by direct acquaintance with the fact. The statement "Desmond Loves Cassio" can only be absolutely self evident to Desmond, since he is the only one with acquaintance with the mental object "Desmond's love for Cassio". Since we can only be directly acquainted with mental data, e.g. sense data or thoughts, a fact can only be completely self evident to a single individual. 
+
+Question: Don't understand second last paragraph of page 98
+
+Question: How do we have direct acquaintance with a fact if a fact is a universal?
+
+Question: If something is absolutely self evident, can it ever not be absolutely self evident?
+
+Thus knowledge is something intuitively absolutely evident, or reasoned out from such knowledge using logical principles. Something that is believed hesitatingly, because it is derived using logical principles from less self evident beliefs, we shall call *probable knowledge*. Most of what we call 'knowledge' is actually probable knowledge.
+
+Question: Are logical principles knowledge?
+
+The coherence theory we discarded earlier becomes very useful in understanding probable knowledge, since probably knowledge that coheres with other probable knowledge becomes more self evident, and thus becomes more probable. The fact that dreams do not cohere with one another means we are less likely to believe in the reality in those dreams. But we note that probably knowledge can never become knowledge. But it is possbile for underlying judgements composing knowledge to become known absolutely through a process separately from which they are known probably.
+
+NOTE: The test of coherence assumes that the principle of contradiction is absolutely self evident.
+
+ But we could have obtained this deductively, by first reasoning that the sense data we recieve was obtained from 
+
+
+But this causes problems because it requires us to know when assumptions are true. 
+
 
 
 
