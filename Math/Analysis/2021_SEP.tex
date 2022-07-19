@@ -10,9 +10,9 @@
 \usepackage[shortlabels]{enumitem}
 \usepackage{esint}
 
-\DeclareMathOperator{\CC}{\mathbf{C}}
-\DeclareMathOperator{\RR}{\mathbf{R}}
-\DeclareMathOperator{\ZZ}{\mathbf{Z}}
+\DeclareMathOperator{\CC}{\mathbb{C}}
+\DeclareMathOperator{\RR}{\mathbb{R}}
+\DeclareMathOperator{\ZZ}{\mathbb{Z}}
 
 % Define a custom "problem" environment
 \newtheoremstyle{problemstyle}  % <name>
@@ -75,124 +75,219 @@
 
 
 
+\pagestyle{headandfoot}
+\runningheadrule
+\runningheader{Analysis SEP}{}{}
+\firstpagefooter{}{}{}
+\runningfooter{}{Page \thepage}{}
+
+
+
+
 \title{Analysis SEP Problems \& Solutions}
-\date{July-August 2021}
+\date{July-August 2022}
 \author{Max Bacharach and Jacob Denson}
 
 \begin{document}
 
 \maketitle
 
+\tableofcontents
+
 \begin{questions}
 
 \newpage
-\section{\centering Day 1: Basic Analysis}
 
-\question (Aug 2016 \#1)
-  For $n\geq 2$ an integer, define $F(n)$ to be the function $F(n)= \max \left\{ k\in \Z: 2^{k}/k\leq n \right\}$. Does $\sum_{n=2}^{\infty}2^{-F(n)}$ converge or diverge?
+\section*{Day 1: Warm Up Question}
+
+\question (Fall 2016)
+  For $n \geq 2$ an integer, define
+  %
+  \[ F(n)= \max \left\{ k\in \Z: 2^{k}/k\leq n \right\}. \]
+  %
+  Does the infinite series
+  %
+  \[ \sum_{n=2}^{\infty}2^{-F(n)} \]
+  %
+  converge or diverge?
 \begin{solution}
-  The series diverges.
-  \begin{align*}
-    \sum_{n=2}^{\infty}2^{-F(n)}
-    &= \sum_{k=1}^{\infty} \#\left\{ n:F(n)=k \right\}\\
-    &=\sum_{k=1}^{\infty}2^{-k}\#\left\{ n: \frac{2^{k}}{k}\leq n < \frac{2^{k+1}}{k+1} \right\}\\
-    &=\sum_{k=1}^{\infty}2^{-k}\left( \frac{2^{k+1}}{k+1}-\frac{2^{k}}{k} \right)\\
-    &=\sum_{k=1}^{\infty}2^{-k}2^{k}\left( \frac{1}{k+1}-\frac{1}{k(k+1)} \right)\\
-    &=\sum_{k=1}^{\infty}\frac{1}{k+1}-\frac{1}{k(k+1)}
+	The series diverges.
+
+	One solution follows by applying the intuitive identity
+	%
+	\[ \sum_{n = 2}^\infty 2^{-F(n)} = \sum_{k = 1}^\infty 2^{-k} \cdot \# \left\{ n \geq 1 : F(n) = k \right\}, \]
+	%
+	which can also be interpreted as viewing the left hand side as a kind of discrete Lebesgue integral of a non-negative step function. But $F(n) = k$ holds if and only if
+	%
+	\[ 2^k/k \leq n < 2^{k+1} / (k+1), \]
+	%
+	and there are at most $2^{k+1} / (k+1) - 2^k / k \sim 2^k / k$ integers between $2^k / k$ and $2^{k+1} / (k+1)$, which implies that
+	%
+	\begin{align*}
+		\sum_{k = 1}^\infty \# \left\{ n \geq 1: F(n) = k \right\} &\geq \sum_{k=1}^{\infty} 2^{-k} \cdot \left( \frac{2^{k+1}}{k+1}-\frac{2^{k}}{k} \right)\\
+    &\sim \sum_{k=1}^{\infty} 2^{-k} \cdot (2^k / k)\\
+    &=\sum_{k=1}^{\infty} 1/k = \infty.
   \end{align*}
-  It is clear from the last expression that the series diverges.
+  %
+  Thus we have proved the series diverges.
+
+  Another method to prove this result is to use the \emph{Cauchy condensation theorem}, which states that for any non-increasing sequence of non-negative real numbers $\{ a(n) \}$, the series
+	%
+	\[ \sum_n a(n) \]
+	%
+	converges if and only if the sum
+	%
+	\[ \sum_n 2^n a(2^n) \]
+	%
+	converges. The advantage of the theorem is that in many series, especially those involving \emph{logarithms}, the values $\{ a(2^n) \}$ will be easier to study than the sequence $\{ a(n) \}$. Though $F(n)$ is not explicitly a logarithm, it behaves very similarly to a logarithm, i.e. we notice that there exists $C > 0$ such that
+	%
+	\[ \log_2(n) \leq F(n) \leq \log_2(n) + \log_2 \log_2(n) + C. \]
+	%
+	This means that
+	%
+	\[ \sum_n 2^{-F(n)} = \sum_n 2^n 2^{-F(2^n)} \geq \sum_n 2^n 2^{- n - \log_2 \log_2(n) - C } \gtrsim \sum_n \frac{1}{\log_2(n)}, \]
+	%
+	and another application of the Cauchy condensation theorem shows that this series diverges.
 \end{solution}
 
-\question (September, 2017) Let $\{ a_n \}$ be a sequence of complex numbers and let
+\newpage
+
+\section{Day 1: Basic Analysis}
+
+\question (Fall 2017) Let $\{ a_n \}$ be a sequence of complex numbers and let
 %
 \[ c_n = n^{-5} \sum_{k = 1}^n k^4 a_k. \]
 \begin{parts}
 	\part Prove or Disprove: If $\lim_{n \to \infty} a_n = a$ exists, then $\lim_{n \to \infty} c_n = c$ exists.
 	\begin{solution}
-		Fix $\varepsilon > 0$. If $|a_k - a| < \varepsilon$ for $k > N$, then
+		The result is \emph{true}, so let us prove it. Roughly speaking, the value of $c_n$ is the weighted average of the sequence $\{ a_1, \dots, a_n \}$, heavily weighted in the favor of the later elements of the sequence. Thus it is intuitive that our proof should decompose the sum defining $c_n$ into earlier terms, which must be shown to be neglible, and later terms, which are more well behaved because they are close to the value $a$. Indeed, fix $\varepsilon > 0$. Then there is $k_0$ such that $|a_k - a| < \varepsilon$ for $k > k_0$. But this means that
 		%
 		\begin{align*}
-			n^{-5} \sum_{k = 1}^n k^4 a_k &= O_N(n^{-5}) + n^{-5} \sum_{k = N+1}^n k^4 a_k\\
-			&= O_N(n^{-5}) + a n^{-5} \sum_{k = N+1}^n k^4 + O(\varepsilon n^{-5} \sum_{k = N+1}^n k^4)\\
-			&= O_N(n^{-5}) + O(\varepsilon) + a(1/5 + O_N(1/n)).
+			c_n &= n^{-5} \sum_{k = 1}^n k^4 a_k\\
+			&= n^{-5} \sum_{k = 1}^{k_0} k^4 a_k + \sum_{k = k_0 = 1}^n k^4 a_k\\
+			&= O_{k_0}(n^{-5}) + n^{-5} \sum_{k = k_0 + 1}^n k^4 a_k\\
+			&= O_{k_0}(n^{-5}) + n^{-5} \sum_{k = k_0 + 1}^n k^4 a + n^{-5} \sum_{k = k_0 + 1}^n k^4 (a_k - a)\\
+			&= O_{k_0}(n^{-5}) + a \cdot \left( \frac{1}{n^5} \sum_{k = k_0+1}^n k^4 \right) + O(\varepsilon n^{-5} \sum_{k = k_0+1}^n k^4)\\
+			&= O_{k_0}(n^{-5}) + a(1/5 + O_{k_0}(1/n)) + O(\varepsilon).
 		\end{align*}
 		%
-		Thus $|c_n - a/5| \leq 2\varepsilon$ for suitable large $n$.
-	\end{solution}
-	
-	\begin{solution}
-      First observe that
-      \begin{equation*}
-      \frac{1}{n^{5}}\sum_{k=1}^{n}k^{4} = \frac{1}{n^{5}}\sum_{k=1}^{n}\int_{k}^{k+1}k^{4}dx \leq \frac{1}{n^{5}}\sum_{k=1}^{n}\int_{k}^{k+1}x^{4}dx = \frac{1}{n^{5}}\int_{1}^{n+1}x^{4}dx = \frac{(n+1)^{5}-1}{5n^{5}}.
-      \end{equation*}
-      Therefore $\limsup_{n\to\infty} \frac{1}{n^{5}}\sum_{k=1}^{n}k^{4}\leq 1/5$. By a similar argument,  $\liminf_{n\to\infty} \frac{1}{n^{5}}\sum_{k=1}^{n}k^{4}\geq 1/5$. Therefore $\limn \frac{1}{n^{5}}\sum_{k=1}^{n}k^{4}=1/5$.
-    
-      Let $a=\limn a_{n}$. We claim that $c_{n}\to a/5$. To see this, choose $n_{0}>0$ such that $|a_{n}-a|<5\epsilon$ whenever $n> n_{0}$. Then
-      \begin{align*}
-        \left| c_{n} - \frac{1}{n^{5}}\sum_{k=1}^{n}k^{4}a\right|
-        &=\left| \frac{1}{n^{5}}\sum_{k=1}^{n}k^{4}a_{k} - \frac{1}{n^{5}}\sum_{k=1}^{n}k^{4}a\right|\\
-        &\leq \frac{1}{n^{5}}\sum_{k=1}^{n_{0}}k^{4}|a_{k}-a|+ \frac{1}{n^{5}}\sum_{k=n_{0}+1}^{n}k^{4}|a_{k}-a|\\
-        &\leq \frac{1}{n^{5}}\sum_{k=1}^{n_{0}}k^{4}|a_{k}-a|+ 5\epsilon \left(\frac{1}{n^{5}}\sum_{k=n_{0}+1}^{n}k^{4}|a_{k}-a|\right)\\
-      \end{align*}
-      Therefore
-      \begin{equation*}
-        \limsup_{n\to\infty }\left| c_{n} - \frac{1}{n^{5}}\sum_{k=1}^{n}k^{4}a\right| \leq \epsilon.
-      \end{equation*}
-      Since $\epsilon>0$ was arbitrary, it follows that $\limn c_{n} = \limn \frac{1}{n^{5}}\sum_{k=1}^{n}k^{4}a = a/5$.
-    \end{solution}
+		But this calculation implies that there exists a positive integer $n_0$ and a constant $C > 0$ such that for $n \geq n_0$,
+		%
+		\[ |c_n - a/5| \leq C \varepsilon. \]
+		%
+		Since $\varepsilon$ was arbitrary, we have shown that $c_n \to a/5$.
+
+		A key step in the calculation of the limit above was that
+		%
+		\[ \frac{1}{n^5} \sum_{k = k_0 + 1}^n k^4 = 1/5 + O_{k_0}(1/n). \]
+		%
+		One can prove this using the technique of \emph{replacing sums with integrals}, which we are often more used to manipulating. Observe that
+		%
+		\begin{align*}
+			\frac{1}{n^5} \sum_{k = k_0}^n k^4 = \frac{1}{n^5} \sum_{k = k_0}^n \int_k^{k+1} k^4\; dx \leq \frac{1}{n^5} \int_{k_0}^{n+1} x^4\; dx = \frac{(n+1)^5 - k_0^5}{5 n^5} = \frac{1}{5} + O_{k_0}(1/n).
+		\end{align*}
+		%
+		A similar argument shows the opposite inequality, namely, that
+		%
+		\[ \frac{1}{n^5} \sum_{k = k_0}^n k^4 \geq \frac{1}{5} + O_{k_0}(1/n), \]
+		%
+		which gives this result.
+
+		One can perform a similar calculation using \emph{limsup} and \emph{liminf} arguments, which yields a slightly different method and avoids some of the more quantitative calculations as above. It is intuitive that for large $n$ we should have
+		%
+		\[ c_n \approx \frac{a}{n^5} \sum_{k = 1}^n k^4. \]
+		%
+		Indeed, we will show that
+		%
+		\[ \limsup_{n \to \infty} \left| c_n - \frac{a}{n^5} \sum_{k = 1}^n k^4 \right| = 0. \]
+		%
+		To do this, we utilize a \emph{$\varepsilon$ of room argument}, i.e. showing that for any $\varepsilon > 0$,
+		%
+		\[ \limsup_{n \to \infty} \left| c_n - \frac{a}{n^5} \sum_{k = 1}^n k^4 \right| \leq \varepsilon. \]
+		%
+		One can pick $k_0$ such that for $k \geq k_0$, $|a_k - a| \leq \varepsilon$. Thus
+		%
+		\begin{align*}
+			\limsup_{n \to \infty}  \left| c_n - \frac{a}{n^5} \sum_{k = 1}^n k^4 \right| &= \limsup_{n \to \infty} \left| \frac{1}{n^5} \sum_{k = 1}^n k^4 (a_k - a) \right|\\
+			&= \limsup_{n \to \infty} \left| \frac{1}{n^5} \sum_{k = k_0}^n k^4 (a_k - a) \right|\\
+			&= \limsup_{n \to \infty} \frac{\varepsilon}{n^5} \sum_{k = k_0}^n k^4\\
+			&= \varepsilon \cdot (1/5) \leq \varepsilon.
+		\end{align*}
+		%
+		But now we find that
+		%
+		\[ \lim_{n \to \infty} c_n = \lim_{n \to \infty} \frac{a}{n^5} \sum_{k = 1}^n k^4 = a \lim_{n \to \infty} (1/5 + O(1/n)) = a/5. \]
+  \end{solution}
 
 
 	\part Prove or Disprove: If $\lim_{n \to \infty} c_n = c$ exists, then $\lim_{n \to \infty} a_n = a$ exists.
 	\begin{solution}
-		This is false. Let $a_n = (-1)^n$. Then $a_n$ does not converge, but we claim $c_n$ does converge. Then
+		This is false, as we might expect since averages like those defining the sequence $\{ c_n \}$ are often much more well behaved than the original sequence $\{ a_n \}$ upon which they are defined. In particular, if the sequence $\{ a_n \}$ has a lot of \emph{oscillation}, then we might expect cancellation in the average to yield a much smaller sequence $\{ c_n \}$. Thus we are lead to consider the sequence $a_n = (-1)^n$ to obtain a counterexample. The sequence $\{ a_n \}$ clearly does not converge. But we claim that the sequence $\{ c_n \}$ \emph{does} converge. We have
 		%
 		\[ c_n = \frac{1}{n^5} \sum_{k = 1}^n (-1)^k k^4 = \frac{S_n}{n^5}, \]
 		%
-		where $S_n = \sum (-1)^k k^4$. We claim that $|S_n| \leq n^4$ for all $n$, and $\text{sign}(S_n) = (-1)^n$. We prove this by induction, the case $n = 1$ being obvious. Assuming the result for $n$, we have
+		where $S_n = \sum (-1)^k k^4$. We will prove by induction that for any $n \geq 1$, $|S_n| \leq n^4$, and $\text{Sign}(S_n) = (-1)^n$. The case $n = 1$ is obvious. Assuming the result for $n$, we have
 		%
 		\[ S_{n+1} = S_n + (-1)^{n+1} (n+1)^4. \]
 		%
-		Now $S_n$ and $(-1)^{n+1}(n+1)^4$ have opposite signs, $|S_n| \leq n^4$, and $(n+1)^4 > n^4$, so $S_n + (-1)^{n+1} (n+1)^4$ has sign $(-1)^{n+1}$, and
+		Now $S_n$ and $(-1)^{n+1}(n+1)^4$ have opposite signs, $|S_n| \leq n^4$, and $(n+1)^4 > n^4$, so we conclude that $S_n + (-1)^{n+1} (n+1)^4$ has sign $(-1)^{n+1}$, and
 		%
 		\[ |S_{n+1}| \leq (n+1)^4. \]
 		%
-		But this implies that $c_n = O(1/n)$, so $c_n \to 0$.
-	\end{solution}
-	
-	\begin{solution}
-	Let $a_{k} =\left\{ 
-	\begin{array}{l@{\quad}l}
-	1 & k=2^{\ell}, \text{if }\ell=0,1,2,\ldots\\
-	0 & \text{else}
-	\end{array}\right.$
-	Then $c_{2n+1}= 0$ for all $n$, and
-	\begin{equation*}
-	c_{2n}= \frac{1}{(2n)^{5}}\sum_{k=1}^{2n}k^{4}a_{k} = \frac{1}{(2n)^{5}}\sum_{k=1}^{\lfloor \log n \rfloor}2^{4i}\leq \frac{1}{(2n)^{5}}(2n)^{4}\#\left\{ i: 1\leq 2^{i}\leq 2n \right\}\leq \frac{\log 2n}{2n}\to 0.
-	\end{equation*}
-	It follows that $\limn c_{n} = 0$ but $\limn a_{n}$ does not exist.
+		But this implies that $c_n = S_n/n^5 = O(1/n)$, so $c_n \to 0$.
+
+		Another counterexample follows if we let $\{ a_n \}$ be a \emph{sparse sequence}, i.e. most elements are zero, in which case the averaged sequence $\{ c_n \}$ will be small. Let
+		%
+		\[ a_k = \begin{cases} 1 &: k = 2^l\ \text{for some $l = 0,1,2,\dots$,} \\ 0 &: \text{otherwise.} \end{cases} \]
+		%
+		Then we find that for any $n \geq 1$, and any $m < 2^n$, $c_{2^n + m} < c_{2^n}$, and
+		%
+		\[ c_{2^n} = \frac{1}{2^{5n}} \sum_{k = 0}^n 2^{4k} = \frac{1}{2^{5n}} \frac{2^{4n} - 1}{2^4 - 1} \leq 2^{-n} \to 0. \]
+		%
+		Thus $\{ c_n \} \to 0$.
 	\end{solution}
 \end{parts}
 
-\question (Aug 2018 \#2)
+\question (Fall 2018)
   For $c_k\in \R$, say that $\Pi c_k$ converges if $\lim_{K\to\infty} \prod_{k=1}^{K} c_k = C$ exists with $C\neq 0, \infty$.
 \begin{parts}
   \part Prove that if $0<a_{k}<1$ for all $k$, or if $-1<a_{k}<0$, for all $k$, then $\prod (1+a_{k})$ converges if and only if $\sum_{k}a_{k}$ converges.
   
-    \begin{solution}
-  Let $P_n = \prod_{k=1}^n (1+a_k)$ and $S_n = \sum_{k=1}^n a_k$. 
-  
-  \textbf{Case 1:} Assume $a_k\in (0,1)$ for all $k$. 
-  First assume $\lim_{n\to\infty} S_n = L <\infty$. We wish to show that $\lim_{n\to\infty} P_n$ converges. Since $(P_n)$ is increasing and $P_1>1$, it suffices to show that $(P_n)$ is bounded above.
-  Since $e^x\geq 1+x$ for all $x$, we have
+  \begin{solution}
+  	Let
+  	%
+  	\[ P_n = \prod_{k = 1}^n (1 + a_k) \quad\text{and}\quad S_n = \sum_{k = 1}^n a_k. \]
+  	%
+  	Then we have
+  	%
+  	\[ P_n = \exp \left( \sum_{k = 1}^n \log(1 + a_k) \right) = \exp \left( Q_n \right). \]
+  	%
+  	Thus $\{ P_n \}$ converges to a nonzero value if and only if $\{ Q_n \}$ converges to a finite value, and it suffices to show that the convergence of $\{ Q_n \}$ is equivalent to the convergence of $\{ S_n \}$. To do this, we apply the \emph{limit comparison test} for series, which states that for any two non-negative sequences $\{ a_n \}$ and $\{ b_n \}$, if $\lim_{n \to \infty} (a_n/b_n) = c$, where $0 < c < \infty$, then either both of the series $\sum a_n$ and $\sum b_n$ converge, or they both diverge. We employ the inequality
+  	%
+  	\[ \frac{x}{1 + x} \leq \log(1 + x) \leq x, \]
+  	%
+  	which holds for any $x \geq 1$. Thus
+  	%
+  	\[ \frac{\log(1 + a_k)}{a_k} \leq \frac{a_k}{a_k} = 1 \]
+  	%
+  	and
+  	%
+  	\[ \frac{\log(1 + a_k)}{a_k} \geq \frac{1}{1 + a_k} \geq 1 - a_k. \]
+  	%
+  	Thus if $\{ a_k \}$ converges to zero, then the convergence of $\{ Q_n \}$ and $\{ S_n \}$ are equivalent. But if $\{ S_n \}$ converges, it is obvious that $\{ a_k \}$ converges to zero, and if $\{ Q_n \}$ converges, then $\log(1 + a_k) \to 0$, which implies $a_k \to 0$. Thus we see that the convergence of $\{ Q_n \}$ and $\{ S_n \}$ are always equivalent.
+
+  	Here is another approach, avoiding the limit comparison test, but at the cost of requiring some more quantitative calculations:
+
+  \textbf{Case 1:} Assume $a_k \in (0,1)$ for all $k$.
+
+  First assume $\lim_{n\to\infty} S_n = L <\infty$. We wish to show that $\lim_{n\to\infty} P_n$ converges. Since $\{ P_n \}$ is an increasing sequence, it suffices to show that $\{ P_n \}$ is bounded above. Since $e^x\geq 1+x$ for all $x \in \RR$, we have
   \begin{equation*}
-  1\leq P_n \leq \prod_{k=1}^n e^{a_k} = e^{S_n} \leq e^{L}<\infty
+  P_n \leq \prod_{k=1}^n e^{a_k} = e^{S_n} \leq e^L
   \end{equation*}
-  where we have used the fact that $S_n$ is increasing, so that $S_n\leq L$.
+  %
+  where we have used the fact that $S_n$ is increasing and convergent, so that $S_n \leq L$.
   
-  Next, assume that $\lim_{n\to\infty}P_n= M$ where $M\neq 0,\infty$. Wish to show that $\lim_{n\to\infty} S_n$ exists. Since $(S_n)$ is increasing, it suffices to show that $(S_n)$ is bounded above.
-  
-  
-  We claim that $P_n \geq S_n + 1$. We prove this using induction. The case $n=1$ is trivial since equality holds. For $n>1$, observe that
+  Next, assume that $\lim_{n\to\infty} P_n = M$ where $M \neq 0,\infty$. We wish to show that $\lim_{n\to\infty} S_n$ exists. Since $\{ S_n \}$ is increasing, it again suffices to show that $\{ S_n \}$ is bounded above. This will follow from an argument showing $S_n \leq P_n - 1$, since we then have $S_n \leq M - 1$ for all $n$. We prove this using induction. The case $n=1$ is trivial since $S_1 = P_1 - 1$. For $n>1$, observe that
   \begin{align*}
   P_n 
   &= (1+a_n) P_{n-1}\\
@@ -200,64 +295,71 @@
   &= 1+ S_{n} + a_nS_{n-1}\\
   &\geq 1+S_n
   \end{align*}
-  This proves the claim. It follows that $S_n\leq P_n$ for all $n$. Therefore since $P_n$ is increasing, we have
-  \begin{equation*}
-  S_n \leq P_n \leq \lim_{n\to\infty} P_n = M<\infty
-  \end{equation*}
-  as required.
-  
-  An alternative approach uses the inequality $\log(1+x)\geq \frac{x}{1+x}$ which holds for all $x>-1$. In that case, we have the inequality
+  This proves the claim. Alternatively, using the inequality
+  %
+  \[ \log(1+x)\geq \frac{x}{1+x}, \]
+  %
+  which holds for all $x>-1$, we conclude that
   \begin{align*}
-  P_n = \exp \(\sum_{k=1}^n \log(1+a_k)\) \geq \exp\(\sum_{k=1}^{n} \frac{a_k}{1+a_k} \)\geq \exp\(\frac{1}{2}\sum_{k=1}^n a_k\).
+  P_n = \exp \(\sum_{k=1}^n \log(1+a_k)\) \geq \exp\(\sum_{k=1}^{n} \frac{a_k}{1+a_k} \)\geq \exp\(\frac{1}{2}\sum_{k=1}^n a_k\) = e^{S_n/2},
   \end{align*}
-  This inequality implies that if $\lim_n P_n$ converges then $\lim_n S_n$ converges as well.
+  %
+  which implies $\{ S_n \}$ is bounded from above if $\{ P_n \}$ is bounded from above.
   
-  
-  \textbf{Case 2:} Assume that $a_k\in (-1,0)$ for all $k$. Suppose $\lim_{n\to\infty} P_n$ converges. Wish to show that $S_n$ converges as well. Since $(S_n)$ is decreasing, it suffices to show that $(S_n)$ is bounded below. 
-  
-  Since $(P_n)$ is decreasing and convergent, there exists $L\in (0,1)$ such that $L = \lim_{n\to\infty} P_n = \inf_{n\geq 1}{P_n}$. Using the inequality $\log(1+x)\leq x$ for $x>-1$, for all $n$ we have
+  \textbf{Case 2:} Assume that $a_k\in (-1,0)$ for all $k$.
+
+  Suppose $\lim_{n\to\infty} P_n = L$, with $L \neq 0$. We wish to show that $S_n$ converges as well. Since $\{ S_n \}$ is now decreasing, it suffices to show that $\{ S_n \}$ is bounded from below. But this follows because $S_n \geq \log P_n$, so that $S_n \geq \log L$. Indeed, using the inequality $\log(1+x)\leq x$, which holds for $x>-1$, we have
   \begin{align*}
-  0< L \leq P_n = \exp\(\sum_{k=1}^n \log(1+a_k)\)\leq e^{S_n}.
+  	P_n = \exp \left( \sum_{k=1}^n \log(1+a_k) \right) \leq e^{S_n}.
   \end{align*}
-  Therefore $S_n\geq \log L>-\infty$ for all $n$. Therefore since $(S_n)$ is decreasing and bounded below, it converges.
+  %
+  Taking logarithms on both sides verifies the inequality.
   
-  Next, assume that $(S_n)$ converges. Need to show that $(P_n)$ converges. Since
-  \begin{equation*}
-  \prod_{k=1}^n (1+a_k) = \exp\(\sum_{k=1}^n \log(1+a_k)\)
-  \end{equation*}
-  it follows that $\prod(1+a_k)$ converges if and only if $\sum_k \log(1+a_k)$ converges. Since $a_k\in (-1,0)$ for all $k$, the sequences $\sum_k \log(1+a_k)$ and $\sum_k a_k$ both have all negative terms, and so we can apply the limit comparison test, as follows.
-  Since $(S_n)$ converges, $a_k\to0$ as $k\to \infty$. Therefore since $\frac{d}{dx}\log(x)=\frac{1}{x}$,
-  \begin{equation}
-  \frac{\log(1+a_k)}{a_k} = \frac{\log(1+a_k)-\log(1)}{a_k}\to 1 \text{ as }k\to\infty. 
-  \end{equation}
-  Therefore by the limit comparison test, $\sum_k\log(1+a_k)$ converges if $\sum_k a_k$ converges. Therefore $(P_n)$ converges. \bnote{[Actually I think this argument might work for the general case.]} 
+  Next, assume that $\{ S_n \}$ converges. We will show that $\{ P_n \}$ converges. It suffices to show that $\{ P_n \}$ is bounded from below, since it is decreasing. But this follows from the inequality
+  %
+  \[ \log(1 + x) \geq \frac{x}{1 + x}, \]
+  %
+  which holds for $x > -1$, so that
+  %
+  \[ P_n = \exp \left( \sum_{k = 1}^n \log(1 + a_k) \right) \geq \exp \left( \sum_{k = 1}^n \frac{a_k}{1 + a_k} \right) \geq \exp \left( \sum_{k = 1}^n a_k (1 - a_k) \right), \]
+  %
+  The fact that $\{ S_k \}$ tends to zero implies that $\{ a_k \}$ tends to zero, so that there is $c > 0$ such that $1 - a_k \geq c$, and thus
+  %
+  \[ P_n \geq \exp \left( c \cdot S_n \right). \]
+  %
+  Thus $\{ P_n \}$ is lower bounded.
   \end{solution}
   
   \part However, prove that $\prod_{k>1} \left( 1+ \frac{(-1)^{k}}{\sqrt{k}} \right)$ diverges.
   
   \begin{solution}
-  \noindent\textbf{Proof of Part (b):} Let $P_n = \prod_{k=2}^n \(1+ \frac{(-1)^k}{\sqrt{k}}\)$. Then
+  \noindent\textbf{Proof of Part (b):} Let $P_n = \prod_{k=2}^n \(1+ \frac{(-1)^k}{\sqrt{k}}\)$. Our goal is to show the sequence $\{ P_n \}$ diverges. Though one cannot apply the result above directly to this product, since the terms are not all positive or negative, we can apply the result to a subsequence of the products $\{ P_n \}$ above by noting that \emph{consecutive products} are negative. Thus
   \begin{align*}
-  P_{2n} 
-  &=\(1+\frac{1}{\sqrt{2}}\) \prod_{k=3}^{2n} \(1+\frac{(-1)^k}{\sqrt{k}}\) \\
-  &=\(1+\frac{1}{\sqrt{2}}\) \prod_{k=4}^{n} \(1-\frac{1}{\sqrt{2k-1}}\)\(1+\frac{1}{\sqrt{2k}}\) \\
-  &=\(1+\frac{1}{\sqrt{2}}\) \prod_{k=4}^{n} \(1+\frac{\sqrt{2k-1}-\sqrt{2k}-1}{\sqrt{2k(2k-1)}}\). \\
+  P_{2n-1} 
+  &= \prod_{k=2}^{2n+1} \(1+\frac{(-1)^k}{\sqrt{k}}\) \\
+  &= \prod_{k=1}^n \(1-\frac{1}{\sqrt{2k+1}}\)\(1+\frac{1}{\sqrt{2k}}\) \\
+  &= \prod_{k=1}^n \left( 1 - \frac{1 - (\sqrt{2k+1} - \sqrt{2k})}{\sqrt{2k} \sqrt{2k+1}} \right). \\
   \end{align*}
-  Using the Mean Value Theorem, $\sqrt{2k+1}-\sqrt{2k}\leq \frac{1}{2\sqrt{2k}}$. Using this, we have
-  \begin{equation*}
-  1+\frac{\sqrt{2k-1}-\sqrt{2k}-1}{\sqrt{2k(2k-1)}}  \leq 1 - \frac{\sqrt{k}+1}{\sqrt{2k(2k-1)}} \leq 1-\frac{1}{2\sqrt{2k-1}} < 1-\frac{1}{2k}.
-  \end{equation*}
-  Therefore 
-  \begin{equation*}
-  P_{2n} = \(1+\frac{1}{\sqrt{2}}\) \prod_{k=4}^{n} \(1-\frac{1}{2k}\).
-  \end{equation*}
-  By part (a), since $\sum_{k=4}^{\infty} \frac{1}{2k}$ diverges, it follows that $\prod_{k=4}^{\infty} \(1-\frac{1}{2k}\) = 0$. Therefore $(P_n)$ diverges.
-  \end{solution}
-  \end{parts}
+  %
+  Using the fact that
+  %
+  \[ \sqrt{x} - \sqrt{y} = (\sqrt{x} - \sqrt{y}) \frac{\sqrt{x} + \sqrt{y}}{\sqrt{x} + \sqrt{y}} = \frac{x - y}{\sqrt{x} + \sqrt{y}}, \]
+  %
+  we find that
+  %
+  \[ 0 < \frac{1 - (\sqrt{2k + 1} - \sqrt{2k})}{\sqrt{2k} \sqrt{2k+1}} \leq \frac{1 - 1/(2k+1)}{2k} = \frac{1}{2k+1} < 1. \]
+  %
+  Thus the previous result implies $\{ P_{2n-1} \}$ converges to zero. Since
+  %
+  \[ \sum_{k = 1}^n \frac{1 - (\sqrt{2k+1} - \sqrt{2k})}{\sqrt{2k} \sqrt{2k+1}} \sim \sum_{k = 1}^n \frac{1}{k} \]
+  %
+  diverges, it follows that the product diverges.
+ \end{solution}
+\end{parts}
   
-\question (September, 2019) Let $f$ be a continuous function on $\RR$ satisfying
+\question (Fall 2019) Let $f$ be a continuous function on $\RR$ satisfying
 %
-\[ |f(x)| \leq 1/(1 + x^2). \]
+\[ |f(x)| \leq \frac{1}{1 + x^2}. \]
 %
 Define a function $F$ on $\RR$ by
 %
@@ -265,50 +367,55 @@ Define a function $F$ on $\RR$ by
 \begin{parts}
 	\part Prove that $F$ is continuous and periodic with period 1.
 	\begin{solution}
-		If $N \geq 2|x|$, then for $|n| \geq N$, $|x + n| \geq |n|/2$, and so
+		For each $x \in \RR$, the sum
 		%
-		\[ \sum_{|n| \geq N} |f(x+n)| \leq \sum_{|n| \geq N} \frac{1}{1 + |n|^2/4} \lesssim \sum_{|n| \geq N}^\infty \frac{1}{n^2} \lesssim 1/N. \]
+		\[ \sum_{n = -\infty}^\infty f(x + n) \]
 		%
-		Thus if we write $F = \lim F_N$, where
+		converges \emph{absolutely}. This justifies that the limit of the infinite series remains the same if we rearrange the series. Thus
 		%
-		\[ F_N(x) = \sum_{|n| \leq N} f(x + n), \]
+		\[ F(x + m) = \sum_{n = -\infty}^\infty f(x +n + m) = \sum_{n = -\infty}^\infty f(x+n) = F(x). \]
 		%
-		then we see that for $M > N \geq 2R$,
+		Thus $F$ is periodic. Since the finite sum of continuous functions is continuous, each of the partial sums
 		%
-		\[ \| F_M - F_N \|_{L^\infty[-R,R]} \lesssim 1/N. \]
+		\[ F_K(x) = \sum_{n = -K}^K f(x+n) = \sum_{n = -K}^K f_n(x) \]
 		%
-		Thus the sequence $\{ F_N \}$ converges locally uniformly to $F$, and thus $F$ is continuous.
+		is continuous. Fix $N > 0$ and define $I_N = [-N,N]$. That $F$ is continuous will follow if we can show that $\{ F_N \}$ converges to $F$ uniformly on $I_N$ for each $N$, since the uniform limit of continuous functions is continuous. Thus we find $F$ is continuous on $I_N$ for each $N$, and taking $N \to \infty$ gives that $F$ is continuous everywhere.
 
-		To show $F$ is periodic, we note that
+		So let us show that $\{ F_K \}$ converges to $F$ uniformly in $L^\infty(I_N)$ for each $N$. If $|n| \geq 2N$, if $x \in I_N$, then
 		%
-		\[ F(x + 1) - F(x) = \lim_{N \to \infty} F_N(x+1) - F_N(x) = \lim_{N \to \infty} f(x + N + 1) - f(x - N). \]
+		\[ |x+n| \geq |n| - |x| \geq n/2. \]
 		%
-		For $N \geq 2|x|$, we have
+		Thus
 		%
-		\[ f(x + N + 1) - f(x - N) \lesssim \frac{1}{N^2}, \]
+		\[ |f_n(x)| \leq \frac{1}{1 + (n/2)^2} \leq \frac{1}{1 + n^2/4} \lesssim 1/n^2. \]
 		%
-		and thus
+		Thus for $K_2 \geq K_1 \geq T \geq 2N$, and $x \in I_N$,
 		%
-		\[ F(x + 1) - F(x) = \lim_{N \to \infty} f(x+N+1) - f(x-N) = 0. \]
+		\[ \| F_{K_2} - F_{K_1} \|_{L^\infty(I_N)} = \| \sum_{K_1 < |n| \leq K_2} f_n \|_{L^\infty(I_N)} \lesssim \sum_{K_1 < n \leq K_2} 1/n^2 \lesssim 1/K_1 \leq 1/T. \]
 		%
-		Thus $F$ is periodic.
+		Taking $T \to \infty$ shows that the sequence $\{ F_K \}$ is Cauchy in $L^\infty(I_N)$, and thus converges uniformly to $F$.
 	\end{solution}
 
 	\part Prove that if $G$ is continuous and periodic with period one, then
 	%
 	\[ \int_0^1 F(x) G(x) = \int_{-\infty}^\infty f(x) G(x)\; dx. \]
 	\begin{solution}
-		Since $F$ is the locally uniform limit of the functions $\{ F_N \}$, we can interchange integrals and limits, writing
+		Since $F$ is the locally uniform limit of the functions $\{ F_N \}$ defined above, we can interchange integrals and limits, writing
 		%
 		\begin{align*}
 			\int_0^1 F(x) G(x)\; dx &= \lim_{N \to \infty} \int_0^1 F_N(x) G(x)\; dx\\
+			&= \lim_{N \to \infty} \sum_{n = -N}^N \int_0^1 f_n(x) G(x)\; dx\\
 			&= \lim_{N \to \infty} \int_{-N}^{N+1} f(x) G(x)\; dx\\
-			&= \int_{-\infty}^\infty f(x) G(x)\; dx.
+			&= \int_{-\infty}^\infty f(x) G(x)\; dx,
 		\end{align*}
+		%
+		where the last result follows because $G$ is continous and periodic, and thus bounded, and so
+		%
+		\[ |f(x) G(x)| \lesssim |f(x)| \lesssim \frac{1}{1 + x^2}. \]
 	\end{solution}
 \end{parts}
-    
-\question (September, 2015) Let $a_1, a_2, \dots$ be a sequence of positive real numbers and assume that
+
+\question (Fall 2015) Let $a_1, a_2, \dots$ be a sequence of positive real numbers and assume that
 %
 \[ \lim_{n \to \infty} \frac{a_1 + \dots + a_n}{n} = 1. \]
 \begin{parts}
@@ -320,7 +427,7 @@ Define a function $F$ on $\RR$ by
 		%
 		Thus
 		%
-		\[ \lim_{n \to \infty} a_n/n = \lim_{n \to \infty} \frac{S_n}{n} - \lim_{n \to \infty} \frac{n-1}{n} \frac{S_{n-1}}{n-1} = 1 - 1 = 0. \]
+		\[ \lim_{n \to \infty} \frac{a_n}{n} = \lim_{n \to \infty} \frac{S_n}{n} - \lim_{n \to \infty} \frac{n-1}{n} \frac{S_{n-1}}{n-1} = 1 - 1 = 0. \]
 	\end{solution}
 
 	\part If $b_n = \max(a_1,\dots,a_n)$, show that $\lim_{n \to \infty} b_n n^{-1} = 0$.
@@ -331,9 +438,9 @@ Define a function $F$ on $\RR$ by
 		%
 		Fix $\varepsilon > 0$. There exists $N > 0$ such that for $n \geq N$, $|a_n/n| \leq \varepsilon$. Thus if $A = \max(a_1/1, \dots, a_N/N)$, we conclude that for $M \geq N$,
 		%
-		\[ b_M/M \leq \max(AN/M, \varepsilon). \]
+		\[ b_M/M \leq \max(A (N/M), \varepsilon). \]
 		%
-		Thus if $M \geq AN/\varepsilon$, $b_M/M \leq \varepsilon$.
+		Thus if $M \geq AN/\varepsilon$, $b_M/M \leq \varepsilon$. Taking $\varepsilon \to 0$ completes the proof.
 	\end{solution}
 
 	\part Show that
@@ -342,99 +449,188 @@ Define a function $F$ on $\RR$ by
 	\begin{solution}
 		For $\beta > 1$, we have
 		%
-		\[ \frac{a_1^\beta + \dots + a_n^\beta}{n^\beta} = \frac{a_1 a_1^{\beta - 1} + \dots + a_n a_n^{\beta - 1}}{n^\beta} \leq \frac{a_1 + \dots + a_n}{n} \max(a_1/n, \dots, a_n/n)^{\beta - 1} \leq (S_n/n) \cdot (b_n/n)^\beta. \]
+		\begin{align*}
+			\frac{a_1^\beta + \dots + a_n^\beta}{n^\beta} &= \frac{a_1 a_1^{\beta - 1} + \dots + a_n a_n^{\beta - 1}}{n^\beta}\\
+			&\leq \frac{a_1 + \dots + a_n}{n} \max(a_1/n, \dots, a_n/n)^{\beta - 1}\\
+			&\leq (S_n/n) \cdot (b_n/n)^{\beta-1}.
+		\end{align*}
 		%
 		Thus
 		%
-		\[ \lim_{n \to \infty} \frac{a_1^\beta + \dots + a_n^\beta}{n^\beta} = \lim_{n \to \infty} (S_n / n) \cdot ( \lim_{n \to \infty} b_n/n )^\beta = 1 \cdot 0 = 0. \]
+		\[ \lim_{n \to \infty} \frac{a_1^\beta + \dots + a_n^\beta}{n^\beta} = \lim_{n \to \infty} (S_n / n) \cdot ( \lim_{n \to \infty} b_n/n )^{\beta-1} = 1 \cdot 0 = 0. \]
 
-		To prove the result for $\beta < 1$, we notice that for suitably large $n$, we have $a_k/n \ll 1$ for $1 \leq k \leq n$. But this implies that $(a_k/n)^\beta \gg a_k/n$, which implies
+		To prove the result for $\beta < 1$, let us begin with an intuitive argument. For $\beta < 1$, if $x \ll 1$, then $x^\beta \gg x$. Because $b_n / n \to 0$, for suitably large $n$ we have $a_k/n \ll 1$ for $1 \leq k \leq n$. But this means that $(a_k/n)^\beta \gg a_k/n$, which implies
 		%
 		\[ \frac{a_1^\beta + \dots + a_n^\beta}{n^\beta} \gg \frac{a_1 + \dots + a_n}{n} \approx 1. \]
 		%
-		More precisely, if $\delta > 0$, then there exists $n_0$ such that for $n \geq n_0$, and $1 \leq k \leq n$, $a_k/n \leq \delta$, and $S_n/n \geq 1/2$. But this implies that
+		More precisely, if $\delta > 0$, then there exists $n_0$ such that for $n \geq n_0$, and $1 \leq k \leq n$,
 		%
-		\[ (a_k/n)^\beta = (a_k/n) (a_k/n)^{\beta - 1} \geq \delta^{\beta - 1} (a_k/n). \]
+		\[ a_k/n \leq \delta \quad \text{and} \quad S_n/n \geq 1/2. \]
+		%
+		But this implies that
+		%
+		\[ (a_k/n)^\beta = \frac{(a_k/n)}{(a_k/n)^{1 - \beta}} \geq \frac{(a_k/n)}{\delta^{1-\beta}}. \]
 		%
 		Thus
 		%
-		\[ \frac{a_1^\beta + \dots + a_n^\beta}{n^\beta} = (a_1/n)^\beta + \dots + (a_n/n)^\beta \geq \delta^{\beta - 1} \frac{a_1 + \dots + a_n}{n} \geq \delta^{\beta - 1} / 2. \]
+		\[ \frac{a_1^\beta + \dots + a_n^\beta}{n^\beta} = (a_1/n)^\beta + \dots + (a_n/n)^\beta \geq \frac{1}{\delta^{1 - \beta}} \frac{a_1 + \dots + a_n}{n} \geq (1/2) \frac{1}{\delta^{1-\beta}}. \]
 		%
 		Taking $\delta \to 0$ completes the proof.
+
+		Another solution is to use an \emph{interpolation argument}. We have
+		%
+		\[ \left( \frac{a_1^\beta + \dots + a_n^\beta}{n^\beta} \right) = \left\| \frac{a_1e_1 + \dots + a_ne_n}{n} \right\|_{l^\beta}^\beta. \]
+		%
+		It thus suffices to show that for $\beta > 1$,
+		%
+		\[ \limsup_{n \to \infty} \left\| \frac{a_1e_1 + \dots + a_ne_n}{n} \right\|_{l^\beta} = 0, \]
+		%
+		and for $\beta < 1$,
+		%
+		\[ \liminf_{n \to \infty} \left\| \frac{a_1e_1 + \dots + a_ne_n}{n} \right\|_{l^\beta} = \infty, \]
+		%
+		For each $1 \leq \beta \leq \infty$, let
+		%
+		\[ A_n(\beta) = \left\| \frac{a_1e_1 + \dots + a_ne_n}{n} \right\|_{l^\beta}. \]
+		%
+		Then
+		%
+		\[ \limsup_{n \to \infty} A_n(1) = \limsup_{n \to \infty} \left\| \frac{a_1e_1 + \dots + a_ne_n}{n} \right\|_{l^1} = 1 \]
+		%
+		and
+		%
+		\[ \limsup_{n \to \infty} A_n(\infty) = \limsup_{n \to \infty} \left\| \frac{a_1e_1 + \dots + a_ne_n}{n} \right\|_{l^\infty} = \max_{1 \leq i \leq n}(a_i/n) = 0. \]
+		%
+		H\"{o}lder's inequality implies that
+		%
+		\[ A_n(\beta) \leq A_n(1)^{1/\beta} A_n(\infty)^{1-1/\beta}. \]
+		%
+		Thus
+		%
+		\[ \limsup_{n \to \infty} A_n(\beta) \leq (\limsup_n A_n(1))^{1/\beta} (\limsup_n A_n(\infty))^{1 - 1/\beta} = 1^{1/\beta} \cdot 0^{1 - 1/\beta} = 0. \]
+		%
+		This is the interpolation argument (upper bounding a quantity for two parameters $\beta_0$ and $\beta_1$, and then using those results to upper bound a quantity for a parameter $\beta$ lying in between $\beta_0$ and $\beta_1$). For $0 < \beta < 1$, another application of H\"{o}lder's inequality shows that if
+		%
+		\[ \lambda = \frac{1/\beta - 1}{1/\beta - 1/2} \]
+		%
+		then $0 < \lambda < 1$, and
+		%
+		\[ A_n(1) \leq A_n(\beta)^{1-\lambda} A_n(2)^\lambda. \]
+		%
+		Thus using the fact that $A_n(2) \to 0$ as $n \to \infty$ (we proved this above), we conclude that
+		%
+		\[ \liminf_{n \to \infty} A_n(\beta) \geq \frac{\left( \lim_{n \to \infty} A_n(1) \right)^{\frac{1}{1 - \lambda}}}{\left( \lim_{n \to \infty} A_n(2) \right)^{\frac{\lambda}{1 - \lambda}}} = \frac{1}{0} = \infty. \]
 	\end{solution}
 \end{parts}
-    
-\newpage
-\section{\centering Day 2: Basic Analysis}
 
-\question (Jan 2017 \#1, Jan 2011 \#3, cf Jan 2007 \#3)
+
+\question (Fall 2021) Let $f \in C^1[0,1]$. Show that for every $\varepsilon > 0$, there exists a polynomial $p$ such that
+%
+\[ \| f - p \|_{L^\infty[0,1]} + \| f' - p' \|_{L^\infty[0,1]} \leq \varepsilon. \]
+\begin{solution}
+	Since $f' \in C[0,1]$, applying the \emph{Stone-Weirstrass theorem}, for any $\varepsilon > 0$, we can find a polynomial $q$ such that $\| f' - q \|_{L^\infty[0,1]} \leq \varepsilon / 2$. But then if we consider the polynomial $p$ such that $p(0) = f(0)$, and $p' = q$, then the fundamental theorem of calculus shows that for $x \in [0,1]$,
+	%
+	\[ |f(x) - p(x)| = \left| \int_0^x f'(x) - p'(x) \right| \leq \int_0^x |f'(x) - p'(x)| \leq (\varepsilon / 2) \cdot x \leq (\varepsilon/2). \]
+	%
+	Thus we have proved that
+	%
+	\[ \| f - p \|_{L^\infty[0,1]} + \| f' - p' \|_{L^\infty[0,1]} \leq \varepsilon. \]
+\end{solution}
+   
+\newpage
+\section*{Day 2: Warm Up Question}
+
+\newpage
+\section{Day 2: Basic Analysis}
+
+\question (Spring 2017, Spring 2011, and Spring 2007)
 Show that the sequence of functions
   \begin{equation*}
-    S_{n}(x)= \sum_{k=1}^{n}\frac{\sin(kx)}{k}, \quad \quad n=1,2,3,\ldots,
+    S_n(x)= \sum_{k=1}^{n}\frac{\sin(kx)}{k}, \quad \quad n=1,2,3,\ldots,
   \end{equation*}
   is uniformly bounded in $\R$.
-\begin{solution}
+
 \bnote{Hint: Summation by parts. Break the sum into two parts for $kx\leq 1$ and $kx>1$ respectively.}
+\begin{solution}
+The idea is to use \emph{Summation by Parts}, also known as \emph{Abel's lemma}, which says the following: Let $\{ a_k \}$ and $\{ b_k \}$ be two sequences of real numbers, and let
+%
+\[ T_n = \sum_{k = 1}^n a_k \]
+%
+be the partial sum of the terms $\{ a_k \}$. Then
+%
+\[ \sum_{k = m}^n a_k b_k = T_n b_n - T_{m-1} b_m + \sum_{k = m}^{n-1} T_k (b_k - b_{k+1}). \]
+%
+%we have:
+%\begin{equation*}
+%  \sum_{k=m}^{n}a_{k}b_{k} = \sum_{k=m}^{n}\left( T_{k}-T_{k-1} \right)b_{k} = \sum_{k=m}^{n}T_{k}b_{k}-\sum_{k=m}^{n}T_{k-1}b_k = T_{n}b_{n} - T_{m-1}b_{m} + \sum_{k=m}^{n-1}T_{k}\left( b_{k}-b_{k+1} \right).
+%\end{equation*}
+Summation by parts can be useful in many different scenarios, but the most useful scenario occurs when the sequence $\{ a_k \}$ is oscillating, and the sequence $\{ b_k \}$ is `smooth' (i.e. changing gradually). The oscillation of $\{ a_k \}$ causes the sequence $\{ T_k \}$ to be small overall because of cancellation, and the smoothness of $\{ b_k \}$ causes the terms $b_k - b_{k+1}$ to be small.
 
-
-
-The idea is to use Summation by Parts, also known as Abel's lemma, which says the following:
-
-Let $a_{k},b_{k}$ be two sequences of real numbers, and denote $T_{k} = \sum_{k=1}^{n}a_{k}$ as the partial sum of $a_{k}$. Then we have:
+Let us use summation by parts to prove this result. It suffices to prove a uniform bound for $-\pi/2 < x < \pi/2$, because the absolute value of each of the functions $S_n$ is periodic with degree $\pi$. First, we break the sum into terms will little oscillation, but whose terms are overall relatively small, and terms with large oscillation to which we can apply summation by parts.. Thus for each $x \in (-\pi/2,\pi/2)$, find a non-negative integer such that $N < 1/|x| < N+1$. Write
+%
+\[ S_n(x) = L_n(x) + H_n(x), \]
+%
+where
+%
+\[ L_n(x) = \sum_{k = 1}^N \frac{\sin(kx)}{k} \quad\text{and}\quad H_n(x) = \sum_{k = N+1}^n \frac{\sin(kx)}{k}. \]
+%
+Utilizing the inequality $|\sin(a)| \leq |a|$ and the triangle inequality, we find that
+%
 \begin{equation*}
-  \sum_{k=m}^{n}a_{k}b_{k} = \sum_{k=m}^{n}\left( T_{k}-T_{k-1} \right)b_{k} = \sum_{k=m}^{n}T_{k}b_{k}-\sum_{k=m}^{n}T_{k-1}b_k = T_{n}b_{n} - T_{m-1}b_{m} + \sum_{k=m}^{n-1}T_{k}\left( b_{k}-b_{k+1} \right).
+  |L_n(x)| = \left| \sum_{k=1}^{N}\frac{\sin(kx)}{k} \right|\leq \sum_{k=1}^{N}\frac{|kx|}{k}\leq N|x|<1.
 \end{equation*}
-
-A solution which uses Summation by Parts is the following. First break the sum into two parts: fix $x\in\R$ and let $N$ be the largest integer such that $N|x|<1$, (so we also have $(N+1)|x|\geq 1$).
-
-Write $\sum_{k=1}^{n}\frac{\sin(kx)}{k}= S_{1}+S_{2}$, where $S_{1} = \sum_{k=1}^{N}\frac{\sin(kx)}{k}$ and $S_{2} = \sum_{k=N+1}^{n}\frac{\sin(kx)}{k}$.
-
+%
+To estimate $H_n$, we apply summation by parts. Let
+%
+\[ T_k(x) = \sum_{j = 1}^k \sin(jx). \]
+%
+The triangle inequality gives the trivial estimate $|T_k(x)| \leq k$ for each $k > 0$ and all $x \in \RR$. A more robust estimate follows via the calculation that for $x \in (-\pi/2,\pi/2)$,
+%
 \begin{equation*}
-  |S_{1}| = \left| \sum_{k=1}^{N}\frac{\sin(kx)}{k} \right|\leq \sum_{k=1}^{N}\frac{|kx|}{k}\leq N|x|<1.
+  |T_k(x)| = \left| \sum_{j=1}^{k}\sin(jx) \right| = \left| \text{Im} \left( \sum_{j=1}^{k}e^{ijx} \right) \right|\leq \left| e^{ix} \frac{ e^{kix} - 1}{e^{ix} - 1}\right| \leq \frac{2}{|\sin x|} \lesssim \frac{1}{|x|}.
 \end{equation*}
-To estimate $S_{2}$, we use summation by parts. Let $T_{k}= \sum_{j=1}^{k}\frac{\sin(jx)}{j}$. Then
-\begin{equation*}
-  |S_{2}| = \left| \sum_{k=N+1}^{n}\frac{\sin(kx)}{k} \right|
-          = \left| \frac{T_{n}}{n}-\frac{T_{N}}{N+1} + \sum_{k=N+1}^{n-1}T_{k}\left(\frac{1}{k}-\frac{1}{k+1}  \right) \right|
-          \leq 2 + \left| \sum_{k=N+1}^{n-1}\frac{T_{k}}{k(k+1)} \right|.
-\end{equation*}
-To estimate the second term, we need to estimate $T_{k}$ first. Indeed, let $x\in[0,\pi]$. Then we have:
-\begin{equation*}
-  |T_{k}| = \left| \sum_{j=1}^{k}\sin(jx) \right| = \left| \text{Im} \left( \sum_{j=1}^{k}e^{ijx} \right) \right|\leq \left|\frac{ e^{ix}(1-e^{ikx})}{1-e^{ix}}\right| \leq \left|\frac{1}{\sin(x/2)}\right| \leq \frac{\pi}{x}
-\end{equation*}
-The last inequality follows from the fact that $\sin(x)/x$ is a decreasing function on the interval $[0,\pi]$.
+%
+Thus
+%
+\begin{align*}
+  |H_n(x)| &= \left| \sum_{k=N+1}^{n}\frac{\sin(kx)}{k} \right|\\
+          &= \left| \frac{T_n(x)}{n}-\frac{T_N(x)}{N+1} + \sum_{k=N+1}^{n-1}T_k(x) \left(\frac{1}{k}-\frac{1}{k+1}  \right) \right|\\
+         &\leq 2 + \left| \sum_{k=N+1}^{n-1}\frac{T_k(x)}{k(k+1)} \right|\\
+         &\lesssim 1 + \frac{1}{|x|} \sum_{k = N+1}^{n-1} \frac{1}{k^2}\\
+         &\lesssim 1 + \frac{1}{N |x|} \lesssim 1.
+\end{align*}
+%
+This shows that both $L_n$ and $H_n$ are uniformly bounded in $n$, and thus the same is true of $S_n$.
 
-Now we finish our estimate of $S_{2}$. Notice that $\left|\frac{T_{n}}{n}\right|\leq 1$ and $\left| \frac{T_{N}}{N+1} \right|\leq 1$, and the term:
-\begin{equation*}
-  \left| \sum_{k+N+1}^{n-1} \frac{T_{k}}{k(k-1)}\right| \leq \frac{\pi}{|x|}\cdot \sum_{k=N+1}^{n-1}\frac{1}{k}-\frac{1}{k+1}\leq \frac{\pi}{|x|}\cdot 2 \cdot \frac{1}{N+1}\leq 2\pi
-\end{equation*}
-where the last inequality follows from our choice of $N$, since we chose $N$ such that $|x|(N+1)\geq 1$, which implies that $\frac{1}{|x|}\leq N+1$.
-
-Thus we see that $|S_{2}|\leq 2+ 2\pi$. This upper bound is independent of $x\in [0,\pi]$ and $n$. In the case of $x\in [\pi,2\pi]$, simply notice that $S(x)=-S(2\pi-x)$.
-
-An alternate approach is to employ Fourier analysis + a Tauberian theorem, though this uses tools which are beyond the scope of the prerequisites of the qualifying exam, though the proof may be of interest for those who know some basic Fourier analysis. The sums here are the partial Fourier series corresponding to the Fourier coefficients of a bounded, $2 \pi$-periodic function $f(x)$ on $[0,2\pi]$ (it is not necessary to know the function, but it is a constant multiple of the function
+An alternate approach is to employ \emph{Fourier analysis} together with a \emph{Tauberian theorem}. Tauberian theorems use tools that  are beyond the scope of the prerequisites of the qualifying exam, though the proof may be of interest for those who know some basic Fourier analysis. The sums here are the partial Fourier series corresponding to the Fourier coefficients of a bounded, $2 \pi$-periodic function $f \in L^\infty[-\pi,\pi]$, i.e. the function $f$ such that
+%
+\[ f \sim \sum_{k = 1}^\infty \frac{\sin(kx)}{k}. \]
+%
+It is not necessary to know the function $f$, but it is a constant multiple of the function
 %
 \[ x \mapsto \begin{cases} -\pi/2 - x/2 &: -\pi < x < 0 \\ +\pi/2 - x/2 &: 0 < x < \pi \end{cases} \]
 %
-It follows that $S_n = D_n * f$, where $D_n$ is the \emph{Dirichlet kernel}. If $\| D_n \|_{L^1((0,2\pi))}$ was uniformly bounded in $n$, we could apply Young's inequality, implying
+It follows that $S_n = D_n * f$, where $D_n$ is the \emph{Dirichlet kernel}. If $\| D_n \|_{L^1([0,2\pi])}$ was uniformly bounded in $n$, we could apply Young's inequality, implying
 %
-\[ \| S_n \|_{L^\infty((0,2\pi))} \leq \| D_n \|_{L^1((0,2\pi))} \| f \|_{L^\infty(0,2\pi))} \lesssim 1. \]
+\[ \| S_n \|_{L^\infty([0,2\pi])} \leq \| D_n \|_{L^1([0,2\pi])} \| f \|_{L^\infty[0,2\pi])} \lesssim 1. \]
 %
-Unfortunately, we have $\| D_n \|_{L^1((0,2\pi))} \sim \log(n)$, so this approach doesn't work completely. But there is a general result for functions $f$ such that $\widehat{f}(n) \lesssim 1/n$, known as a \emph{Tauberian theorem}, which shows that $D_n * f$ is uniformly bounded in $n$ if and only if $P_r * f$ is bounded as $r \to 1$, where $\{ P_r \}$ is the \emph{Poisson kernel}. Since $\| P_r \|_{L^1((0,2\pi))} \lesssim 1$ for $0 < r < 1$, we can use Young's inequality to conclude that $\| P_r * f \|_{L^\infty((0,2\pi))} \lesssim 1$. Thus $P_r * f$ is uniformly bounded in $r$, and thus $D_n * f$ is uniformly bounded, completing the proof.
+Unfortunately, we have $\| D_n \|_{L^1([0,2\pi])} \sim \log n$, so this approach doesn't work completely. But there is a general result for functions $f \in L^1([0,2\pi])$ such that
+%
+\[ |\widehat{f}(n)| \lesssim 1/n, \]
+%
+known as a \emph{Tauberian theorem}, which shows that $D_n * f$ is uniformly bounded in $n$ if and only if $P_r * f$ is bounded as $r \to 1$, where $\{ P_r \}$ is the \emph{Poisson kernel}. Since $\| P_r \|_{L^1([0,2\pi])} \lesssim 1$ for $0 < r < 1$, we can use Young's inequality to conclude that $\| P_r * f \|_{L^\infty((0,2\pi))} \lesssim 1$. Thus $P_r * f$ is uniformly bounded in $r$, and thus $D_n * f$ is uniformly bounded in $n$, completing the proof.
 
 \end{solution}
 
 
-\question (August, 2015) Consider the series
+\question (Fall 2015) Consider the series
 %
 $$ \sum_{n = 1}^\infty \frac{1}{\sqrt{n}} \sin(x/n). $$
 %
 \begin{parts}
 	\part Show that the series converges pointwise to some function $f$ on $\RR$.
 	\begin{solution}
-		The main idea to understanding the sum is to use the bound $|\sin(y)| \leq |y|$, which is tight when $|y| \leq 1$. Thus little is lost in our estimates if we apply this bound in the sum above for $|n| \geq |x|$.
-
-		We will actually find this sum converges absolutely, locally uniformly in $x$. Indeed, plugging in the bound $|\sin(x)| \leq |x|$, we find that
+		The main idea to understanding the sum is to use the bound $|\sin(y)| \leq |y|$, which is tight when $|y| \leq 1$. Thus little is lost in our estimates if we apply this bound in the sum above for $|n| \geq |x|$, since then $|x/n| \leq 1$. We will actually find this sum converges absolutely, locally uniformly in $x$. Indeed, plugging in the bound $|\sin(x)| \leq |x|$, we find that
 		%
 		\[ \sum_{n = 1}^\infty \left| \frac{1}{\sqrt{n}} \sin(x/n) \right| \leq \sum_{n = 1}^\infty \frac{1}{\sqrt{n}} \frac{|x|}{n} = |x| \sum_{n = 1}^\infty \frac{1}{n^{3/2}} \lesssim |x|. \]
 		%
@@ -465,7 +661,7 @@ $$ \sum_{n = 1}^\infty \frac{1}{\sqrt{n}} \sin(x/n). $$
 		%
 		\[ |f_M'(x) - f_N'(x)| \leq \sum_{n = N+1}^M 1/n^{3/2} \lesssim N^{-1/2}. \]
 		%
-		Thus $\| f_M - f_N \|_{L^\infty(\RR)} \lesssim N^{-1/2}$, which implies the sequence is uniformly cauchy, and thus converges to some function $g$. But it is a general rule that if $\{ f_N \}$ converges locally uniformly to some function $f$, and $\{ f_N' \}$ converges locally uniformly to some function $g$, then $f$ is differentiable, and $f' = g$. Thus $f$ is differentiable.
+		Thus $\| f_M - f_N \|_{L^\infty(\RR)} \lesssim N^{-1/2}$, which implies the sequence is uniformly Cauchy, and thus converges to some function $g$. But it is a general rule that if $\{ f_N \}$ converges locally uniformly to some function $f$, and $\{ f_N' \}$ converges locally uniformly to some function $g$, then $f$ is differentiable, and $f' = g$. Thus $f$ is differentiable.
 
 		An alternative, but less clean way to show $f$ is differentiable is using the definition of the derivative, i.e. by proving that for each $x \in \RR$, the limit
 		%
@@ -510,18 +706,18 @@ $$ \sum_{n = 1}^\infty \frac{1}{\sqrt{n}} \sin(x/n). $$
 	\end{solution}
 \end{parts}
 
-\question (September, 2019) Show that if $K \subset \RR^n$, and every continuous function on $K$ is bounded, then $K$ is compact.
+\question (Fall 2019) Show that if $K \subset \RR^n$, and every continuous function on $K$ is bounded, then $K$ is compact.
 \begin{solution}
-	It suffices to show that $K$ is bounded and closed.
+	The \emph{Heine-Borel theorem} implies that it suffices to show that $K$ is bounded and closed.
 
-	If $K$ was not closed, then we could find $y \in \overline{K} - K$. The function $f(x) = 1/d(x,y)$ would then be continuous, but not bounded, on $K$. Thus $\overline{K} - K$ is empty, so $\overline{K} = K$.
+	If $K$ was not closed, then we could find $y \in \overline{K} - K$. The function $f(x) = 1/|x-y|$ would then be continuous, but not bounded, on $K$. Thus $\overline{K} - K$ is empty, so $\overline{K} = K$.
 
 	If $K$ was not bounded, then $f(x) = |x|$ would be a continuous, unbounded function. Thus $K$ is bounded.
 
 	Thus $K$ is compact.
 \end{solution}
 
-\question (January, 2015) Prove that the integral
+\question (Spring 2015) Prove that the integral
 %
 \[ f(a) = \int_0^\infty \frac{\sin(x^2 + ax)}{x}\; dx \]
 %
@@ -531,13 +727,13 @@ converges for $a \geq 0$, and $f$ is continuous on $[0,\infty)$.
 	%
 	\[ f_0(a) = \int_0^1 \frac{\sin(x^2 + ax)}{x}\; dx. \]
 	%
-	We perform a dyadic decomposition, writing, for $n \in \ZZ$,
+	We perform a \emph{dyadic decomposition}, writing, for $n \in \ZZ$,
 	%
 	\[ f_n(a) = \int_{2^n}^{2^{n+1}} \frac{\sin(x^2 + ax)}{x}\; dx. \]
 	%
 	Then $f = \sum_{n = 0}^\infty f_n$. Since the integrand is continuous, and each integral is on a finite interval, all of the functions $\{ f_n \}$ are continuous.
 
-	We claim this sum converges locally uniformly. To do this we \emph{must} exploit the oscillation in the integrand, for $1/x$ is not summable. To do this, we perform an integration by parts. Indeed, for $a \geq 0$,
+	We claim this sum converges locally uniformly. To do this we \emph{must} exploit the oscillation in the integrand, for $1/x$ is not summable. To do this, we perform an \emph{integration by parts}. Indeed, for $a \geq 0$,
 	%
 	\begin{align*}
 		\int_{2^n}^{2^{n+1}} \frac{\sin(x^2 + ax)}{x} &= \int_{2^n}^{2^{n+1}} \frac{d}{dx} \left( \cos(x^2 + ax) \right) \cdot \frac{-1}{x(2x + a)}\\
@@ -549,14 +745,14 @@ converges for $a \geq 0$, and $f$ is continuous on $[0,\infty)$.
 	Thus $\| f_n \|_{L^\infty[0,\infty)} \lesssim 1/2^n$. Thus $\{ f_n \}$ is uniformly summable, and so $f = \sum f_n$ exists, and is continuous for $a \geq 0$.
 \end{solution}
 
-\question (September, 2017) Consider the sequence of functions $f_n: \RR \to \RR$ defined by
+\question (Fall 2017) Consider the sequence of functions $f_n: \RR \to \RR$ defined by
 %
 \[ f_n(x) = \int_0^n \frac{\sin(sx)}{\sqrt{s}}\; ds. \]
 %
 \begin{parts}
 	\part Show that $\{ f_n \}$ converges locally uniformly on $(0,\infty)$.
 	\begin{solution}
-		This integral can only converge because of the oscillation of $\sin(sx)$ for large $x$. Thus we integrate by parts, writing
+		This integral can only converge because of the oscillation of $\sin(sx)$ for large $x$. Thus we \emph{integrate by parts}, writing
 		%
 		\begin{align*}
 			\int_{n_0}^{n_1} \frac{\sin(sx)}{\sqrt{s}}\; ds &= \int_{n_0}^{n_1} \frac{- d/ds (\cos(sx))}{x \sqrt{s}}\; ds\\
@@ -575,7 +771,7 @@ converges for $a \geq 0$, and $f$ is continuous on $[0,\infty)$.
 		%
 		\[ \left| \int_{n_0}^{n_1} \frac{\sin(sx)}{\sqrt{s}}\; ds \right| \leq 1. \]
 		%
-		Now pick $x \sim 1/n$, such that for $s \in [n_0,n_1]$, $\sin(sx) \geq sx/2$. Then
+		Now pick $x \in [0,1)$ with $x \sim 1/n_1$, such that for $s \in [n_0,n_1]$, $\sin(sx) \geq sx/2$. Then
 		%
 		\[ 1 \geq \int_{n_0}^{n_1} \frac{\sin(sx)}{\sqrt{s}}\; ds \geq \frac{x}{2} \int_{n_0}^{n_1} \sqrt{s}\; ds \gtrsim n_1^{3/2} x \gtrsim n_1^{1/2}. \]
 		%
@@ -583,17 +779,74 @@ converges for $a \geq 0$, and $f$ is continuous on $[0,\infty)$.
 	\end{solution}
 
 	\part Does the sequence $\{ f_n \}$ converge uniformly on $[1,\infty)$ as $n \to \infty$?
+	\begin{solution}
+		Yes, as implied by the calculations in part (a).
+	\end{solution}
 \end{parts}
 
+\question (Fall 2021) Does the improper integral
+%
+\[ \int_2^\infty \frac{x \sin(e^x)}{x + \sin(e^x)}\; dx \]
+%
+converge?
+\begin{solution}
+	If $y = e^x$, then $dy = e^x dx = y dx$, and so
+	%
+	\[ \int_2^\infty \frac{x \sin(e^x)}{x + \sin(e^x)}\; dx = \int_{\log 2}^\infty \frac{\sin y}{y} \frac{\log(y)}{\log(y) + \sin(y)} \]
+	%
+	The integrand oscillates between positive and negative values, so it suffices to decompose the integral onto the intervals where the integrand is positive or negative. For suitably large $n$, write
+	%
+	\[ C_n = \left| \int_{\pi n}^{\pi (n + 1)} \frac{\sin y}{y} \frac{\log y}{\log y + \sin y} \right| \]
+	%
+	The integral will then converge if and only if the alternating series
+	%
+	\[ \sum_{n = 1}^\infty (-1)^n C_n \]
+	%
+	converges. For $\pi n \leq y \leq \pi(n+1)$, a Taylor series expansion shows that
+	%
+	\begin{align*}
+		\frac{1}{y} \frac{\log y}{\log y + \sin y} &= \frac{1}{y} \frac{1}{1 + \sin y / \log y}\\
+		&= \left( \frac{1}{\pi n} + O(1/n^2) \right) \left(1 - \frac{\sin y}{\log y} + O \left( \frac{1}{(\log n)^2} \right) \right)\\
+		&= \left( \frac{1}{\pi n} + O(1/n^2) \right) \left(1 - \frac{\sin y}{\log(\pi n)} + O \left( \frac{1}{(\log n)^2} \right) \right)\\
+		&= \left( \frac{1}{\pi n} - \frac{\sin y}{\pi n \log \pi n} + O \left( \frac{1}{n (\log n)^2} \right) \right).
+	\end{align*}
+	%
+	Thus
+	%
+	\begin{align*}
+		C_n &= \int_0^\pi \frac{\sin y}{\pi n} - \frac{(\sin y)^2}{\pi n \log \pi n}\; dy + O \left( \frac{1}{n (\log n)^2} \right)\\
+		&= \frac{2}{\pi n} - \frac{1}{2 n \log(\pi n)} + O \left( \frac{1}{n (\log n)^2} \right)\\
+		&= C_n' + O \left( \frac{1}{n (\log n)^2} \right).
+	\end{align*}
+	%
+	The quantities $\{ C_n' \}$ are decreasing for suitably large $n$. Thus by the \emph{Leibnitz test}, the alternating series
+	%
+	\[ \sum_{n = 1}^\infty (-1)^n C_n' \]
+	%
+	converges. On the other hand, the series
+	%
+	\[ \sum_{n = 1}^\infty O \left( \frac{1}{n (\log n)^2} \right) \]
+	%
+	converges \emph{absolutely}, i.e. by applying the Cauchy condensation theorem. But this means that the alternating series
+	%
+	\[ \sum_{n = 1}^\infty (-1)^n C_n \]
+	%
+	converges.
+\end{solution}
+
 \newpage
-\section{\centering Day 3: Basic Analysis}
+\section*{Day 3: Warm Up Question}
+
+\newpage
+\section{Day 3: Basic Analysis}
 
 
-\question (Aug 2018 \#2) 
+\question (Fall 2018) 
 Prove that for $1\leq p \leq 2$ and $0<b<a$, $$(a+b)^p + (a-b)^p \geq 2a^p + p(p-1)a^{p-2}b^2.$$
 
+\bnote{Hint: Apply Taylors Theorem.}
+
 \begin{solution}
-\bnote{Hint: Taylors theorem}
   By subtracting the right-hand side, factoring out $a^p$, and noting that $0<b/a<1$, it suffices to show that the function
   \begin{equation*}
     f(x) = \left( 1+x \right)^{p} + \left( 1-x \right)^{p} - 2 - p(p-1)x ^{2}
@@ -609,7 +862,7 @@ Prove that for $1\leq p \leq 2$ and $0<b<a$, $$(a+b)^p + (a-b)^p \geq 2a^p + p(p
   \end{equation*}
   where
   \begin{equation*}
-    R_{2}(x)= \frac{1}{6}p(p-1)(p-2)(1+\xi)^{p-3}x^{3}
+    R_{2}(x)= \frac{p(p-1)(p-2)(1+\xi)^{p-3}x^{3}}{6}
   \end{equation*}
   for some number $\xi$ between $0$ and $x$. Substituting the Taylor expansions for $g(x)$ and $g(-x)$ into the formula for $f$ gives
   \begin{equation*}
@@ -617,28 +870,36 @@ Prove that for $1\leq p \leq 2$ and $0<b<a$, $$(a+b)^p + (a-b)^p \geq 2a^p + p(p
   \end{equation*}
   or equivalently
   \begin{equation*}
-    f(x) = \frac{1}{6}p(p-1)(p-2)\left[(1+\xi_{+})^{p-3}-(1+\xi_{-})^{p-3}\right]x^{3}
+    f(x) = \frac{p(p-1)(p-2)}{6} \left[(1+\xi_{+})^{p-3}-(1+\xi_{-})^{p-3}\right]x^{3}
   \end{equation*}
   for some $\xi_{+}\in(0,x)$ and $\xi_{-}\in(-x,0)$. Since $\xi_{-}<\xi_{+}$ and $p<3$, the part in brackets is negative, and since $0\leq p \leq 2$, it follows that $f(x)$ is nonnegative, as required.
 \end{solution}
 
-\question (Jan 2018 \#1, Jan 2021 \#1)
+\question (Spring 2018 and Spring 2021)
   Determine if
   \begin{equation*}
     \sum_{k=1}^{\infty}\frac{\cos(\sqrt{k})}{k}
   \end{equation*}
   converges.
 
+\bnote{Hint: Integration by parts, Mean value theorem}
 
 \begin{solution}
-\bnote{Hint: integration by parts, mean value theorem}
-Yes, the series converges. We first claim that the integral $\int_{1}^{\infty}\frac{\cos(x^{1/2})}{x}dx$ converges. To see this, we use integration by parts:
+Yes, the series converges. We first claim that the integral
+%
+\[ \int_{1}^{\infty}\frac{\cos(x^{1/2})}{x}dx \]
+%
+converges. To see this, we use integration by parts:
   \begin{align*}
     \int_{1}^{\infty}\frac{\cos(x^{1/2})}{x}dx
     &= \int_{1}^{\infty}2x^{-1/2}\frac{d}{dx}\left[ \sin(x^{1/2}) \right]dx\\
     &= -2\sin(1)+ \int_{1}^{\infty}\frac{\sin(x^{1/2})}{x^{3/2}}dx<\infty.
   \end{align*}
-  This proves the claim. Next we claim that $\sum_{k=1}^{n} \frac{\cos(\sqrt{k})}{k}$ is a Cauchy sequence (and therefore converges as $n\to\infty$). To prove this, it suffices by the previous claim to show that for every $\epsilon>0$ there exists $N$ such that $m,n>N$ implies 
+  This proves the claim. Next we claim that
+  %
+  \[ \sum_{k=1}^{n} \frac{\cos(\sqrt{k})}{k} \]
+  %
+  is a Cauchy sequence (and therefore converges as $n\to\infty$). To prove this, it suffices by the previous claim to show that for every $\epsilon>0$ there exists $N$ such that $m,n>N$ implies 
   \begin{equation}\label{partial-sum-difference}
     \left|\sum_{k=m}^{n}\frac{\cos(\sqrt{k})}{k} - \int_{m}^{n+1}\frac{\cos(\sqrt{x})}{x}dx\right|<\epsilon.
   \end{equation}
@@ -647,7 +908,11 @@ Yes, the series converges. We first claim that the integral $\int_{1}^{\infty}\f
     \sum_{k=m}^{n}\frac{\cos(\sqrt{k})}{k} - \int_{m}^{n+1}\frac{\cos(\sqrt{x})}{x}dx
     = \sum_{k=m}^{n}\int_{k}^{k+1}\(\frac{\cos(\sqrt{k})}{k} - \frac{\cos(\sqrt{x})}{x}\)dx.
   \end{equation}
-  By the Mean Value Theorem, since $\frac{d}{dx}\left[ \frac{\cos(x^{1/2})}{x} \right]= -\frac{\cos(x^{1/2})}{x^{2}} - \frac{\sin(x^{1/2})}{2x^{3/2}}$, it follows that for every $x\in [k,k+1]$, there exists some $\xi\in (x,k+1)$ such that
+  By the Mean Value Theorem, since
+  %
+  \[ \frac{d}{dx}\left[ \frac{\cos(x^{1/2})}{x} \right]= -\frac{\cos(x^{1/2})}{x^{2}} - \frac{\sin(x^{1/2})}{2x^{3/2}}, \]
+  %
+  it follows that for every $x\in [k,k+1]$, there exists some $\xi\in (x,k+1)$ such that
   \begin{equation*}
     \frac{\cos(\sqrt{k})}{k} - \frac{\cos(\sqrt{x})}{x} \leq \frac{1}{\xi^{2}}+ \frac{1}{2\xi^{3/2}}
   \end{equation*}
@@ -666,7 +931,7 @@ Yes, the series converges. We first claim that the integral $\int_{1}^{\infty}\f
   Since the series on the right hand side is summable, it tends to zero as $m,n\to\infty$, which establishes \eqref{partial-sum-difference}.
 \end{solution}
 
-\question (January, 2015) Let $g$ be a non-constant differentiable real function on a finite interval $[a,b]$, with $g(a) = g(b) = 0$. Show that there exists $c \in (a,b)$ such that
+\question (Spring 2015) Let $g$ be a non-constant differentiable real function on a finite interval $[a,b]$, with $g(a) = g(b) = 0$. Show that there exists $c \in (a,b)$ such that
 %
 \[ |g'(c)| > \frac{4}{(b - a)^2} \int_a^b |g(t)|\; dt. \]
 \begin{solution}
@@ -683,7 +948,7 @@ Yes, the series converges. We first claim that the integral $\int_{1}^{\infty}\f
 	Rearranging this inequality completes the proof, except in the case that all the inequalities in this calculation are equalities (so we cannot get the strict inequality required). But this only holds if $g'$ is a constant function, hence $g$ is linear, which is impossible since $g$ is non constant, and $g(0) = g(1) = 0$.
 \end{solution}
 
-\question (September, 2019) If $f: \RR^n \to \RR$ is differentiable on $\RR^n - \{ 0 \}$, continuous at 0, and
+\question (Fall 2019) If $f: \RR^n \to \RR$ is differentiable on $\RR^n - \{ 0 \}$, continuous at 0, and
 %
 \[ \lim_{x \to 0} \frac{\partial f}{\partial x^i}(x) = 0, \]
 %
@@ -715,7 +980,7 @@ for $1 \leq i \leq n$, then $f$ is differentiable at 0.
 
 
 
-\question (January, 2017) For any pair of sequences $\{ a_k \}$ and $\{ b_n \}$, show that
+\question (Spring 2017) For any pair of sequences $\{ a_k \}$ and $\{ b_n \}$, show that
 %
 \[ \sum_{n = 1}^\infty \sum_{m = 1}^\infty \frac{a_n b_m}{n + m} \lesssim \left( \sum_{n = 1}^\infty a_n^2 \right)^{1/2} \left( \sum_{m = 1}^\infty b_m^2 \right)^{1/2}. \]
 \begin{solution}
@@ -759,7 +1024,7 @@ for $1 \leq i \leq n$, then $f$ is differentiable at 0.
 	%
 	\[ \left( \sum_{m = 1}^\infty |Ta(m)|^p \right)^{1/p} \lesssim_p \#(E)^{1/p}. \]
 	%
-	Indeed, if $N = \#(E)$, then it is simple to see that $Ta \leq Ta^*$, where $a^*$ is the indicator function of $\{ 1, \dots, N \}$, and so one needs only estimate $Ta^*$, and it is not too difficult to show that $\| Ta^* \|_{L^p} \lesssim_p \#(E)^{1/p}$ for $1 < p < \infty$. This is known as a \emph{restricted} estimate. Standard techniques in the theory of real interpolation thus imply that
+	Indeed, if $N = \#(E)$, then it is simple to see that $Ta \leq Ta^*$, where $a^*$ is the indicator function of $\{ 1, \dots, N \}$, and so one needs only estimate $Ta^*$, and it is not too difficult to show that $\| Ta^* \|_{L^p} \lesssim_p \#(E)^{1/p}$ for $1 < p < \infty$. This is known as a \emph{restricted strong type} estimate. Standard techniques in the theory of real interpolation thus imply that
 	%
 	\[ \left( \sum_{m = 1}^\infty |Ta(m)|^2 \right)^{1/2} \lesssim \left( \sum_{n = 1}^\infty |a(n)|^2 \right)^{1/2}, \]
 	%
@@ -770,22 +1035,37 @@ for $1 \leq i \leq n$, then $f$ is differentiable at 0.
 \newpage
 \section{Day 4: Measure Theory}
 
-\question  (Jan 2021 \#2, Jan 2016 \#4)
+\question  (Spring 2021 and Spring 2016)
   Let $E\subset \R$ be a Lebesgue measurable set with $|E|<\infty$. Prove that the function $f:\R\to \R$ defined by $f(r)= |E\cap (E+r)|$ is continuous
 \begin{solution}
-    %It suffices to prove that for all $s$,
+    It suffices to prove that for all $s \in \RR$,
     %
-    %\[ \lim_{r \to s} f(r) = f(s). \]
+    \[ \lim_{r \to s} f(r) = f(s). \]
     %
-    %Now
+    We write
     %
-    %\[ f(r) - f(s) = \int \mathbf{I}_E(x) [\mathbf{I}_E(x + r) - \mathbf{I}_E(x + s)]. \]
+    \[ f(r) = \int \mathbf{I}_E(x) \mathbf{I}_E(x + r). \]
     %
-    %As $r \to s$, the integrand tends to zero pointwise. And moreover, the integrands are uniformly dominated by $2\mathbf{I}_E$, which is an integrable function. Thus the dominated convergence theorem implies that
+    Now
     %
-    %\[ \lim_{r \to s} f(r) - f(s) = 0. \]
+    \[ f(r) - f(s) = \int \mathbf{I}_E(x) [\mathbf{I}_E(x + r) - \mathbf{I}_E(x + s)]. \]
     %
-    %Thus $f$ is a %continuous function.
+    The result then follows from the fact that
+    %
+    \[ \lim_{r \to s} \int | \mathbf{I}_E(x + r) - \mathbf{I}_E(x + s)|\; dx \to 0, \]
+    %
+    because for any $f \in L^1(\RR)$,
+    %
+    \[ \lim_{r \to 0} \int |f(x + r) - f(x)|\; dx = 0. \]
+    %
+    To see that this equation is true, we note it is certainly true for any $f \in C_c^\infty(\RR)$, which is a dense subfamily of $L^1(\RR)$. But the operators $A_r f(x) = f(x + r) - f(x)$ are uniformly bounded in $L^1(\RR)$, i.e. $\| A_r f \|_{L^1(\RR)} \leq 2 \| f \|_{L^1(\RR)}$. And thus the result follows by the uniform boundedness theorem.
+
+    \begin{comment}
+    As $r \to s$, the integrand tends to zero pointwise. And moreover, the integrands are uniformly dominated by $2\mathbf{I}_E$, which is an integrable function. Thus the dominated convergence theorem implies that
+    %
+    \[ \lim_{r \to s} f(r) - f(s) = 0. \]
+    %
+    Thus $f$ is a continuous function.
 
   Let $\epsilon>0$. Since $E$ is measurable and $|E|<\infty$, $\chi_{E}$ is integrable. Since $C_{c}(\R)$ is dense in $L^{1}(\R)$, there exists $g\in C_{c}(\R)$ such that $\norm{g-\chi_{E}}_{L^{1}(\R)}<\epsilon/3$. Since $g$ is continuous and compactly supported, it is unformly continuous. Therefore (again using the fact that $|E|<\infty$) we may choose $\delta>0$ such
   \begin{equation}
@@ -804,11 +1084,12 @@ Therefore by the triangle inequality,
               &\leq \int_{\R}|\chi_{E}(x-r)-g(x-r)|dx + \int_{E}|g(x-r)-g(x-s)|dx \\\quad &+\int_{\R}|g(x-s)-\chi_{E}(x-s)|dx.
 \end{align*}
 By translation invariance (i.e. do a u-substitution), the first and third integrals both equal  $\int_{\R}|\chi_{E}(x)-g(x)|dx < \epsilon/3$. By \eqref{eq:uniform-continuity}, the second integral is less than $\epsilon/3$. Therefore $|f(r)-f(s)|<\epsilon$. We have shown that $\delta$ responds to the $\epsilon$-challenge in the definition of continuity. Therefore $f$ is continuous.
+\end{comment}
 \end{solution}
 
 
 
-\question (January, 2015) Does there exists a Borel measurable function $f: \RR \to [0,\infty)$ such that
+\question (Spring 2015) Does there exists a Borel measurable function $f: \RR \to [0,\infty)$ such that
 %
 \[ \int_a^b f(x)\; dx = \infty \]
 %
@@ -822,9 +1103,13 @@ for all real numbers $a < b$. Find an example or show that no such function exis
     %
     The Borel-Cantelli lemma implies that $E = \limsup_x E_x$ is a set of measure zero. We set
     %
-    \[ f(x) = \mathbf{I}(x \not \in E) \sum_{p/q \in \mathbf{Q} \cap [0,1]} q^4 \cdot \mathbf{I}(x \in (p/q - 1/q^3, p/q + 1/q^3). \]
+    \[ f(x) = \mathbf{I}(x \not \in E) \sum_{p/q \in \mathbf{Q} \cap [0,1]} q^4 \cdot \mathbf{I}(x \in (p/q - 1/q^3, p/q + 1/q^3)). \]
     %
-    If $x \not \in E$, then $x$ lies in at most finitely many of the intervals $(p/q - 1/q^3, p/q + 1/q^3)$, so $f(x)$ is finite. Moreover, $f$ is a limit of simple functions, and is therefore measurable. And if $a < b$, there exists arbitrarily large denominators $q$ for which there is a simple fraction $p/q$ with $a < p/q - 1/q^3 < p/q + 1/q^3 < b$; on $(p/q - 1/q^3, p/q + 1/q^3) \cap E^c$, we have $f(x) \geq q^4$, and thus
+    If $x \not \in E$, then $x$ lies in at most finitely many of the intervals $(p/q - 1/q^3, p/q + 1/q^3)$, so $f(x)$ is finite. Moreover, $f$ is a limit of simple functions, and is therefore measurable. And if $a < b$, there exists arbitrarily large denominators $q$ for which there is a simple fraction $p/q$ with
+    %
+    \[ a < p/q - 1/q^3 < p/q + 1/q^3 < b. \]
+    %
+    On $(p/q - 1/q^3, p/q + 1/q^3) \cap E^c$, we have $f(x) \geq q^4$, and thus
     %
     \[ \int_a^b f(x)\; dx \geq \int_{p/q - 1/q^3}^{p/q + 1/q^3} q^4 = 2q. \]
     %
@@ -833,7 +1118,7 @@ for all real numbers $a < b$. Find an example or show that no such function exis
     \[ \int_a^b f(x)\; dx = \infty. \]
 \end{solution}
 
-\question (Aug 2018 \#5) Two parts:
+\question (Fall 2018) Two parts:
 
     \begin{parts}
     \part Give an example, with explanation, of each of the following:
@@ -842,9 +1127,21 @@ for all real numbers $a < b$. Find an example or show that no such function exis
         \item A sequence of functions in $L^1(\R)$ that converges almost everywhere to zero, but it does not converge in measure to any function. 
         \end{itemize}
   \begin{solution} 
-  One idea for (a): For $n>1$, let $a_n = 1+ \frac{1}{2} + \frac{1}{3} + \ldots + \frac{1}{n-1}$ mod 1. Define $f_n = \chi_{[a_n, \min\{a_n+\frac{1}{n},1\}]}$. Then $\int_{\R}|f_n|dx \leq \int_{a_n}^{a_n+\frac{1}{n}}dx = 1/n \to 0$. So $f_n \to 0$ in $L^1$. However, since $a_n\to \infty$, one can see that for all $x\in [0,1]$, the sequence of real numbers $(f_n(x))$ is 0 infinitely often and 1 infinitely often. Hence $\limsup_{n\to\infty} f_n(x) = 1 \neq 0 = \liminf_{n\to\infty} f_n(x)$. Thus $f_n$ doesn't converge almost surely.
-  
-  For the second part of $(a)$, let $f_n = \chi_{(n,n+1)}$. The details are easy to verify. (This is the classic ``moving bump".)
+  	For the first part of (a), It suffices to construct such a function on $L^1([0,1))$, since one can patch together functions onto all of $\RR$. Given $a \in \RR$, let $[a] \in [0,1)$ be the unique value such that $a - [a] \in \ZZ$. Define
+  	%
+  	\[ H_n = \sum_{k = 1}^n \frac{1}{k}. \]
+  	%
+  	Define $I_n = \{ [x] \in [0,1): x \in [H_n,H_{n+1}] \}$ and then let $f_n = \chi_{I_n}$. These functions are known as the \emph{typewriter sequence}, for some reason. Then
+  	%
+  	\[ \| f_n \|_{L^1(\RR)} = H_{n+1} - H_n \lesssim 1/n. \]
+  	%
+  	Thus the sequence $\{ f_n \}$ converges to zero in $L^1(\RR)$. However, since $H_n \to \infty$, $\limsup I_n = [0,1)$, which means that for any $x \in [0,1)$,
+  	%
+  	\[ \liminf_{n \to \infty} f_n(x) = 1. \]
+  	%
+  	Thus $\{ f_n \}$ does not converge pointwise to zero at any point in $[0,1)$.
+
+  	For the second part, let $I_n = [n,n+1]$, and let $f_n = \chi_{I_n}$. The sequence $\{ f_n \}$ is then the required example. This is the classic ``moving bump''.
   \end{solution}    
         
     \part Prove that a sequence of functions on $\R$ that converges to zero in measure must have a subsequence that converges to zero almost everywhere. Do not quote any theorems that trivialize the problem. 
@@ -859,7 +1156,7 @@ for all real numbers $a < b$. Find an example or show that no such function exis
     \end{parts}
     
     
-\question (January, 2017)
+\question (Spring 2017)
     Let $f: [0,\infty) \to \RR$ be a continuously differentiable function for which $\| f' \|_\infty < \infty$. Define, for $x > 0$,
     %
     \[ F(x) = \int_0^\infty f(x + yx) \psi(y)\; dy, \]
@@ -906,28 +1203,33 @@ for all real numbers $a < b$. Find an example or show that no such function exis
     \end{align*}
 \end{solution}
 
-\question (Aug 2016 \# 4) Let $f:[0,1]\to \R$ be continuous with $\min_{0\leq x\leq 1} f(x) = 0$. Assume that for any $0\leq a\leq b\leq 1$ we have $\int_{a}^{b}[f(x)-\min_{a\leq y\leq b}f(y)]dx \leq \frac{|b-a|}{2}$. Prove that for any $\lambda\geq 0$, we have
+\question (Fall 2016) Let $f:[0,1]\to \R$ be continuous with $\min_{0\leq x\leq 1} f(x) = 0$. Assume that for any $0\leq a\leq b\leq 1$ we have
+%
+\[ \int_{a}^{b}[f(x)-\min_{a\leq y\leq b}f(y)]dx \leq \frac{|b-a|}{2}. \]
+%
+Prove that for any $\lambda\geq 0$, we have
 \begin{equation*}
 \left| \left\{ x:f(x)>\lambda+1 \right\} \right|\leq \frac{1}{2} \left| \left\{ f(x)>\lambda) \right\} \right|.
 \end{equation*}
 
 \begin{solution}
   Since $f$ is continuous, $\left\{x: f(x)>\lambda \right\}$ is open. Therefore we may write $\left\{x: f(x)>\lambda \right\} = \bigcup_{i=1}^{\infty}I_{i}$ where $(I_{i})_{i=1}^{\infty}$ is a countable pairwise disjoint sequence of intervals $I_{i}=(a_{i},b_{i})$ with $a_{i}\leq b_{i}$.
-  \vt
-  \noindent
-  \textit{Claim:} $\min_{t\in \bar{I}_{i}} f(t) \leq \lambda$.
-  \begin{proof}[Proof of Claim:]
-    If $I_{i}=\emptyset$ there is nothing to show. If $a_{i} = 0$ and $b_{i}=1$, then by hypothesis, $\min_{[a_{i},b_{i}]}f =\min_{[0,1]}f = 0\leq \lambda$. So assume that is not the case; i.e., that at least one of $a_{i},b_{i}$ is in $(0,1)$. Without loss of generality, assume that $a_{i}\in (0,1)$. The $a_{i}\in \partial \left\{ x: f(x)\leq \lambda \right\}$. Hence by continuity of $f$, we have $f(a_{i})\leq \lambda$. Hence $\min_{[a_{i},b_{i}]}f \leq \lambda$. 
-  \end{proof}
-  Then we have:
+
+  We claim that for each $i$,
+  %
+  \[ \inf_{t \in \overline{I}_i} f(t) \leq \lambda. \]
+  %
+  If $I_i = \emptyset$, there is nothing to show. If $a_i = 0$ and $b_i = 1$, then by hypothesis, $\min_{[a_{i},b_{i}]}f =\min_{[0,1]}f = 0\leq \lambda$. So assume that is not the case; i.e., that at least one of $a_{i},b_{i}$ is in $(0,1)$. Without loss of generality, assume that $a_i \in (0,1)$. Then $a_i \in \partial \left\{ x: f(x)\leq \lambda \right\}$. Hence by continuity of $f$, we have $f(a_{i})\leq \lambda$.
+
+  Now that this has been proved, we have:
   \begin{align*}
-    \frac{1}{2}|I_{i}| &\geq \int_{I_{i}} f(x)-\min_{t\in {\bar{I}_{i}}}f(t) dx
+    \frac{1}{2}|I_{i}| &\geq \int_{I_{i}} \left\{ f(x)-\min_{t\in {\bar{I}_{i}}}f(t) \right\} dx
     &&\text{by assumption}\\
-                       &\geq \int_{I_{i}\cap \left\{ f > \lambda+1 \right\}}f(x)-\min_{t\in{\bar{I}_{i}}}f(t)dx
+                       &\geq\int_{I_{i}\cap \left\{ f > \lambda+1 \right\}} \left\{ f(x)-\min_{t\in{\bar{I}_{i}}}f(t) \right\} dx
     &&\text{by nonnegative of the integrand}\\
-                       &\geq \int_{I_{i}\cap \left\{ f > \lambda+1 \right\}}f(x)-\lambda dx
+                       &\geq \int_{I_{i}\cap \left\{ f > \lambda+1 \right\}} (f(x)-\lambda) dx
     &&\text{by the claim}\\
-                       &\geq \int_{I_{i}\cap \left\{ f > \lambda+1 \right\}}(\lambda+1)-\lambda dx
+                       &\geq \int_{I_{i}\cap \left\{ f > \lambda+1 \right\}} ((\lambda+1)-\lambda) dx
     &&\text{by domain of integration}\\
                        &= \left|I_{i} \cap \left\{  f> \lambda+1\right\} \right|.
   \end{align*}
@@ -944,7 +1246,7 @@ for all real numbers $a < b$. Find an example or show that no such function exis
 \newpage
 \section{Day 5: Basic Functional Analysis}
 
-\question (January, 2015) Let $f \in L^2[0,1]$ satisfy $\int_0^1 t^n f(t)\; dt = (n+2)^{-1}$ for $n = 0, 1,\dots$. Must then $f(t) = t$ for almost every $t \in [0,1]$?
+\question (Spring 2015) Let $f \in L^2[0,1]$ satisfy $\int_0^1 t^n f(t)\; dt = (n+2)^{-1}$ for $n = 0, 1,\dots$. Must then $f(t) = t$ for almost every $t \in [0,1]$?
 \begin{solution}
     The identity $\int_0^1 t^n f(t)\; dt = (n+2)^{-1}$ shows that for any polymonial $p(t)$,
     %
@@ -961,7 +1263,7 @@ for all real numbers $a < b$. Find an example or show that no such function exis
     This implies $f(t) = t$ for almost every $t$.
 \end{solution}
 
-\question (September 2015) Find all $f \in L^2[0,\pi]$ such that
+\question (Fall 2015) Find all $f \in L^2[0,\pi]$ such that
 %
 \[ \int_0^\pi |f(x) - \sin x|^2\; dx \leq \frac{4\pi}{9} \]
 %
@@ -1030,10 +1332,10 @@ and
     This can only occur if $y = z = C = 0$, and it then follows from the quadratic formula that $x = 1/6$. Thus the only function $f$ satisfying this result is the function
     %
     \[ f(x) = (1/6) \sin x + (1/2) \cos x. \]
-\end{solution}
+    %
+    This completes the argument.
 
-\begin{solution}
-Let $u(x)= \sin(x)-f(x)$ and $v(x)=f(x)-\cos(x)$. Then
+    Alternatively, let $u(x)= \sin(x)-f(x)$ and $v(x)=f(x)-\cos(x)$. Then
 
 \begin{equation*}
   \norm{u+v}_{L^{2}}^{2} = \int_{0}^{\pi}\left( \sin(x)+\cos(x) \right)^{2}dx = \int_{0}^{\pi} \sin^{2}(x)+ \cos^{2}(x)dx =\pi.
@@ -1064,7 +1366,7 @@ This implies $\alpha = 2$ or $\alpha= -2/5$. A similar calculation using $\norm{
 \end{equation*}
 \end{solution}
 
-\question (January 2017)
+\question (Spring 2017)
     Let $l^1(\mathbf{N})$ be the space of summable sequences, i.e.
     %
     \[ l^1(\mathbf{N}) = \{ x : \sum_{n = 1}^\infty |x_n| < \infty \}. \]
@@ -1092,28 +1394,37 @@ This implies $\alpha = 2$ or $\alpha= -2/5$. A similar calculation using $\norm{
     Taking $\varepsilon \to 0$ completes the proof.
 \end{solution}
 
-\question (Jan 2018 \#2)
+\question (Spring 2018)
   Let $K$ be a continuous function on $[0,1]\times [0,1]$. Suppose that $g$ is a continuous function on $[0,1]$. Show that there exists a unique continuous function $f$ on $[0,1]$ such that
   \begin{equation*}
     f(x)=g(x)+\int_{0}^{x}f(y)K(x,y)dy
   \end{equation*}
 
   \begin{solution}
-    Define an integral operator $T$ by $Tf(x) = g(x)+\int_{0}^{x}f(y)K(x,y)dy$. Since $g$ is continuous, $T:X\to X$ where $X=C[0,1]$, which is a Banach space with respect to the topology induced by the norm $\norm{f} = \max_{x\in[0,1]} |f(x)|$. 
-    Since $K$ is continuous and $[0,1]\times[0,1]$ is compact, there exists $M$ such that $|K(x,y)|\leq M$ for all $x,y\in [0,1]\times[0,1]$.
+    Define an integral operator $T$ by setting
+    %
+    \[ Tf(x) = g(x)+\int_{0}^{x}f(y)K(x,y)dy. \]
+    %
+    Since $g$ is continuous, $T:X\to X$ where $X=C[0,1]$, a Banach space with respect to the norm $\norm{f}_{L^\infty[0,1]} = \max_{x\in[0,1]} |f(x)|$. It suffices to show there is a unique $f$ such that $Tf = f$. Since $K$ is continuous and $[0,1]\times[0,1]$ is compact, there exists $M$ such that $|K(x,y)|\leq M$ for all $x,y\in [0,1]\times[0,1]$.
     By induction we can show that for any $f_{1},f_{2}\in C[0,1]$ and any $x\in [0,1]$,
     \begin{align*}
       |T^{n}f_{1}(x)-T^{n}f_{2}(x)|
-      &\leq \norm{f_{1}-f_{2}}M^{n}\int_{0}^{x}\int_{0}^{x_{1}}\cdots \int_{0}^{x_{n-1}}x_{n}dx_{n}\cdots dx_{1}\\
-      &=\norm{f_{1}-f_{2}}M^{n}\frac{x^{n}}{n! }\\
-      &\leq \norm{f_{1}-f_{2}}\frac{M^{n}}{n!}.
+      &\leq \norm{f_{1}-f_{2}}_{L^\infty[0,1]} M^{n}\int_{0}^{x}\int_{0}^{x_{1}}\cdots \int_{0}^{x_{n-1}}x_{n}dx_{n}\cdots dx_{1}\\
+      &=\norm{f_{1}-f_{2}}_{L^\infty[0,1]} \frac{M^n x^{n}}{n! }\\
+      &\leq \norm{f_{1}-f_{2}}_{L^\infty[0,1]} \frac{M^{n}}{n!}.
     \end{align*}
-    Therefore $\norm{T^{n}f_{1}-T^{n}f_{2}}\leq \frac{M^{n}}{n!}\norm{f_{1}-f_{2}}$. In particular,  since $\lim_{n\to\infty}\frac{M^{n}}{n!}=0$ for any $M>0$, we can choose $n$ sufficiently large that $\frac{M^{n}}{n!}<1$, in which case $T^{n}$ is a contraction. The existence and uniqueness of $f$ then follow from the contraction mapping theorem.
-\end{solution}
-\begin{solution} Remark: in the previous solution, we wished to apply the contraction mapping theorem, but could not do so directly with $T$ because $T$ is not a contraction on $C[0,1]$. We got around this difficulty by considering the operator $T^n$ for some positive integer $n$, which fortuitously turned out to be a contraction when $n$ is large enough. Another approach is to consider $T$ as an operator on ``smaller'' Banach spaces, e.g. $C[0,x_1], C[x_1,x_2], \ldots$ etc, where $x_i-x_{i-1}$ are small enough that $T$ is a contraction on $C[x_{i-1},x_{i}]$ and then patch the solutions together. We detail this second proof here.
+    %
+    Thus for sufficiently large $n$, we conclude $T^n$ is a contraction map. Thus by the Banach fixed point theorem, we conclude that there exists a unique $f \in C[0,1]$ such that $T^n f = f$. Clearly, this shows that there exists at most one $f$ such that $Tf = f$, since if $Tf = f$, then $T^n f = f$. TODO: Does it show existence?
 
-The idea is to apply the contraction mapping theorem on small intervals and then patch thigns together. Assume $|K|\leq M$ for all $x,y$. Define $$T_{1}(f)= g(x)+\int_{0}^{x}f(y)K(x,y)dy$$ on $C([0,x_{1}])$ where $x_{1}>0$ is sufficiently small that $\norm{T_{1}f-T_{1}h}_{\infty}\leq \frac{1}{2}\norm{f-h}_{\infty}$ on the interval $[0,x_{1}]$. We can do this because $\norm{K}_{\infty}\leq M$. Therefore we can apply the contraction mapping theorem to get a unique solution $f_{1}\in C([0,x_{1}])$. Then we define $$T_{2}(f)= g(x)+\int_{x_{1}}^{x}f(y)K(x,y)dy + \int_{0}^{x_{1}}f_1(y) K(x,y)dy$$ on $C([x_{1},2x_{1}])$ where $f_{1}$ is the solution we get from the first step. It is easy to check that this operator is also a contraction. Moreover, the unique solution we get $f_{2}$ agrees with $f_{1}$ at the point $x_{1}$, so it can be patched together continuously. (Why?) Repeat this process finitely many times, we're done. The uniqueness follows from the contraction mapping theorem.  
-
+    In the previous solution, we wished to apply the contraction mapping theorem, but could not do so directly with $T$ because $T$ is not a contraction on $C[0,1]$. We got around this difficulty by considering the operator $T^n$ for some positive integer $n$, which fortuitously turned out to be a contraction when $n$ is large enough. Another approach is to consider $T$ as an operator on ``smaller'' Banach spaces, e.g. $C[0,x_1], C[x_1,x_2], \ldots$ etc, where $x_i-x_{i-1}$ are small enough that $T$ is a contraction on $C[x_{i-1},x_{i}]$, and then patch the solutions together. We detail this second proof here. If $|K|\leq M$ for all $x,y$, define
+    %
+    \[ T_{x_0 x_1}(f)= g(x)+\int_{0}^{x}f(y)K(x,y)dy \]
+    %
+    on $C([x_0,x_1])$. Then
+    %
+    \[ \| T_{x_0 x_1} f_1 - T_{x_0 x_1} f_2 \|_{L^\infty[x_0,x_1]} \leq \int_{x_0}^{x_1} |K(x,y)|\; dy \cdot \| f_1 - f_2 \|_{L^\infty[x_0,x_1]} \leq M(x_1 - x_0) \| f_1 - f_2 \|_{L^\infty[0,x_0]}. \]
+    %
+    Thus if $x_1 - x_0 < 1/2M$, then we conclude that $T_{x_0 x_1}$ is a contraction map on $C([x_0,x_1])$. This means that for any such interval, there exists a unique $f_{x_0x_1} \in C[x_0,x_1]$ such that $T_{x_0 x_1} f = f$. But clearly if $f$ satisfies this property, then it's restriction to any subinterval also satisfies this property. This implies that any two solutions $f_{x_0x_1}$ and $f_{x_2x_3}$ agree on $[x_0,x_1] \cap [x_2,x_3]$. But the locality of continuity means we can patch these functions together to find $f \in C[0,1]$ such that $T_{x_0x_1} f = f$ for any $x_0$ and $x_1$ with $x_1 - x_0 < 1/2M$. But this implies that $Tf = f$.
 \end{solution}
 
 \question Let $\phi: \RR \to \RR$ be a continuous function with compact support.
@@ -1203,10 +1514,17 @@ The idea is to apply the contraction mapping theorem on small intervals and then
 \end{parts}
 
 
-\item (Aug 2016 \#5)
+\item (Fall 2016)
   Give an example of a non-empty closed subset of $L^{2}([0,1])$ that does not contain a vector of smallest norm. Prove your assertion.
 
 \begin{solution}
+	Let $\{ e_n \}$ be an orthonormal basis for $L^2[0,1]$, and define
+	%
+	\[ x_n = (1 + 1/n) e_n. \]
+	%
+	Then $\{ x_n \}$ is a closed subset of $L^2[0,1]$ (it is actually \emph{discrete}), and has no element of smallest norm.
+
+\begin{comment}
   Let $e_{n} = \sqrt{2}\sin(n\pi x)$ for $n=1,2,\ldots$, and define $x_{n}= \left(\frac{n+1}{n}\right)e_{n}$. Then $\{x_{n}\}_{n=1}$ is a nonempty closed subset with no element of smallest norm. To prove this, we first prove two claims:
 
   
@@ -1253,7 +1571,7 @@ The idea is to apply the contraction mapping theorem on small intervals and then
 
 
 Using Claim 1, we see that $\norm{x_{n}}_{L^2([0,1])} = \left( \frac{n+1}{n} \right)\norm{e_{n}}_{L^{2}([0,1])} = 1+\frac{1}{n}$, and from this it is clear that $(x_{n})$ has no element of smallest norm. The fact that $x_{n}$ is closed follows from Claim 2, which implies that any convergent sequence consisting of elements in $\left\{ x_{n} \right\}_{n}$ is eventually constant, and hence its limit point must again be an element in $\left\{ x_{n} \right\}_{n}$.
-
+\end{comment}
 
   
 \end{solution}
@@ -1266,7 +1584,7 @@ Using Claim 1, we see that $\norm{x_{n}}_{L^2([0,1])} = \left( \frac{n+1}{n} \ri
 \newpage
 \section{Day 6: Functional Analysis}
 
-\question (September, 2019) Show that there is no sequence $\{ a_n \}$ of positive numbers such that $\sum a_n |c_n| < \infty$ if and only if $\{ c_n \}$ is a bounded sequence. Hint: Suppose that there exists a sequence and consider the map $T: l^\infty \to l^1$ given by $Tf(n) = a_n f(n)$. The set of $f$ such that $f(n) = 0$ for all but finitely many $n$ is dense in $l^1$ but not in $l^\infty$.
+\question (Fall 2019) Show that there is no sequence $\{ a_n \}$ of positive numbers such that $\sum a_n |c_n| < \infty$ if and only if $\{ c_n \}$ is a bounded sequence. Hint: Suppose that there exists a sequence and consider the map $T: l^\infty \to l^1$ given by $Tf(n) = a_n f(n)$. The set of $f$ such that $f(n) = 0$ for all but finitely many $n$ is dense in $l^1$ but not in $l^\infty$.
 \begin{solution}
     Consider the operator $T$ defined in the hint. Then $T$ is injective, since all elements of the sequence $\{ a_n \}$ are positive. We also claim that $T$ is surjective, given the property assumed of the sequence. Indeed, if $\sum b_n < \infty$, and we define $c_n = b_n/a_n$, then $\sum a_n |c_n| < \infty$, and thus $\{ c_n \}$ is a bounded sequence, and $Tc = b$.
     
@@ -1279,7 +1597,7 @@ Using Claim 1, we see that $\norm{x_{n}}_{L^2([0,1])} = \left( \frac{n+1}{n} \ri
     As $N \to \infty$, $|a_N| \to 0$ since the sequence is integrable. But this is impossible since the bound $\| Tc \|_{l^1} \gtrsim \| c \|_{l^\infty}$ implies that $|a_N| \gtrsim 1$ for all $N$.
 \end{solution}
 
-\question (Aug 2020, Problem \#7R)
+\question (Fall 2020)
 
 Suppose that $X,Y$ and $Z$ are Banach spaces, and $T:X\times Y\to Z$ is a mapping such that:
 \begin{enumerate}[(a)]
@@ -1312,7 +1630,7 @@ Prove there exists a constant $C$ such that
   \end{equation*}
 \end{solution}
 
-\question (September, 2015) For $p \in (1,\infty)$, and for $f \in L^p(\RR)$ define
+\question (Fall 2015) For $p \in (1,\infty)$, and for $f \in L^p(\RR)$ define
 %
 \[ Tf(x) = \int_0^1 f(x + y)\; dy. \]
 %
@@ -1357,7 +1675,7 @@ Prove there exists a constant $C$ such that
         which implies $f = 0$ almost everywhere.
     \end{solution}
     
-    \part (2015, September) Prove that the map $f \mapsto Tf - f$ does not map $L^p(\RR)$ onto $L^p(\RR)$.
+    \part (Fall 2015) Prove that the map $f \mapsto Tf - f$ does not map $L^p(\RR)$ onto $L^p(\RR)$.
     \begin{solution}
         First, we claim that $Tf - f$ is injective. Indeed, if $Tf = f$, then $\| Tf \|_p = \| f \|_p$, and by the last part of the problem, this implies that $f = 0$. If $Tf - f$ was surjective, then the open mapping theorem would therefore imply that there would exist a constant $C > 0$ such that for all $f \in L^p(\RR)$, $\| Tf - f \|_p \geq C \| f \|_p$. Our goal is to show this is not true.
         
@@ -1371,52 +1689,46 @@ Prove there exists a constant $C$ such that
 
 
 
-\question (Aug 2014 \# 9)
-
+\question (Fall 2014)
 \begin{parts}
-\part For any $n\geq 1$ an integer, there exists two positive measures $\mu_{1}^{n},\mu_{2}^{n}$ supported on $[0,1]$ such that for any polynomial $P(x)$ with $\deg P(x)\leq n$ it holds:
+\part For any $n \geq 1$ an integer, there exists two positive measures $\mu_{1}^{n},\mu_{2}^{n}$ supported on $[0,1]$ such that for any polynomial $P(x)$ with $\deg P(x)\leq n$ it holds:
 \begin{equation*}
   P'(0) = \int_{0}^{1}P(x)d\mu^{n}_{1}(x)-\int_{0}^{1}P(x)d\mu_{2}^{n}(x).
 \end{equation*}
 
 \begin{solution}
-  Let $X = \left\{ p: p\text{ is a real-valued polynomial on }[0,1]\text{ of degree}\leq n \right\}$. Then $X$ is a finite dimensional linear subspace of $C[0,1]$. Define two norms
-  $\norm{p}_{u}:= \max_{0\leq x\leq 1}|p(x)|$ and $\norm{\cdot}$ by $\norm{p}:= \max_{0\leq k\leq n }|a_{k}|$ when $p(x)= \sum_{k=0}^{n}a_{k}x^{k}$. Since all norms on a finite dimensional space are equivalent, there is a constant $C>0$ such that
-  \begin{equation*}
-    \norm{p}\leq C\norm{p}_{u}.
-  \end{equation*}
-  Let $T:X\to\R$ be defined by $Tp = p'(0)$. If $p(x)= \sum_{k=0}^{n}a_{k}x^{k}$ then
-  \begin{equation*}
-    |Tp| = |p'(0)| = |a_{1}|\leq \norm{p} \leq C \norm{p}_{\infty}.
-  \end{equation*}
-  Therefore $\norm{T}\leq C<\infty$. Since $T$ is also linear, $T$ is a bounded linear functional $X$. Since $X$ is a subspace of $C[0,1]$, by the Hahn-Banach theorem $T$ can be extended to a bounded linear functional on $C_{c}[0,1]$. That is, we have $T\in (C[0,1])^{*}$. Therefore by the Riesz Representation Theorem (e.g. Royden p464), there is a finite signed measure $\mu$ on defined on the Borel subsets of $[0,1]$ such that
-  \begin{equation*}
-    Tp = \int_{0}^{1}p(x)d\mu(x) = \int_{0}^{1}p(x)d\mu_{1}^{n}-\int_{0}^{1}p(x)d\mu_{2}^{n}(x)
-  \end{equation*}
-  where $\mu=\mu_{1}^{n}-\mu_{2}^{n}$ is the Jordan Decomposition of $\mu$.
-\end{solution}
+	Let $X_n$ be the space of all real-valued polynomials on $[0,1]$ with degree at most $n$. Then $X_n$ is a finite dimensional linear subspace of $C[0,1]$. Let $T: X_n \to \RR$ be the operator $TP = P'(0)$. Then $T$ is bounded on $X_n$ since $X_n$ is finite dimensional. Thus by the Hahn-Banach theorem, we can find an extension of $T$ to a bounded functional on $C[0,1]$. The \emph{Reisz Representation Theorem} says that $C[0,1]^*$ is the space of all finite signed Borel measures on $[0,1]$. Thus there exists a finite signed Borel measure $\mu$ on $[0,1]$ such that for any $f \in C[0,1]$,
+	%
+	\[ Tf = \int f(x) d\mu(x). \]
+	%
+	In particular, if $P \in X_n$,
+	%
+	\[ P'(0) = \int P(x) d\mu(x). \]
+	%
+	Then we perform a \emph{Jordan decomposition} to write $\mu = \mu_1 - \mu_2$, where $\mu_1$ and $\mu_2$ are finite non-negative Borel measures, and this completes the construction.
 
-\begin{solution} (This is an alternate solution to part (a). It is Chun's solution from the 2016 SEP, problem 39. He provides an explicit form for the measures, which I thought was interesting enough to type up. -m)
-
-
-  We will show that there exists constants $c_{j}\in \R, x_{j}\in (0,1)$ with $0\leq j\leq n$ such that the measure $\mu^{n}$ defined by
+	One can also define the measures explicitly, though the argument becomes more technical. This is Chun's solution from the 2016 SEP, problem 39. We will show that there exists constants $c_{j}\in \R, x_{j}\in (0,1)$ with $0\leq j\leq n$ such that the measure $\mu^{n}$ defined by
   \begin{equation}\label{eq:mu-form}
     \mu^{n}:= \sum_{j=0}^{n}c_{j}\delta_{x_{j}}
   \end{equation}
-  satisfies $\int_{0}^{1}P(x)d\mu^{n}(x)=P'(x)$ for any polynomial $P'(x)$ with $\deg P(x)\leq n$. The result will then follow by taking
+  satisfies
+  %
+  \[ \int_0^1 P(x) d\mu^{(n)}(x) = P'(0) \]
+  %
+  for any polynomial $P \in X_n$. The result will then follow by taking
   \begin{equation*}
     \mu_{1}^{n} = \sum_{j=0}^{n}c_{j}^{+}\delta_{a_{j}} \quad \text{and}\quad    \mu_{2}^{n} = \sum_{j=0}^{n}c_{j}^{-}\delta_{a_{j}}
   \end{equation*}
   where $c_{j}^{+}=\max\{c_{j},0\}$ and $c^{-}= \max\{-c_{j},0\}$.
 
-  Suppose $P(x)=\sum_{k=0}^{n}a_{k}x^{k}$. Then $P'(0)=a_{1}$. By \eqref{eq:mu-form}, $\int_{0}^{1}x^{k}d\mu^{n}(x) = \sum_{j=0}^{n}c_{j}x_{j}^{k}$ whenever $0\leq k\leq n$, and hence
+  Let us determine what conditions the measure $\mu^n$ must satisfy. If $P(x)=\sum_{k=0}^{n}a_{k}x^{k}$, then $P'(0)=a_{1}$. By \eqref{eq:mu-form}, $\int_{0}^{1}x^{k}d\mu^{n}(x) = \sum_{j=0}^{n}c_{j}x_{j}^{k}$ whenever $0\leq k\leq n$, and hence
   \begin{equation*}
     \int_{0}^{1}P(x)d\mu^{n}(x)
     = \int_{0}^{1}\sum_{k=0}^{n}a_{k}x^{k}d\mu^{n}(x)
     = \sum_{k=0}^{n}a_{k}\int_{0}^{1}x^{k}d\mu^{n}(x)
     = \sum_{k=0}^{n}\sum_{j=0}^{n}a_{k}c_{j}x_{j}^{k}.
   \end{equation*}
-  Therefore $\int_{0}^{1}P(x)d\mu^{n}(x)=P'(0)$ if and only if
+  Therefore $\int_{0}^{1}f(x)d\mu^{n}(x)=P'(0)$ holds if and only if
   \begin{equation*}
     \sum_{k=0}^{n}a_{k}\sum_{j=0}^{n}x_{j}^{k}=a_{1}
   \end{equation*}
@@ -1463,13 +1775,11 @@ Prove there exists a constant $C$ such that
       x_{0}^{n} & x_{1}^{n} & \cdots & x_{n}^{n} 
     \end{pmatrix}.
   \end{equation*}
-  The matrix equation \eqref{eq:matrix-equation} has a solution $\vec{c}=(c_{0},\ldots,c_{n})\in \R^{n+1}$ if and only if $Q(x_{0},\ldots,x_{n})\neq 0$. Therefore to prove the existence of the desired $\mu^{n}$, it will suffice to show there exists $(x_{0},\ldots,x_{n})\in (0,1)^{n+1}$ such that $Q(x_{0},\ldots,x_{n})\neq 0$.
-
-  Since $Q$ is a polynomial, its null set has $(n+1)$-dimensional Lebesgue measure zero; i.e., 
-  \begin{equation*}
-    \mathcal{L}^{n+1} \left\{ (x_{0},\ldots,x_{n})\in (0,1)^{n+1}: Q(x_{0},\ldots,x_{n}) \right\} = 0.
-  \end{equation*}
-  (This is a fairly involved induction proof. \bnote{2021-07-22: Type this up?}) It follows that there exists $(y_{0},\ldots,y_{n})\in (0,1)^{n+1}$ such that $Q(y_{0},\ldots,y_{n})\neq 0$. This completes the proof.
+  The matrix equation \eqref{eq:matrix-equation} has a solution $\vec{c}=(c_{0},\ldots,c_{n})\in \R^{n+1}$ if and only if $Q(x_{0},\ldots,x_{n})\neq 0$. Therefore to prove the existence of the desired $\mu^{n}$, it will suffice to show there exists $(x_{0},\ldots,x_{n})\in (0,1)^{n+1}$ such that $Q(x_{0},\ldots,x_{n})\neq 0$. But this follows because $Q$ is a polynomial, hence analytic, and because it's derivatives do not vanish at the origin, i.e.
+  %
+  \[ \partial_{x_1} \partial_{x_2}^2 \dots \partial_{x_n}^n Q(0) \neq 0, \]
+  %
+  we conclude $Q \neq 0$, so $Q$ cannot vanish on any open set. In particular, it cannot vanish on $(0,1)^{n+1}$.
 \end{solution}
 
 \part Does there exist two finite positive measures $\mu_{1},\mu_{2}$ supported on $[0,1]$ such that for any polynomial $P(x)$, it holds
@@ -1478,8 +1788,7 @@ Prove there exists a constant $C$ such that
 \end{equation*}
 
 \begin{solution}
-    No. Idea: if it were the case, then by Riesz Representation Theorem (which identifies an isometry between $C[0,1]^{*}$ and the normed linear space of signed radon measures on $[0,1]$) it would follow that there exists some $S\in C[0,1]^{*}$ such that $Sp =p'(0)$ for all polynomials on $[0,1]$. But this cannot be, because such an operator $S$ would not be continuous! To see why, let $p_{n}(x)= (1-x)^{n}$. Then $\norm{Sp_{n}}=n$ but $\norm{p_{n}}\leq 1$. Therefore $S$ is not bounded. 
-
+    There does not exist such a pari of measures. If the measures existed, and if $\mu = \mu_1 - \mu_2$, then $\mu$ corresponds to a continuous linear function $T$ on $C[0,1]$, such that $Tf = f'(0)$ for any polynomial $f$. But then $T$ cannot be continuous, for if $f_n = (1 - x)^n$, then $\| f_n \|_{L^\infty[0,1]} = 1$ for all $n$, whereas $Tf_n = n$.
 \end{solution}
 \end{parts}
 
@@ -1492,31 +1801,42 @@ Prove there exists a constant $C$ such that
 \newpage
 \section{Day 7: Baire Category}
 
-\item (Jan 2020 \#7 R)
+\item (Spring 2020)
   A \textbf{Hamel basis} for a vector space $X$ is a collection $\mathcal{H}\subset X$ of vectors such that $x\in X$ can be written uniquely as a finite linear combination of elements in $\mathcal{H}$. Prove that an infinite dimensional Banach space cannot have a countable Hamel basis. (Hint: otherwise the Banach space would be first category in itself.)
 
 \begin{solution}
-  Denote the norm of $X$ by $\norm{\cdot}$. Suppose $\mathcal{H}$ is countable. Then there exists an enumeration $f_{1},f_{2},\ldots$ of $\mathcal{H}$. Let $E_{n}= \text{span}\left\{ f_{1},\ldots,f_{n} \right\}$. By definition of Hamel basis, $X=\cup_{n=1}^{\infty} E_{n}$. It will suffice to show that $E_{n}$ is nowhere dense, as this will imply that $X$---which is a complete metric space with respect to the norm topology---is a countable union of nowhere dense sets, contradicting the Baire Category theorem.
+  Denote the norm of $X$ by $\norm{\cdot}$. Suppose $\mathcal{H}$ is countable. Then there exists an enumeration $f_{1},f_{2},\ldots$ of $\mathcal{H}$. Let $E_{n}= \text{span}\left\{ f_{1},\ldots,f_{n} \right\}$. By definition of Hamel basis, $X=\cup_{n=1}^{\infty} E_{n}$. It will suffice to show that $E_{n}$ is nowhere dense, as this will imply that $X$---which is a complete metric space with respect to the norm topology---is a countable union of nowhere dense sets, contradicting the \emph{Baire Category theorem}. But this follows because \emph{any} finite dimensional subspace of a Banach space is closed, and if $E_n$ itself had nonempty interior, then it would contain a neighborhood of the origin, which is absorbing, and thus we would conclude that $E_n = X$.
 
-  Need to show $(\bar{E_{n}})^{\circ}=\emptyset$. Since $E_{n}$ is finite dimensional, it is closed (see lemma 1 below), and hence it suffices to show that $E_{n}^{\circ}=\emptyset$. Suppose $x\in E_{n}$, and let $\epsilon>0$. Then $x= x_{1}f_{1}+ \ldots + x_{n}f_{n}$. Since $X$ is infinite dimensional, there exists $f^{*}\in \mathcal{H}\backslash\left\{f_{1},\ldots,f_{n}\right\}$. Since $f^{*}\neq 0$, it follows that $y=x+ \frac{\epsilon}{2 \norm{f^{*}}}f^{*}\in E_{n}^{c}$. Moreover, $\norm{y-x} = \frac{\epsilon}{2 \norm{f^{*}}}\norm{f^{*}}< \epsilon$ (here $B(x,\epsilon)$ denotes the open ball $\left\{ z\in X: \norm{x-z}<\epsilon \right\}$). Therefore $y\in B(x,\epsilon)\cap E_{n}^{c}$. Therefore $B(x,\epsilon)\not\subset E_{n}$. Since $\epsilon>0$ was arbitrary, $x\notin E_{n}^{\circ}$. Since $x$ was arbitrary, $E_{n}^{\circ}=\emptyset$. This completes the proof.
+  Let us argue in slightly more detail some steps of this argument:
 
+  \noindent \textit{Lemma 1:} Any finite dimensional subspace $Y$ of a Banach space $X$ is closed.
+  \begin{proof}
+  	Since $Y$ is finite dimensional, it has some basis $\{ e_1, \dots, e_n \}$. If we define a norm
+  	%
+  	\[ \| \sum a_i e_i \|_Y = \left( \sum |a_i|^2 \right)^{1/2}, \]
+  	%
+  	then $Y$ is a Banach space with this norm, because it is easily seen to be isometric to $\RR^n$ or $\CC^n$ (depending on the underlying field). But all norms on a finite dimensional vector space are equivalent, so that $\| \cdot \|_Y$ is comparable to $\| \cdot \|_X$, and this shows $Y$ is a Banach space under the norm induced by $X$. But this implies that $Y$ is closed in $X$, since any sequence $\{ y_n \}$ converging to an element $x \in X$ is Cauchy, and thus converges in $Y$.
+  \end{proof}
 
-  \vt
-  \noindent \textit{Lemma 1:} $E_{n}$ is closed.
-  \begin{proof}[Proof of Lemma 1:] Suppose $x_{k}\in E_{n}$ is a sequence such that $\norm{x_{k}-x}\to 0$ for some $x\in X$. We need to show that $x\in E_{n}$. We can write $x_{k} = \sum_{i=1}^{n} x_{k,i}f_{i}$.  Since $x_{k}$ is Cauchy in $E_{n}$,
-    \begin{equation}\label{eq:cauchy-in-norm}
-      \norm{x_{j}-x_{k}}\to 0\text{ as }j,k\to 0.
-    \end{equation}
-    
-    Define a new norm $\norm{\cdot}_{1}$ by $\norm{z}_{1}:= |c_{1}|+\ldots+ |c_{n}|$ for $z=c_{1}f_{1}+ \ldots + c_{n}f_{n}$. Since norms on a finite-dimensional vector space are equivalent, \eqref{eq:cauchy-in-norm} implies that
-    \begin{equation*}
-      \norm{x_{j}-x_{k}}_{1} =  \norm{\sum_{i=1}^{n} (x_{j,i}-x_{k,i})f_{i}}= \sum_{i=1}^{n}|x_{j,i}-x_{k,i}| \to 0\text{ as }j,k\to 0.
-    \end{equation*}
-Therefore $(x_{k,i})_{k=1}^{\infty}$ is a Cauchy sequence of reals for each $i=1,\ldots,n$. Therefore by completeness of $\R$, for each $i$ there exists $y_{i}\in \R$ such that $\lim_{k\to\infty}x_{k,i}=y_{i}$. It is then easy to see that $x_{k}\to \sum_{i=1}^{n}y_{i}f_{i}$ in norm. By uniqueness of limits, $x=\sum_{i=1}^{n}y_{i}f_{i}$. Since $\sum_{i=1}^{n}y_{i}f_{i}\in E_{n}$, it follows $x\in E_{n}$, as desired.
+  \noindent \textit{Lemma 2:} If $Y$ is a proper subspace of a Banach space $X$, then $Y$ has nonempty interior in $X$.
+  \begin{proof}
+  	For each $x_0 \in X$ and $\varepsilon > 0$, let
+  	%
+  	\[ B_\varepsilon(x_0) = \{ x \in X: \| x - x_0 \| < \varepsilon \}. \]
+  	%
+  	Suppose that there exists $y_0 \in Y$ and $\varepsilon > 0$ such that $B_\varepsilon(y_0) \subset Y$. Then
+  	%
+  	\[ B_\varepsilon(0) = B_\varepsilon(y_0) - y_0 \subset Y - y_0 = Y. \]
+  	%
+  	If $r > 0$, then
+  	%
+  	\[ B_r(0) = (r / \varepsilon) \cdot B_\varepsilon(0) \subset (r / \varepsilon) \cdot Y = Y. \]
+  	%
+  	Thus $Y$ contains every ball centered at the origin. But this clearly means $X = Y$.
   \end{proof}
 \end{solution}
 
-\question (September, 2017) Let $f_n$ be a sequence of real functions on $\RR$ such that each $f_n'$ is continuous on $\RR$. Suppose that as $n \to \infty$, $f_n$ converges to a function $f: \RR \to \RR$ pointwise, and $f_n'$ converges to a function $g$ pointwise.
+\question (Fall 2017) Let $f_n$ be a sequence of real functions on $\RR$ such that each $f_n'$ is continuous on $\RR$. Suppose that as $n \to \infty$, $f_n$ converges to a function $f: \RR \to \RR$ pointwise, and $f_n'$ converges to a function $g$ pointwise.
 
 Prove that there exists a non-empty interval $(a,b)$ and a constant $L < \infty$ such that
 %
@@ -1528,12 +1848,12 @@ Hint: Consider the sets $K_c = \{ x: \sup_n |f_n'(x)| \leq c \}$.
     %
     \[ K_c = \{ x : \sup_n |f_n'(x)| \leq c \}, \]
     %
-    then $\bigcup_{c = 1}^\infty K_c = \RR$. Since the supremum of continuous functions is lower semi-continuous, each $K_c$ is a closed set. And thus the Baire category theorem implies that there exists $L$ such that $K_L$ contains an interval. Thus there is an interval $(a,b)$ such that for all $x \in (a,b)$, $\sup |f_n'(x)| \leq L$. Thus by the Mean value theorem
+    then $\bigcup_{c = 1}^\infty K_c = \RR$. Since the supremum of continuous functions is lower semi-continuous, each $K_c$ is a closed set. And thus the \emph{Baire category theorem} implies that there exists $L$ such that $K_L$ contains an interval. Thus there is an interval $(a,b)$ such that for all $x \in (a,b)$, $\sup |f_n'(x)| \leq L$. Thus by the mean value theorem
     %
     \[ |f(x) - f(y)| = \limsup_{n \to \infty} |f_n(x) - f_n(y)| \leq \limsup_{n \to \infty} |x - y| \| f_n \|_{L^\infty(a,b)} \leq L |x - y|. \]
 \end{solution}
 
-\item (Fall 2016 \# 8) Show that there is a continuous real valued function on $[0,1]$ that is not monotone on any open interval $(a,b)\subset [0,1]$.
+\item (Fall 2016) Show that there is a continuous real valued function on $[0,1]$ that is not monotone on any open interval $(a,b)\subset [0,1]$.
 
 % \begin{solution}
 %   Suppose not. Let $E_{q,n}= \left\{ f\in C([0,1]): f \text{ monotone on }(q-1/n,q+1/n) \right\}.$ Then
@@ -1548,18 +1868,18 @@ Hint: Consider the sets $K_c = \{ x: \sup_n |f_n'(x)| \leq c \}$.
 
 \begin{solution}
   Suppose not. Then we can write $C([0,1])$ as the following countable union:
-  \begin{equation}\label{eq:big-union}
+  \begin{equation}
     C([0,1]) = \bigcup_{a,b\in \Q, a<b}E_{a,b}.
   \end{equation}
   where $E_{a,b}= \left\{ f\in C([0,1]): f \text{ monotone on }(a,b) \right\}.$
   
   We claim that each $E_{a,b}$ is closed. Indeed suppose $(f_{k})$ is a sequence of monotone function on $(a,b)$ such that $f_{k}\to f$ uniformly. Then there exists a subsequence $(k_{j})$ with $k_{j}\to \infty$ and such that $f_{k_{j}}$ is an increasing function for all $j$ or $f_{k_{j}}$ is a decreasing function for all $j$. Without loss suppose that they are increasing functions. If $x\leq y$ then $f_{k_{j}}(x)-f_{k_{j}}(y)\leq $ for all $j$, and hence sending $j\to \infty$, we have $f(x)\leq f(y)$. Thus $f$ is increasing. Thus $E_{a,b}$ is closed. This proves the claim.
   
-  Next, we observe that since $C([0,1])$ is a complete metric space and can be written as a countable union \eqref{eq:big-union} of close sets, it follows by Baire's theorem that there exists some $a,b\in Q$ with $a<b$ such that $E_{a,b}$ has nonempty interior. That is, there exists $f^{*}\in E_{a,b}$ and $\epsilon>0$ such that $\left\{ f\in C([0,1]): \norm{f^{*}-f}_{\infty} < \epsilon\right\}\subset E_{a,b}.$ Therefore every $f$ with $\norm{f^{*}-f}_{\infty}<\epsilon$ is monotone on the interval $(a,b)$. But this is absurd, since any function can by approximated uniformly by zig-zag functions (draw a picture). 
+  The $C[0,1]$ is a complete metric space which is the countable union of closed sets. It follows by Baire's theorem that there exists some $a,b\in Q$ with $a<b$ such that $E_{a,b}$ has nonempty interior. That is, there exists $f^{*}\in E_{a,b}$ and $\epsilon>0$ such that $\left\{ f\in C([0,1]): \norm{f^{*}-f}_{\infty} < \epsilon\right\}\subset E_{a,b}.$ Therefore every $f$ with $\norm{f^{*}-f}_{\infty}<\epsilon$ is monotone on the interval $(a,b)$. But this is absurd, since any function can by approximated uniformly by ``zig-zag functions''.
 
 \end{solution}
 
-\item (Jan 2014 \#6)
+\item (Spring 2014)
   Does there exist a sequence of continuous functions $f_{n}:[0,1]\to \R$ such that $f_{n}\to \chi_{\Q}$ pointwise?
 
 \begin{solution}
@@ -1580,14 +1900,14 @@ Hint: Consider the sets $K_c = \{ x: \sup_n |f_n'(x)| \leq c \}$.
 \end{solution}
 
 
-\item (August 2014 \#6)
+\item (Fall 2014)
   Let $X,Y$ be Banach spaces and $\left\{ T_{j,k}: j,k\in \mathbb{N} \right\}$ be a set of bounded linear transformations $X\to Y$. Suppose for each $k$, there exists $x\in X$ such that $\sup \left\{ \norm{T_{j,k}x}:  j\in \mathbb{N} \right\} = \infty.$ Then there is an $x\in X$ such that $\sup \left\{ \norm{T_{j,k} x} : j\in \mathbb{N}\right\} = \infty$ for all $k.$
   \begin{solution}
     Proof by contrapositive. Suppose that the conclusion does not hold: that is, suppose that for all $x\in X$ there exists some $k$ such that $\sup \{\norm{T_{j,k_{0}}x}:j\in\mathbb{N}\}<\infty$. Then we can write
 \begin{equation*}
   X=\bigcup_{k= 1}^{\infty} \bigcup_{N= 1}^{\infty} \bigcap_{j= 1}^{\infty} \left\{ x\in X: \norm{T_{j,k}x}\leq N \right\}.
 \end{equation*}
-By Baire Category theorem, there exists $k_{0},N_{0}\geq 1$ and some ball $\bar{B}_{r}(x_{0})= \{x\in X : \norm{x-x_0}\leq r\}$ with $r>1$ such that $$\sup_{j\geq 1}\norm{T_{j,k_{0}}x}\leq N_{0}$$ for all $x\in \bar{B}_r(x_0)$.
+By the Baire Category theorem, there exists $k_{0},N_{0}\geq 1$ and some ball $\bar{B}_{r}(x_{0})= \{x\in X : \norm{x-x_0}\leq r\}$ with $r>1$ such that $$\sup_{j\geq 1}\norm{T_{j,k_{0}}x}\leq N_{0}$$ for all $x\in \bar{B}_r(x_0)$.
 
 It will suffice to show that for this choice of $k_{0}$, we have $\sup \{\norm{T_{j,k_{0}}x}: j\in \mathbb{N}\}<\infty$ for all $x\in X$.
 
@@ -1622,7 +1942,7 @@ Combining the two cases, the result follows.
 \newpage
 
 \section{Day 8: Intro to Distribution}
-\item (Fall 2020, \# 8R)
+\item (Fall 2020)
 Consider the function $f:\R^{2}\to \R$ given by $f(x,y)=|x|$. Find $\left( \frac{\partial ^{2}}{\partial x^{2}}+ \frac{\partial ^{2}}{\partial y^{2}} \right)f$, where the derivative is taken in the sense of distributions.
 
 \begin{solution}
@@ -1652,7 +1972,7 @@ Consider the function $f:\R^{2}\to \R$ given by $f(x,y)=|x|$. Find $\left( \frac
 \end{solution} 
 
 
-\question (January 2017)
+\question (Spring 2017)
 \begin{parts}
     \part Let $f \in L^1(\RR)$ and consider the sequence of distributions $T_n(x) = \sin(nx^2) f(x)$. Show that $\lim_{n \to \infty} T_n = 0$ in the sense of distributions.
     \begin{solution}
@@ -1697,7 +2017,7 @@ Consider the function $f:\R^{2}\to \R$ given by $f(x,y)=|x|$. Find $\left( \frac
     \end{solution}
 \end{parts}
 
-\question (January, 2015)
+\question (Spring 2015)
 \begin{parts}
     \part If $f \in C[0,1]$, and the distributional derivative $f'$ of $f$ on $(0,1)$ is in $L^1((0,1))$, prove that
     %
@@ -1761,7 +2081,7 @@ Consider the function $f:\R^{2}\to \R$ given by $f(x,y)=|x|$. Find $\left( \frac
 \end{parts}
 
 
-\item (January 2016 \#8) Prove or disprove:
+\item (Fall 2021, Spring 2016) Prove or disprove:
   \begin{parts}
     \part There exists a distribution $u\in \mathcal{D}(\R)$ so that the restriction to $(0,\infty)$ is given by
     \begin{equation*}
@@ -1805,7 +2125,7 @@ Consider the function $f:\R^{2}\to \R$ given by $f(x,y)=|x|$. Find $\left( \frac
 
 
 
-\question (September, 2017) A distribution $T \in \mathcal{S}'(\RR^n)$ is said to be \emph{nonnegative} if $\langle T, \phi \rangle \geq 0$ for every test function $\phi \in \mathcal{S}(\RR^n)$ with $\phi(x) \geq 0$ for all $x \in \RR^n$.
+\question (Fall 2017) A distribution $T \in \mathcal{S}'(\RR^n)$ is said to be \emph{nonnegative} if $\langle T, \phi \rangle \geq 0$ for every test function $\phi \in \mathcal{S}(\RR^n)$ with $\phi(x) \geq 0$ for all $x \in \RR^n$.
 \begin{parts}
     \part Suppose $f \in L^1_{\text{loc}}(\RR^n)$, and let $T_f$ be the distribution defined by $f$. Show that $T_f \geq 0$ if and only if $f \geq 0$ for almost all $x \in \RR^n$.
     \begin{solution}
@@ -1833,7 +2153,7 @@ Consider the function $f:\R^{2}\to \R$ given by $f(x,y)=|x|$. Find $\left( \frac
         If $\phi \geq 0$, then $\langle T_n, \phi \rangle \geq 0$ for all $n$ since $T_n \geq 0$. But $\langle T, \phi \rangle = \lim_n \langle T_n, \phi \rangle$, which implies that $\langle T,\phi \rangle \geq 0$.
     \end{solution}
     
-    \part Suppose $\Phi: \RR \to \RR$ is a $C^2$ function with $\Phi'' \geq 0$ in $\RR$, and let $f \in C^2(\RR^n)$ have compact supported. Show that $\Delta(\Phi(f(x)) \geq \Phi'(f(x)) \Delta f(x)$.
+    \part Suppose $\Phi: \RR \to \RR$ is a $C^2$ function with $\Phi'' \geq 0$ in $\RR$, and let $f \in C^2(\RR^n)$ have compact support. Show that $\Delta(\Phi(f(x)) \geq \Phi'(f(x)) \Delta f(x)$.
     \begin{solution}
         We calculate directly that
         %
@@ -1863,7 +2183,7 @@ Consider the function $f:\R^{2}\to \R$ given by $f(x,y)=|x|$. Find $\left( \frac
 
 
 
-\item (Jan 2020 \#8 R)
+\item (Spring 2020)
 \begin{parts}
   \part Suppose $\Lambda$ is a distribution on $\R^{n}$ such that $\text{supp}(\Lambda)=\left\{ 0 \right\}.$ If $f\in C^{\infty}(\R^{n})$ satisfies $f(0)=0$, does it follow that $f\Lambda = 0$ as a distribution?
   \begin{solution}
@@ -1932,7 +2252,7 @@ Consider the function $f:\R^{2}\to \R$ given by $f(x,y)=|x|$. Find $\left( \frac
 \newpage 
 \section{Day 9: Fourier Analysis + Distribution Theory}
 
-\question (January 2017) Let $f \in L^1(\RR^n)$ be a function all of whose distributional derivatives $D^\alpha f$ of order $|\alpha| = m$ also belong to $L^1(\RR^n)$. Show that if $m > n$, then $f \in C(\RR^n)$.
+\question (Spring 2017) Let $f \in L^1(\RR^n)$ be a function all of whose distributional derivatives $D^\alpha f$ of order $|\alpha| = m$ also belong to $L^1(\RR^n)$. Show that if $m > n$, then $f \in C(\RR^n)$.
 \begin{solution}
     The duality between differentiation and multiplication by polynomials in the Fourier transform, and the fact that the Fourier transform of an $L^1$ function is in $L^\infty$, implies that for each $\alpha$ with $|\alpha| = m$,
     %
@@ -1945,7 +2265,7 @@ Consider the function $f:\R^{2}\to \R$ given by $f(x,y)=|x|$. Find $\left( \frac
     Since $m > n$, this means $\widehat{f}$ is also integrable. The Fourier inversion formula thus implies that $f$ agrees almost everywhere with a bounded, continuous function.
 \end{solution}
 
-\question (September, 2019)
+\question (Fall 2019)
     Let $s \in \RR$, and let $H^s(\RR)$ be the Sobolev space on $\RR$ with the norm
     %
     \[ \| u \|_{(s)} = \left( \int_{\RR} (1 + |\xi|^2)^s |\widehat{u}(\xi)|^2\; d\xi \right)^{1/2} \]
@@ -2016,7 +2336,7 @@ Therefore using Minkowski's inequality,
 This is exactly the inequality we needed to show, so we are done.
 
 \end{solution}
-\question (September, 2019) Let $f \in L^2(\RR)$. Define
+\question (Fall 2019) Let $f \in L^2(\RR)$. Define
 %
 \[ g(x) = \int_{-\infty}^\infty f(x-y) f(y)\; dy \]
 %
@@ -2042,7 +2362,7 @@ where $*$ denotes convolution, and $\widehat{\cdot}$ denotes the Fourier transfo
 \end{solution}
 
 
-\question (September, 2015) Let $f$ be a tempered distribution on $\RR$ with Fourier transform
+\question (Fall 2015) Let $f$ be a tempered distribution on $\RR$ with Fourier transform
 %
 \[ \widehat{f}(\xi) = 1 + \xi^{12} + \sin \xi + \text{sign}(\xi). \]
 %
@@ -2124,7 +2444,7 @@ Find $f$ and $f'$ (specify the definition of the Fourier transform you are using
     then the derivative of $\text{p.v}(1/x)$ is $- \text{f.p}(1/x^2)$. This allows us to calculate the distributional derivative of $h$.
 \end{solution}
 
-\question (September, 2015) Recall that $H^s(\RR^n)$ is the Sobolev space consisting of all tempered distributions $g$ on $\RR^n$ for which the Fourier transform $\widehat{g}$ of $g$ is locally integrable and satisfies
+\question (Fall 2015) Recall that $H^s(\RR^n)$ is the Sobolev space consisting of all tempered distributions $g$ on $\RR^n$ for which the Fourier transform $\widehat{g}$ of $g$ is locally integrable and satisfies
 %
 \[ \int_{\RR^n} (1 + |\xi|^2)^s |\widehat{g}(\xi)|^2\; d\xi < \infty. \]
 %
@@ -2175,7 +2495,7 @@ Show that if $\text{Re}(a) > - n/2$ and $s \in [0,\text{Re}(a) + n/2)$, then $f_
 \newpage
 \section{Day 10: Bonus Questions}
 
-\question (September, 2017) Let $a_1, \dots, a_n > 0$. Let $f: \RR^n \to \RR$ be defined by
+\question (Fall 2017) Let $a_1, \dots, a_n > 0$. Let $f: \RR^n \to \RR$ be defined by
 %
 \[ f(x) = \frac{1}{1 + \sum |x_i|^{\alpha_i}}. \]
 %
@@ -2298,7 +2618,7 @@ Prove that $G$ is a continuous function and that $\lim_{\lambda \to \infty} G(\l
     Since $f_n \to f$ almost everywhere, as $n \to \infty$ and for a fixed $k > 0$, $\{ E_n(k) \}$ is an increasing sequence, and $X - \bigcup_n E_n(k)$ is a set of measure zero. Thus for each $r > 0$, we can pick $n_1$ such that $|X - E_{n_1}(1)| \leq 1/2^r$. Similarily, we can for each $k$ pick $n_k$ such that $|E_{n_{k-1}}(k-1) - E_{n_k}(k)| \leq 1 / 2^{k+r}$. If we define $A_r = \bigcap_k E_{n_k}(k)$, then $|X - A_r| \leq 1/2^{r-1}$, and by definition, $f_k$ converges uniformly on $A_r$ for each $r$ since for $n \geq n_k$, $|f_n(x) - f(x)| \leq 1/2^k$. Thus we have found the required sequence $\{ A_r \}$.
 \end{solution}
 
-\question (January, 2017) Given for each function $f \in C^0(\RR^2)$ we define for each $y \in \RR$ a function $f_y \in C[0,1]$ by $f_y(x) = f(x,y)$. Assume that for each fixed $y$, the distributional derivative of $f_y \in \mathcal{D}'(\RR)$ defines a function $a_y \in L^p(\RR)$. Assume further that
+\question (Spring 2017) Given for each function $f \in C^0(\RR^2)$ we define for each $y \in \RR$ a function $f_y \in C[0,1]$ by $f_y(x) = f(x,y)$. Assume that for each fixed $y$, the distributional derivative of $f_y \in \mathcal{D}'(\RR)$ defines a function $a_y \in L^p(\RR)$. Assume further that
 %
 \[ \| a_y \|_p \leq C < \infty \]
 %
@@ -2337,7 +2657,7 @@ for some constant $C$ independent of $y$. Show that the distributional derivativ
     Thus we conclude that $\partial_x f \in L^p_{\text{loc}}$.
 \end{solution}
 
-\question (Jan 2020 \#4)
+\question (Spring 2020)
   Let $E\subset[0,1]$ be a measurable set with positive Lebesgue measure. Moreover, it satisfies the following property: As long as $x$ and $x$ belong to $E$, we know $\frac{x+y}{2}$ belongs to $E$. Prove that $E$ is an interval.
   
   
@@ -2419,7 +2739,7 @@ for some constant $C$ independent of $y$. Show that the distributional derivativ
 \section{Day 11: Bonus Questions}
 
 
-\question (September, 2015) Let $\chi \in C^\infty(\RR)$ have a compact support and define
+\question (Fall 2015) Let $\chi \in C^\infty(\RR)$ have a compact support and define
 %
 \[ f_n(x) = n^2 \chi'(nx). \]
 %
@@ -2477,7 +2797,7 @@ holds.
 \end{solution}
 
 
-\question (Aug 2018 \#5)
+\question (Fall 2018)
   Prove that in an infinite dimensional Banach space,
   \begin{enumerate}[(a)]
   \item every norm bounded set is weakly bounded,
@@ -2515,7 +2835,7 @@ holds.
 \end{solution}
 
 
-\item (January 2016 \#1) Let $1<p<\infty$, and let $\chi_{[1-\frac{1}{n},1]}$ denote the characteristic function of $[1-\frac{1}{n},1]$. For which $\alpha\in \R$ does the sequences $n^{\alpha}\chi_{[1-\frac{1}{n},1]}$ converge weakly to $0$ in $L^{p}(\R)$?
+\item (Spring 2016) Let $1<p<\infty$, and let $\chi_{[1-\frac{1}{n},1]}$ denote the characteristic function of $[1-\frac{1}{n},1]$. For which $\alpha\in \R$ does the sequences $n^{\alpha}\chi_{[1-\frac{1}{n},1]}$ converge weakly to $0$ in $L^{p}(\R)$?
 
 \begin{solution}
   Case 1: Suppose $\alpha> 1/p$. Then $\norm{f_{n}}_{p}^{p} = \int_{1-\frac{1}{n}}^{1}n^{\alpha p}dx = n^{\alpha p - 1}\to \infty$ as $n\to\infty$. Since weakly convergent sequences are bounded in norm, it follows that $f_{n}$ does not weakly converge if $\alpha>1/p$.
@@ -2542,7 +2862,7 @@ holds.
 \end{solution}
 
 
-\item (Jan 2018 \#5) Let $x_{n}$ be a sequence in a Hilbert space $H$. Suppose that $x_{n}$ converges to $x$ weakly. Prove that there is a subsequence $x_{n_{k}}$ such that
+\item (Spring 2018) Let $x_{n}$ be a sequence in a Hilbert space $H$. Suppose that $x_{n}$ converges to $x$ weakly. Prove that there is a subsequence $x_{n_{k}}$ such that
 \begin{equation*}
   \frac{1}{N}\sum_{k=1}^{N}x_{n_{k}}
 \end{equation*}
@@ -2569,7 +2889,7 @@ converges to $x$ (in norm) as $N\to\infty$.
 
   
   
-\question (September 2015) Let $E \subset \RR$ be a measurable set, such that $E + r = E$ for all $r \in \mathbf{Q}$. Show that $|E| = 0$ or $|E^c| = 0$.
+\question (Fall 2015) Let $E \subset \RR$ be a measurable set, such that $E + r = E$ for all $r \in \mathbf{Q}$. Show that $|E| = 0$ or $|E^c| = 0$.
 \begin{solution}
     We apply the Lebesgue density theorem. Suppose $|E| \neq 0$. Fix $\delta > 0$. Then there exists $\varepsilon_0 > 0$ such that for $\varepsilon < \varepsilon_0$, we can find $a,b \in \mathbf{Q}$ with $b - a < \varepsilon$ with
     %
@@ -2586,7 +2906,7 @@ converges to $x$ (in norm) as $N\to\infty$.
     The Lebesgue density theorem thus implies that $|E^c| = 0$.
 \end{solution}
 
-\question (Jan 2015)
+\question (Spring 2015)
     Let $\{ r_n \} \in [0,1]$ be an arbitrary sequence, and define the function
     %
     \[ f(x) = \sum_{r_n < x} \frac{1}{2^n} \]
@@ -2650,7 +2970,7 @@ converges to $x$ (in norm) as $N\to\infty$.
 \newpage
 \section{Day 12: Bonus Questions}
 
-\question (Aug 2013 \# 5) Let $E= \left\{ (x_{1},x_{2}) : x_{1},x_{2}\in \R, x_{1}-x_{2}\in \Q\right\}$. Is it possible to find to Lebesgue measurable sets $A_{1},A_{2}\subset\R$ such that $|A_{1}|,|A_{2}|>0$, and $A_{1}\times A_{2}\subset E^{c}$?
+\question (Fall 2013) Let $E= \left\{ (x_{1},x_{2}) : x_{1},x_{2}\in \R, x_{1}-x_{2}\in \Q\right\}$. Is it possible to find to Lebesgue measurable sets $A_{1},A_{2}\subset\R$ such that $|A_{1}|,|A_{2}|>0$, and $A_{1}\times A_{2}\subset E^{c}$?
 \begin{solution}
   No, it is not possible. We will show that $|A_{1}|\cdot|A_{2}| = 0$ whenever $A_{1}\times A_{2}\subset E^{c}$. 
 
@@ -2695,7 +3015,7 @@ converges to $x$ (in norm) as $N\to\infty$.
   \end{equation*}
 \end{solution}
 
-\question (September, 2015) Let $(X, \mu)$ be a measure space, and let $f: X \to \RR$ be measurable. Then if $1 \leq p < r < q < \infty$ and there is $C < \infty$ such that
+\question (Fall 2015) Let $(X, \mu)$ be a measure space, and let $f: X \to \RR$ be measurable. Then if $1 \leq p < r < q < \infty$ and there is $C < \infty$ such that
 %
 \[ \mu(\{ x : |f(x)| > \lambda \}) \leq \frac{C}{\lambda^p + \lambda^q} \]
 %
@@ -2752,7 +3072,7 @@ for every $\lambda > 0$. Then $f \in L^r(\mu)$.
   Therefore by Case 1, $\int_{X'}|f(x)|^{r}dx<\infty$. And since $\int_{X}|f(x)|^{r}dx = \int_{X'}|f(x)|^{r}dx$, we are done. 
   \end{solution}
 
-\question (January, 2017)
+\question (Spring 2017)
     Let $E \subset \RR^n$ be a set of finite, positive measure, and let $\{ t_k \}$ be a sequence with $\{ t_k \} > 0$ and $\lim_k t_k = 0$. Define, for $f \in L^p(\RR^n)$,
     %
     \[ Mf(x) = \sup_k \fint_{t_k E} |f(x-y)|\; dy. \]
@@ -2805,7 +3125,7 @@ for every $\lambda > 0$. Then $f \in L^r(\mu)$.
 
 
 
-\question (Jan 2020 \#6)
+\question (Spring 2020)
   Let $f_{n}:[0,1]\to \R$ be a sequence of Lebesgue measurable functions such that $f_{n}$ converges to $f$ almost everywhere on $[0,1]$ and such that $\norm{f_{n}}_{L^{2}([0,1])}\leq 1$ for all $n$. Show that
   \begin{equation*}
     \limn \norm{f_{n}-f}_{L^{1}([0,1])}=0.
@@ -2858,7 +3178,7 @@ Another (similar) proof is given:
 \end{solution}
 
 
-\question (Jan 2020 \#1)
+\question (Spring 2020)
 Let $\sum_{n=1}^{\infty}a_{n}$ be a convergent series. Let $b_{n}\in\R$ be an increasing sequence with $\lim_{n\to\infty}b_{n}=\infty$. Show that
 \begin{equation*}
   \lim_{n\to\infty} \frac{1}{b_{n}}\sum_{k=1}^{n}b_{k}a_{k} = 0.
@@ -2893,7 +3213,7 @@ where for the last equality we used the fact that $\sum_{k=k_{n}}^{n-1}(b_{k}-b_
 The result then follows since $T_{n}\to a$ and $M_{n}\to 0$ as $n\to \infty$. 
 \end{solution}
 
-\question (Aug 2018 \#8R)
+\question (Fall 2018)
   Let $1<p\leq \infty$. Let $(X,\mathcal{M},\mu)$ be a finite measure speace. Let $\left\{ f_{n} \right\}$ be a sequence of measurable functions converging $\mu$-a.e. to the function $f$. Assume further that $\norm{f_{n}}_{p}\leq 1$ for all $n$. Prove that $f_{n}\to f$ as $n\to \infty$ in $L^{r}$ for all $1\leq r<p$.
 \begin{solution}
   \textit{Case 1.} If $p=\infty$ then since $\norm{f}_{\infty}\leq 1$ and $f_{n}\to f$ a.e., it follows that $\norm{f}_{\infty}\leq 1$. Therefore by the triangle inequality and using the fact that $r\geq 1$, we have $|f_{n}-f|^{r}\leq (|f_{n}| + |f| )^{r}\leq 2^{r}$. Since the constant function $2^{r}$ is integrable on $X$ with respect to $\mu$, it follows by the dominated convergence theorem that $\lim_{n\to\infty}\int_{X} |f_{n}-f|^{r}d\mu = 0$. Therefore $f_{n}\to f$ in $L^{r}$.
@@ -2927,7 +3247,7 @@ The result then follows since $T_{n}\to a$ and $M_{n}\to 0$ as $n\to \infty$.
    Since $\epsilon>0$ was arbitrary, it follows that $\limsup_{n\to\infty} \int_{X} |f_{n}-f|^{r}d\mu=0$. Therefore $f_{n}\to f$ in $L^{r}$.
 \end{solution}
 
-\question (September, 2017) Let $f: \RR \to \RR$ be a compactly supported function that satisfies the H\"{o}lder condition with exponent $\beta \in (0,1)$, i.e. that there exists a constant $A < \infty$ such that for all $x,y \in \RR$, $|f(x) - f(y)| \leq A|x-y|^\beta$. Consider the function $g$ defined by
+\question (Fall 2017) Let $f: \RR \to \RR$ be a compactly supported function that satisfies the H\"{o}lder condition with exponent $\beta \in (0,1)$, i.e. that there exists a constant $A < \infty$ such that for all $x,y \in \RR$, $|f(x) - f(y)| \leq A|x-y|^\beta$. Consider the function $g$ defined by
 %
 \[ g(x) = \int_{-\infty}^\infty \frac{f(y)}{|x-y|^\alpha}\; dy, \]
 %
@@ -3000,7 +3320,7 @@ where $\alpha \in (0,\beta)$.
 
 \subsection{Limits and Integrals (DCT and friends)}
 
-\question (Rice Winter Qualifying Exam 2011) Let $\{ f_n \}$ be a sequence of Lebesgue measurable functions defined on $[0,1]$ such that $\| f(x) \| \leq 1$ for all $n \geq 1$ and all $0 < x \leq 1$, and
+\question (Rice, Winter 2011) Let $\{ f_n \}$ be a sequence of Lebesgue measurable functions defined on $[0,1]$ such that $\| f(x) \| \leq 1$ for all $n \geq 1$ and all $0 < x \leq 1$, and
 \[ \lim_{n \to \infty} f_n(x) = f(x) \]
 %
 exists for each $0 \leq x \leq 1$. Prove that
@@ -3060,7 +3380,7 @@ exists for each $0 \leq x \leq 1$. Prove that
     \end{solution}
 \end{parts}
 
-\question (January, 2017)
+\question (Spring 2017)
     Let $f: [0,\infty) \to \RR$ be a continuously differentiable function for which $\| f' \|_\infty < \infty$. Define, for $x > 0$,
     %
     \[ F(x) = \int_0^\infty f(x + yx) \psi(y)\; dy, \]
@@ -3131,7 +3451,7 @@ Does $\{ F_n \}$ has a uniformly convergent subsequence.
     uniformly in $n$. Thus Arzela-Ascoli implies the existence of a uniformly convergent subsequence.
 \end{solution}
 
-\question (August 2004) Let $f_{n}:[0,1]\to \R$ be a sequence of continuous functions whose derivatives $f'_{n}$ in the sense of distributions belong to $L^{2}(0,1)$. The functions also satisfy $f_{n}(0)=0$.
+\question (Fall 2004) Let $f_{n}:[0,1]\to \R$ be a sequence of continuous functions whose derivatives $f'_{n}$ in the sense of distributions belong to $L^{2}(0,1)$. The functions also satisfy $f_{n}(0)=0$.
 \begin{parts}
   \part
 Assume that
@@ -3185,7 +3505,7 @@ exists for all $g\in C([0,1])$. Do we still have the $f_{n}$ converge uniformly?
 \end{solution}
 \end{parts}
 
-\question (January 2014)
+\question (Spring 2014)
 
 Consider the following operator
 
@@ -3315,7 +3635,7 @@ We first prove the following claim:
 \newpage
 \section{Day 14: Misc. Topics}
 
-\question (Rice Qualifying Exam, Winter 2008) Is it possible to construct a measurable set $E \subset \RR$ of positive measure such that for any pair $a < b$, $|E \cap [a,b]| \leq 0.5 (b - a)$?
+\question (Rice, Winter 2008) Is it possible to construct a measurable set $E \subset \RR$ of positive measure such that for any pair $a < b$, $|E \cap [a,b]| \leq 0.5 (b - a)$?
 \begin{solution}
     No, since the Lebesgue differentiation theorem implies that if $E$ has positive measure, then there exists $x_0$ such that
     %
@@ -3324,7 +3644,7 @@ We first prove the following claim:
     However, if $E$ is as above, then $|E \cap I| / |I| \leq 0.5$ for any interval $I$, so $x_0$ cannot possibly exist. Thus any $E$ satisfying the condition above must have measure zero.
 \end{solution}
 
-\question (January 2010) For $\lambda>0$, set
+\question (Spring 2010) For $\lambda>0$, set
 \begin{equation*}
   F(\lambda)= \int_{0}^{1}e^{-10\lambda x^{4}+\lambda x^{6}}dx
 \end{equation*}
@@ -3372,7 +3692,7 @@ In particular, by equation \eqref{eq:u-form-of-F} and the triangle inequality,
    where $C_{2} := \int_{0}^{\infty}ue^{-10u^{4}}du<\infty$. This completes the proof.
  \end{solution}
 
-\question (August 2010)
+\question (Fall 2010)
 Let $I = [0,1]$ and define for $f\in L^{2}(I)$ the Fourier coefficients as $\hat{f}(k) =\int_{0}^{1}f(t)e^{-2\pi i k t}dt$ for any $k\in \Z$. 
 
 
@@ -3433,7 +3753,7 @@ Let $I = [0,1]$ and define for $f\in L^{2}(I)$ the Fourier coefficients as $\hat
 \end{solution}
 \end{parts}
 
-\question (August 2011) Let $\ell^{2}(\mathbb{N})$ denote the Hilbert space of square summable sequences with inner product $(x,y)= \sum_{n=1}^{\infty}x_{n}y_{n}$, where $x=(x_{1},x_{2},\cdots)$ and $y=(y_{1},y_{2},\cdots)$.
+\question (Fall 2011) Let $\ell^{2}(\mathbb{N})$ denote the Hilbert space of square summable sequences with inner product $(x,y)= \sum_{n=1}^{\infty}x_{n}y_{n}$, where $x=(x_{1},x_{2},\cdots)$ and $y=(y_{1},y_{2},\cdots)$.
 \begin{parts}
 \part What are the necessary and sufficient conditions on $\lambda_n>0$ for the set
 \begin{equation*}
@@ -3557,7 +3877,7 @@ where the final inequality is justified by \ref{item:4} since $x_{n}>x$.
 (This proof was adapted from Royden and Fitzpatrick's \textit{Real Analysis} 4th ed.)
 \end{solution}
 
-\question (August 2015) Identify all $x\in \R$ such that $\lim_{n\to\infty} \sin(nx)$ exists.
+\question (Fall 2015) Identify all $x\in \R$ such that $\lim_{n\to\infty} \sin(nx)$ exists.
 
 \begin{solution} \bnote{(need to rewrite this for clarity)} Define $f(x)=\sin(2\pi x)$. It will suffice to characterize the $\alpha$ for which $\limn f(n\alpha)$ converges, since $\limn f(n\alpha)$ exists if and only if $\limn \sin(n2\pi \alpha)$ exists. Observe that $f$ is periodic: if $k\in \Z$ then $f(x)=\sin(2\pi x) = \sin(2\pi x +2\pi k) =f(x+k)$. By periodicity it suffices to consider $\alpha\in [0,1)$, since $\limn f(n\alpha)$ converges if and only if $\limn f(n(\alpha+k))$ converges for all $k\in \Z$. 
 
@@ -3597,7 +3917,7 @@ where the final inequality is justified by \ref{item:4} since $x_{n}>x$.
 
 
 \newpage
-\section{Day 15: January 2021 Final Qualifying Exam}
+\section{Day 15: Spring 2021 Final Qualifying Exam}
 
 \question (1) Determine if
 %
@@ -3920,7 +4240,7 @@ Prove that a function $f \in C^{1/2}(\RR)$ if and only if there exists a constan
 \newpage
 \section{Questions that need solutions}
 
-\question (September, 2017) Let $g: \RR^2 \to \RR$ be a function that has continuous partial derivatives in $\RR^2$. Define $\chi: \RR^3 \to \{ 0, 1 \}$ by $\chi(x) = 1$ if $x_3 > g(x_1,x_2)$, and $\chi(x) = 0$ otherwise. Compute the derivatives $\partial \chi / \partial x^i$ for $i = 1, 2, 3$.
+\question (Fall 2017) Let $g: \RR^2 \to \RR$ be a function that has continuous partial derivatives in $\RR^2$. Define $\chi: \RR^3 \to \{ 0, 1 \}$ by $\chi(x) = 1$ if $x_3 > g(x_1,x_2)$, and $\chi(x) = 0$ otherwise. Compute the derivatives $\partial \chi / \partial x^i$ for $i = 1, 2, 3$.
 
 \question Let $\alpha \in (0,1)$, and for $f \in C[0,1]$, and $x \in [0,1]$, define
 %
