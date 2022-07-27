@@ -1,4 +1,4 @@
-\documentclass[answers]{exam}
+\documentclass{exam}
 \usepackage[utf8]{inputenc}
 
 \usepackage{comment}
@@ -622,6 +622,34 @@ known as a \emph{Tauberian theorem}, which shows that $D_n * f$ is uniformly bou
 
 \end{solution}
 
+\question (Spring 2021)
+%
+\[ \sum_{k = 1}^\infty \frac{\cos(\sqrt{k})}{k} \]
+%
+converges.
+\begin{solution}
+    Since the sum of $1/k$ diverges, this convergence could only possibly happen from the oscillation present in the $\cos(\sqrt{k})$ causes enough cancellation. Thus trying to control the oscillation is key to understanding this series. In particular, let us try and understand how often $\cos(\sqrt{k})$ changes sign. We can use conjugation, an often useful trick to understand square roots, to write
+    %
+    \begin{align*}
+        \sqrt{k+n} - \sqrt{k} &= (\sqrt{k+n} - \sqrt{k}) \left( \frac{\sqrt{k+n} + \sqrt{k}}{\sqrt{k+n} + \sqrt{k}} \right)\\
+        &= \frac{n}{\sqrt{k+n} + \sqrt{k}}\\
+        &= \frac{n}{2\sqrt{k} + O(n/\sqrt{k})}\\
+        &= \frac{n}{2\sqrt{k}} + O \left( \frac{n^2}{k^{3/2}} \right).
+    \end{align*}
+    %
+    In particular,
+    %
+    \[ \sqrt{k + 2 \pi \sqrt{k}} + \sqrt{k} = \pi + O(1/\sqrt{k}). \]
+    %
+    Thus for each $n$, the sign of $\cos(\sqrt{k})$ stays roughly the same for $k = n \pm \sqrt{n}$. More precisely, let $\{ m_1, m_2, \dots \}$ be an increasing family of integers with $m_1 = 1$, and such that for each $i$, and $k \in \{ m_i, m_i + 1, \dots, m_{i+1} - 1 \}$ , $\cos(\sqrt{k})$ has the same sign. Then $m_{i+1} - m_i \sim \sqrt{m_i}$. For more than half of the values in $\{ m_i, \dots, m_{i+1} - 1 \}$, $|\cos(\sqrt{k})| \geq 1/2$, and it follows that
+    %
+    \begin{align*}
+        \left| \sum_{k = m_i}^{m_{i+1} - 1} \frac{\cos(\sqrt{k})}{k} \right| \sim \frac{1}{\sqrt{m_i}}.
+    \end{align*}
+    %
+    Roughly speaking, an application of Leibnitz's alternating series test then implies that this series converges.
+\end{solution}
+
 
 \question (Fall 2015) Consider the series
 %
@@ -790,13 +818,39 @@ converges for $a \geq 0$, and $f$ is continuous on $[0,\infty)$.
 %
 converge?
 \begin{solution}
-	If $y = e^x$, then $dy = e^x dx = y dx$, and so
+	Here's one solution. Our first intuition is to break the integrand into an oscillatory part, and a fairly well behaved part. A good option seems to be breaking the sum into the product
+	%
+	\[ \frac{x}{x + \sin(e^x)} \cdot \sin(e^x) = A(x) \cdot B(x). \]
+	%
+	For large $x$, the well behaved part of the integrand is close to one. So let's do a Taylor expansion. A first order expansion yields $A(x) = 1 + O(1/x)$, but the error term here is not good enough (it's not integrable in $x$). Thus we perform a second order expansion, i.e. writing $A(x) = 1 - \sin(e^x) / x + O(1/x^2)$. Now the error term is integrable, so we conclude that the convergence of the improper integral above is equivalent to the convergence of the integral
+	%
+	\[ \int_2^\infty \left( 1 - \frac{\sin(e^x)}{x} \right) \sin(e^x)\; dx. \]
+	%
+	A change of variables might help us out here. We write $y = e^x$. Then $dy = y dx$, and so this integral is equal to
+	%
+	\[ \int_c^\infty \frac{\sin(y)}{y} \left( 1 - \frac{\sin(y)}{\ln y} \right). \]
+	%
+	A simple integration by parts (antidifferentiate the oscillating term $\sin(y)$, differentiate the term going to zero $1/y$) yields
+	%
+	\[ \int_c^\infty \frac{\sin(y)}{y} = C + \int_{O(1)}^\infty \frac{\cos(y)}{y^2}. \]
+	%
+	The integral on the right hand side is summable, and thus the integral converges. Thus the convergence of the overall integral is equivalent to
+	%
+	\[ \int_c^\infty \frac{\sin(y)^2}{y \ln(y)}. \]
+	%
+	This integral is positive, and \emph{not integrable}, i.e. a dyadic decomposition (a tool for breaking a sum into parts on powers of two, which helps us out in an analogous to the Cauchy condensation theorem) shows that
+	%
+	\[ \int_c^\infty \frac{\sin(y)^2}{y \ln(y)} \gtrsim \sum_{k = 1}^\infty \int_{2^k}^{2^{k+1}} \frac{\sin(y)^2}{y \ln(y)} \gtrsim \sum_{k = 1}^\infty 2^k \frac{1}{k 2^k} = \sum_{k = 1}^\infty \frac{1}{k} = \infty. \]
+	%
+	Thus we conclude that the integral diverges, and thus the same must be true for the overall integral.
+
+	Here is an alternate solution. If $y = e^x$, then $dy = e^x dx = y dx$, and so
 	%
 	\[ \int_2^\infty \frac{x \sin(e^x)}{x + \sin(e^x)}\; dx = \int_{\log 2}^\infty \frac{\sin y}{y} \frac{\log(y)}{\log(y) + \sin(y)} \]
 	%
 	The integrand oscillates between positive and negative values, so it suffices to decompose the integral onto the intervals where the integrand is positive or negative. For suitably large $n$, write
 	%
-	\[ C_n = \left| \int_{\pi n}^{\pi (n + 1)} \frac{\sin y}{y} \frac{\log y}{\log y + \sin y} \right| \]
+	\[ C_n = \left| \int_{\pi n}^{\pi (n + 1)} \frac{\sin y}{y} \frac{\log y}{\log y + (-1)^n \sin y} \right| \]
 	%
 	The integral will then converge if and only if the alternating series
 	%
@@ -805,48 +859,44 @@ converge?
 	converges. For $\pi n \leq y \leq \pi(n+1)$, a Taylor series expansion shows that
 	%
 	\begin{align*}
-		\frac{1}{y} \frac{\log y}{\log y + \sin y} &= \frac{1}{y} \frac{1}{1 + \sin y / \log y}\\
-		&= \left( \frac{1}{\pi n} + O(1/n^2) \right) \left(1 - \frac{\sin y}{\log y} + O \left( \frac{1}{(\log n)^2} \right) \right)\\
-		&= \left( \frac{1}{\pi n} + O(1/n^2) \right) \left(1 - \frac{\sin y}{\log(\pi n)} + O \left( \frac{1}{(\log n)^2} \right) \right)\\
-		&= \left( \frac{1}{\pi n} - \frac{\sin y}{\pi n \log \pi n} + O \left( \frac{1}{n (\log n)^2} \right) \right).
+		\frac{1}{y} \frac{\log y}{\log y + (-1)^n \sin y} &= \frac{1}{y} \frac{1}{1 + (-1)^n \sin y / \log y}\\
+		&= \left( \frac{1}{\pi n} + O(1/n^2) \right) \left(1 - (-1)^n \frac{\sin y}{\log y} + O \left( \frac{1}{(\log n)^2} \right) \right)\\
+		&= \left( \frac{1}{\pi n} + O(1/n^2) \right) \left(1 - (-1)^n \frac{\sin y}{\log(\pi n)} + O \left( \frac{1}{(\log n)^2} \right) \right)\\
+		&= \left( \frac{1}{\pi n} - (-1)^n \frac{\sin y}{\pi n \log \pi n} + O \left( \frac{1}{n (\log n)^2} \right) \right).
 	\end{align*}
 	%
 	Thus
 	%
 	\begin{align*}
-		C_n &= \int_0^\pi \frac{\sin y}{\pi n} - \frac{(\sin y)^2}{\pi n \log \pi n}\; dy + O \left( \frac{1}{n (\log n)^2} \right)\\
-		&= \frac{2}{\pi n} - \frac{1}{2 n \log(\pi n)} + O \left( \frac{1}{n (\log n)^2} \right)\\
+		C_n &= \left| \int_0^\pi \frac{\sin y}{\pi n} - (-1)^n \frac{(\sin y)^2}{\pi n \log \pi n}\; dy \right| + O \left( \frac{1}{n (\log n)^2} \right)\\
+		&= \left| \frac{2}{\pi n} - (-1)^n \frac{1}{2 n \log(\pi n)} \right| + O \left( \frac{1}{n (\log n)^2} \right)\\
 		&= C_n' + O \left( \frac{1}{n (\log n)^2} \right).
 	\end{align*}
 	%
-	The quantities $\{ C_n' \}$ are decreasing for suitably large $n$. Thus by the \emph{Leibnitz test}, the alternating series
+	For large $n$, we have
 	%
-	\[ \sum_{n = 1}^\infty (-1)^n C_n' \]
+	\[ C_n' = \frac{2}{\pi n} - (-1)^n \frac{1}{2 n \log(\pi n)}. \]
 	%
-	converges. On the other hand, the series
+	Thus
 	%
-	\[ \sum_{n = 1}^\infty O \left( \frac{1}{n (\log n)^2} \right) \]
+	\[ \sum (-1)^n C_n' = \sum (-1)^n (2 / \pi n) - \frac{1}{2 n \log(\pi n)}. \]
 	%
-	converges \emph{absolutely}, i.e. by applying the Cauchy condensation theorem. But this means that the alternating series
+	The sum $\sum (-1)^n (2 / \pi n)$ converges by the \emph{Leibnitz test}. But the other part of the series diverges, i.e.
 	%
-	\[ \sum_{n = 1}^\infty (-1)^n C_n \]
+	\[ \sum_n \frac{1}{2 n \log(\pi n)} = \infty. \]
 	%
-	converges.
+	One can prove this using the Cauchy condensation theorem. Thus the alternating series \emph{diverges}, and so the entire integral diverges.
 \end{solution}
 
 \newpage
 \section*{Day 3: Warm Up Question}
 
-\newpage
-\section{Day 3: Basic Analysis}
-
-
 \question (Fall 2018) 
 Prove that for $1\leq p \leq 2$ and $0<b<a$, $$(a+b)^p + (a-b)^p \geq 2a^p + p(p-1)a^{p-2}b^2.$$
 
-\bnote{Hint: Apply Taylors Theorem.}
-
 \begin{solution}
+	\bnote{Hint: Apply Taylors Theorem.}
+
   By subtracting the right-hand side, factoring out $a^p$, and noting that $0<b/a<1$, it suffices to show that the function
   \begin{equation*}
     f(x) = \left( 1+x \right)^{p} + \left( 1-x \right)^{p} - 2 - p(p-1)x ^{2}
@@ -882,9 +932,9 @@ Prove that for $1\leq p \leq 2$ and $0<b<a$, $$(a+b)^p + (a-b)^p \geq 2a^p + p(p
   \end{equation*}
   converges.
 
+\begin{solution}
 \bnote{Hint: Integration by parts, Mean value theorem}
 
-\begin{solution}
 Yes, the series converges. We first claim that the integral
 %
 \[ \int_{1}^{\infty}\frac{\cos(x^{1/2})}{x}dx \]
@@ -931,6 +981,12 @@ converges. To see this, we use integration by parts:
   Since the series on the right hand side is summable, it tends to zero as $m,n\to\infty$, which establishes \eqref{partial-sum-difference}.
 \end{solution}
 
+
+
+
+\newpage
+\section{Day 3: Basic Analysis}
+
 \question (Spring 2015) Let $g$ be a non-constant differentiable real function on a finite interval $[a,b]$, with $g(a) = g(b) = 0$. Show that there exists $c \in (a,b)$ such that
 %
 \[ |g'(c)| > \frac{4}{(b - a)^2} \int_a^b |g(t)|\; dt. \]
@@ -946,6 +1002,22 @@ converges. To see this, we use integration by parts:
 	\end{align*}
 	%
 	Rearranging this inequality completes the proof, except in the case that all the inequalities in this calculation are equalities (so we cannot get the strict inequality required). But this only holds if $g'$ is a constant function, hence $g$ is linear, which is impossible since $g$ is non constant, and $g(0) = g(1) = 0$.
+
+	(Thanks to Karthik for the geometric intuition behind this proof) It suffices to prove the result when $g \in C_c^\infty((0,1))$, since the general result 
+
+	Here is another, geometric proof, using the calculus of variations. Let $X$ denote the space of all continuous functions $g$ which are differentiable except at finitely many points, have $g(a) = g(b) = 0$, and such that whenever the function is differentiable, the magnitude of the derivative is less than one. It suffices to prove that for any $g \in X$,
+	%
+	\[ \frac{4}{(b-a)^2} \int_a^b |g(t)|\; dt < 1, \]
+	%
+	except if $g$ is the `triangle function', with $g(t) = t$ for $a \leq t \leq (a + b)/2$ and $g(t) = (a + b)/2 - t$ for $(a + b)/2 \leq t \leq b$. This will prove the theorem since the triangle function does not satisfy the constraints of the actual problem we are trying to solve (it is not differentiable everywhere).
+
+	Clearly, we can assume that $g \geq 0$, since $X$ is invariant under taking absolute values. We claim that we have $|g'(x)| = 1$ whever $x$ is differentiable. By splitting $[a,b]$ into finite intervals, we may assume that $g$ is differentiable on the entirety of some particular interval $I = [x_0,x_1]$. Then the fundamental theorem of calculus kicks into play, and we have that for $t \in I$,
+	%
+	\[ g(t) = \int_{x_0}^t g'(t)\; dt. \]
+
+	Indeed, if $|g'(x_0)| < 1$, then $g$ is differentiable on an interval containing $x_0$, then consider the function $j$, which is a non-negative function vanishing everywhere on $I$, with $j'(x) = 1 - |g'(x)|$ on $I$. Then $j$ is differentiable except at finitely many points, and $j \geq 0$. We have $g + j \in X$, and 
+
+	on a dense set of $x$. Indeed, if $|g'(x)| < 1$ in a small interval $I$, then the function $g + j$ lies in $X$, where $j$ is a non-negative function vanishing everywhere on $I$, where 
 \end{solution}
 
 \question (Fall 2019) If $f: \RR^n \to \RR$ is differentiable on $\RR^n - \{ 0 \}$, continuous at 0, and
@@ -1062,6 +1134,8 @@ for $1 \leq i \leq n$, then $f$ is differentiable at 0.
     \[ \lim_{r \to 0} \int |f(x + r) - f(x)|\; dx = 0. \]
     %
     To see that this equation is true, we note it is certainly true for any $f \in C_c^\infty(\RR)$, which is a dense subfamily of $L^1(\RR)$. But the operators $A_r f(x) = f(x + r) - f(x)$ are uniformly bounded in $L^1(\RR)$, i.e. $\| A_r f \|_{L^1(\RR)} \leq 2 \| f \|_{L^1(\RR)}$. And thus the result follows by the uniform boundedness theorem.
+
+    Alternatively, write $g = \mathbf{I}_E$. Then $g$ lies in $L^1$ and $L^\infty$, and $f(r) = (g * g)(-r)$. But Young's convolution inequality implies that $g * g$ is continuous, so that $f$ is continuous.
 
     \begin{comment}
     As $r \to s$, the integrand tends to zero pointwise. And moreover, the integrands are uniformly dominated by $2\mathbf{I}_E$, which is an integrable function. Thus the dominated convergence theorem implies that
@@ -1250,9 +1324,6 @@ Prove that for any $\lambda\geq 0$, we have
 \newpage
 \section*{Day 5: Warm Up Problems}
 
-\newpage
-\section{Day 5: Basic Functional Analysis}
-
 \question (Spring 2015) Let $f \in L^2[0,1]$ satisfy $\int_0^1 t^n f(t)\; dt = (n+2)^{-1}$ for $n = 0, 1,\dots$. Must then $f(t) = t$ for almost every $t \in [0,1]$?
 \begin{solution}
     The identity $\int_0^1 t^n f(t)\; dt = (n+2)^{-1}$ shows that for any polymonial $p(t)$,
@@ -1269,6 +1340,58 @@ Prove that for any $\lambda\geq 0$, we have
     %
     This implies $f(t) = t$ for almost every $t$.
 \end{solution}
+
+\question (Fall 2021) Let $\{ f_n \}$ be a sequence of monotonic functions on $[0,1]$ converging to a function $f$ in measure. Show that $f$ coincides almost everywhere with a monotonic function $f_0$, and that $f_n(x) \to f_0(x)$ at every point of continuity of $f_0$.
+\begin{solution}
+	If the sequence $\{ f_n \}$ converges uniformly, then for each $0 \leq x < y \leq 1$, we would have
+	%
+	\[ f(y) - f(x) = \lim_n f_n(y) - f_n(x) \geq 0. \]
+	%
+	Thus $f$ is monotonic. This sequence does \emph{not} converge uniformly. But we utilize one of \emph{Littlewood's three principles}, namely, that every convergent sequence of functions is nearly uniformly convergent.
+
+	We do this by first giving us a $\varepsilon$ of room. It suffices to show that for each $\varepsilon$, there exists a set $E(\varepsilon)$ such that if $x,y \in E(\varepsilon)$ and $x < y$, then
+	%
+	\[ f(y) - f(x) \geq - 2 \varepsilon. \]
+	%
+	If we set
+	%
+	\[ E_n(\varepsilon) = \{ x \in [0,1] : |f_n(x) - f(x)| \geq \varepsilon \} \]
+	%
+	then $|E_n(\varepsilon)| \to 1$. If $x < y$, with $x,y \in E_n$ for some $n$, then
+	%
+	\[ f(y) - f(x) \geq [f_n(y) - f_n(x)] - 2 \varepsilon \geq -2\varepsilon. \]
+	%
+	Thus if $E(\varepsilon) = \bigcup_n E_n(\varepsilon)$, then $|E(\varepsilon)^c| = 0$, and for $x,y \in E(\varepsilon)$ with $x < y$,
+	%
+	\[ f(y) - f(x) \geq - 2 \varepsilon. \]
+	%
+	The set $E = \bigcap E(1/2^k)$ is also a set with $|E^c| = 0$, and for any $x,y \in E$ with $x < y$,
+	%
+	\[ f(y) - f(x) \geq - 2 / 2^k \]
+	%
+	for all $k > 0$, so taking $k \to \infty$ gives
+	%
+	\[ f(y) - f(x) \geq 0. \]
+	%
+	Thus $f$ is monotonic when restricted to $E$, and thus agrees with a monotonic function $f_0: [0,1] \to \RR$ on $E$.
+
+	It now suffices to show that $f_n(x_0) \to f_0(x_0)$, whenever $x_0$ is a continuity point of $f_0$. Here we use the same Littlewood's principle more explicitly, i.e. using Egorov's theorem: for any $\delta > 0$, there is $E_\delta \subset [0,1]$ with $|E_\delta|^c < \delta/2$, such that $f_n \to f_0$ uniformly on $E_\delta$. If $x_0$ is a continuity point of $f_0$, then for any $\varepsilon > 0$, there exists $\delta > 0$ such that if $|x - x_0| \leq \delta$, $|f(x) - f(x_0)| \leq \varepsilon$. Since $|E_\delta|^c < \delta/2$, there must exist
+	%
+	\[ x_0 - \delta < x_1 < x_0 < x_2 < x_0 + \delta \]
+	%
+	with $x_1,x_2 \in E_\delta$. But this implies that
+	%
+	\[ \limsup_n f_n(x_0) \leq \limsup_n f_n(x_2) = f_0(x_2) \leq f_0(x_0) + \varepsilon \]
+	%
+	and
+	%
+	\[ \liminf_n f_n(x_0) \geq \liminf_n f_n(x_1) = f_0(x_1) \geq f_0(x_0) - \varepsilon. \]
+	%
+	Since $\varepsilon$ was arbitrary, it is clear from these inequalities that $f_n(x_0)$ converges to $f_0(x_0)$.
+\end{solution}
+
+\newpage
+\section{Day 5: Functional Analysis}
 
 \question (Fall 2015) Find all $f \in L^2[0,\pi]$ such that
 %
@@ -1401,7 +1524,7 @@ This implies $\alpha = 2$ or $\alpha= -2/5$. A similar calculation using $\norm{
     Taking $\varepsilon \to 0$ completes the proof.
 \end{solution}
 
-\question (Spring 2018)
+\question (Spring 2018, Spring 2021)
   Let $K$ be a continuous function on $[0,1]\times [0,1]$. Suppose that $g$ is a continuous function on $[0,1]$. Show that there exists a unique continuous function $f$ on $[0,1]$ such that
   \begin{equation*}
     f(x)=g(x)+\int_{0}^{x}f(y)K(x,y)dy
@@ -3903,25 +4026,21 @@ where the final inequality is justified by \ref{item:4} since $x_{n}>x$.
 (This proof was adapted from Royden and Fitzpatrick's \textit{Real Analysis} 4th ed.)
 \end{solution}
 
-\question (Fall 2015) Identify all $x\in \R$ such that $\lim_{n\to\infty} \sin(nx)$ exists.
+\question (Fall 2015) Identify all $\alpha\in \R$ such that $\lim_{n\to\infty} \sin(2 \pi n \alpha)$ exists.
 
-\begin{solution} \bnote{(need to rewrite this for clarity)} Define $f(x)=\sin(2\pi x)$. It will suffice to characterize the $\alpha$ for which $\limn f(n\alpha)$ converges, since $\limn f(n\alpha)$ exists if and only if $\limn \sin(n2\pi \alpha)$ exists. Observe that $f$ is periodic: if $k\in \Z$ then $f(x)=\sin(2\pi x) = \sin(2\pi x +2\pi k) =f(x+k)$. By periodicity it suffices to consider $\alpha\in [0,1)$, since $\limn f(n\alpha)$ converges if and only if $\limn f(n(\alpha+k))$ converges for all $k\in \Z$. 
+\begin{solution}
+	Define $f(\alpha)=\sin(2\pi \alpha)$. It will suffice to characterize the $\alpha$ for which $\limn f(n\alpha)$ converges, since $\limn f(n\alpha)$ exists if and only if $\limn \sin(n2\pi \alpha)$ exists. Observe that $f$ is periodic: if $k\in \Z$ then $f(x)=\sin(2\pi x) = \sin(2\pi x +2\pi k) =f(x+k)$. By periodicity it suffices to consider $\alpha\in [0,1)$, since $\limn f(n\alpha)$ converges if and only if $\limn f(n(\alpha+k))$ converges for all $k\in \Z$. 
 
-
-  \vt
-  \textit{Case 1.} Suppose $\alpha \notin \Q$. Let $\xi_{n}:= n\alpha - \lfloor n\alpha \rfloor$. Then $(\xi_{n})$ is an equidistributed sequence on $[0,1)$ and hence is dense. Therefore we may choose a subseqeuence $n_{j}$ of positive integers such that $\xi_{n_{j}}\to \frac{3}{4}$ as $j\to \infty$ and another subsequence $n_{k}$ such that $\xi_{n_{k}}\to \frac{1}{4}$ as $k\to \infty$.
+  \textit{Case 1.} Suppose $\alpha \notin \Q$. Let $\xi_{n}:= n\alpha - \lfloor n\alpha \rfloor$. Then by \emph{Weyl's equidistribution theorem}, the sequence $\{ \xi_{n} \}$ is equidistributed on $[0,1)$ and hence is dense. If we choose a sequence $n_k$ such that $\xi_{n_k} \to 3/4$ as $k \to \infty$, and another sequence $m_k$ such that $\xi_{m_k} \to 1/4$, then we conclude that by continuity,
+  %
+  \[ \liminf_{n \to \infty} f(n \alpha) \leq \liminf_{k \to \infty} f(n_k \alpha) = -1 \]
+  %
+  and
+  %
+  \[ \limsup_{n \to \infty} \sin(2 \pi n \alpha) \geq \limsup_{k \to \infty} \sin(2 \pi m_k) = 1. \]
+  %
+  This shows the $\liminf$ differs from the $\limsup$, so $\limn \sin(2 \pi n \alpha)$ cannot exist. Therefore $\sin(2\pi n \alpha)$ does not converge for any $\alpha\notin \Q$
   
-  Since $f$ is 1-periodic and continuous, we have $f(n_{j}\alpha)= f(\xi_{n_{j}}) \to f(1/4)$ as $j\to\infty$. Therefore
-  \begin{equation*}
-    \limsup_{n\to\infty} f(n\alpha)  \geq \limsup_{j\to \infty}f(n_{j}\alpha) = \limsup_{j\to\infty} f(\xi_{n_{j}})= f(1/4)=\sin(\pi/2)=1.
-  \end{equation*}
-  But by similar reasonsing, we also have
-  \begin{equation*}
-    \liminf_{n\to\infty} f(n\alpha) \leq \limsup_{k\to\infty}f(n_{k}\alpha) = \limsup_{k\to\infty} f(\xi_{n_{k}})=f(3/4)=\sin(3\pi/2)=-1.
-  \end{equation*}
-  Therefore $f(n\alpha)$ does not converge as $n\to\infty$. Therefore $\sin(2\pi n \alpha)$ does not converge for any $\alpha\notin \Q$
-  
-  \vt
   \textit{Case 2.} Suppose $\alpha\in\Q$. Write $\alpha = p/q$ where $p,q$ are integers with $\gcd(p,q)=1$. Let $x = 2\pi p/q$. Then the sequence $\xi_{n}:= n\alpha-\lfloor n \alpha \rfloor$ is periodic with $q$ distinct values, one of which is zero. Indeed,
   \begin{equation*}
     \xi_{q}=q \frac{p}{q} - \left\lfloor q \frac{p}{q} \right\rfloor = p-p = 0
@@ -3930,8 +4049,13 @@ where the final inequality is justified by \ref{item:4} since $x_{n}>x$.
   \begin{equation*}
     \xi_{q+1}= (q+1)\frac{p}{q} - \left\lfloor \frac{(q+1)p}{q} \right\rfloor = \frac{p}{q} - \left\lfloor \frac{p}{q}\right\rfloor = \xi_{1}.
   \end{equation*}
-  Since $f(n\alpha) = f(\xi_{n})$, it follows that the seuence $\{f(n\alpha)\}_{n=1}^{\infty}$ is periodic and takes up to $q$ distinct values. Therefore, in order for $\limn f(n\alpha)$ to converge, we must have $f(\xi_{1})=f(\xi_{2})=\ldots=f(\xi_{q})=f(0)=0$. By periodicity of $f$, this is equivalent to
-  \begin{equation*}
+  Since $f(n\alpha) = f(\xi_{n})$, it follows that the seuence $\{f(n\alpha)\}_{n=1}^{\infty}$ is periodic and takes up to $q$ distinct values. Therefore, in order for $\limn f(n\alpha)$ to converge, we must have
+  %
+  \[ f(\xi_{1})=f(\xi_{2})=\ldots=f(\xi_{q})=f(0)=0. \]
+  %
+  By periodicity of $f$, this is equivalent to
+  %
+	\begin{equation*}
     f\(\frac{p}{q}\)= f\(\frac{2p}{q}\)=\ldots=f\left(\frac{(q-1)p}{q}\right)=f(p)
   \end{equation*}
   and
@@ -3945,40 +4069,7 @@ where the final inequality is justified by \ref{item:4} since $x_{n}>x$.
 \newpage
 \section{Day 15: Spring 2021 Final Qualifying Exam}
 
-\question (1) Determine if
-%
-\[ \sum_{k = 1}^\infty \frac{\cos(\sqrt{k})}{k} \]
-%
-converges.
-\begin{solution}
-    Since the sum of $1/k$ diverges, this convergence could only possibly happen from the oscillation present in the $\cos(\sqrt{k})$ causes enough cancellation. Thus trying to control the oscillation is key to understanding this series. In particular, let us try and understand how often $\cos(\sqrt{k})$ changes sign. We can use conjugation, an often useful trick to understand square roots, to write
-    %
-    \begin{align*}
-        \sqrt{k+n} - \sqrt{k} &= (\sqrt{k+n} - \sqrt{k}) \left( \frac{\sqrt{k+n} + \sqrt{k}}{\sqrt{k+n} + \sqrt{k}} \right)\\
-        &= \frac{n}{\sqrt{k+n} + \sqrt{k}}\\
-        &= \frac{n}{2\sqrt{k} + O(n/\sqrt{k})}\\
-        &= \frac{n}{2\sqrt{k}} + O \left( \frac{n^2}{k^{3/2}} \right).
-    \end{align*}
-    %
-    In particular,
-    %
-    \[ \sqrt{k + 2 \pi \sqrt{k}} + \sqrt{k} = \pi + O(1/\sqrt{k}). \]
-    %
-    Thus for each $n$, the sign of $\cos(\sqrt{k})$ stays roughly the same for $k = n \pm \sqrt{n}$. More precisely, let $\{ m_1, m_2, \dots \}$ be an increasing family of integers with $m_1 = 1$, and such that for each $i$, and $k \in \{ m_i, m_i + 1, \dots, m_{i+1} - 1 \}$ , $\cos(\sqrt{k})$ has the same sign. Then $m_{i+1} - m_i \sim \sqrt{m_i}$. For more than half of the values in $\{ m_i, \dots, m_{i+1} - 1 \}$, $|\cos(\sqrt{k})| \geq 1/2$, and it follows that
-    %
-    \begin{align*}
-        \left| \sum_{k = m_i}^{m_{i+1} - 1} \frac{\cos(\sqrt{k})}{k} \right| \sim \frac{1}{\sqrt{m_i}}.
-    \end{align*}
-    %
-    Roughly speaking, an application of Leibnitz's alternating series test then implies that this series converges.
-\end{solution}
-
-\question (2) Let $E \subset \RR$ be a Lebesgue measurable set with $|E| < \infty$. Prove that the function $f: \RR \to \RR$ defined by $f(r) = |E \cap (E + r)|$ is continuous.
-\begin{solution}
-    Write $g = \mathbf{I}_E$. Then $g$ lies in $L^1$ and $L^\infty$, and $f(r) = (g * g)(-r)$. But Young's convolution inequality implies that $g * g$ is continuous, so that $f$ is continuous.
-\end{solution}
-
-\question (3) For a Lebssgue measurable subset $E$ of $\R$, denote $\textbf{1}_E$ the indicator function of $E$ (i.e. $\textbf{1}_E(x)=1$ for $x\in E$ and $\textbf{1}_E(x) = 0$ for $x\in E^c$).
+\question (3) For a Lebesgue measurable subset $E$ of $\R$, denote $\textbf{1}_E$ the indicator function of $E$ (i.e. $\textbf{1}_E(x)=1$ for $x\in E$ and $\textbf{1}_E(x) = 0$ for $x\in E^c$).
 
 Let $\{E_n: n\in \mathbb{N}\}$ be a family of Lebesgue measurable subsets of $\R$ with finite measure and let $f$ be a measurable function such that \begin{equation*}
 \limn \int_{\R} | f(x)-\textbf{1}_{E_n}(x)| dx = 0.
@@ -4010,7 +4101,7 @@ In other words, $\lim_{k\to \infty} \mathbf{1}_{E_{n_{k}}}(x) = f(x)$ for a.e. $
 \end{solution}
 
 
-\question (4) Let $f$ be a $C^1$ function on $[0,\infty)$. Suppose that
+\question (Spring 2021) Let $f$ be a $C^1$ function on $[0,\infty)$. Suppose that
 %
 \[ \int_0^\infty t |f'(t)|^2\; dt < \infty \]
 %
@@ -4077,22 +4168,6 @@ Therefore it suffices to show that $\frac{1}{T}\int_{0}^{T}tf'(t)dt$ converges a
   &\leq \frac{1}{2 \sqrt{T}} \left(\int_{0}^{\infty}t|f'(t)|^{2} dt \right)^{\frac{1}{2}} + \frac{1}{T}\left( \frac{T^{2}-T}{2} \right)^{1/2}\left(\int_{\sqrt{T}}^{\infty}t|f'(t)|^{2}dt \right)^{\frac{1}{2}}\\
   &\leq \frac{C}{2 \sqrt{T}}  +\left(\int_{\sqrt{T}}^{\infty} t|f'(t)|^{2}dt \right)^{\frac{1}{2}} \to 0 \text{ as }T\to 0
 \end{align*}
-
-\end{solution}
-\question (5) Let $K$ be a continuous function on $[0,1]\times[0,1]$ satisfying $|K|<1$. Suppose that $g$ is a continuous function on $[0,1]$. Show that there exists a unique continuous function $f$ on $[0,1]$ such that 
-\begin{equation*}
-f(x) = g(x) + \int_0^1 f(y) K(x,y)dy.
-\end{equation*}
-\begin{solution}
-Since $(x,y)\mapsto |K(x,y)|$ is a continuous function, it achieves its maximum on the compact set $[0,1]\times[0,1]$. In particular, since $|K(x,y)|<1$ for all $0\leq x,y\leq 1$, it follows that $M:= \max_{0\leq x,y\leq 1} |K(x,y)| <1$. Define an operator $T: C[0,1]\to C[0,1]$ by
-\begin{equation*}
-Tf(x) = g(x) + \int_0^1 K(x,y)f(y)dy
-\end{equation*}
-for each $f\in C[0,1]$. Letting $\norm{\cdot}$ denote the uniform norm, it follows by the triangle inequality that
-\begin{equation*}
-\norm{Tf_1-Tf_2} \leq \int_0^1 M \norm{f_1-f_2}_{\infty} dx  = M\norm{f_1-f_2}.
-\end{equation*}
-Since $M<1$, therefore $T$ is a contraction on $C[0,1]$. Since $C[0,1]$ is a complete metric space (under the metric induced by the uniform norm), it follows by the Contraction Mapping Theorem that there exists a unique function $f_0\in C[0,1]$ such that $Tf_0 = f_0$.
 \end{solution}
 
 
