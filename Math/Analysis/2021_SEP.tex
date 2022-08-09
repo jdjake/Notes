@@ -112,6 +112,8 @@ Let's begin by reviewing the fundamental techniques to analysis. These include t
 
 	\item The \emph{$\varepsilon$ of room} technique. To show that an inequality $a \leq b$ is true, it suffices to show that $a \leq b + \varepsilon$ is true for any $\varepsilon > 0$. This technique is often applied to show that two quantities are equal to one another, i.e. to show that $a = b$, it suffices to show that $a \leq b + \varepsilon$ and $b \leq a + \varepsilon$ for any $\varepsilon > 0$.
 
+	\item A \emph{dyadic decomposition} is often useful for rough estimates, i.e. breaking up regions of integration / regions of summation into powers of two, and applying crude estimates on these regions.
+
 	\item The \emph{Stone-Weirstrass theorem} tells us that in $\RR^n$, the family of multi-variate polynomials on $\RR^n$ form a dense subspace of $C(K)$, for any compact set $K \subset \RR^n$, where $C(K)$ is the Banach space given by the $L^\infty$ norm. It follows that this class is also dense in most other function spaces encountered in analysis, e.g. the spaces $L^p(\RR^n)$ for $1 \leq p < \infty$.
 
 	\item Inequalities involving sine are often useful on the qualifying exam, for instance, the inequality
@@ -145,6 +147,8 @@ Let's begin by reviewing the fundamental techniques to analysis. These include t
 	\[ | \sum a_n b_n | \leq \left( \sum |a_n|^p \right)^{1/p} \left( |b_n|^q \right)^{1/q} \]
 	%
 	where $1 \leq p,q \leq \infty$ and $1/p + 1/q = 1$. We also have similar inequalities for integrals.
+
+	\item The \emph{Arzela-Ascoli theorem}, which says that a set $K$ of functions in $C[0,1]$ is compact in the $L^\infty$ norm if $K$ is \emph{uniformly bounded}, i.e. there is $M > 0$ such that $\| f \|_{L^\infty} \leq M$ for all $f \in K$, and \emph{uniformly equicontinuous}, i.e. for any $\varepsilon > 0$, there is $\delta > 0$ such that if $|x - y| \leq \delta$ then for any $f \in K$, $|f(x) - f(y)| \leq \varepsilon$.
 \end{itemize}
 
 \subsection*{Sequences, Series, and Integrals}
@@ -694,7 +698,17 @@ To estimate $H_n$, we apply summation by parts. Let
 The triangle inequality gives the trivial estimate $|T_k(x)| \leq k$ for each $k > 0$ and all $x \in \RR$. A more robust estimate follows via the calculation that for $x \in (-\pi/2,\pi/2)$,
 %
 \begin{equation*}
-  |T_k(x)| = \left| \sum_{j=1}^{k}\sin(jx) \right| = \left| \text{Im} \left( \sum_{j=1}^{k}e^{ijx} \right) \right|\leq \left| e^{ix} \frac{ e^{kix} - 1}{e^{ix} - 1}\right| \leq \frac{2}{|\sin x|} \lesssim \frac{1}{|x|}.
+  |T_k(x)| = \left| \sum_{j=1}^{k}\sin(jx) \right| = \left| \text{Im} \left( \sum_{j=1}^{k}e^{ijx} \right) \right|\leq \left| e^{ix} \frac{ e^{kix} - 1}{e^{ix} - 1}\right| \leq \frac{2}{|\sin x|} \lesssim \frac{1}{|x|},
+\end{equation*}
+%
+where in the second last inequality, we have used
+%
+\begin{equation*}
+  \left| e^{ix}\frac{e^{kix}-1}{e^{ix}-1} \right|
+  \leq \frac{2}{\left| e^{ix}-1 \right|}
+  = \frac{2}{\sqrt{( \cos(x)-1 )^{2}+ \sin^{2}(x)}}
+  = \sqrt{\frac{2}{1-\cos x}}
+  = \frac{1}{|\sin (x/2)|}.
 \end{equation*}
 %
 Thus
@@ -800,21 +814,91 @@ $$ \sum_{n = 1}^\infty \frac{1}{\sqrt{n}} \sin(x/n). $$
 
 		An alternative, but less clean way to show $f$ is differentiable is using the definition of the derivative, i.e. by proving that for each $x \in \RR$, the limit
 		%
-		\[ \lim_{h \to 0} \frac{f(x + h) - f(x)}{h} = \lim_{h \to 0} \sum_{n = 1}^\infty \frac{1}{\sqrt{n}} \frac{\sin((x + h)/n) - \sin(x/n)}{h}. \]
+		\[ \frac{f(x+h)-f(x)}{h} \]
 		%
-		exists. One way to do this is to write
+		exists. To see this, write
+    %
+    \begin{align}
+          \label{eq:fall2015-0}
+          \frac{f(x+h)-f(x)}{h} 
+          &= \underbrace{\frac{1}{h} \sum_{n=1}^{N}
+            \frac{1}{\sqrt{n}}\left[ \sin \left( \frac{x+h}{n} \right)
+            - \sin \left( \frac{x}{n} \right)   \right]}_{\text{Call it }A_{N,h}(x)} \nonumber\\
+            \quad&+ \underbrace{\frac{1}{h} \sum_{n=N+1}^{\infty}
+            \frac{1}{\sqrt{n}}\left[ \sin \left( \frac{x+h}{n} \right)
+            - \sin \left( \frac{x}{n} \right)   \right]}_{\text{Call it }B_{N}(x)}.
+        \end{align}
+        We consider the two terms on the right hand side individually. By the mean value theorem, $ \left|\sin \left( \frac{x+h}{n} \right)
+        - \sin \left( \frac{x}{n} \right)\right|\leq \frac{|h|}{n}$, and hence
+        \begin{equation}\label{eq:fall2015-1}
+          |B_{N}(x)| \leq \sum_{n=N+1}^{\infty}\frac{1}{n^{3/2}} \leq \frac{C}{\sqrt{N}}
+        \end{equation}
+        for some constant $C>0$ not depending on $x$.
+        
+        Next we consider $A_{N,h}$. Let
+				%
+				\[ g_{N}(x) = \sum_{n=1}^{N}\frac{1}{n^{3/2}}\cos(x/n) \]
+				%
+				and let
+				%
+				\[ g_{\infty}(x) = \sum_{n=1}^{\infty}\frac{1}{n^{3/2}}\cos(x/n). \]
+				%
+				Then (it is easy to check that)
+        \begin{equation}\label{eq:fall2015-3}
+          \lim_{h\to \infty} A_{N,h}(x)  = g_{N}(x) \text{ for each $x$}
+        \end{equation}
+        and
+        \begin{equation}\label{eq:fall2015-2}
+          \lim_{N \to \infty} g_{N}(x) = g_{\infty}(x) \text{ uniformly in $x$.}
+        \end{equation}
+        Therefore by Eq. \eqref{eq:fall2015-0},
+        \begin{align*}
+           \frac{f(x+h)-f(x)}{h}-g_{\infty}(x)
+          = g_{N}(x)-g_{\infty}(x) +A_{N,h}(x)-g_{N}(x) +B_{N}
+        \end{align*}
+        so that
+        \begin{equation*} 
+          \left| \frac{f(x+h)-f(x)}{h}-g_{\infty}(x) \right| 
+          \leq \sup_{x\in \mathbb{R}}\left|g_{N}(x)-g_{\infty}(x)\right| +\left|A_{N,h}(x)-g_{N}(x)\right| + \frac{C}{\sqrt{N}}
+        \end{equation*}
+        Let $\epsilon>0$ be arbitrary. By \eqref{eq:fall2015-1} and \eqref{eq:fall2015-2}, we may choose $N$ sufficiently
+        large that $C/\sqrt{N} <\epsilon/2$ and $\sup_{x\in \mathbb{R}}\left|g_{N}(x)-g_{\infty}(x)\right|
+        <\epsilon/2$, which implies
+        \begin{align*} 
+          \left| \frac{f(x+h)-f(x)}{h}-g_{\infty}(x) \right|
+          \leq \left|A_{N,h}(x)-g_{N}(x)\right| + \epsilon.
+        \end{align*}
+        Taking the limit suprememum of both sides as $h\to 0$ and using \eqref{eq:fall2015-3}, we obtain
+        \begin{equation*}
+          \limsup_{h\to 0} \left| \frac{f(x+h)-f(x)}{h}-g_{\infty}(x) \right| \leq \epsilon
+        \end{equation*}
+        Since $\epsilon>0$ was arbitrary, it holds that
+        %
+        \[ \limsup_{h\to 0} \left|
+          \frac{f(x+h)-f(x)}{h}-g_{\infty}(x) \right| =0. \]
+          %
+          Therefore
+          %
+          \[ f'(x) = \lim_{h \to 0}
+        \frac{f(x+h)-f(x)}{h}=g_{\infty}(x)\in \mathbb{R}. \]
+
+		%An alternative, but less clean way to show $f$ is differentiable is using the definition of the derivative, i.e. by proving that for each $x \in \RR$, the limit
 		%
-		\[ \lim_{h \to 0} \frac{f(x + h) - f(x)}{h} = \lim_{h \to 0} \frac{f_N(x + h) - f_N(x)}{h} + \lim_{h \to 0} \sum_{n = N+1}^\infty \frac{1}{\sqrt{n}} \frac{\sin((x + h)/n) - \sin(x/n)}{h}. \]
+		%\[ \lim_{h \to 0} \frac{f(x + h) - f(x)}{h} = \lim_{h \to 0} \sum_{n = 1}^\infty \frac{1}{\sqrt{n}} \frac{\sin((x + h)/n) - \sin(x/n)}{h}. \]
 		%
-		Since $f_N$ is differentiable, the first limit is easily shown to exist. One might understand the second sum by using the mean value theorem to conclude that $|\sin((x + h)/n) - \sin(x/n)| \lesssim |h| / n$, thus obtaining that
+		%exists. One way to do this is to write
 		%
-		\[ \limsup_{h \to 0} \left| \sum_{n = N+1}^\infty \frac{1}{\sqrt{n}} \frac{\sin((x + h)/n) - \sin(x/n)}{h} \right| \lesssim 1/N^{1/2}. \]
+		%\[ \lim_{h \to 0} \frac{f(x + h) - f(x)}{h} = \lim_{h \to 0} \frac{f_N(x + h) - f_N(x)}{h} + \lim_{h \to 0} \sum_{n = N+1}^\infty \frac{1}{\sqrt{n}} \frac{\sin((x + h)/n) - \sin(x/n)}{h}. \]
 		%
-		This means that
+		%Since $f_N$ is differentiable, the first limit is easily shown to exist. One might understand the second sum by using the mean value theorem to conclude that $|\sin((x + h)/n) - \sin(x/n)| \lesssim |h| / n$, thus obtaining that
 		%
-		\[ \limsup_{h \to 0} \frac{f(x + h) - f(x)}{h} - \liminf_{h \to 0} \frac{f(x + h) - f(x)}{h} \lesssim 1/N^{1/2}. \]
+		%\[ \limsup_{h \to 0} \left| \sum_{n = N+1}^\infty \frac{1}{\sqrt{n}} \frac{\sin((x + h)/n) - \sin(x/n)}{h} \right| \lesssim 1/N^{1/2}. \]
 		%
-		Taking $N \to \infty$ shows that $\liminf = \limsup$, so that the limit exists, and thus $f$ is differentiable.
+		%This means that
+		%
+		%\[ \limsup_{h \to 0} \frac{f(x + h) - f(x)}{h} - \liminf_{h \to 0} \frac{f(x + h) - f(x)}{h} \lesssim 1/N^{1/2}. \]
+		%
+		%Taking $N \to \infty$ shows that $\liminf = \limsup$, so that the limit exists, and thus $f$ is differentiable.
 	\end{solution}
 
 	\part Does the series converge uniformly on $\RR$?
@@ -878,6 +962,32 @@ converges for $a \geq 0$, and $f$ is continuous on $[0,\infty)$.
 	\end{align*}
 	%
 	Thus $\| f_n \|_{L^\infty[0,\infty)} \lesssim 1/2^n$. Thus $\{ f_n \}$ is uniformly summable, and so $f = \sum f_n$ exists, and is continuous for $a \geq 0$.
+
+	One can also work without a dyadic decomposition, i.e. using integration by parts to write
+	%
+  \begin{align*}
+      &= \int_{A}^{B}\frac{\sin(x^{2}+ax)}{x}dx\\ 
+      &= \int_{A}^{B}\frac{\sin(x^{2}+ax)(2x+a)}{x(2x+a)}dx\\
+      &= \int_{A}^{B} \frac{d}{dx}\left[ -\cos(x^{2}+ax) \right] \cdot \frac{1}{x(2x+a)}dx\\
+      &= \left.\frac{-\cos(x^{2}+ax)}{x(2x+a)}\right|^{x=B}_{x=A} + \int_{A}^{B}\cos(x^{2}+ax)\left( \frac{-1}{x^{2}(2x+a)}-\frac{2}{x(2x+a)} \right)  dx
+    \end{align*}
+    Therefore if
+    %
+    \[ f_C(a) = \int_0^C \frac{\sin(x^2 + ax)}{x}\; dx, \]
+    %
+    then we have shown that
+    %
+    \begin{equation*}
+      \left|   f_{B}(a)-f_{A}(a) \right|
+      \leq \frac{1}{2A^{2}}+ \frac{1}{2B^{2}} + \int_{A}^{B}\frac{1}{2x^{3}}+ \frac{2}{x(2x)^{2}} dx
+      \leq 10 \left( \frac{1}{A^{2}}+\frac{1}{B^{2}}  \right).
+    \end{equation*}
+    %
+    Thus
+    %
+    \[ \| f_B - f_A \|_{L^\infty[0,\infty)} \leq 10 (1/A^2 + 1/B^2) \to 0, \]
+    %
+    which shows $\{ f_A \}$ converges uniformly to a continuous function as $A \to \infty$.
 \end{solution}
 
 \question (Fall 2017) Consider the sequence of functions $f_n: \RR \to \RR$ defined by
@@ -1399,7 +1509,7 @@ for all real numbers $a < b$. Find an example or show that no such function exis
   	%
   	\[ \liminf_{n \to \infty} f_n(x) = 1. \]
   	%
-  	Thus $\{ f_n \}$ does not converge pointwise to zero at any point in $[0,1)$.
+  	Thus for any $x \in [0,1]$, $\{ f_n(x) \}$ does not converge as $n \to \infty$. Thus the sequence of functions $\{ f_n \}$ does not converge pointwise to zero at any point in $[0,1)$.
 
   	For the second part, let $I_n = [n,n+1]$, and let $f_n = \chi_{I_n}$. The sequence $\{ f_n \}$ is then the required example. This is the classic ``moving bump''.
   \end{solution}    
@@ -1910,15 +2020,22 @@ Using Claim 1, we see that $\norm{x_{n}}_{L^2([0,1])} = \left( \frac{n+1}{n} \ri
 
 \question (Fall 2019) Show that there is no sequence $\{ a_n \}$ of positive numbers such that $\sum a_n |c_n| < \infty$ if and only if $\{ c_n \}$ is a bounded sequence. Hint: Suppose that there exists a sequence and consider the map $T: l^\infty \to l^1$ given by $Tf(n) = a_n f(n)$. The set of $f$ such that $f(n) = 0$ for all but finitely many $n$ is dense in $l^1$ but not in $l^\infty$.
 \begin{solution}
-    Consider the operator $T$ defined in the hint. Then $T$ is injective, since all elements of the sequence $\{ a_n \}$ are positive. We also claim that $T$ is surjective, given the property assumed of the sequence. Indeed, if $\sum b_n < \infty$, and we define $c_n = b_n/a_n$, then $\sum a_n |c_n| < \infty$, and thus $\{ c_n \}$ is a bounded sequence, and $Tc = b$.
-    
-    Thus we conclude that $T$ is an isomorphism, so that there exists a constants $C_1,C_2 > 0$ such that $C_1 \| c \|_{l^\infty} \leq \| Tc \|_{l^1} \leq C_2 \| c \|_{l^\infty}$. Plugging in the bounded sequence $(1,1,1,\dots)$ into the operator $T$ gives the sequence $\{ a_n \}$, and so this sequence lies in $l^1$. Clearly any sequence $\{ a_n \}$ in $l^1$ will give rise to a bounded operator from $l^\infty$ to $l^1$, so we wish to disprove that the lower bound exists, i.e there does not exist a sequence $\{ a_n \}$ in $l^1$ such that $\| Tc \|_{l^1} \gtrsim \| c \|_{l^\infty}$.
+    Consider the operator $T$ defined in the hint. Clearly $T$ is linear. Also, $T$ is injective, since all elements of the sequence $\{ a_n \}$ are positive. We also claim that $T$ is surjective, given the property assumed of the sequence. Indeed, if $\sum b_n < \infty$, and we define $c_n = b_n/a_n$, then $\sum a_n |c_n| < \infty$, and thus $\{ c_n \}$ is a bounded sequence, and $Tc = b$. Finally, we claim that $T$ is bounded. Indeed, we have
+    %
+    \[ \| Tf \|_{l^1} = \sum |Tf(n)| = \sum |a_n| |f(n)| \leq \left( \sum |a_n| \right) \| f \|_{l^\infty}. \]
+   
+   %
+   Thus we conclude that $T$ is an isomorphism (a consequence of the open mapping theorem is that any bounded, bijective linear oeprator is an isomorphism). This means that there exists a constants $C_1,C_2 > 0$ such that $C_1 \| c \|_{l^\infty} \leq \| Tc \|_{l^1} \leq C_2 \| c \|_{l^\infty}$.
+
+   This leads to a contradiction via one of several approaches. Plugging in the bounded sequence $(1,1,1,\dots)$ into the operator $T$ gives the sequence $\{ a_n \}$, and so this sequence lies in $l^1$. Clearly any sequence $\{ a_n \}$ in $l^1$ will give rise to a bounded operator from $l^\infty$ to $l^1$, so we wish to disprove that the lower bound exists, i.e there does not exist a sequence $\{ a_n \}$ in $l^1$ such that $\| Tc \|_{l^1} \gtrsim \| c \|_{l^\infty}$.
     
     To do this, we must construct a non-negative sequence $c$ where $\| c \|_{l^\infty}$ is large, but such that $\| Tc \|_{l^1}$ is small. The best way to do this is to concetrate the sequence $c$ at a single point, i.e. we consider the sequence $c = (0,\dots,0,1,\dots)$, where the $1$ is in the $N$th term in the sequence. Then $Tc = (0,\dots,0,a_n,\dots)$, and so we have
     %
     \[ \| c \|_{l^\infty} = 1 \quad\text{and}\quad \| Tc \|_{l^1} = |a_N|. \]
     %
     As $N \to \infty$, $|a_N| \to 0$ since the sequence is integrable. But this is impossible since the bound $\| Tc \|_{l^1} \gtrsim \| c \|_{l^\infty}$ implies that $|a_N| \gtrsim 1$ for all $N$.
+
+    Alternatively, it suffices to argue more abstractly that $l^1$ and $l^\infty$ cannot be isomorphic to one another. For instance, one can show that $l^1$ is separable, but $l^\infty$ is not separable, so the spaces cannot be isomorphic.
 \end{solution}
 
 \question (Fall 2020)
@@ -1967,7 +2084,7 @@ Prove there exists a constant $C$ such that
         %
         Minkowski's inequality occurs when we replace the sum with an integral, i.e. for $1 \leq p \leq \infty$,
         %
-        \[ \left\| \int_y f_y\; dy \right\|_p \leq \int_y \| f_y \|_p\; dy. \]
+        \[ \left\| \int f_y\; dy \right\|_p \leq \int \| f_y \|_p\; dy. \]
         %
         In this case, we set $f_y(x) = f(x + y)$. Then
         %
@@ -1981,22 +2098,28 @@ Prove there exists a constant $C$ such that
         %
         \[ \| \sum_n f_n \|_p = \sum_n \| f_n \|_p \]
         %
-        if and only if $\{ f_n \}$ are all scalar multiples of one another. Similarily, \emph{Minkowski's inequality} is an equality if and only if $\{ f_y \}$ are all scalar multiples of one another \emph{almost everywhere}. Thus if $\| Tf \|_p = \| f \|_p$, then the application of Minkowski's inequality is an equality, which implies that there exists $c(y)$ such that $f_y(x) = c(y) f(x)$, i.e. $f(x + y) = c(y) f(x)$. But if
+        if and only if $\{ f_n \}$ are all scalar multiples of one another. Similarily, \emph{Minkowski's inequality} is an equality if and only if $\{ f_y \}$ are all scalar multiples of one another \emph{almost everywhere}. Thus if $\| Tf \|_p = \| f \|_p$, then the application of Minkowski's inequality is an equality, which implies that there exists $c(y)$ such that $f_y(x) = c(y) f(x)$, i.e. $f(x + y) = c(y) f(x)$.
+
+        Now suppose that
         %
-        \[ \int_0^y |f(x)|^p\; dx \neq 0, \]
+        \[ \int_{-\infty}^\infty |f(x)|^p\; dx \neq 0. \]
         %
-        the dominated convergence theorem implies that
+        Then we can find some $x_0 \in \RR$ with $f(x_0) \neq 0$. The dominated convergence theorem implies that for any $x \in \RR$,
         %
         \begin{align*}
-            \| f \|_p^p &= \lim_{n \to \infty} \sum_{k = -n}^n \int_0^y f(x + ky)\; dy\\
-            &= \lim_{n \to \infty} \int_0^y f(x) \sum_{k = -n}^n c(y)^k.
+            \| f \|_p^p &= \lim_{n \to \infty} \sum_{k = -n}^n \int_0^1 |f(x_0 + ky)|^p\; dy\\
+            &= \lim_{n \to \infty} |f(x_0)|^p \int_0^1 \sum_{k = -n}^n |c(y)|^k\; dy.
         \end{align*}
         %
-        But this sum cannot possibly converge. Thus
+        The sum
         %
-        \[ \int_0^y |f(x)|^p = 0, \]
+        \[ \sum_{k = -n}^n |c(y)|^k \]
         %
-        which implies $f = 0$ almost everywhere.
+        converges monotonically in $n$ to $\infty$ everywhere except when $c(y) = 0$, where it is constantly zero in $n$. Thus by the monotone convergence theorem, if $c$ does not equal zero almost everywhere on $[0,1]$, then
+        %
+        \[ \| f \|_p^p = \infty, \]
+        %
+        which gives a contradiction. Thus $c = 0$ almost everywhere on $[0,1]$, and so as a result, $f = 0$ almost everywhere.
     \end{solution}
     
     \part (Fall 2015) Prove that the map $f \mapsto Tf - f$ does not map $L^p(\RR)$ onto $L^p(\RR)$.
@@ -2414,19 +2537,29 @@ Consider the function $f:\R^{2}\to \R$ given by $f(x,y)=|x|$. Find $\left( \frac
     
     \part Find a distribution $T \in \mathcal{D}'(\RR)$ such that $T_n = \sin(nx^2)T$ does not converge to $0$ in the sense of distributions as $n \to \infty$.
     \begin{solution}
-        One can find a distribution $T$ such that for $\phi$ supported away from the origin,
+    		Let $T$ be the distribution defined by
+    		%
+    		\[ T(\phi) = \phi \left( \sqrt{\pi / 2} \right) \]
+    		%
+    		for every test function $\phi$. Then
+    		%
+    		\[ T_n(\phi) = T(\sin(nx^2)\phi(x))=\sin\left(\frac{n \pi}{2}\right)\phi\left(\sqrt{\frac{\pi}2}\right)= (-1)^n\phi\left(\sqrt{\frac{\pi}2}\right), \]
+    		%
+    		which does not converge as $n\to \infty$ if $\phi(\sqrt{\pi/2})\neq 0$.
+
+%        One can find a distribution $T$ such that for $\phi$ supported away from the origin,
         %
-        \[ \int \phi(x) (1/x^2)\; dx. \]
+%        \[ \int \phi(x) (1/x^2)\; dx. \]
         %
-        One choice is provided in a previous question. Consider a non-negative test function $\phi$ supported away from the origin (for simplicity, supported on $x > 0$), we have
+%        One choice is provided in a previous question. Consider a non-negative test function $\phi$ supported away from the origin (for simplicity, supported on $x > 0$), we have
         %
-        \[ \int \sin(nx^2) T(x) \phi(x)\; dx = \int \frac{\sin(nx^2) \phi(x)}{x^2}. \]
+%        \[ \int \sin(nx^2) T(x) \phi(x)\; dx = \int \frac{\sin(nx^2) \phi(x)}{x^2}. \]
         %
-        For large $n$, we have $\sin(nx^2) \geq nx^2/2$ on the support of $\phi$, which implies that
+%        For large $n$, we have $\sin(nx^2) \geq nx^2/2$ on the support of $\phi$, which implies that
         %
-        \[ \int \frac{\sin(nx^2) \phi(x)}{x^2} \geq n/2 \int \phi(x)\; dx.  \]
+%        \[ \int \frac{\sin(nx^2) \phi(x)}{x^2} \geq n/2 \int \phi(x)\; dx.  \]
         %
-        This clearly does not converge to zero as $n \to \infty$.
+%        This clearly does not converge to zero as $n \to \infty$.
     \end{solution}
 \end{parts}
 
