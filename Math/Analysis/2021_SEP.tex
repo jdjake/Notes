@@ -9,6 +9,7 @@
 \usepackage{bbm}
 \usepackage[shortlabels]{enumitem}
 \usepackage{esint}
+\usepackage{mathabx}
 
 \DeclareMathOperator{\CC}{\mathbb{C}}
 \DeclareMathOperator{\RR}{\mathbb{R}}
@@ -1260,7 +1261,7 @@ It is useful to keep in mind \emph{Littlewood's Three Principles}:
 	\item Every almost everywhere convergent sequence of measurable functions is nearly uniformly convergent. One instance of this principle is \emph{Egorov's theorem}, that if $\{ f_n \}$ is a sequence of measurable functions on a finite measure set $E_0 \subset \RR^d$ converging pointwise to some function $f: E_0 \to \CC$, then for any $\varepsilon > 0$, we can find $E \subset E_0$ with $|E \Delta E_0| < \varepsilon$ such that $\{ f_n \}$ converges uniformly to $f$ on $E$.
 \end{itemize}
 %
-One should also keep in mind three other principles of measure theory:
+Here are some other results which are often useful:
 %
 \begin{itemize}
 	\item The \emph{monotone convergence theorem}: If $\{ f_n \}$ is a monotone sequence of non-negative measurable functions converging to some function $f$ pointwise almost everywhere as $n \to \infty$, then
@@ -1274,6 +1275,12 @@ One should also keep in mind three other principles of measure theory:
 	\item \emph{Fatou's lemma}, which says that if $\{ f_n \}$ are a family of non-negative, measurable functions, then
 	%
 	\[ \int \left( \liminf_{n \to \infty} f_n(x) \right)\; dx \leq \liminf_{n \to \infty} \left( \int f_n(x)\; dx \right). \]
+
+	\item The \emph{Borel-Cantelli Lemma}: If $\{ E_n \}$ is a sequence of measurable sets such that
+	%
+	\[ \sum_{n = 1}^\infty |E_n| < \infty, \]
+	%
+	then $\limsup_n E_n = \bigcap_{n = 1}^\infty \bigcup_{m \geq n} E_m$ is a set of measure zero.
 \end{itemize}
 %
 One should also have an aptitude for manipulating sets to calculate their measure, but it is difficult to summarize these techniques here: they come from practice in various problems.
@@ -1493,6 +1500,13 @@ Prove that for any $\lambda\geq 0$, we have
   \end{equation*}
 \end{solution}
 
+
+
+
+\newpage
+\section{Functional Analysis Notes}
+
+s
 
 
 
@@ -2109,6 +2123,46 @@ Prove there exists a constant $C$ such that
 
 
 
+
+\newpage
+\section{Baire Category Notes}
+
+The \emph{Baire Category Theorem} says that if $X$ is a complete metric space, then for any sequence $\{ U_n \}$ of open, dense subsets of $X$, $\bigcap_n U_n$ is dense in $X$. To make things less abstract, I like to think through this result in terms of logical properties:
+%
+\begin{itemize}
+	\item A logical property $P$ of points in $X$ is \emph{stable} if, whenever $P(x_0)$ is true for some $x_0 \in X$, then $P(x)$ is true for $x$ in a neighborhood of $x_0$.
+
+	\item A logical property $P$ of points in $X$ is \emph{unstable} if, whenever $P(x_0)$ is true for some $x_0 \in X$, then for any $\varepsilon > 0$, we can find $x \in X$ with $d(x,x_0) < \varepsilon$, such that $P(x)$ is false. One advantage of being quantitative here is that it suffices to show that the property is unstable for $x_0$ in a \emph{dense} subspace $X_0$ of $X$.
+\end{itemize}
+%
+The Baire category theorem then says that, given a countable family of properties $\{ P_n \}$, such that $P_n$ is a stable property, and the \emph{negation} of $P_n$ is an unstable property, then the set of points $x \in X$ such that $P_n(x)$ is true for all $n$ is a dense subset of $X$.
+
+To see an example of this formulation of the theorem, let us go through the classic Baire category proof that there exists a continuous function on $[0,1]$, which is differentiable nowhere. The first challenge is to find countably many properties $\{ P_n \}$ of functions in $C[0,1]$ such that a function $f$ is differentiable nowhere if and only if $P_n(f)$ is true for all $n$, though we must also be careful to choose these properties to be stable. This leads to the family of properties $\{ P_{N,M} \}$, where $N$ and $M$ are positive integers, and $P_{N,M}(f)$ is true if, for any $x_0 \in [0,1]$, there exists $x_1 \in [0,1]$ with $0 < |x_1 - x_0| < 1/M$ and with
+%
+\[ |f(x_0) - f(x_1)| > N|x_0 - x_1|. \]
+%
+Let us now show that the properties $\{ P_{N,M} \}$ are both stable, and their complement is unstable:
+%
+\begin{itemize}
+	\item Since $[0,1]$ is compact, and for any fixed $f$, $x_0$ and $x_1$ such that the above properties hold, we can keep $x_1$ constant as we vary $x_0$ in a small neighborhood, we can find a finite collection of points $\{ x_1(1),\dots, x_1(K) \}$ such that given any $x_0 \in [0,1]$, there is $k$ such that $0 < |x_0 - x_1(k)| < 1/M$ and $|f(x_0) - f(x_1)| > N|x_0 - x_1|$. Combined with the fact that we use a \emph{strict inequality} above, this can be used to show $P_{N,M}$ is a stable property.
+
+	\item Conversely, the negation of the property $P_{N,M}$ is unstable. To see this, we note that $C^\infty[0,1]$ is dense in $C[0,1]$. Thus to show the property is unstable, it suffices to show it is unstable at any such function $f \in C^\infty[0,1]$. Fix $T > 0$ such that $f$ is Lipschitz of order $T$ for some large quantity $T \geq 1$. For any $R \geq 2M$, define a function $g_R \in C[0,1]$ such that for $1 \leq k \leq R$, $g(k/R) = (-1)^k (10NT/R)$, and then linearly interpolating between these values. Then $\| g_R \|_{L^\infty} \leq 10NT/R$. Now consider the function $f_R = f + g_R$. Now if $1/R \leq x \leq 2/R$,
+	%
+	\begin{align*}
+		|f_R(k/R + x) - f_R(k/R)| &\geq |g_R(k/R + x) - g_R(k/R)| - |f(k/R + x) - f(k/R)|\\
+		&\geq 10NT/R - |f(k/R + x) - f(k/R)|\\
+		&\geq 10TN/R - 2T/R\\
+		&\geq 5TN/R > N|x|.
+	\end{align*}
+	%
+	Since $R \geq 2M$, this justifies that $P_{N,M}(f_R)$ is true. For any $\varepsilon > 0$, if $R \geq 10NT/\varepsilon$, then $\| f_R - f \|_{L^\infty} \leq \varepsilon$. Thus we see that the property $P_{N,M}$ is unstable.
+\end{itemize}
+%
+The Baire category theorem then implies that the set of $f \in C[0,1]$ such that $P_{N,M}(f)$ is true for all $N$ and $M$ is dense in $C[0,1]$, which proves the existence of continuous functions differentiable at no point.
+
+
+
+
 \newpage
 \section*{Day 7: Warm Up Problems}
 
@@ -2248,6 +2302,47 @@ Combining the two cases, the result follows.
 \end{solution}
 
 
+
+
+
+
+
+\newpage
+\section{Distribution Theory Notes}
+
+Here we detail the very basics of distribution theory. The hope is that provided one knows these basics, then without having to study much distribution theory, one can turn many problems on the exam involving distributions into more basic analysis problems, to which one can apply the tools of basic analysis, measure theory, or functional analysis.
+
+If $U \subset \RR^d$ is an open set, a distribution on $U$ is a \emph{continuous linear functional} $u$ on the vector space $\mathcal{D}(U) := C_c^\infty(U)$ of all smooth, compactly supported functions on $U$. Thus with each $\phi \in C_c^\infty(U)$, the functional $u$ associates a quantity $\langle u, \phi \rangle$, which we might also denote as
+%
+\[ \int u(x) \phi(x)\; dx. \]
+%
+The set of all distributions on $U$ is denoted $\mathcal{D}(U)^*$. There is an abstract theory of topological vector spaces that allows us to define what it means for $u$ to be continuous, but it is not necessary to learn this theory if one remembers a more practical definition. In order for $u$ to be continuous, one needs to show that for any compact set $K \subset U$, there exists an integer $N > 0$, possibly depending on $K$, such that for all $\phi \in C_c^\infty(U)$ with $\text{supp}(\phi) \subset K$,
+%
+\[ |\langle u, \phi \rangle| \lesssim_K \sup_{x \in K} \sup_{|\alpha| \leq N} |D^\alpha \phi(x)|. \]
+%
+To check you understand this definition, prove that the linear functional $u$ defined by setting
+%
+\[ \langle u, \phi \rangle = \sum_{n = 1}^\infty e^{e^{n}} D^{n!} \phi(n) \]
+%
+is a distribution. As other examples, for any locally integrable function $f: U \to \CC$, or any locally finite measure $\mu$, one can view $f$ and $\mu$ as distributions by defining
+%
+\[ \langle f, \phi \rangle = \int f(x) \phi(x)\; dx \quad\text{and} \langle \mu, \phi \rangle = \int \phi(x)\; d\mu(x). \]
+%
+Thus many mathematical objects in analysis are special cases of distributions. An important example is the Dirac delta distribution $\delta_x$, for any $x \in U$, such that $\langle \delta_x, \phi \rangle = \phi(x)$.
+
+Surprisingly, one can take the formal derivative of \emph{any distribution}, by applying integration by parts. If $u$ is a distribution on $U$, we define it's partial derivatives $D^i u$, which are also distributions, by the formal definition
+%
+\[ \langle D^i u, \phi \rangle = - \langle u, D^i \phi \rangle. \]
+%
+As an example, we calculate that
+%
+\[ \langle D^i \delta_x, \phi \rangle = - \langle \delta_x, D^i \phi \rangle = - D^i \phi(x). \]
+%
+Thus the derivative of the Dirac delta at a point $x$ is the distribution that measures the derivatives of a given function at the point $x$. For more well behaved functions, the distributional derivative of a function will be equal to the derivative of the function.
+
+A sequence of distributions $\{ u_n \}$ converges \emph{distributionally} to another distribution $u$ if, for any $\phi \in \mathcal{D}(U)$, the quantities $\langle u_n, \phi \rangle$ converge to $\langle u, \phi \rangle$. If this is the case, it also follows that the derivatives $\{ D^i u_n \}$ converge distributionally to $D^i u$.
+
+Roughly speaking, if you start to get intuition about how to work with distributions, these facts will allow you to convert most problems about distributions to more basic problems about the convergence of numbers, or integrals, and so on, and so you can focus on trying to apply the more basic analytical tools.
 
 
 
@@ -2757,6 +2852,68 @@ Find $f$ and $f'$ (specify the definition of the Fourier transform you are using
 
 
 
+
+
+
+
+
+
+\newpage
+\section{Fourier Analysis / Tempered Distribution Notes}
+
+With distribution theory, there are a couple simple facts that allow one to convert technical sounding problems into more basic problems. Fourier analysis consists of some more deep tools than this, so I'd recommend making a study of these tools separately. But the theory of Fourier analysis applied to tempered distributions is very similar to the theory of distributions, in the sense that if you know Fourier analysis, you can often convert problems involving tempered distributions into more basic problems about Fourier analysis / other analysis techniques.
+
+To begin with, let's review the Fourier transform. If $f: \RR^d \to \CC$ is integrable, we define the Fourier transform $\widehat{f}: \RR^d \to \CC$ by the integral formula
+%
+\[ \widehat{f}(\xi) = \int f(x) e^{-2 \pi i \xi \cdot x}\; dx. \]
+%
+To avoid technical assumptions, from now on we assume we are working with functions in the \emph{Schwartz class} $\mathcal{S}(\RR^d)$, which consists of smooth functions $f \in C^\infty(\RR^d)$ which are rapidly decaying, i.e. such that for any $N > 0$,
+%
+\[ |f(x)| \lesssim_N \frac{1}{(1 + |x|)^N}. \]
+%
+The Fourier transform is then a bijection from $\mathcal{S}(\RR^d)$ to itself, with inverse given by
+%
+\[ \widecheck{g}(x) = \int g(\xi) e^{2 \pi i \xi \cdot x}\; d \xi. \]
+%
+One can then verify that the \emph{multiplication formula}
+%
+\[ \int \widehat{f}(\xi) g(\xi)\; d\xi = \int f(x) \widehat{g}(x)\; dx \]
+%
+holds. This will enable us to use duality to extend the definition of the Fourier transform to a family of distributions.
+
+Distributions on $\RR^d$ were defined as continuous linear functionals on $\mathcal{D}(\RR^d) = C_c^\infty(\RR^d)$. Some of these distributions extend to continuous linear functionals on $\mathcal{S}(\RR^d)$, which contains $\mathcal{D}(\RR^d)$ as a subclass. These distributions are called \emph{tempered}, and the class of all such tempered distributions is denoted $\mathcal{S}(\RR^d)^*$. Again, there is an abstract theory which determines when a linear functional on $\mathcal{S}(\RR^d)$ is continuous. But in practice, it suffices to verify the following: a tempered distribution $u$ is a functional that associates with each $\phi \in \mathcal{S}(\RR^d)$ a quantity $\langle u, \phi \rangle$, such that there exists $N > 0$ and $M > 0$ such that
+%
+\[ |\langle u, \phi \rangle| \leq \sup_{|\alpha| \leq N} \sup_{x \in \RR^d} \frac{|D^\alpha \phi(x)|}{(1 + |x|)^M}. \]
+%
+If $u$ is a tempered distribution, we formally define the Fourier transform of $u$, a tempered distribution $\widehat{u}$, by the formula
+%
+\[ \langle \widehat{u}, \phi \rangle = \langle u, \widehat{\phi} \rangle, \]
+%
+which behaves like the multiplication formula above. The Fourier transform is then a bijection of $\mathcal{S}(\RR^d)^*$, where the inverse Fourier transform is given by
+%
+\[ \langle \widecheck{u}, \phi \rangle = \langle u, \widecheck{\phi} \rangle, \]
+%
+where the inverse Fourier transform $\widecheck{\phi}$ is defined above.
+
+We now summarize several useful properties of the Fourier transform:
+%
+\begin{itemize}
+	\item Because the Fourier transform is a bijection, if $\widehat{u} = 0$, then $u = 0$.
+
+	\item If $f$ is an integrable function, then $\widehat{f}$ is a continuous function with $\lim_{|x| \to \infty} |f(x)| = 0$ (the \emph{Riemann-Lebesgue Lemma}), and $\| \widehat{f} \|_{L^\infty} \leq \| f \|_{L^1}$.
+
+	\item The Fourier transform is a bijection of $L^2(\RR^d)$, and for any $f \in L^2(\RR^d)$, $\| \widehat{f} \|_{L^2} = \| f \|_{L^2}$ (\emph{Parseval's Formula}). In particular, if $u$ is a tempered distribution, and $\widehat{u} \in L^2(\RR^d)$, then $u \in L^2(\RR^d)$.
+
+	\item The Fourier transform of $D^\alpha u$ is equal to $(2 \pi i \xi)^\alpha \widehat{u}$.
+
+	\item The Fourier transform of $(- 2 \pi i x)^\alpha u$ is equal to $D^\alpha \widehat{u}$.
+
+	\item If we define the convolution of $\phi_1, \phi_2 \in \mathcal{S}(\RR^d)$ by setting
+	%
+	\[ (\phi_1 * \phi_2)(x) = \int \phi_1(y) \phi_2(x - y)\; dy, \]
+	%
+	then $\phi_1 * \phi_2$ is Schwartz, and it's Fourier transform is $\widehat{\phi_1} \cdot \widehat{\phi_2}$. There is a way to define the convolution of a distribution $u$ with a Schwartz function $\phi$, denoted $u * \phi$, which will be a tempered distribution. The important thing to remember is that the Fourier transform of this convolution is also equal to $\widehat{u} \widehat{\phi}$.
+\end{itemize}
 
 
 
