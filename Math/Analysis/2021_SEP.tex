@@ -3147,6 +3147,155 @@ Show that if $\text{Re}(a) > - n/2$ and $s \in [0,\text{Re}(a) + n/2)$, then $f_
 \newpage
 \section*{Day 10: Warm Up Problems}
 
+\question (Fall 2021) Let $\sigma$ be a Borel probability measure on $[0,1]$ satisfying
+%
+\begin{enumerate}
+	\item $\sigma([1/3,2/3]) = 0$.
+	\item $\sigma([a,b]) = \sigma([1-b,1-a])$ for any $0 \leq a < b \leq 1$.
+	\item $\sigma([3a,3b]) = 2 \sigma([a,b])$ for any $a,b$ such that $0 \leq 3a < 3b \leq 1$.
+\end{enumerate}
+%
+$\sigma$ is called the $1/3$ Cantor measure on $[0,1]$.
+\begin{parts}
+	\part Find $\sigma([0,1/8])$.
+	\begin{solution}
+		Property 2 implies that
+		%
+		\[ \sigma([0,1/3]) = \sigma([2/3,1]). \]
+		%
+		Since $\sigma$ is a probability measure, and $\sigma([1/3,2/3]) = 0$, this implies that $\sigma$ gives mass $1/2$ to each of these sets. Property 1 and 3 implies that
+		%
+		\[ \sigma([1/9,2/9]) = (1/2) \sigma([1/3,2/3]) = 0. \]
+		%
+		Since $1/9 < 1/8 < 2/9$, we find that
+		%
+		\[ \sigma([0,1/8]) = \sigma([0,1/9]). \]
+		%
+		But now Property 1 implies that
+		%
+		\[ \sigma([0,1/9]) = (1/2) \sigma([0,1/3]) = 1/4. \]
+		%
+		Thus $\sigma([0,1/8]) = 1/4$.
+	\end{solution}
+
+	\part Calculate the second moment of $\sigma$, i.e. the integral
+	%
+	\[ M = \int_0^1 x^2 d\sigma(x). \]
+	\begin{solution}
+		The trick to calculating $M$ is to exploit the recursive nature of the Cantor measure to write $M$ in terms of itself. First, we note that
+		%
+		\[ \int_0^1 x d\sigma(x) = 1/2. \]
+		%
+		To see why this is true, we note that Property 2. implies that $d\sigma(1 - x) = d\sigma(x)$, and so a change of variables gives that
+		%
+		\[ \int_0^1 x d\sigma(x) = \int_0^1 (1 - x) d\sigma(1 - x) = \int_0^1 (1 - x) d\sigma(x) = 1 - \int_0^1 x d\sigma(x). \]
+		%
+		Rearranging this equation gives the result.
+
+		Now we have done this, let's address the second moment. Property 1. implies that we have $d \sigma(x/3) = (1/2) d\sigma(x)$, and so a change of variables gives that
+		%
+		\[ \int_0^{1/3} x^2 d\sigma(x) = \int_0^1 (x/3)^2 d\sigma(x/3) = (1/18) \int_0^1 x^2 d\sigma(x) = M/18. \]
+		%
+		Since $\sigma([1/3,2/3]) = 0$,
+		%
+		\[ \int_{1/3}^{2/3} x^2 d\sigma(x) = 0. \]
+		%
+		Finally, using Property 2. of the integral, we have $d \sigma(1 - x) = d \sigma(x)$, which gives that
+		%
+		\[ \int_{2/3}^1 x^2 d\sigma(x) = \int_0^{1/3} (1 - x)^2 d \sigma(1 - x) = \int_0^{1/3} (1 - 2x + x^2) d \sigma(x). \]
+		%
+		Now
+		%
+		\[ \int_0^{1/3} d\sigma(x) = \sigma([0,1/3]) = 1/2. \]
+		%
+		Another change of variables gives that
+		%
+		\[ \int_0^{1/3} x d\sigma(x) = \int_0^1 (x/3) d\sigma(x/3) = (1/6) \int_0^1 x d\sigma(x) = (1/12). \]
+		%
+		Finally, we have already calculated that
+		%
+		\[ \int_0^{1/3} x^2 d\sigma(x) = M/18. \]
+		%
+		Putting everything together, we conclude that
+		%
+		\[ \int_{2/3}^1 x^2 d\sigma(x) = 1 - 2/12 + M/18 = 1 - 1/6 + M/18. \]
+		%
+		Thus
+		%
+		\[ M = \int_0^1 x^2 d\sigma(x) = (M/18) + (0) + (1 - 1/6 + M/18) = M/9 + (5/6). \]
+		%
+		Rearranging gives
+		%
+		\[ M = 15/16. \]
+	\end{solution}
+\end{parts}
+
+\question (Fall 2021) Find the spectrum of the linear operator $A$ on $L^2(\RR)$ defined as
+%
+\[ Af(x) = \int_{-\infty}^\infty \frac{f(y)}{1 + (x - y)^2}\; dy \]
+%
+(The spectrum of a linear operator $T$ is the closure of the set of all complex numbers $\lambda$ such that the operator $T - \lambda$ does not have a bounded inverse). Hint: It may be useful to find the Fourier transform of $1/(1 + x^2)$.
+\begin{solution}
+	That Fourier analysis might help us in this problem is suggest by the fact that $Af = K * f$, where
+	%
+	\[ K(x) = \frac{1}{1 + x^2}. \]
+	%
+	Thus the operator is a convolution operator. If $m = \widehat{K}$, then we can view $A$ as a \emph{Fourier multiplier operator}, i.e. such that
+	%
+	\[ \widehat{Af}(\xi) = m(\xi) \widehat{f}(\xi). \]
+	%
+	There are several ways to compute $K$. The first is to calculate it explicitly, writing
+	%
+	\[ m(\xi) = \int_{-\infty}^\infty \frac{e^{-2 \pi i \xi \cdot x}}{1 + x^2}\; dx \]
+	%
+	and apply contour integration. The second is to note that since
+	%
+	\[ \left( 1 - \frac{1}{4 \pi^2} (- 2 \pi i x)^2 \right) K = (1 + x^2) K = 1, \]
+	%
+	taking Fourier transforms on both sides gives that $m$ satisfies the differential equation
+	%
+	\[ D^2 m = (4 \pi^2) (m - \delta). \]
+	%
+	Solving this equation gives
+	%
+	\[ m(\xi) = A e^{2 \pi \xi} + B e^{-2 \pi \xi} + \pi [ e^{2 \pi x} H(x) - e^{-2 \pi x} H(x) ], \]
+	% 
+	Since $m$ is tempered, the constants must be chosen to avoid exponential increase near infinity. Thus we must set $A = \pi$, and $B = 0$, which gives
+	%
+	\[ m(\xi) = \pi e^{-2 \pi |\xi|}. \]
+	%
+	This viewpoint will help us find \emph{approximate eigenvalues} for $A$, which, by virtue of the fact that $A$ is self-adjoint, are the only barriers to $A - \lambda$ being invertible. Morally speaking, if $e_{\xi_0}(x) = e^{2 \pi i \xi_0 \cdot x}$, then $\widehat{e_{\xi_0}} = \delta_{\xi_0}$, and so the Fourier transform of $Ae_{\xi_0}$ \emph{should} be equal to $m(\xi_0) \delta_{\xi_0}$, and thus we should have
+	%
+	\[ A e_{\xi_0} = m(\xi_0) e_{\xi_0}. \]
+	%
+	Thus $e_{\xi_0}$ is an eigenfunction of $A$ with eigenvalue $m(\xi_0)$. \emph{However}, $e_{\xi_0}$ does not lie in $L^2(\RR)$, and in fact, $A$ has no eigenfunctions. To fix this, we simply approximate $e_{\xi_0}$ by elements of $L^2(\RR)$, i.e. considering a Schwartz function $\phi$ with $\| \phi \|_{L^2(\RR)} = 1$, with $\widehat{\phi}$ supported on $[-1,1]$, and with $\widehat{\phi} \geq 0$, and consider the functions
+	%
+	\[ e_{\xi_0,R}(x) = R^{-1/2} e^{2 \pi i \xi_0 \cdot x} \phi(x/R) \]
+	%
+	for $R > 0$. Then $\| e_{\xi_0,R} \|_{L^2(\RR)} = 1$ for all $R > 0$, and by applying Plancherel's formula,
+	%
+	\begin{align*}
+		\| Ae_{\xi_0,R} - m(\xi_0) e_{\xi_0,R} \|_{L^2(\RR)} &= \| [m(\xi) - m(\xi_0) \widehat{e_{\xi_0,R}}(\xi) \|_{L^2_\xi(\RR)}\\
+		&= R^{1/2} \left( \int |m(\xi) - m(\xi_0)|^2 |\widehat{\phi}(R (\xi - \xi_0))|^2\; d\xi \right)^{1/2}.
+	\end{align*}
+	%
+	This integral is supported on $|\xi - \xi_0| \leq 1/R$, and on this region, by continuity of $m$, we have $|m(\xi) - m(\xi_0)| \lesssim_{\xi_0} 1/R$. Putting this into the integral above gives that
+	%
+	\[ \| Ae_{\xi_0,R} - m(\xi_0) e_{\xi_0,R} \|_{L^2(\RR)} \leq R^{-1/2} = R^{-1/2} \| e_{\xi_0,R} \|_{L^2(\RR)}. \]
+	%
+	Taking $R \to \infty$ shows that $A - m(\xi_0)$ cannot be an isomorphism, since if $T$ is an isomorphism, we have $\| Tf \|_{L^2(\RR)} \gtrsim \| f \|_{L^2(\RR)}$. Since the range of $m$ includes all positive numbers less than or equal to $\pi$, we have shown that the spectrum contains $[0,\pi]$.
+
+	We claim this is \emph{all} of the spectrum of $A$. Indeed, if $\alpha \not \in [0,\pi]$, then $|m(\xi) - \alpha| \gtrsim 1$ for all $\xi \in \RR$, and so
+	%
+	\begin{align*}
+		\| (A - \alpha) f \|_{L^2(\RR)} &= \| [m(\xi) - \alpha] \widehat{f}(\xi) \|_{L^2(\RR)} \gtrsim \| \widehat{f} \|_{L^2(\RR)} = \| f \|_{L^2(\RR)}.
+	\end{align*}
+	%
+	Thus $A - \alpha$ is an isomorphism onto it's image, which must contain all of $L^2(\RR)$ because it has a continuous inverse, namely the operator $B_\alpha: L^2(\RR) \to L^2(\RR)$ defined such that for $f \in L^2(\RR)$,
+	%
+	\[ \widehat{B_\alpha f}(\xi) = \frac{\widehat{f}(\xi)}{m(\xi) - \alpha}. \]
+\end{solution}
+
 \newpage
 \section{Day 10: Bonus Questions}
 
@@ -3313,7 +3462,7 @@ for some constant $C$ independent of $y$. Show that the distributional derivativ
 \end{solution}
 
 \question (Spring 2020)
-  Let $E\subset[0,1]$ be a measurable set with positive Lebesgue measure. Moreover, it satisfies the following property: As long as $x$ and $x$ belong to $E$, we know $\frac{x+y}{2}$ belongs to $E$. Prove that $E$ is an interval.
+  Let $E\subset[0,1]$ be a measurable set with positive Lebesgue measure. Moreover, it satisfies the following property: As long as $x$ and $y$ belong to $E$, we know $\frac{x+y}{2}$ belongs to $E$. Prove that $E$ is an interval.
   
   
 \begin{solution}
@@ -3390,9 +3539,9 @@ for some constant $C$ independent of $y$. Show that the distributional derivativ
     \end{solution}
 \end{parts}
 
-\newpage
-\section{Day 11: Bonus Questions}
 
+\newpage
+\section*{Day 11: Warm Up Question}
 
 \question (Fall 2015) Let $\chi \in C^\infty(\RR)$ have a compact support and define
 %
@@ -3422,38 +3571,8 @@ for some constant $C$ independent of $y$. Show that the distributional derivativ
     \end{solution}
 \end{parts}
 
-\question Let
-%
-\[ s_N(x) = \sum_{n = 1}^N (-1)^n \frac{x^{3n}}{n^{2/3}}. \]
-%
-Prove that $s_N(x)$ converges to a limit $s(x)$ on $[0,1]$, and that there is a constant $C > 0$ so that for all $N \geq 1$ the inequality
-%
-\[ \sup_{x \in [0,1]} |s_N(x) - s(x)|\leq C N^{-2/3} \]
-%
-holds.
-\begin{solution}
-    The convergence here becomes highly singular near $x = 1$, because the power series diverges for $|x| > 1$. Thus we cannot use normal power series techniques here. It seems we must exploit the oscillation of the series here to get explicit bounds since removing the $(-1)^n$ in the definition of the series causes the sum to diverge at $x = 1$. If we define
-    %
-    \[ S_N(x) = \sum_{n = 1}^N (-x^3)^n \]
-    %
-    for $N > 0$, and $S_0 = 0$, then the geometric series formula shows that there is $C > 0$ such that $|S_N(x)| \leq C$ for all $N$ and $x \in [0,1]$, and a summation by parts shows that
-    %
-    \[ \sum_{n = 1}^N (-1)^n \frac{x^{3n}}{n^{2/3}} = \sum_{n = 1}^N (S_n - S_{n-1}) \frac{1}{n^{2/3}} = \sum_{n = 1}^{N-1} S_n \left( \frac{1}{n^{2/3}} - \frac{1}{(n+3)^{2/3}} \right) + S_N / n^{2/3}. \]
-    %
-    Now a mean value theorem / Taylor series expansion implies that
-    %
-    \[ \left| \frac{1}{n^{2/3}} - \frac{1}{(n+3)^{2/3}} \right| \lesssim \frac{1}{n^{5/3}}, \]
-    %
-    which is summable, and so for $M \geq N$,
-    %
-    \[ |s_M(x) - s_N(x)| \lesssim \sum_{n = N}^{M-1} S_n / n^{5/3} + S_M / M^{2/3} \lesssim C/N^{2/3}. \]
-    %
-    This is sufficient to show the existence of the point wise limit (since it shows $s_N$ is a Cauchy sequence), and also shows the required inequality.
-\end{solution}
-
-
 \question (Fall 2018)
-  Prove that in an infinite dimensional Banach space,
+  Prove or Disprove that in an infinite dimensional Banach space,
   \begin{enumerate}[(a)]
   \item every norm bounded set is weakly bounded,
   \item every norm closed set is weakly closed
@@ -3487,6 +3606,72 @@ holds.
       |\phi(x_{n})-\phi(x)| = |\phi(x_{n}-x)|\leq \norm{\phi} \norm{x_{n}-x}
     \end{equation*}
     for every $\phi\in X^{*}$. Since the right-hand side converges to zero as $n\to\infty$, it follows that $\phi(x_{n})\to \phi(x)$ as well, i.e. that $x_{n}$ converges weakly to $x$. Therefore since $F$ is weakly closed, $x\in F$, as required.
+\end{solution}
+
+
+\newpage
+\section{Day 11: Bonus Questions}
+
+\question Suppose $f: [0,1]^2 \to \RR$ is continuous, and $\partial^2 f / \partial x^2$ exists pointwise on $[0,1]$, is continuous in the $x$ variable, and is bounded. Then $\partial f / \partial x$ is continuous.
+\begin{solution}
+	If $\partial_x f$ was not continuous, we could find $z \in [0,1]^2$ and $R > 0$ such that for any $\delta > 0$, we can find $w \in [0,1]^2$ with $|z - w| \leq \delta$ and with $| \partial_x f(w) - \partial x f(z)| \geq R$. Applying Taylor's formula and the boundedness and continuity of $\partial_x^2 f$, there exists $C > 0$, such that if $z + te_1 \in [0,1]^2$ and $w + te_1 \in [0,1]^2$
+	%
+	\[ |f(z + t e_1) - f(z) - t \partial_x f(z)| \leq C t^2. \]
+	%
+	and
+	%
+	\[ |f(w + te_1) - f(w) - t \partial_x f(w)| \leq C t^2. \]
+	%
+	Thus
+	%
+	\[ |f(z + t e_1) - f(w + te_1)| \geq |t| |\partial_x f(z) - \partial_x f(w)| - |f(z) - f(w)| - 2Ct^2 \geq |t| R - |f(z) - f(w)| - 2Ct^2 \]
+	%
+	Since $f$ is continuous, it is uniformly continuous. Thus for any $\varepsilon > 0$, there is $\delta > 0$ such that if $|v - w| \leq \delta$, then $|f(v) - f(w)| \leq \varepsilon$. But
+	%
+	\[ |(z + te_1) - (w + te_1)| = |z - w| \leq \delta, \]
+	%
+	so we conclude that $|f(z + te_1) - f(w + te_1)| \leq \varepsilon$ and $|f(z) - f(w)| \leq \varepsilon$, and thus that
+	%
+	\[ |t| R - 2Ct^2 \leq 2 \varepsilon \]
+	%
+	It is possible to pick $|t| = \min(1/10, R/4C)$. If $R/4C \geq 1/10$, then $R \geq 2C/5$, and so setting $t = 1/10$ gives
+	%
+	\[ 2 \varepsilon \geq R/10 - C/50 \geq C/50. \]
+	%
+	Thus $\varepsilon$ cannot be arbitrarily small, which gives a contradiction. If $R \leq 2C/5$, we can pick $|t| = R/4C$, which gives
+	%
+	\[ 2 \varepsilon \geq R^2/8C. \]
+	%
+	This again prevents $\varepsilon$ from being arbitrarily small.
+\end{solution}
+
+\question Let
+%
+\[ s_N(x) = \sum_{n = 1}^N (-1)^n \frac{x^{3n}}{n^{2/3}}. \]
+%
+Prove that $s_N(x)$ converges to a limit $s(x)$ on $[0,1]$, and that there is a constant $C > 0$ so that for all $N \geq 1$ the inequality
+%
+\[ \sup_{x \in [0,1]} |s_N(x) - s(x)|\leq C N^{-2/3} \]
+%
+holds.
+\begin{solution}
+    The convergence here becomes highly singular near $x = 1$, because the power series diverges for $|x| > 1$. Thus we cannot use normal power series techniques here. It seems we must exploit the oscillation of the series here to get explicit bounds since removing the $(-1)^n$ in the definition of the series causes the sum to diverge at $x = 1$. If we define
+    %
+    \[ S_N(x) = \sum_{n = 1}^N (-x^3)^n \]
+    %
+    for $N > 0$, and $S_0 = 0$, then the geometric series formula shows that there is $C > 0$ such that $|S_N(x)| \leq C$ for all $N$ and $x \in [0,1]$, and a summation by parts shows that
+    %
+    \[ \sum_{n = 1}^N (-1)^n \frac{x^{3n}}{n^{2/3}} = \sum_{n = 1}^N (S_n - S_{n-1}) \frac{1}{n^{2/3}} = \sum_{n = 1}^{N-1} S_n \left( \frac{1}{n^{2/3}} - \frac{1}{(n+3)^{2/3}} \right) + S_N / n^{2/3}. \]
+    %
+    Now a mean value theorem / Taylor series expansion implies that
+    %
+    \[ \left| \frac{1}{n^{2/3}} - \frac{1}{(n+3)^{2/3}} \right| \lesssim \frac{1}{n^{5/3}}, \]
+    %
+    which is summable, and so for $M \geq N$,
+    %
+    \[ |s_M(x) - s_N(x)| \lesssim \sum_{n = N}^{M-1} S_n / n^{5/3} + S_M / M^{2/3} \lesssim C/N^{2/3}. \]
+    %
+    This is sufficient to show the existence of the point wise limit (since it shows $s_N$ is a Cauchy sequence), and also shows the required inequality.
 \end{solution}
 
 
@@ -4848,15 +5033,233 @@ Prove that a function $f \in C^{1/2}(\RR)$ if and only if there exists a constan
 \section{Questions that need solutions}
 
 \question (Fall 2017) Let $g: \RR^2 \to \RR$ be a function that has continuous partial derivatives in $\RR^2$. Define $\chi: \RR^3 \to \{ 0, 1 \}$ by $\chi(x) = 1$ if $x_3 > g(x_1,x_2)$, and $\chi(x) = 0$ otherwise. Compute the derivatives $\partial \chi / \partial x^i$ for $i = 1, 2, 3$.
+\begin{solution}
+		The function $\chi$ is constant away from the surface $x_3 = g(x_1,x_2)$, so we should expect the distributional derivatives of $\chi$ to be supported on this surface. Now for a test function $\phi$, using the fundamental theorem of calculus, we have
+		%
+		\begin{align*}
+			\int \partial_3 \chi(x) \phi(x) &= - \int \int_{g(x_1,x_2)}^\infty \chi(x) \partial_3 \phi(x)\; dx_3 \; dx_1\; dx_2\\
+			&= \int \chi(x_1,x_2, g(x_1,x_2)) \phi(x_1,x_2,g(x_1,x_2))\; dx_1\; dx_2.
+		\end{align*}
+		%
+		Thus $\partial_3 \chi$ is equal to integration against the measure obtained by pulling back the Lebesgue measure on $\RR^2$ along the projection $\pi$ projecting the graph $x_3 = g(x_1,x_2)$ onto the $x_3$ axis. Next, if $S_{x_1} = \{ (x_2,x_3): g(x_1,x_2) < x_3 \}$, we have
+		%
+		\begin{align*}
+			\int \partial_1 \chi(x) \phi(x)\; dx &= - \int \chi(x) \partial_1 \phi(x)\; dx\\
+			&= - \int 
+		\end{align*}
+\end{solution}
 
 \question Let $\alpha \in (0,1)$, and for $f \in C[0,1]$, and $x \in [0,1]$, define
 %
-\[ (T_\alpha f)(x) = \int_0^1 \sin(x+y) |x-y|^{-\alpha} f(y)\; dy. \]
+\[ (T_\alpha f)(x) = \int_0^1 \sin(x-y) |x-y|^{-\alpha} f(y)\; dy. \]
 \begin{parts}
     \part Prove that $T_\alpha$ extends to a bounded operator on $L^2[0,1]$.
-    
-    \item For which $\alpha \in (0,1)$ is $T_\alpha: L^2[0,1] \to L^2[0,1]$ a compact operator?
+   	\begin{solution}
+   		We calculate using Minkowski's inequality that
+   		%
+   		\begin{align*}
+   			\| T_\alpha f \|_{L^1[0,1]} &= \left\| \int_0^1 \sin(x - y) |x - y|^{-\alpha} f(y)\; dy \right\|_{L^1_x[0,1]}\\
+   			&\leq \int_0^1 \left\| |\sin(x - y)| |x - y|^{-\alpha} f(y) \|_{L^1_x[0,1]} \right\|\; dy\\
+   			&= \int_0^1 |f(y)| \left( \int_0^1 |\sin(x - y) |x - y|^{-\alpha}\; dx \right) \; dy\\
+   			&\leq \int_0^1 |f(y)| \int_0^1 |x - y|^{-\alpha}\; dx \;dy\\
+   			&\leq \left( 2 \int_0^5 t^{-\alpha}\; dt \right) \left( \int_0^1 |f(y)|\; dy \right)\\
+   			&\leq \frac{2 \cdot 5^{1-\alpha}}{1 - \alpha} \| f \|_{L^1[0,1]}.
+   		\end{align*}
+   		%
+   		Thus $T_\alpha$ is bounded from $L^1[0,1]$. Similarily, we verify that
+   		%
+   		\begin{align*}
+   			\| T_\alpha f \|_{L^\infty[0,1]} &= \sup_x \left| \int_0^1 \sin(x - y) | x - y |^{-\alpha} f(y)\; dy \right|\\
+   			&\leq \| f \|_{L^\infty[0,1]} \sup_x \int_0^1 |\sin(x - y)| |x - y|^{\alpha}\; dy\\
+   			&\leq \| f \|_{L^\infty[0,1]} \left( 2 \int_0^5 t^{-\alpha}\; dt \right)\\
+   			&\lesssim \| f \|_{L^\infty[0,1]}.
+   		\end{align*}
+   		%
+   		Thus $T_\alpha$ is bounded from $L^\infty[0,1]$ to itself. Interpolation theory then implies that $T_\alpha$ is bounded on $L^p[0,1]$ for all $1 \leq p \leq \infty$. In particular, $T_\alpha$ is bounded on $L^2[0,1]$.
+   	\end{solution}
+
+    \part For which $\alpha \in (0,1)$ is $T_\alpha: L^2[0,1] \to L^2[0,1]$ a compact operator?
+    \begin{solution}
+    	The operator $T_\alpha$ is an integral operator with kernel
+    	%
+    	\[ K_\alpha(x,y) = \sin(x - y) |x - y|^{-\alpha}. \]
+    	%
+    	We calculate that
+    	%
+    	\begin{align*}
+    		\| K_\alpha \|_{L^2_x[0,1] L^2_y[0,1]} &\leq \left( \int_0^1 \int_0^1 |x - y|^{-2\alpha}\; dx\; dy \right)^{1/2}\\
+    		&\lesssim \left( \int_{|z| \leq 10} |z|^{-2\alpha}\; dz \right)^{1/2}\\
+    		&\lesssim \left( \int_0^{10} t^{-2\alpha}\; dt \right)^{1/2}.
+    	\end{align*}
+    	%
+    	For $\alpha < 1/2$, this quantity is finite, and thus $T_\alpha$ is a Hilbert-Schmidt operator, and thus compact. It is natural to guess this is also the range under which operator is compact, i.e. the operator is not compact for $\alpha \geq 1/2$.
+
+    	The remaining part of the problem is quite hard. Here are some ideas on a proof, but the ideas are certainly not rigorous. Let me know if you find a solution, and I can add it to this document, crediting you. We let
+    	%
+    	\[ K_\alpha(x) = \sin(x) |x|^{-\alpha} \]
+    	%
+    	Then $T_\alpha f = K_\alpha * f$, restricted to $[0,1]$. The Fourier transform of $|x|^{-\alpha}$ is $|\xi|^{-(1 - \alpha)}$ multiplied by a constant, and so, morally speaking, ignoring constants, we have
+    	%
+    	\[ \widehat{K_\alpha} = (\delta_1 - \delta_{-1}) |\xi|^{-(1 - \alpha)} = |\xi - 1|^{-(1 - \alpha)} - |\xi + 1|^{-(1 - \alpha)}. \]
+    	%
+    	Since $T_\alpha$ acts by multiplying $f$ on the frequency side of things by $\widehat{K_\alpha}$, we see that the function might behave the worst when $f$ is oscillating at a frequency $-1$ or $1$. For the remainder of the proof, we will pretend like we are actually working on $\RR$ instead of $[0,1]$, i.e. we are working with the operator $T_\alpha f = K_\alpha * f$ on $L^2(\RR)$. If $\phi$ is a Schwartz function whose Fourier transform is supported on $1/10 \leq |\xi| \leq 2/10$, and we let
+    	%
+    	\[ f_N(x) = N^{-1/2} \phi(x/N) e^{ix}, \]
+    	%
+    	then the Fourier transform of $T_\alpha f_N$ should be approximately equal to
+    	%
+    	\begin{align*}
+    		|\xi - 1|^{1 - \alpha} N^{1/2} & \widehat{\phi}(N(\xi - 1)) - |\xi + 1|^{-(1 - \alpha)} N^{1/2} \widehat{\phi}(N(\xi-1))\\
+    		&\approx |(1 + 1/10 N) - 1|^{-(1 - \alpha)} N^{1/2} \widehat{\phi}(N(x - 1)) - |1 + 1|^{-(1 - \alpha)} N^{1/2} \widehat{\phi}(N(\xi - 1))\\
+    		&\approx (1/10N)^{-(1 - \alpha)} N^{1/2} \widehat{\phi}(N(x - 1)) - 2^{-(1 - \alpha)} N^{1/2} \widehat{\phi}(N(\xi - 1))\\
+    		&\approx N^{1/2 - \alpha} \widehat{\phi}(N(x - 1)) - N^{1/2} \widehat{\phi}(N(\xi - 1)).
+    	\end{align*}
+    	%
+    	Thus we should have
+    	%
+    	\[ T_\alpha f_N \approx (N^{-\alpha} - 1) f_N \]
+    	%
+    	and so
+    	%
+    	\[ \| T_\alpha f_N + f_N \|_{L^2[0,1]} \lesssim N^{-\alpha}. \]
+    	%
+    	This means $\{ T_\alpha f_N \}$ has a convergent subsequence if and only if $\{ f_N \}$ has a convergent subsequence. But this is clearly impossible since $\limsup |f_N(x)| = 0$ and so any subsequence must convergent pointwise almost everywhere to zero.
+
+    	\begin{comment}
+
+    	But this means that
+    	%
+    	\[ T_\alpha f_N \approx N^{3/2 - \alpha} \]
+    	%
+    	Now 
+
+    	%
+    	\[ C_\alpha N^{1/2} \phi((\xi - 1)/N) ( |\xi - 1|^{-(1 - \alpha)} - |\xi + 1|^{-(1 - \alpha)} ) \approx C_\alpha N^{1/2} \phi(N (\xi - 1)) |\xi - 1|^{-(1 - \alpha)} + A_\alpha N^{1/2} \phi(N (\xi - 1)). \]
+    	%
+    	Thus $T_\alpha f_N$ is the sum of something with $L^2$ norm proportional to one (the inverse Fourier transform of the second term) and the function $g_N$ with
+    	%
+    	\[ |g_N(x)| \approx \left| \int N^{1/2} \phi(N(\xi - 1)) |\xi - 1|^{\alpha - 1} e^{2 \pi i \xi \cdot x} \right| = \left| \int N^{1/2 - \alpha} \phi(\xi) |\xi|^{\alpha - 1} e^{2 \pi i \xi \cdot x} \right|. \]
+    	%
+    	Since $\alpha \geq 1/2$, $\| g_N \|_{L^2} = o(1)$, which implies the $L^2$ norm of
+    	%
+    	\[ \| T_\alpha f_N - f_N \| = o(1). \]
+    	%
+    	But $\{ f_N \}$ does not converge to any function in $L^2$ (it converges pointwise almost everywhere to zero but does not converge in $L^2$ to zero), and so
+    	\end{comment}
+
+    	\begin{comment}
+
+
+
+
+    	 Now the operator $T_\alpha$ is compact if and only if the operator
+    	%
+    	\[ S_\alpha = \mathcal{F} \circ T_\alpha \circ \mathcal{F}^{-1} \]
+    	%
+    	is compact on $L^2($. Now
+    	%
+    	\[ S_\alpha f = \widehat{K_\alpha} \widehat{f}. \]
+    	%
+    	s
+
+    	If $I =$ is an interval of length $L$, for suitably small $L$, then for $x \not \in 2I$ such that $\sin(x)$
+    	%
+    	\[ T_\alpha \chi_I(x) \gtrsim \frac{1}{d(x,I)^{1 - \alpha}}. \]
+    	%
+    	This implies that for $\alpha \geq 1/2$,
+    	%
+    	\[ \| T_\alpha \chi_I \|_{L^2[0,1]}^2 \gtrsim 1 \]
+    	%
+    	uniformly in 
+
+
+    	$T_\alpha \chi_I(x) \gtrsim N^{\alpha - 1}$ on $5I - I$, and thus
+    	%
+    	\[ \| T_\alpha ( N^{1/2} \chi_I) \|_{L^2[0,1]} \gtrsim N^{\alpha - 1/2} \]
+
+
+    	If $\{ I \}$ ranges over all intervals of length $1/10$ in $[0,1]$, then for $x \not \in 5I - I$
+    	%
+    	\[ \| T_\alpha \chi_I(x)| = \int_0^1 \frac{\sin(x + y)}{|x - y|} \]
+
+    	If $e_n(x) = e^{2 \pi i nx }$, then if $c_n(x) = \cos(nx)$,
+    	%
+    	\begin{align*}
+    		T_\alpha c_n(x) &= \int_0^1 \frac{\sin(x + y) \cos(ny)}{|x - y|^{1 - \alpha}}\; dy\\
+    		&= s
+    	\end{align*}
+
+
+    	We see something that looks like a convolution, i.e. using the Fourier inversion formula we can formally write (in the sense of distributions)
+    	%
+    	\[ \frac{1}{|x - y|^\alpha} = C_\alpha \int_{-\infty}^\infty \frac{1}{|\xi|^{1-\alpha}} e^{i \xi \cdot (x - y)}\; d\xi \]
+			%
+			for some constant $C_\alpha$. Thus for sufficiently regular $f$, e.g. compactly supported, smooth $f$ on $[0,1]$,
+    	%
+    	\begin{align*}
+    		T_\alpha f(x) &= C_\alpha \int_0^1 \int_{-\infty}^\infty \frac{\sin(x + y)}{|\xi|^{1 - \alpha}} f(y) e^{i \xi \cdot (x - y)}\; d\xi\; dy\\
+    		&= \frac{2 C_\alpha}{i} \int_0^1 \int_{-\infty}^\infty \frac{e^{i (x+y)} - e^{- i(x+y)})}{|\xi|^{1 - \alpha}} e^{i \xi \cdot (x - y)} f(y)\; d\xi\; dy\\
+    		&= \frac{2 C_\alpha}{i} \int_0^1 \int_{-\infty}^\infty \frac{f(y)}{|\xi|^{1-\alpha}} [  e^{i ([1 + \xi] x + [1 - \xi] y)} - e^{-i[ (1 - \xi) x + (1 + \xi) y ]} ]\; d\xi\; dy\\
+    		&= \frac{2 C_\alpha}{i} \int_{-\infty}^\infty \frac{e^{i (1 + \xi) x} \widehat{f}(\xi - 1) - e^{-i (1 - \xi) x} \widehat{f}(\xi + 1)}{|\xi|^{1 - \alpha}}\; d\xi.
+    	\end{align*}
+    	%
+    	If $\widehat{f}(\xi + 1) = \widehat{f}(\xi - 1)$, i.e. if $f$ is supported near $\ZZ / 2$, then this works out to
+    	%
+    	\[ (4 C_\alpha) \sin(x) e^{-i x} \int_{-\infty}^\infty \frac{e^{i \xi x}}{|\xi - 1|^{1 - \alpha}} \widehat{f}(\xi)\; d\xi \]
+    	%
+    	s
+
+    	%
+    	Thus
+    	%
+    	\begin{align*}
+    		\widehat{T_\alpha f}(\eta) &= \frac{2C_\alpha}{i} \int_{-\infty}^\infty \int_{-\infty}^\infty \frac{e^{2 \pi i (\xi - \eta) \cdot x}}{|\xi|^{1 - \alpha}} [ e^{ix} \widehat{f}(\xi - 1/2\pi) - e^{-i x} \widehat{f}(\xi + 1/2\pi) ]\; d\xi\; dx\\
+    		&= \frac{2C_\alpha}{i} \int_{-\infty}^\infty \int_{-\infty}^\infty \frac{1}{|\xi|^{1 - \alpha}} [ e^{2 \pi i (\xi - \eta + 1/2\pi) x)} \widehat{f}(\xi - 1/2\pi) - e^{2 \pi i (\xi - \eta - 1/2\pi) x} \widehat{f}(\xi + 1/2\pi) ]\; d\xi\; dx\\
+    		&= \frac{2C_\alpha}{i} \int_{-\infty}^\infty \frac{1}{|\xi|^{1 - \alpha}} \left( \delta(\xi - \eta + 1 / 2\pi) \widehat{f}(\xi - 1/2\pi) - \delta(\xi - \eta - 1 / 2 \pi) \widehat{f}(\xi + 1 / 2\pi) \right)\; d\xi\\
+    		&= \frac{2C_\alpha}{i} \left( \frac{\widehat{f}(\eta - 1 / \pi)}{|\eta - 1/2 \pi|^{1 - \alpha}} - \frac{\widehat{f}(\eta + 1 / \pi)}{|\eta + 1/2\pi|^{1 - \alpha}} \right).
+    	\end{align*}
+    	%
+    	If we define $S_\alpha = \mathcal{F} \circ T_\alpha \circ \mathcal{F}^{-1}$, then
+    	%
+    	\[ S_\alpha g(\xi) = \frac{2C_\alpha}{i} \left( \frac{g(\xi - 1/\pi)}{|\xi - 1/2\pi|^{1 - \alpha}} - \frac{g(\xi + 1/\pi)}{|\xi + 1/2\pi|^{1 - \alpha}} \right). \]
+
+    	\[ \widehat{T_\alpha f}(n) = \int_0^1 \int_0^1 \sin(x + y) | x - y |^{-\alpha} f(y) e^{-2 \pi i n x}\; dx\; dy. \]
+
+
+
+
+    	My intuition to construct an example here is to consider a function which is widely 
+
+    	Assume $\alpha \geq 1/2$, and write $f_N = \log(N)^{1/2} (\chi_1 + \dots + \chi_M)$, where
+    	%
+    	\begin{itemize}
+				\item $(1/C)N \leq M \leq C N$ for some universal constant $C > 0$.
+				\item $\chi_j = \chi_{I_j}$ for some interval $I_j$ of length $1/ N \log N$.
+				\item If $x,y \in 10 I_j$, $\sin(x + y) \geq 1/2$.
+				\item The set of intervals $\{ 10 I_j \}$ are disjoint from one another, where $10 I_j$ denotes the interval with the same center as $I_j$, but ten times the radius.
+			\end{itemize}
+			%
+			Now $T_\alpha \chi_j \geq 0$ for all $j$. And for $x \in 10I_j - 2I_j$,
+			%
+			\[ T_\alpha \chi_j(x) \geq (1/2) \int_{I_j} |x - y|^{-\alpha} \; dy \gtrsim N^{\alpha - 1}. \]
+			%
+			and for $k \neq j$,
+			%
+			\[ T_\alpha \chi_k(x) \gtrsim N^{-1} \]
+			%
+			Thus $|T_\alpha f| \gtrsim \log(N)^{1/2} (  1 + N^{\alpha - 1} )$
+
+			and so
+			%
+			\[ |T_\alpha f(x)| \gtrsim \log(N)^{1/2} |T_\alpha \chi_j(x)| \gtrsim \log(N)^{1/2} N^{\alpha - 1/2}. \]
+			%
+			Thus
+			%
+			\[ \| T_\alpha f \|_{L^2[0,1]} = \left( \sum_j \| T_\alpha f \|_{L^2(10 I_j - 2 I_j)}^2 \right)^{1/2} \gtrsim \left( \sum_j (N \log N)^{-1} (\log(N) N^{2\alpha - 1}) \right)^{1/2} \gtrsim N^{\alpha - 1/2}. \]
+		\end{comment}
+    \end{solution}
 \end{parts}
+
 
 \end{questions}
 
