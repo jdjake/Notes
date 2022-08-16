@@ -772,12 +772,61 @@ This leads to a general bound.
 
 \section{Brownian Motion and Nodal Sets}
 
-Laplacian eigenfunctions $e_\lambda$ on a compact manifold $M^d$ behave well under the heat equation, i.e. if $e^{\Delta t}$ are the propogators for the heat equation $\partial_t = \Delta$ on $M$, and $e_\lambda u = - \lambda^2 u$, then
+Eigenfunctions $e_\lambda$ to the Laplace-Beltrami operator on a compact manifold $M^d$ behave well under the heat equation, i.e. if $e^{\Delta t}$ are the propogators for the heat equation $\partial_t = \Delta$ on $M$, and $e_\lambda u = - \lambda^2 u$, then
 %
 \[ (e^{t \Delta} e_\lambda)(x) = e^{- \lambda^2 t} e_\lambda(x). \]
 %
-The heat equation is mathematically describing the distribution of a large number of particles randomly moving through space, and thus is strongly connected to the study of Brownian motion.
+The heat equation is mathematically describing the distribution of a large number of particles, each diffusing through a medium in which they are subject to random molecular bombardments. The theory of \emph{diffusions} in probability give us an alternate viewpoint through which to model this situation, so it makes sense this theory will bring light upon the theory of eigenfunctions.
 
+\subsection{Probabilistic Tools}
+
+To define diffusions, let us introduce the required machinery. We work over a fixed probability space $\Omega$. A \emph{continous stochastic process} valued in some space $M$ is then a Borel-measurable function $X: \Omega \to C([0,\infty),M)$, which we also view as a family of $M$ valued random variables $\{ X_t: t \in [0,\infty) \}$. Intuitively, a stochastic process $X$ is a random path formed by a particle travelling through space. Given a fixed process on $M$ and $x \in M$, we let $\EE^x[\cdot] = \EE[ \cdot | X_0 = x ]$ denote the conditional expectation given that the process starts at the position $x$.
+
+The most basic diffusion process is \emph{Brownian motion}, and is used to generate the more general family. A one dimensional Brownian motion $B$ is a continuous stochastic process such that for any interval $I = [t,s]$, the random variables $\Delta_I B = B_s - B_t$ are mean zero, variance $s - t$ Gaussians, and for any disjoint family of closed intervals $\{ I_1,\dots, I_n \}$ in $[0,\infty)$, the random variables $\{ \Delta_{I_1} B, \dots, \Delta_{I_n} B \}$ are independent of another. An $n$ dimensional Brownian motion on $\RR^d$ is precisely a stochastic process whose coordinates are independent Brownian motions. An \emph{It\^{o} diffusion} with \emph{drift coefficient} $b(x)$ (valued in $\RR^d$) and \emph{diffusion coefficient} $A(x)$ (a $d \times d$ matrix) is a continuous random process $X$ satisfying a \emph{stochastic differential equation} of the form $dX = b(X) dt + A(X) dB$. The formal definition of this stochastic differential equation is quite difficult, but intuitvely, there exists a Brownian motion $B$ such that
+%
+\[ X_{t + \delta} \approx X_t + b(X_t) \delta + A(X_t) [B_{t + \delta} - B_t] \]
+%
+which the approximation becomes equality in a technical sense as $\delta \to 0$, i.e. the error $E_{t,\delta}$ between the two random variables is a random variable with mean $o(\delta)$ and third moment $O(\delta^3)$. As one might expect, one can define It\^{o} diffusions on a compact Riemannian manifold $M$, given a vector field $b$ on $M$ operating as the drift coefficient, and a section of linear transformations on $TM$.
+
+An important fact about the diffusions above is that they are \emph{Markov}, i.e. if one observes the values of the Brownian motion $\{ X_t \}$, up to a certain time $T$, the only information one observes which tells us about the evolution of the process past the time $T$ is the position the diffusion arrives to at time $T$, i.e. the random variable $X_T$. More formally, a probabilist would write this by stating that for $S > T$, and for a function $f$ on $M$,
+%
+\[ \EE[ f(X_S) | \Sigma_T ] = \EE[ f(X_S) | X_T ], \]
+%
+where the conditional expectation is taken with respect to a $\sigma$ algebra $\Sigma_T$, which models the information one sees when observing the process up to time $T$. One can also let the times $T$ and $S$ be random \emph{stopping times}, so a diffusion satisfies the \emph{strong Markov property}.
+
+Now we connect diffusions to the study of second order partial differential equations. For any $f \in C^2(M)$, if we define a differential operator $L$ on $M$, the \emph{generator of the diffusion}, by setting
+%
+\[ Lf(x) = b(x) \cdot \nabla f(x) + \frac{A(x)A(x)^T \cdot Hf(x)}{2}, \]
+%
+Then the derivative of the function $t \mapsto \EE^x[f(X_t)]$ at $t = 0$ is precisely $Lf(x)$. Dynkin's formula follows by formally applying the fundamental theorem of calculus to this derivative, i.e. that
+%
+\[ \EE^x[f(X_T)] = \EE^x[f(X_0)] + \EE^x \left[ \int_0^T Lf(X_s)\; ds \right] = f(x) + \EE^x \left[ \int_0^T Lf(X_s)\; ds \right], \]
+%
+and we can allow $T$ to be a stopping time as well, provided that $\EE^x[T] < \infty$. The \emph{Feynman-Kac formula} reverses this process; if we define
+%
+\[ u(x,t) = \EE^x[f(X_t)] \]
+%
+then $u$ is the solution to the partial differential equation $\partial_t u = Lu$, with initial conditions $f$. Thus one can convert problems about second order parabolic PDEs to problems about diffusions, and vice versa. In particular, we see that we can obtain a natural definition of Brownian motion on a manifold by letting $B$ be a diffusion with generator given by the Laplace Beltrami operator.
+
+TODO: Showing that it takes $R^2/n$ time on average to leave a ball of radius $R$.
+
+Next, we move onto the study of boundary value problems for semielliptic PDEs $L$ via diffusions. Let us start with a bounded region $D$ of $\RR^d$. Consider a diffusion process $X$ with generator $L$, and let $T_D = \inf \{ t > 0 : X_t \not \in D \}$. Then for sufficiently regular inputs, the Dynkin formula tells us that the unique solution to the problem $Lv = -h$ on $D$ with boundary conditions $\phi$ on $\partial D$ is given by
+%
+\[ v(x) = \EE^x[\phi(X_{T_D})] + \EE^x \left[ \int_0^{T_D} h(X_t)\; dt \right]. \]
+%
+We can also solve the heat equation $\partial_t u = Lu$ with absorbing boundary conditions $u(x,t) = 0$ for $x \in \partial D$, and initial condition $u(x,0) = f(x)$ by setting
+%
+\[ u(x,t) = \EE^x[f(X_t) \chi_t ], \]
+%
+where $\chi_t = 1$ if $t < T_D$, and $\chi_t = 0$ otherwise (we kill paths that reach the boundary). Using linearity, we can now solve the problem $\partial_t u - Lu = h$ with a general boundary condition $u(x,t) = \phi(x)$ on $\partial D$ and with initial conditions $u(x,0) = f(x)$, namely, we have
+%
+\[ u(x,t) = \EE^x[\phi(X_{T_D})] + \EE^x \left[ \int_0^{T_D} h(X_t)\; dt \right] + \EE^x[f(X_t) \chi_t]. \]
+%
+Note that if $D$ is bounded, and $f \in L^\infty(D)$, then dominated convergence implies that for each $x \in D$, $u(x,t) \to v(x)$ as $t \to \infty$, i.e. so the solution to Dirichlet's problem is really the long term distribution of the process.
+
+
+
+\begin{comment}
 As an example, consider the equation $\Delta u = \delta_x$ defined on a bounded open subset $\Omega$ of $\RR^d$, with $x \in \Omega$, and subject to the condition that $u$ vanishes on the boundary of $\Omega$. One can view this as the steady state distribution of heat obtained by placing a candle underneath the surface at the point $x$, while fixing the temperature of the boundary. In this situation heat is constantly emitted from the point $x$ at all times, allowed to travel around $\Omega$ at random, but is eradicated if it ever touches the boundary $\partial \Omega$ by virtue of the boundary condition. The probabilistic model of this equation is to consider a Brownian motion $\{ B^{x,t_0} \}$ starting at a point $x \in \Omega$ and released at time $t_0$. The density function of these particles at time $T$, viewed as a random measure $\mu^T$ on $\Omega$, is given by
 %
 \[ \int \phi(x) d\mu^T(x) = \int_0^T \phi(B^{x,t}_T) \chi^{x,t}_T\; dt, \]
@@ -834,11 +883,11 @@ One can again understand $H_{\Omega,x}$ by `reversing time' in a certain sense. 
 \[ u(x,t) = \PP(H_{\Omega,x} > t) \]
 %
 is a solution to the heat equation, such that $u(x,t) = 1$ on $\partial \Omega$, and starts equal to zero on $\Omega$.
+\end{comment}
 
-To exploit this relation to control nodal sets, we let $\Omega$ be a nodal domain of $e_\lambda$, i.e. a connected component of $M$
+\section{Nodal Sets Via Brownian Motion}
 
-
-The Feynman-Kac formula tells us that solutions to the equation $\partial_t = \Delta$ on an open set $\Omega \subset M$, which are held equal to one on $\partial \Omega$ and vanish initially on the interior can be understood in terms of the probability that Brownian motion will hit $\partial \Omega$ in a given number of units of time.
+To exploit this relation to control nodal sets, we let $\Omega$ be a nodal domain of $e_\lambda$, i.e. a connected component of $M$. The Feynman-Kac formula tells us that solutions to the equation $\partial_t = \Delta$ on an open set $\Omega \subset M$, which are held equal to one on $\partial \Omega$ and vanish initially on the interior can be understood in terms of the probability that Brownian motion will hit $\partial \Omega$ in a given number of units of time.
 
 
 
@@ -865,5 +914,7 @@ The proof will show one can generalize this result to $\Sigma$ formed from a fin
 TODO: DO WE EXPECT DENSITY OF THE NODAL SET FOR LARGE $\lambda$, i.e. $\lambda^{-1/2}$ density.
 
 (Citation: Green, Brown, and Probability)
+(Citation: Stochastic Differential Equations)
+(Citation: Tao Brownian Motion)
 
 
