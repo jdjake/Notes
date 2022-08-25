@@ -4302,6 +4302,238 @@ where $\alpha \in (0,\beta)$.
 
 
 \newpage
+\section{Day 14: Analysis Qualifying Exam 2022}
+
+\question Let $x_1,\dots,x_{n+1}$ be pairwise distinct real numbers. Prove that there exists $C > 0$ such that if $P: \RR \to \RR$ is a polynomial with degree at most $n$, then
+%
+\[ \| P \|_{L^\infty[0,1]}\leq C \max \left( |P(x_1)|, \dots, |P(x_{n+1})| \right). \]
+\begin{solution}
+	Let $V_n$ be the vector space of degree $\leq n$ polynomials. The theory of polynomial interpolation shows that the operator $T: V_n \to \RR^n$ given by
+	%
+	\[ TP = ( p(x_1), \dots, p(x_{n+1}) ) \]
+	%
+	is a bijection. Thus $T^{-1}: \RR^n \to V_n$ is well defined. As a linear map between two finite dimensional vector spaces, $T^{-1}$ is continuous from any norm on $\RR^n$, to any norm on $V_n$. If we equip $\RR^n$ with the $l^\infty$ norm, and $V_n$ with the $L^\infty[0,1]$ norm, then the result immediately follows.
+\end{solution}
+
+\question Given a real number $x$, let $\{ x \}$ denote the fractional part of $x$. Suppose $\alpha$ is an irrational number and define $T: [0,1] \to [0,1]$ by
+%
+\[ T(x) = \{ x + \alpha \}. \]
+%
+Prove: If $A \subset [0,1]$ is measurable and $T(A) = A$ then $|A| \in \{ 0, 1 \}$.
+\begin{solution}
+	Define $f: \RR \to \{ 0, 1 \}$ by setting $f(x) = \mathbf{I}(x \in A)$. Since $T(A) = A$, it follows that $f(x + \alpha) = f(x)$, i.e. $f$ is both $[0,1]$ periodic and $\alpha$ periodic. But applying the Fourier transform to both sides of this formula (viewing $f$ as a tempered distribution) yields that
+	%
+	\[ \widehat{f}(\xi) e^{2 \pi i \xi \alpha} = \widehat{f}(\xi), \]
+	%
+	i.e. that $\widehat{f}$ is supported on integer multiples of $2 \pi \alpha$. But the Poisson summation formula says precisely that $\widehat{f}$ is supported on the integer multiples of $2 \pi$, and the intersection of these two supports lies only at the origin. Thus $\widehat{f}$ is supported at the origin. But the only locally integrable tempered function with this property is a constant function, so either $f(x) = 1$ almost everywhere, or $f(x) = 0$ almost everywhere, which yields the result.
+%	An easy (but lazy) way to prove the result is to apply the Weyl equidistribution theorem, which says that for any suitably regular function $f: [0,1] \to \RR$, and any $x \in [0,1]$,
+	%
+%	\[ \int_0^1 f(x)\; dx = \lim_{N \to \infty} \frac{1}{N} \sum_{k = 1}^N f ( \{ x + k \alpha \}  ). \]
+	%
+%	In particular, one can apply the result with $f(x)$
+\end{solution}
+
+\question Let $\{ f_n \}$ be a sequence of measurable, real-valued functions on a measure space $X$ such that $f_n \to f$ pointwise as $n \to \infty$, where $f: X \to \RR$, and suppose that for some constant $M > 0$,
+%
+\[ \int |f_n| d\mu \leq M\ \text{for all $n \in \mathbb{N}$}. \]
+\begin{parts}
+	\part Prove that
+	%
+	\[ \int |f|\; d\mu \leq M. \]
+	\begin{solution}
+		The result follows immediately from Fatou's lemma, i.e. that
+		%
+		\[ \int |f|\; d\mu = \int \liminf_n |f_n|\; d\mu \leq \liminf_n \int |f_n|\; d\mu \leq M. \]
+	\end{solution}
+
+	\part Give an example to show that we may have $\int |f_n|\; d\mu = M$ for every $n$, but $\int |f|\; d\mu < M$.
+	\begin{solution}
+		Let $X = \RR$, and let $f_n(x) = M \mathbf{I}(x \in [n,n+1])$. Then $f = 0$.
+	\end{solution}
+
+	\part Prove that
+	%
+	\[ \lim_{n \to \infty} \int ||f_n| - |f| - |f_n - f|| = 0. \]
+	\begin{solution}
+		The integrand converges pointwise to zero. Moreover, we have
+		%
+		\[ ||f_n| - |f| - |f_n - f|| = |f_n - f| + |f| - |f_n| \]
+		%
+		by virtue of the fact that
+		%
+		\[ |f_n - f| \geq |f_n| - |f|. \]
+		%
+		Now the triangle inequality gives that
+		%
+		\[ |f_n - f| + |f| - |f_n| \leq |f_n| + |f| + |f| - |f_n| \leq 2 |f|. \]
+		%
+		Thus the integrands are uniformly domainted by an \emph{integrable function}. The domainted convergence thus immediately gives the result.
+	\end{solution}
+\end{parts}
+
+\question Consider the following equation for an unknown function $f: [0,1] \to \RR$:
+%
+\[ f(x) = g(x) + \lambda \int_0^1 (x - y)^2 f(y)\; dy + \frac{1}{2} \sin(f(x)). \]
+%
+Prove that there exists a number $\lambda_0 > 0$ such that for all $\lambda \in [0,\lambda_0)$ and all continuous functions $g$ on $[0,1]$, the equation has a unique continuous solution.
+\begin{solution}
+	Define an integral operator $T_g$ by setting
+	%
+	\[ T_g f(x) = g(x) + \frac{\sin(f(x))}{2} + \lambda \int_0^1 (x - y)^2 f(y)\; dy. \]
+	%
+	The problem is to find, and prove the uniqueness, of a fixed point for $T_g$. We calculate that
+	%
+	\begin{align*}
+		\| T_g f_1 - T_g f_2 \|_{L^\infty[0,1]} &\leq \left\| \frac{\sin \circ f_1 - \sin \circ f_2}{2} \right\|_{L^\infty[0,1]} + \lambda \| f_1 - f_2 \|_{L^\infty[0,1]} \sup_{x \in [0,1]} \int_0^1 (x - y)^2\; dy\\
+		&\leq (1/2) \| f_1 - f_2 \|_{L^\infty[0,1]} + \lambda \| f_1 - f_2 \|_{L^\infty[0,1]} \left( \sup_{x \in [0,1]} x^2 - x + 1/3 \right)\\
+		&\leq (1/2 + \lambda / 3) \| f_1 - f_2 \|_{L^\infty[0,1]}.
+	\end{align*}
+	%
+	If $\lambda < 1/6$, we conclude that $T_g$ is a contraction map, and thus has a unique fixed point.
+\end{solution}
+
+\question Given $\alpha \geq 0$, the $\alpha$-dimensional Hausdorff measure of a set $X \subset \RR^n$ is
+%
+\[ H^\alpha(X) = \liminf_{r \to 0} \left\{ \sum_{i = 1}^\infty r_i^\alpha : X \subset \bigcup_{i = 1}^\infty B(x_i,r_i), r_i < r\ \text{for all $i$} \right\} \]
+%
+(where $B(x,r)$ is the Euclidean ball with center $x$ and radius $r$) and the Hausdorff dimension is
+%
+\[ \dim_{\mathbf{H}}(X) = \inf \{ \alpha \geq 0: H^\alpha(X) = 0. \} \]
+%
+Prove:
+%
+\begin{parts}
+	\part If $X \subset \RR^n$ and $\mu$ is a finite Borel measure on $X$ such that $\mu(X) > 0$ and $\mu(B(x,r)) \leq r^\alpha$ for all open balls $B(x,r)$, then $\dim_{\mathbf{H}}(X) \geq \alpha$.
+	\begin{solution}
+		Suppose $X$ is covered by a family of balls $\{ B(x_i,r_i) \}$. Then
+		%
+		\[ 1 \lesssim \mu(X) = \mu( \bigcup B(x_i,r_i) ) \leq \sum_i \mu ( B(x_i,r_i) ) \leq \sum_i r_i^\alpha. \]
+		%
+		Thus
+		%
+		\[ H^\alpha(X) = \liminf \sum_i r_i^\alpha \gtrsim 1, \]
+		%
+		which implies that $\dim_{\mathbf{H}}(X) \geq \alpha$.
+	\end{solution}
+
+	\part If $\mathbf{S}^1 = \{ (x,y) \in \RR^2: x^2 + y^2 = 1 \}$, then $\dim_{\mathbf{H}}(\mathbf{S}^1) = 1$.
+	\begin{solution}
+		For any $r$, we can cover $\mathbf{S}^1$ by $O(1/r)$ balls of radius $r$. Thus for $\alpha > 1$,
+		%
+		\[ H^\alpha(X) = \liminf_{r \to 0} O(1/r) r^\alpha = \liminf_{r \to 0} r^{\alpha - 1} = 0. \]
+		%
+		Thus $\dim_{\mathbf{H}}(\mathbf{S}^1) \leq 1$. We use the first part to prove that $\dim_{\mathbf{H}}(\mathbf{S}^1) \geq 1$, which will complete the proof. Namely, we let $\mu$ denote the angle measure on $\mathbf{S}^1$ divided by $1000$. Then it is easy to prove that $\mu(B(x,r)) \lesssim r$ for all balls $B$ - since the angle measure has mass $2 \pi / 1000$ we may assume $r \leq 1/10$, and then the intersection of $B(x,r)$ with $\mathbf{S}^1$ is an arc with angular length $O(r)$. Thus the above part of the problem gives the lower bound.
+	\end{solution}
+\end{parts}
+
+\question Let $X = [0,1]$ with Lebesgue measure and $Y = [0,1]$ with counting measure. Give an example of an integrable function $f: X \times Y \to [0,\infty)$ for which Fubini's theorem does not apply.
+\begin{solution}
+	Let $f(x,y) = 1$ if $x = y$, and $f(x,y) = 0$ otherwise. Then
+	%
+	\[ \int_Y \int_X f(x,y)\; dx\; dy = \int_Y 0\; dy = 0, \]
+	%
+	whereas
+	%
+	\[ \int_X \int_Y f(x,y)\; dy\; dx = \int_X 1\; dx = 1. \]
+\end{solution}
+
+
+\question For $s > 1/2$ let $H^s(\RR^n)$ denote the Sobolev space
+%
+\[ H^s(\RR^n) = \{ f \in L^2(\RR^n): \int_{\RR^n} (1 + |\xi|^2)^s |\widehat{f}(\xi)|^2\; d\xi < \infty \}. \]
+%
+Use the Fourier transform to prove that if $u \in H^s(\RR^n)$ for $s > n/2$ then $u \in L^\infty(\RR^n)$ with the boundary
+%
+\[ \| u \|_{L^\infty(\RR^n)} \leq C \| u \|_{H^s(\RR^n)}. \]
+%
+for a constant $C$ depending only on $s$ and $n$.
+\begin{solution}
+	The Fourier inversion formula tells us that
+	%
+	\[ \| u \|_{L^\infty(\RR^n)} \leq \| \widehat{u} \|_{L^1(\RR^n)}. \]
+	%
+	But for $s > n/2$, we have
+	%
+	\[ \| \widehat{u} \|_{L^1(\RR^n)} \lesssim_s \| u \|_{H^s(\RR^n)}, \]
+	%
+	by virtue of Cauchy Schwartz, i.e. that
+	%
+	\[ \int |\widehat{u}(\xi)|\; d\xi = \int \left[ |\widehat{u}(\xi)| (1 + |\xi|^2)^{s/2} \right] \left[ (1 + |\xi^2)^{-s/2} \right] \leq \left( \int |\widehat{u}(\xi)|^2 (1 + |\xi|^2)^s \right)^{1/2} \left( \int (1 + |\xi|^2)^{-s} \right)^{1/2}. \]
+	%
+	The first integral is precisely the $H^s$ norm, and for large $\xi$, the right integrand is bounded, and essentially equal to $|\xi|^{-2s}$ for $|\xi| \geq 1$, which proves the second integral is finite, completing the proof.
+\end{solution}
+
+
+\question Assume that $X$ is a compact metric space and $T: X \to X$ is a continuous map. Let $M_1(T)$ denote the set of Borel probability measures on $X$ such that $T_* \mu = \mu$. Prove
+%
+\begin{parts}
+	\part $M_1(T) \neq \emptyset$.
+	\begin{solution}
+		Fix any probability measure $\nu$. Then $T_*^k \nu$ is a probability measure for all $k \geq 0$. Define a probability measure $\mu_n$ such that
+		%
+		\[ \mu_n = \frac{1}{n} \sum_{k = 0}^{n-1} T_*^k \nu \]
+		%
+		Applying weak $*$ compactness, there exists a subsequence of these measures that converges in the weak $*$ topology to some probability measure $\mu$, i.e. $\mu = \lim_m \mu_{n_m}$. Then by continuity of the pushforward,
+		%
+		\[ T_* \mu = \lim_{m \to \infty} \frac{1}{n_m} \sum_{k = 0}^{n_m - 1} T_* T_*^k \nu = \lim_{m \to \infty} \frac{1}{n_m} \sum_{k = 0}^{n_m - 1} T_*^{k+1} \nu = \lim_{m \to \infty} [(n_m) / (n_m + 1)] (\mu_{n_m+1} - \nu). \]
+		%
+		The limit point of this 
+
+		Let $\{ B_i \}$ be a countable basis of balls for $X$. It suffices to show that for any finite, disjoint collection of balls $\{ B_1, \dots, B_n \}$, we can find a Borel probability measure $\mu_n$ such that $\mu(T^{-1}(B_i)) = \mu(B_i)$, for then if we take a limit of maximal collections of balls whose radius tends to zero, and consider a subsequence of probability measures which converge weakly to some probability measure $\mu$, then it follows that $T_* \mu = \mu$. It does not take too much work to find a $\mu_n$ which works.
+
+
+		We can break down the sets $\{ B_1,\dots,B_n, T^{-1}B_1,\dots, T^{-1}B_n \}$ into finitely many atomic parts $\{ A_1,\dots,A_m \}$, i.e. such that each set is a union of these parts, and such that the intersection of any subcollection of the sets is a finite union of these sets. The problem then just becomes a linear programming problem, i.e. each of the equations $\mu(T^{-1}(B_i)) = \mu(B_i)$ breaks down into an equation $\sum_{j \in \mathcal{S}_i'} c_j = \sum_{j \in \mathcal{S}_i} c_j$. where $c_i = 0$, subject to the contraint that $c_i \geq 0$.
+	\end{solution}
+
+	\part If $M_1(T) = \{ \mu \}$ consits of a single measure $\mu$, then
+	%
+	\[ \int_X f d \mu = \lim_{N \to \infty} \frac{1}{N} \sum_{n = 0}^{N-1} f \circ T^n(x) \]
+	%
+	for every continuous function $f: X \to \RR$ and $x \in X$.
+	\begin{solution}
+		The result above shows that every subsequence of the measures
+		%
+		\[ \mu_n = \frac{1}{N} \sum_{n = 0}^{N-1} f \circ T^n \]
+		%
+		has a further subsequence converging in the weak $*$ topology to the invariant measure $\mu$. But this is only possible if the sequence itself converges to $\mu$.
+	\end{solution}
+\end{parts}
+
+\question Find the Fourier transform of the following function $f$ in $\RR^2$:
+%
+\[ f(x) = e^{i x \xi_0} |x - x_0|^{-1}. \]
+\begin{solution}
+	First, we note that if $g(x) = |x - x_0|^{-1}$, then
+	%
+	\[ \widehat{f}(\xi) = \widehat{g}(\xi - \xi_0 / 2 \pi). \]
+	%
+	But if $h(x) = |x|^{-1}$, then
+	%
+	\[ \widehat{g}(\xi) = \widehat{h}(\xi) e^{-2 \pi i \xi \cdot x_0}. \]
+	%
+	Thus it suffices to find the Fourier transform of $h$. But $h$ is radial, $C^\infty$ away from the origin, and homogeneous of degree $-1$. It follows that the Fourier transform of $h$ is radial, $C^\infty$ away from the origin, and homogeneous of degree $-1$. Since there are no such homogeneous functions supported at the origin, we conclude that there must exist a quantity $C$ such that
+	%
+	\[ \widehat{h}(\xi) = C |\xi|^{-1}. \]
+	%
+	To calculate $C$, it suffices to test $h$ against a Gaussian. Namely, if $\Phi(x) = e^{- \pi |x|^2}$, then $\Phi$ is it's own Fourier transform, and so the multiplication formula shows that
+	%
+	\[ C \int |\xi|^{-1} \Phi(\xi) = \int \widehat{h}(\xi) \Phi(\xi) = \int h(x) \Phi(x) = \int |x|^{-1} \Phi(x). \]
+	%
+	Thus we conclude that $C = 1$, i.e. that $h$ is it's own Fourier transform. Thus
+	%
+	\begin{align*}
+		\widehat{f}(\xi) &= \widehat{g}(\xi - \xi_0 / 2 \pi)\\
+		&= \widehat{h}(\xi - \xi_0 / 2\pi) e^{-2 \pi i \xi \cdot x_0} e^{i \xi_0 \cdot x}\\
+		&= \frac{e^{-2 \pi i \xi \cdot x_0} e^{i \xi_0 \cdot x}}{|\xi - \xi_0 / 2\pi|}.
+	\end{align*}
+\end{solution}
+
+
+
+
+
+
+\newpage
 \section{Day 13: Interchanging limits and integrals + Arzela-Ascoli Theorem}
 
 \subsection{Limits and Integrals (DCT and friends)}
