@@ -12,6 +12,63 @@ and the \emph{non constant coefficient} partial differential equations
 %
 The central problems of the theory are \emph{existence} and \emph{regularity}: Given $f$, does a solution $u$ to the equation $Lu = f$ exist, and if so, how does the regularity of $f$ relate to the regularity of $u$. We often phrase the regularity problems in terms of function spaces. Let $\{ X^s \}$ be a family of function spaces, indexed by a parameter $s \in \RR$, measuring the \emph{regularity} of functions in these spaces. Given a linear partial differential operator $L$, a regularity result might say that for some $s$ and $t$, if $Lu = f$, where $f \in X^s$, then $u$ in $X^t$. Such results often require one to use the special properties of the operator $L$; general theories are rarely available, except for certain very special families of partial differential equations, especially the \emph{elliptic partial differential equations}.
 
+\chapter{Green's Functions}
+
+Let $\Omega$ be a bounded, open set on $\RR^n$. Recall Green's second identity,
+%
+\[ \int_\Omega (u \Delta v - v \Delta u) = \int_{\partial \Omega} u \frac{\partial v}{\partial \eta} - v \frac{\partial u}{\partial \eta}. \]
+%
+We introduce the quantity
+%
+\[ u_x(y) = \frac{1}{|x - y|^{n-2}}, \]
+%
+which is Newton's gravitational potential, or Coulomb's electrostatic potential given a point mass at the point $x$. A simple computation shows that $\Delta u_x(y) = 0$ for $y \neq x$, perhaps using the fact that if $u(x)$ is a radial function, with $u(x) = f(r)$ for $r = |x|$, then
+%
+\[ \Delta u(x) = f''(r) + \frac{n - 1}{r} f'(r). \]
+%
+Plugging this function into Green's identity, if $v \in C^2(\Omega)$ is a Harmonic function on a domain $\Omega$, continuous on the closure of $\Omega$, then for any $x$, applying Green's identity on the domain $\Omega_{x,\varepsilon}$, obtained from $\Omega$ by removing the ball $B$ of radius $\varepsilon$ centered at $x$, where $\varepsilon$ is small enough so that the entire ball is contained in $\Omega$, we find that
+%
+\begin{align*}
+	0 &= \int_{\partial \Omega_{x,\varepsilon}} \left( u_x \frac{\partial v}{\partial \eta} - v \frac{\partial u_x}{\partial \eta} \right)\\
+	&= \int_{\partial \Omega} \left( u_x \frac{\partial v}{\partial \eta} - v \frac{\partial u_x}{\partial \eta} \right) - \int_{\partial B} u_x \frac{\partial v}{\partial \eta} - v \frac{\partial u_x}{\partial \eta}.
+\end{align*}
+%
+Now for $y \in \partial B$, with $y = x + z$, $\eta(y) = \varepsilon^{-1} z$. And
+%
+\[ \nabla u_x(y) = -(n-2) \frac{z}{|z|^n}, \]
+%
+so
+%
+\[ \int_{\partial B} u_x \frac{\partial v}{\partial \eta} - v \frac{\partial u_x}{\partial \eta} = \int_{|z| = 1} \varepsilon \cdot \nabla v(x + \varepsilon z) \cdot z + (n-2) v(x + \varepsilon z). \]
+%
+Applying a Taylor series shows that as $\varepsilon \to 0$, this quantity converges to $(n-2) C_d v(x)$, where $C_d$ is the surface area of $S^{d-1}$. Thus we conclude that
+%
+\[ v(x) = \frac{-1}{C_d (n-2)} \int_{\partial \Omega} \left( u_x \frac{\partial v}{\partial \eta} - v \frac{\partial u_x}{\partial \eta} \right) \]
+%
+Thus $v$ is determined by it's boundary values, and boundary derivatives in the direction normal to $\Omega$. To get rid of these normal boundary derivatives, we suppose we can compute a function $h_x$, which is harmonic in $\Omega$, and equal to $u_x$ on $\partial \Omega$. Then we can apply Green's second identity again, which yields
+%
+\begin{align*}
+	0 &= \int_{\partial \Omega} v \frac{\partial h_x}{\partial \eta} - \frac{\partial v}{\partial \eta} G\\
+	&= \int_{\partial \Omega} v \frac{\partial h_x}{\partial \eta} - \frac{\partial v}{\partial \eta} u_x.
+\end{align*}
+%
+Thus we conclude that
+%
+\[ v(x) = \frac{-1}{C_d (n-2)} \int_{\partial \Omega} v \left( \frac{\partial h_x}{\partial \eta} - \frac{\partial u_x}{\partial \eta} \right). \]
+%
+The function
+%
+\[ g_x(y) = \frac{-1}{C_d (n-2)} (h_x(y) - u_x(y)) \]
+%
+is called the \emph{Green's function} on the domain $\Omega$. It solves the equation $\Delta g_x = \delta_x$ on $\Omega$, while vanishing on the boundary. We have calculated this by virtue of the fact that for any harmonic function $v$ on $\Omega$,
+%
+\[ v(x) = \int_{\partial \Omega} \frac{\partial g_x}{\partial \eta} v\; dy. \]
+%
+Thus $v$ is uniquely determined by it's boundary values. What's more, we now have a natural operator which, given some sufficiently boundary conditions on $\partial \Omega$, allows us to find a unique solution to Laplace's equation on $\Omega$.
+
+
+
+
 \chapter{Elliptic Equations}
 
 Consider a partial differential operator $L f(x) = \sum a_\alpha(x) D^\alpha f(x)$, where $a_\alpha \in C^\infty(\RR^n)$. Associated with this operator is it's symbol $a(x,\xi) = \sum a_\alpha(x) \xi^\alpha$, and if $L$ has order $m$, it's principle symbol is $a_m(x,\xi) = \sum_{|\alpha| = m} a_\alpha(x) \xi^\alpha$. We say $L$ is \emph{elliptic} near $x_0$ if $a_m(x_0,\xi) = 0$ only when $\xi = 0$. This is equivalent to assuming that there exists $M > 0$, and two constants $c_1$ and $c_2$ and a small neighborhood $U$ of $x_0$ such that $c_1 |\xi|^m \leq |a(x,\xi)| \leq c_2 |\xi|^m$ for $|\xi| \geq M$.
