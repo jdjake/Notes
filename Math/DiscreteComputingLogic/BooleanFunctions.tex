@@ -342,11 +342,11 @@ For a {\it Boolean-valued} map $f: \BB^n \to \BB$, we find that $f^2 = 1$, so $\
 %
 \[ \sum \widehat{f}(S)^2 = 1 \]
 %
-It therefore follows that the squares of the Fourier coefficients generate a probability distribution over subsets of $[n]$. We call this distribution the {\bf spectral sample} of $f$. Often times, the Fourier coeffients of sets over some particular cardinality are more than enough to determine some result. We define the weight of a function $f: \BB^n \to \mathbf{R}$ of degree $k$ to be
+It therefore follows that the squares of the Fourier coefficients generate a probability distribution over subsets of $[n]$. We call this distribution the {\bf spectral sample} of $f$. We define the weight of a function $f: \BB^n \to \mathbf{R}$ of degree $k$ to be
 %
 \[ \mathbf{W}^k(f) = \sum_{|S| = k} \widehat{f}(S)^2 \]
 %
-If $f$ is Boolean-valued, then we can also define $\mathbf{W}^k(f) = \mathbf{P}(|S| = k)$ where $S$ is a random set drawn from the spectral sample. $\mathbf{W}^k(f)$ is also the square norm of the function
+If $f$ is Boolean-valued, then $\mathbf{W}^k(f) = \mathbf{P}(|S| = k)$ where $S$ is a random set drawn from the spectral sample induced by $f$. $\mathbf{W}^k(f)$ is also the $L^2$ norm of the function
 %
 \[ f^{=k}(x) = \sum_{|S| = k} \widehat{f}(S) x^S \]
 %
@@ -364,20 +364,23 @@ Note that $\mathbf{P}(f(X) \neq g(X))$ differs from the Hamming distance of $f$ 
     &= 4d(f,1)d(f,-1)
 \end{align*}
 %
-Thus the variance of Boolean valued functions is very closely related to the degree to whether the function is constant or not.
+Thus the variance of Boolean valued functions is very closely related to the degree to which a function differs from a constant function in the Hamming distance. We therefore have the following result.
 
 \begin{lemma}
-    If $\varepsilon = \min[d(f,1),d(f,-1)]$, then $2\varepsilon \leq \mathbf{V}(f) \leq 4\varepsilon$.
+    If $f: \BB^n \to \BB$ is a Boolean function, and $\varepsilon = \min[d(f,1),d(f,-1)]$, then
+    %
+    \[ 2\varepsilon \leq \mathbf{V}(f) \leq 4\varepsilon. \]
 \end{lemma}
 \begin{proof}
     We are effectively proving that for any $x \in [0,1]$,
     %
     \[ 2\min(x,1-x) \leq 4x(1-x) \leq 4\min(x,1-x) \]
     %
-    Since $4x(1-x) = 4\max(x,1-x)\min(x,1-x)$, we divide by $4\min(x,1-x)$ and restate the inequality as $1/2 \leq \max(x,1-x) \leq 1$, which is obvious. The lower bound is tight for $\varepsilon \sim 1/2$ (where the variance is maximal), and the upper bound is tight for extreme values of $\varepsilon$ (where the variance is negligible).
+    Since $4x(1-x) = 4\max(x,1-x)\min(x,1-x)$, we divide by $4\min(x,1-x)$ and restate the inequality as $1/2 \leq \max(x,1-x) \leq 1$, which is obvious. The lower bound is tight for $\varepsilon \sim 1/2$, where the variance is maximal, and the upper bound is tight for extreme values of $\varepsilon$, where the variance is negligible.
 \end{proof}
 
-This shows that given Boolean functions $f_n: \BB^n \to \BB$, then $\varepsilon_n \sim x_n$ holds if and only if $\mathbf{V}(f) \sim x_n$. The minimum hamming distance to a constant value is asymptotically the same as the variation of the function. In general domains we intuitively view $\mathbf{V}(f)$ as a measure of how constant the function $f$ is, but for functions valued in $\BB$ we have a precise, quantitative estimate. In the context of the Fourier expansion of the variance of a function this makes sense, we obtain that if $\varepsilon = \min[d(f,1),d(f,-1)]$, then $\widehat{f}(\emptyset)^2 = 1 - 4\varepsilon + 4\varepsilon^2 = 1 - 4\varepsilon + O^+(\varepsilon^2)$, so a function is virtually constant if and only if a majority of its Fourier weight is concentrated on the degree zero coefficient.
+%This shows that given Boolean functions $f_n: \BB^n \to \BB$, then $\varepsilon_n \sim x_n$ holds if and only if $\mathbf{V}(f) \sim x_n$. The minimum hamming distance to a constant value is asymptotically the same as the variation of the function.
+In general domains we intuitively view $\mathbf{V}(f)$ as a measure of how constant the function $f$ is, and the result above gives a precise instance of this heuristic for Boolean functions. In the context of the Fourier expansion of the variance of a function this makes sense, we obtain that if $\varepsilon = \min[d(f,1),d(f,-1)]$, then $\widehat{f}(\emptyset)^2 = 1 - 4\varepsilon + 4\varepsilon^2 = 1 - 4\varepsilon + O^+(\varepsilon^2)$, so a function is virtually constant if and only if a majority of its Fourier weight is concentrated on the degree zero coefficient.
 
 \begin{example}
     Consider a function $f$ chosen uniformly randomly from the set of all Boolean functions on $\BB^n$. For any function $g: \BB^n \to \BB$, the probability distribution gives $\mathbf{P}(f = g) = 1/2^{(2^n)}$. Since each Boolean function has a Fourier expansion, $f$ has a Boolean expansion
@@ -403,17 +406,17 @@ This shows that given Boolean functions $f_n: \BB^n \to \BB$, then $\varepsilon_
 
 \section{Testing Linearity}
 
-A function $f: \BB^n \to \BB$ is linear if $f(xy) = f(x) f(y)$ for all $x,y \in \BB^n$, or equivalently, if there is $S \subset [n]$ such that $f(x) = x^S$. Given a general function $f$, there are effectively only two ways to explicitly check that the function is linear, we either check that $f(xy) = f(x) f(y)$ for all choices of the arguments $x$ and $y$, or check that $f(x) = x^S$ holds for some choice of $S$, over all choices of $x$. Even assuming that $f$ can be evaluated in constant time, both methods take exponential time in $n$ to compute. This is guaranteed, because the minimal description length of $f$ is always exponential in $n$, and if an algorithm determining linearity does not check the entire description of a linear function $f$, we can modify $f$ to a non-linear function on inputs that the linearity tester doesn't look at, at the algorithm will not be able to distinguish between these two inputs. The problem of testing linearity is a scenario in a family of problems in the field of property testing, which attempts to design efficient algorithms to determine whether a particular boolean-valued function satisfies a certain property. We will address the more general theory in a later chapter.
+A function $f: \BB^n \to \BB$ is linear if $f(xy) = f(x) f(y)$ for all $x,y \in \BB^n$, or equivalently, if there is $S \subset [n]$ such that $f(x) = x^S$. Given a general function $f$, there are effectively only two ways to explicitly check that the function is linear, we either check that $f(xy) = f(x) f(y)$ for all choices of the arguments $x$ and $y$, or check that $f(x) = x^S$ holds for some choice of $S$, over all choices of $x$. Even assuming that $f$ can be evaluated in constant time, both methods take exponential time in $n$ to compute. This is guaranteed, because the minimal description length of a general function $f$ requires a description length of $\Theta(2^n)$ bits. If an algorithm determining linearity does not check the entire description of the function $f$, we can modify $f$ to be non-linear function on inputs that the linearity tester doesn't look at, and the algorithm will not be able to distinguish between these two inputs. The problem of testing linearity is a scenario in a family of problems in the field of \emph{property testing}, which attempts to design efficient algorithms to determine whether a particular boolean-valued function satisfies a certain property. We will address the more general theory in a later chapter.
 
 We might not be able to come up with a polynomial time algorithm to verify linearity, but we can make headway by considering the possiblity of coming up with a randomized algorithm which can verify linearity with high probability. The likely solution to the problem, given some function $f$, would to perform the linearity test for $f(XY) = f(X) f(Y)$ for a certain set of randomly chosen inputs $X$ and $Y$. If $f$ is non-linear, then $f(XY) \neq f(X) f(Y)$ with positive probability, and if we find this particular input we can guarantee the function is non-linear. If $f$ is linear, the test always passes. We shall find that if a function is likely to succeed, then the function is guaranteed to be close to a linear function.
 
-The simplest version of linearity testing runs using one random query as a test -- it just takes a pair of uniformly random inputs, and tests the linearity of this function against these inputs. This is known as the Blum-Luby-Rosenfeld algorithm, or BLR for short. It turns out that the sucess of this method is directly related to how similar a function is to a linear character. There are two candidates to define what it means to be `approximately linear'. For a subset $A$ of Boolean-valued functions, we shall let $d(f,A) = \inf_{g \in A} d(f,g)$ denote the minimum distance from $f$ to $A$, and we will let $\mathcal{C}$ denote the subset of Boolean functions which are characters.
+The simplest version of linearity testing runs using one random query as a test -- it just takes a pair of uniformly random inputs, and tests the linearity of this function against these inputs. This is known as the Blum-Luby-Rosenfeld algorithm, or BLR test for short. It turns out that the sucess of this method is directly related to how similar a function is to a linear character. There are two candidates to define what it means to be `approximately linear'. For a subset $A$ of Boolean-valued functions, we shall let $d(f,A) = \inf_{g \in A} d(f,g)$ denote the minimum distance from $f$ to $A$, and we will let $\mathcal{C}$ denote the subset of Boolean functions which are characters, i.e. of the form $x^S$ for some $S \subset [n]$. These are precisely the linear functions 
 
 So how do we quantify the ability for the BLR test to succeed. To begin with, there are two ways we could say a function $f$ is `close' to being linear.
 %
 \begin{itemize}
-    \item $f(xy) = f(x) f(y)$ for a large majority of inputs $x$ and $y$. Essentially, this means exactly that $f(XY) = f(X)f(Y)$ holds with high probability, so the BLR test is accepted with high probability.
-    \item There is a linear functional $g$ such that $f(x) = g(x)$ for a large number of inputs $x$. This means exactly that $d(f,(\mathbf{F}_2^n)^*)$ is small, so $f$ is close to some character.
+    \item $f(xy) = f(x) f(y)$ for a large majority of inputs $x$ and $y$. Essentially, this means exactly that $f(XY) = f(X)f(Y)$ holds with high probability, so this property is equivalent to the BLR test being accepted with high probability.
+    \item There is a \emph{particular} linear functional $g$ such that $f(x) = g(x)$ for a large number of inputs $x$, i.e. $d(f,g)$ is small, so $f$ is close to an element of $\mathcal{C}$.
 \end{itemize}
 %
 The two notions are certainly related, but a direct relation seems difficult to quantify. One way is easy to bound. If $g$ is linear, and $d(f,g) = \varepsilon$, then a standard union bound inequality guarantees that
