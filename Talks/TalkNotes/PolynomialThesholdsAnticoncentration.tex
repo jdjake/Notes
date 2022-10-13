@@ -1,0 +1,232 @@
+\documentclass{article}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{esint}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{prop}[theorem]{Proposition}
+
+\theoremstyle{remark}
+\newtheorem*{example}{Example}
+\newtheorem*{remark}{Remark}
+
+\theoremstyle{definition}
+\newtheorem*{defi}{Definition}
+\newenvironment{definition}
+    {\begin{samepage}\begin{framed}\begin{defi}}
+    {\end{defi}\end{framed}\end{samepage}}
+
+\title{A Structure Theorem for Poorly Anticoncentrated Gaussian Chaos}
+\author{Jacob Denson}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+A \emph{degree $d$ polynomial theshold function (PTF)} is a function of the form $f(x) = \text{sgn}(p(x))$, for some polynomial $p$ is a polynomial of degree $d$.
+
+Algebraic topology sprung arose naturally from understanding the theory of integration of holomorphic functions on the complex plane. Conversely, one of the most classical way to determine the topological structure of subdomains of $\mathbf{C}$ is to study holomorphic functions on this set, or equivalently in the real variable setting, harmonic functions on $\mathbf{R}^2$. We aim to generalize this topological classification by studying a suitable generalization of harmonic functions on other manifolds.
+
+\section{The Laplacian of Functions}
+
+For suitably smooth functions, we can write
+%
+\[ (\Delta f)(x) = \lim_{r \to 0} \frac{1}{r^2} \fint_{S(r)} \left( f(x + y) - f(x) \right)\; dy \]
+%
+where $S(r)$ is a circle of radius $r$ centred at the origin. In particular, it is intuitive that $\Delta (f \circ \alpha)(x) = (\Delta f)(\alpha(x))$ if $\alpha$ is an isometry. This means that the operator naturally extends to smooth functions on Riemannian manifolds, such that if $x$ is a set of isometric coordinates,
+%
+\[ \Delta f = \sum \frac{\partial^2 f}{\partial x_i^2} \]
+%
+We will be consider harmonic forms on the manifold, such that $\Delta f = 0$, and how they represent the topological structure of the ambient manifold. We will soon see this is only possible on a Riemannian manifold $(M,g)$, which for simplicity we assume to be oriented.
+
+There is an alternate, more algebraic way to introduce the Laplacian. Since $\Delta f = \nabla \cdot \nabla f$, it suffices to extend the gradient and divergence operators to arbitrary Riemannian manifolds. The gradient operator should take smooth functions and give us vector fields, and the divergence should take vector fields and give us smooth functions. Over $\mathbf{R}^n$, $df$ and $\nabla f$ are defined in essentially the same way,
+%
+\[ \nabla f = \sum \frac{\partial f}{\partial x_i} e_i\ \ \ \ \ df = \sum \frac{\partial f}{\partial x_i} dx^i \]
+%
+The only difference is that `the indices are in the wrong place'. This is because while $\nabla f$ is a vector field, $df$ is a {\it covector} field. To convert between the two, we use the inner product structure on the manifold to establish a canonical isomorphism between the bundles $TM$ and $T^*M$. Given $v \in TM_p$, we consider $v^\sharp \in T^*M_p$ given by $v^\sharp(w) = v \cdot w$. Conversely, given $\omega \in T^*M_p$, there is a unique vector $\omega^\flat \in TM_p$ such that $\omega(v) = \omega^\flat \cdot v$. This enables us to {\it define} the gradient on a Riemannian manifold as $\nabla f = (df)^\flat$. In coordinates, it is given simply by
+%
+\[ \sum \frac{\partial f}{\partial x_i} g^{ij} \frac{\partial}{\partial x_j} \]
+%
+where $(g^{ij})$ is the inverse of the metric coefficients $g_{ij}$.
+
+The divergence is a little harder. First, we note that in Euclidean space, the divergence gives the rate of infinitisimal volume expansion that a region of space experiences when affected by the vector field. Thus it is natural to use volumes on manifolds to define the divergence. Luckily, the Riemannian structure has our back. The form
+%
+\[ dV = \frac{dx^1 \wedge \dots \wedge dx^n}{\sqrt{\det g}}  \]
+%
+is seen to be invariant of any {\it oriented} coordinate chart $x$, and gives the standard volume form on any isometric coordinate chart. We can therefore define an inner product on the space of compactly supported vector fields by setting
+%
+\[ \langle X, Y \rangle = \int X \cdot Y\; dV \]
+%
+The completion of this space will be denoted by $L^2(TM)$. Similarily, we can define
+%
+\[ \langle f, g \rangle = \int fg\; dV \]
+%
+the completion denoted by $L^2(M)$. On $\mathbf{R}^n$, a change of variables gives that $\langle \nabla \cdot X, f \rangle = - \langle X, \nabla f \rangle$. Thus we {\it define} the divergence $\nabla \cdot X$ to be the unique vector field for which this is true. Since the inner product space is not complete, it is not automatic that this even exists, but calculating the divergence in the usual manner in isometric coordinates shows that the vector field does actually exist. In general coordinates it is given by
+%
+\[ \nabla \cdot X = \frac{1}{\sqrt{\det g}} \sum \frac{\partial (X^i \sqrt{\det g})}{\partial x_i} \]
+%
+This completes the definition of the gradient and divergence, and so $\Delta f$ makes sense for any smooth function $f$. Using some basic theory from the analysis of Sobolev spaces, we can prove the following result.
+
+\begin{theorem}[Functional Hodge Theorem]
+    If $M$ is a compact, connected, orientable, Riemannian manifold, then the space $L^2(M)$ has an orthonormal basis consisting of smooth eigenfunctions of the Laplacian, with each eigenvalue positive, except for zero, which has multiplicity one, and the eigenvalues accumulating only at $\infty$.
+\end{theorem}
+
+\begin{example}
+    This theorem doesn't hold on $L^2(\mathbf{R})$, but we do have the result for $L^2(\mathbf{T})$. The canonical orthonormal basis consists of the exponential maps $e_n(x) = e^{2 \pi i n x}$, since $\Delta e_n = (2 \pi n)^2 e_n$. On $L^2(\mathbf{T}^2)$, we get the multiple Fourier series $e_{nm}(x,y) = e^{2 \pi i (n x + m y)}$ such that $\Delta e_{nm} = (2 \pi)^2 (n^2 + m^2) e_{nm}$.
+\end{example}
+
+\begin{example}
+    The computation of an orthonormal basis to $L^2(S^2)$ leads naturally to the theory of spherical harmonics. These are harmonic, homogenous polynomials in $\mathbf{R}^3$ restricted to the sphere, and lead to basis expansion of all square integrable functions on the sphere.
+\end{example}
+
+\begin{remark}
+    As stated, this theorem extends when $\Delta$ is replaced by any elliptic differential operator on $M$, proved in a first course in partial differential equations.
+\end{remark}
+
+\section{The Laplacian on Forms}
+
+Since the Laplace operator $\Delta$ determines the metric on the manifold, it is natural to ask which features of $\Delta$ are sufficient to determine the metric structure of the manifold. It was an open question until the 70s? whether the sequence of eigenvalues corresponding to $\Delta$ were sufficient to determine this structure. Unfortunately, the answer turns out to be no, since manifolds were constructed which were {\it isospectral}, but not isometric. We can't `hear the shape of a drum'.
+
+Of course, the laplace operator does still carry a large amount of topological information. We can get much more information if we study not only functions on our manifold, but also forms of the various orders. Just how extending the $d$ operator to all forms was an incredibly useful idea, extending the $\Delta$ operator to all forms is also incredibly useful from the viewpoint of differential topology. Of course, defining the space $L^2(\Lambda^k M)$ is not too difficult; the metric $g$ is a bilinear map from $TM$ to itself, and therefore extends to a bilinear map $g \otimes \dots \otimes g$ on $\mathcal{T}^m(TM)$, and therefore, by the musical isomorphism, to a bilinear map from $\mathcal{T}^m(T^*M)$. For instance, we have $(dx \otimes dy) \cdot (dz \otimes dw) = (dx \cdot dz) (dy \cdot dw)$. The alternating forms form a subbundle of this bundle, and so we naturally have an inner product structure on $\Lambda^k M$, and so we can consider
+%
+\[ \langle \omega, \eta \rangle = \int \omega \cdot \eta\; dV \]
+%
+which is completed to a Hilbert space $L^2(\Lambda^k M)$. There is another way to see this inner product using the {\it hodge star}. It is a linear map $*: \Lambda^k(T^*M) \to \Lambda^{n-k}(T^*M)$ such that in any positively oriented orthonormal coframe $s^1, \dots, s^n$, we have
+%
+\[ s^{i_1} \wedge \dots \wedge s^{i_k} \wedge *(s^{i_1} \wedge \dots \wedge s^{i_k}) = dV \]
+%
+So $*(s^{i_1} \wedge \dots \wedge s^{i_k}) = s^{j_1} \wedge \dots \wedge s^{j_{n-k}}$ and $\{ j_1, \dots, j_{n-k} \} \cup \{ i_1, \dots, i_k \} = \{ 1, \dots, n \}$. Checking orientations shows that $*(*(\omega)) = (-1)^{k(n-k)} \omega$ for any $k$ form $\omega$. The star is an isometry, so we can use it to identify $k$ forms and $n-k$ forms in a natural way.
+
+\begin{theorem}
+    For any two $k$ forms $\omega, \eta$, $\omega \cdot \eta\; dV = \omega \wedge *\eta$.
+\end{theorem}
+\begin{proof}
+    By bilinearity, we may assume that
+    %
+    \[ \omega = s^{i_1} \wedge \dots \wedge s^{i_k}\ \ \ \ \eta = s^{j_1} \wedge \dots \wedge s^{j_k} \]
+    %
+    where $s$ is an orthonormal oriented frame. Then
+    %
+    \[ (\omega \cdot \eta) dV = \mathbf{I}(i_1 = j_1, \dots, i_k = j_k) (s^1 \wedge \dots \wedge s^n) \]
+    %
+    This is nonzero if and only if $\omega = \eta$, and then $(\omega \cdot \eta) dV = dV = \omega \wedge *\eta$.
+\end{proof}
+
+Thus we also have
+%
+\[ \langle \omega, \eta \rangle = \int \omega \wedge * \eta \]
+%
+We can use this to obtain an integration by parts formula for differentiation. In other words, we compute the adjoint operator to $d$, such that $\langle d\omega, \eta \rangle = \langle \omega, \delta \eta \rangle$. We call $\delta$ the {\bf codifferential} of $d$.
+%
+\begin{align*}
+    \langle d\omega, \eta \rangle &= \int d\omega \wedge *\eta\\
+    &= \int d(\omega \wedge *\eta) - (-1)^k \int \omega \wedge d(* \eta)\\
+    &= (-1)^{k+1} \int \omega \wedge d(* \eta)\\
+    &= (-1)^{k+1 + k(n-k)} \int \omega \wedge **(d(* \eta))\\
+    &= (-1)^{nk+1} \langle \omega, *(d(* \eta)) \rangle
+\end{align*}
+%
+Thus $\delta \eta = (-1)^{nk+1} *(d(* \eta))$, which is kind of what you would expect. In particular, the operation $\delta$ on covector fields operates very similarily to the divergence for vector fields, which was defined in terms of the adjoint of the gradient. In particular, we find that
+%
+\[ \langle \Delta f, g \rangle = - \langle \nabla \cdot \nabla f, g \rangle = \langle \nabla f, \nabla g \rangle = \langle df, dg \rangle = \langle \delta df, g \rangle \]
+%
+So the Laplacian is given by $\Delta f = \delta df$. We would like to use this equation to define the Laplacian for all forms, but this doesn't work. For one thing, then the Laplacian of $n$ forms is trivial, and secondly, the nice analytic features don't let us use functional analysis. To fix this up, we note that for $n$ forms we should have
+%
+\[ \Delta \omega = *(\Delta(* \omega)) = *(\delta d(* \omega)) = (-1)^{n+1} *(* d * d * \omega) = (-1)^{n+1} d(* d * \omega) = d(\delta \omega) \]
+%
+Which hints that the general Laplacian should be combinations of $d \delta$ and $\delta d$, and it turns out that the correction definition is $\Delta \omega = d \delta \omega + \delta d \omega$. This turns to have the nice analytic properties which give us a Hodge theorem.
+
+\begin{theorem}
+    If $M$ is a compact, connected, oriented Riemannian manifold, there exists an orthonormal basis of $L^2(\Lambda^k M)$ consisting of smooth eigenforms to the Laplacian.
+\end{theorem}
+
+\begin{example}
+    Consider $L^2(\Lambda^1(\mathbf{T}^2))$. Then every one form $\omega$ on the manifold corresponds to $f\; dx + g\; dy$ on $\mathbf{R}^2$ where $f$ and $g$ are periodic. We compute
+    %
+    \begin{align*}
+        \delta \omega &= - *(d(* (fdx + gdy))) = - *(d(f dy - g dx))\\
+        &= - * \left( ( f_x + g_y) dx \wedge dy \right) = -(f_x + g_y)
+    \end{align*}
+    %
+    This is certainly natural given that $\delta$ is connected to the divergence. Now
+    \[ d(\delta \omega) = - (f_{xx} + g_{xy}) dx - (f_{xy} + g_{yy}) dy \]
+    %
+    Similarily, we calculate
+    %
+    \[ d\omega = (g_x - f_y) dx \wedge dy \]
+    %
+    \[ *(d \omega) = g_x - f_y \]
+    \[ d(*(d \omega)) = g_{xx} dx + g_{xy} dy - f_{xy} dx - f_{yy} dy \]
+    \[ \delta(d(\omega)) = - *(d(*(d \omega))) = - (f_{yy} - g_{xy}) dx - (g_{xx} - f_{xy}) dy \]
+    %
+    Thus
+    %
+    \[ \Delta \omega = - (f_{xx} + f_{yy})\; dx - (g_{xx} + g_{yy})\; dy = \Delta f\; dx + \Delta g\; dy \]
+    %
+    In particular, this means that $\Delta \omega = \lambda \omega$ if and only if $\Delta f = \lambda f$ and $\Delta g = \lambda g$. And we can take an orthonormal eigenspace consisting of the forms $e_{nm} dx$ and $e_{nm} dy$ for all pairs of integers $n$ and $m$. The dimension of the eigenspaces corresponds to the number of representations of an integer as a sum of squares. 
+\end{example}
+
+\section{Topological Properties of Harmonic Forms}
+
+Now we see how the harmonic forms give us the topology of the space. First, we have the Hodge decomposition. Note that the codifferential $\delta$ satisfies $\delta^2 = 0$, precisely because $d^2 = 0$, and thus defines a homology. Because it is essentially `the same' operator as $d$, but going in the other direction, it gives exactly the same topological information as $d$. We call a form {\bf coexact} if it is of the form $\delta \omega$ for some $\omega$. Using more Sobolev space techniques, we can prove the following.
+
+\begin{theorem}[Hodge Decomposition]
+    Every smooth $k$ form can be written uniquely as the sum of a harmonic $k$ form, an exact form, and a coexact form.
+\end{theorem}
+
+Now if $\Delta \omega = 0$, then $d \delta \omega = - \delta d \omega$. In particular,
+%
+\[ 0 = \langle \Delta \omega, \omega \rangle = \langle \delta \omega, \delta \omega \rangle + \langle d \omega, d \omega \rangle \]
+%
+Thus both $d \omega = 0$ and $\delta \omega = 0$. In particular, $\omega$ is closed. Given {\it any} closed form $\omega$, we can use the Hodge decomposition to write the form uniquely as $\omega = \alpha + d \beta + \delta \lambda$, where $\alpha$ is harmonic. But then $0 = d \omega = d \alpha + d^2 \beta + d \delta \lambda = d \delta \lambda$. But this means that $0 = \langle d \delta \lambda, \lambda \rangle = \langle \delta \lambda, \delta \lambda \rangle = 0$, so $\delta \lambda = 0$. We conclude that every {\it closed} form can be uniquely written as a sum of a harmonic form and an exact form. In particular, we get the Hodge Theorem, that each cohomology class is represented by {\it exactly one} harmonic form. Thus in most cases in De Rham cohomology it suffices to do computations with harmonic forms. This often leads to simpler Hodge theoretic proofs of various theorems in differential topology.
+
+\begin{theorem}
+    If $M$ is compact and orientable, then $H^k$ is finite dimensional.
+\end{theorem}
+\begin{proof}
+    Hodge's theorem tells us that the space of harmonic forms of each order is finite dimensional, and this vector space is isomorphic to $H^k(M)$.
+\end{proof}
+
+A non hodge theoretic would have to deal with some kind of finite covering by open sets whose homology we know how to compute, as well as their intersections, so we could apply some kind of Meyer Vietoris argument.
+
+\begin{theorem}
+    The dimension of the space of harmonic forms of a manifold $M$ is independant of the metric $g$, and even the differential structure.
+\end{theorem}
+\begin{proof}
+    The space of harmonic forms of order $k$ is isomorphic to $H^k(M)$, which is the De Rham cohomology and singular cohomology, depending only on the topological structure of $M$.
+\end{proof}
+
+We also get a simple proof of Poincare duality.
+
+\begin{theorem}
+    For any compact manifold $M$, $H^k(M) \equiv H^{n-k}(M)$.
+\end{theorem}
+\begin{proof}
+    A form $\omega$ is harmonic if and only if $* \omega$ is, since $* \Delta = \Delta *$. Thus the dimension of harmonic forms of degree $k$ is isomorphic to the space of harmonic forms of degree $n-k$.
+\end{proof}
+
+\begin{theorem}
+    If $\pi: M \to N$ is a finite sheeted cover of two compact oriented manifolds, then $\dim(H_k(M)) \geq \dim(H_k(N))$.
+\end{theorem}
+\begin{proof}
+    Given a metric $g$ on $N$, we obtain a metric $\pi^* g$ on $M$. It is impossible to distinguish $N$ from $M$ locally, so we should expect $\Delta(\pi^*(\omega)) = \pi^*(\Delta \omega)$, and $\pi^*$ is injective, so we obtain an injective map from harmonic forms on $N$ to harmonic forms on $M$.
+\end{proof}
+
+\begin{remark}
+    The proof using standard De Rham arguments is much more technical.
+\end{remark}
+
+\begin{theorem}
+    $\dim(H^k(M \times N)) = \sum \dim(H^i(M)) \dim(H^{k-i}(M))$.
+\end{theorem}
+\begin{proof}
+    Given metrics $g$ on $M$ and $h$ on $N$, we obtain a metric $g \oplus h$ on $M \times N$, and then $dV_{M \times N} = dV_M \wedge dV_N$ in an appropriate orientation. If we have an orthonormal basis $\{ f_i \}$ for $L^2(M)$ and an orthonormal basis $\{ g_i \}$ for $L^2(N)$, we obtain a basis for $L^2(M \times N)$ consisting of $\{ f_ig_j \}$. And similarily, given orthonormal basis $\omega_i^k$ for $L^2(\Lambda^k M)$, we obtain an orthonormal basis $\omega_i^l \wedge \omega_j^{k-l}$ for $L^2(\Lambda^k(M \times N))$. In particular, we have $\Delta(\omega \eta)$
+\end{proof}
+
+\end{document}
