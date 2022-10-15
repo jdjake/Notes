@@ -1,57 +1,59 @@
-I prefer books visceral books that solve particular problems while building a theory, though often some theory building proves useful to building intuition.
+# Math Book Recommendations
+
+Here I've recorded some math books that I found the most useful for learning a particular topic, inspired by the "Chicago Undergraduate Mathematics Bibliography" (https://www.ocf.berkeley.edu/~abhishek/chicmath.htm), which I found very useful during my undergraduate years:
+
+The * before a title indicates a book I have only read a small section of, but found useful such that, if I was to ever look further into this topic, I would read into this particular text further.
 
 
+## Fundamentals
 
+### Linear Algebra
 
+- Charles Curtis, Linear Algebra: An Introductory Approach
 
-========================
-===   Fundamentals   ===
-========================
+	The First Linear Algebra Book I read. Does the job of teaching the basic ideas, without too much flair or extras.
 
-	Linear Algebra
-	==============
+- Paul Halmos, Finite-Dimensional Vector Spaces
 
-		Charles Curtis, Linear Algebra: An Introductory Approach
+	Utilizes the modern terminology and techniques of functional analysis on infinite dimensional vector spaces to the finite dimensional. Suprisingly, this modern approach makes the material very readable.
 
-			The first linear algebra book I read. Does the job of teaching the basic ideas, without too much flair or extras.
+- Stephen Friedberg / Arnold Insel / Lawrence Spence, Linear Algebra
 
-		Paul Halmos, Finite-Dimensional Vector Spaces
+	Pretty bog standard linear algebra book. Gets through all the potential topics you need.
 
-			Utilizes the modern terminology and techniques of functional analysis on infinite dimensional vector spaces to the finite dimensional. Suprisingly, this modern approach makes the material very readable.
+- Peter Lax, Linear Algebra and its Applications
 
-		Peter Lax, Linear Algebra and its Applications
+	An advanced book on finite dimensional linear algebra and matrix theory. Most people skip these parts of linear algebra, but there are very important uses for this theory! Not all linear algebra is functional analysis in disguise. Read this for concreteness!
 
-			An advanced book on finite dimensional linear algebra and matrix theory. Most people skip these parts of linear algebra, but there are very important uses for this theory! Not all linear algebra is functional analysis in disguise. Read this for concreteness!
-
-		Stephen Friedberg / Arnold Insel / Lawrence Spence, Linear Algebra
-
-			Pretty bog standard linear algebra book. Gets through all the potential topics you need.
+- * Denis Serre, Matrices
+		
+- * Rajendra Bhatia, Positive Definite Matrices
 
 	Discrete Mathematics
 	====================
 
 		Ronald Graham / Donald Knuth / Oren Patashnik, Concrete Mathematics: A Foundation for Computing Science
 
-			A problems book designed so that computing science students can read Donald Knuth's monolithic and archaic `The Art of Computer Programming' series. However, it really is a good introduction to the basic ideas of discrete mathematics, solving recurrences, basic number theory, generating functions, discrete probablity theory, and asymptotics. Very useful, and you'll likely learn techniques you didn't know if you read it, even if you think you already know all the discrete mathematics you will need.
+			A problems book designed so that computing science students can read Donald Knuth's monolithic `The Art of Computer Programming' series. However, it really is a good introduction to the basic ideas of discrete mathematics, solving recurrences, basic number theory, generating functions, discrete probablity theory, and asymptotics. Very useful, and you'll likely learn techniques you didn't know if you read it, even if you think you already know all the discrete mathematics you will need.
 
-		J. Michael Steele, The Cauchy Schwartz Master Class
+		John Michael Steele, The Cauchy Schwartz Master Class
 
 	Calculus & Introductory Analysis
 	================================
-
-		Michael Spivak, Calculus
-
-			Less terse text in basic analysis.
 
 		Walter Rudin, Principles of Mathematical Analysis
 
 			Very terse text in basic analysis.
 
-		T.W. Korner, A Companion to Analysis
+		Michael Spivak, Calculus
+
+			Less terse text in basic analysis.
+
+		Thomas Korner, A Companion to Analysis
 
 			Great supplement to a basic analysis course. Explains `why' basic analysis isn't so intuitive as you might believe.
 
-		H.M. Schey, Div, Grad, Curl, and all that
+		Hermann Schey, Div, Grad, Curl, and all that
 
 			Great introduction to classical vector calculus.
 	
@@ -59,10 +61,11 @@ I prefer books visceral books that solve particular problems while building a th
 
 			Covers basic multivariate calculus, and elementary differential forms / integration on manifolds.
 
-		Books to Look Into:
-			- Robert S. Strichartz, The Way of Analysis
-			- Courant, Vol 1 + 2.
-			- Calculus, a Genetic Approach
+		* Robert S. Strichartz, The Way of Analysis
+		
+		* Richard Courant, Introduction To Calculus and Analysis, Vol 1 + 2.
+		
+		* Otto Toeplitz, Calculus: a Genetic Approach
 
 	Basic Probability Theory
 	==================
@@ -71,20 +74,20 @@ I prefer books visceral books that solve particular problems while building a th
 
 		William Feller, An Introduction to Probability Theory and its Applications (Vol 1-2)
 
-		David Williams, Weighing the Odds: A Course in Probability Theory
+		* David Williams, Weighing the Odds: A Course in Probability Theory
 
 	Geometry
 	========
 
-		Hartshorne, Geometry: Euclid and Beyond
+		* Robin Hartshorne, Geometry: Euclid and Beyond
 
-		Richter-Gebert, Perspectives on Projective Geometry
+		* Jurgen Richter-Gebert, Perspectives on Projective Geometry
 
-		T.K. Carne, University of Cambridge Lecture Notes, Geometry and Groups
+		* Keith Carne, University of Cambridge Lecture Notes, Geometry and Groups
 
-		Hermann Weyl, Symmetry
+		* Hermann Weyl, Symmetry
 
-		Oliver Byrne, The First Six Books of The Elements of Euclid.
+		* Oliver Byrne, The First Six Books of The Elements of Euclid.
 
 	Complex Analysis
 	================
@@ -96,33 +99,7 @@ I prefer books visceral books that solve particular problems while building a th
 	Classical Differential Geometry
 	===============================
 
-		Manfredo do Carmo, Differential Geometry of Curves and Surfaces
-
-	Fourier Analysis
-	================
-
-		Elias Stein / Rami Shakarchi, Fourier Analysis
-
-		T.W. Korner, Fourier Analysis
-		T.W. Korner, Exercises in Fourier Analysis
-
-		A panorama of Harmonic analysis Steven Krantz
-
-		Javier Duoandioketxea, Fourier Analysis
-
-		Stein, Weiss, Fourier Analysis on Euclidean Spaces
-
-		Thomas Wolff, Lectures on Harmonic Analysis
-
-		Terence Tao, Lecture notes for Math 247A: Harmonic Analysis
-
-		Elias Stein, Singular Integrals
-
-		Elias Stein, Harmonic Analysis
-
-		Books to Look Into:
-			- R.E. Edwards: Fourier Series Volumes One and Two
-			- ANALYSIS AND APPLICATIONS:THE MATHEMATICAL WORK OF ELIAS STEIN
+		* Manfredo do Carmo, Differential Geometry of Curves and Surfaces
 
 	Differential Equations
 	======================
@@ -131,22 +108,30 @@ I prefer books visceral books that solve particular problems while building a th
 
 			A much more `practical' differential equations book. Talks about the actual geometrical theory behind differential equations, and an introduction to the more `chaotic aspects' relating differential equations to dynamical systems. Choose this if you want a differential equations course that is actually interesting! The second edition republishing by Springer includes many real-word examples of differential equation (logistic equation, Lotka-Volterra, etc) which add variety to the exposition
 
-		Steven H. Strogatz, Nonlinear Dynamics and Chaos
+		* Steven H. Strogatz, Nonlinear Dynamics and Chaos
 
-		Differential Equations Books to Look Into:
-			- Garrett Birkhoff / Gian-Carlo Rota, Ordinary Differential Equations
-			- John Guckenheimer / Philip Holmes, Nonlinear Oscillations, Dynamical Systems, and Bifurcations of Vector Fields.
+		* Garrett Birkhoff / Gian-Carlo Rota, Ordinary Differential Equations
+		
+		* John Guckenheimer / Philip Holmes, Nonlinear Oscillations, Dynamical Systems, and Bifurcations of Vector Fields.
 
 	Elementary Mathematical Physics (Mechanics and Electromagnetics)
 	================================================================
 
-		Lev Landau / Evegeny Lifshitz, Mechanics
-
-		Lev Landau / Evegeny Lifshitz, The Classical Theory of Fields
+		Lev Landau / Evegeny Lifshitz, Course of Theoretical Physics:
+			Vol 1: Mechanics
+			* Vol 2: The Classical Theory of Fields
+			* Vol 3: Quantum Mechanics: Non Relativistic Theory
+			* Vol 4: Relativistic Quantum Theory
+			* Vol 5: Statistical Physics
+			* Vol 6: Fluid Mechanics
+			* Vol 7: The Theory of Elasticity
+			* Vol 8: Electrodynamics of Continuous Media
+			* Vol 9: Statistical Physics, Vol 2
+			* Vol 10: Physical Kinetics
 
 		Michael Spivak, Physics for Mathematicians
 
-                Ain Sonin, Dimensional Analysis
+                * Ain Sonin, Dimensional Analysis
 
 
 
@@ -179,9 +164,9 @@ I prefer books visceral books that solve particular problems while building a th
 
 		John Kelley, General Topology
 
-		Ya / Viro / Ivanov / Yu / Netsevetev / Kharlamov, Elementary Topology Problem Textbook
-
 		James Munkres, Topology
+
+		* Viro / Ivanov / Netsvetaev / Kharlamov, Elementary Topology: Problem Textbook
 
 
 	Galois Theory
@@ -189,21 +174,21 @@ I prefer books visceral books that solve particular problems while building a th
 
 		James Stewart, Galois Theory
 
-		Jacobson, Basic Algebra I (Section on Galois Theory)
+		Nathan Jacobson, Basic Algebra I (Section on Galois Theory)
 
 	Algebraic Topology
 	==================
 
-		Hatcher, Algebraic Topology
+		Allen Hatcher, Algebraic Topology
 
-		John Stillwell, Classical Topology and Combinatorial Group Theory
+		* John Stillwell, Classical Topology and Combinatorial Group Theory
 
 			Gives geometry inspiration for the basic concepts of algebraic topology: fundamental groups and homology theory.
 
 	Measure Theory
 	==============
 
-		Rudin, Real and Complex analysis
+		Walter Rudin, Real and Complex analysis
 
 			One of the best and most concise introductions to measure theory I've read. The first chapter essentially includes all the big theorems of measure theory you'll need, and the next few chapters include the other little important things that are useful (product measures, radon nikodym derivates, etc). Also includes a strange second part on complex analysis that I haven't got round to reading, but apparently proceeds by an incredible strange approach.
 
@@ -213,41 +198,43 @@ I prefer books visceral books that solve particular problems while building a th
 
 		Elias Stein / Rami Shakarchi, Princeton Lectures in Analysis (Vol 3: Measure Theory, Integration and Hilbert Spaces)
 
-		Halmos, Measure Theory
+		Paul Halmos, Measure Theory
 
 	Functional Analysis
 	===================
 
 		Elias Stein / Rami Shakarchi, Princeton Lectures in Analysis (Vol 4: Functional Analysis)
 
-		Paul Halmos, A Hilbert Space Problem Book
+		* Paul Halmos, A Hilbert Space Problem Book
 
 		John Conway, A Course in Functional Analysis
 
 		Peter Lax, Functional Analysis
 
-			Really good for applications of functional analysis, showing WHY WE STUDY THIS SUBJECT IN THE FIRST PLACE!
+			Really good for applications of functional analysis, giving motivations for the study of functional analysis rather than just the abstract theory.
 
 		Robert Megginson, An Introduction to Banach Space Theory
 
-		Treves, Topological Vector Spaces, Distributions, and Kernels
+		Francois Treves, Topological Vector Spaces, Distributions, and Kernels
 
 		Walter Rudin, Functional Analysis
 
-		Fabian, Habala, Hajek, Montesinos, Zivler, Banach Space Theory
+		* Fabian, Habala, Hajek, Montesinos, Zivler, Banach Space Theory
 
 			Incredibly comprehensive book on the advanced areas of Banach space
 
-		Diestel, Uhl Jr. Vector Measures
+		* Joseph Diestel / John Uhl Jr. Vector Measures
 
 			Good resource for learning vector valued integration theory.
+
+		* Patrick Billingsley, Convergence of Probability Measures
 
 	Modern Differential Geometry
 	============================
 
-		Michael Spivak, A Concise Introduction to Differential Geometry
+		Michael Spivak, A Concise Introduction to Differential Geometry (Vol 1-5)
 
-		A Thorough Introduction To The Theory of General Relativity (International Winter School on Gravity and Light 2015)
+		Frederic Schuller, A Thorough Introduction To The Theory of General Relativity (International Winter School on Gravity and Light 2015)
 			Lecture 1 (Topology): https://www.youtube.com/watch?v=7G4SqIboeig
 			Lecture 2 (Topological Manifolds): https://www.youtube.com/watch?v=93f-ayezCqE
 			Lecture 3 (Multilinear Algebra): https://www.youtube.com/watch?v=mbv3T15nWq0
@@ -268,28 +255,28 @@ I prefer books visceral books that solve particular problems while building a th
 
 			I found this book a little bit more concise than Spivaks book, which helped make some concepts more readable. But I still think both should be read for a true understanding of differential geometry.
 
-		Serge Lang, Fundamentals of Differential Geometry
+		* Serge Lang, Fundamentals of Differential Geometry
 
 			In true, abstract Serge Lang style, the book introduces the usual theory of differentiable manifolds as a theory of spaces that look locally like infinite dimensional Banach spaces. If you like Serge Lang books, you'll like this one.
 
-                Marian Fecko, Differential Geometry for Physicists
+                * Marian Fecko, Differential Geometry for Physicists
 
-                Morris Herch, Differentiable Topology
+                * Morris Herch, Differentiable Topology
 
 
         Partial Differential Equations
         ==============================
 
-        Craig Evans, Partial Differential Equations
+	        * Craig Evans, Partial Differential Equations
 
-        Vladimir Arnold, Partial Differential Equations
+	        * Vladimir Arnold, Lectures on Partial Differential Equations
 
 	Commutative Algebra
 	===================
 
 		Atiyah Macdonald, Commutative Algebra
 
-		Pete L. Clark, Commutative Algebra
+		* Pete L. Clark, Commutative Algebra
 
 	Algebraic Geometry
 	==================
@@ -300,14 +287,15 @@ I prefer books visceral books that solve particular problems while building a th
 
 		William Fulton, Algebraic Curves
 
-		Gerd Fischer, Plane Algebraic Curves
-    		Very elementary for what is proven. Useful for a first introduction.
+		* Gerd Fischer, Plane Algebraic Curves
+    			
+    			Very elementary for what is proven. Useful for a first introduction.
 
-		Igor Shaferavich, Basic Algebraic Geometry I
+		* Igor Shaferavich, Basic Algebraic Geometry I
 
-		Robin Hartshorne, Algebraic Geometry
+		* Robin Hartshorne, Algebraic Geometry
 
-		Lie, Algebraic Geometry
+		* Lie, Algebraic Geometry
 
 	Mathematical Logic
 	==================
@@ -318,9 +306,9 @@ I prefer books visceral books that solve particular problems while building a th
 
 		Mendelson, Introduction to Mathematical Logic
 
-		Jech, Set Theory
+		* Jech, Set Theory
 
-		Dirk Van Dalen, Logic and Structure
+		* Dirk Van Dalen, Logic and Structure
 
 	Theoretical Computing Science
 	=============================
@@ -329,20 +317,22 @@ I prefer books visceral books that solve particular problems while building a th
 
 			The standard introduction to models of computation. Starts off with the basic forms of computation, including introductions to pushdown automata and grammars, but quickly moves onto computability in Turing machines. An interesting feature of this book is that each big proof is preceded by a `proof idea' section, which explains the idea behind the more technical parts of the proof you're about to read. This is really useful, and this technique should be used in more basic introductions to mathematical subjects. The only weakness of this book is that it doesn't include the parts of computation theory that connect to mathematical logic, which I have yet to find a good resource for yet.
 
-		Boaz Barak, Introduction to Theoretical Computing Science
+		* Boaz Barak, Introduction to Theoretical Computing Science
 
-                Sanjeev Arora and Boaz Barak, Computational Complexity: A Modern Approach
+                * Sanjeev Arora and Boaz Barak, Computational Complexity: A Modern Approach
 
 			Yes. There is a whole diverse theory of computational complexity which goes beyond `Does P = NP'. This is THE book for this topic, and includes a range of different advanced subjects going beyond the basic complexity classes encountered in an introductory course in a theory of computation. I haven't had a chance to read it throughly, but the special topics I have read into (probabilistically checkable proofs and the PCP theorem) were well put together.
 
         Number Theory
         =============
 
-            Allen Hatcher, the Topology of Numbers
+        	* Allen Hatcher, the Topology of Numbers
 
-            Montgomery, Analytical Number Theory
+        	* Hugh Montgomery / Robert Vaughan, Analytical Number Theory
 
-            Terence Tao, Analytical Number Theory Notes
+        	* Hugh Montgomery, Ten Lectures on the Interface Between Analytic Number Theory and Harmonic Analysis
+
+        	* Terence Tao, Analytical Number Theory Online Notes
 
 
 
@@ -355,7 +345,221 @@ I prefer books visceral books that solve particular problems while building a th
 ===   Special Topics   ===
 ==========================
 
-        Restriction Theory
+	Representation Theory
+	=====================
+
+		* William Fulton / Joe Harris, Representation Theory
+
+	Operator Algebras / Operator Theory
+	=================
+
+		John Conway, A Course in Functional Analysis
+
+		Kadison / Ringrose, Fundamental of the Theory of Operator Algebras
+
+		Kenneth Davidson, C^* Algebras by Example
+
+		* Davies, Spectral Theory and Differential Operators
+
+
+	Abstract Harmonic Analysis
+	==========================
+
+		Gerald B. Folland, A Course in Abstract Harmonic Analysis
+
+		Walter Rudin, Fourier Analysis on Groups
+
+			An introduction to only the abelian aspects of abstract harmonic analysis. A good complement to Follands book, which focuses on aspects of the theory important to the noncommutative theory.
+
+		Edwin Hewitt, Kenneth Ross, Abstract Harmonic Analysis (Vol 1-2)
+
+			Incredibly comprehensive, but so slow going I can't recommend it for a first introduction.
+
+	Ergodic Theory
+	==============
+
+		* Manfred Einsiedler / Thomas Ward, Ergodic Theory With a View Towards Number Theory
+
+	Advanced Combinatorics
+	====================
+
+		* Herbert Wilf, Generatingfunctionology
+
+		Larry Guth, Polynomial Methods in Combinatorics
+
+		Ryan O' Donnell, Analysis of Boolean Functions
+
+	Optimization
+	============
+
+		Chvatal, Linear Optimization
+
+		Bertsimas, Tsitsiklis, Introduction to Linear Optimzation
+
+	Modular Forms
+	=============
+
+		* Jan Hendrik Bruiner / Gerad van der Geer / Gunter Harder / Don Zagier, The 1-2-3 of Modular Forms
+
+			This was the book that really attracted me to the theory of modular forms and their applications. Unlike other books, which focus specifically on the theory without introducing applications, this book introduces the applications while introducing the theory, which makes the path to understanding modular forms much more visceral.
+
+		* Don Zagier Lectures in Modular Forms
+
+			Lecture 1: https://www.youtube.com/watch?v=zKt5L0ggZ3o
+			Lecture 2: https://www.youtube.com/watch?v=FVje_MN8SUE
+			Lecture 3: https://www.youtube.com/watch?v=uFaX8eNn64A
+			Lecture 4: https://www.youtube.com/watch?v=jpanciocK4Y
+			Lecture 5: https://www.youtube.com/watch?v=JwWOH9ty9b0
+
+			Really good introduction to Modular forms, from the view of theoretical physics (but still a useful introduction for mathematicians!).
+
+		* Fred Diamond / Jerry Shurman, A First Course in Modular Forms
+
+			This book introduces the Riemann surface theory which connects to Modular forms, which helped me understand some of the technical aspects of the theory, and its generalizations to the theory of automorphic forms. Maybe if you read a better resource on general Riemann surfaces this is unneccessary, and I might find this book not so useful once I know Rieman surface theory, but for now it's still very useful.
+
+	Lie Algebras
+	============
+
+		Karin Erdmann / Mark J. Wildon, Introduction to Lie Algebras
+
+		Varadarajan, Lie groups Lie Algebras and Their Representations
+
+		Brian Hall, Lie Groups Lie Algebras and Representation Theory
+
+		* Mazorchuk, Lectures on SL_2(C) modules
+
+	Lambda Calculus / Theories of Computation
+	=========================================
+
+		Hindley / Selden: Lambda Calculus and Combinators
+
+		Raymond Smullyan, To Mock a Mockingbird and Other Logic Puzzles
+
+		Ulf Nillson / Jan Maluszynski, Logic Programming and Prolog.
+
+
+
+
+	
+
+
+
+
+	Stochastic Processes
+	====================
+
+		Lawler, Introduction to Stochastic Processes
+
+		* David Levin / Yuval Peres / Elizabeth Wilmer, Markov Chains and Mixing Times
+
+		* Jean Francois Le Gall, Brownian Motion, Martingales, and Stochastic Calculus
+
+		* Theodore Harris, The Theory of Branching Processes
+
+		* Atherya / Ney, Branching Processes
+
+		* Nils Berglund, Long-Time Dynamics of Stochastic Differential Equations
+
+		* Daley / Vere-Jones, An Introduction To The Theory of Point Processes
+
+		* Keeler, Notes on the Poisson Point Process
+
+		* Johnson, Introduction to Spatial Point Processes
+
+		* Michael Kozdron, Lectures on Stochastic Calculus with Applications to Finance
+
+		* Miller, Stochastic Calculus
+
+		* Ramon Van Handel, Stochastic Filtering and Control
+
+
+	High Dimensional Probability Theory
+	===================================
+
+		Terence Tao, Topics in Random Matrix Theory
+
+		Ramon van Handel, Probability in High Dimension Lecture Notes
+
+		Roman Vershynin, High Dimensional Probability
+
+		* Stephane Boucheron / Gabor Lugosi / Pascal Massart, Concentration Inequalities: A Nonasymptotic Theory of Independence
+
+		* Martin Wainwright, High-Dimensional Statistics
+
+		* Remi Rhodes / Vincent Vargas, Lectures on Gaussian Multiplicative Chaos
+
+	Integrable Probability
+	======================
+
+		* Alexei Borodin / Vadim Gorin Integrable Probability
+
+
+	Mathematical Statistics
+	=======================
+
+		* Hastie, Tibshirani, Friedman, the Elements of Statistical Learning
+
+		Tor Lattimore and Csaba Szepesvari, Bandit Algorithms
+
+		* Shervish, Mathematical Statistics
+
+	Information Theory
+	==================
+
+		* Stephen Barnett, Introduction to Quantum Information
+
+		* Simon DeDeo, Information Theory for Intelligent People
+
+		* John Watrous, The Theory of Quantum Information
+
+	Geometric Probability Theory (Percolation + Gaussian Free Fields)
+	==================
+
+		* Russell Lyons / Yuval Peres, Probability on Trees and Networks
+
+		* Nathenael Berestycki / Ellen Powell, Gaussian Free Field, Liouville Quantum Gravity, and Gaussian Multiplicative Chaos
+
+
+
+
+
+
+
+
+
+
+
+=============================
+===   Harmonic Analysis   ===
+=============================
+
+	Fourier Series
+	==============
+
+		Elias Stein / Rami Shakarchi, Fourier Analysis
+
+		T.W. Korner, Fourier Analysis
+		T.W. Korner, Exercises in Fourier Analysis
+
+		A Panorama of Harmonic analysis Steven Krantz
+
+		Javier Duoandioketxea, Fourier Analysis
+
+		Stein, Weiss, Fourier Analysis on Euclidean Spaces
+
+		Thomas Wolff, Lectures on Harmonic Analysis
+
+		Terence Tao, Lecture notes for Math 247A: Harmonic Analysis
+
+		Elias Stein, Singular Integrals
+
+		Elias Stein, Harmonic Analysis
+
+		Books to Look Into:
+			- R.E. Edwards: Fourier Series Volumes One and Two
+			- (Many Authors): Analysis and Applications: The Mathematical Work of Elias Stein
+
+	Restriction Theory
         ==================
 
                 Terence Tao, Notes from Restriction Theory
@@ -383,124 +587,11 @@ I prefer books visceral books that solve particular problems while building a th
 
 			Gives a detailed account of many uses of using the Baire category theorem to construct pathologic sets in analysis.
 
-	Representation Theory
-	=====================
-
-		William Fulton / Joe Harris, Representation Theory
-
-	Operator Algebras / Operator Theory
-	=================
-
-		John Conway, A Course in Functional Analysis
-
-		Kadison, Ringrose, Fundamental of the THeory of Operator Algebras
-
-		Kenneth Davidson, C^* Algebras by Example
-
-		Davies, Spectral Theory and Differential Operators
 
 
-	Abstract Harmonic Analysis
-	==========================
-
-		Gerald B. Folland, A Course in Abstract Harmonic Analysis
-
-		Walter Rudin, Fourier Analysis on Groups
-
-			An introduction to only the abelian aspects of abstract harmonic analysis. A good complement to Follands book, which focuses on aspects of the theory important to the noncommutative theory.
-
-		Edwin Hewitt, Kenneth Ross, Abstract Harmonic Analysis (Vol 1-2)
-
-			Incredibly comprehensive, but so slow going I can't recommend it for a first introduction.
-
-	Stochastic Processes
-	====================
-
-		Lawler, Introduction to Stochastic Processes
-
-		David Levin / Yuval Peres / Elizabeth Wilmer, Markov Chains and Mixing Times
-
-	High Dimensional Probability Theory
-	===================================
-
-		Terence Tao, Topics in Random Matrix Theory
-
-		Ramon van Handel, Probability in High Dimension Lecture Notes
-
-		Roman Vershynin, High Dimensional Probability
-
-	Ergodic Theory
-	==============
-
-		Manfred Einsiedler / Thomas Ward, Ergodic Theory With a View Towards Number Theory
-
-	Advanced Combinatorics
-	====================
-
-		Herbert Wilf, Generatingfunctionology
-
-		Larry Guth, Polynomial Methods in Combinatorics
-
-		Ryan O' Donnell, Analysis of Boolean Functions
-
-	Optimization
-	============
-
-		Chvatal, Linear Optimization
-
-		Bertsimas, Tsitsiklis, Introduction to Linear Optimzation
-
-	Mathematical Statistics
-	=======================
-
-		Hastie, Tibshirani, Friedman, the Elements of Statistical Learning
-
-		Tor Lattimore and Csaba Szepesvari, Bandit Algorithms
-
-		Shervish, Mathematical Statistics
 
 
-	Modular Forms
-	=============
 
-		Jan Hendrik Bruiner / Gerad van der Geer / Gunter Harder / Don Zagier, The 1-2-3 of Modular Forms
-
-			This was the book that really attracted me to the theory of modular forms and their applications. Unlike other books, which focus specifically on the theory without introducing applications, this book introduces the applications while introducing the theory, which makes the path to understanding modular forms much more visceral.
-
-		Don Zagier Lectures in Modular Forms
-
-			Lecture 1: https://www.youtube.com/watch?v=zKt5L0ggZ3o
-			Lecture 2: https://www.youtube.com/watch?v=FVje_MN8SUE
-			Lecture 3: https://www.youtube.com/watch?v=uFaX8eNn64A
-			Lecture 4: https://www.youtube.com/watch?v=jpanciocK4Y
-			Lecture 5: https://www.youtube.com/watch?v=JwWOH9ty9b0
-
-			Really good introduction to Modular forms, from the view of theoretical physics (but still a useful introduction for mathematicians!).
-
-		Fred Diamond / Jerry Shurman, A First Course in Modular Forms
-
-			This book introduces the Riemann surface theory which connects to Modular forms, which helped me understand some of the technical aspects of the theory, and its generalizations to the theory of automorphic forms. Maybe if you read a better resource on general Riemann surfaces this is unneccessary, and I might find this book not so useful once I know Rieman surface theory, but for now it's still very useful.
-
-	Lie Algebras
-	============
-
-		Karin Erdmann / Mark J. Wildon, Introduction to Lie Algebras
-
-		Varadarajan, Lie groups Lie Algebras and Their Representations
-
-		Brian Hall, Lie Groups Lie Algebras and Representation Theory
-
-		Books to Look Into:
-			- Mazorchuk, Lectures on SL_2(C) modules
-
-	Lambda Calculus / Theories of Computation
-	=========================================
-
-		Hindley / Selden: Lambda Calculus and Combinators
-
-		Raymond Smullyan, To Mock a Mockingbird and Other Logic Puzzles
-
-		Ulf Nillson / Jan Maluszynski, Logic Programming and Prolog.
 
 
 Expository Articles
@@ -510,7 +601,7 @@ Scott Miller - Review of Mumford Algebraic Geometry Book
 
     Good for intuition / history about the development of scheme theory
 
-Andreas Seeger - Review of Fourier Restriction on Paraboloidal
+Andreas Seeger - Review of Fourier Restriction on Paraboloid
 
 Gregory Moore - The emergence of closed and open sets in analysis
 
