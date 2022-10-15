@@ -37,6 +37,8 @@ An ! before the title of a book is used to indicate a book I have only read a sm
 
 - John Michael Steele, The Cauchy Schwartz Master Class
 
+- ! Gowers, Techniques in Combinatorics
+
 ###	Calculus & Introductory Analysis
 
 - Walter Rudin, Principles of Mathematical Analysis
@@ -65,6 +67,8 @@ An ! before the title of a book is used to indicate a book I have only read a sm
 		
 - ! Otto Toeplitz, Calculus: a Genetic Approach
 
+- ! Abbott, Understanding Analysis
+
 ### Basic Probability Theory
 
 - Larry Wasserman, All of Statistics: A Concise Course in Statistical Inference
@@ -85,15 +89,35 @@ An ! before the title of a book is used to indicate a book I have only read a sm
 
 - ! Oliver Byrne, The First Six Books of The Elements of Euclid.
 
-### Complex Analysis
+- ! Cecil, Lie Sphere Geometry
+
+- ! Carne, Geometry and Groups
+
+- ! Benz, Geometry of Real Inner Product Spaces
+
+- ! Hartshorne, Projective Geometry
+
+- ! Oggier / Bruckstein, Groups and Symmetries
+
+- ! Coxeter, the Real Projective Plane
+
+### Complex Analysis / Harmonic Functions
 
 - Elias Stein / Rami Shakarchi, Princeton Lectures in Analysis (Vol 2: Complex Analysis)
 
 - Lars Ahlfors, Complex Analysis
 
+- ! Krantz, A Handbook of Complex Variables
+
+- ! Garnett, Bounded Analytic Functions
+
 ### Classical Differential Geometry
 
-- Manfredo do Carmo, Differential Geometry of Curves and Surfaces
+- ! Manfredo do Carmo, Differential Geometry of Curves and Surfaces
+
+- ! Sharpe, Differential Geometry: Cartan's Generalization of Klein's Erlangen Program
+
+- ! Shifrin, Differential Geometry: A First Course in Curves and Surfaces
 
 ###	Differential Equations
 
@@ -135,6 +159,22 @@ An ! before the title of a book is used to indicate a book I have only read a sm
 - Michael Artin, Algebra
 
 	Tries to use more 'matrix / linear algebra' knowledge to build up a knowledge of basic algebra.
+
+- Dummett / Foote, Algebra
+
+- ! Eisenbud, Commutative Algebra
+
+- ! Gathman, Commutative Algebra
+
+- ! Clark, Commutative Algebra
+
+- ! Maclane, Category Theory
+
+- ! Lawvere, Conceptual Mathematics
+
+- ! Milnor, Algebraic K-Theory
+
+- ! Wiebel, The K-Book
 
 
 ### Topology
@@ -240,6 +280,10 @@ An ! before the title of a book is used to indicate a book I have only read a sm
 
 	I found this book a little bit more concise than Spivaks book, which helped make some concepts more readable. But I still think both should be read for a true understanding of differential geometry.
 
+- ! Tu, Differential Geometry: Connections, Curvature, and Characteristic Classes
+
+- ! Needham, Visual Differential Geometry and Forms, A Mathematical Drama in Five Acts
+
 - ! Serge Lang, Fundamentals of Differential Geometry
 
 	In true, abstract Serge Lang style, the book introduces the usual theory of differentiable manifolds as a theory of spaces that look locally like infinite dimensional Banach spaces. If you like Serge Lang books, you'll like this one.
@@ -255,6 +299,14 @@ An ! before the title of a book is used to indicate a book I have only read a sm
 
 - ! Vladimir Arnold, Lectures on Partial Differential Equations
 
+- ! Axler, Harmonic Function Theory
+
+- ! Korner, Partial Differential Equations Notes
+
+- ! Taylor, Partial Differential Equuations
+
+- ! Ambrosio / Gigli, A User's Guide to Optimal Transport
+
 
 ### Commutative Algebra
 
@@ -263,6 +315,8 @@ An ! before the title of a book is used to indicate a book I have only read a sm
 - ! Pete L. Clark, Commutative Algebra
 
 ### Algebraic Geometry
+
+- ! Beltrametti, Lectures on Curves, Surfaces, and Projective Varieties
 
 - Brieskorn Knorrer, Plane Algebraic Curves
 			
@@ -276,9 +330,21 @@ An ! before the title of a book is used to indicate a book I have only read a sm
 
 - ! Igor Shaferavich, Basic Algebraic Geometry I
 
+- ! Liu, Algebraic Geometry and Arithmetic Curves
+
+- ! Harris, Geometry of Schemes
+
+- ! Harris, Algebraic Geometry
+
+- ! Gathman, Algebraic Geometry
+
 - ! Robin Hartshorne, Algebraic Geometry
 
 - ! Lie, Algebraic Geometry
+
+- ! Cox, Toric Varieties
+
+- ! Dolgachov, Classical Algebraic Geometry: A Modern View
 
 ### Mathematical Logic
 
@@ -306,6 +372,14 @@ An ! before the title of a book is used to indicate a book I have only read a sm
 
 ### Number Theory
 
+- ! Godfrey Hardy, Number Theory
+
+- ! Oggier, Algebraic Number Theory
+
+- ! Chandresekheran, Analytic Number Theory
+
+- ! Davenport, Multiplicative Number Theory
+
 - ! Allen Hatcher, the Topology of Numbers
 
 - ! Hugh Montgomery / Robert Vaughan, Analytical Number Theory
@@ -313,6 +387,8 @@ An ! before the title of a book is used to indicate a book I have only read a sm
 - ! Hugh Montgomery, Ten Lectures on the Interface Between Analytic Number Theory and Harmonic Analysis
 
 - ! Terence Tao, Analytical Number Theory Online Notes
+
+- ! Baker, An Introduction to p-adic Numbers and p-adic Analysis
 
 
 ### Representation Theory
@@ -328,6 +404,10 @@ An ! before the title of a book is used to indicate a book I have only read a sm
 - Kenneth Davidson, C^* Algebras by Example
 
 - ! Davies, Spectral Theory and Differential Operators
+
+- ! McIntosh, Operator Theory - Spectra and Functional Calculi
+
+- ! Hytonen, Neervan, Veraar, Weis - Analysis in Banach Spaces: Probabilistic Methods
 
 ### Abstract Harmonic Analysus
 
@@ -345,7 +425,7 @@ An ! before the title of a book is used to indicate a book I have only read a sm
 
 - ! Manfred Einsiedler / Thomas Ward, Ergodic Theory With a View Towards Number Theory
 
-###	Special Topics in Combinatorics
+###	Special Topics in Discrete Mathematics
 
 - ! Herbert Wilf, Generatingfunctionology
 
@@ -353,11 +433,26 @@ An ! before the title of a book is used to indicate a book I have only read a sm
 
 - Ryan O' Donnell, Analysis of Boolean Functions
 
+- ! Kahane, Some Random Series of Functions
+
+- ! Alon, Spencer, The Probabilistic Method
+
+- ! Terrence Tao, Additive Combinatorics
+
+- ! Stanley, Enumerative Combinatorics
+
+- ! Bondy, Graph Theory
+
 ###	Optimization
 
 - Chvatal, Linear Optimization
 
 - Bertsimas, Tsitsiklis, Introduction to Linear Optimzation
+
+- ! Bubeck, Convex Optimization
+
+- ! Weber, Optimization
+
 
 ###	Modular Forms
 
@@ -383,7 +478,16 @@ An ! before the title of a book is used to indicate a book I have only read a sm
 
 	This book introduces the Riemann surface theory which connects to Modular forms, which helped me understand some of the technical aspects of the theory, and its generalizations to the theory of automorphic forms. Maybe if you read a better resource on general Riemann surfaces this is unneccessary, and I might find this book not so useful once I know Rieman surface theory, but for now it's still very useful.
 
-### Lie Algebras
+- Neal Koblitz, Introduction to Elliptic Curves and Modular Forms
+
+- ! J.S. Milne, Modular Functions and Elliptic Curves
+
+- ! William Stein, Modular Forms: A Computational Approach
+
+
+
+
+### Lie Algebras and Groups
 
 - Karin Erdmann / Mark J. Wildon, Introduction to Lie Algebras
 
@@ -393,6 +497,8 @@ An ! before the title of a book is used to indicate a book I have only read a sm
 
 - ! Mazorchuk, Lectures on SL_2(C) modules
 
+- Alistair Savage, Introduction to Lie Groups
+
 ### Lambda Calculus / Theories of Computation
 
 - Hindley / Selden: Lambda Calculus and Combinators
@@ -400,6 +506,24 @@ An ! before the title of a book is used to indicate a book I have only read a sm
 - Raymond Smullyan, To Mock a Mockingbird and Other Logic Puzzles
 
 - Ulf Nillson / Jan Maluszynski, Logic Programming and Prolog.
+
+### Riemann Surfaces
+
+- ! Jurgen Jost, Compact Riemann Surfaces
+
+- ! Gunning, Lectures on Riemann Surfaces
+
+- ! Huybrecht, Complex Geometry
+
+### Symplectic Geometry
+
+- ! Yong-Geun Oh, Symplectic Topology and Floer Homology
+
+
+
+
+
+
 
 
 
@@ -487,63 +611,133 @@ An ! before the title of a book is used to indicate a book I have only read a sm
 
 
 
-=============================
-===   Harmonic Analysis   ===
-=============================
+## Harmonic Analysis / Geometric Measure Theory
 
-	Fourier Series
-	==============
+### Fourier Series / General Books on Fourier Analysis
 
-		Elias Stein / Rami Shakarchi, Fourier Analysis
+- Elias Stein / Rami Shakarchi, Fourier Analysis
 
-		T.W. Korner, Fourier Analysis
-		T.W. Korner, Exercises in Fourier Analysis
+- T.W. Korner, Fourier Analysis (Plus Exercise Book)
 
-		A Panorama of Harmonic analysis Steven Krantz
+- Steven Krantz, A Panorama of Harmonic Analysis
 
-		Javier Duoandioketxea, Fourier Analysis
+- Javier Duoandioketxea, Fourier Analysis
 
-		Stein, Weiss, Fourier Analysis on Euclidean Spaces
+- Stein, Weiss, Fourier Analysis on Euclidean Spaces
 
-		Thomas Wolff, Lectures on Harmonic Analysis
+- Thomas Wolff, Lectures on Harmonic Analysis
 
-		Terence Tao, Lecture notes for Math 247A: Harmonic Analysis
+- Terence Tao, Lecture notes for Math 247A: Harmonic Analysis
 
-		Elias Stein, Singular Integrals
+- ! Elias Stein, Singular Integrals
 
-		Elias Stein, Harmonic Analysis
+- ! Grafakos, Classical + Modern Harmonic Analysis
 
-		Books to Look Into:
-			- R.E. Edwards: Fourier Series Volumes One and Two
-			- (Many Authors): Analysis and Applications: The Mathematical Work of Elias Stein
+- Elias Stein, Harmonic Analysis
 
-	Restriction Theory
-        ==================
+- ! R.E. Edwards: Fourier Series Volumes One and Two
 
-                Terence Tao, Notes from Restriction Theory
+- ! Breen, Harmonic Analysis Notes
 
-                Ciprian Demeter, Restriction and Decoupling
+- ! Bremeaut, Fourier Analysis And Stochastic Processes
 
-                University of Edinburgh, Modern Developments in Fourier Analysis Notes
+- ! Atelier d'Analyse Harmonique 2019, Littlewood-Paley Theory and Applications
 
-	Geometric Measure Theory
-	========================
+- Katznelson, An Introduction to Harmonic Analysis
 
-		Kenneth Falconer, Fractal Geometry: Mathematical Foundations and Applications
+- ! Osgood, Lectures on the Fourier Transform
 
-		Kenneth Falconer, The Geometry of Fractal Sets
+- ! Zygmund Trigonometric Series
 
-		Pertti Mattila, Geometry of Sets and Measures in Euclidean Space
+### Complex Analysis and Harmonic Analysis
 
-		Pertti Mattila, Fourier Analysis and Hausdorff Dimension
+- ! Havin, Introduction to Hp Spaces
 
-                Frank Morgan, Introduction to Geometric Measure Theory
+### Interpolation Theory
 
-		Herbert Federer, Geoemtric Measure Theory
+- ! Tartar, Interpolation Spaces
 
-		T.W. Korner, Baire Categorry, Probabilistic Constructions, and Convolution Squares
+- ! Bergh, Interpolation Spaces
 
-			Gives a detailed account of many uses of using the Baire category theorem to construct pathologic sets in analysis.
+- ! Brudnyi / Krugljak, Interpolation Functors and Interpolation Spaces
+
+- ! Triebel, Interpolation Spaces
+
+### PDOs / Fourier Integral Operators / Riemannian Harmonic Analysis
+
+- ! Zelditch Notes
+
+- ! Rosenberg, the Laplacian on a Riemannian Manifold
+
+- ! Zanelli, Lectures on Fourier Integral Operators: From Local to Global Theory
+
+- Hormander, Vol 1-4
+
+- ! Sogge, Fourier Integrals in Classical Analysis
+
+- ! Sogge, Hangzhou Lectures on Eigenfunctions of the Laplacian
+
+- ! Brain Street, Maximal Subellipticity
+
+- ! Tataru, Microlocal Analysis
+
+- ! Taylor, Pseudodifferential Operators
+
+- Treves Vol 1 + 2
+
+### Time Frequency Analysis
+
+- ! Folland, Harmonic Analysis in Phase Space
+
+### Semi-Classical Analysis
+
+- ! Zworski, Semiclassical Analysis
+
+- ! Guillemin / Sternberg, Semi-Classical Analysis
+
+### Symmetric Spaces
+
+- ! Helgason, Lie Groups and Symmetric Spaces
+
+### Restriction Theory
+
+- ! Terence Tao, Notes from Restriction Theory
+
+- ! Ciprian Demeter, Restriction and Decoupling
+
+- ! Johnathan Hickamn, Modern Developments in Fourier Analysis Notes
+
+###	Geometric Measure Theory
+
+- Kenneth Falconer, Fractal Geometry: Mathematical Foundations and Applications
+
+- Kenneth Falconer, The Geometry of Fractal Sets
+
+- Pertti Mattila, Geometry of Sets and Measures in Euclidean Space
+
+- Pertti Mattila, Fourier Analysis and Hausdorff Dimension
+
+- Frederick Almgren Jr., Plateau's Problem: An Introduction to Varifold Geometry
+
+- ! Frank Morgan, Introduction to Geometric Measure Theory
+
+- ! Herbert Federer, Geoemtric Measure Theory
+
+- T.W. Korner, Baire Categorry, Probabilistic Constructions, and Convolution Squares
+
+	Gives a detailed account of many uses of using the Baire category theorem to construct pathologic sets in analysis.
+
+### Signals Processing / Physical Intuition
+
+- ! Vetterli / Kovacevic / Goyal, Foundations of Signal Processing
+
+- ! Lyons, Digital Signal Processing
+
+- ! Oppenheimer, Discrete-Time Signal Processing
+
+- ! Oppenheimer, Signals and Systems
+
+- ! Byrne, Signals Processing: A Mathematical Approach
 
 
 
@@ -552,17 +746,48 @@ An ! before the title of a book is used to indicate a book I have only read a sm
 
 
 
-Expository Articles
-===================
+## Expository Articles
 
-Scott Miller - Review of Mumford Algebraic Geometry Book
+- ! (Many Authors): Analysis and Applications: The Mathematical Work of Elias Stein
 
-    Good for intuition / history about the development of scheme theory
+- Scott Miller, Review of Mumford Algebraic Geometry Book
 
-Andreas Seeger - Review of Fourier Restriction on Paraboloid
+	Good for intuition / history about the development of scheme theory
 
-Gregory Moore - The emergence of closed and open sets in analysis
+- Andreas Seeger, Review of Fourier Restriction on Paraboloid
 
-G.G Lorentz - Who Discovered Analytic Sets
+- Gregory Moore, The emergence of closed and open sets in analysis
 
-Issacc Goldbring and Sean Walsh, An Invitation to Nonstandard Analysis
+- G.G Lorentz, Who Discovered Analytic Sets
+
+- Issacc Goldbring and Sean Walsh, An Invitation to Nonstandard Analysis
+
+- ! Terrence Tao: An Epsilon of Room / Spending Symmetry / etc (Multiple Volumes)
+
+- Hiller, Crystallography and Cohomology of Groups
+
+- Krantz, Mathematical Apocrypha
+
+- Krantz, Advice
+
+- Krantz, Primer for Mathematical Writing
+
+
+
+
+
+
+TO READ:
+
+- Kahane, Some Random Series of Functions
+- Ryan O' Donnell
+- - ! (Many Authors): Analysis and Applications: The Mathematical Work of Elias Stein
+- Andreas Seeger, Review of Fourier Restriction on Paraboloid
+- Pertti Mattila, Geometry of Sets and Measures in Euclidean Space
+
+- Pertti Mattila, Fourier Analysis and Hausdorff Dimension
+- ! Sharpe, Differential Geometry: Cartan's Generalization of Klein's Erlangen Program
+- ! Needham, Visual Differential Geometry and Forms, A Mathematical Drama in Five Acts
+- Zelditch Notes
+
+- ! Rosenberg, the Laplacian on a Riemannian Manifold
