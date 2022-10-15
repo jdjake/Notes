@@ -2,7 +2,7 @@
 
 Here I've recorded some math books that I found the most useful for learning a particular topic, inspired by the "Chicago Undergraduate Mathematics Bibliography" (https://www.ocf.berkeley.edu/~abhishek/chicmath.htm), which I found very useful during my undergraduate years:
 
-The * before a title indicates a book I have only read a small section of, but found useful such that, if I was to ever look further into this topic, I would read into this particular text further.
+An ! before the title of a book is used to indicate a book I have only read a small portion of, but which I found useful enough to write down in case I ever need to read further into a particular field.
 
 
 ## Fundamentals
@@ -120,99 +120,89 @@ The * before a title indicates a book I have only read a small section of, but f
 
 
 
+## Advanced Topics
+
+### Abstract Algebra
+
+- Kostrikin / Shafarevich, Algebra I: Basic Notions
+
+	Introduces the general fields of abstract algebra (Groups, rings, modules, etc) as a natural extension of certain practical problems that arise in fields of mathematics. I only read this book after I already knew about all these structures, but the book really made them 'fit' in my mind with respect to the general field of mathematics. I am very interested in how successful an 'algebra' course would be if it introduced the field of abstract algebra as a consolidated whole like this book tries to accomplish.
+
+- Serge Lang, Algebra
+
+	Terse but thorough. I suggest reading it along with G. Bergman's companion to the book.
+
+- Michael Artin, Algebra
+
+	Tries to use more 'matrix / linear algebra' knowledge to build up a knowledge of basic algebra.
 
 
-===========================
-===   Advanced Topics   ===
-===========================
+### Topology
 
-	Abstract Algebra
-	================
+- John Kelley, General Topology
 
-		Kostrikin / Shafarevich, Algebra I: Basic Notions
+- James Munkres, Topology
 
-			Introduces the general fields of abstract algebra (Groups, rings, modules, etc) as a natural extension of certain practical problems that arise in fields of mathematics. I only read this book after I already knew about all these structures, but the book really made them `fit' in my mind with respect to the general field of mathematics. I am very interested in how successful an `algebra' course would be if it introduced the field of abstract algebra as a consolidated whole like this book tries to accomplish.
-
-		Serge Lang, Algebra
-
-			Terse but thorough. I suggest reading it along with G. Bergman's companion to the book.
-
-		Michael Artin, Algebra
-
-			Tries to use more `matrix / linear algebra' knowledge to build up a knowledge of basic algebra.
-
-	Topology
-	========
-
-		John Kelley, General Topology
-
-		James Munkres, Topology
-
-		* Viro / Ivanov / Netsvetaev / Kharlamov, Elementary Topology: Problem Textbook
+- ! Viro / Ivanov / Netsvetaev / Kharlamov, Elementary Topology: Problem Textbook
 
 
-	Galois Theory
-	=============
+### Galois Theory
 
-		James Stewart, Galois Theory
+- James Stewart, Galois Theory
 
-		Nathan Jacobson, Basic Algebra I (Section on Galois Theory)
+- Nathan Jacobson, Basic Algebra I (Section on Galois Theory)
 
-	Algebraic Topology
-	==================
+### Algebraic Topology
 
-		Allen Hatcher, Algebraic Topology
+- Allen Hatcher, Algebraic Topology
 
-		* John Stillwell, Classical Topology and Combinatorial Group Theory
+- ! John Stillwell, Classical Topology and Combinatorial Group Theory
 
-			Gives geometry inspiration for the basic concepts of algebraic topology: fundamental groups and homology theory.
+	Gives geometry inspiration for the basic concepts of algebraic topology: fundamental groups and homology theory.
 
-	Measure Theory
-	==============
+### Measure Theory
 
-		Walter Rudin, Real and Complex analysis
+- Walter Rudin, Real and Complex analysis
 
-			One of the best and most concise introductions to measure theory I've read. The first chapter essentially includes all the big theorems of measure theory you'll need, and the next few chapters include the other little important things that are useful (product measures, radon nikodym derivates, etc). Also includes a strange second part on complex analysis that I haven't got round to reading, but apparently proceeds by an incredible strange approach.
+	One of the best and most concise introductions to measure theory I've read. The first chapter essentially includes all the big theorems of measure theory you'll need, and the next few chapters include the other little important things that are useful (product measures, radon nikodym derivates, etc). Also includes a strange second part on complex analysis that I haven't got round to reading, but apparently proceeds by an incredible strange approach.
 
-		Terrence Tao, An Introduction to Measure Theory
+- Terrence Tao, An Introduction to Measure Theory
 
-			Very good for building intuition.
+	Very good for building intuition.
 
-		Elias Stein / Rami Shakarchi, Princeton Lectures in Analysis (Vol 3: Measure Theory, Integration and Hilbert Spaces)
+- Elias Stein / Rami Shakarchi, Princeton Lectures in Analysis (Vol 3: Measure Theory, Integration and Hilbert Spaces)
 
-		Paul Halmos, Measure Theory
+- Paul Halmos, Measure Theory
 
-	Functional Analysis
-	===================
+###	Functional Analysis
 
-		Elias Stein / Rami Shakarchi, Princeton Lectures in Analysis (Vol 4: Functional Analysis)
+- Elias Stein / Rami Shakarchi, Princeton Lectures in Analysis (Vol 4: Functional Analysis)
 
-		* Paul Halmos, A Hilbert Space Problem Book
+- ! Paul Halmos, A Hilbert Space Problem Book
 
-		John Conway, A Course in Functional Analysis
+- John Conway, A Course in Functional Analysis
 
-		Peter Lax, Functional Analysis
+- Peter Lax, Functional Analysis
 
-			Really good for applications of functional analysis, giving motivations for the study of functional analysis rather than just the abstract theory.
+	Really good for applications of functional analysis, giving motivations for the study of functional analysis rather than just the abstract theory.
 
-		Robert Megginson, An Introduction to Banach Space Theory
+- Robert Megginson, An Introduction to Banach Space Theory
 
-		Francois Treves, Topological Vector Spaces, Distributions, and Kernels
+- Francois Treves, Topological Vector Spaces, Distributions, and Kernels
 
-		Walter Rudin, Functional Analysis
+- Walter Rudin, Functional Analysis
 
-		* Fabian, Habala, Hajek, Montesinos, Zivler, Banach Space Theory
+- ! Fabian, Habala, Hajek, Montesinos, Zivler, Banach Space Theory
 
-			Incredibly comprehensive book on the advanced areas of Banach space
+	Incredibly comprehensive book on the advanced areas of Banach space
 
-		* Joseph Diestel / John Uhl Jr. Vector Measures
+- ! Joseph Diestel / John Uhl Jr. Vector Measures
 
-			Good resource for learning vector valued integration theory.
+	Good resource for learning vector valued integration theory.
 
-		* Patrick Billingsley, Convergence of Probability Measures
+- ! Patrick Billingsley, Convergence of Probability Measures
 
-	Modern Differential Geometry
-	============================
+###	Modern Differential Geometry
 
 		Michael Spivak, A Concise Introduction to Differential Geometry (Vol 1-5)
 
