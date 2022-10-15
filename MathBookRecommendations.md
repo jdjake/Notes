@@ -209,16 +209,27 @@ An ! before the title of a book is used to indicate a book I have only read a sm
 - Frederic Schuller, A Thorough Introduction To The Theory of General Relativity (International Winter School on Gravity and Light 2015)
 	
 	Lecture 1 (Topology): https://www.youtube.com/watch?v=7G4SqIboeig
+
 	Lecture 2 (Topological Manifolds): https://www.youtube.com/watch?v=93f-ayezCqE
+
 	Lecture 3 (Multilinear Algebra): https://www.youtube.com/watch?v=mbv3T15nWq0
+
 	Lecture 4 (Differentiable Manifolds): https://www.youtube.com/watch?v=HSyTEwS4g80
+
 	Lecture 5 (Tangent Spaces): https://www.youtube.com/watch?v=pepU_7NJSGM&spfreload=10
+
 	Lecture 6 (Fields): https://www.youtube.com/watch?v=UbQS40KHkH0
+
 	Lecture 7 (Connections): https://www.youtube.com/watch?v=nEaiZBbCVtI
+
 	Lecture 8 (Parallel Transport and Curvature): https://www.youtube.com/watch?v=2eVWUdcI2ho
+
 	Lecture 9 (Newtonian Spacetime is Curved): https://www.youtube.com/watch?v=IBlCu1zgD4Y
+
 	Lecture 10 (Metric Manifolds): https://www.youtube.com/watch?v=ONCZNwKswn4
+
 	Lecture 11 (Symmetry): https://www.youtube.com/watch?v=v4jolM-bPpA
+
 	Lecture 12 (Integration on Manifolds): https://www.youtube.com/watch?v=2XpnbvPy-Zg
 	
 	(It gets more physicsy after this, but this is still interesting, especially since it motivated quite a bit of modern differential geometry to begin with)
@@ -357,9 +368,13 @@ An ! before the title of a book is used to indicate a book I have only read a sm
 - ! Don Zagier Lectures in Modular Forms
 
 	Lecture 1: https://www.youtube.com/watch?v=zKt5L0ggZ3o
+
 	Lecture 2: https://www.youtube.com/watch?v=FVje_MN8SUE
+
 	Lecture 3: https://www.youtube.com/watch?v=uFaX8eNn64A
+
 	Lecture 4: https://www.youtube.com/watch?v=jpanciocK4Y
+
 	Lecture 5: https://www.youtube.com/watch?v=JwWOH9ty9b0
 
 	Really good introduction to Modular forms, from the view of theoretical physics (but still a useful introduction for mathematicians!).
