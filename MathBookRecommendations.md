@@ -204,210 +204,187 @@ An ! before the title of a book is used to indicate a book I have only read a sm
 
 ###	Modern Differential Geometry
 
-		Michael Spivak, A Concise Introduction to Differential Geometry (Vol 1-5)
+- Michael Spivak, A Concise Introduction to Differential Geometry (Vol 1-5)
 
-		Frederic Schuller, A Thorough Introduction To The Theory of General Relativity (International Winter School on Gravity and Light 2015)
-			Lecture 1 (Topology): https://www.youtube.com/watch?v=7G4SqIboeig
-			Lecture 2 (Topological Manifolds): https://www.youtube.com/watch?v=93f-ayezCqE
-			Lecture 3 (Multilinear Algebra): https://www.youtube.com/watch?v=mbv3T15nWq0
-			Lecture 4 (Differentiable Manifolds): https://www.youtube.com/watch?v=HSyTEwS4g80
-			Lecture 5 (Tangent Spaces): https://www.youtube.com/watch?v=pepU_7NJSGM&spfreload=10
-			Lecture 6 (Fields): https://www.youtube.com/watch?v=UbQS40KHkH0
-			Lecture 7 (Connections): https://www.youtube.com/watch?v=nEaiZBbCVtI
-			Lecture 8 (Parallel Transport and Curvature): https://www.youtube.com/watch?v=2eVWUdcI2ho
-			Lecture 9 (Newtonian Spacetime is Curved): https://www.youtube.com/watch?v=IBlCu1zgD4Y
-			Lecture 10 (Metric Manifolds): https://www.youtube.com/watch?v=ONCZNwKswn4
-			Lecture 11 (Symmetry): https://www.youtube.com/watch?v=v4jolM-bPpA
-			Lecture 12 (Integration on Manifolds): https://www.youtube.com/watch?v=2XpnbvPy-Zg
-			... (It gets more physicsy after this, but this is still interesting, especially since it motivated quite a bit of modern differential geometry to begin with)
+- Frederic Schuller, A Thorough Introduction To The Theory of General Relativity (International Winter School on Gravity and Light 2015)
+	
+	Lecture 1 (Topology): https://www.youtube.com/watch?v=7G4SqIboeig
+	Lecture 2 (Topological Manifolds): https://www.youtube.com/watch?v=93f-ayezCqE
+	Lecture 3 (Multilinear Algebra): https://www.youtube.com/watch?v=mbv3T15nWq0
+	Lecture 4 (Differentiable Manifolds): https://www.youtube.com/watch?v=HSyTEwS4g80
+	Lecture 5 (Tangent Spaces): https://www.youtube.com/watch?v=pepU_7NJSGM&spfreload=10
+	Lecture 6 (Fields): https://www.youtube.com/watch?v=UbQS40KHkH0
+	Lecture 7 (Connections): https://www.youtube.com/watch?v=nEaiZBbCVtI
+	Lecture 8 (Parallel Transport and Curvature): https://www.youtube.com/watch?v=2eVWUdcI2ho
+	Lecture 9 (Newtonian Spacetime is Curved): https://www.youtube.com/watch?v=IBlCu1zgD4Y
+	Lecture 10 (Metric Manifolds): https://www.youtube.com/watch?v=ONCZNwKswn4
+	Lecture 11 (Symmetry): https://www.youtube.com/watch?v=v4jolM-bPpA
+	Lecture 12 (Integration on Manifolds): https://www.youtube.com/watch?v=2XpnbvPy-Zg
+	
+	(It gets more physicsy after this, but this is still interesting, especially since it motivated quite a bit of modern differential geometry to begin with)
 
-			Despite it's name, this lectures series is an introduction to the basic ideas of differentiable manifolds, with the goal of introducing them to theoretical physicists. Based on your experience, you can probably skip some of these lectures, but they proceed at a very gradual pace and introduce all the essentials to manifold theory. While I was studying the basic properties of differential geometry, they made a nice complement to Volume 1 of Spivaks' differential geometry introduction, and Lees introduction to smooth manifolds.
+	Despite it's name, this lectures series is an introduction to the basic ideas of differentiable manifolds, with the goal of introducing them to theoretical physicists. Based on your experience, you can probably skip some of these lectures, but they proceed at a very gradual pace and introduce all the essentials to manifold theory. While I was studying the basic properties of differential geometry, they made a nice complement to Volume 1 of Spivaks' differential geometry introduction, and Lees introduction to smooth manifolds.
 
-		John Lee, Introduction to Smooth Manifolds
+- John Lee, Introduction to Smooth Manifolds
 
-			I found this book a little bit more concise than Spivaks book, which helped make some concepts more readable. But I still think both should be read for a true understanding of differential geometry.
+	I found this book a little bit more concise than Spivaks book, which helped make some concepts more readable. But I still think both should be read for a true understanding of differential geometry.
 
-		* Serge Lang, Fundamentals of Differential Geometry
+- ! Serge Lang, Fundamentals of Differential Geometry
 
-			In true, abstract Serge Lang style, the book introduces the usual theory of differentiable manifolds as a theory of spaces that look locally like infinite dimensional Banach spaces. If you like Serge Lang books, you'll like this one.
+	In true, abstract Serge Lang style, the book introduces the usual theory of differentiable manifolds as a theory of spaces that look locally like infinite dimensional Banach spaces. If you like Serge Lang books, you'll like this one.
 
-                * Marian Fecko, Differential Geometry for Physicists
+- ! Marian Fecko, Differential Geometry for Physicists
 
-                * Morris Herch, Differentiable Topology
+- ! Morris Herch, Differentiable Topology
 
 
-        Partial Differential Equations
-        ==============================
+### Partial Differential Equations
 
-	        * Craig Evans, Partial Differential Equations
+- ! Craig Evans, Partial Differential Equations
 
-	        * Vladimir Arnold, Lectures on Partial Differential Equations
+- ! Vladimir Arnold, Lectures on Partial Differential Equations
 
-	Commutative Algebra
-	===================
 
-		Atiyah Macdonald, Commutative Algebra
+### Commutative Algebra
 
-		* Pete L. Clark, Commutative Algebra
+- Atiyah Macdonald, Commutative Algebra
 
-	Algebraic Geometry
-	==================
+- ! Pete L. Clark, Commutative Algebra
 
-		Brieskorn Knorrer, Plane Algebraic Curves
+### Algebraic Geometry
+
+- Brieskorn Knorrer, Plane Algebraic Curves
 			
-			Read for Culture
+	Read for Culture
 
-		William Fulton, Algebraic Curves
+- William Fulton, Algebraic Curves
 
-		* Gerd Fischer, Plane Algebraic Curves
+- ! Gerd Fischer, Plane Algebraic Curves
     			
-    			Very elementary for what is proven. Useful for a first introduction.
+    Very elementary for what is proven. Useful for a first introduction.
 
-		* Igor Shaferavich, Basic Algebraic Geometry I
+- ! Igor Shaferavich, Basic Algebraic Geometry I
 
-		* Robin Hartshorne, Algebraic Geometry
+- ! Robin Hartshorne, Algebraic Geometry
 
-		* Lie, Algebraic Geometry
+- ! Lie, Algebraic Geometry
 
-	Mathematical Logic
-	==================
+### Mathematical Logic
 
-		Chiswell / Hodges, Mathematical Logic
+- Chiswell / Hodges, Mathematical Logic
 
-			Good intro to someone who hasn't had any `real' mathematical logic yet.
+	Good intro to someone who hasn't had any 'real' mathematical logic yet.
 
-		Mendelson, Introduction to Mathematical Logic
+- Mendelson, Introduction to Mathematical Logic
 
-		* Jech, Set Theory
+- ! Jech, Set Theory
 
-		* Dirk Van Dalen, Logic and Structure
+- ! Dirk Van Dalen, Logic and Structure
 
-	Theoretical Computing Science
-	=============================
+### Theoretical Computing Science
 
-		Michael Sipser, Introduction to the Theory of Computation
+- Michael Sipser, Introduction to the Theory of Computation
 
-			The standard introduction to models of computation. Starts off with the basic forms of computation, including introductions to pushdown automata and grammars, but quickly moves onto computability in Turing machines. An interesting feature of this book is that each big proof is preceded by a `proof idea' section, which explains the idea behind the more technical parts of the proof you're about to read. This is really useful, and this technique should be used in more basic introductions to mathematical subjects. The only weakness of this book is that it doesn't include the parts of computation theory that connect to mathematical logic, which I have yet to find a good resource for yet.
+	The standard introduction to models of computation. Starts off with the basic forms of computation, including introductions to pushdown automata and grammars, but quickly moves onto computability in Turing machines. An interesting feature of this book is that each big proof is preceded by a 'proof idea' section, which explains the idea behind the more technical parts of the proof you're about to read. This is really useful, and this technique should be used in more basic introductions to mathematical subjects. The only weakness of this book is that it doesn't include the parts of computation theory that connect to mathematical logic, which I have yet to find a good resource for yet.
 
-		* Boaz Barak, Introduction to Theoretical Computing Science
+- ! Boaz Barak, Introduction to Theoretical Computing Science
 
-                * Sanjeev Arora and Boaz Barak, Computational Complexity: A Modern Approach
+- ! Sanjeev Arora and Boaz Barak, Computational Complexity: A Modern Approach
 
-			Yes. There is a whole diverse theory of computational complexity which goes beyond `Does P = NP'. This is THE book for this topic, and includes a range of different advanced subjects going beyond the basic complexity classes encountered in an introductory course in a theory of computation. I haven't had a chance to read it throughly, but the special topics I have read into (probabilistically checkable proofs and the PCP theorem) were well put together.
+	Yes. There is a whole diverse theory of computational complexity which goes beyond 'Does P = NP'. This is THE book for this topic, and includes a range of different advanced subjects going beyond the basic complexity classes encountered in an introductory course in a theory of computation. I haven't had a chance to read it throughly, but the special topics I have read into (probabilistically checkable proofs and the PCP theorem) were well put together.
 
-        Number Theory
-        =============
+### Number Theory
 
-        	* Allen Hatcher, the Topology of Numbers
+- ! Allen Hatcher, the Topology of Numbers
 
-        	* Hugh Montgomery / Robert Vaughan, Analytical Number Theory
+- ! Hugh Montgomery / Robert Vaughan, Analytical Number Theory
 
-        	* Hugh Montgomery, Ten Lectures on the Interface Between Analytic Number Theory and Harmonic Analysis
+- ! Hugh Montgomery, Ten Lectures on the Interface Between Analytic Number Theory and Harmonic Analysis
 
-        	* Terence Tao, Analytical Number Theory Online Notes
+- ! Terence Tao, Analytical Number Theory Online Notes
 
 
+### Representation Theory
 
+- ! William Fulton / Joe Harris, Representation Theory
 
+###	Operator Algebras / Operator Theory
 
+- John Conway, A Course in Functional Analysis
 
+- Kadison / Ringrose, Fundamental of the Theory of Operator Algebras
 
+- Kenneth Davidson, C^* Algebras by Example
 
-==========================
-===   Special Topics   ===
-==========================
+- ! Davies, Spectral Theory and Differential Operators
 
-	Representation Theory
-	=====================
+### Abstract Harmonic Analysus
 
-		* William Fulton / Joe Harris, Representation Theory
+- Gerald B. Folland, A Course in Abstract Harmonic Analysis
 
-	Operator Algebras / Operator Theory
-	=================
+- Walter Rudin, Fourier Analysis on Groups
 
-		John Conway, A Course in Functional Analysis
+	An introduction to only the abelian aspects of abstract harmonic analysis. A good complement to Follands book, which focuses on aspects of the theory important to the noncommutative theory.
 
-		Kadison / Ringrose, Fundamental of the Theory of Operator Algebras
+- !Edwin Hewitt, Kenneth Ross, Abstract Harmonic Analysis (Vol 1-2)
 
-		Kenneth Davidson, C^* Algebras by Example
+	Incredibly comprehensive, but so slow going I can't recommend it for a first introduction.
 
-		* Davies, Spectral Theory and Differential Operators
+### Ergodic Theory
 
+- ! Manfred Einsiedler / Thomas Ward, Ergodic Theory With a View Towards Number Theory
 
-	Abstract Harmonic Analysis
-	==========================
+###	Special Topics in Combinatorics
 
-		Gerald B. Folland, A Course in Abstract Harmonic Analysis
+- ! Herbert Wilf, Generatingfunctionology
 
-		Walter Rudin, Fourier Analysis on Groups
+- Larry Guth, Polynomial Methods in Combinatorics
 
-			An introduction to only the abelian aspects of abstract harmonic analysis. A good complement to Follands book, which focuses on aspects of the theory important to the noncommutative theory.
+- Ryan O' Donnell, Analysis of Boolean Functions
 
-		Edwin Hewitt, Kenneth Ross, Abstract Harmonic Analysis (Vol 1-2)
+###	Optimization
 
-			Incredibly comprehensive, but so slow going I can't recommend it for a first introduction.
+- Chvatal, Linear Optimization
 
-	Ergodic Theory
-	==============
+- Bertsimas, Tsitsiklis, Introduction to Linear Optimzation
 
-		* Manfred Einsiedler / Thomas Ward, Ergodic Theory With a View Towards Number Theory
+###	Modular Forms
 
-	Advanced Combinatorics
-	====================
+- ! Jan Hendrik Bruiner / Gerad van der Geer / Gunter Harder / Don Zagier, The 1-2-3 of Modular Forms
 
-		* Herbert Wilf, Generatingfunctionology
+	This was the book that really attracted me to the theory of modular forms and their applications. Unlike other books, which focus specifically on the theory without introducing applications, this book introduces the applications while introducing the theory, which makes the path to understanding modular forms much more visceral.
 
-		Larry Guth, Polynomial Methods in Combinatorics
+- ! Don Zagier Lectures in Modular Forms
 
-		Ryan O' Donnell, Analysis of Boolean Functions
+	Lecture 1: https://www.youtube.com/watch?v=zKt5L0ggZ3o
+	Lecture 2: https://www.youtube.com/watch?v=FVje_MN8SUE
+	Lecture 3: https://www.youtube.com/watch?v=uFaX8eNn64A
+	Lecture 4: https://www.youtube.com/watch?v=jpanciocK4Y
+	Lecture 5: https://www.youtube.com/watch?v=JwWOH9ty9b0
 
-	Optimization
-	============
+	Really good introduction to Modular forms, from the view of theoretical physics (but still a useful introduction for mathematicians!).
 
-		Chvatal, Linear Optimization
+- Fred Diamond / Jerry Shurman, A First Course in Modular Forms
 
-		Bertsimas, Tsitsiklis, Introduction to Linear Optimzation
+	This book introduces the Riemann surface theory which connects to Modular forms, which helped me understand some of the technical aspects of the theory, and its generalizations to the theory of automorphic forms. Maybe if you read a better resource on general Riemann surfaces this is unneccessary, and I might find this book not so useful once I know Rieman surface theory, but for now it's still very useful.
 
-	Modular Forms
-	=============
+### Lie Algebras
 
-		* Jan Hendrik Bruiner / Gerad van der Geer / Gunter Harder / Don Zagier, The 1-2-3 of Modular Forms
+- Karin Erdmann / Mark J. Wildon, Introduction to Lie Algebras
 
-			This was the book that really attracted me to the theory of modular forms and their applications. Unlike other books, which focus specifically on the theory without introducing applications, this book introduces the applications while introducing the theory, which makes the path to understanding modular forms much more visceral.
+- Varadarajan, Lie groups Lie Algebras and Their Representations
 
-		* Don Zagier Lectures in Modular Forms
+- Brian Hall, Lie Groups Lie Algebras and Representation Theory
 
-			Lecture 1: https://www.youtube.com/watch?v=zKt5L0ggZ3o
-			Lecture 2: https://www.youtube.com/watch?v=FVje_MN8SUE
-			Lecture 3: https://www.youtube.com/watch?v=uFaX8eNn64A
-			Lecture 4: https://www.youtube.com/watch?v=jpanciocK4Y
-			Lecture 5: https://www.youtube.com/watch?v=JwWOH9ty9b0
+- ! Mazorchuk, Lectures on SL_2(C) modules
 
-			Really good introduction to Modular forms, from the view of theoretical physics (but still a useful introduction for mathematicians!).
+### Lambda Calculus / Theories of Computation
 
-		* Fred Diamond / Jerry Shurman, A First Course in Modular Forms
+- Hindley / Selden: Lambda Calculus and Combinators
 
-			This book introduces the Riemann surface theory which connects to Modular forms, which helped me understand some of the technical aspects of the theory, and its generalizations to the theory of automorphic forms. Maybe if you read a better resource on general Riemann surfaces this is unneccessary, and I might find this book not so useful once I know Rieman surface theory, but for now it's still very useful.
+- Raymond Smullyan, To Mock a Mockingbird and Other Logic Puzzles
 
-	Lie Algebras
-	============
-
-		Karin Erdmann / Mark J. Wildon, Introduction to Lie Algebras
-
-		Varadarajan, Lie groups Lie Algebras and Their Representations
-
-		Brian Hall, Lie Groups Lie Algebras and Representation Theory
-
-		* Mazorchuk, Lectures on SL_2(C) modules
-
-	Lambda Calculus / Theories of Computation
-	=========================================
-
-		Hindley / Selden: Lambda Calculus and Combinators
-
-		Raymond Smullyan, To Mock a Mockingbird and Other Logic Puzzles
-
-		Ulf Nillson / Jan Maluszynski, Logic Programming and Prolog.
+- Ulf Nillson / Jan Maluszynski, Logic Programming and Prolog.
 
 
 
