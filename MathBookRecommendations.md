@@ -29,109 +29,91 @@ The * before a title indicates a book I have only read a small section of, but f
 		
 - ! Rajendra Bhatia, Positive Definite Matrices
 
-	Discrete Mathematics
-	====================
+### Discrete Mathematics
 
-		Ronald Graham / Donald Knuth / Oren Patashnik, Concrete Mathematics: A Foundation for Computing Science
+- Ronald Graham / Donald Knuth / Oren Patashnik, Concrete Mathematics: A Foundation for Computing Science
 
-			A problems book designed so that computing science students can read Donald Knuth's monolithic `The Art of Computer Programming' series. However, it really is a good introduction to the basic ideas of discrete mathematics, solving recurrences, basic number theory, generating functions, discrete probablity theory, and asymptotics. Very useful, and you'll likely learn techniques you didn't know if you read it, even if you think you already know all the discrete mathematics you will need.
+	A problems book designed so that computing science students can read Donald Knuth's monolithic "The Art of Computer Programming" series. However, it really is a good introduction to the basic ideas of discrete mathematics, solving recurrences, basic number theory, generating functions, discrete probablity theory, and asymptotics. Very useful, and you'll likely learn techniques you didn't know if you read it, even if you think you already know all the discrete mathematics you will need.
 
-		John Michael Steele, The Cauchy Schwartz Master Class
+- John Michael Steele, The Cauchy Schwartz Master Class
 
-	Calculus & Introductory Analysis
-	================================
+###	Calculus & Introductory Analysis
 
-		Walter Rudin, Principles of Mathematical Analysis
+- Walter Rudin, Principles of Mathematical Analysis
 
-			Very terse text in basic analysis.
+	Very terse text in basic analysis.
 
-		Michael Spivak, Calculus
+- Michael Spivak, Calculus
 
-			Less terse text in basic analysis.
+	Less terse text in basic analysis.
 
-		Thomas Korner, A Companion to Analysis
+- Thomas Korner, A Companion to Analysis
 
-			Great supplement to a basic analysis course. Explains `why' basic analysis isn't so intuitive as you might believe.
+	Great supplement to a basic analysis course. Explains 'why' basic analysis isn't so intuitive as you might believe.
 
-		Hermann Schey, Div, Grad, Curl, and all that
+- Hermann Schey, Div, Grad, Curl, and all that
 
-			Great introduction to classical vector calculus.
+	Great introduction to classical vector calculus.
 	
-		Michael Spivak, Calculus on Manifolds
+- Michael Spivak, Calculus on Manifolds
 
-			Covers basic multivariate calculus, and elementary differential forms / integration on manifolds.
+	Covers basic multivariate calculus, and elementary differential forms / integration on manifolds.
 
-		* Robert S. Strichartz, The Way of Analysis
+- ! Robert S. Strichartz, The Way of Analysis
 		
-		* Richard Courant, Introduction To Calculus and Analysis, Vol 1 + 2.
+- ! Richard Courant, Introduction To Calculus and Analysis, Vol 1 + 2.
 		
-		* Otto Toeplitz, Calculus: a Genetic Approach
+- ! Otto Toeplitz, Calculus: a Genetic Approach
 
-	Basic Probability Theory
-	==================
+### Basic Probability Theory
 
-		Larry Wasserman, All of Statistics: A Concise Course in Statistical Inference
+- Larry Wasserman, All of Statistics: A Concise Course in Statistical Inference
 
-		William Feller, An Introduction to Probability Theory and its Applications (Vol 1-2)
+- William Feller, An Introduction to Probability Theory and its Applications (Vol 1-2)
 
-		* David Williams, Weighing the Odds: A Course in Probability Theory
+- ! David Williams, Weighing the Odds: A Course in Probability Theory
 
-	Geometry
-	========
+### Geometry
 
-		* Robin Hartshorne, Geometry: Euclid and Beyond
+- ! Robin Hartshorne, Geometry: Euclid and Beyond
 
-		* Jurgen Richter-Gebert, Perspectives on Projective Geometry
+- ! Jurgen Richter-Gebert, Perspectives on Projective Geometry
 
-		* Keith Carne, University of Cambridge Lecture Notes, Geometry and Groups
+- ! Keith Carne, University of Cambridge Lecture Notes, Geometry and Groups
 
-		* Hermann Weyl, Symmetry
+- ! Hermann Weyl, Symmetry
 
-		* Oliver Byrne, The First Six Books of The Elements of Euclid.
+- ! Oliver Byrne, The First Six Books of The Elements of Euclid.
 
-	Complex Analysis
-	================
+### Complex Analysis
 
-		Elias Stein / Rami Shakarchi, Princeton Lectures in Analysis (Vol 2: Complex Analysis)
+- Elias Stein / Rami Shakarchi, Princeton Lectures in Analysis (Vol 2: Complex Analysis)
 
-		Lars Ahlfors, Complex Analysis
+- Lars Ahlfors, Complex Analysis
 
-	Classical Differential Geometry
-	===============================
+### Classical Differential Geometry
 
-		* Manfredo do Carmo, Differential Geometry of Curves and Surfaces
+- Manfredo do Carmo, Differential Geometry of Curves and Surfaces
 
-	Differential Equations
-	======================
+###	Differential Equations
 
-		Vladimir Arnold, Ordinary Differential Equations
+- Vladimir Arnold, Ordinary Differential Equations
 
-			A much more `practical' differential equations book. Talks about the actual geometrical theory behind differential equations, and an introduction to the more `chaotic aspects' relating differential equations to dynamical systems. Choose this if you want a differential equations course that is actually interesting! The second edition republishing by Springer includes many real-word examples of differential equation (logistic equation, Lotka-Volterra, etc) which add variety to the exposition
+	A much more 'practical' differential equations book. Talks about the actual geometrical theory behind differential equations, and an introduction to the more 'chaotic aspects' relating differential equations to dynamical systems. Choose this if you want a differential equations course that is actually interesting! The second edition republishing by Springer includes many real-word examples of differential equation (logistic equation, Lotka-Volterra, etc) which add variety to the exposition
 
-		* Steven H. Strogatz, Nonlinear Dynamics and Chaos
+- ! Steven H. Strogatz, Nonlinear Dynamics and Chaos
 
-		* Garrett Birkhoff / Gian-Carlo Rota, Ordinary Differential Equations
+- ! Garrett Birkhoff / Gian-Carlo Rota, Ordinary Differential Equations
 		
-		* John Guckenheimer / Philip Holmes, Nonlinear Oscillations, Dynamical Systems, and Bifurcations of Vector Fields.
+- ! John Guckenheimer / Philip Holmes, Nonlinear Oscillations, Dynamical Systems, and Bifurcations of Vector Fields.
 
-	Elementary Mathematical Physics (Mechanics and Electromagnetics)
-	================================================================
+### Mathematical Physics
 
-		Lev Landau / Evegeny Lifshitz, Course of Theoretical Physics:
-			Vol 1: Mechanics
-			* Vol 2: The Classical Theory of Fields
-			* Vol 3: Quantum Mechanics: Non Relativistic Theory
-			* Vol 4: Relativistic Quantum Theory
-			* Vol 5: Statistical Physics
-			* Vol 6: Fluid Mechanics
-			* Vol 7: The Theory of Elasticity
-			* Vol 8: Electrodynamics of Continuous Media
-			* Vol 9: Statistical Physics, Vol 2
-			* Vol 10: Physical Kinetics
+- Lev Landau / Evegeny Lifshitz, Course of Theoretical Physics:
 
-		Michael Spivak, Physics for Mathematicians
+- Michael Spivak, Physics for Mathematicians
 
-                * Ain Sonin, Dimensional Analysis
+- ! Ain Sonin, Dimensional Analysis
 
 
 
