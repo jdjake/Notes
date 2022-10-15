@@ -25,9 +25,9 @@ The * before a title indicates a book I have only read a small section of, but f
 
 	An advanced book on finite dimensional linear algebra and matrix theory. Most people skip these parts of linear algebra, but there are very important uses for this theory! Not all linear algebra is functional analysis in disguise. Read this for concreteness!
 
-- * Denis Serre, Matrices
+* Denis Serre, Matrices
 		
-- * Rajendra Bhatia, Positive Definite Matrices
+* Rajendra Bhatia, Positive Definite Matrices
 
 	Discrete Mathematics
 	====================
