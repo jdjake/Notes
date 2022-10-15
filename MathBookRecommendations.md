@@ -107,8 +107,6 @@ An ! before the title of a book is used to indicate a book I have only read a sm
 
 - Lars Ahlfors, Complex Analysis
 
-- ! Krantz, A Handbook of Complex Variables
-
 - ! Garnett, Bounded Analytic Functions
 
 ### Classical Differential Geometry
@@ -484,6 +482,8 @@ An ! before the title of a book is used to indicate a book I have only read a sm
 
 - ! William Stein, Modular Forms: A Computational Approach
 
+- ! Bringmann, Folsom, Ono, Rolen. Harmonic Maass Forms and Mock Modular Forms: Theory and Applications.
+
 
 
 
@@ -507,13 +507,17 @@ An ! before the title of a book is used to indicate a book I have only read a sm
 
 - Ulf Nillson / Jan Maluszynski, Logic Programming and Prolog.
 
-### Riemann Surfaces
+### Riemann Surfaces / Several Complex Variables
 
 - ! Jurgen Jost, Compact Riemann Surfaces
 
-- ! Gunning, Lectures on Riemann Surfaces
+- ! Robert Gunning, Lectures on Riemann Surfaces
 
 - ! Huybrecht, Complex Geometry
+
+- ! Krantz, A Handbook of Complex Variables
+
+- ! Robert Gunning. Analytic Functions of Several Complex Variables.
 
 ### Symplectic Geometry
 
@@ -631,6 +635,8 @@ An ! before the title of a book is used to indicate a book I have only read a sm
 
 - ! Elias Stein, Singular Integrals
 
+- ! Deng, Han, Harmonic Analysis on Spaces of Homogeneous Type.
+
 - ! Grafakos, Classical + Modern Harmonic Analysis
 
 - Elias Stein, Harmonic Analysis
@@ -648,6 +654,8 @@ An ! before the title of a book is used to indicate a book I have only read a sm
 - ! Osgood, Lectures on the Fourier Transform
 
 - ! Zygmund Trigonometric Series
+
+- ! Muscalu / Schlag, Classical and Multilinear Harmonic Analysis
 
 ### Complex Analysis and Harmonic Analysis
 
@@ -776,18 +784,3 @@ An ! before the title of a book is used to indicate a book I have only read a sm
 
 
 
-
-TO READ:
-
-- Kahane, Some Random Series of Functions
-- Ryan O' Donnell
-- - ! (Many Authors): Analysis and Applications: The Mathematical Work of Elias Stein
-- Andreas Seeger, Review of Fourier Restriction on Paraboloid
-- Pertti Mattila, Geometry of Sets and Measures in Euclidean Space
-
-- Pertti Mattila, Fourier Analysis and Hausdorff Dimension
-- ! Sharpe, Differential Geometry: Cartan's Generalization of Klein's Erlangen Program
-- ! Needham, Visual Differential Geometry and Forms, A Mathematical Drama in Five Acts
-- Zelditch Notes
-
-- ! Rosenberg, the Laplacian on a Riemannian Manifold
