@@ -408,80 +408,74 @@ An ! before the title of a book is used to indicate a book I have only read a sm
 
 
 
+## Topics in Probability Theory
 
-	Stochastic Processes
-	====================
+### Stochastic Processes
 
-		Lawler, Introduction to Stochastic Processes
+- Lawler, Introduction to Stochastic Processes
 
-		* David Levin / Yuval Peres / Elizabeth Wilmer, Markov Chains and Mixing Times
+- ! David Levin / Yuval Peres / Elizabeth Wilmer, Markov Chains and Mixing Times
 
-		* Jean Francois Le Gall, Brownian Motion, Martingales, and Stochastic Calculus
+- ! Jean Francois Le Gall, Brownian Motion, Martingales, and Stochastic Calculus
 
-		* Theodore Harris, The Theory of Branching Processes
+- ! Theodore Harris, The Theory of Branching Processes
 
-		* Atherya / Ney, Branching Processes
+- ! Atherya / Ney, Branching Processes
 
-		* Nils Berglund, Long-Time Dynamics of Stochastic Differential Equations
+- ! Nils Berglund, Long-Time Dynamics of Stochastic Differential Equations
 
-		* Daley / Vere-Jones, An Introduction To The Theory of Point Processes
+- ! Daley / Vere-Jones, An Introduction To The Theory of Point Processes
 
-		* Keeler, Notes on the Poisson Point Process
+- ! Keeler, Notes on the Poisson Point Process
 
-		* Johnson, Introduction to Spatial Point Processes
+- ! Johnson, Introduction to Spatial Point Processes
 
-		* Michael Kozdron, Lectures on Stochastic Calculus with Applications to Finance
+- ! Michael Kozdron, Lectures on Stochastic Calculus with Applications to Finance
 
-		* Miller, Stochastic Calculus
+- ! Miller, Stochastic Calculus
 
-		* Ramon Van Handel, Stochastic Filtering and Control
-
-
-	High Dimensional Probability Theory
-	===================================
-
-		Terence Tao, Topics in Random Matrix Theory
-
-		Ramon van Handel, Probability in High Dimension Lecture Notes
-
-		Roman Vershynin, High Dimensional Probability
-
-		* Stephane Boucheron / Gabor Lugosi / Pascal Massart, Concentration Inequalities: A Nonasymptotic Theory of Independence
-
-		* Martin Wainwright, High-Dimensional Statistics
-
-		* Remi Rhodes / Vincent Vargas, Lectures on Gaussian Multiplicative Chaos
-
-	Integrable Probability
-	======================
-
-		* Alexei Borodin / Vadim Gorin Integrable Probability
+- ! Ramon Van Handel, Stochastic Filtering and Control
 
 
-	Mathematical Statistics
-	=======================
+### High Dimensional Probability Theory
 
-		* Hastie, Tibshirani, Friedman, the Elements of Statistical Learning
+- ! Terence Tao, Topics in Random Matrix Theory
 
-		Tor Lattimore and Csaba Szepesvari, Bandit Algorithms
+- Ramon van Handel, Probability in High Dimension Lecture Notes
 
-		* Shervish, Mathematical Statistics
+- Roman Vershynin, High Dimensional Probability
 
-	Information Theory
-	==================
+- ! Stephane Boucheron / Gabor Lugosi / Pascal Massart, Concentration Inequalities: A Nonasymptotic Theory of Independence
 
-		* Stephen Barnett, Introduction to Quantum Information
+- ! Martin Wainwright, High-Dimensional Statistics
 
-		* Simon DeDeo, Information Theory for Intelligent People
+- ! Remi Rhodes / Vincent Vargas, Lectures on Gaussian Multiplicative Chaos
 
-		* John Watrous, The Theory of Quantum Information
+### Integrable Probability
 
-	Geometric Probability Theory (Percolation + Gaussian Free Fields)
-	==================
+- ! Alexei Borodin / Vadim Gorin Integrable Probability
 
-		* Russell Lyons / Yuval Peres, Probability on Trees and Networks
+### Mathematical Statistics
 
-		* Nathenael Berestycki / Ellen Powell, Gaussian Free Field, Liouville Quantum Gravity, and Gaussian Multiplicative Chaos
+- ! Hastie, Tibshirani, Friedman, the Elements of Statistical Learning
+
+- Tor Lattimore and Csaba Szepesvari, Bandit Algorithms
+
+- ! Shervish, Mathematical Statistics
+
+###	Information Theory
+
+- ! Stephen Barnett, Introduction to Quantum Information
+
+- ! Simon DeDeo, Information Theory for Intelligent People
+
+- ! John Watrous, The Theory of Quantum Information
+
+### Geometric Probability Theory (Percolation + Gaussian Free Fields)
+
+- ! Russell Lyons / Yuval Peres, Probability on Trees and Networks
+
+- ! Nathenael Berestycki / Ellen Powell, Gaussian Free Field, Liouville Quantum Gravity, and Gaussian Multiplicative Chaos
 
 
 
