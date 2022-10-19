@@ -9,6 +9,10 @@ An ! before the title of a book is used to indicate a book I have only read a sm
 
 ### Linear Algebra
 
+- * Carl Meyer, Matrix Analysis and Applied Linear Algebra
+
+	Looks like a good book for studying basic matrix algebra.
+
 - Charles Curtis, Linear Algebra: An Introductory Approach
 
 	The First Linear Algebra Book I read. Does the job of teaching the basic ideas, without too much flair or extras.
@@ -771,23 +775,3 @@ An ! before the title of a book is used to indicate a book I have only read a sm
 - Krantz, Advice
 
 - Krantz, Primer for Mathematical Writing
-
-
-
-
-
-
-TO READ:
-
-- Kahane, Some Random Series of Functions
-- Ryan O' Donnell
-- - ! (Many Authors): Analysis and Applications: The Mathematical Work of Elias Stein
-- Andreas Seeger, Review of Fourier Restriction on Paraboloid
-- Pertti Mattila, Geometry of Sets and Measures in Euclidean Space
-
-- Pertti Mattila, Fourier Analysis and Hausdorff Dimension
-- ! Sharpe, Differential Geometry: Cartan's Generalization of Klein's Erlangen Program
-- ! Needham, Visual Differential Geometry and Forms, A Mathematical Drama in Five Acts
-- Zelditch Notes
-
-- ! Rosenberg, the Laplacian on a Riemannian Manifold

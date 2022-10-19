@@ -2,15 +2,15 @@
 %%!TEX root = HarmonicAnalysis.tex
 \part{Linear Partial Differential Equations}
 
-Here we study the techniques of the \emph{constant coefficient} linear partial differential equations
+Here we study \emph{constant coefficient} linear partial differential equations
 %
 \[ Lf(x) = \sum a_\alpha D^\alpha f(x) \]
 %
-and the \emph{non constant coefficient} partial differential equations
+and the \emph{non-constant coefficient} linear partial differential equations
 %
 \[ Lf(x) = \sum a_\alpha(x) D^\alpha f(x) \]
 %
-The central problems of the theory are \emph{existence} and \emph{regularity}: Given $f$, does a solution $u$ to the equation $Lu = f$ exist, and if so, how does the regularity of $f$ relate to the regularity of $u$. We often phrase the regularity problems in terms of function spaces. Let $\{ X^s \}$ be a family of function spaces, indexed by a parameter $s \in \RR$, measuring the \emph{regularity} of functions in these spaces. Given a linear partial differential operator $L$, a regularity result might say that for some $s$ and $t$, if $Lu = f$, where $f \in X^s$, then $u$ in $X^t$. Such results often require one to use the special properties of the operator $L$; general theories are rarely available, except for certain very special families of partial differential equations, especially the \emph{elliptic partial differential equations}.
+using methods of harmonic analysis. The central problems of the theory are \emph{existence} and \emph{regularity}: Given $f$, does a solution $u$ to the equation $Lu = f$ exist, and if so, how does the regularity of $f$ relate to the regularity of $u$. We often phrase the regularity problems in terms of function spaces. Let $\{ X^s \}$ be a family of function spaces, indexed by a parameter $s \in \RR$, measuring the \emph{regularity} of functions in these spaces. Given a linear partial differential operator $L$, a regularity result might say that for some $s$ and $t$, if $Lu = f$, where $f \in X^s$, then $u$ in $X^t$. Such results often require one to use the special properties of the operator $L$; general theories are rarely available, except for certain very special families of partial differential equations, especially the \emph{elliptic partial differential equations}.
 
 \chapter{Green's Functions}
 
@@ -92,33 +92,81 @@ Elliptic operators have a near complete theory, because they are \emph{invertibl
 
 
 
+\chapter{Propogation Speed}
+
+One important feature of a partial differential equation is the manner in which data \emph{propogates} through a solution. Our goal in this chapter is to analyze when partial differential equations have a \emph{finite speed of propogation}. One feature of many important partial differential equations (of which the wave equation is an exemplary example) is the fact that values of the equation \emph{propogate through time} at a finite speed $c$. This is a property of many different equations, whose study is the aim of this chapter. So let us consider a general linear partial differential equation of the form $\partial_t u = Lu$, where we do not have to deal with higher-derivatives in the $t$-variable because we allow $u$ instead to be \emph{vector-valued}, i.e. $u$ is a function from $\RR^d \times \RR \to \RR^m$ for some $m$, and $(Lf)_i = \sum c_{i,j,\alpha}(x,t) D^\alpha_x f_j$.
+
+To determine what properties of the equation are \emph{necessary} for the equation to have a finite speed of propogation, we assume that the problem of existence and uniqueness for the Cauchy problem of this equation has been solved, in the sense that for any function $f \in C_c^\infty(\RR^d, \RR^m)$ and any $t_0 \in \RR$, there exists a unique solution $u(x,t)$ (let's say, lying in the space of distributions), defined for $t \geq t_0$, solving the differential equation $\partial_t u = Lu$, and with $u(x,t_0) = f(x)$ for all $x \in \RR^d$. Thus we can consider operators $\{ S_{t_0,t_1} : t_0 \leq t_1 \}$ such that, with the notation as above, $S_{t_0,t_1} f(x) = u(x,t_1)$. Since we are working with linear differential equations, the operators $S_{t_0,t_1}$ are \emph{linear operators}, and by assumption they are Schwartz, i.e. they map $\mathcal{D}(\RR^d,\RR^m)$ to $\mathcal{D}(\RR^d,\RR^m)^*$. In particular, the linearity implies that  the \emph{principle of superposition} applies, i.e. that $S_{t_0,t_1}(f + g) = S_{t_0,t_1} f + S_{t_0,t_1} g$.
+
+To formally analyze how data propogates in solutions to the equations above, we introduce the idea of \emph{influence} and \emph{dependence}. For $t < s$, we say that a point $(x,t)$ in space-time \emph{does not influence} a point $(y,s)$ if there exists a spatial neighborhood $U$ of $x$, and a space-time neighborhood $V$ of $(y,s)$, such that for any $f_1$ and $f_2$ which are equal outside of $U$, $S_{t,s} f_1$ is equal to $S_{t,s} f_2$ on $V$. Using linearity, this is equivalent to the property that, for any $f$ supported on $U$, $S_{t,s} f$ is supported outside of $V$. The \emph{domain of influence} of $(x,t)$ is then the set of all $(y,s)$ which \emph{are} influenced by $(x,t)$. The \emph{domain of dependence} $\mathcal{D}_D(y,s)$ of a point $(y,s)$ is precisely the set of all $(x,t)$ such that $(y,s)$ is influenced by $(x,t)$. We define
+%
+\[ \mathcal{D}_{I,s}(x,t) = \{ y : (y,s) \in \mathcal{D}_I(x,t) \} \quad\text{and}\quad \mathcal{D}_{D,t}(y,s) = \{ x : (x,t) \in \mathcal{D}_D(y,s) \} \]
+%
+to be the domains at particular time slices.
+
+We can now formally state our goal: what are the conditions which ensure a \emph{finite speed of propogation} $c$, i.e. such that the domain of influence of any point $(x_0,t_0)$ is contained in the cone
+%
+\[ \Gamma_{x_0,t_0} = \{ (x_1,t_1): |x_1 - x_0| \leq c |t_1 - t_0| \}. \]
+%
+We will begin by analyzing the properties of equations with a finite speed of propogation, in order to try and obtain a condition that can be reversed to ensure a finite speed of propogation. So we now assume that our equation has a finite speed of propogation $c$. Here are some immediate properties.
+
+\begin{theorem}
+	Suppose that $\partial_t = L$ is a partial differential equation with a finite speed of propogation $c$. Then the following properties hold:
+	%
+	\begin{itemize}
+		\item (Finite Propogation of Support) If $\text{supp}(f) \subset K$, then the support of $S_{t_0,t_1} f$ is contained in the $t_1 - t_0$ thickening of the set $K$.
+		\item (Domains of Determinacy) Suppose that $t < s$, and $U$ is an open neighborhood of $\mathcal{D}_{D,t}(y,s)$. Then if $f$ vanishes on $U$, then $S_{t,s} f$ vanishes on a neighborhood of $(y,s)$.
+		\item (Huygen's Wave Construction): For $t_0 < s < t_1$, $\mathcal{D}_{I,t_1}(x_0,t_0)$ is contained in the union of all of the sets $\mathcal{D}_{I,t_2}(y,s)$, where $y$ ranges over all elements of $\mathcal{D}_{I,s}(x_0,t_0)$.
+	\end{itemize}
+\end{theorem}
+
+It is now clear that for any point $(x_0,t_0)$, $\mathcal{D}_I(x_0,t_0)$ intersects the hyperplane $\Sigma = \{ t = t_0 \}$ at the unique point $(x_0,t_0)$, i.e. $\mathcal{D}_{I,t_0}(x_0,t_0) = \{ (x_0,t_0) \}$. More strongly, $\mathcal{D}_I(x_0,t_0)$ must intersect this point on $\Sigma$ transversally, i.e. at angles $\theta \in [0,\pi]$ bounded from below by some $\delta > 0$, i.e. such that
+%
+\[ |\cos(\theta) \leq \frac{c}{(1 + c^2)^{1/2}} < 1. \]
+%
+Related to this property, we say a hypersurface $\Sigma = \{ t = p(x) \}$ is \emph{space-like} if no pair of points on $\Sigma$ influences each other, and \emph{strictly space-like} if there exists $\delta > 0$ such that for any $(x,t) \in \Sigma$, $\mathcal{D}_I(x,t)$ intersects the tangent space to $T_{(x,t)} \Sigma$ at an angle greater than $\delta$. It follows from the assumptions that if $|\nabla p(x)| < 1/c$, then $\Sigma$ is strictly space-like.
+
+
+
+
+Let us consider a partial differential equation of the form $\partial_t u = L_t u$, where $u(x,t)$ takes on values in some finite-dimensional vector space $V$, and $L_t$ is a linear partial differential equation. We will be interested in the 
+
+
+Let us assume that the Cauchy problem for such equations has been solved, i.e. that given the specification of $u$ at time $t = 0$, one can uniquely solve for the equation at future times, i.e. so that there exists a family of solution operators $\{ S_{t_0,t_1} : t_0 < t_1 \}$ taking initial conditions at a particular time into the future. We say that the space-time point $(x_0,t_0)$ \emph{influences} a space-time point $(x_1,t_1)$ if $S_{t_0,t_1} u_0$
+
+We say a point $p$ influences a point $q$ if there exists two 
+
+
+
+
+
+
+
+
+
 \chapter{Dispersive Equations}
+
+TODO: Move vector valued approach somewhere else: We begin with constant-coefficient linear dispersive equations i.e. considering a first order system $\partial_t u = Lu$, where $u: V \times \RR \to \RR$ for some finite dimensional Hilbert space $V$, and where $Lu = \sum c_\alpha D_x^\alpha u$ for some $c_\alpha \in \text{End}(V)$. In order to have any hope of a well posed theory  finite speed of propogation, we assume that $L$ is formally skew-adjoint, i.e. such that for all test functions $u,v \in \DD(V)$, $\langle Lu, v \rangle = - \langle u, -Lv \rangle$. If we write $L = i h(D_x)$ for some polynomial $h: \RR^d \to \text{End}(V)$, then this is equivalent to the coefficients of $h$ being self-adjoint. The polynomial $h$ is called the \emph{dispersion relation} of the equation. If $V = \RR^m$, then the assumptions imply that $h$ is a system of real-coefficient polynomials.
+
+\newpage
 
 A partial differential equation is \emph{dispersive} if wave-like solutions to the partial differential equation with differing frequencies travel in different directions and speeds, so that linear combinations of such solutions tend to `spread out in space' over time. This phenomenon presents itself in various \emph{dispersive estimates} for such partial differential equations.
 
-The simplest example where dispersive phenomena emerges is in the analysis of a constant-ceofficient hyperbolic first order system of the form
-%
-\[ \partial_t u = Lu \]
-%
-where $u: V \times \RR \to \RR$ for some finite dimensional Hilbert space $V$, and where $Lu = \sum c_\alpha D_x^\alpha u$ for some $c_\alpha \in \text{End}(V)$. In order to assume the differential equation is hyperbolic, and thus well-posed, we assume that $L$ is formally skew-adjont, i.e. that for all compactly supported, smooth functions $u: V \to \RR$ and $v: V \to \RR$,
-%
-\[ \langle Lu, v \rangle = - \langle u, - Lv \rangle. \]
-%
-If we write $L = 2 \pi i h(D_x)$ for some polynomial $h: \RR^d \to \text{End}(V)$, then this is equivalent to the coefficients of $h$ being self-adjoint. The polynomial $h$ is called the \emph{dispersion relation} of the equation.
+We begin with a constant coefficient partial differential equation of the form $P(D_t, D_x) = 0$ which is degree $m$ in time, where the roots of the polynomial $P(\omega, \xi) = 0$ in the $\omega$ variable are all real-valued. This equation is called the \emph{dispersion relation} of the equation. In the case where the equation is of the form $\partial_t = i h(D_x)$, the solutions are of the form $\omega = h(\xi)$, and we call the function $h$ the dispersion relation. For higher degrees the function $h$ must be treated as a multi-valued function.
 
-Given such a PDE, we have \emph{planar wave solutions} of the form
+The \emph{planar waves} of the equation are precisely those of the form
 %
 \[ u(x,t) = e^{2 \pi i (\xi \cdot x + \omega t)} \]
-% x = - (omega / \xi) t
-precisely when $\omega = h(\xi)$. Thus the dispersion relation relates the \emph{wave number} $\xi$ of a planar wave with the \emph{angular frequency} $\omega$ of the planar waves involved. In particular, looking at the phase $\xi \cdot x + \omega t$ and trying to solve in the $x$-variable, we see the wave will look like it is travelling through space at a \emph{phase velocity}
 %
-\[ v_p(\xi) = - \frac{\xi}{|\xi|} \frac{h(\xi)}{|\xi|} \]
+where $\xi \in \RR^d$, $\omega \in \RR$, and $P(\omega,\xi) = 0$. Thus the dispersion relation $P(\omega,\xi) = 0$ relates the \emph{wave number} $\xi$ of the planar wave with the \emph{angular frequency} $\omega$ of the planar waves involved. In particular, looking at the phase $\xi \cdot x + \omega t$ and trying to solve in the $x$-variable, the high and low points of the waves in space will look like they are travelling at a \emph{phase velocity}
+%
+\[ - \frac{\xi}{|\xi|} \frac{h(\xi)}{|\xi|}. \]
 %
 In particular, the phase speed is $|h(\xi)| / |\xi|$.
 
 More generally, we can consider superposition solutions using the Fourier inversion formula, i.e. writing
 %
-\[ u(x,t) = \int \widehat{u_0}(\xi) e^{2 \pi i [\xi \cdot x + h(\xi) t]}\; d\xi \]
+\[ u(x,t) = \int e^{2 \pi i (\xi \cdot x + h(\xi) t)} \widehat{u_0}(\xi)\; d\xi \]
 %
 Taking $u_0(\xi) = e^{2 \pi i \xi \cdot x}$ gives the planar wave solutions above. A \emph{wave packet} solution is obtained by taking $u_0$ to be supported on a small region of phase-space, i.e. localized to a particular position in space, and a particular frequency. One example localized near $(x_0,\xi_0)$ would be of the form
 %
@@ -126,12 +174,20 @@ Taking $u_0(\xi) = e^{2 \pi i \xi \cdot x}$ gives the planar wave solutions abov
 %
 where $\phi$ is a Schwartz function whose Fourier transform $\psi$ is smooth and compactly supported. Fourier inversion tells us that
 %
-\[ u(x,t) = \int \psi(\xi) e^{2 \pi i [ (\xi_0 + \xi) \cdot x + h(\xi_0 + \xi) t - \xi \cdot x_0 ]}\; d\xi. \]
+\[ u(x,t) = \left( \int \psi(\xi) e^{2 \pi i [ (\xi_0 + \xi) \cdot x + h(\xi_0 + \xi) t - \xi \cdot x_0 ]}\; d\xi \right). \]
 %
-The principle of nonstationary phase tells us that $u$ has spatial concentration near $x = x_0 - \nabla h(\xi_0) t + O(t)$. Thus the phase envelope of $u$ can be seen to be travelling starting at $x_0$, and travelling at a \emph{group velocity} $- \nabla h(\xi_0)$, though the slight differences in phase velocities for individual planar waves which give $u$ as a superposition can lead to the phase envelope spreading apart in time.
+The principle of nonstationary phase tells us that $u(x,t)$ is spatially concentrated where $x = x_0 - \nabla h(\xi_0) t + O(t)$. Thus the phase envelope of $u$ starts travelling starting at $x_0$, and travels at a \emph{group velocity} $- \nabla h(\xi_0)$.
+%
+% \[ |u(x,t)| \lesssim_N |x - (x_0 - t \cdot\nabla h (\xi_0 + \xi))|^{-N} \]
+%
+The slight differences in phase velocity for indiidual planar waves under which $u$ is composed in superposition can lead to the phase envelope spreading apart in time at a rate of $O(t)$, i.e. \emph{dispersing in space}.
 
 \begin{example}
-	For $\omega_0 \in \RR$, we can consider the \emph{phase rotation equation} $\partial_t u = 2 \pi i \omega_0$, which can be explicitly solved by writing
+	For $\omega_0 \in \RR$, we can consider the \emph{phase rotation equation}
+	%
+	\[ \partial_t u = 2 \pi i \omega_0, \]
+	%
+	which can be explicitly solved by writing
 	%
 	\[ u(x,t) = e^{2 \pi i \omega_0 t} u_0(x). \]
 	%
@@ -139,7 +195,7 @@ The principle of nonstationary phase tells us that $u$ has spatial concentration
 	%
 	\[ e^{2 \pi i (\xi \cdot x + \omega_0 t)}. \]
 	%
-	The phase velocity here is $- \omega_0 / \xi$, i.e. planar waves with a high spatial frequency will appear to travel much more slowly in time. The group velocity, however, is $0$, so a superposition of waves with similar spatial frequency will remain in the same position spatially.
+	The phase velocity here is $v_p(\xi) = - \omega_0 / \xi$, i.e. planar waves with a high spatial frequency will appear to travel through space much more slowly. The group velocity, however, is $0$, so a superposition of waves with similar spatial frequency will remain in the same position.
 \end{example}
 
 \begin{example}
@@ -153,23 +209,72 @@ The principle of nonstationary phase tells us that $u$ has spatial concentration
 	%
 	The planar-wave solutions are of the form
 	%
-	\[ e^{2 \pi i (\xi \cdot x - (\xi \cdot v_0) t))}. \]
+	\[ e^{2 \pi i [\xi \cdot x - t (\xi \cdot v_0)]}. \]
 	%
-	The dispersion relation is $h(\xi) = - v_0 \cdot \xi$. The phase velocity is $v_p(\xi) = \xi (v_0 \cdot \xi) / |\xi|^2$; if $\xi$ is aligned in the direction $v_0$, then the phase velocity will be $v_0$, and if $\xi$ is orthogonal to $v_0$, the phase velocity will be zero, since the solution will be stationary in time. The group velocity is $v_0$, i.e. a wave packet will always roughly move in the direction $v_0$.
+	The dispersion relation is given by $h(\xi) = - v_0 \cdot \xi$. Thus we obtain that the phase velocity is $v_p(\xi) = \xi (v_0 \cdot \xi) / |\xi|^2$; if $\xi$ is aligned in the direction $v_0$, then the phase velocity will be $v_0$, and if $\xi$ is orthogonal to $v_0$, the phase velocity will be zero, since the solution will be stationary in time. The group velocity is $v_0$, i.e. a wave packet will always roughly move in the direction $v_0$.
 \end{example}
 
 \begin{example}
-	In the \emph{free Schr\"{o}dinger equation} $i \partial_t u = - (\hbar / 8 \pi^2 m) \Delta u$, the dispersion relation is $h(\xi) = - (\hbar / 2 m) |\xi|^2$, and the phase velocity is $v_p(\xi) = (\hbar / 2 m) \xi$. The group velocity here is $v_g(\xi) = (\hbar / m) \xi$. Thus we see that the phase of a wave packet travels at half it's group velocity. More interesting is the group velocity equation, which in physics is used as a derivation of \emph{De Broglie's law} $mv_g = \hbar \xi$, i.e. that the frequency of a wave packet is tied to it's velocity in time.
+	In the \emph{free Schr\"{o}dinger equation} $i \partial_t u = - (\hbar / 2 m) \Delta u$, the dispersion relation is $h(\xi) = - (\hbar / 2 m) |\xi|^2$, and the phase velocity is $v_p(\xi) = (\hbar / 2 m) \xi$. The group velocity is seen to be $v_g(\xi) = (\hbar / m) \xi$. Thus we see that the phase of a wave packet travels at half it's group velocity. More interesting is the group velocity equation, which in physics is used as a derivation of \emph{De Broglie's law} $mv = \hbar \xi$, i.e. that the frequency of a wave packet is tied to it's velocity in time.
 \end{example}
 
 \begin{example}
-	The \emph{one-dimensional Airy equation} is $\partial_t u = (2 \pi)^{-3} \partial_x^3 u$. It has dispersion relation $h(\xi) = |\xi|^3$. The phase velocity is $v_p(\xi) = \xi |\xi|$, and the group velocity is $v_g(\xi) = 3 \xi |\xi| = 3 v_p(\xi)$.
+	The \emph{one-dimensional Airy equation} is $\partial_t u = \partial_x^3 u$. It has dispersion relation $h(\xi) = |\xi|^3$. The phase velocity is $v_p(\xi) = \xi |\xi|$, and the group velocity is $v_g(\xi) = 3 \xi |\xi| = 3 v_p(\xi)$.
 \end{example}
 
-For higher order hyperbolic equations $P(\partial_t, D_x)$, say of order $m$, the dispersion relation $h$ is multi-valued, equal to the values $h(\xi)$ such that $P(i h(\xi),\xi) = 0$.
+\begin{comment}
+\begin{example}
+	The \emph{vacuum Maxwell's equations} are given by the system
+	%
+	\[ \partial_t E = c^2 (\nabla_x \times B) \quad \partial_t B = - (\nabla_x \times E) \quad \text{Div}(E) = \text{Div}(B) = 0, \]
+	%
+	where $E$ and $B$ are vector fields $\RR^{1 + 3} \to \RR^3$, and $c > 0$ is the speed of light. To obtain the dispersion relation, take Fourier transforms, noting that
+	%
+	\[ \partial_t( \widehat{E}, \widehat{B} ) = ( c^2 i \xi \times \widehat{B}, - i \xi \times \widehat{E} ) = M(\xi) (\widehat{B}, \widehat{E}) \]
+	%
+	where
+	%
+	\[ M(\xi) = \begin{pmatrix} 0 & c^2 i (\xi \times \cdot) \\ - i (\xi \times \cdot) & 0 \end{pmatrix} \]
+	%
+	What are the eigenvectors of this equation? They are a pair of vectors $(v,w)$ such that, for some constant $\lambda$,
+	%
+	\[ \xi \times w = (\lambda/c^2) v \quad\text{and}\quad \xi \times v = - \lambda w. \]
+	%
+	If $\lambda = 0$, then $v$ and $w$ are both scalar multiples of $\xi$. If $\lambda \neq 0$, the equations imply that $\{ \xi, w, v \}$ are all orthogonal to one another. In this case, taking absolute values yields that $c^2 |\xi| |w| = |\lambda| |v|$ and $|\xi| |v| = |\lambda| |w|$. Using these equations we can thus show that $|\lambda| = c |\xi|$, and thus that $|v| = c |w|$. And given these equations, if we now assume that $\{ \xi, w, v \}$ is an oriented basis, then we conclude that this gives an eigenvector with eigenvalue $c |\xi|$. Conversely, if $\{ \xi, w, v \}$ is an unoriented basis, then we conclude that this gives an eigenvector with eigenvalue $- c |\xi|$. Thus, in an approporiate basis, we have $h(\xi) = i c |\xi| P_1(\xi) + - i c |\xi| P_2(\xi)$ for two orthogonal projection matrices $P_1(\xi)$ and $P_2(\xi)$.
+
+
+	%
+	% lambda = 0: v and w are multiples of xi (two degrees of freedom)
+	% lambda = c |xi| : two degrees of freedom
+	% lambda = - c |xi|: two degrees of freedom? (unoriented basis?)
+	\[ \xi \times w = (|\lambda| / c^2) v  \quad\text{and}\quad \xi \times v = - |\lambda| w \]
+
+	% 0  a v1
+	% b  0 v2
+	% av2 = cv1
+	% bv1 = cv2
+	% Then v1 must be orthogonal to xi and to v2
+	% and  v2 must be orthogonal to xi and to v1
+	% Given a pair of vector fields v1 and v2 such that { xi, v1, v2 } form an orthogonal basis
+	% Then xi x v1 is a multiple of v2
+	% and xi x v2 is a multiple of v1
+ 
+	\[ ( \widehat{E} ,\widehat{B} ) = e^{t M} (\widehat{E}_0, \widehat{B}_0) \]
+
+
+	\[ \partial_t \widehat{E} = c^2 (i \xi \times \widehat{B})  \quad \partial_t \widehat{B} = - (i \xi \times \widehat{E}). \]
+	%
+	Thus if $\widehat{B} = \delta_{\xi_0}$ and $\widehat{E} = \delta_{E_0}$, then
+	%
+	\[ \partial_t \widehat{E} = c^2 (i \xi \times \xi_0) \]
+
+
+	\[ L = -i \left( \sum \begin{pmatrix} 0 & 0 & 0 \\ 0 & 0 & - c^2 \\ 0 & c^2 & 0 \end{pmatrix} D_x + \begin{pmatrix} 0 & 0 & c^2 \\ 0 & 0 & 0 \\ -c^2 & 0 & 0 \end{pmatrix} D_y + \begin{pmatrix} 0 & -c^2 & 0 \\ c^2 & 0 & 0 \\ 0 & 0 & 0 \end{pmatrix} D_z \right) \]
+\end{example}
+\end{comment}
 
 \begin{example}
-	Consider the \emph{wave equation} $\Box u = 0$, where $\Box$ is the d'Alembertian operator $(2 \pi)^{-2} \Delta - \partial_t^2$. The resulting polynomial is $P(\tau,\xi) = -(\xi^2 + \tau^2)$. The dispersion relation here is thus given by the equation $(\xi^2 + (i h(\xi))^2) = 0$, i.e. we have $h(\xi) = \pm \xi$. The phase velocities are $v_p(\xi) = \pm \xi / |\xi|$, and the group velocities are also $v_g(\xi) = \pm \xi / |\xi|$.
+	Consider the \emph{wave equation} $\Box u = 0$, where $\Box$ is the d'Alembertian operator $(2 \pi)^{-2} \Delta - \partial_t^2$. The resulting polynomial is $P(\tau,\xi) = -(\xi^2 + \tau^2)$. The dispersion relation here is thus given by the equation $\xi^2 - h(\xi)^2 = 0$, i.e. we have $h(\xi) = \pm \xi$. The phase velocities are $v_p(\xi) = \pm \xi / |\xi|$, and the group velocities are also $v_g(\xi) = \pm \xi / |\xi|$.
 \end{example}
 
 \begin{example}
@@ -178,10 +283,35 @@ For higher order hyperbolic equations $P(\partial_t, D_x)$, say of order $m$, th
 
 Our goal is to study \emph{dispersive equations}, i.e. equations where wave packet solutions tend to spread apart over time. Since the velocity of a wave packet travelling at frequency $\xi_0$ is $\nabla h(\xi_0)$, wave packets near $\xi_0$ will travel at different frequencies if the \emph{Hessian} $H(\xi_0)$ of $h$ is invertible. If this is true, the equation is called \emph{fully dispersive}, like the Schr\"{o}dinger equation and Airy equation. In dimension one, for the wave equation, the Hessian is zero, so in this case the wave equation is very non-dispersive. But in $d$ dimensions, we see the Hessian has rank $d-1$, so we at least have `some dispersion', but not in the radial direction.
 
-% f'(x) is continuous away from 0
-% f'(0-) != f'(0+)
-% Then f'(0) does not exist
-% f(epsilon) = [f'(0+) + o(1)][epsilon + o(1)]
+For an equation of the form $\partial_t u = Lu$, taking Fourier transforms in the $x$-variable tells us that
+%
+\[ \widehat{u}(\xi,t) = e^{i h(\xi) t} \widehat{u_0}(\xi). \]
+%
+Thus the propogators $\{ e^{Lt} \}$ are Fourier multipliers, with symbol $m_t(\xi) = e^{i h(\xi) t}$. In particular, taking inverse Fourier transforms yields the convolution kernels $K_t$ such that $e^{Lt} f = K_t * f$. The kernels $\{ K_t \}$ are precisely the fundamental solutions to the equation.
+
+\begin{example}
+	The propogators for the free Schr\"{o}dinger equation $\partial_t u = i (\hbar / 2 m) \Delta u$ are Fourier multipliers with symbol $m_t(\xi) = - (\hbar / 2m) |\xi|^2$. Using some complex analysis and the Fourier transform of the Gaussian, we can obtain the inverse Fourier transform, the \emph{Schr\"{o}dinger kernel}
+	%
+	\[ K_t(x) = t^{-d/2} \cdot (2 \pi i \hbar / m)^{-d/2} e^{i (m / 2 \hbar t) |x|^2}. \]
+	%
+	This formula is quite remarkable, since it is not obvious that this kernel converges to the Dirac delta as $t \to 0$, given a balance between the growing singularity near the origin and the more and more rapid oscillation of the phase. The kernel is \emph{not} integrable -- it does not even have any decay at infinity. But it is locally integrable, which results in the phenomenon that if $u_0$ is compactly supported and integrable, then $K_t * u_0$ will be \emph{smooth}, but not locally integrable. This is an instance of the phenomenon of \emph{local smoothing} -- the group velocity $v_g(\xi) = (\hbar / m) \xi$ tells us that wave packets localized near large frequencies travel at a large frequency. Thus if we have a sum of wave packets localized in space, the high frequency packets will quickly leave this region, leaving only the smaller frequency packets, which result in a smooth function being left behind.
+\end{example}
+
+\begin{example}
+	The fundamental solution for the one dimension Airy equation $\partial_t u = \partial_x^3 u$ has a fundamental solution of the form
+	%
+	\[ K_t(x) = t^{-1/3} \text{Ai}( x / t^{1/3} ), \]
+	%
+	where $\text{Ai}(x)$ is the \emph{Airy function}. The group velocity $v_g(\xi) = |\xi| \xi$ leads to high frequency terms moving much faster, so we should expect a much greater local smoothing for this equation. On the other hand, this should lead to wave packets spreading apart much faster, resulting in solutions having less decay.
+\end{example}
+
+\begin{example}
+	The wave equation $\Box u = 0$ has two fundamental solutions. This is because if we take Fourier transforms we are lead to the equation
+	%
+	\[ \widehat{u}(\xi,t) = \cos(t |\xi|) \cdot \widehat{u_0}(\xi) + \frac{\sin(t |\xi|)}{|\xi|} \widehat{\partial_t u_0}(\xi). \]
+	%
+	Thus we have $u(\xi,t) = [K^0 * u_0] + [K^1 * (\partial_t u_0)]$. TODO: 71 of Tao discussing these.
+\end{example}
 
 
 
@@ -191,27 +321,151 @@ Our goal is to study \emph{dispersive equations}, i.e. equations where wave pack
 
 \section{Strichartz Estimates}
 
-Our goal is to obtain \emph{space-time estimates} of the form $\| u \|_{L^q_t L^r_x}$ on solutions $u$ to a dispersive partial differential equation. Let's start with a dispersive equation of the form $\partial_t u = Lu$. let's look at pointwise estimates. Let $T_t = e^{2 \pi i t L}$.
+Our goal is to obtain \emph{space-time estimates} of the form $\| u \|_{L^q_t L^r_x}$ on solutions $u$ to a dispersive partial differential equation. To be concrete, we'll work with the Schr\"{o}dinger equation $i \partial_t u = - (1/2) \Delta u$. The wave propogators $T_t = e^{i t L}$ for this equation are Fourier multipliers with a symbol $m_t(\xi) = e^{it |\xi|^2 / 2}$ with $|m_t(\xi)| = 1$ for all $\xi$. It follows from Plancherel that these operators preserve the $L^2$ norm
 %
-\[ T_t f(x) = \int e^{2 \pi i [\xi \cdot x + h(\xi) t]} \widehat{f}(\xi)\; d\xi. \]
+\[ \| e^{itL} f \|_{L^2_x} = \| f \|_{L^2_x}. \]
 %
-This is an operator with Fourier multiplier $m_t(\xi) = e^{2 \pi i h(\xi) t}$. To understand these operators, we apply Littlewood-Paley theory, writing
+More generally, all the $L^2$ Sobolev norms are conserved, i.e.
 %
-\[ T_t = T_{t,0} + T_{t,1} + \dots \]
+\[ \| e^{itL} f \|_{H^s_x} = \| f \|_{H^s_x}. \]
 %
-where $T_{t,l}$ is a Fourier multiplier with symbol $m_{t,l}(\xi) = \psi_l(\xi) e^{2 \pi i h(\xi) t}$. Applying stationary phase, if $K_{t,l}$ is the inverse Fourier transform of $m_{t,l}$, then we have TODO
+Thus the best space-time estimate we can obtain here is $L^2_x \to L^\infty_t L^2_x$, and more generally, $H^s_x \to L^\infty_t H^s_x$ estimates.
 
-As $t \to \infty$, we can see Dispersion via the norm of the operators $T_t$.
+We have explicitly computed the convolution kernel associated with the wave propogators in the last section, namely, we have
+%
+\[ K_t(x) = t^{-d/2} \cdot (2 \pi i)^{-d/2} e^{i t |x|^2 / 2}. \]
+%
+Simply by applying the triangle inequality, we thus obtain that
+%
+\[ \| T_t f \|_{L^\infty_x} = \| K_t * f \|_{L^\infty_x} \leq \| K_t \|_{L^\infty_x} \| f \|_{L^1_x} \lesssim |t|^{-d/2} \| f \|_{L^1_x}. \]
+%
+This is a \emph{dispersion estimate}, since it says that for large $t$, despite the $L^2$ norm concentration, the solution is spreading out in space.
+
+%We can do slightly better if we first frequency localize. If we let
+%
+%\[ m_{t,R}(\xi) = e^{it (\hbar / 2m) |\xi|^2} \eta( \xi / R ) \]
+%
+%for some fixed $\eta \in C_c^\infty(\RR^d)$ such that $\eta(\xi) = 1$ for $|\xi| \sim 1$, then the inverse Fourier transform $K_{t,R}$, thanks to the principle of stationary phase, tells us that
+% x' = x/Rt
+%\[ K_{t,R}(x) = R^d \int e^{2 \pi i R^2 t ( \xi \cdot x' + (\hbar / 2m) |\xi|^2 )} \eta ( \xi  )\; d\xi  \]
+% phi(\xi) = \xi \cdot x' + (h / 2m) |xi|^2
+% Grad_xi phi = x' + (h/m) xi
+% Stationary when xi = - x' (m/h)
+% H_xi phi = h/m
+% Thus all the eigenvalues are h/m
+%
+%\[ K_{t,R}(x) = \chi \left( \frac{m}{\hbar} \frac{|x|}{Rt} \right) \cdot O(t^{-d/2}) \]
+%
+%where $\chi(t) \lesssim_N |t - 1|^{-N}$ for all $N > 0$. Thus we get that
+%
+%\[ \| T_t f \|_{L^\infty_x} \lesssim (\hbar / m)^{d/p^*} R^{d/p^*} t^{d(1 - 1/2 - 1/p)} \| f \|_{L^p_x}. \]
+%
+%What do we get purely by Bernstein's inequality?
+%
+%\[ \| T_t f \|_{L^\infty_x} \lesssim R^{d/2} \| T_t f \|_{L^2_x} = R^{d/2} \| f \|_{L^2_x} \lesssim \| f \|_{L^1_x}. \]
+
+%This estimate is good for large times because of the decay, which makes sense because dispersion takes time to occur. We can see this more precisely if we consider a frequency-locaized function $f$, i.e. such that $\widehat{f}$ is supported on $|\xi| \sim R$ for some $n \in \ZZ$. Then we can split $f$ up into various wave packets, eac travelling with group velocity $R$.
+%
+% h(xi) = |xi|^2
+% group velocity (\hbar / m ) xi
+%Then the same is true of $T_t f$. Bernstein's inequality implies that
+%
+%\[ \| D^\alpha T_t f \|_{L^\infty_x} \lesssim 2^{n ( |\alpha| + d/2)} \| T_t f \|_{L^2_x} = 2^{n (|\alpha| + d/2)} \| f \|_{L^2_x}. \]
+%
+%\[ \| D^\alpha T_t f \|_{L^\infty_x} = \| T_t D^\alpha f \|_{L^\infty_x} \lesssim |t|^{-d/2} \| D^\alpha f \|_{L^\infty_x} \lesssim |t|^{-d/2} 2^{n(|\alpha| + d/2)} \]
+% |t|^{-1/3} i is 
+
+The $L^2$ energy of $f$ might be conserved by the propogators, but it is spread out further and further in space over time, more thinly as $t \to \infty$. Interpolation yields that
+%
+\[ \| T_t f \|_{L^{p^*}_x} \lesssim |t|^{-d(1/p - 1/2)} \| f \|_{L^p_x} \]
+%
+for $1 \leq p \leq 2$. These are the complete fixed-time $L^p \to L^q$ estimates that are available for the Schr\"{o}dinger equations.
 
 \begin{theorem}
-	Suppose that $T$ has a dispersion relation of the form $\| T_t \|_{L^q}$
+	If we have $L^p \to L^q$ bounds of the form
+	%
+	\[ \| T_t f \|_{L^q_x} \leq A(t) \| f \|_{L^p_x} \]
+	%
+	then we have $q = p^*$, we have $p \leq 1$, and we have $A(t) \sim |t|^{-(d/2)(1/p - 1/q)}$.
 \end{theorem}
 \begin{proof}
-	Let $T$ map functions on $\RR^d$ to functions on $\RR^d \times \RR$, given by
+	We first note that by Littlewood's Principle and the translation invariance of the Schr\"{o}dinger equation"that the only $L^p \to L^q$ estimates for $T_t$ must have $q \geq p$. If we can show $q = p^*$, this implies that $p \leq 1$ is necessary given the other equation $q = p^*$. Next, we use the \emph{parabolic rescaling} of the Schr\"{o}dinger equation, namely that
 	%
-	\[ Tf(x,t) = e^{2 \pi i t L} f(x) = T_t f(x). \]
+	\[ T_t \{ \text{Dil}_R f \} = \text{Dil}_R \{ T_{t/R^2} f \}. \]
 	%
-	The formal adjoint is $T^*$ mapping functions on $\RR^d \times \RR$ to functions on $\RR^d$ by
+	It follows that if we had an $L^p \to L^q$ estimate for $T_t$ with operator norm $A(t)$, then
+	%
+	\[ R^{d/q} \| T_{t/R^2} f \|_{L^q_x} = \| T_t \{ \text{Dil}_R f \} \|_{L^q_x} \leq A(t) \| \text{Dil}_R f \|_{L^p_x} = A(t) R^{d/p} \| f \|_{L^p_x} \]
+	%
+	Since $f$ was arbitrary, we obtain that \emph{if} we have $L^p \to L^q$ bounds, then $A(t/R^2) \leq A(t) R^{d(1/p - 1/q)}$. Thus we conclude that $A(t) \sim |t|^{-(d/2)(1/p - 1/q)}$. If $f \in \mathcal{S}_x$ has Fourier support in the unit ball, then the principle of non-stationary phase implies that for $|x| \geq 5|t|$,
+	%
+	\[ |T_t f(x)| \lesssim_{N,M} \langle x \rangle^{-N} \langle t \rangle^{-M}, \]
+	%
+	and for $|x| \leq 5|t|$, the principle of stationary phase implies that
+	%
+	\[ |T_t f(x)| \sim \langle t \rangle^{-d/2}. \]
+	%
+	Thus $\| T_t f \|_{L^q_x} \sim \langle t \rangle^{d/q - d/2}$ for $|t| \geq 1$. Parabolic rescaling actually implies that for $|t| \leq 1$, $\| T_t f \|_{L^q_x} \sim |t|^{d/q - d/2}$. It thus follows that
+	%
+	\[ |t|^{d/q-d/2} \lesssim |t|^{-(d/2)(1/p - 1/q)}. \]
+	%
+	Thus we have $1/p + 1/q = 1$.
+\end{proof}
+
+One can insert derivative Fourier multipliers into the estimates we have obtained to conclude that
+%
+\[ \| T_t f \|_{W_x^{s,p^*}} \lesssim t^{-d(1/p - 1/2)} \| f \|_{W_x^{s,p}} \]
+%
+in the same range. Sobolev embedding allows one to obtain some higher integrability properties of the left hand side, i.e. that if we have $p$ and $q$, with $q > p^*$, and $s = d(1/p^* - 1/q)$, then
+% 1 - 1/p - s/d = 1/q
+\[ \| T_t f \|_{L^q_x} \lesssim \| T_t f \|_{W^{s,p^*}_x} \lesssim t^{-d(1/p - 1/2)} \| f \|_{W_x^{s,p}}. \]
+%
+In particular, if $f$ has Fourier support on $|\xi| \sim R$, then we conclude that
+%
+\[ \| T_t f \|_{L^q_x} \lesssim t^{-d(1/p - 1/2)} \| f \|_{W_x^{s,p}} \lesssim R^{d(1/p^* - 1/q)} t^{-d(1/p - 1/2)} \| f \|_{L^p_x}. \]
+%
+Thus we have frequency localized dispersive estimates. However, one can never \emph{gain regularity} by applying the Schr\"{o}dinger equation, contrasting the elliptic case where functions are smoothed by propogators.
+
+\begin{lemma}
+	There exists no estimates of the form
+	%
+	\[ \| T_t f \|_{W^{s_2,q}_x} \lesssim \| f \|_{W^{s_1,p}_x} \]
+	%
+	with $s_2 > s_1$.
+\end{lemma}
+\begin{proof}
+	We rely on the Galilean invariance of the Schr\"{o}dinger equation, namely that
+	%
+	\[ T_t \{ \text{Mod}_v f \} = e^{i t |v|^2 / 2} \text{Mod}_v \text{Trans}_{vt} \{ T_t f \}. \]
+	%
+	For $|v| \geq 1$ we have $\| \text{Mod}_v f \|_{W^{s_1,p}_x} \sim |v|^{s_1}$. On the other hand, we have
+	%
+	\[ \| T_t \{ \text{Mod}_v f \} \|_{W^{s_2,q}_x} \sim |v|^{s_2}. \]
+	%
+	Thus if we had a $W^{s_1,p}_x \to W^{s_2,q}_x$ bound, we have
+	%
+	\[ |v|^{s_2} \sim \| T_t \{ \text{Mod}_v f \} \|_{W^{s_2,q}_x} \lesssim \| \text{Mod}_v f \|_{W^{s_1,q}_x} \sim |v|^{s_1}. \]
+	%
+	Thus $|v|^{s_2} \lesssim |v|^{s_1}$, so as we take $|v| \to \infty$ we must have $s_2 \leq s_1$.
+\end{proof}
+
+Combining these estimates with a duality argument, we obtain Strichartz time-space estimates for the Schr\"{o}dinger equation, that allow us to obtain good bounds on the behaviour of the equation at all times, rather than just at a fixed, large time. To state these results, we thus define the operator
+%
+\[ Tf(x,t) = T_t f(x). \]
+%
+This is precisely the \emph{solution operator} for the Schr\"{o}dinger equation.
+
+\begin{theorem}
+	If $2/q + d/r = d/2$, for $2 \leq r,q \leq \infty$, then
+	%
+	\[ \| T f \|_{L^q_t L^r_x} \lesssim \| f \|_{L^2_x}. \]
+	%
+	This immediately implies that
+	%
+	\[ \| Tf \|_{L^q_t W^{s,r}_x} \lesssim \| f \|_{H^s_x}. \]
+\end{theorem}
+\begin{proof}
+	The formal adjoint $T^*$ of $T$ maps functions on $\RR^d \times \RR$ to functions on $\RR^d$ by the equation
 	%
 	\[ T^*F(x) = \int e^{-2 \pi i t L} F(x,t)\; dt = \int T_{-t} F(x,t)\; dt. \]
 	%
@@ -219,25 +473,28 @@ As $t \to \infty$, we can see Dispersion via the norm of the operators $T_t$.
 	%
 	\[ TT^*F(x,t) = \int e^{2 \pi i (t - s) L} F(x,s)\; ds = \int T_{t-s} F_s(x)\; ds. \]
 	%
-	We have dispersive estimate
+	We have the dispersive estimate
 	%
-	\[ \| e^{2 \pi i (t - s)} f \|_{L^r_x} \lesssim |t|^{- (d/2 - d/r)} \| f \|_{L^{r^*}_x} \]
+	\[ \| e^{2 \pi i (t - s)} f \|_{L^r_x} \lesssim |t-s|^{- (d/2 - d/r)} \| f \|_{L^{r^*}_x} \]
 	%
 	for $1/r + 1/r^* = 1$. Thus
 	%
 	\begin{align*}
-		\| TT^* F \|_{L^q_t L^r_x} &\leq \left\| \int \left\| T_{t-s} F_s \right\|_{L^r_x}\; ds \right\|_{L^q_t}\\
-		&\lesssim \left\| \int \frac{\| F_s \|_{L^{r^*}_x}}{|t - s|^{d/2 - d/r}} \; ds \right\|_{L^q_t}.
+		\| TT^* F \|_{L^q_t L^r_x} &\leq \left\| \int \left\| T_{t-s} F_s \right\|_{L^r_x}\; ds \right\|_{L^q_t} \lesssim \left\| \int \frac{\| F_s \|_{L^{r^*}_x}}{|t - s|^{d/2 - d/r}} \; ds \right\|_{L^q_t}.
 	\end{align*}
 	%
-	Now applying Hardy-Littlewood-Sobolev gives the required bound, i.e. that
+	Now applying Hardy-Littlewood-Sobolev gives the required bound (\emph{provided that $q \neq 2$}), i.e. that
 	%
-	\[ \| TT^* F \|_{L^q_t L^r_x} \lesssim \left\| \int \frac{\| F_s \|_{L^{r^*}_x}}{|t - s|^{d/2 - d/r}} \; ds \right\|_{L^q_t} \lesssim \| F_s \|_{L^q_s L^r_x}. \]
+	\[ \| TT^* F \|_{L^q_t L^r_x} \lesssim \left\| \int \frac{\| F_s \|_{L^{r^*}_x}}{|t - s|^{d/2 - d/r}} \; ds \right\|_{L^q_t} \lesssim \| F_s \|_{L^{q^*}_s L^{r^*}_x}. \]
 	%
-	The $TT^*$ argument gives that
-	%
-	\[ \| Tf \|_{L^q_t L^r_x} \lesssim \| f \|_{L^2_x}. \qedhere \]
+	The $TT^*$ argument thus gives $\| Tf \|_{L^q_t L^r_x} \lesssim \| f \|_{L^2_x}$. For $q = 2$, we must instead apply more sophisticated techniques due to Keel and Tao (1998).
 \end{proof}
+
+We can view this equation in two ways. Firstly, the equation says that `on average', the Schr\"{o}dinger propogators result in an increase of integrability of $f$, from the $L^2$ norm to the $L^r$ norm for $r > 2$, \emph{but only by averaging in the $L^q$ norm}. As an example application, let $u_0$ be a function with $L^2$ norm 1, and with Fourier transform supported on frequencies $|\xi| \sim R$. The uncertainty principle implies $u_0$ is locally constant at a scale $1/R$, and thus we expect that $u_0$ has size at most $R^{d/2}$ on any of these balls. The propogated solutions $T_t u_0$ also have $L^2$ norm 1, and have Fourier transform supported on frequencies $|\xi| \sim 1$. However, the Strichartz estimate thus implies that $T_t u_0$ can only have points with size $R^{d/2}$ on a small set of times with measure at most $O(1/R^2)$. This makes sense, since if the function has height $R^{d/2}$, it's mass would be highly concentrated near this point, and so we would have a spatial uncertainty of $1/R$. This implies a frequency uncertainty of $R$, and the dispersion relation implies that concentration in such a small ball only occurs for a time at most $1/R^2$ before the frequencies begin to separate from one another.
+
+\begin{theorem}
+	s
+\end{theorem}
 
 
 
