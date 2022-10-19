@@ -111,8 +111,6 @@ An ! before the title of a book is used to indicate a book I have only read a sm
 
 - Lars Ahlfors, Complex Analysis
 
-- ! Krantz, A Handbook of Complex Variables
-
 - ! Garnett, Bounded Analytic Functions
 
 ### Classical Differential Geometry
@@ -488,6 +486,8 @@ An ! before the title of a book is used to indicate a book I have only read a sm
 
 - ! William Stein, Modular Forms: A Computational Approach
 
+- ! Bringmann, Folsom, Ono, Rolen. Harmonic Maass Forms and Mock Modular Forms: Theory and Applications.
+
 
 
 
@@ -511,13 +511,17 @@ An ! before the title of a book is used to indicate a book I have only read a sm
 
 - Ulf Nillson / Jan Maluszynski, Logic Programming and Prolog.
 
-### Riemann Surfaces
+### Riemann Surfaces / Several Complex Variables
 
 - ! Jurgen Jost, Compact Riemann Surfaces
 
-- ! Gunning, Lectures on Riemann Surfaces
+- ! Robert Gunning, Lectures on Riemann Surfaces
 
 - ! Huybrecht, Complex Geometry
+
+- ! Krantz, A Handbook of Complex Variables
+
+- ! Robert Gunning. Analytic Functions of Several Complex Variables.
 
 ### Symplectic Geometry
 
@@ -635,6 +639,8 @@ An ! before the title of a book is used to indicate a book I have only read a sm
 
 - ! Elias Stein, Singular Integrals
 
+- ! Deng, Han, Harmonic Analysis on Spaces of Homogeneous Type.
+
 - ! Grafakos, Classical + Modern Harmonic Analysis
 
 - Elias Stein, Harmonic Analysis
@@ -652,6 +658,8 @@ An ! before the title of a book is used to indicate a book I have only read a sm
 - ! Osgood, Lectures on the Fourier Transform
 
 - ! Zygmund Trigonometric Series
+
+- ! Muscalu / Schlag, Classical and Multilinear Harmonic Analysis
 
 ### Complex Analysis and Harmonic Analysis
 
