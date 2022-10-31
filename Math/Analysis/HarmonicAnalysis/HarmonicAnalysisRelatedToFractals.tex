@@ -1,4 +1,351 @@
+%% The following is a directive for TeXShop to indicate the main file
+%%!TEX root = HarmonicAnalysis.tex
+
 \part{Harmonic Analysis and Fractals}
+
+\chapter{Dimensions via Fourier Integrals}
+
+The key to applying Fourier analysis to the theory of fractal dimension begins with Frostman's lemma.
+
+\begin{lemma} (Frostman)
+  Let $E \subset \RR^d$ be a Borel set. If $H^s(E) > 0$, then there exists a non-negative measure $\mu$ supported on $E$ and a constant $c > 0$ such that
+  %
+  \[ \mu(B(x,r)) \leq c r^s \]
+  %
+  for all $x \in \RR^d$ and $r > 0$.
+\end{lemma}
+
+A simple application of Frostman's lemma, is that $\hausdim(A \times B) \geq \hausdim(A) + \hausdim(B)$, i.e. by taking product measures.
+
+We call such a measure a \emph{Frostman measure of dimension $s$}, and denote it by $\hausdim(\mu)$. In particular, Frostman's lemma guarantees that for any Borel set $E$,
+%
+\[ \hausdim(E) = \sup \{ \hausdim(\mu) : \text{supp}(\mu) \subset E \}. \]
+%
+A key operator associated with Frostman's lemma is the \emph{$s$ energy} of a measure $\mu$, defined to be
+%
+\[ I_s(\mu) = \int \int |x - y|^{-s} d\mu(x) d\mu(y) = \int k_s * \mu\; d\mu, \]
+%
+where $k_s(x) = |x|^{-s}$ is the \emph{Riesz kernel}. If $\mu$ has compact support, then $I_s(\mu) < \infty$ implies that $I_t(\mu) < \infty$ for $0 < t < s$, so, from a local perspective, having finite $s$ energy for larger $s$ is a more restrictive condition. Energies immediately connect to Frostman type bounds via the identity
+%
+\[ \int |x - y|^{-s} d\mu(y) = s \int_0^\infty \frac{\mu(B(x,r))}{r^s}\; \frac{dr}{r}. \]
+%
+Thus if $\mu(B(x,r)) \leq c r^s$, and is supported on a set with diameter at most $D$, then for any $\varepsilon > 0$,
+%
+\begin{align*}
+  \int |x - y|^{-(s - \varepsilon)} d\mu(y) &\leq (s - \varepsilon) \int_0^D \frac{cr^s}{r^{s - \varepsilon}} \frac{dr}{r}\\
+  &\leq (s - \varepsilon) \int_0^D c r^\varepsilon \frac{dr}{r}\\
+  &\leq c \frac{s - \varepsilon}{\varepsilon} D^\varepsilon.
+\end{align*}
+%
+Thus in particular,
+%
+\[ I_s(\mu) \leq c \frac{s - \varepsilon}{\varepsilon} D^\varepsilon. \]
+%
+In particular, if $\mu$ is a compactly supported Borel measure, we conclude that $\hausdim(\mu) = \sup \{ s : I_s(\mu) < \infty \}$. Conversely, if $\mu$ is a measure such that $I_s(\mu) < \infty$, then we conclude that for some $M > 0$, the set
+%
+\[ E_M = \{ x : \int |x - y|^{-s} d\mu(y) \leq M \} \]
+%
+has positive $\mu$ measure. If we consider $\nu = \mu \cdot \mathbf{I}_{E_M}$, then we see that
+%
+\[ \nu(B(x,r)) \leq (2^s M) r^s \]
+%
+for all $x \in \RR^d$ and $r > 0$, so that $\hausdim(\nu) \geq s$. Thus we conclude that for any Borel set $E$,
+%
+\[ \hausdim(E) = \sup \{ s > 0: \text{There is a probability measure $\mu$ supported on $E$ with $I_s(\mu) < \infty$} \}, \]
+%
+Thus Hausdorff dimension is closely connected to energy integrals.
+
+\begin{example}
+  If $\mu$ is the Lebesgue measure restricted to $[0,1]^d$, then $I_s(\mu) < \infty$ for $s < d$. The Lebesgue measure on $\RR^d$ has infinite $s$ energy for every $s$. Similarily, if $\mu$ is the one-dimensional Hausdorff measure restricted to a rectifiable curve, then $I_s(\mu) < \infty$ for $s < 1$.
+\end{example}
+
+\begin{example}
+  If $\mu$ is the Cantor measure on the $1/3$ Cantor set, then $I_s(\mu) < \infty$ for $s < \log 2 / \log 3$.
+\end{example}
+
+Now let's allow Fourier analysis to enter the picture. Applying the multiplication formula for the Fourier transform, noting that for $0 < s < d$, $\widehat{k_s}$ is a constant multiple of $k_{d-s}$, we conclude that
+%
+\begin{align*}
+  I_s(\mu) &= \langle k_s * \mu, \mu \rangle\\
+  &= \langle \widehat{k_s * \mu}, \widehat{\mu} \rangle\\
+  &= \langle k_{d-s} \widehat{\mu}, \widehat{\mu} \rangle\\
+  &= \int |\xi|^{s - d} |\widehat{\mu}(\xi)|^2\; d\xi.
+\end{align*}
+%
+To be more formally correct, we must apply a mollification to $\mu$, so that we can interpret everything distributionally, and then apply Fatou's lemma to ensure everything works out at the end. But we'll leave that as an exercise.
+
+For signed measures $\mu$ and $\nu$, we can define the mutual energy
+%
+\[ I_s(\mu,\nu) = \int \int |x - y|^{-s} d\mu(x) \overline{d\nu(y)}. \]
+%
+The function $(\mu,\nu) \mapsto I_s(\mu,\nu)$ is then a conjugate symmetric bilinear map, which is positive definite, and thus the set of signed measures $\mu$ such that $I_s(\mu) < \infty$ forms a Hilbert space. We then have a formula
+%
+\[ I_s(\mu,\nu) = \int |\xi|^{s - d} \widehat{\mu}(\xi) \overline{\widehat{\nu}(\xi)}, \]
+%
+which relates the mutual energy to the Fourier transforms.
+
+If $I_s(\mu) < \infty$, then we must have $|\widehat{\mu}(\xi)| \lesssim |\xi|^{-s/2}$ for \emph{most frequencies $\xi$}. This manifests in various different ways:
+%
+\begin{itemize}
+  \item A weak bound together with the fact that
+  %
+  \[ \int_{|\xi| \leq R} |\xi|^s |\widehat{\mu}(\xi)|^2 \leq R^d I_s(\mu) \]
+  %
+  implies that as $R \to \infty$,
+  %
+  \[ \{ |\xi| \leq R: |\widehat{\mu}(\xi)| \geq |\xi|^{-s/2} \} = o(R^d). \]
+
+  \item If we define
+  %
+  \[ A_r(\mu) = \int_{|\xi| = 1} |\widehat{\mu}(r \xi)|^2\; d\sigma(r), \]
+  %
+  then $I_s(\mu) = \int_0^\infty A_r(\mu) r^{s-1}\; dr$, and we actually have
+  %
+  \[ A_r(\mu) \lesssim I_s(\mu) r^{-s}. \]
+  %
+  To see this, we apply the inverse Fourier transform, writing
+  %
+  \[ A_r(\mu) = \int \widehat{\sigma}(r(x - y)) d\mu(x) d\mu(y), \]
+  %
+  and then using the fact that $|\widehat{\sigma}(r(x-y))| \lesssim r^{-s} |x - y|^{-s}$ and reverting back to energy integrals. Thus we see that $L^2$ spherical averages have the decay required.
+\end{itemize}
+%
+Unfortunately, it is not true that we have a pointwise bound $|\widehat{\mu}(\xi)| \lesssim |\xi|^{-s/2}$, which is a stricter condition. We define the \emph{Fourier dimension} of a measure $\mu$ to be
+%
+\[ \fordim(\mu) = \sup \{ 0 < s \leq d: \sup_\xi |\xi|^{s/2} \widehat{\mu}(\xi) < \infty \}. \]
+%
+If $s < \fordim(\mu)$, then $I_s(\mu) < \infty$, so $\hausdim(\mu) \leq \fordim(\mu)$. The \emph{Fourier dimension} of a set $E$ is equal to
+%
+\[ \fordim(E) = \sup \{ \fordim(\mu): \text{supp}(\mu) \subset E \}. \]
+%
+Then we see that $\fordim(E) \leq \hausdim(E)$ for any Borel $E$. A set is \emph{Salem} if it's Fourier dimension is equal to it's Hausdorff dimension.
+
+\begin{example}
+  A sphere in $\RR^d$ is a Salem set of dimension $d-1$. On the other hand, a plane is \emph{not a Salem set}. In fact, the Fourier dimension of the plane is equal to \emph{zero}, since the Fourier transform of any measure supported on a plane has no decay in the direction tangential to the plane.
+\end{example}
+
+It is often true that Fourier dimension gives more information than the Hausdorff dimension. For instance, here is a result about sum set. For a set $E$, define $E^{\oplus n}$ to be $E + \dots + E$, the $n$ time set addition.
+
+\begin{theorem}
+  Suppose $E \subset \RR$. If $\fordim(E) > 1/k$, then $|E^{\oplus k}| > 0$, and if $\fordim(E) > 2/k$, then $E^{\oplus k}$ contains an open interval.
+\end{theorem}
+\begin{proof}
+  If $\mu$ is a measure, define $\mu^{* k}$ to be the $k$-fold convolution of $\mu$ with itself. Then if $|\widehat{\mu}(\xi)| \lesssim |\xi|^{-s/2}$, then
+  %
+  \[ |\widehat{\mu^{* k}}(\xi)| = |\widehat{\mu}(\xi)|^k \lesssim |\xi|^{-sk/2}. \]
+  %
+  If $s > 1/k$, then we conclude that $\widehat{\mu^{* s}}$ is an $L^2$ function, and thus that $\mu^{* s}$ is an $L^2$ function, and thus is non-vanishing on a set of positive Lebesgue measure. If $\mu$ is supported on $E$, then $\mu^{* s}$ is supported on $E^{\oplus k}$, giving that $E^{\oplus k}$ contains a set of positive Lebesgue measure. If $s > 2/k$, then $\widehat{\mu^{* s}}$ is integrable, so $\mu^{* s}$ is a continuous function, which implies the points where it is non-vanishing are an open set, which is contained in $E^{\oplus k}$.
+\end{proof}
+
+
+
+
+
+
+\chapter{Hausdorff Dimensions of Projections}
+
+Here we prove Marstrand's projection theorem, that if $E \subset \RR^d$ is a Borel set, and $V \subset \RR^d$ is a random subspace of $\RR^d$ of dimension $m$, then with probability one, the projection $\pi_V: \RR^d \to \RR^d$ has the property that
+%
+\[ \hausdim(\pi_V(E)) = \min(\hausdim(E), m). \]
+%
+We will show a proof using Fourier analysis, which also allows a more robust characterization of how many planes fail to have the right projection properties.
+
+To do this, it is convenient to introduce the \emph{Sobolev dimension} of a measure $\mu$ to be
+%
+\[ \sobdim(\mu) = \sup \left\{ s \in \RR: \int |\widehat{\mu}(\xi)|^2 (1 + |\xi|)^{s-d}\; d\xi < \infty \right\}, \]
+%
+i.e. $\sobdim(\mu)$ is the supremum of $s$ such that $\mu \in H^{s/2 - d/2}(\RR^d)$. We can consider the Sobolev energy $I_s(\mu)$, defined as above. It is equal to the energy we have defined in the last chapter for $0 < s < d$, but extends this definition to all $s \in \RR$. The Sobolev dimension of a measure, roughly speaking, gives a measure of how smooth the measure is. For instance, if $\sobdim(\mu) > d$, then $\mu \in L^2(\RR^d)$, and if $\sobdim(\mu) > 2d$, then $\mu$ is a continuous function.
+
+\begin{theorem}
+  Let $E \subset \RR^d$ be a Borel set with $\hausdim(E)$. If $V$ is a random $m$ dimensional subspace of $\RR^d$ chosen from the Grassmannian manifold $G(d,m)$ with respect to the Haar measure on $G(d,m)$, then for almost every $m$ dimensional subspace $V$,
+  %
+  \[ \hausdim(P_V(E)) = \max(\hausdim(E), m). \]
+  %
+  Moreover, if $\hausdim(E) > m$, then $H^m(P_V(E)) > 0$ for almost every $V$.
+\end{theorem}
+\begin{proof}
+  We reduce the result to an integral argument about measures. Fourier analysis enters the picture because plane waves behave nicely under lifts. If $s < \hausdim(E)$, then we can find a probability measure $\mu$ supported on $E$ with $I_s(\mu) < \infty$. For each $V \in G(d,m)$, we consider the pushforward measures $\mu_V = (P_V)_* \mu$. We will show that
+  %
+  \[ \int_{G(d,m)} I_s(\mu_V) < \infty, \]
+  %
+  from which it follows that $I_s(\mu_V) < \infty$ for almost every $V \in G(d,m)$, and, since $\mu_V$ is supported on $P_V(E)$, that $\hausdim(P_V(E)) \geq s$ for almost every $V$. If we can choose $s > m$ as in the example above, then we conclude that for almost every $V$, by restricting $\mu_V$ to a smaller subset, we can choose a Frostman measure $\nu$ supported on $P_V(E)$ with dimension $m$. But this means that $H^m(P_V(E)) > 0$.
+
+  It now suffices to show that
+  %
+  \[ \int_{G(d,m)} I_s(\mu_V) < \infty. \]
+  %
+  s
+\end{proof}
+
+
+
+
+
+
+\chapter{Cantor Measures}
+
+Let us study the Fourier analytic properties of some Cantor like sets.
+
+\section{Middle Dissection Cantor Sets}
+
+For $0 < \alpha < 1/2$, we define a set $C_\alpha \subset [0,1]$, as the limit of a family of sets $C_{\alpha,n}$ constructed iteratively. We start by defining $C_{\alpha,0} = [0,1]$. For $k \geq 0$, the set $C_{\alpha,k}$ will be a union of disjoint intervals $\{ I_{k,j} \}$ of length $\alpha^k$. We define $C_{\alpha,k+1}$ as the union of the intervals obtaining by removing the middle portion of length $(1 - 2\alpha) 2^{-k} \alpha^k$ from each interval $I_{k,j}$, and keeping the two length $\alpha^{k+1}$ intervals on the left and right that remain. Iterating this algorithm gives $C_\alpha = \bigcap_k C_{\alpha,k}$.
+
+At each stage, $C_{\alpha,k}$ will be a union of $2^k$ intervals of length $\alpha^k$. This gives an optimal cover of $C_\alpha$ at the scale $\alpha^k$, from which one can prove the Minkowski dimension of $C_\alpha$ is equal to
+%
+\[ s_\alpha = \frac{\log(2^k)}{\log(\alpha^{-k})} = \frac{\log 2}{\log(1/\alpha)}. \]
+%
+This is \emph{also} the Hausdorff dimension of $C_\alpha$. One can actually show that
+%
+\[ H^{s_\alpha}(C_\alpha) = 1 \]
+%
+The upper bound is immediately obtained by the covering argument above. Conversely, if $J_1,\dots,J_N$ is any cover of $C_\alpha$ by intervals with length at most $\alpha^k$ (which we can assume is finite by compactness), then by a `parent' argument one can show that
+%
+\[ \sum |J_i|^{s_\alpha} \geq 2^k \alpha^{k s_k} = 1. \]
+%
+Thus taking $k \to \infty$ yields the right bound. Thus the Hausdorff dimension of $C_\alpha$ is also $s_\alpha$.
+
+We can construct a natural measure on $C_\alpha$ by taking a limit of the uniform probability measures on $C_{\alpha,k}$. Let us denote the limiting measure as $\mu_\alpha$. One can verify that
+%
+\[ \mu(B(x,r)) \lesssim r^{s_\alpha}. \]
+%
+Moreover, one actually has that for $x \in C_\alpha$, $\mu(B(x,r)) \gtrsim r^{s_\alpha}$. We call such a measure \emph{Ahlfors regular}.
+
+Nowl et's compute the Fourier transform of $\mu_\alpha$.
+
+\begin{theorem}
+  We have
+  %
+  \[ \widehat{\mu_\alpha}(\xi) = \prod_{j = 0}^\infty \cos(\pi(1 - \alpha) \alpha^j \xi) \]
+\end{theorem}
+\begin{proof}
+  It's easiest to do this by expressing $\mu_\alpha$ as a limit of sums of Dirac deltas, and it is notationally best to do this using a binary sequence. We set
+  %
+  \[ \mathcal{E}_k = \{ 0, 1 \}^k \]
+  %
+  and for $\varepsilon \in \mathcal{E}_k$, define $a(\varepsilon) = \sum_{j = 1}^k \varepsilon_j (1 - \alpha) \alpha^{j-1}$. For each $\varepsilon$, the point $a(\varepsilon)$ is the left hand endpoint of one of the $2^k$ intervals defining $C_{\alpha,k}$. If we define
+  %
+  \[ \nu_k = 2^{-k} \sum_{\varepsilon \in \mathcal{E}_k} \delta_{\alpha(\varepsilon)} \]
+  %
+  then $\mu$ is the weak limit of the sequence of measures $\nu_k$. We have
+  %
+  \begin{align*}
+    \widehat{\nu_k}(\xi) &= 2^{-k} \sum_{\varepsilon \in \mathcal{E}_k} e^{-2 \pi i \alpha(\varepsilon) \cdot \xi}\\
+    &= 2^{-k} \sum_{\varepsilon \in \mathcal{E}_k} \prod_{j = 1}^k e^{-2 \pi i (1 - \alpha) \alpha^{j-1} \xi \varepsilon_j}\\
+    &= 2^{-k} \prod_{j = 1}^k (1 + e^{-2 \pi i (1 - \alpha) \alpha^{j-1} \xi})\\
+    &= 2^{-k} \prod_{j = 1}^k e^{- i \pi (1 - \alpha) \alpha^{j-1} \xi} \cos( \pi (1 - \alpha) \alpha^{j-1} \xi )\\
+    &= e^{i \pi (\alpha^k - 1) \xi} \prod_{j = 1}^k \cos(\pi(1 - \alpha) \alpha^{j-1} \xi).
+  \end{align*}
+  %
+  The result follows now by taking $k \to \infty$.
+\end{proof}
+
+Thus in particular, we get
+%
+\[ |\widehat{\mu_{1/3}}(\xi)| = \prod_{j = 1}^\infty \cos(2 \pi 3^{-j} \xi). \]
+%
+If $\xi = 3^k$, then
+%
+\[ \widehat{\mu_{1/3}(\xi)} = \prod_{j = 1}^\infty \cos(2 \pi / 3^j) \geq \prod_{j = 1}^\infty (1 - O(3^{-2j})) \gtrsim 1 \]
+%
+Thus $\limsup_{\xi \to \infty} |\widehat{\mu_{1/3}(\xi)}| \neq 0$. Thus in particular, $\fordim(\mu_{1/3}) = 0$. More generally, if $\alpha \leq 1/3$, then there is no measure on $C_\alpha$ whose Fourier transform tends to zero as $\alpha \to \infty$ (such measures are called \emph{Rachjman measures}).
+
+\begin{theorem}
+  If $n \geq 3$, and $\alpha = 1/n$, then $C_\alpha$ does not support a Rachjman measure.
+\end{theorem}
+\begin{proof}
+  For any $x \in C_\alpha$, and $k \geq 1$, $[\alpha^{-k} x] \not \in (\alpha, 1 - \alpha)$. Indeed, the map $x \mapsto [\alpha^{-k} x]$ maps intervals to their parents in the Cantor set construction. So let $\mu$ be supported on $C_\alpha$. Choose a non-negative $C_c^\infty$ function $\phi$ supported on $(\alpha, 1 - \alpha)$ with $\int \phi(x)\; dx = 1$. Consider the rescaled functions
+  %
+  \[ \phi_j(x) = \phi( [ \alpha^{-k} x ] ). \]
+  %
+  Then $\phi_j$ has disjoint support from $C_\alpha$ for all $j$. Then
+  %
+  \[ \phi_j(x) = \sum \widehat{\phi}(n) e^{2 \pi i \alpha^{-j} k x}. \]
+  %
+  Thus $\phi_j$ has Fourier support on integer multiplers of $\alpha^{-j}$. Thus
+  %
+  \begin{align*}
+    0 &= \int \phi_j(x) d\mu\\
+    &= \sum_n \widehat{\phi_j}(n) \overline{\widehat{\mu}(n)}\\
+    &= \sum_n \widehat{\phi}(n) \overline{\widehat{\mu}(\alpha^{-j} n)}\\
+    &= 1 + \sum_{0 < |n| < T} \widehat{\phi}(n) \overline{\widehat{\mu}(\alpha^{-j} n)} + \sum_{|n| \geq T} \widehat{\phi}(n) \overline{\widehat{\mu}(\alpha^{-j} n)}.
+  \end{align*}
+  %
+  We have that for all $N > 0$,
+  %
+  \[ \left| \sum_{|n| \geq T} \widehat{\phi}(n) \overline{\widehat{\mu}(\alpha^{-j} n)} \right| \leq \sum_{|n| \geq T} |\widehat{\phi}(n)| \lesssim_N T^{-N}. \]
+  %
+  On the other hand, we have
+  %
+  \[ \left| \sum_{0 < |n| < T} \widehat{\phi}(n) \overline{\widehat{\mu}(\alpha^{-j} n)} \right| \leq 2T \sup_{0 < |n| < T} |\widehat{\mu}(\alpha^{-j} n)|. \]
+  %
+  Thus we conclude that for all $j > 0$,
+  %
+  \[ \sup_{0 < |n| < T} |\widehat{\mu}(\alpha^{-j} n)| \geq 1/2T - O_N(T^{-N}) \gtrsim 1/T. \]
+  %
+  Thus it follows that there exists $|m| \geq \alpha^{-j}$ for all $j > 0$ such that $|\widehat{\mu}(m)| \gtrsim 1$, and thus $\mu$ cannot be a Rachjman measure.
+\end{proof}
+
+All that we needed was that there was some interval $I \subset [0,1]$ and an increasing sequence $\{ k_j \}$ such that $[k_j x] \not \in I$ for all $x \in C$. Thus if $\mu$ is a Rajchmann measure supported on some set $E$, it follows that for any interval $I$, and any sequence $\{ k_j \}$, there exists $x \in E$ such that $[k_j x] \in I$. Thus points in $E$ are `recurrent' in some sense.
+
+There are values $\alpha$ such that $\mu_\alpha$ is a Rachjmann measure. We say a number $\theta > 1$ is \emph{Pisot} if there exists $\lambda \neq 0$ such that
+%
+\[ \sum_{k = 0}^\infty \sin^2(\lambda \theta^k) < \infty. \]
+%
+This means that, roughly speaking, $\lambda \theta^k$ is roughly concentrated near integers values. The condition turns out to be equivalent to being an algebraic integer whose conjugates have modulus less than one.
+
+\begin{theorem}
+  The measure $\mu_\alpha$ is Rachjmann if and only if $1/\alpha$ is \emph{not} a Pisot number.
+\end{theorem}
+\begin{proof}
+  Let $\theta = 1/\alpha$. Suppose that $\mu_\alpha$ is not Rachjmann. Choose $\delta > 0$ and $\{ u_k \}$ such that $|\widehat{\mu_\alpha}(u_k)| \geq \delta$ for all $k$. Write $\pi (1 - \alpha) u_k = \lambda_k \theta^{m_k}$ for $1 \leq \lambda_k < \theta$ and some increasing sequence of integers $\{ m_k \}$. Without loss of generality, we may assume $\lambda_k$ converges to some $\lambda$ as $k \to \infty$. Then
+  %
+  \begin{align*}
+    \delta &< |\widehat{\mu_\alpha}(u_k)|\\
+    &= | \prod_{j = 0}^\infty \cos(\pi (1 - \alpha) \alpha^{j-1} u_k) |
+    &= | \prod_{j = 0}^\infty \cos(\lambda_k \theta^{m_k - j + 1}) |\\
+    &\leq | \prod_{j = 0}^{m_k} \cos(\lambda_k \theta^{m_k - j + 1}) |.
+  \end{align*}
+  %
+  TODO: Finish the argument.
+
+  Conversely, suppose $\theta$ is a Pisot number. Then there is $\lambda$ such that
+  %
+  \[ \sum_{j = 0}^\infty \sin^2(\lambda \theta^j) < \infty. \]
+  %
+  Thus if $\pi (1 - \alpha) u_k = \lambda \theta^k$, then TODO
+  %
+  \[ |\widehat{\mu}_\alpha(u_k)| \gtrsim 1. \]
+  %
+  Thus $\mu_\alpha$ is not a Rachjmann measure.
+\end{proof}
+
+It is a harder (but true) result that $C_\alpha$ supports a Rachjmann measure if and only if $1/\alpha$ is Pisot.
+
+\section{Modified Cantor Sets}
+
+Fix $0 < N < M$, and consider a Cantor set $C_{N,M}$ where, at each stage, we take an interval with relative length 1, divide it into $N$ subintervals with relative length $1/N$ and take the leftmost portion with relative length $1/M$. Thus after $k$ iterations of the algorithm, we have $N^k$ intervals with sidelength $1/M^k$. Thus we have a set with Minkowski dimension $s_{N,M} = \log N / \log M$. Similar arguments to before yield that this is also the Hausdorff dimension, and moreover, $H^{s_{N,M}}(C_{N,M}) = 1$. For each $\varepsilon \in \mathcal{E}_k = \{ 0, \dots, N - 1 \}^k$, we can associate an interval of sidelength $1/M^k$ in the $k$th iteration of the algorithm, with left endpoint $\alpha(\varepsilon) = \sum_{j = 0}^\infty \varepsilon_j M^{-j} / N$. Let us denote the uniform measure on $C_{N,M}$ by $\mu_{N,M}$. Similar arguments show that
+%
+\[ |\widehat{\mu}_{N,M}(\xi)| = \prod_{j = 1}^\infty \frac{1 + e^{2 \pi i \xi M^{-j} / N} + \dots + e^{2 \pi i \xi M^{-j} (N-1) / N}}{N}. \]
+%
+This sequence is poorly behaved when $\xi$ is an integer multiple of $M^{-j}$ for any $j > 0$, i.e. the first $m$ terms are equal to one if $\xi = NM^{-m}$.
+
+\section{Self Similar Measures}
+
+Consider a contractive similariy $S: \RR^d \to \RR^d$, i.e. such that $|S(x) - S(y)| = r |x - y|$ for some $0 < r < 1$. Then $Sx = r Rx + a$ for some $R \in O_d$. A borel measure $\mu$ is \emph{self similar} if there are similarity maps $S_1,\dots,S_N$ and $0 < p_1,\dots,p_N \leq 1$ such that $\sum p_i = 1$, and
+%
+\[ \mu = \sum p_i (S_j)_* \mu. \]
+%
+Conversely, for any $S_1,\dots,S_N$ and $p_1,\dots,p_N$, a unique such measure $\mu$ exists. The support of $\mu$ is the unique compact set $K$ which is invariant under $S_j$, i.e. such that $K = \bigcup S_j(K)$. If $p_j = r_j^s$, where $r_j$ is the contraction ratio of $S_j$, and $s$ is the unique value that makes these things sum to one, then $s$ is called the \emph{similarity dimension}, and one has $\hausdim(K) = s$. The Cantor sets $C_\alpha$ fit into this scenario if $S_1(x) = \alpha x$ and $S_2(x) = \alpha x + 1 - \alpha$. If $\mu$ is self similar, then we have a simple formula for the Fourier transform, namely, if $\mathcal{J}_m = \{ 1, \dots, N \}^m$, then
+%
+\[ \widehat{\mu}(\xi) = \lim_{m \to \infty} \sum_{J \in \mathcal{J}_m} (p_{J_1} \cdots p_{J_m}) e^{-2 \pi i \xi \cdot a_J} \]
+%
+where $(S_{J_1} \circ \dots \circ S_{J_N}) x = r_J R_J x + a_J$.
+
+
+
+
+
+
 
 \chapter{Riemann's Theory of Trigonometric Series}
 

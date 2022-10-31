@@ -4623,8 +4623,181 @@ This decomposition using balls is the one most generalizable to more general sit
 \end{remark}
 
 \begin{proof}
-    
+    TODO: See Big Stein.
 \end{proof}
+
+A consequence is a generalized Calderon-Zygmund decomposition.
+
+\begin{theorem}
+    Let $f \in L^1(X)$, and $\alpha > 0$, where
+    %
+    \[ \alpha > \frac{\| f \|_{L^1(X)}}{|X|}. \]
+    %
+    Then we can write $f = g + b$, where $b$ has a decomposition as $\sum b_k$ associated with a family of balls $\{ B_k \}$ such that:
+    %
+    \begin{itemize}
+        \item $\| g \|_{L^\infty(X)} \lesssim \alpha$.
+
+        \item The functions $\{ b_k \}$ have disjoint support, $b_k$ is supported on $B_k$, $\| b_k \|_{L^1(X)} \lesssim \alpha |B_k|$, and
+        %
+        \[ \int b_k(x)\; dx = 0. \]
+        
+        \item $\sum |B_k| \lesssim \alpha^{-1} \| f \|_{L^1(X)}$.
+
+        \item We can find disjoint sets $\{ Q_k \}$ such that $Q_k \subset B_k$, $b_k$ is supported on $Q_k$
+    \end{itemize}
+\end{theorem}
+\begin{proof}
+    TODO: See Big Stein.
+\end{proof}
+
+\section{Calderon-Zygmund Kernels}
+
+Let $X$ be some measure space, equipped with balls satisfying the assumptions under which the Calderon-Zygmund decomposition holds (in particular, the engulfing and doubling property). We will now use this theory of Calderon-Zygmund decompositions to study some singular integrals formally written
+%
+\[ Tf(x) = \int_X K(x,x') f(x')\; dx', \]
+%
+where $K$ is a kernel which, in some sense, only has singularities on the diagonal. We make the apriori assumptions that $T$ is bounded from $L^q(X)$ to itself, for some $q > 1$. More precisely, we assume the following properties:
+%
+\begin{itemize}
+    \item (Integrability Conditions): The kernel $K$ is a measurable function away from the diagonal,  and for each $f \in L^q(X)$ with compact support, for almost every $x \not \in \text{supp}(f)$, we have
+    %
+    \[ Tf(x) = \int K(x,x') f(x')\; dx, \]
+    %
+    where the right hand side is absolutely integrable in $x'$ and thus can be interpreted in a Lebesgue sense.
+
+    \item (Cancellation Condition): There exists a constants $A > 0$ and $c > 1$ such that for any $\delta > 0$, any $y \in X$ and any $y' \in B(y,\delta)$,
+    %
+    \[ \int_{B(y,c \delta)^c} |K(x,y) - K(x,y')| \leq A. \]
+\end{itemize}
+%
+On $\RR^d$, this class contains the algebra of \emph{Calderon-Zygmund operators}, i.e. those operators given by convolution by a tempered distribution $k$, measurable away from the origin and satisfying:
+%
+\begin{itemize}
+    \item $|k(x)| \leq A |x|^{-d}$.
+    \item There exists $A > 0$ such that for all $y \neq 0$,
+    %
+    \[ \int_{|x| > 2 |y|} |k(x) - k(x-y)|\; dx \leq A. \]
+    \item For any $0 < r_1 < r_2 < \infty$,
+    %
+    \[ \int_{r_1 < |x| < r_2} k(x)\; dx = 0. \]
+\end{itemize}
+%
+We can then define an operator $T$, first for say, $C_c^\infty(\RR^d)$ functions, by a \emph{principal value}, i.e.
+%
+\[ Tf(x) = \lim_{r \to 0} \int_{|y| > r} k(y) f(x-y)\; dy. \]
+%
+This is well defined because of the cancellation conditions present in $k$, i.e. because
+%
+\[ \int_{|y| > r} k(y) f(x-y)\; dy = \int_{|y| > r} k(y) [f(x-y) - f(x)] \]
+%
+and the integrand of the right hand side is $O(|y|^{1-d})$ as $y \to 0$. The second condition is implied if we have $|\nabla k(x)| \lesssim A/|x|^{d+1}$, and if this condition holds, we say $k$ is a \emph{strong Calderon-Zygmund kernel}. These operators are automatically bounded on $L^2(\RR^d)$, because their Fourier transforms are bounded.
+
+\begin{lemma}
+    Let $k$ be a Calderon-Zygmund kernel. Then $\| \widehat{k} \|_{L^\infty(\RR^d)} \lesssim A$.
+\end{lemma}
+\begin{proof}
+    For any $0 < r < s$, we will show that
+    %
+    \[ m_{r,s}(\xi) = \int_{r < |x| < s} k(x) e^{-2 \pi i \xi \cdot x}\; dx. \]
+    %
+    is uniformly bounded in $L^\infty$, from which the result will follow. Let $a = \max(r,|\xi|^{-1})$, and let $b = \min(s,|\xi|^{-1})$. We have
+    %
+    \begin{align*}
+        \left| \int_{r < |x| < b} k(x) e^{-2 \pi i \xi \cdot x} \right| &= \left| \int_{r < |x| < |\xi|^{-1}} k(x) [e^{-2 \pi i \xi \cdot x} - 1] \right|\\
+        &\leq \int_{r < |x| < b} |\xi| |x| k(x)\; dx\\
+        &\leq A |\xi| \int_{0 < |x| < |\xi|^{-1}} |x|^{1-d}\\
+        &\lesssim A |\xi| |\xi|^{-1} \lesssim A.
+    \end{align*}
+    %
+    For large $|x|$, we utilize the fact that the exponential is oscillating sufficiently rapidly, and we must somehow use the smoothness of $k$. If we had a strong derivative condition we could integrate by parts, but we cannot do this in general with the weaker conditions assumed. Instead, we use a trick, using the fact that the exponential is $\xi/2 |\xi|^2$ periodic to write
+    %
+    \begin{align*}
+        \int_{a < |x| \leq s} k(x) e^{-2 \pi i \xi \cdot x}\; dx &= - \int_{a < |x| \leq s} k(x) e^{-2 \pi i \xi \cdot (x + \xi / 2 |\xi|^2}\; dx\\
+        &= - \int_{a < |x - \xi / 2 |\xi|^2| \leq s} k(x - \xi / 2 |\xi|^2) e^{-2 \pi i \xi \cdot x}.
+    \end{align*}
+    %
+    The region $\{ x : a < |x - \xi / 2 |\xi|^2 | \leq s \}$ does not differ from the set $\{ x : a < |x| \leq s \}$ by very much. Indeed, if the first condition holds, then $|x| \geq |\xi|^{-1} / 2$, and so if a point is in the first set but not the second, then
+    %
+    \[ |\xi|^{-1} / 2 \leq |x| \leq |\xi|^{-1}. \]
+    %
+    On this set, $|k(x - \xi / 2 |\xi|^2)| \leq A |\xi|^{-d}$, so together with this bound the total integral of $k(x - \xi / 2 |\xi|^2)$ over this region is at most $O(A)$. Similarily, if a point is in the second set but not the first, then
+    %
+    \[ |x - \xi / 2 |\xi|^2| \geq |\xi|^{-1}/2, \]
+    %
+    and a similar analysis gives the integral of $k(x - \xi / 2|\xi|^2)$ is at most $O(A)$. Thus we conclude that
+    %
+    \begin{align*}
+        2& \left| \int_{a < |x| \leq s} k(x) e^{-2 \pi i \xi \cdot x}\; dx \right|\\
+        &\quad\quad \leq \left| \int_{a < |x| \leq s} (k(x) - k(x - \xi / 2 |\xi|^2)) e^{-2 \pi i \xi \cdot x} \right| + O(A).
+    \end{align*}
+    %
+    But now the triangle inequality implies that
+    %
+    \[ \left| \int_{a < |x| \leq s} (k(x) - k(x - \xi / 2 |\xi|^2)) e^{-2 \pi i \xi \cdot x} \right| \lesssim A, \]
+    %
+    which completes the proof.
+\end{proof}
+
+The main result we will prove is condition; given an operator $T$ bounded in $L^q(\RR^d)$, and with a kernel $K$ satisfying the conditions above, we will show that $T$ is bounded on $L^p(\RR^d)$ for $1 < p < \infty$. Interpolation shows it suffices to show an $L^1(\RR^d) \to L^{1,\infty}(\RR^d)$ bound.
+
+\begin{theorem}
+    The operator $T$ satisfies an estimate of the form
+    %
+    \[ \| Tf \|_{L^{1,\infty}(X)} \lesssim \| f \|_{L^1(X)} \]
+    %
+    for $f \in L^1(X) \cap L^q(X)$, so that $T$ extends uniquely to an operator from $L^1(X)$ to $L^{1,\infty}(X)$, and by interpolation, from $L^p(X)$ to $L^p(X)$ for all $1 < p \leq q$.
+\end{theorem}
+\begin{proof}
+    Our goal is to bound the measure of the set
+    %
+    \[ \{ x : |Tf(x)| > \alpha \}. \]
+    %
+    It suffices to obtain the bound (by a density argument) for $f \in L^1(X) \cap L^q(X)$. Perform a Calderon-Zygmund decomposition at the scale $\alpha$, writing $f = g + \sum b_k$, associated with a family of balls $\{ B_k \}$. It suffices to obtain a bound on the measure of the sets
+    %
+    \[ \{ x : |Tg(x)| > \alpha/2 \} \quad\text{and}\quad \{ x : |Tb(x)| > \alpha/2 \}. \]
+    %
+    First, we argue that $g \in L^q(X)$, and more precisely, $\| g \|_{L^q(X)} \lesssim \alpha^{1-1/q} \| f \|_{L^1(X)}$. On $A = (\bigcup B_k)^c$, the function $g$ arees with $f$, so we have $\| g \|_{L^\infty(A)} \lesssim \alpha \| f \|_{L^1(X)}$ and $\| g \|_{L^1(A)} \lesssim \| f \|_{L^1(A)}$, which we can interpolate to conclude that $\| g \|_{L^q(A)} \lesssim \alpha^{1-1/q} \| f \|_{L^1(X)}$. On the other hand, $|A^c| \lesssim \alpha^{-1} \| f \|_{L^1(X)}$, so combined with the bound $\| g \|_{L^\infty(A^c)} \lesssim \alpha \| f \|_{L^1(X)}$ we can again interpolate to yield $\| g \|_{L^q(A^c)} \lesssim \alpha^{1-1/q} \| f \|_{L^1(X)}$, and combining this with the previous bound completes the claim.
+
+    Thus we have $\| Tg \|_{L^q(X)} \lesssim \alpha^{1-1/q} \| f \|_{L^1(X)}$, which conveniently yields via Chebyshev's inequality that the measure of the set
+    %
+    \[ \{ x : |Tg(x)| > \alpha / 2 \} \]
+    %
+    has measure at most $O(\alpha^{-1} \| f \|_{L^1(X)})$, which is precisely the bound we need.
+
+    Thus it remains to analyze the set $\{ x : |Tb(x)| > \alpha / 2 \}$. Each of the functions $b_k$ differs from $f$ on it's support $Q_k$ by the average value of $f$ on $Q_k$, and so these functions all lie in $L^q(X)$. If $x_0$ denotes the center of the ball $B_k$, then
+    %
+    \begin{align*}
+        \int_{(B_k^*)^c} |Tb_k(x)|\; dx &= \int_{(B_k^*)^c} \left| \int K(x,x') b_k(x')\; dx' \right|\; dx\\
+        &= \int_{(B_k^*)^c} \left| \int [K(x,x') - K(x,x_0)] b_k(x')\; dx' \right|\; dx\\
+        &\leq \int_{(B_k^*)^c} \int |K(x,x') - K(x,x_0)| |b_k(x')|\; dx'\; dx\\
+        &\leq \left( \sup_{x' \in B_k} \int_{(B_k^*)^c} |K(x,x') - K(x,x_0)|\; dx'\; dx \right) \| b_k \|_{L^1(X)}\\
+        &\lesssim A \alpha |B_k|.
+    \end{align*}
+    %
+    In particular, this means that
+    %
+    \[ \| Tb \|_{(\bigcup_k B_k^*)^c} \lesssim \sum_k A \alpha |B_k| \lesssim A \| f \|_{L^1(X)}. \]
+    %
+    On the other hand, $\sum |B_k^*| \lesssim \alpha^{-1} \| f \|_{L^1(X)}$, so we conclude that by Chebyshev,
+    %
+    \[ \{ x : |Tb(x)| > \alpha / 2 \} \lesssim \alpha^{-1} A \| f \|_{L^1(X)} + \sum |B_k^*| \lesssim \alpha^{-1} \| f \|_{L^1(X)}. \]
+    %
+    This concludes the proof.
+\end{proof}
+
+How much such a kernel arise? First off, if $k$ is a tempered distribution which is homogeneous of degree $-d$, smooth away from the origin, and satisfies
+%
+\[ \int_{|x| = 1} k(x)\; dx = 0, \]
+%
+then $k$ is a Calderon-Zygmund kernel. In fact, if $m$ is homogeneous of degree zero, and smooth away from the origin, then it's Fourier transform will satisfy this condition automatically (TODO: Prove integral on sphere is zero), which connects the theory immediately to the theory of Fourier multipliers. More generally, if $m$ is smooth away from the origin, and satisfies $|\partial^\alpha m(\xi)| \lesssim_\alpha |\xi|^{-|\alpha|}$ for all $\alpha > 0$, then (TODO: Add this) we will see in the section on Fourier multipliers that $|\partial^\alpha k(x)| \lesssim_\alpha |x|^{-n-|\alpha|}$, which shows $k$ satisfies all the required estimates to be a Calderon-Zygmund kernel (TODO: Integral on sphere is zero). More generally, if $|\partial^\alpha m(\xi)| \lesssim_\alpha |\xi|^{-\alpha}$ for $|\alpha| \leq \lceil n/2 \rceil$, then $k$ might not have the required derivative bounds, but will satisfy the required cancellation condition
+%
+\[ \int_{|x| \geq 2 |y|} | k(x-y) - k(x)|\; dx \leq A, \]
+%
+which is enough to apply the theory. Such multipliers are called \emph{Marcinkiewicz}.
+
+
+
 
 \chapter{Fourier Multiplier Operators}
 
@@ -5088,7 +5261,7 @@ The theorem of H\"{o}rmander-Mikhlin is a more sophisticated instance of the smo
     \[ \sup_{R > 0} \int |\mathcal{F}( \varphi \text{Dil}_R m)(x)| (1 + |x|)^{\varepsilon}\; dx < \infty.  \]
 \end{itemize}
 %
-If the second last point holds, the $\varepsilon$ in the last point can be chosen to be any number smaller than $\alpha - d/2$. This result is closely related to the theory of singular integrals. In particular, under the first two assumptions,
+If the second last point holds, the $\varepsilon$ in the last point can be chosen to be any number smaller than $\alpha - d/2$. This result is closely related to the theory of singular integrals. In particular, under the first two assumptions, the multiplier has a convolution kernel which is a Calderon-Zygmund kernel.
 
 \begin{theorem}
     Consider $m \in L^\infty(\RR^d)$ and suppose there exists $\varepsilon > 0$ and $\varphi$ as above with
@@ -5187,6 +5360,21 @@ If the second last point holds, the $\varepsilon$ in the last point can be chose
 \begin{remark}
     A fastidious reader may complain that the Calderon-Zygmund decomposition of a Schwartz function yields a family of functions that are only integrable, and not necessarily even continuous. To remedy this situation, we replace the kernel operator $K$ we are originally studying with the more regularized kernels $K^{\leq N} = \sum_{|n| \leq N} 2^{nd} \cdot \text{Dil}_{1/2^n} K_n$. The operators $K^{\leq N}$ are then Schwartz convolution kernels, and, independently of this proof, are thus easily seen to lie in $M^p(\RR^d)$ for all $1 \leq p \leq \infty$, and thus extend to be well defined on the components of Calderon-Zygmund decompositions of functions. The important part of this proof is that it shows that the operators $K^{\leq N}$ are \emph{uniformly} when they induce convolution operators from $L^1(\RR^d)$ to $L^{1,\infty}(\RR^d)$, and thus imply the resultant bounds for the limiting convolution kernel $K$.
 \end{remark}
+
+Here is a basic application of the result, a kind of \emph{Schauder estimate} for the fractional Laplacian.
+
+\begin{theorem}
+    Suppose $(- \Delta)^{k/2} u \in L^p(\RR^d)$ for some $1 < p < \infty$. Then $\partial^\alpha u \in L^p$ for any multi-index $\alpha$ with $|\alpha| = k$.
+\end{theorem}
+\begin{proof}
+    The Fourier multiplier operator whose symbol $m(\xi)$ is a constant multiple of $\xi^\alpha / |\xi|^k$ maps $(-\Delta)^{k/2} u$ to $\partial^\alpha u$. Moreover, $m$ is homogeneous of degree zero, and $C^\infty$ away from the origin, and thus satisfies bounds of the form
+    %
+    \[ |\partial^\beta m(\xi)| \lesssim |\xi|^{-\beta} \]
+    %
+    for all $\beta > 0$. But this means that the multiplier operator $m(D)$ is bounded from $L^p(\RR^d)$ to $L^p(\RR^d)$ for all $1 < p < \infty$, and thus we have
+    %
+    \[ \| \partial^\alpha u \|_{L^p(\RR^d)} \lesssim \| (-\Delta)^{k/2} u \|_{L^p(\RR^d)}. \qedhere \]
+\end{proof}
 
 Since convolution can be seen as a way of smoothing out some of the irregularities of a function, one might ask whether the convolution of a multiplier in $M^{p,q}(\RR^d)$ with a function lies in $M^{p,q}(\RR^d)$. One can obtain such a result, provided the function is integrable.
 
