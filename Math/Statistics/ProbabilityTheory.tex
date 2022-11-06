@@ -504,7 +504,7 @@ In particular, let $F$ and $E$ be events depending on a parameter $n$:
     \item If $F$ occurs asymptotically almost surely, it occurs asymptotically almost surely conditioned on $E$, provided that $\mathbf{P}(E) \gtrsim 1$.
 \end{itemize}
 
-None of the consequence of this list involve any assumptions about the interactions of the evens. Given more interesting iteractions between the events, one can often strengthen the bounds obtained here.
+None of the consequence of this list involve any assumptions about the interactions of the evens. Given more interesting iteractions between the events, one can likely strengthen the bounds obtained here, e.g. via the chaining method seen later in these notes.
 
 %\section{Convexity}
 
@@ -590,7 +590,7 @@ As $p$ becomes larger, this inequality gives a sharper rate of decay on the rand
 This is known as a {\it Chernoff bound}.
 
 \begin{remark}
-    The linearity of expectation makes applying Markov's inequality quite simple. But higher order moments are non-linear, and so often one needs to analyze the distribution of $X$ much more careful. Chernoff bounds are even more difficult to obtain, but much more useful.
+    The linearity of expectation makes applying Markov's inequality quite simple. But higher order moments are non-linear, and so often one needs to analyze the distribution of $X$ much more carefully. Chernoff bounds are even more difficult to obtain, but much more useful.
 \end{remark}
 
 \begin{remark}
@@ -635,14 +635,14 @@ Very similar methods establish upper bounds on $\mathbf{P}(|X - \mathbf{E} X| \g
     %
     \[ \mathbf{P}(|X - \mu| \geq \sqrt{2} \cdot \sigma) \leq 1/2 \]
     %
-    Thus $\mu - \sqrt{2} \cdot \sigma \leq M \leq \mu + \sqrt{2} \cdot \sigma$, so $M = \mu + O(\sigma)$. This explains why in most circumstances, the mean replaces the median in statistical estimates, because they are equivalent up to a small number of standard deviations.
+    Thus $\mu - \sqrt{2} \cdot \sigma \leq M \leq \mu + \sqrt{2} \cdot \sigma$, so $M = \mu + O(\sigma)$. This explains why in most circumstances, the median rarely shows up in statistical estimates, because they are equivalent up to a small number of standard deviations.
 \end{example}
 
 When $t$ is large, a bound on $\mathbf{P}(|X - \mathbf{E}X| \geq t)$ is known as a large deviation inequality. Chebyshev's inequality becomes useful only when $t$ exceeds a single standard deviation, i.e. $t \geq \sigma$, and is therefore an example of a large deviation inequality. Second moment methods are often useful for bounding sums of independant random variables because if $X$ and $Y$ are independant, then $\mathbf{V}(X + Y) = \mathbf{V}(X) + \mathbf{V}(Y)$ is easy to calculate. We can continue establishing large deviation bounds, obtaining $\mathbf{P}(|X - \mathbf{E} X| > t) \lesssim 1/t^p$ by bounding $\mathbf{E}|X - \mathbf{E}X|^p$. We will refer to any of these inequalities as Chebyshev bounds.
 
 \section{Moments of Sums of Random Variables}
 
-We now study the tail inequalities for a sum $S_n = X_1 + \dots + X_n$ of random variables, using the moment methods we have established. For simplicity, we assume all variables $X_k$ have mean zero, so that deviation and tail inequalities agree with one another. Of course, general results then follow by translation.
+We now study the tail inequalities for a sum $S_n = X_1 + \dots + X_n$ of random variables, using the moment methods we have established. For simplicity, we assume all variables $X_k$ have mean zero, so that deviation and tail inequalities agree with one another.
 
 Using the first moment method, which requires no assumption on the interdependence of the $X_k$, we find $\EE |S_n| \leq \EE |X_1| + \dots + \EE |X_n|$. Combined with Markov's inequality, we conclude
 %
@@ -652,34 +652,36 @@ Nonetheless, this inequality can be sharp, especially given no independance betw
 
 Now we consider what the second moment method gives us. Note that
 %
-\[ \EE S_n^2 = \sum \EE(X_i X_j) \]
+\[ \EE(S_n^2) = \sum_{i = 1}^n \sum_{j = 1}^n \EE(X_i X_j) \]
 %
-If we assume the variables are pairwise independent, then $\EE(X_i X_j) = 0$ for $i \neq j$, so $\EE S_n^2 = \sum \EE(X_i^2)$. This is just the familiar statement that variance is additive. Chebyshev's inequality then yields that
+If we assume the variables are pairwise independent, then we have $\EE(X_i X_j) = 0$ for $i \neq j$, so $\EE(S_n^2) = \sum \EE(X_i^2)$. This is just the familiar statement that variance is additive. Chebyshev's inequality then yields that
 %
 \[ \prob(|S_n| \geq t) \leq \frac{\Var(X_1) + \dots + \Var(X_n)}{t^2} \]
 %
-Informally, this means
+Informally, this means that with high probability,
 %
-\[ S_n = O(\Var(S_n)^{1/2}) = O((\Var(X_1) + \dots + \Var(X_n))^{1/2}). \]
+\[ S_n \lesssim \Var(S_n)^{1/2} = (\Var(X_1) + \dots + \Var(X_n))^{1/2}). \]
 %
-We cannot expect to obtain a much sharper region of concentration for $S_n$ than this, because
+We cannot expect to obtain a much sharper region of concentration for $S_n$ than that obtained by Chebyshev's inequality, because
 %
-\[ \Var(X_1) + \dots + \Var(X_n) = \Var(S_n) = \int_0^\infty 2t \prob(|S_n| \geq t)\; dt. \]
+\[ \Var(X_1) + \dots + \Var(X_n) = \Var(S_n) = \int_0^\infty 2t \cdot \prob(|S_n| \geq t)\; dt. \]
+%
+Thus we expect $\prob(|S_n| \geq t) \gtrsim \Var(S_n) / 2t$ for significantly many values $t$.
 
 \begin{example}
-    Assume for simplicity that $\Var(X_k) = 1$ for all $k$, and $X_k = O(1)$, so $S_n = O(n)$ and $\Var(S_n) = n$. Suppose $|S_n| < A_n$ with high probability, for some $A_n > 0$, i.e. $\prob(|S_n| \geq A_n) \lesssim O(1/n^{1 + \varepsilon})$ for some $\varepsilon > 0$. Then
+    Consider random variables $\{ X_1, \dots, X_n \}$, and let $S_n = X_1 + \dots + X_n$. For simplicity, assume $|S_n| \lesssim n$ almost surely, and that $\Var(S_n) \gtrsim n$. Suppose that $|S_n| \leq A_n$ with high probability for some $A_n > 0$, i.e. $\PP(|S_n| \geq A) \lesssim 1/n^{1 + \varepsilon}$ for some $\varepsilon > 0$. Then
     %
     \begin{align*}
-        n = \int_0^\infty 2t \prob(|S_n| \geq t) &\lesssim \int_0^{A_n} 2t + \int_{A_n}^{O(n)} 2t \cdot n^{-c} \\
+        \Var(S_n) = \int_0^\infty 2t \prob(|S_n| \geq t) &\lesssim \int_0^{A_n} 2t + \int_{A_n}^{O(n)} 2t \cdot n^{-1-\varepsilon} \\
         &\lesssim A_n^2 + (1/n^{1 + \varepsilon}) (O(n^2) - A_n^2)\\
         &\lesssim (1 - 1/n^{1 + \varepsilon}) A_n^2 + n^{1-\varepsilon}.
     \end{align*}
     %
-    Thus
+    Since $\Var(S_n) \gtrsim n$, we conclude that
     %
-    \[ A_n^2 \gtrsim \frac{n - n^{1 - \varepsilon}}{1 - 1/n^{1 + \varepsilon}} \gtrsim n \]
+    \[ A_n^2 \gtrsim \frac{\Var(S_n) - n^{1 - \varepsilon}}{1 - 1/n^{1 + \varepsilon}} \gtrsim \Var(S_n). \]
     %
-    so $A_n \gtrsim n^{1/2} = (\Var(X_1) + \dots + \Var(X_n))^{1/2}$, as we expected.
+    Thus the best concentration bound we can hope for concentrates in a region of length $O(\Var(S_n)^{1/2})$.
 \end{example}
 
 The next example shows the tail bound is sharp in particular circumstances, especially when only pairwise independence is satisfied.
@@ -700,7 +702,7 @@ The next example shows the tail bound is sharp in particular circumstances, espe
     %
     \[ S = \sum_{k \in \{0,1\}^m} X_k = 2^m \cdot \mathbf{I}(Y = 0) \]
     %
-    is the sum of pairwise random variables with mean one. By pairwise independance, it's variance is $2^m - 1$. Chebyshev's inequality gives
+    is the sum of pairwise independant random variables with mean one. By pairwise independance, it's variance is $2^m - 1$. Chebyshev's inequality gives
     %
     \[ \frac{1}{2^m} = \prob(S \geq 2^m) \leq \frac{1}{2^m - 1} \]
     %
@@ -737,11 +739,11 @@ Now we assume that the random variables $\{ X_k \}$ are actually jointly indepen
 %
 \[ \prob \left( |S_n| \geq t \cdot \sqrt{n} \right) \leq C \exp(-ct^2) \]
 %
-for some constants $c,C > 0$. Thus we obtain square-exponential decay by controlling all the individual moments of $S_n$. A slicker way to do this is using exponential moments.
+for some constants $c,C > 0$. Thus we obtain square-exponential decay by controlling all the individual moments of $S_n$. A slicker way to do this is using exponential moments, as we do in the next section.
 
 \section{Concentration of Measure}
 
-We have seen that given a large number of random variables $X_1, \dots, X_N$, with $X_k = O(1)$ almost surely for each $k$, then even though the random variable $S_N$ ranges over an interval of length $O(N)$, it has a high probability of concentrating in a $\sqrt{N}$ region. The basic intuition is that for large $N$, it is difficult for independant random variabels to `work together' to push the function too far from it's mean. The tail bounds tend to be {\it sub-gaussian}, in the sense that $S_N$ deviates $t$ standard deviations from the mean with probability $O(e^{-c t^2})$. Concentration of measure is a primary tool for ensuring various events hold with overwhelming probability.
+We have seen that given a large number of random variables $X_1, \dots, X_N$, with $X_k = O(1)$ almost surely for each $k$, then even though the random variable $S_N$ ranges over an interval of length $O(N)$, it has a high probability of concentrating in a $\sqrt{N}$ region. The basic intuition is that for large $N$, it is difficult for independant random variables to `work together' to push the function too far from it's mean. The tail bounds tend to be {\it sub-gaussian}, in the sense that $S_N$ deviates $t$ standard deviations from the mean with probability $O(e^{-c t^2})$. Concentration of measure is a primary tool for ensuring various events hold with overwhelming probability.
 
 \begin{lemma}
     If $X$ is centrally distributed and takes values in $[a,b]$, then
@@ -831,6 +833,77 @@ The full assumption of independance is not necessary for a Chebyshev-type tail b
     %
     \[ \prob(S_n \geq t) \leq e^{-2t^2/ \sum a_i^2}. \qedhere  \]
 \end{proof}
+
+For particular distributions, directly computing moments can sometimes give better tail bounds. For instance, here is a result using a Chernoff bound about $\text{Ber}(p)$ random variables when $p$ is small.
+
+\begin{lemma}
+    Let $X_1,\dots,X_n$ be independent random variables, where $X_i \sim \text{Ber}(p_i)$ for $1 \leq i \leq n$. Let $S = X_1 + \dots + X_n$, and let $\mu = \sum p_i$ be the mean of $S$. Then for $t > \mu$,
+    %
+    \[ \PP(S \geq t) \leq e^{-\mu} \left( \frac{e \mu}{t} \right)^t, \]
+    %
+    and for $t < \mu$,
+    %
+    \[ \PP(S \leq t) \leq e^{-\mu} \left( \frac{e \mu}{t} \right)^t.  \]
+    %
+    For $\delta \in (0,1)$, we have
+    %
+    \[ \PP(|S - \mu| \geq \delta \mu) \leq 2 e^{-c \mu \delta^2}. \]
+\end{lemma}
+\begin{proof}
+    We have that for $\lambda > 0$,
+    %
+    \begin{align*}
+        \EE[ e^{\lambda S} ] &= \prod_{i = 1}^n \EE [ e^{\lambda X_i} ]\\
+        &= \prod_{i = 1}^n [ p_i e^\lambda + (1 - p_i) ]\\
+        &\leq \prod_{i = 1}^n (1 + p_i(e^\lambda - 1))\\
+        &\leq \prod_{i = 1}^n \exp \left( p_i (e^\lambda - 1) \right)\\
+        &= \exp \left( \mu (e^\lambda - 1) \right).
+    \end{align*}
+    %
+    Thus we conclude that for any $\lambda > 0$,
+    %
+    \[ \PP( S \geq t ) \leq \exp \left( \mu (e^\lambda - 1) \right) e^{- \lambda t}. \]
+    %
+    This bound is optimized for $\lambda$ which satisfy
+    %
+    \[ \frac{e^\lambda - 1}{\lambda} = t / \mu. \]
+    %
+    If $t$ is significantly larger than $\mu$, we we must choose $\lambda$ to be large. Since for large $\lambda$, we expect that
+    %
+    \[ \frac{e^\lambda - 1}{\lambda} \approx e^\lambda \]
+    %
+    this leads us to expect that we should choose $\lambda = \ln(t / \mu)$. Plugging this in for $t > \mu$ yields that
+    %
+    \[ \PP ( S \geq t ) \leq \exp \left( t - \mu \right) (\mu/t)^{t} = e^{-\mu} (e \mu / t)^t. \]
+    %
+    Conversely, for $t < \mu$,
+    %
+    \[ \PP(S \leq t) = \PP(e^{-\lambda S} \geq e^{-\lambda t}) \leq \EE[e^{- \lambda S}] e^{\lambda t}. \]
+    %
+    Similar to above, we calculate that
+    %
+    \[ \EE[e^{-\lambda S}] = \prod_{i = 1}^n (1 - p_i (1 - e^{-\lambda}) ) \leq \exp( - \mu (1 - e^{-\lambda}) ).  \]
+    %
+    Thus we find that
+    %
+    \[ \PP(S \leq t) \leq \exp ( - \mu (1 - e^{-\lambda}) ) e^{\lambda t}. \]
+    %
+    Setting $\lambda = \ln(\mu / t)$ yields that
+    %
+    \[ \PP(S \leq t) \leq e^{-\mu} (e \mu / t)^t. \]
+    %
+    Finally, we have
+    %
+    \[ \PP(|S - \mu| \geq \delta \mu) = \PP(S \leq (1 - \delta) \mu) + \PP(S \geq (1 + \delta) \mu). \]
+    %
+    Applying both deviation principles we have already proved yields the final result.
+\end{proof}
+
+Note that these tails behave like the \emph{Poisson distribution}, i.e. if $X \sim \text{Poisson}(\mu)$, then for $t > \mu$,
+%
+\[ \PP(X \geq t) \leq e^{-\mu} \left( \frac{e \mu}{t} \right)^t. \]
+%
+Thus we begin to see how the Poisson distribution arises as a limit of a sum of Bernoulli distributions with very small mean.
 
 \section{Subgaussian Random Variables}
 
@@ -922,7 +995,7 @@ The natural way to form a measure of being subgaussian is to come up with an Orl
 
 We can use the Orlicz norms to provide a norm measuring how subgaussian a random variable is. It is obtained by considering the convex, increasing function $\psi_2(x) = e^{x^2}/2$. Naturally, we let $\| X \|_{\psi_2}$ denote this norm. Because $\| X \|_{\psi_2} < \infty$ if and only if $X$ is subgaussian, we think of the $\psi_2$ norm as being a measure of how `subgaussian' a random variable is.
 
-For the hyperplane of centered subgaussian random variables, we can use an alternate norm. For a subgaussian random variable $X$ with $\EE(X) = 0$, we let $\sigma(X)$ denote the smallest value $\sigma$ such that $M_X(\lambda) \leq \exp((\sigma \lambda)^2/2)$. Of course, $\sigma(X)$ and $\| X \|_{\psi_2}$ are comparable to one another, in the sense that
+For the subspace of centered subgaussian random variables, we can use an alternate norm. For a subgaussian random variable $X$ with $\EE(X) = 0$, we let $\sigma(X)$ denote the smallest value $\sigma$ such that $M_X(\lambda) \leq \exp((\sigma \lambda)^2/2)$. Of course, $\sigma(X)$ and $\| X \|_{\psi_2}$ are comparable to one another, in the sense that
 %
 \[ \sigma(X) \leq \| X \|_{\psi_2} \leq 10 \sigma(X) \]
 %
@@ -948,14 +1021,22 @@ Choosing $p = 1 + \sigma(X)/\sigma(Y)$ gives $\sigma(X+Y) \leq \sigma(X) + \sigm
 %
 \[ M_{X+Y}(\lambda) = M_X(\lambda) M_Y(\lambda) \leq \exp(\lambda^2 (\sigma^2 + \tau^2)/2) \]
 %
-Thus we get a better tail bound on the sum.
+Thus we get \emph{square root cancellation}.
 
 \begin{example}
-    Let $X_1, \dots, X_n$ be independant subgaussian random variables. Let $S = \sum X_k/N$. Then $\mathbf{E}(S) = \sum \mathbf{E}(X_k) / N$, and $\sigma(S) \leq \sqrt{\sum \sigma(X_k)^2} / N$. We therefore conclude that
+    Let $X_1, \dots, X_n$ be independant subgaussian ,s and let $S = \sum X_i$. Then
     %
-    \[ \prob(|S - \EE(S)| \geq t) \leq 2 \exp \left( \frac{- N^2 t^2}{\sum \sigma(X_k)^2} \right) \]
+    \[ \EE[S] = \sum_i \EE[X_i] \quad\text{and}\quad \sigma(S) \leq \left( \sum_i \sigma(X_i) \right)^{1/2}. \]
     %
-    Provided that $\sigma(X_k) = O(1)$, we conclude that $\prob(|S - \EE S| \geq t) \leq 2 \exp(-cNt)$ for some constant $c$, which is a very useful deviation inequality for sums of random variables.
+    Thus we conclude that
+    %
+    \[ \prob(|S - \EE(S)| \geq t) \leq 2 \exp \left( \frac{- t^2}{\sum \sigma(X_k)^2} \right) \]
+    %
+    Provided that we have a uniform bound $\sigma(X_k) \lesssim 1$, we conclude that
+    %
+    \[ \prob(|S - \EE S| \geq t) \leq 2 \exp(-ct^2/n) \]
+    %
+    for some $c > 0$, which is a very useful deviation inequality for sums of random variables, i.e. it shows that $|S - \EE S| \lesssim \log(n) \cdot n^{1/2}$ with high probability, and if $\{ c_n \}$ is any sequence converging to infinity, regardless of how slowly, we have $|S - \EE S| \lesssim c_n \log(n) n^{1/2}$ with overwhelming probability.
 \end{example}
 
 If $\sigma(X) = 0$, then $M_X(\lambda) \leq 1$ for all $\lambda$, which gives $\mathbf{P}(|X| \geq t) \leq e^{-\lambda t}$ for all $\lambda > 0$, and taking $\lambda \to \infty$ gives $\mathbf{P}(|X| \geq t) = 0$ for all $t > 0$. Thus $X = 0$ almost surely. If $X$ is not centered, we still let $\sigma(X)$ denote $\sigma(X - \EE X)$. Then $\sigma$ is no longer a norm on the space of subgaussian random variables, but a seminorm, whose kernel is the space of random variables constant almost surely. The next lemma shows that $\sigma(X) \lesssim \| X \|_{\psi_2}$, but if the mean of $X$ is unbounded, it is no longer true that $\| X \|_{\psi_2} \lesssim \sigma(X)$.
@@ -964,19 +1045,19 @@ If $\sigma(X) = 0$, then $M_X(\lambda) \leq 1$ for all $\lambda$, which gives $\
     If $X$ is subgaussian, $\| X - \mathbf{E} X \|_{\psi_2} \lesssim \| X \|_{\psi_2}$.
 \end{lemma}
 \begin{proof}
-    We use the triangle inequality to write
+    Let $\delta$ be a point mass at zero. We use the triangle inequality to write
     %
-    \[ \| X - \mathbf{E }X \|_{\psi_2} = \| X \|_{\psi_2} + | \mathbf{E} X | \| 1 \|_{\psi_2} \lesssim \| X \|_{\psi_2} + | \mathbf{E} X | \]
+    \[ \| X - \mathbf{E }X \|_{\psi_2} \leq \| X \|_{\psi_2} + | \mathbf{E} X | \| \delta \|_{\psi_2} \lesssim \| X \|_{\psi_2} + | \mathbf{E} X | \]
     %
     Thus it suffices to prove $|\mathbf{E} X | \lesssim \| X \|_{\psi_2}$. But by Jensen's inequality,
     %
-    \[ |\mathbf{E} X| \leq \mathbf{E} |X| = \| X \|_1 \leq \| X \|_{\psi_2} \]
+    \[ |\mathbf{E} X| \leq \mathbf{E} |X| = \| X \|_1 \leq \| X \|_{\psi_2}. \]
     %
     This completes the argument.
 \end{proof}
 
 \begin{theorem}
-    If $X_1, \dots, X_m$ are subgaussian random variables with $\| X_i \|_{\psi_2} \leq K$ for all $i$, then
+    If $X_1, \dots, X_m$ are subgaussian random variables, and we have $\| X_i \|_{\psi_2} \leq K$ for all $i$, then
     %
     \[ \EE(\max(|X_1|,\dots,|X_m|)) \lesssim K (\log m)^{1/2}. \]
 \end{theorem}
@@ -1024,20 +1105,67 @@ If $\sigma(X) = 0$, then $M_X(\lambda) \leq 1$ for all $\lambda$, which gives $\
     Since we can perform the same argument for $-X$, $X$ is $1$ subgaussian.
 \end{example}
 
-If $X$ is subgaussian, it `looks' like a normal distribution if $\Var(X)^2$ is approximately equal to $\| X \|_{\psi_2}$. This fails for certain discrete distributions. For instance, a Bernoulli random variable $X \in \{ 0, 1 \}$ with $\prob(X = 1) = p$ has $\Var(X) = \EE(X^2) - \EE(X)^2 = p(1-p)$, whereas $M_X(\lambda) = 1 + pe^\lambda$, which shows $\| X \|_{\psi_2} = 1/\log(1/p)$, which decreases at an arbitrarily fast rate as $p \to 0$. Thus for small values of $p$, $\| X \|_{\psi_2}$ is much larger than $\Var(X)$. On the other hand, for sums of independant subgaussian random variables, these two quantities do agree with one another. This is Khintchine's ienquality.
+If $X$ is subgaussian, it `looks' like a normal distribution if $\Var(X)$ is approximately equal to $\| X \|_{\psi_2}$, i.e. so that with very large probability we have $|X| \lesssim \Var(X)$. This fails for certain discrete distributions. For instance, a Bernoulli random variable $X \in \{ 0, 1 \}$ with $\prob(X = 1) = p$ has $\Var(X) = \EE(X^2) - \EE(X)^2 = p(1-p)$, whereas $M_X(\lambda) = 1 + pe^\lambda$, which shows $\| X \|_{\psi_2} = 1/\log(1/p)$, which decreases at an arbitrarily fast rate as $p \to 0$. Thus for small values of $p$, $\| X \|_{\psi_2}$ is much larger than $\Var(X)$. On the other hand, for sums of independant subgaussian random variables, these two quantities do agree with one another. This is Khintchine's ienquality.
 
 \begin{theorem}[Khintchine]
-    Let $X_1, \dots, X_n$ be independant, mean zero subgaussian random variables. Let $S = \sum X_k$. Then for any $p \in [2,\infty)$,
+    Let $X_1, \dots, X_n$ be independant, mean zero subgaussian random variables, such that for all $i$,
     %
-    \[ \Var(S)^{1/2} \leq \left\| S \right\|_p \lesssim K p^{1/2} \Var(S)^{1/2}, \]
+    \[ \| X_i \|_{\psi_2} \leq K. \]
+    %
+    Let $S = \sum_i X_i$. Then for any $p \in [2,\infty)$,
+    %
+    \[ \Var(S)^{1/2} \leq \| S \|_{L^p} \lesssim K p^{1/2} \Var(S)^{1/2}, \]
     %
     where $K = \max \| X_i \|_{\psi_2}$.
 \end{theorem}
 \begin{proof}
-    TODO
+    We have
+    %
+    \[ \Var(S)^{1/2} = \| S - \EE S \|_{L^2} = \| S \|_{L^2} \leq \| S \|_{L^p}, \]
+    %
+    which gives the first half of the inequality. To prove the second half of the inequality, we write
+    %
+    \[ \| S \|_{L^p}^p = \int_0^\infty pt^{p-1} \PP(|S| \geq t)\; dt. \]
+    %
+    We have $\| S \|_{\psi_2} \lesssim n^{1/2} K$, so plugging in the bound
+    %
+    \[ \PP(|S| \geq t) \leq 2 \exp(- c t^2 / n K) \]
+    %
+    Now fix $a > 0$, and calculate that
+    %
+    \begin{align*}
+        \int_{a p^{1/2} n^{1/2} K}^\infty pt^{p-1} \PP(|S| \geq t) &\leq \int_{a p^{1/2} n^{1/2} K }^\infty 2pt^{p-1} \exp( - c t^2 / n K^2 )\\
+        &\lesssim p n^{p/2} K^p \int_{a p^{1/2}}^\infty t^{p-1} \exp( -   c t^2 )\; dt.
+    \end{align*}
+    %
+    If $a$ is significantly large, then for $t \geq a p^{1/2}$,
+    %
+    \begin{align*}
+        t^{p-1} \exp( - c t^2 ) &\leq \exp( (p-1) \log t - c t^2 )\\
+        &\leq \exp \left( - \left( ct - (p-1) \frac{\log t}{t} \right) t \right)\\
+        &\leq \exp \left( \left( - ct/2 \right) \right).
+    \end{align*}
+    %
+    Thus we conclude that
+    %
+    \[ \int_{a p^{1/2}}^\infty t^{p-1} \exp( -   c t^2 )\; dt \lesssim 1. \]
+    %
+    and so
+    %
+    \[ \left( \int_{a p^{1/2} n^{1/2} K}^\infty pt^{p-1} \PP(|S| \geq t) \right)^{1/p} \lesssim n^{1/2} K.  \]
+    %
+    Conversely, we have
+    %
+    \[ \int_0^{a p^{1/2} n^{1/2} K} pt^{p-1} \PP(|S| \geq t) \leq p \int_0^{a p^{1/2} n^{1/2} K} t^{p-1}\; dt = p (a p^{1/2} n^{1/2} K)^p. \]
+    %
+    Thus
+    %
+    \[ \left( \int_0^{a p^{1/2} n^{1/2} K} pt^{p-1} \PP(|S| \geq t) \right)^{1/p} \lesssim p^{1/2} n^{1/2} K. \]
+    %
+    Putting these calculations together completes the proof.
 \end{proof}
 
-Thus if $K = O(1)$, this means $\| S \|_{\psi_2}^2$ is comparable to $\Var(S)$, so in a subgaussian sense $S$ does `look' like a normal distribution.
+So if $K \lesssim 1$, $\| S \|_{\psi_2}^2$ is comparable to $\Var(S)$, so the tails of $S$ behave as if $S$ was a Gaussian. This might be expected by virtue of the central limit theorem.
 
 
 
@@ -1062,7 +1190,7 @@ The class of subgaussian random variables is very flexible, but some distributio
     If the properties hold, we say that $X$ is \emph{subexponential}.
 \end{theorem}
 
-We leave the equivalence to the reader. A natural norm to place on this space is the Orlicz norm induced by $\psi_1(x) = e^{x/t}/2$.
+We leave the equivalence to the reader. A natural norm to place on this space is the Orlicz norm induced by $\psi_1(x) = e^{x/t}/2$. We have a variant of H\"{o}lder's inequality here.
 
 \begin{lemma}
     A variable $X$ is subgaussian if and only if $X^2$ is subexponential. The product of two subgaussian random variables is subexponential. More precisely,
@@ -1075,10 +1203,11 @@ The analogy of Hoeffding's inequality for subgaussian functions is Bernstein's i
 \begin{theorem}
     If $X_1, \dots, X_N$ are independant, centrally distributed, subexponential random variables. Then
     %
-    \[ \mathbf{P} \left( \left| \frac{1}{N} \sum_{n = 1}^N X_n \right| \geq t \right) \leq 2 \exp \left( -c \min \left( \frac{N^2 t^2}{\sum \| X_m \|_{\psi_1}^2}, \frac{N t}{\max \| X_m \|_{\psi_1}} \right) \right) \]
+    \[ \mathbf{P} \left( \left| \sum_{n = 1}^N X_n \right| \geq t \right) \leq 2 \exp \left( -c \min \left( \frac{t^2}{\sum \| X_m \|_{\psi_1}^2}, \frac{t}{\max \| X_m \|_{\psi_1}} \right) \right) \]
 \end{theorem}
 
-An important way to think of Bernstein's inequality is that it places the behaviour of deviation from the mean into two categories. For small deviations from the mean, the tail bound looks like that of a normal distribution. On the other hand, for large deviations, the tail becomes heavier, like an exponential distribution. The reason for the appearance of the exponential decay is a heuristic result of the central limit, which says the sum should look approximately like a normal distribution for large $N$.
+An important way to think of Bernstein's inequality is that it places the behaviour of deviation from the mean into two categories. For small deviations from the mean, the tail bound looks like that of a normal distribution. On the other hand, for large deviations, the tail becomes heavier, like an exponential distribution. The reason for the appearance of the exponential decay is a heuristic result of the central limit, which says the sum should look approximately like a normal distribution.
+
 
 
 
@@ -1147,10 +1276,6 @@ The Kullback Leibler distance gives us certain bounds which are essential to inf
 \end{theorem}
 
 Suppose we have a decision procedure which attempts to distinguish between events in probability distributions. If we choose an event $A$ upon which the decision procedure fails to make the correct decision on the measure $\mu$, and $A^c$ measures the decision to fail under the measure $\nu$, then the bound above shows the decision procedure cannot work reliably on both $\mu$ and $\nu$.
-
-
-
-
 
 
 

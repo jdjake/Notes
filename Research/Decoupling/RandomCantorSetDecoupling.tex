@@ -1,0 +1,292 @@
+\documentclass[dvipsnames,letterpaper,12pt]{article}
+
+\usepackage[margin = 1.0in]{geometry}
+\usepackage{amsmath,amssymb,graphicx,mathabx,accents}
+\usepackage{enumerate,mdwlist}
+
+\usepackage{tikz}
+
+%\setlist[enumerate]{label*={\normalfont(\Alph*)},ref=(\Alph*)}
+
+\numberwithin{equation}{section}
+
+\usepackage{amsthm}
+
+\usepackage{hyperref}
+
+\usepackage{verbatim}
+
+\usepackage{nag}
+
+\DeclareMathOperator{\minkdim}{\dim_{\mathbb{M}}}
+\DeclareMathOperator{\hausdim}{\dim_{\mathbb{H}}}
+\DeclareMathOperator{\lowminkdim}{\underline{\dim}_{\mathbb{M}}}
+\DeclareMathOperator{\upminkdim}{\overline{\dim}_{\mathbb{M}}}
+\DeclareMathOperator{\fordim}{\dim_{\mathbb{F}}}
+
+\DeclareMathOperator{\lhdim}{\underline{\dim}_{\mathbb{M}}}
+\DeclareMathOperator{\lmbdim}{\underline{\dim}_{\mathbb{MB}}}
+
+\DeclareMathOperator{\RR}{\mathbb{R}}
+\DeclareMathOperator{\ZZ}{\mathbb{Z}}
+\DeclareMathOperator{\QQ}{\mathbb{Q}}
+\DeclareMathOperator{\TT}{\mathbb{T}}
+\DeclareMathOperator{\CC}{\mathbb{C}}
+
+\DeclareMathOperator{\B}{\mathcal{B}}
+
+\newtheorem{theorem}{Theorem}
+%\newtheorem{lemma}{Lemma}
+%\newtheorem{corollary}{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+%\newtheorem{prop}[theorem]{Proposition}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{remarks}[theorem]{Remarks}
+\newtheorem*{remarksaboutresults}{Remarks About The Results Stated}
+%\newtheorem*{concludingremarks}{Concluding Remarks}
+\numberwithin{theorem}{section}
+
+\DeclareMathOperator{\EE}{\mathbb{E}}
+\DeclareMathOperator{\PP}{\mathbb{P}}
+
+\DeclareMathOperator{\DQ}{\mathcal{Q}}
+\DeclareMathOperator{\DR}{\mathcal{R}}
+
+\newcommand{\psitwo}[1]{\| {#1} \|_{\psi_2(L)}}
+\newcommand{\TV}[2]{\| {#1} \|_{\text{TV}({#2})}}
+
+
+
+
+
+
+
+
+\title{Random Cantor Set Decoupling}
+\author{Jacob Denson\footnote{University of Madison Wisconsin, Madison, WI, jcdenson@wisc.edu}}
+
+\begin{document}
+
+\maketitle
+
+Our goal is to 
+
+\section{Toy Problem: Gaussians Supported on Fractal Intervals}
+
+Let's consider a toy problem, which is easier than the Cantor set by virtue of the fact that it has less arithmetic structure. Fix an exponent $p$, fix a large integer $N$, a quantity $0 < s < 1$, and then set $M$ to be the closest integer to $N^s$. Choose $M$ points $\xi_1,\dots,\xi_M$ on $\TT$, uniformly at random. For $1 \leq k \leq M$, let
+%
+\[ f_k(x) = N^{-1/p} e^{2 \pi i \xi_k \cdot x} \phi(x/N). \]
+%
+Then $f_k$ is $L^p$ normalized, and roughly speaking, has phase space support on the set
+%
+\[ \{ (x,\xi) : |x| \leq N\ \text{and}\ |\xi - \xi_k| \leq 1/N \}. \]
+%
+If $s < 1/2$, the intervals $I_j$ are disjoint from one another with high probability.
+
+\begin{lemma}
+    If $s < 1/2$, then for any $\varepsilon > 0$, if $N$ is sufficiently large, the intervals $I_1,\dots,I_M$ will be disjoint from one another with probability at least $1 - O(N^{2s - 1})$. We can also (TODO: Prove this) get this property with $90\%$ probability for $s = 1/2$ if $M = N^{1/2} / 100$.
+\end{lemma}
+\begin{proof}
+    Let $P_l$ denote the probability that $I_1,\dots,I_l$ are $1/N$ separated from one another, i.e.
+    %
+    \[ d(I_j, I_k) \geq 1/N \]
+    %
+    for $j \neq k$. Then $P_1 = 1$, and we can obtain an inductive lower bound for the other $l$. Namely, if $I_1,\dots,I_l$ are $1/N$ separated from one another, then $I_1,\dots,I_{l+1}$ will be $1/N$ separated from one another if $\xi_{l+1}$ lies away from a $3/N$ neighborhood of $\xi_1,\dots,\xi_l$, which is a set of measure at least $1 - (3/N) l$. Thus we find that
+    %
+    \[ P_{l+1} \geq P_l (1 - 3l/N). \]
+    %
+    Thus we find that
+    %
+    \[ P_l \geq \prod_{j = 1}^{l-1} (1 - 3l/N) = (-3/N)^{l-1} \frac{\Gamma(l - N/3)}{\Gamma(1 - N/3)}. \]
+    %
+    Using asymptotics for the ratio of a Gamma function (Tracomi and Erdelyi, 1951, though TODO: Assumptions of that paper might not hold uniformly in the $l$ we need)
+    %
+    \[ P_l \geq 1 - 1.5 \left( \frac{l(l-1)}{N} \right) + O(1/N^2). \]
+    %
+    In particular, for $l = M$, we find that
+    %
+    \[ P_M \geq 1 - 1.5 M^2 / N + O(1/N^2) \geq 1 - 1.5 N^{2s - 1} + O(1/N^2) = 1 - O(N^{2s-1}). \qedhere \]
+\end{proof}
+
+Thus in this case, the functions $\{ f_k \}$ are all orthogonal to one another. For larger $s$, we cannot expect the functions to be orthogonal with high probability, but we can expect them to be almost orthogonal to one another.
+
+\begin{lemma}
+    With probability exceeding $1 - O(1/N^{10})$, all of the sets
+    %
+    \[ A_i = \{ j : |\xi_i - \xi_j| \geq 10/N \} \]
+    %
+    have cardinality $O_s(1)$.
+\end{lemma}
+\begin{proof}
+    Let $I$ be an interval of length $L$. Then the random variable
+    %
+    \[ Z_I = \# \{ k: \xi_k \in I \} \]
+    %
+    is a $\text{Bin}(M,L)$ random variable. In particular, a Chernoff bound implies that for $t \geq ML$,
+    %
+    \[ \PP( Z_I \geq t ) \leq e^{-ML} \left( \frac{e \mu}{t} \right)^t. \]
+    %
+    Now let $I_1,\dots,I_N \subset \TT$ be the family of all sidelength $3/N$ intervals whose endpoints lie on integer multiples of $1/N$. The bound above implies that for any $1 \leq j \leq N$, and any $t \geq 3/N^{1-s}$,
+    %
+    \[ \PP( Z_{I_j} \geq t ) \leq e^{-3/N^{1-s}} \left( \frac{3e}{N^{1-s}} \right)^t \leq \left( \frac{3e}{N^{1-s} t} \right)^t. \]
+    %
+    In particular,
+    %
+    \begin{align*}
+        \PP \left(Z_{I_j} \geq \frac{20}{1 - s} \right) &\leq \left( \frac{3e(1-s)}{20 N^{1-s}} \right)^{\frac{20}{1-s}} \leq 1/N^{20}.
+    \end{align*}
+    %
+    Taking a union bound, we conclude that
+    %
+    \[ \PP \left( \max_j Z_{I_j} \geq \frac{10}{1-s} \right) \leq 1/N^{19} \leq 1/N^{10}. \]
+    %
+    But the fact that no interval $Z_{I_j}$ contains more than $O_s(1)$ points of $\{ \xi_1,\dots, \xi_M \}$ implies what was needed to be proved.
+\end{proof}
+
+This condition shows that with high probability, the functions $\{ f_k \}$, roughly speaking, have close to disjoint Fourier support. In particular, they are almost orthogonal, which almost immediately implies that for any constants $a_1,\dots,a_M$,
+%
+\[ \left\| \sum_{k = 1}^M a_k f_k \right\|_{L^2(\RR^d)} \lesssim N^{(d/2)(1/2 - 1/p)} \left( \sum_{k = 1}^M |a_k|^2 \right)^{1/2}. \]
+%
+Our goal is to extend a result like this to the $L^p$ norm, i.e. to guarantee with high probability that
+%
+\[ \left\| \sum_{k = 1}^M a_k f_k \right\|_{L^p(\RR^d)} \lesssim \left( \sum_{k = 1}^M |a_k|^2 \right)^{1/2}. \]
+%
+Normalizing, it will suffice to prove that with high probability, for \emph{any} constants $a_1,\dots,a_M$ with $\sum |a_i|^2 = 1$,
+%
+\[ \left\| \sum_{k = 1}^M a_k f_k \right\|_{L^p(\RR^d)} \lesssim 1. \]
+%
+We will obtain such a result using a \emph{Chaining argument}. 
+
+For each point $a$ on the unit sphere, we write
+%
+\[ S(a,x) = \sum_{k = 1}^M a_k f_k(x) \]
+%
+and then setting
+%
+\[ Z(a) = \left\| \sum_{k = 1}^M a_k f_k \right\|_{L^p(\RR^d)}. \]
+%
+We now establish an upper bound on the average value of $Z(a)$.
+
+\begin{theorem}
+    We have
+    %
+    \[ \EE[\sup_{|a| = 1} Z(a)] \lesssim (\log N)^{1/2} N^{s/2 - 1/p}. \]
+\end{theorem}
+\begin{proof}
+    Hoeffding's inequality guarantees that for each $x \in \RR$,
+    %
+    \[ \| S(a,x) \|_{\psi_2} \lesssim |a| N^{-1/p} \phi(x/N). \]
+    %
+    A union bound guarantees that, for all $x$ in the integer lattice,
+    %
+    \[ \| \sup_{x \in \ZZ} S(a,x) \|_{\psi_2} \lesssim |a| (\log N)^{1/2} N^{-1/p}. \]
+    %
+    Applying the local constancy policy, this should show that
+    %
+    \[ \| S(a) \|_{\psi_2} \lesssim |a| (\log N)^{1/2} N^{-1/p}. \]
+    %
+    But now the triangle inequality implies that
+    %
+    \[ |Z(a) - Z(b)| = | \| S(a) \|_{L^p(\RR^d)} - \| S(b) \|_{L^p(\RR^d)} | \leq \| S(a-b) \|_{L^p(\RR^d)}. \]
+    %
+    Thus 
+    %
+    \[ \| Z(a) - Z(b) \|_{\psi_2} \leq \| S(a-b) \|_{L^p(\RR^d)} \lesssim |a - b| (\log N)^{1/2} N^{-1/p}. \]
+    %
+    Thus Dudley's integral inequality implies that
+    %
+    \[ \EE [ \sup_{|a| = 1} Z(a) ] \lesssim (\log N)^{1/2} N^{-1/p} \int_0^\infty (\log N(t))^{1/2}\; dt, \]
+    %
+    where $N(t)$ denotes the number of balls of radius $t$ required to cover the unit sphere in $\RR^M$. We have $N(t) \lesssim (1/t)^{M-1}$ for $t \lesssim 1$, and $N(t) = 1$ for $t \gtrsim 1$, which leads to
+    %
+    \[ \EE [ \sup_{|a| = 1} Z(a) ] \lesssim (\log N)^{1/2} N^{-1/p} M^{1/2} = (\log N)^{1/2} N^{s/2 - 1/p}. \]
+    %
+    Thus we have a good decoupling constant for $s \geq 2/p$. This is good because we therefore need $p$ to be bigger than one to get anything interesting.
+\end{proof}
+
+TODO: This is a local bound, and I think we can show this leads to a global bound, e.g. by Demeter's book. Unfortunately, we only have a good bound on the expected value of $\sup_{|a| = 1} Z(a)$, and not the tails, so iterating this using Markov's inequality to get a bound on decoupling on a random fractal doesn't yield great results. Indeed, suppose we iteratively construct a fractal at a scale $1/L^k$ consisting of $L^{ks}$ intervals. Then Markov's inequality guarantees that if $E$ is the random fractal constructed, then for sequences $\{ C_k \}$ with $\sum 1/C_k < \infty$, the Borel-Cantelli lemma implies that almost surely, if $\delta_k = 1/L^k$, the random set $E$ has a decoupling constant
+%
+\[ \text{Dec}(E(\delta_k),p) \leq C_k \log (1/\delta_k)^{1/2} (1/\delta_k)^{s/2 - 1/p} \]
+%
+for all $k$. For $s < 2/p$, we can select these constants well, leading to
+%
+\[ \text{Dec}(E(1/L^k),p) \lesssim 1. \]
+%
+In fact, this inequality gets \emph{better as a power in $\delta_k$} as $k \to \infty$. For $s = 2/p$, Markov's inequality only leads to bounds of the form
+%
+\[ \text{Dec}(E(1/L^k),p) \lesssim k (\log k)^2 \log(1/\delta_k)^{1/2} \lessapprox_{L,\varepsilon} \log(1/\delta_k)^{3/2}. \]
+%
+I'll have to (TODO) look into tail bounds on suprema of sub-Gaussian processes if we want to improve the implicit constants in $k$, i.e. if we want to replace $k$ with a power of $\log k$, so we get a decoupling constant $\widetilde{O}( \log(1/\delta_k)^{1/2})$.
+
+\section{Toy Problem \# 2: Gaussians Supported on the Cantor Set}
+
+Now we consider a different model of random Cantor sets which possesses more arithmetic structure, and thus makes the problem harder. TODO: For normal $1/3$ Cantor set, I think the same $L^\infty$ analysis will work \emph{away from frequencies which are a power of 3}, but hopefully this is a small set so something trivial should work here.
+
+
+
+\begin{comment}
+
+Now Hoeffding's inequality guarantees that for each x,
+
+P ( |D(a,x)| >= t ) <= e^{-ct^2}
+
+Thus |D(a,x)| << 1 with high probability.
+
+Taking a union bound, we get
+
+P ( |D(a,x)| >= t for all points x with |x| << M lying on the integer lattice )
+
+    <= M^d e^{-c t^2}
+
+Thus
+
+P( |S(a,x)| >= t for all ... ) <= M^d e^{-c N^{2d/p} t^2}
+
+Using the locally constant property, we should expect that
+
+P( |S(a)|_{L^p} >= t  ) <= M^d e^{-c N^{2d/p} t^2 }
+
+Since we are modeling a discretization of a fractal with dimension s, we might expect to have M = N^s, so we get that
+
+P( |S(a)|_{L^p} >= t  ) << N^{sd} e^{-c N^{2d/p} t^2 }.
+
+N^{2d/p} t^2 - sd log N >= [N^{2d/p} / 2] t^2
+provided that (2sd)^{1/2} (log N)^{1/2} / N^{d/p} <= t
+
+For t below this range, we use the trivial bound
+
+P(A(a) >= t) <= 1 <= 2 exp ( - c t^2 / a^2 )
+
+provided that t << a
+But this means we can set a a = (2sd)^{1/2} (log N)^{1/2} / N^{d/p}
+
+Thus A(a) has Subgaussian norm (log N)^{1/2} N^{-d/p}
+
+Since we assumed sum_k a_K^2 = 1, in general by scaling we get that
+
+A(a) has Subgaussian norm (log N)^{1/2} N^{-d/p} |a|
+
+For any a and b,
+
+A(a) - A(b) = A(a - b) has Subgaussian norm (log N)^{1/2} N^{-d/p} |a - b|.
+
+This means that the metric given by d(a,b) equal to the Subgaussian norm of A(a-b)
+on the unit sphere behaves (log N)^{1/2} N^{-d/p} times the usual metric.
+
+Thus Dudley's integral inequality implies that
+
+E[ sup_a A(a) ] << (log N)^{1/2} N^{-d/p} int_0^infty (log N(e))^{1/2} de
+
+For epsilon <= 1, we should have N(e) << e^{1-d}
+For epsilon >= 1, we have N(e) = 1.
+Thus we get
+
+E[ sup_a A(a) ] << (log N)^{1/2} N^{-d/p}
+
+In particular, we get that with high probability, for all a,
+
+A(a) << (log N)^{1/2} N^{-d/p} |a|.
+\end{comment}
+
+\end{document}
