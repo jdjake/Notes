@@ -1094,7 +1094,11 @@ We can also prove a version of contraction which works for more general function
 
 \chapter{Chaining}
 
-In this chapter we try and simultaneously control the supremum of a family of random variables $\{ X_t : t \in T \}$, where $T$ is an arbitrary infinite index set. Of course, if the family of random variables are independant and identically distributed with common distribution $X$, this is easy, since $\sup X_t = \| X \|_{L^\infty}$ almost surely. To get interesting results, we need to assume some kind of dependence among the random variables. We will find that if the random variables $\{ X_t \}$ are `sufficiently continuous', then controlling $\sup_t X_t$ relies solely on studying the geometry of the index set $T$.
+In this chapter we try and simultaneously control a random variable of the form
+%
+\[ X^* = \sup_{t \in T} X_t, \]
+%
+where $\{ X_t : t \in T \}$ are a family of random variables, and $T$ is an arbitrary infinite index set. One must assume some kind of dependence among these random variables in order to get interesting results, for if a family of random variables are independant and identically distributed with common distribution $X$, and $T$ is large, then we should expect that $X^* = \| X \|_{L^\infty}$ with high probability (and if $T$ is infinite, i.e. as in the White noise process, this will happen almost surely). We will find that if the random variables $\{ X_t \}$ are `sufficiently continuous', then controlling $\sup_t X_t$ relies solely on studying the geometry of the index set $T$.
 
 \begin{example}
 	Given a random matrix $A$. It is an important problem to bound the operator norm
@@ -1105,14 +1109,139 @@ In this chapter we try and simultaneously control the supremum of a family of ra
 	%
 	\[ \| |Ax| - |Ay| \|_{\psi_2} \leq \| |A(x-y)| \|_{\psi_2} \leq K |x - y|. \]
 	%
-	Thus if $x$ and $y$ are close, then $Ax$ and $Ay$ are very close with high probability. This is what we mean by the process being `sufficiently continuous'.
+	Thus if $x$ and $y$ are close, then $Ax$ and $Ay$ are highly dependant on one another, i.e. they are very close with high probability.
 \end{example}
 
-We make a technical note that though we do assume that our index sets are infinite, we really concentrate on obtaining results for the suprema of finite, or countable index stochastic processes, which are \emph{independant} of the cardinality of the index set. For instance, $\sup X_t$, need not even be measurable if we take the supremum over uncountably many indices $t$. For instance, when we refer to $\EE(\sup X_t)$, what we really study is
+We make a technical note that, in order to avoid measurability problems, we assume our index sets are finite, and concentrate on obtaining results that are \emph{independent} of cardinality. This means, that for instance, if we are controlling $\EE[X^*]$ over an infinite index set, we are really controlling
 %
-\[ \sup \left\{ \EE \left( \sup_{t \in T_0} X_t \right): T_0 \subset T, T_0\ \text{finite} \right\}. \]
+\[ \sup \left\{ \EE \left( \sup_{t \in T_0} X_t \right) : T_0 \subset T\ \text{is a finite subset} \right\}. \]
 %
-We find this agrees with the standard expectation if the index set is countable, by the monotone convergence theorem. For uncountable index sets that are of interest, such as variants of Brownian motion, or the random matrix process described above, one can use certain continuity properties of the process to ensure that the supremum is a measurable function, and that the standard expectation agrees with the finitary expectation defined above.
+This is equal to $\EE[X^*]$ in most reasonable circumstances, i.e. if the index set is countable by the monotone convergence theorem, or if we assume a continuity condition, i.e. when studying Brownian motion or a random matrix process as in the example above. In the words of Talagrand, all these problems belong to `pre-1950 mathematics'.
+
+\section{Continuity of Brownian Motion}
+
+Kolmogorov was the first person to use the ideas of chaining. You may have already encountered these techniques in a class on continuous time stochastic processes, where it is used to prove the existence of continuous versions of such processes. Let's review this argument. We set $T = [0,1]^d$, and consider a stochastic process $\{ X_t : t \in T \}$ subject to the \emph{Kolmogorov conditions} $\EE |X_s - X_t|^p \leq d(s,t)^\alpha$, for $p > 0$ and $\alpha > d$. Kolmogorovs idea to bound properties of this process is to successively approximate a point $t \in T$ by a discrete lattice, bound the behaviour of the process on this lattice at various scales, and then use the Kolmorogov conditions to bound the behaviour of all random variables in the process. More precisely, we let $G_n = (\ZZ^d / 2^n) \cap T$. Then $\#(G_n) = 2^{nd}$. For any $t \in T$, we can find a sequence $t_n \in G_n$ such that
+%
+\[ d(t,t_n) \leq d^{1/2} 2^{-n} \]
+%
+It follows from the triangle inequality that $d(t_n,t_{n+1}) \leq 2 d^{1/2} 2^{-n}$.
+
+\begin{lemma}
+    For any $t \in T$, almost surely, we have
+    %
+    \[ X_t = \lim_{n \to \infty} X_{t_n}. \]
+\end{lemma}
+\begin{proof}
+    The Kolmogorov condition tells us that
+    %
+    \[ \EE |X_t - X_{t_n}|^p \lesssim_d 2^{-\alpha n} \]
+    %
+    and so by Chebyshev's inequality,
+    %
+    \[ \PP(|X_t - X_{t_n}| \geq n^{2/p} 2^{-\alpha n / p}) \leq 1 / n^2. \]
+    %
+    We can then apply the Kolmogorov 0-1 law, summing in $n$, to cocnlude that almost surely $|X_t - X_{t_n}| \leq n^{2/p} 2^{-\alpha n /p}$, which yields the required result.
+\end{proof}
+
+Our goal is to prove that the stochastic process $\{ X_t \}$ has a continuous version. To obtain this, it suffices to show that if we define 
+%
+\[ Z_k = \sup_{|s-t| < 2^{-k}} |X_s - X_t| \]
+%
+where $s$ and $t$ range over all \emph{rational numbers}, then almost surely, $Z_k \to 0$ as $k \to \infty$.
+
+To prove this, first note that any ball of radius $1/2^{i+2}$ contains at most one point of $G_i$. Thus if $s$ and $t$ are rational, $|s - t| \leq 1/2^k$, and we consider the approximations $s_n,t_n \in G_n$ of $s$ and $t$ as above, then $s_i = t_i$ for all $i \leq k - 2$. Thus almost surely,
+%
+\begin{align*}
+    |X_s - X_t| &= \lim_{n \to \infty} |X_{s_n} - X_{t_n}|\\
+    &= \left| \left( \sum_{n = k-2}^\infty X_{s_{n+1}} - X_{s_n} \right) - \left(\sum_{n = k-2}^\infty X_{t_{n+1}} - X_{t_n} \right) \right|\\
+    &\leq 2 \sum_{n = k-2}^\infty Y_n,
+\end{align*}
+%
+where, if we set
+%
+\[ U_n = \{ (s,t) \in G_n \times G_{n+1} : |s - t| \lesssim 3 d^{1/2} /2^{n+1} \}, \]
+%
+then
+%
+\[ Y_n = \sup_{(s,t) \in U_n} |X_s - X_t|. \]
+%
+It thus suffices to control the random variables $Y_n$, which are suprema over finite subsets.
+
+Note that $\#(U_n) \lesssim_d 2^{dn}$, since $\#(G_n) = 2^{dn}$, and for each $s$, there are $O_d(1)$ values $t$ such that $(s,t) \in U_n$. But now we use a trivial bound to obtain that
+%
+\[ \EE |Y_n|^p \leq \EE \sum_{(s,t) \in U_n} |X_s - X_t|^p \lesssim_d 2^{dn} 2^{-\alpha n}. \]
+%
+Since $\alpha > d$, this quantity is summable in $n$, i.e. we find that
+%
+\[ \EE |Z_k|^p \lesssim \EE \left| \sum_{n = k-2}^\infty Y_n \right|^p \leq ( \sum_{n = k-2}^\infty 2^{(d - \alpha) n / p} )^p \lesssim_{d,p,\alpha} 2^{-( \alpha  - d )k}, \]
+%
+and so $\EE |Z_k|^p \lesssim 2^{-(\alpha - d)k}$. This is, in general, a \emph{sharp inequality}, even though we deduced it from some relatively trivial techniques. Thus almost surely, we have
+%
+\[ |Z_k| \lesssim k^{-2/p} 2^{-(\alpha - d)k/p}. \]
+%
+This implies the stronger result that the stochastic process $\{ X_t \}$ has a version with satisfies a H\"{o}lder condition of order $\beta$ for any $0 < \beta < (\alpha - d)/p$.
+
+\section{Random Fourier Series}
+
+Here is a related problem. We want to study the uniform convergence of a random Fourier series
+%
+\[ X_t = \sum_{k = 1}^\infty a_k Z_k e^{2 \pi i k t}, \]
+%
+where $\{ Z_k \}$ are independent standard Gaussians, and $\{ a_k \}$ are constants, and $t \in T$, where $T = \TT$. We might want to perform the same approximation trick we did in the previous section, but the natural metric to use here is \emph{not} the standard one on $\TT$. This is because, for instance,
+%
+\[ \EE|X_t - X_s|^2 = \sum_{k = 1}^\infty |a_k|^2 | e^{2 \pi i k t} - e^{2 \pi i k s} |^2. \]
+%
+We are therefore inclined to consider a metric $d$ on $[0,1]$ given by
+%
+\[ d(t,s) = \left( \sum_{k = 1}^\infty |a_k|^2 | e^{2 \pi i k t} - e^{2 \pi i k s} |^2 \right)^{1/2}. \]
+%
+This metric is translation invariant, but nontrivial to analyze, which motivates us to consider this method in a general metric space $(T,d)$.
+
+So now let's move to a set $T$ which satisfies
+%
+\[ \EE \left( \varphi \left( \frac{|X_s - X_t|}{d(s,t)} \right) \right) \leq 1 \]
+%
+for some convex, monotone increasing function $\varphi$ with $\varphi(0) = 0$ and $\varphi \geq 0$, and for which we wish to consider
+%
+\[ Y_\delta = \sup_{|t - s| \leq \delta} |X_t - X_s|. \]
+%
+This is analogous to Kolmogorov's moment condition. Given such a condition, we define the Orlitz metric
+%
+\[ d(t,s) = \inf \left\{ a > 0 : \EE \left( \varphi \left( \frac{|X_t - X_s|}{a} \right) \right) \leq 1 \right\}. \]
+%
+To find a substitute for the sets $\{ G_n \}$ given before, for each $\varepsilon > 0$, we let $N(T,d,\varepsilon)$ be the \emph{smallest} number of balls of radius $\varepsilon$ required to cover $T$. Let $n_0$ be the smallest integer such that $\text{Diam}(T,d) \geq 1/2^{n_0}$. We define sets $\{ G_n : n \geq n_0 \}$ such that $G_n$ is the centers of the balls in an optimal $1/2^n$ cover of $T$, i.e. so that $\#(G_n) = N(T,d,1/2^n)$. We define
+%
+\[ U_n = \{ (s,t) \in G_n \times G_{n+1}: d(s,t) <= 3 / 2^n \}. \]
+%
+In such a general metric space, we can only use the crude bound
+%
+\[ \#(U_n) \leq \#(G_n) \#(G_{n+1}) \leq \#(G_{n+1})^2 \]
+%
+rather than the better bound we obtain in the case of Kolmogorov's argument. As above, we almost surely have
+%
+\[ \sup_{d(t,s) \leq 2^{-k}} |X_t - X_s| \lesssim \sum_{n = \max(k,n_0)}^\infty Y_n, \]
+%
+where
+%
+\[ Y_n = \sup_{(t,s) \in U_n} |X_t - X_s|. \]
+%
+By convexity, $\varphi(\max_i a_i) \leq \varphi(\sum a_i) \leq \sum_i \varphi(a_i)$, and so
+%
+\[ \varphi(\EE Y_n) \leq \EE \varphi(Y_n) \leq \sum_{(t,s) \in U_n} \EE \varphi(|X_t - X_s|) \leq \#(U_n) 2^{-n}. \]
+%
+Thus
+%
+\[ \EE Y_n \leq 2^{-n} \varphi^{-1}(\#(U_n)) \leq 2^{-n} \varphi^{-1}( N(T,d,1/2^n)^2 ). \]
+%
+Thus
+%
+\[ \EE \left( \sup_{d(t,s) \leq 2^{-k}} |X_t - X_s| \right) \lesssim \sum_{n = \max(n_0,k)}^\infty 2^{-n} \varphi^{-1}(N(T,d,1/2^n)^2) \sim \int_0^{2^{-k}} \varphi^{-1}(N(T,d,\varepsilon)^2)\; d\varepsilon. \]
+%
+If $\varphi(t) = e^{t^2} - 1$, one obtains Dudley's inequality
+%
+\[ \EE \left( \sup_{d(t,s) \leq \delta} |X_t - X_s| \right) \lesssim \int_0^\delta \sqrt{\log (N(T,d,\varepsilon))}\; d\varepsilon. \]
+%
+This holds, in particular, for Gaussian processes $\{ X_t \}$, in which case we have $d(t,s) = \| X_t - X_s \|_{L^2}$.
 
 \section{Covering Numbers}
 
