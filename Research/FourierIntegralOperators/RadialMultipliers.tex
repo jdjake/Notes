@@ -1125,9 +1125,9 @@ In order to construct fundamental solutions to the wave equation on a Riemannian
 %
 then $\Box E_\nu = \nu E_{\nu - 1}$, where $E_0 = E_+$. As $\nu \to \infty$, these distributions become less and less singular on the forward light cone. We also have a Fourier representation formula; for each $\nu$, $E_\nu$ is a finite linear combination of terms of the form
 %
-\[ t^j H(t) \int e^{2 \pi i (x \cdot \xi + t |\xi|)} |\xi|^{-\nu - 1 - k}\; d\xi \]
+\[ t^j H(t) \int \frac{e^{2 \pi i (x \cdot \xi + t |\xi|)}}{|\xi|^{\nu + k + 1}}\; d\xi \]
 %
-where $j + k = \nu$.
+where $j + k = \nu$. In particular, we see from this formula that $E_\nu$ is a Fourier integral of order at most $d/4 - \nu - 1$.
 
 \section{Constant Coefficient Metric}
 
@@ -1392,24 +1392,55 @@ By induction on $\nu$, all these equations are smooth.
 
 Since all the quantities here depend smoothly on the metric $g$, and the metric smoothly varies as we vary the point $p_0$ we started with, we can perform this construction in a smoothly varying way for all points $p_0$ on the manifold $M$. If we let $x$ and $y$ vary over a compact set $K \subset M$, we thus obtain a function
 %
-\[ K_n(x,t;y) = \sum_{\nu = 0}^n \alpha_\nu(x,y) E_\nu( d_g(x,y), t ). \]
+\begin{align*}
+    K_n(x,t;y) = \sum_{\nu = 0}^n \alpha_\nu(x,y) E_\nu( d_g(x,y), t ).
+\end{align*}
 %
-which is well defined for $t| \lesssim_K 1$. We then have
+which is well defined for $|t| \lesssim_K 1$. We then have
 %
 \[ \Box_g K_n(x,y,t) = \delta - (\Delta_g \alpha_{n+1}) E_{n+1}(d_g(x,y), t) = \delta - c_{n+1} E_{n+1}(d_g(x,y), t). \]
 %
-Thus this operator becomes more and more regular as $n \to \infty$. It follows that if we define the operators
+TODO: How do we get a solution operator from this parametrix. These operators should be FIOs of order $-1/4$, and for a fixed time, operators of order $0$. The remainder should be an FIO of order $-1/4-n-1$, and for a fixed time, of order $-n-1$.
+%Thus this operator becomes more and more regular as $n \to \infty$. It follows that if we define the operators
 %
-\[ S_n f(x,t) = \int K_n(x,y,t) f(y)\; dV(y), \]
+%\[ S_n f(x,t) = \int K_n(x,y,t) f(y)\; dV(y), \]
 %
-then for $0 < |t| \lesssim 1$,
+%then for $0 < |t| \lesssim 1$,
 %
-\[ \Box_g (S_n f)(x,t) = - \int c_{n+1} E_{n+1}(d_g(x,y), t) f(y)\; dV_y, \]
+%\[ \Box_g (S_n f)(x,t) = - \int c_{n+1} E_{n+1}(d_g(x,y), t) f(y)\; dV_g(y), \]
 %
-and
+%and
 %
-\[ \Box_g (S_n f)(x,0+) = f(x). \]
+%\[ \Box_g (S_n f)(x,0+) = f(x). \]
 %
+%Now it is important to note that the errors $\{ c_n E_n \}$ do not converge pointwise to zero as $n \to \infty$, and so we cannot take an infinite series here to get a complete solution operator. TODO: How to do we get a
+
+
+But from the perspective of regularity, a finite expansion is normally enough. We can express $E_n(d_g(x,y),t)$ as a finite linear combination of terms of the form
+%
+\[ t^j H(t) \int \frac{e^{2 \pi i (d_g(x,y) \cdot \xi + t |\xi|)}}{|\xi|^{\nu + k + 1}}\; d\xi. \]
+% d = 2n
+% N = n
+% Symbol of order s = -nu - 1
+% -nu-1 = m
+In particular, this implies that for each $n$, $S_n$ is a Fourier integral operator of order $-5/4$, and if we fix the time, we get a Fourier integral operator of order $-1$.
+%
+\[ \frac{\sin(t |\xi|)}{|\xi|} \]
+
+Assuming we have localized the support of $f$ to a compact set $K$ contained in a particular coordinate system $(y,V)$, and if $F(x,\xi)$ denotes the Fourier transform of $y \mapsto c_n(x,y) f(y) |g(y)|^{1/2}$, then
+%
+\begin{align*}
+    \int c_n(x,y) E_n(d_g(x,y), t) f(y)\; dV_g(y)
+\end{align*}
+%
+is a linear combination of terms of the form
+%
+\[ t^j H(t) \int \frac{F(x,\xi)}{|\xi|^{\nu + k + 1}} e^{2 \pi i (d_g(x,y) \cdot \xi + t |\xi|)}\; d\xi \]
+%
+Now we have
+%
+\[ \| F |\xi|^s \|_{L^2(\RR^d)} \lesssim \| f \|_{\dot{H}^s(\RR^d)} \]
+
 Thus, modulo an operator that becomes more and more regular as $n \to \infty$, locally in $x$ and $t$, we have found operators which approximate solution operators to the wave equation.
 
 TODO: USE HADAMARD PARAMETRIX TO SHOW WAVE EQUATION HAS FINITE PROPOGATION SPEED. SOGGE Chapter 2.
@@ -3109,6 +3140,73 @@ Interpolation thus yields that
 \[ \| T_R^\lambda f \|_{L^p(\RR^d)} \lesssim_\varepsilon R^{1 - \mu} \lambda^{\mu + \alpha(p) + \varepsilon}. \]
 %
 We need $\mu < - \alpha(p)$ in order to get a decay we can sum in $\lambda$. On the other hand, we need $\mu \geq 1$ so that we get uniform bounds in $R$. Thus we need $-1 > \alpha(p)$
+
+
+
+
+
+
+
+
+\chapter{Trying to Use Hadamard Parametrix}
+
+Let
+%
+\[ T_R f = \sum_\lambda m(\lambda / R) \langle f, e_\lambda \rangle e_\lambda. \]
+%
+If we write
+%
+\[ M(t) = \int_0^\infty m(\lambda) \cos(2 \pi t \lambda)\; d\lambda, \]
+%
+then the inverse formula implies that
+%
+\[ m(\lambda / R) = \int M(t) \cos \left( \frac{2 \pi \lambda t}{R} \right)\; dt. \]
+%
+Thus we have
+%
+\[ T_R f = \int M(t) \cos \left( \frac{2 \pi \sqrt{-\Delta} t}{R} \right) f\; dt \]
+%
+Local smoothing implies that we need only analyze an integral of the form
+%
+\[ T_R f = R \int \eta(R t) M(R t) \cos \Big( 2 \pi \sqrt{-\Delta} \cdot t \Big) f\; dt, \]
+%
+where $\eta$ has support on an arbitrarily small, but fixed portion of the origin. Localizing the operator by a partition of unity, and then applying the Hadamard parametrix, we should expect to control the kernel $T_R f$ by a finite sum of functions of the form
+%
+\[ K_R(x,y) = R \int \int \frac{c(x,y) \eta(R t) M(R t)}{|\xi|^\nu} e^{2 \pi i (\xi \cdot d_g(x,y) + t |\xi|)}\; d\xi\; dR, \]
+%
+where $a$ is smooth and compactly supported, and $d_g$ denotes the geodesic distance on the manifold. Let us perform a frequency decomposition, writing $K_R = K_{R,0} + 2^{k(d - \nu)} \sum_{k = 1}^\infty K_{R,k}$, where
+%
+\[ K_{R,0}(x,t;y) = R \int M(Rt) \frac{c(x,y) \eta(R t) \psi_0(\xi)}{|\xi|^\nu} e^{2 \pi i (\xi \cdot d_g(x,y) + t |\xi|)}\; d\xi\; dt, \]
+%
+and for $k \geq 1$,
+%
+\[ K_{R,k}(x,t;y) = 2^{k(\nu - d)} R \int \int \frac{a(x,y) \eta(R t) M(R t) \tilde{\psi}( \xi / 2^k )}{|\xi|^\nu} e^{2 \pi i (\xi \cdot d_g(x,y) + t |\xi|)}\; d\xi\; dt. \]
+%
+Rescaling, and setting $a_\nu(x,t,y,\xi) =  a(x,y) \eta(t) \tilde{\psi}(\xi) / |\xi|^\nu$ gives that
+%
+\[ K_{R,k}(x,t;y) = \int M(t) \int a_\nu(x,t,y,\xi) e^{2 \pi i 2^k (\xi \cdot d_g(x,y) + (t / R) |\xi|)}\; d\xi\; dt. \]
+%
+Similarily,
+%
+\[ K_{R,0}(x,t;y) = \int M(t) a_{\nu,0}(x,y,t,\xi) e^{2 \pi i (\xi \cdot d_g(x,y) + (t/R) |\xi|)}\; d\xi\; dt. \]
+%
+Our goal is to obtain some $L^p$ estimates on this operator that are summable in $k$, thus obtaining bounds of the form
+%
+\[ \| T_{R,k} f \|_{L^p} \lesssim 2^{k(\nu - d - \varepsilon)} \]
+%
+for some $\varepsilon > 0$, which hold uniformly in $R$. The operator $T_{R,0}$ should not be an issue since one can just take in absolute values to obtain the required result.
+
+Stationary phase tells us that the majority of the mass of the kernel $K_{R,k}$ should be concentrated on points $(x,t;y)$ where $|d_g(x,y) - t/R| \lesssim 2^{-k}$, a geodesic annulus of radius $t/R$, and thickness $2^{-k}$. If we are to try a decoupling result, let us split this annulus into a family $\Theta_k$ of sectors of aperture $2^{-k/2}$ with the finite itnersection property. We should require a set of sectors $\Theta_{R,k}$ with $\#(\Theta_k) \lesssim 2^{k(d-1)/2}$. If we consider a partition of unity $\{ \chi_\theta \}$ localizing the operator to these sectors, we can therefore write $T_{R,k} = \sum_\theta T_{R,k,\theta}$. Let us suppose a Wolff-type decoupling bound held for this operators, i.e. that
+%
+\[ \| T_{R,k} f \|_{L^p} \lesssim_\varepsilon 2^{k(\alpha(p) + \varepsilon)} \left( \sum_\theta \| T_{R,k,\theta} f \|_{L^p}^p \right)^{1/p}. \]
+%
+Let us thus analyze a particular one of these operators $T_{R,k,\theta}$, which has kernel
+%
+\[ K_{R,k,\theta}(x,t;y) = \int \int M(t) a_{\nu,\theta}(x,y,t,\xi) e^{2 \pi i 2^k (\xi \cdot d_g(x,y) + (t/R) |\xi|)}\; d\xi\; dt, \]
+%
+where $a_{\nu,\theta} = a_\nu \cdot \chi_\theta$. For each $t$, and $x$, nonstationary phase tells us that the mass of the kernel $K_{R,k,\theta}(x,t;\cdot)$ should be concentrated on a cap of long thickness $2^{-k}$ and short thicknesses $2^{-k/2}$, containing in the intersection of the sector $\theta$ and the $2^{-k}$ neighborhood of the annulus of radius $t/R$ centered at $y$. We should expect that on this cap the kernel should have amplitude equal to $O( M(t) 2^{-k(d-1)} )$. Thus we have
+%
+\[ \| T_{R,k,\theta} f \|_{L^\infty(\RR^d)} \lesssim A_p(m) 2^{-3k(d+1) / 2} \| f \|_{L^\infty} \]
 
 
 
