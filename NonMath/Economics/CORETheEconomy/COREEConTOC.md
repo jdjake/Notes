@@ -1,6 +1,6 @@
 # CORE ECON Textbook
 
-[Chapter 1: The Capitalist Revolution](CORE%20ECON%20Textbook%2073c337f308d645dfaae503008bba05eb/Chapter%201%20The%20Capitalist%20Revolution%2085c083f1ac744d0da248ce87bd669c9b.md)
+[Chapter 1: The Capitalist Revolution](CORE-Econ-Chapters/Chapter1.md)
 
 [Chapter 2: Technology, Population, and Growth](CORE%20ECON%20Textbook%2073c337f308d645dfaae503008bba05eb/Chapter%202%20Technology,%20Population,%20and%20Growth%202e7bbefa697d46d79cd74e5fc9c2058d.md)
 
