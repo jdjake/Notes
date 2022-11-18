@@ -2,31 +2,31 @@
 
 [Chapter 1: The Capitalist Revolution](CORE-Econ-Chapters/Chapter1.md)
 
-[Chapter 2: Technology, Population, and Growth](CORE%20ECON%20Textbook%2073c337f308d645dfaae503008bba05eb/Chapter%202%20Technology,%20Population,%20and%20Growth%202e7bbefa697d46d79cd74e5fc9c2058d.md)
+[Chapter 2: Technology, Population, and Growth](CORE-Econ-Chapters/Chapter2.md)
 
-[Chapter 3: Work, Scarcity, and Choice](CORE%20ECON%20Textbook%2073c337f308d645dfaae503008bba05eb/Chapter%203%20Work,%20Scarcity,%20and%20Choice%2094496b3e93144d63926b1f9f6abbd594.md)
+[Chapter 3: Work, Scarcity, and Choice](CORE-Econ-Chapters/Chapter3.md)
 
-[Chapter 4: Social Interactions](CORE%20ECON%20Textbook%2073c337f308d645dfaae503008bba05eb/Chapter%204%20Social%20Interactions%202fb669c908294acfa64a1ea4d4b92a2b.md)
+[Chapter 4: Social Interactions](CORE-Econ-Chapters/Chapter4.md)
 
-[Chapter 5: Property and Power](CORE%20ECON%20Textbook%2073c337f308d645dfaae503008bba05eb/Chapter%205%20Property%20and%20Power%20fec2195236c14671a55993e2257642cb.md)
+[Chapter 5: Property and Power](CORE-Econ-Chapters/Chapter5.md)
 
-[Chapter 6: The Firm, Owners, Managers, and Employees](CORE%20ECON%20Textbook%2073c337f308d645dfaae503008bba05eb/Chapter%206%20The%20Firm,%20Owners,%20Managers,%20and%20Employee%20e5accbb81be74ddb988e8319ba1d0523.md)
+[Chapter 6: The Firm, Owners, Managers, and Employees](CORE-Econ-Chapters/Chapter6.md)
 
-[Chapter 7: The Firm and It’s Customers](CORE%20ECON%20Textbook%2073c337f308d645dfaae503008bba05eb/Chapter%207%20The%20Firm%20and%20It%E2%80%99s%20Customers%20f81fde993f64475697f6c1fbcd45aa14.md)
+[Chapter 7: The Firm and It’s Customers](CORE-Econ-Chapters/Chapter7.md)
 
-[Chapter 8: Supply and Demand](CORE%20ECON%20Textbook%2073c337f308d645dfaae503008bba05eb/Chapter%208%20Supply%20and%20Demand%20f516a55d1e4f4421a6e51028ff330d02.md)
+[Chapter 8: Supply and Demand](CORE-Econ-Chapters/Chapter8.md)
 
-[Chapter 9: The Labour market](CORE%20ECON%20Textbook%2073c337f308d645dfaae503008bba05eb/Chapter%209%20The%20Labour%20market%209b43ce8bc8454a5ca5d6f453145f9072.md)
+[Chapter 9: The Labour market](CORE-Econ-Chapters/Chapter9.md)
 
-[Chapter 10: Banks, Money, and the Credit Market](CORE%20ECON%20Textbook%2073c337f308d645dfaae503008bba05eb/Chapter%2010%20Banks,%20Money,%20and%20the%20Credit%20Market%2044bb6eb52fca4ae28fb3cc3111ca3d29.md)
+[Chapter 10: Banks, Money, and the Credit Market](CORE-Econ-Chapters/Chapter10.md)
 
-[Chapter 11: Rent-Seeking, Price-Setting](CORE%20ECON%20Textbook%2073c337f308d645dfaae503008bba05eb/Chapter%2011%20Rent-Seeking,%20Price-Setting%20ff4e3bdc6c024d06b182f7e25e795793.md)
+[Chapter 11: Rent-Seeking, Price-Setting](CORE-Econ-Chapters/Chapter11.md)
 
-[Chapter 12: Markets, Efficiency, and Public Policy](CORE%20ECON%20Textbook%2073c337f308d645dfaae503008bba05eb/Chapter%2012%20Markets,%20Efficiency,%20and%20Public%20Policy%200e6e4298b7b14d3683f968b9c87abe8e.md)
+[Chapter 12: Markets, Efficiency, and Public Policy](CORE-Econ-Chapters/Chapter12.md)
 
-[Chapter 13: Economic Fluctuations and Unemployment](CORE%20ECON%20Textbook%2073c337f308d645dfaae503008bba05eb/Chapter%2013%20Economic%20Fluctuations%20and%20Unemployment%200fa5ab0cc98e44fd80a83e5cdc28960f.md)
+[Chapter 13: Economic Fluctuations and Unemployment](CORE-Econ-Chapters/Chapter13.md)
 
-[Chapter 14: Unemployment and Fiscal Policy](CORE%20ECON%20Textbook%2073c337f308d645dfaae503008bba05eb/Chapter%2014%20Unemployment%20and%20Fiscal%20Policy%20bcfbb46e954442a0b6fff5f8ca6e903e.md)
+[Chapter 14: Unemployment and Fiscal Policy](CORE-Econ-Chapters/Chapter14.md)
 
 **Quotes**
 
