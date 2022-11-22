@@ -60,7 +60,10 @@ Nonetheless, a neo-intuitionism has begun to arise in recent years, obtained by 
 
 While formalism regulates what is 'true mathematics' to the psychologists, for practical purposes it must relegate it's work to a certain few sets of axiom systems that it percieves will probably be seen as 'true', for instance, the axioms of set theory. From this axiom system the formalist will eventually prove a principle of induction, a fact intuitively true for the mathematics of the intuitionists. But this means the formalist will never be able to justify a choice of axioms by a proof of non-contradictoryness of their theory, for in order to conclude a contradiction will never arise, the formalist would have to justify an infinite number of statements, and thus implicitly assume the principle of induction.
 
-On finitary problems, the formalists and intuitionists differ only in their method, but on problems of the infinite the results differ. Intuitionists only deal with denumerable sequences of objects, so techniques such as the theory of higher order ordinals have no meaning. In particular, the question as to whether $\aleph_1$
+On finitary problems, the formalists and intuitionists differ only in their method, but on problems of the infinite the results differ. Intuitionists only deal with denumerable sequences of objects, and their unity cannot be decomposed into infinitely many discrete elements. For instance, the question as to whether $\mathbf{R}$ has the cardinality of the continuum 
+
+
+In particular, the question as to whether $\aleph_1$ is countable has no meaning. The standard proof that $[0,1]$ is uncountable holds some ground to the intuitionist, who would accept that, for any possible construction of a countable sequence of real numbers, there is a construction of a real number not belonging to that set.
 
 A proof of being non-contradictory 
 
