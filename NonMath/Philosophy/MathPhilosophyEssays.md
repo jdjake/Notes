@@ -63,13 +63,16 @@ Let us reflect on the philosophical content of formalism. Once a language is for
 
 
 
-% See Poincare, La Science et l'Hypothese.
-% See Poincare, Scientia No. XXIV p. 6
-% See Borel, Revue du Mois, No. 80, p. 221.
-% See Russell, Introduction to Mathematical Philosophy.
-% See Heyting, Intuitionism. An Introduciton.
-% See Dummitt, Elements of Intuitionism
-% See Troelstra, Choice Sequences
-% See Quine, "On What There Is".
-% See Benacerrag and Putnum, Philosophy of Mathematics
-% See Heijenoort, From Frege to Godel.
+
+## Other Sources to Look at Sometime
+
+- Poincare, La Science et l'Hypothese.
+- Poincare, Scientia No. XXIV p. 6
+- Borel, Revue du Mois, No. 80, p. 221.
+- Russell, Introduction to Mathematical Philosophy.
+- Heyting, Intuitionism. An Introduciton.
+- Dummitt, Elements of Intuitionism
+- Troelstra, Choice Sequences
+- Quine, "On What There Is".
+- Benacerrag and Putnum, Philosophy of Mathematics
+- Heijenoort, From Frege to Godel.
