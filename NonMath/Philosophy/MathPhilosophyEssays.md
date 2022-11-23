@@ -5,8 +5,7 @@
 
 ## Quotes:
 
-“Les hommes ne s’entendent pas, parce qu’ils ne parlent pas la même langue et qu’il y a des langues qui ne s’apprennent pas.
-[Men do not get along because they do not speak the same language and there are languages ​​that cannot be learned.]” 
+Les hommes ne s'entendent pas, parce qu'ils ne parlent pas la même langue et qu’il y a des langues qui ne s’apprennent pas. (Men do not get along because they do not speak the same language and there are languages that cannot be learned). - Henri Poincar\'{e}.
 
 
 
