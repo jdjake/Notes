@@ -70,31 +70,419 @@
 
 \maketitle
 
-Our goal is to get decoupling bounds for random Cantor sets of various different forms. Let's start by discussing estimates that already exist. First, what range should we expect to get? Fix a sequence of constants $\{ q_i \}$. We then define a Cantor set $C = \lim C_i$ of dimension $s$, where $\{ C_i \}$ is a decreasing family of sets, such that for each $i$, $C_i$ is a union of $N_i$ length $\delta_i = ( \prod_{j \leq i} q_j )^{-1}$ intervals $\{ I_j \}$. We assume that the dimension
-%
-\[ s = \lim_{i \to \infty} \frac{\log N_i}{\log(1/\delta_i)} \]
-%
-exists. This will be the lower Minkowski dimension of the set in general, and the Hausdorff dimension for most nicely chosen parameters, i.e. this is the case if $q_i = q$ is independent of $i$, and $N_i = q^{is}$. Let $D_p(C_i)$ be the optimal constant such that for any Schwartz function $f$,
-%
-\[ \| f \|_{L^p(\RR)} \leq D_p(C_i) \left( \sum_I \| P_I f \|_{L^p(\RR)}^2 \right)^{1/2}. \]
-%
-where $I$ ranges over all intervals of length $\delta_i$ defining $C_i$, and $P_I$ denotes the Fourier multiplier with symbol $\xi \mapsto \mathbf{I}(\xi \in J)$. In particular, we are concerned with finding the optimal constant $\kappa_p(C)$ such that
-%
-\[ D_p(C_i) \lesssim_\varepsilon \delta(i)^{- (\kappa(C) + \varepsilon)} \]
-%
-for all $\varepsilon > 0$.
+\section{Just a Random Middle Thirds Cantor Set}
 
-What is the range of $\kappa(C)$ we can expect? We have the trivial estimates $D_2(C_i) = 1$ (by orthogonality) and $D_\infty(C_i) \leq \delta(i)^{-s/2}$ (by the triangle inequality), which can be interpolated, yielding that
+Consider a random Cantor set $C = \lim_j C_j$, where for each $j$, the set $C_j$ is a union of $2^j$ length $1/3^j$ intervals with startpoints on $\ZZ / 3^j$. Then $C$ is a set with Hausdorff and Minkowski dimension $s = \log_3(2)$. For any two integers $j < i$, let $D_p(j,i)$ denote the optimal constant such that for any Schwartz function $f$ with Fourier support on $C_i$, one has
 %
-\[ D_p(C_i) \leq \delta(i)^{-s(1/2-1/p)}. \]
+\[ \| f \|_{L^p(\RR)} \leq D_p(j,i) \left( \sum_J \| P_J f \|_{L^p(\RR)}^2 \right)^{1/2}. \]
 %
-Thus $\kappa(C) \leq s(1/2 - 1/p)$. On the other hand, consider any family $C$ of length $\delta = 1/N$ intervals $I_1,\dots,I_M$ with endpoints $\xi_1, \dots, \xi_M \in [0,1]$, we fix $\phi \in C_c^\infty(\RR)$ with Fourier support on $[0,1]$ and with $\text{Re}(\phi(x)) \geq 1/2$ on $[-1/10,1/10]$. If we consider the function
+where $J$ ranges over all intervals in $\mathcal{I}_j$. Here $P_J$ denotes the Fourier multiplier with symbol $\xi \mapsto \mathbf{I}(\xi \in J)$. If $\delta_j = 3^{-j}$, then for a given sequence $j = \{ j_i \}$, we let $\kappa_p(C,j)$ denote the optimal exponent such that
 %
-\[ f(x) = \phi(x/N) \left( \sum e^{2 \pi i \xi_i x / N} \right) \]
+\[ D_p(j_i,i) \lesssim_\varepsilon \delta_{j_i}^{- \kappa_p(C,j) - \varepsilon} \]
 %
-then we find that $P_{I_j} f = e^{2 \pi i \xi_i x / N} \phi(x/N)$, and so
+for all $\varepsilon > 0$. In particular, we are interested in learning when \emph{genuine decoupling} occurs, i.e. when $\kappa_p(C,j) = 0$. Moreover, we will be considering a \emph{random} Cantor set construction $C = \lim_j C_j$, i.e. when the sets $\{ C_j \}$ are chosen randomly at each stage of the construction, where $\mathcal{I}_{j+1}$ is constructed from $\mathcal{I}_j$ by taking each interval, splitting it into three segments, and taking two segments at random. We will be interested in determining when we have $\kappa_p(C,j) = 0$ \emph{almost surely}.
+
+By orthogonality, we have the trivial estimate
 %
-\[ D_p(C) \gtrsim M^{-1/2} N^{-1/p} \| f \|_{L^p(\RR)}. \]
+\[ D_2(j,i) = 1 \]
+%
+and by the triangle inequality, we have the trivial estimate
+%
+\[ D_\infty(j,i) \leq N_j = \delta_j^{-s-o(1)}. \]
+%
+Interpolation yields that
+%
+\[ D_p(j,i) \leq \delta_j^{-s(1/2 - 1/p) - o(1)}. \]
+%
+Thus $\kappa_p(C,j) \leq s(1/2 - 1/p)$ for any sequence $j$.
+
+On the other hand, we can construct a lower bound. Fix $\phi \in C_c^\infty(\RR)$ with Fourier support on $[0,1]$, and with $\text{Re}(\phi(x)) \geq 1/2$ on $[-1/10, 1/10]$. Consider
+%
+\begin{align*}
+    f(x) &= \phi(x / 3^i) \sum_I e^{2 \pi i \xi_I x}\\
+    &= \phi(x / 3^i) \sum_J e^{2 \pi i \xi_J x} \sum_{I \subset J} e^{2 \pi i (\xi_I - \xi_J) x}.
+\end{align*}
+% The L2 norm of this function is equal to the L2 norm of it's Fourier transform, which is
+% 3^i * sum_I phi(3^i (xi - xi_I))
+% So the L2 norm is
+% 3^i (2/3)^{i/2} = 2^{i/2} 3^{i/2}
+% The Linfty norm is at most 2^i
+% If has a height >= H on a set of width W, then
+% H W^{1/2} <= 2^{i/2} 3^{i/2}
+% So >> 2^i on a set of width at most W <= (3/2)^i
+% More generally, graph should be below H <= 2^{i/2} 3^{i/2} / X^{1/2}
+Then for any $J \in \mathcal{I}_j$,
+%
+\[ (P_J f)(x) = \phi(x / 3^i) \sum_{I \subset J} e^{2 \pi i (\xi_I - \xi_J)}. \]
+%
+For $|x| \leq 1/10$, we have
+%
+\[ \left| \sum_{I \subset J} e^{2 \pi i (\xi_I - \xi_J) x} \right| \sim \# \{ I : I \subset J \} = 3^{i-j}. \]
+%
+On the other hand, provided that the $\{ \xi_I - \xi_J \}$ are not highly correlated with one another, which we can expect if we choose the Cantor set randomly, we should expect square root cancellation to start, i.e. so that for most $|x| \gtrsim 1/10$, we have
+%
+\[ \left| \sum_{I \subset J} e^{2 \pi i (\xi_I - \xi_J) x} \right| \sim \# \{ I : I \subset J \}^{1/2} = 2^{(i-j)/2}. \]
+%
+Thus we should expect that
+% delta_i^{-1/p} <= M_{j+1} ... M_i
+\[ \| P_J f \|_{L^p(\RR^d)} \sim 2^{i-j} + 2^{(i-j)/2} 3^{i/p}. \]
+%
+In particular, we should expect that
+%
+\begin{align*}
+    \left( \sum_J \| P_J f \|_{L^p(\RR)}^2 \right)^{1/2} &\sim 2^{j/2} \left( 2^{i-j} + 2^{(i-j)/2)} 3^{i/p} \right)\\
+    &\sim 2^{i-j/2} + 2^{i/2} 3^{i/p}.
+\end{align*}
+%
+On the other hand, local constancy does guarantee that for $|x| \leq 1/10$,
+%
+\[ |f(x)| \gtrsim 2^i. \]
+%
+For $|x| \gtrsim 1/10$, square root cancellation means that, in the best case scenario, we can heuristically assume that there are constants $c_J(x)$ with $|c_J| = 1$ such that
+%
+\[ |f(x)| \sim \phi(x / 3^i) \left| \sum_J c_J(x) e^{2 \pi i \xi_J x} 2^{(i-j)/2} \right|. \]
+%
+If the $\{ c_J(x) \}$ are uncorrelated, we would expect square root cancellation to give that
+%
+\[ |f(x)| \sim \phi(x / 3^i) \cdot 2^{j/2} 2^{(i-j)/2} = \phi(x/3^i) 2^{i/2}. \]
+%
+We therefore obtain that
+%
+\[ \| f \|_{L^p(\RR^d)} \sim 2^i + 2^{i/2} 3^{i/p}. \]
+%
+We thus obtain that
+%
+\[ D_p(j,i) \gtrsim \frac{2^i + 2^{i/2} 3^{i/p}}{2^{i-j/2} + 2^{i/2} 3^{i/p}}. \]
+%
+If $2 \leq p \leq 2/s$, then the second term in the numerator and denominator dominate, and this counterexample only shows that
+%
+\[ D_p(j,i) \gtrsim 1, \]
+%
+so that it is possible to obtain a constant $\kappa_p(C,j) = 0$ for any sequence $j$. For $p > 2/s$, the first term in the numerator dominates. Provided that
+%
+\[ j \leq \left( 1 - \frac{1}{(s/2) p} \right) i = \alpha_{p,s} i \]
+%
+the first term in the denominator dominates, and we find that
+%
+\[ D_p(j,i) \gtrsim 2^{j/2}. \]
+%
+Thus if $j_i \leq \alpha_{p,s} i$ for infinitely many $i$, then we have $\kappa_p(C,j) \geq 1/2$, and so \emph{genuine decoupling does not hold}. On the other hand, if
+%
+\[ j \geq \alpha_{p,s} i \]
+%
+then the second term in the denominator dominates and we find that
+%
+\[ D_p(j,i) \gtrsim 2^{i/2} 3^{-i/p} = 3^{(s/2 - 1/p) i} \geq 3^{(s/2 - 1/p) j}. \]
+%
+Thus for $p > 2/s$, we automatically have $\kappa_p(C,j) \gtrsim s/2 - 1/p$, and so geniune decoupling cannot hold here. We therefore see that our goal should be to obtain decoupling at the value $p = 2/s$.
+
+
+
+For a sequence $\{ j_i \}$ satisfying this condition, in order for this quantity to be $O_\varepsilon( 3^{\varepsilon j_i} )$ for any $\varepsilon > 0$, we must have $j_i \geq \varepsilon^{-1}(s/2 - 1/p) i$
+
+ $\varepsilon^{-1} (s/2 - 1/p) i \leq O_\varepsilon(1) + j$
+
+
+
+\[ (s/2 - 1/p) i \geq (s/2) j \]
+\[ -(s/2)j \geq (1/p - s/2)i \]
+\[ 3^{s(i-j/2)} \geq 3^{(s/2 + 1/p)i} \]
+
+
+For $p > 2/s$, the first term in the denominator dominates, and we obtain that
+%
+\[ D_p(j,i) \gtrsim \frac{2^{i-j/2} + 2^{i/2} 3^{i/p}}{2^i} = 2^{-(i+j)/2} + 2^{-i/2} 3^{i/p} = 3^{-(s/2)i} ( 3^{-(s/2)j} + 3^{i/p}). \]
+
+
+The first term in the denominator dominates for $p \geq 2/s$, and the first term in the numerator dominates for
+%
+\[ j \leq \left( 1 - \frac{1}{(s/2) p} \right) i. \]
+%
+In this case, we obtain that
+%
+\[ D_p(j,i) \gtrsim 2^{-j/2}, \]
+%
+which means in this case we could possible obtain $\kappa_p(C,j) = 0$ in this scenario. On the other hand, for
+%
+\[ \left( 1 - \frac{1}{(s/2) p} \right) i \leq j \leq i, \]
+%
+we obtain that
+%
+\[ D_p(j,i) \gtrsim 2^{(i - j)/2} 3^{-i/p} = 3^{(s/2)(i - j) - i/p} \]
+%
+\[ (s/2 - 1/p) i \leq (s/2) j \]
+\[ j \gtrsim \frac{s/2 - 1/p}{s/2 + \varepsilon} i \]
+\[ i \lesssim O_\varepsilon(1) + \frac{(s/2 + \varepsilon)}{s/2 - 1/p} j \]
+\[ (s/2 - 1/p) i \lesssim O_\varepsilon(1) + (s/2 + \varepsilon) j \]
+
+
+In particular, this can also only be true for $p \geq 2/s$. In particular, in the range $2 \leq p \leq 2/s$, we get that
+%
+\[ D_p(j,i) \gtrsim 2^{i/2}, \]
+%
+In particular, one must have $\kappa_p(C,j) \geq s/2$ since one always has
+%
+\[ 2^{i/2} = 3^{i (s/2)} \geq 3^{j(s/2)}. \]
+%
+On the other hand, for $p > 2/s$, 
+
+
+
+Thus if both these terms dominate we get that
+%
+\[ D_p(j,i) \gtrsim 2^{(i+j)/2}. \]
+
+$2^{(i-j)/2} \geq 3^{i/p}$
+
+
+The first term dominates if
+%
+\[ j \leq \left[ 1 - \frac{1}{(p/2) s} \right] i, \]
+%
+in particular, this can only be true if $p > 2/s$.
+
+This gives us examples which lower bound the Decoupling constant.
+
+On the other hand, if, these quantities are heavily correlated, then constructive interference would likely give that
+%
+\[ |f(x)| \sim \phi(x / 3^i) 2^i 2^{(i-j)/2} = 2^{3i/2} 2^{-j/2}. \]
+%
+This would likely occur (TODO) if the quantities $\{ \xi_I - \xi_J : I \subset J \}$ are the same, independently of $J$.
+
+Let us assume we are working in the regime where
+%
+\[ (M_1 \cdots M_i)^{1/2} \delta_i^{-1/p} \lesssim (M_1 \cdots M_j)^{1/2} (M_{j+1} \cdots M_i), \]
+%
+i.e. where
+%
+\[ \delta_i \gtrsim (M_{j+1} \cdots M_i)^{-p/2}. \]
+%
+In the standard middle-thirds Cantor set, one has $\delta_i = 1/3^i$, and $M_j = 2$ for all $j$, so this condition becomes
+%
+\[ j \leq O(1) + \left[ 1 - \frac{1}{(p/2) \log_3(2)} \right] i \]
+%
+which forces us to have $j \leq $
+
+\[ i \log(3) \leq O(1) + [(i-j) p / 2] \log(2) \]
+\[ 3^i \lesssim C 2^{(i-j)p/2} \]
+
+In general, we do not expect the sums
+%
+\[ \left\{ \sum_{I \subset J} e^{2 \pi i (\xi_I - \xi_J) x} : J \in \mathcal{I}_j \right\} \]
+%
+to be highly correlated with one another. In particular, for 
+
+In particular, we let $\Omega_J = \bigcup \{ I : I \subset J \}$, then
+
+
+
+\section{Bilinear Decoupling of Random Half Dimensional Cantor Sets}
+
+Consider a Cantor set $C = \lim_j C_j$, where for each $j$, $C_j$ is a union of $2^j$ intervals $\mathcal{I}_j$ of length $1/4^j$. Then $C$ has dimension $1/2$. Our goal is to establish a bilinear decoupling estimate. Suppose we fix $j$ and $i$, and write $C_i = \bigcup_j C_{j,I}$, where $C_{j,I} = C_i \cap I$, and $I$ ranges over intervals in $\mathcal{I}_j$. Then $C_{j,I}$ is a union of $2^{i-j}$ intervals of length $1/4^i$.
+
+Given a random set $S \subset \{ 1, \dots, 4^j \}$ with cardinality $2^j$, the expected number of tuples $(s_1,s_2,s_3,s_4) \in S$ such that
+%
+\[ |(s_1 + s_2) - (s_3 + s_4)| \lesssim 10 \]
+%
+is equal to $O(4^j)$. If we fix $(s_1,s_2,s_3,s_4)$ satisfying the equation above, as well as four random sets $T_1,T_2,T_3,T_4 \in \{ 1, \dots, 4^{i-j} \}$ with cardinality $2^{i-j}$, then the expected number of tuples $(t_1,t_2,t_3,t_4) \in T_1 \times T_2 \times T_3 \times T_4$ such that
+%
+\[ |(s_1 + s_2) + (t_1 + t_2) / 4^{i-j} - (s_3 - s_4) - (t_3 + t_4) / 4^{i-j}| \lesssim 10/4^{i-j} \]
+%
+is at most $O(4^{i-j})$. Thus
+%
+\[ \left\| \sum P_J f \right\|_{L^4}^4 \leq \sum (P_{J_1} f) (P_{J_2} f) (P_{J_3} f) (P_{J_4} f). \]
+%
+Now
+%
+\[ \langle (P_{J_1} f) (P_{J_2} f), (P_{J_3} f) (P_{J_4} f) \rangle = 0 \]
+%
+unless $J_1 + J_2$ intersects $J_3 + J_4$. There are in expectation at most $4^j$ such pairs with this property. For such pairs, we can further decompose into a sum over the scale $1/4^i$, and we find there are $O(4^{i-j})$ pairs $(I_1,I_2,I_3,I_4)$ with $I_1 \subset J_1,\dots, I_4 \subset J_4$ such that $I_1 + I_2$ intersects $I_3 + I_4$. But this gives that
+%
+\[ |\langle (P_{J_1} f) (P_{J_2} f), (P_{J_3} f) (P_{J_4} f) \rangle| \lesssim 4^{i-j} \max_I \| P_I f \|_{L^4}^4. \]
+%
+We can be a big more efficient here if we think about the fact that for any pair $(t_1,t_2)$, there are $O(1)$ tuples $(t_1,t_2,t_3,t_4)$ satisfying the equation above. Similarily, we should expect that for any pair $(t_3,t_4)$, there are $O(1)$ tuples $(t_1,t_2,t_3,t_4)$. Thus we should be allowed to apply H\"{o}lder, writing
+%
+\begin{align*}
+    |\langle (P_{J_1} f) (P_{J_2} f), (P_{J_3} f), (P_{J_4} f) \rangle| &\lesssim \left( \sum_{\substack{I_1 \subset J_1\\I_2 \subset J_2}} \| (P_{J_1} f)  \|_{L^2}^2 \right) \left( \sum_{I_1,I_2} \| (P_{I_1} f) (P_{I_2} f) \|_{L^2} \right)^2.
+\end{align*}
+
+Thus we should have
+%
+\[ |\langle (P_{J_1} f) (P_{J_2} f), (P_{J_3} f) (P_{J_4} f) \rangle| \lesssim 2^{i-j} \max_I \| P_I f \|_{L^4}^4 \]
+
+But this means that
+%
+\[ \sum (P_{J_1} f) (P_{J_2} f) (P_{J_3} f) (P_{J_4} f) \leq 4^i \max_I \| P_I f \|_{L^4}^4. \]
+%
+
+How many \emph{distinct} values are in this sum?
+%
+\[ \| f \|_{L^4} \lesssim 4^{i/4} \max_I \| P_I f \|_{L^4}. \]
+%
+We have
+%
+\[ \left( \sum_I \| P_I f \|_{L^4}^2 \right)^{1/2} \lesssim 4^{i/2} \max_I \| P_I f \|_{L^4} \]
+
+
+If $A$, $B$, $C$, and $D$ are each a random union of $2^{i-j}$ intervals of length $1/4^i$, then $A + B$ and $C + D$ are roughly speaking, both a union of $O(4^{i-j})$ intervals of length $1/4^i$. For any interval $A + B$, there is therefore a probability $O(4^{i-j} / 4^i) = O(4^{-j)}$ of intersecting $C + D$, and thus the expected number of intersections with $C + D$ is $O(4^{i-2j})$, and thus the probability of any intersection is $O(4^{2j-i})$. Taking the union over all $4^{i-j}$ pairs gives that the expected number of intersection pairs is $O(4^j)$.
+
+More gneerally, suppose $A$, $B$, $C$, and $D$ are each a random union of $L^{s(i-j)}$ intervals of length $1/L^i$, then $A + B$ and $C + D$ are roughly speaking, each a union of $O(L^{2s(i-j)})$ intervals of length $1/L^i$. For any interval in $A + B$, there is therefore a probability $O(L^{2s(i-j)} / L^i) = O(L^{(2s - 1)i - (2s)j})$ of these sets intersecting $C + D$, and thus the expected number of intersections is $O(L^{(4s - 1)i - (4s)j})$, and so the probability of an intersection is $O(L^{(4s)j - (4s - 1)i})$. Now taking a union over all $L^{(4s)j}$ possible pairs gives that 
+
+Maybe choosing a fractal set with dimension $1/2$ might make an easy first problem to deal with, since then the critical exponent is $p = 4$, and we can perhaps use bilinear techniques to understand decoupling.
+
+
+\section{Introductio}
+
+Our goal is to get decoupling bounds for random Cantor sets of various different forms. In this section, we start by reviewing some of the estimates that already exist, Let's start by reviewing some of the estimates that already exist, as well as introducing some systematic notation.
+
+Fix a sequence of integers $\{ q_j \}$ and $\{ N_j \}$, and we define $\delta_j = (q_1 \dots q_j)^{-1}$. We consider an $s$-dimensional Cantor set
+%
+\[ C = \lim_{j \to \infty} C_j \]
+%
+on which we will perform decoupling. Here $\{ C_j \}$ is a decreasing family of sets, such that for each $j$, $C_j$ is a union of $N_j$ length $\delta_j$ intervals $\mathcal{I}_j$. We assume that the limit
+%
+\[ s = \lim_{j \to \infty} \frac{\log N_j}{\log(1/\delta_j)} \]
+%
+exists, which will be the lower Minkowski dimension of the set in general, and the Hausdorff dimension as well provided that the integers $\{ q_j \}$ do not grow faster than exponentially. In particular, this will be the case if $q_j = q$ is independent of $j$, and $N_j = q^{js} + O(1)$. For simplicity, we also assume the existence of a sequence $\{ M_j \}$ such that each interval $I \in \mathcal{I}_j$ contains $M_{j+1}$ children in $\mathcal{I}_{j+1}$. This means that $N_j = M_1 \cdots M_j$.
+
+Given a fixed Cantor set $C = \lim_j C_j$, and two integers $j < i$, we let $D_p(j,i)$ denote the optimal constant such that for any Schwartz function $f$ with Fourier support on $C_i$, one has
+%
+\[ \| f \|_{L^p(\RR)} \leq D_p(j,i) \left( \sum_J \| P_J f \|_{L^p(\RR)}^2 \right)^{1/2}. \]
+%
+where $J$ ranges over all intervals in $\mathcal{I}_j$, and $P_J$ denotes the Fourier multiplier with symbol $\xi \mapsto \mathbf{I}(\xi \in J)$. For a given sequence $j = \{ j_i \}$, we let $\kappa_p(C,j)$ denote the optimal exponent such that
+%
+\[ D_p(j_i,i) \lesssim_\varepsilon \delta_{j_i}^{- \kappa_p(C,j) - \varepsilon} \]
+%
+for all $\varepsilon > 0$. In particular, we are interested in learning when \emph{genuine decoupling} occurs, i.e. when $\kappa_p(C,j) = 0$. Moreover, we will be considering a random Cantor set construction $C = \lim_j C_j$, i.e. when the sets $\{ C_j \}$ are chosen randomly at each stage of the construction, and we will be interested in determining when we have $\kappa_p(C,j) = 0$ \emph{almost surely}.
+
+By orthogonality, we have the trivial estimate
+%
+\[ D_2(j,i) = 1 \]
+%
+and by the triangle inequality, we have the trivial estimate
+%
+\[ D_\infty(j,i) \leq N_j = \delta_j^{-s-o(1)}. \]
+%
+Interpolation yields that
+%
+\[ D_p(j,i) \leq \delta_j^{-s(1/2 - 1/p) - o(1)}. \]
+%
+Thus $\kappa_p(C,j) \leq s(1/2 - 1/p)$ for any sequence $j$.
+
+On the other hand, we can construct a lower bound. Fix $\phi \in C_c^\infty(\RR)$ with Fourier support on $[0,1]$, and with $\text{Re}(\phi(x)) \geq 1/2$ on $[-1/10, 1/10]$. Consider
+%
+\begin{align*}
+    f(x) &= \phi(\delta_i x) \sum_I e^{2 \pi i \xi_I x}\\
+    &= \phi(\delta_i x) \sum_J e^{2 \pi i \xi_J x} \sum_{I \subset J} e^{2 \pi i (\xi_I - \xi_J) x}.
+\end{align*}
+%
+Then for any $J \in \mathcal{I}_j$,
+%
+\[ (P_J f)(x) = \phi(\delta_i x) \sum_{I \subset J} e^{2 \pi i (\xi_I - \xi_J)}. \]
+%
+For $|x| \leq 1/10$, we have
+%
+\[ \left| \sum_{I \subset J} e^{2 \pi i (\xi_I - \xi_J) x} \right| \sim \# \{ I : I \subset J \} = (M_{j+1} \cdots M_i). \]
+%
+On the other hand, provided that the $\{ \xi_I - \xi_J \}$ are not highly correlated with one another, which we can expect if we choose the Cantor set randomly, we should expect square root cancellation to start, i.e. so that for most $|x| \gtrsim 1/10$, we have
+%
+\[ \left| \sum_{I \subset J} e^{2 \pi i (\xi_I - \xi_J) x} \right| \sim \# \{ I : I \subset J \}^{1/2} = (M_{j+1} \cdots M_i)^{1/2}. \]
+%
+Thus we should expect that
+% delta_i^{-1/p} <= M_{j+1} ... M_i
+\[ \| P_J f \|_{L^p(\RR^d)} \sim (M_{j+1} \cdots M_i) + (M_{j+1} \cdots M_i)^{1/2} \delta_i^{-1/p}. \]
+%
+In particular, we should expect that
+%
+\begin{align*}
+    \left( \sum_J \| P_J f \|_{L^p(\RR)}^2 \right)^{1/2} &\sim (M_1 \cdots M_j)^{1/2} \left( (M_{j+1} \cdots M_i) + (M_{j+1} \cdots M_i)^{1/2} \delta_i^{-1/p} \right)\\
+    &\sim (M_1 \cdots M_j)^{1/2} (M_{j+1} \cdots M_i) + (M_1 \cdots M_i)^{1/2} \delta_i^{-1/p}.
+\end{align*}
+%
+On the other hand, local constancy does guarantee that for $|x| \leq 1/10$,
+%
+\[ |f(x)| \gtrsim M_1 \cdots M_j. \]
+%
+For $|x| \gtrsim 1/10$, we can heuristically assume that there are constants $c_J(x)$ with $|c_J| = 1$ such that
+%
+\[ |f(x)| \sim \phi(\delta_i x) \left| \sum_J c_J(x) e^{2 \pi i \xi_J x} (M_{j+1} \cdots M_i)^{1/2} \right|. \]
+%
+If the $\{ c_J(x) \}$ are uncorrelated, we would expect square root cancellation to again occur, giving that
+%
+\[ |f(x)| \sim \phi(\delta_i x) (M_1 \dots M_i)^{1/2}. \]
+%
+Even in the uncorrelated case, we get that
+%
+\[ \| f \|_{L^p(\RR^d)} \sim (M_1 \cdots M_j) + \delta_i^{-1/p} (M_1 \cdots M_i)^{1/2}. \]
+%
+This gives us examples which lower bound the Decoupling constant.
+
+Let us assume we are working in the regime where
+%
+\[ (M_1 \cdots M_i)^{1/2} \delta_i^{-1/p} \lesssim (M_1 \cdots M_j)^{1/2} (M_{j+1} \cdots M_i), \]
+%
+i.e. where
+%
+\[ \delta_i \gtrsim (M_{j+1} \cdots M_i)^{-p/2}. \]
+%
+In the standard middle-thirds Cantor set, one has $\delta_i = 1/3^i$, and $M_j = 2$ for all $j$, so this condition becomes
+%
+\[ j \leq O(1) + \left[ 1 - \frac{1}{(p/2) \log_3(2)} \right] i \]
+%
+which forces us to have $j \leq $
+
+\[ i \log(3) \leq O(1) + [(i-j) p / 2] \log(2) \]
+\[ 3^i \lesssim C 2^{(i-j)p/2} \]
+
+In general, we do not expect the sums
+%
+\[ \left\{ \sum_{I \subset J} e^{2 \pi i (\xi_I - \xi_J) x} : J \in \mathcal{I}_j \right\} \]
+%
+to be highly correlated with one another. In particular, for 
+
+In particular, we let $\Omega_J = \bigcup \{ I : I \subset J \}$, then
+
+
+
+%Consider a family of random $\{ \pm 1 \}$ valued Bernoulli random variables $\{ a_I : I \in \mathcal{I}_i \}$, and consider the function
+%
+\[ f(x) = \phi(\delta_i x) \left( \sum_I e^{2 \pi i \xi_I x} \right) = \phi(\delta-_i x), \]
+%
+where $\xi_I$ is the center of the interval $I$. Then for $J \in \mathcal{I}_j$, by square root cancellation heuristics we would expect that with high probability,
+
+\[ f(x) = \phi(\delta_i x) \left( \sum_J e^{2 \pi i \xi_J x} \sum_{I \subset J} a_I e^{2 \pi i (\xi_I - \xi_J) x} \right) \]
+%
+\[ |(P_J f)(x)| \approx \phi(\delta_i x) e^{2 \pi i \xi_J x} \cdot \#( I : I \subset J)^{1/2} = \phi(x/\delta_i) (M_{j+1} \dots M_i)^{1/2}. \]
+%
+Thus
+%
+\[ \| P_J \|_{L^p(\RR^d)} \approx \delta_i^{1/p} (M_{j+1} \dots M_i)^{1/2}. \]
+%
+This implies that
+%
+\[ \left( \sum_J \| P_J f \|_{L^p(\RR)}^2 \right)^{1/2} \approx \delta_i^{1/p} (M_1 \dots M_i)^{1/2}. \]
+%
+On the other hand, by square root cancellation heuristics we would expect that
+%
+\[ |f(x)| \approx \phi(x/\delta_i) (M_1 \dots M_i)^{1/2}, \]
+%
+and thus that
+%
+\[ \| f \|_{L^p(\RR)} \approx \delta_i^{1/p} (M_1 \dots M_i)^{1/2}. \]
+
+we would expect that with high probability,
+%
+\[ \| P_I f \|_{L^p} \approx \left( \sum_I \right)^{1/2} \]
+
+for any given indices $j$ and $i$,
+
+On the other hand, consider any set $C$ which is the union of $M$ length $\delta$ intervals $\mathcal{I} = \{ I_1,\dots,I_M \}$, where the interval $I_k$ has endpoint $\xi_k \in [0,1]$. Fix $\phi \in C_c^\infty(\RR)$ with Fourier support on $[0,1]$ and with $\text{Re}(\phi(x)) \geq 1/2$ on $[-1/10,1/10]$. If we consider the function
+%
+\[ f(x) = \phi(x/\delta) \left( \sum_k e^{2 \pi i \delta \xi_k x} \right) \]
+%
+then we find that $P_{I_j} f = e^{2 \pi i \delta \xi_i x} \phi(x/\delta)$, and so
+%
+\[ D_p(C, \mathcal{I}) \gtrsim M^{-1/2} \delta^{1/p} \| f \|_{L^p(\RR)}. \]
 %
 Because $|\xi_i| \in [0,1]$, $\text{Re}(e^{2 \pi i \xi_i x}) \geq 1/2$ for $|x| \leq 1/10$ for all $i$, and so we obtain that $\text{Re}(f) \geq M/2$ for $|x| \leq 1/10$, thus leading to a bound
 %
@@ -102,19 +490,19 @@ Because $|\xi_i| \in [0,1]$, $\text{Re}(e^{2 \pi i \xi_i x}) \geq 1/2$ for $|x| 
 %
 But this means
 %
-\[ D_p(C) \gtrsim M^{1/2} N^{-1/p}. \]
+\[ D_p(C) \gtrsim M^{1/2} \delta^{1/p}. \]
 %
-If $M = N^s$, we get $D_p(C) \gtrsim N^{s/2 - 1/p} = \delta^{-s/2 + 1/p}$. Thus for Cantor sets $C$ of dimension $s$ constructed as above, we have $\kappa(C) \geq s/2 - 1/p$. This leads to a bound of the form
+If $M = \delta^{-s}$, we get $D_p(C) \gtrsim \delta^{1/p - s/2}$. Thus for Cantor sets $C$ of dimension $s$ constructed as above, we must have $\kappa_p(C) \geq s/2 - 1/p$. This leads to a bound of the form
 %
 \[ s/2 - 1/p \leq \kappa_p(C) \leq s/2 - s/p \]
 %
 with length $-s/p + 1/p = (1 - s) / p$. This makes sense, since we should expect to get \emph{nothing} except for trivial decoupling when $s = 1$ (complete flatness), or when $p = \infty$ (no orthogonality). TODO: The upper bound is tight by the paper below. How tight is this lower bound?
 
-In (Bourgain, 1989), for any $p > 2$, and $N > 0$, arbitrarily large sets $S \subset \{ 0, \dots, N-1 \}^d$ are constructed with $\#(S) \gtrsim N^{2/p}$ such that for any constants $\{ c_a \}$,
+In (Bourgain, 1989), for any $p > 2$, and $N > 0$, sets $S \subset \{ 0, \dots, N-1 \}^d$ are constructed with $\#(S) \gtrsim N^{2/p}$ such that for any constants $\{ c_\xi \}$,
 %
-\[ \| \sum_{\xi \in S} c_a e^{2 \pi i \xi \cdot x} \|_{L^p(\TT^d)} \lesssim_p \left( \sum_{\xi \in S} |c_\xi|^2 \right)^{1/2}. \]
+\[ \| \sum_{\xi \in S} c_\xi e^{2 \pi i \xi \cdot x} \|_{L^p(\TT^d)} \lesssim_p \left( \sum_{\xi \in S} |c_\xi|^2 \right)^{1/2}. \]
 %
-Such sets are called $\Lambda(p)$ sets. In (Laba, Wang, 2016), these sets are used to construct Cantor sets $C = \lim C_i$ in $\TT^d$ of dimension $s$ for any $0 < s < d$, for any $p > 2$, satisfying the inequality
+Such sets are called $\Lambda(p)$ sets. In (Laba, Wang, 2016), these sets are used to construct Cantor sets $C = \lim C_j$ in $\TT^d$ of dimension $s$ for any $0 < s < d$, for any $p > 2$, satisfying the inequality
 %
 \[ \left( \sum_I \| f \|_{L^p(w_I)}^p \right)^{1/p} \lesssim C(p)^i \left( \sum_J \| P_J f \|_{L^p(w_J)}^2 \right)^{1/2} \]
 %
@@ -122,49 +510,49 @@ where $I$ ranges over a tiling of $O(\delta_i^{-1})$ sidelength $1$ cubes coveri
 %
 \[ \| f \|_{L^p(w_U)} \lesssim C(p)^i \left( \sum_J \| P_J f \|_{L^p(w_J)}^2 \right)^{1/2}. \]
 %
-If $N(i) = q^i$, this leads to a bound $D_p(C_i) \lesssim_p \delta_i^{-c_{p,q}}$ for some $c_{p,q} > 0$, i.e. $\kappa(C) \lesssim_{p,q} 1$. But in that paper they take $\{ q_i \}$ monotone increasing, so this bound does not tell us anything about $\kappa(C)$ in this situation.
-%In (Laba, Wang, 2016), they assume that $\{ q_i \}$ is monotone increasing, but that $q_{i+1} \lesssim_\varepsilon q_1 \dots q_i$ for all $\varepsilon > 0$ (so the dimension is well behaved). The fact the sequence is monotone increasing implies that $i / \log(1/\delta_i) \to 0$ as $i \to \infty$, and thus the decoupling constant $D_p(C_i) = C^i$ is $O_\varepsilon(\delta_i^{-\varepsilon})$ for every $\varepsilon > 0$, i.e. for this example $\kappa(C) = 0$.
+If $N_j = q^j$, this leads to a bound $D_p(C_i) \lesssim_p \delta_j^{-c_{p,q}}$ for some $c_{p,q} > 0$, i.e. $\kappa_p(C) \lesssim_{p,q} 1$. But in that paper they take $\{ q_j \}$ monotone increasing, so this bound does not tell us anything about $\kappa_p(C)$ in this situation.
+%In (Laba, Wang, 2016), they assume that $\{ q_i \}$ is monotone increasing, but that $q_{i+1} \lesssim_\varepsilon q_1 \dots q_i$ for all $\varepsilon > 0$ (so the dimension is well behaved). The fact the sequence is monotone increasing implies that $i / \log(1/\delta_i) \to 0$ as $i \to \infty$, and thus the decoupling constant $D_p(C_i) = C^i$ is $O_\varepsilon(\delta_i^{-\varepsilon})$ for every $\varepsilon > 0$, i.e. for this example $\kappa_p(C) = 0$.
 
-In (Chang, Pont, Greenfeld, Jamneshan, Li, Madrid, 2021), decoupling for a Cantor set on the line is studied. They study Cantor sets $C^{q,d} = \lim C_i^{q,d}$ parameterized by an integer $q > 1$, an integer $0 < k < q$, and digits $0 \leq d_1 < \dots < d_k < q$. In this case, $C^{q,d}_i$ is a union of $N(i) = k^i$ length $1/q^i$ intervals, and at each step of the construction, each length $\delta_i = 1/q^i$ interval $I$ is divided into $q$ length $1/q^{i+1}$ intervals $J_0(I),\dots,J_{q-1}(I)$, and we define
+In (Chang, Pont, Greenfeld, Jamneshan, Li, Madrid, 2021), decoupling for a Cantor set on the line is studied. They study Cantor sets $C^{q,d} = \lim C_j^{q,d}$ parameterized by an integer $q > 1$, an integer $0 < k < q$, and digits $0 \leq d_1 < \dots < d_k < q$. In this case, $C^{q,d}_j$ is a union of $N_j = k^j$ length $1/q^j$ intervals, and at each step of the construction, each length $\delta_j = 1/q^j$ interval $I$ is divided into $q$ length $1/q^{j+1}$ intervals $J_0(I),\dots,J_{q-1}(I)$, and we define
 %
 \[ C^{q,d}_{i+1} = \bigcup_I \bigcup_{l = 1}^k J_l(I). \]
 %
-Let us denote by $D(C_i) = D_p(q,d,i)$ the decoupling constant at the scale $i$, i.e. the best constant such that for any Schwartz function $f$,
+To help summarize results, let us denote by $D(C_j, \mathcal{I}_j)$ by $D_p(q,d,j)$ the decoupling constant at the scale $i$, i.e. the best constant such that for any Schwartz function $f$,
 %
-\[ \| f \|_{L^p(\RR)} \leq D_p(q,d,i) \left( \sum_I \| P_I f \|_{L^p(\RR)} \right)^{1/2}, \]
+\[ \| f \|_{L^p(\RR)} \leq D_p(q,d,j) \left( \sum_I \| P_I f \|_{L^p(\RR)}^2 \right)^{1/2}, \]
 %
 where $P_I$ is the projection operator onto the interval $I$ in frequency space:
 %
 \begin{itemize}
     \item For the classical Cantor set, it is obtained that
     %
-    \[ D_4(3,\{ 0, 2 \}, i) \lesssim (2^i)^{0.25 \log_2(1.5)} = \delta_i^{-(1/4) \log_q(3/2)}. \]
+    \[ D_4(3,\{ 0, 2 \}, j) \lesssim (2^j)^{0.25 \log_2(1.5)} = \delta_j^{-(1/4) \log_q(3/2)}. \]
 
     \item For $q > 2$,
     %
-    \[ D_4(q,\{ 0, 1 \}, i) \lesssim (2^i)^{0.25 \log_2(1.5)} = \delta_i^{-(1/4) \log_q(3/2)}. \]
+    \[ D_4(q,\{ 0, 1 \}, j) \lesssim (2^j)^{0.25 \log_2(1.5)} = \delta_j^{-(1/4) \log_q(3/2)}. \]
     % delta_i = 1/q^i = q^{-i} = (2^i)^{- log_2(q)}
 
     \item For $q > 4$,
     %
-    \[ D_4(q, \{ 0, 1, 2 \}, i) \lesssim (3^i)^{(1/4) \log_3(5/17)} = \delta_i^{-(1/4) \log_q(5/17)}. \]
+    \[ D_4(q, \{ 0, 1, 2 \}, j) \lesssim (3^j)^{(1/4) \log_3(5/17)} = \delta_j^{-(1/4) \log_q(5/17)}. \]
 
     \item For $q > 6$,
     %
-    \[ D_4(q, \{ 0, 1, 3 \}, i) \lesssim (3^i)^{(1/4) \log_3(5/3)} = \delta_i^{-(1/4) \log_q(5/3)}. \]
+    \[ D_4(q, \{ 0, 1, 3 \}, j) \lesssim (3^j)^{(1/4) \log_3(5/3)} = \delta_j^{-(1/4) \log_q(5/3)}. \]
 
     \item If $d$ is the vector of all squares of integers at most $q$, where $q \geq e^{e^{O(1/\varepsilon)}}$, then
     % q^{i/2}
-    \[ D_4(q,d,i) \lesssim_\varepsilon N(i)^\varepsilon \approx \delta_i^{-\varepsilon / 2}. \]
+    \[ D_4(q,d,j) \lesssim_\varepsilon N_j^\varepsilon \approx \delta_j^{-\varepsilon / 2}. \]
 \end{itemize}
 %
 How bad can the decoupling constant get? They prove (in Proposition 3.6 of their paper) that for any Hausdorff dimension $s$, and any $n > 0$, there exists a Cantor set constructed as above with dimension $s$, such that the smallest constant $\kappa_{2n}$ such that
 %
-\[ D_{2n}(C_i) \lesssim_\varepsilon \delta(i)^{- \kappa_{2n} + \varepsilon} \]
+\[ D_{2n}(C_i) \lesssim_\varepsilon \delta_j^{- \kappa_{2n} + \varepsilon} \]
 %
 for all $\varepsilon > 0$ is at least $s(1/2 - 1/2n)$. This is the \emph{worst possible exponent}, 
 
-\section{Toy Problem: Gaussians Supported on Fractal Intervals}
+\section{Gaussians Supported on Fractal Intervals}
 
 Let's consider a toy problem, which is easier than the Cantor set by virtue of the fact that it has less arithmetic structure. Fix an exponent $p$, fix a large integer $N$, a quantity $0 < s < 1$, and then set $M$ to be the closest integer to $N^s$. Choose $M$ points $\xi_1,\dots,\xi_M$ on $\TT$, uniformly at random. For $1 \leq k \leq M$, let
 %
@@ -174,37 +562,37 @@ where $\phi \in \mathcal{S}(\RR)$ is a function whose Fourier transform is suppo
 %
 \[ \{ (x,\xi) : |x| \leq N\ \text{and}\ |\xi - \xi_k| \leq 1/N \}. \]
 %
-If $s < 1/2$, the intervals $I_j$ are disjoint from one another with high probability.
+If $s < 1/2$, the intervals $I_j$ are disjoint from one another with high probability, and if $s < 1$, they will have finite overlap with high probability.
 
 \begin{lemma}
     If $s < 1/2$, then for any $\varepsilon > 0$, if $N$ is sufficiently large, the intervals $I_1,\dots,I_M$ will be disjoint from one another with probability at least $1 - O(N^{2s - 1})$. We can also (TODO: Prove this) get this property with $90\%$ probability for $s = 1/2$ if $M = N^{1/2} / 100$.
 \end{lemma}
 \begin{proof}
-    Let $P_l$ denote the probability that $I_1,\dots,I_l$ are $1/N$ separated from one another, i.e.
+    Let $p_l$ denote the probability that $I_1,\dots,I_l$ are $1/N$ separated from one another, i.e.
     %
     \[ d(I_j, I_k) \geq 1/N \]
     %
-    for $j \neq k$. Then $P_1 = 1$, and we can obtain an inductive lower bound for the other $l$. Namely, if $I_1,\dots,I_l$ are $1/N$ separated from one another, then $I_1,\dots,I_{l+1}$ will be $1/N$ separated from one another if $\xi_{l+1}$ lies away from a $3/N$ neighborhood of $\xi_1,\dots,\xi_l$, which is a set of measure at least $1 - (3/N) l$. Thus we find that
+    for $j \neq k$. Then $p_1 = 1$, and we can obtain an inductive lower bound for the other $l$. Namely, if $I_1,\dots,I_l$ are $1/N$ separated from one another, then $I_1,\dots,I_{l+1}$ will be $1/N$ separated from one another if $\xi_{l+1}$ lies away from a $3/N$ neighborhood of $\xi_1,\dots,\xi_l$, which is a set of measure at least $1 - (3/N) l$. Thus we find that
     %
-    \[ P_{l+1} \geq P_l (1 - 3l/N). \]
+    \[ p_{l+1} \geq p_l (1 - 3l/N). \]
     %
     Thus we find that
     %
-    \[ P_l \geq \prod_{j = 1}^{l-1} (1 - 3l/N) = (-3/N)^{l-1} \frac{\Gamma(l - N/3)}{\Gamma(1 - N/3)}. \]
+    \[ p_l \geq \prod_{j = 1}^{l-1} (1 - 3l/N) = (-3/N)^{l-1} \frac{\Gamma(l - N/3)}{\Gamma(1 - N/3)}. \]
     %
     Using asymptotics for the ratio of a Gamma function and their relation to Stirling series (Tracomi and Erdelyi, 1951, or Laforgia and Natalini, 2012), we find that
     %
-    \[ P_l \geq 1 - \frac{3}{2} \frac{l(l-1)}{N} + O(1/N^2), \]
+    \[ p_l \geq 1 - \frac{3}{2} \frac{l(l-1)}{N} + O(1/N^2), \]
     %
     The asymptotic expansions in these papers don't necessarily hold uniformly as $l \to \infty$, but in the range we're consider, i.e. for $1 \leq l \leq N^s$, this probably isn't a problem (TODO). In particular, for $l = M$, we find that
     %
-    \[ P_M \geq 1 - 1.5 M^2 / N + O(1/N^2) \geq 1 - 1.5 N^{2s - 1} + O(1/N^2) = 1 - O(N^{2s-1}). \qedhere \]
+    \[ p_M \geq 1 - 1.5 M^2 / N + O(1/N^2) \geq 1 - 1.5 N^{2s - 1} + O(1/N^2) = 1 - O(N^{2s-1}). \qedhere \]
 \end{proof}
 
 It follows from Parseval's identity that in this situation, the functions $\{ f_i \}$ are orthogonal to one another. For $1/2 \leq s < 1$, we cannot guarantee this orthogonality since intervals will intersect, but we can expect \emph{almost orthogonality}.
 
 \begin{lemma}
-    For $0 < s < n$, and any $a \gtrsim 1$, with probability exceeding $1 - O_s(1/N^{a-1})$, all of the sets
+    For $0 < s < 1$, and any $a \gtrsim 1$, with probability exceeding $1 - O_s(1/N^{a-1})$, all of the sets
     %
     \[ A_i = \{ j : |\xi_i - \xi_j| \leq 10/N \} \]
     %
@@ -252,7 +640,7 @@ Normalizing, it will suffice to prove that with high probability, for \emph{any}
 %
 \[ \left\| \sum_{k = 1}^M a_k f_k \right\|_{L^p(\RR^d)} \lesssim N^{1/p}. \]
 %
-We will obtain such a result using a \emph{Chaining argument}. 
+We will try and obtain such a result using a \emph{Chaining argument}. 
 
 \begin{comment}
 
@@ -537,23 +925,6 @@ we get that for each $i_1,\dots,i_{k-1}$,
 Here, we get a Martingale at each scale, in some sense, so maybe instead of Hoeffding's inequality, some kind of Martingale inequality will work for obtaining good uniform bounds.
 
 
-
-\section{Best Examples of Decoupling Constant}
-
-What are some extremizers for the decoupling constant? If we consider the setup as above, i.e. at the scale $1/N^k$, and set $a_i = 1 / M^{k/2}$ for all $k$ multi-indexes $i$, then the resulting function $\sum a_i f_i$ has magnitude $\sim M^{k/2}$ on the interval of length $N^{k-1}$ centered at the origin, and thus the $L^p$ norm is at least
-%
-\[ M^{k/2} N^{(k-1)/p} = N^{-1/p} N^{k(1/p + s/2)}. \]
-%
-On the other hand,
-%
-\[ \left( \sum |a_i|^2 \| f_i \|_{L^p(\RR^d)}^2 \right)^{1/2} \sim N^{k/p}. \]
-%
-Thus we find that $D_k \gtrsim N^{ks/2 - 1/p}$. Thus the decoupling constant must get bad for large $k$. TODO
-% The decoupling constant for s = 1 should be lower bounded by N^{k(1/2 - 1/p)} and this seems to do much better than that?
-
-TODO: Zane Mentioned some weird extremizers for the Cantor sets that aren't like the Knaap example.
-
-
 \section{Bourgain Beat Us To It}
 
 In (Bourgain, 1989), it is proved that for any $2 < p < \infty$, and for any $\{ 0, \dots, N-1 \}$, there exists $S \subset \{ 0, \dots, N-1 \}$ with $\#(S) > N^{2/p}$ such that for any $\{ a_i : i \in S \}$,
@@ -616,6 +987,29 @@ Choose $0 < \gamma < 1$ with $(1 - \gamma^2)^{p/2 - 1} + (\gamma^2)^{p/2} < 1$. 
     %
     TODO FINISH THIS.
 \end{proof}
+
+
+\section{Cantor Sets at Different Scales}
+
+Our goal is to establish a variant of multilinear Kakeya for Cantor sets decoupled at a less fine scale. For $j < i$, we let $D_p(j,i)$ denote the optimal constant in the inequality
+%
+\[ \| f \|_{L^p(\RR)} \leq D_p(j,i) \left( \sum_I \| P_I f \|_{L^p(\RR)}^2 \right)^{1/2}, \]
+%
+where $f$ is a Schwartz function with Fourier support on $C_i$, and $I$ ranges over all intervals in $\mathcal{I}_j$. If $i$ is significantly larger than $j$, we should expect to get much better decoupling constants, since the pieces $\{ I \cap C_i : I \in \mathcal{I}_j \}$ should, with high probability, look very different to one another. For any sequence $j = \{ j_i \}$, we let $\kappa_p(C,j)$ denote the optimal exponent such that
+%
+\[ D_p(j_i,i) \lesssim_\varepsilon \delta_i^{-\kappa_p(C,j)-\varepsilon}. \]
+%
+Our goal is to determine for which sequences we have `genuine decoupling', i.e. for which sequences we have $\kappa_p(C,j) = 0$.
+
+How far back do we have to `genuine decoupling', i.e. with $\kappa_p(C) = 0$. If $j_1 = j_0 + O(1)$, the same counterexample as above should give $\kappa_p(C) > 0$, so $j_0$ must be significantly smaller than $j_0$.
+
+
+Rob suggested that perhaps $j_1 = \alpha j_0$ for some $\alpha < 1$.
+
+Can we do a biorthogonality argument here?
+
+
+
 
 
 
