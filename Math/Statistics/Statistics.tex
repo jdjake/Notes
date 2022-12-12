@@ -1,7 +1,5 @@
 \input{../../style.tex}
 
-\DeclareMathOperator*{\argmin}{arg\,min}
-
 \title{Statistics}
 \author{Jacob Denson}
 
@@ -14,11 +12,11 @@
 
 \chapter{Statistical Models}
 
-Statistics is the theory of inferring features of the distribution of some probability distribution, given a number of independant samples drawn from that distribution. The theory uses various different techniques, depending on the problem. The space of probability measures is generally infeasible to study. Normally, we have to restrict the underlying distribution to lie in a given subset of distributions, known as a {\bf statistical model}. A {\bf parametric model} is a statistical model defined by finitely many parameters, i.e. the model is equal to
+Statistics is the theory of inferring features of some probability distribution $\mu$ on a set $S$ (normally $S$ is discrete, or equal to $\RR^d$ for some $d$), given a number of independent samples drawn from this probability distribution. In general, it is very difficult to determine properties of $\mu$, so we often work with some assumptions on the distribution $\mu$, a \emph{statistical model}. More precisely, a statistic model $\mathcal{F}$ is a subset of the space of all distributions on a set $S$. We might write such a set as
 %
-\[ \{ \mu_x : x \in \mathbf{R}^n \}. \]
+\[ \mathcal{F} = \{ \mu_\theta : \theta \in \Theta \}, \]
 %
-for some distributions $\mu_x$. In {\bf nonparametric statistics}, the model can be infinite dimensional.
+where $\Theta$ is the \emph{parameter space} of the model. If $\Theta$ can be seen naturally as a subset of $\RR^n$ for some $n$, we say this is a \emph{parametric model}.
 
 \begin{example}
     In many statistical problems, we commonly assume the distribution is normal. That is, we work over the statistical model
@@ -28,16 +26,185 @@ for some distributions $\mu_x$. In {\bf nonparametric statistics}, the model can
     Thus a normal distribution in $\RR^n$ is specifiable by $n^2 + n$ parameters.
 \end{example}
 
-\chapter{Regression}
+\begin{example}
+	A standard class in nonparametric statistics is the class of \emph{all distributions}. But some methods might assume some minor regularity about the distribution. For instance, we might work in the model $\mathcal{F}_{\text{ABS}}$, which consists of all probability measures $\mu$ which are absolutely continuous (i.e. that have a density function). Or perhaps some additional regularity, i.e. that $\mu$ lies in some function space, i.e. a Sobolev space.
+\end{example}
 
-The most basic task of statistics is regression. Given a sequence of independent experiments $(X_1, Y_1), \dots, (X_n, Y_n)$ drawn from some distribution $(X,Y)$, we want to determine the a function $f$ such that $f(X)$ approximates $Y$. To measure the approximations success, for each value $(x,y)$, we consider a {\bf loss function} $L(y,f(x)) \geq 0$. The {\bf estimated prediction error} is then defined to be $\text{EPE}(f) = \EE(L(Y,f(X)))$. The goal of {\bf regression} is to find a function $f$ which minimizes the estimated prediction error. In parametric problems, the goal is to find the function $f$ lying in a given finite dimensional class of candidate functions minimized estimated prediction error. In non parametric problems, we must find the function $f$ from an infinite dimensional class of candidate functions.
+A \emph{statistical functional} is any function of the distribution $\mu$. Examples include the \emph{expected value} of the distribution, the \emph{variance}, or the \emph{median} (only defined for probability measures without atoms). A \emph{statistic} is a function of the data drawn from this distribution. We can now formally describe the problem of statistics: given a statistical functional, find a statistic which best approximates this functional. This is the problem of \emph{point estimation}. The methods involved depend on the statistical functional employed.
+
+For notational purposes, in statistics we often consider a multitude of distributions $\mu$ over the same set $S$. We therefore introduce the notation $\PP_\mu$, $\EE_\mu$, and $\VV_\mu$, to denote the probabilistic quantities obtained by using the distribution $\mu$. For parametric problems, we might also use the notation $\PP_\theta$, $\EE_\theta$, and $\VV_\theta$.
+
+One of the most important point estimation problem is the problem of \emph{regression}, \emph{prediction}, and \emph{classification}, we are given pairs
+%
+\[ (X_1,Y_1),\dots,(X_N,Y_N) \]
+%
+drawn independently from some product distribution $\mu$. Given $\mu$ and some \emph{error}, or \emph{loss function}, we have a given \emph{regression function} $Y = R(X)$, which best approximates the relationship between $X$ and $Y$ given by the distribution $\mu$. Finding a good approximation of $R$ via the data is called \emph{regression}, or \emph{curve estimation}. Given a new input $X$ that has not yet been observed, we can then \emph{predict} from the approximate regression function what the best estimate for the output $Y$ should be.
+
+Related to point estimation is the computation of \emph{confidence intervals}. Given a statistical functional $\theta \in \RR$, the problem is to compute an interval $C$ from observed data $X_1,\dots,X_N$ such that for each $\mu$,
+%
+\[ \PP_\mu( \theta \in C ) \geq 1 - \alpha \]
+%
+The interval $C$ is then called an $\alpha$-\emph{confidence interval}. More generally, if $\theta$ is a vector we can consider a \emph{confidence set}. It is standard, but not necessary, to take $\alpha = 0.05$, and unless specified we will take this as the choice of $\alpha$.
+
+\begin{remark}
+	Under the frequentist interpretation of probability, a confidence interval \emph{does not} give a probability associated with the quantity $\theta$, since we assign no probability distribution to the distributions $\mu$ we consider. Instead, one can interpret a confidence interval as follows: each time we perform a confidence interval computation, we should be expected to be right $95\%$ of the time.
+\end{remark}
+
+Another problem is \emph{hypothesis testing}. Here we have a particular fact about a distribution, called the \emph{null hypothesis}. Given some data, the goal of hypothesis testing is to determine whether we should reject the null hypothesis, or if we have grounds to still believe in the null hypothesis.
+
+\chapter{Point Estimation}
+
+Let us consider point estimation. We consider a statistical functional $\theta$ of some distribution $\mu$, from which we observe data $X_1,\dots,X_N$. We must now find a statistic $\widehat{\theta}_N$, called the \emph{estimator}, which is our best guess of $\theta$. We say the estimator $\widehat{\theta}$ is \emph{unbiased} if $\EE_\mu[\widehat{\theta} - \theta_N] = 0$ for any distribution $\mu$ in our statistical model. It is consistant if $\widehat{\theta}_N$ converges to $\theta$ in probaibility as $N \to \infty$, for any $\mu$.
+
+As a function of random data, the estimator $\widehat{\theta}$ is a random variable. It's distribution is called the \emph{sampling distribution}. The standard deviation of the estimator is called the \emph{standard error} $\text{SE}_N$. Often, this error will depend on $\mu$, and will thus be unknown. But we can often find an \emph{estimator} for the standard error, which will be denoted by $\widehat{\text{SE}}_N$.
+
+To determine how good an estimator is, we produce a \emph{loss function} $L$, and then to determine the \emph{expected loss}
+%
+\[ \EE_\mu[ L(\theta, \widehat{\theta}_N) ]. \]
+%
+The function $L$ is normally selected so that if $\widehat{\theta}_N = \theta$ then no loss in incurred, and more loss is incurred the `further away' $\widehat{\theta}_N$ is from being correct. There are several natural choices for the loss function:
+%
+\begin{itemize}
+	\item The most common is the loss function
+	%
+	\[ L(\theta_1,\theta_2) = (\theta_1 - \theta_2)^2. \]
+	%
+	The resulting expected loss is the \emph{mean square error}, denoted $\text{MSE}$. A nice feature of this formula is the \emph{bias} \emph{variance} decomposition, i.e. for any estimator, if we define
+	%
+	\[ \text{BIAS} = \EE[ \widehat{\theta}_N - \Theta_N ], \]
+	%
+	then
+	%
+	\[ \text{MSE} = \text{BIAS}^2 + \text{SE}^2. \]
+
+	\item Another common choice is the $L^1$ loss function
+	%
+	\[ L(\theta_1,\theta_2) = |\theta_1 - \theta_2|. \]
+
+	\item For discrete problems, another choice is the $0-1$ loss function
+	%
+	\[ L(\theta_1,\theta_2) = \mathbf{I}(\theta_1 \neq \theta_2). \]
+\end{itemize}
+%
+Given a loss function, our goal is often therefore to find an estimator which minimizes the expected loss over all other possible estimators.
+
+Expanding out the mean square error, we conclude that
+%
+\[ \text{MSE} = \text{BIAS}^2 + \text{SE}^2, \]
+%
+where $\text{BIAS} = \EE_\mu[ \widehat{\theta}_N ] - \theta$. In particular, we conclude that if $\text{BIAS} \to 0$ and $\text{SE} \to 0$ as $N \to \infty$, then $\widehat{\theta}_N$ is a consistent estimator, since then $\widehat{\theta}_N$ converges in the $L^2$ norm to $\theta$ for any distribution $\mu$, and convergence in $L^2$ implies convergence in probability.
 
 \begin{example}
-	The most analytically convenient loss function to pick is the {\bf squared error loss} $L(y,f(x)) = (y - f(x))^2$. We then have
+	Consider $X_1,\dots,X_N \sim \text{Bernoulli}(p)$, where $p \in [0,1]$ is unknown. A natural estimator to use is
+	%
+	\[ \widehat{p}_N = \frac{X_1 + \dots + X_N}{N}. \]
+	%
+	It is simple to check via linearity of expectation that $\widehat{p}_N$ is unbiased. It's standard error is
+	%
+	\[ \text{SE} = \sqrt{\frac{p(1-p)}{N}}. \]
+	%
+	A natural estimator for this standard error is therefore
+	%
+	\[ \widehat{\text{SE}}_N = \sqrt{\frac{\widehat{p}_N (1 - \widehat{p}_N)}{N}}. \]
+	%
+	For any value $p$, the standard error converges to zero, so this is a consistent estimator.
+\end{example}
+
+A common method for point estimation, especially in parametric problems where the point we are estimating determines the distribution under study, is the \emph{maximum likelihood estimator}. We begin by assuming the statistical model we are working in is contained in the space of all distributions which are either continuous or are discrete. Given data $X_1,\dots,X_N$, we define the \emph{likelihood function}
+%
+\[ L(\mu) = f(X_1) \cdots f(X_N) \]
+%
+where $f$ is the density function of $\mu$. To find the maximum likelihood estimator, we find
+%
+\[ \mu_* = \argmax_{\mu \in \mathcal{F}}(L(\mu)), \]
+%
+the `most likely' distribution to generate a given dataset. We then set $\widehat{\theta}_N = \theta^*$, where $\theta^*$ is the value of the statistical function $\theta$ we are estimating which is associated with the distribution $\mu^*$. To compute $\mu^*$, it is often easier to work with the \emph{log likelihood}
+%
+\[ l(\mu) = \log f(X_1) + \log f(X_2) + \dots + \log f(X_N), \]
+%
+since the distribution maximizing likelihood also maximizes the log-likelihood.
+
+\begin{example}
+	Consider $X_1,\dots,X_N \sim \text{Bernoulli}(p)$, where $p$ is unknown, and suppose we want to estimate $p$. We will find that the estimator we saw above is the maximum likelihood estimator for this example. Indeed, we have
+	%
+	\begin{align*}
+		l(p) &= \sum_{i = 1}^N \log \PP_p(X_i)\\
+		&= \sum_{i = 1}^N \log \left( p^{X_i} (1 - p)^{1 - X_i} \right)\\
+		&= \sum_{i = 1}^N X_i \log(p) + (1 - X_i) \log(1 - p).
+	\end{align*}
+	%
+	The derivative of $l$ as a function of $p$ is equal to
+	%
+	\[ \sum_{i = 1}^N \frac{X_i}{p} - \frac{1 - X_i}{1 - p} = \frac{1}{1 - p} \left( \frac{S}{p} - N \right), \]
+	%
+	where $S = \sum X_i$. Setting this quantity equal to zero gives that we should set $\widehat{p}_N = S/N$, which was the estimator we considered before.
+\end{example}
+
+\begin{example}
+	Consider $X_1,\dots,X_N \sim N(\mu,\sigma^2)$, where $\mu$ and $\sigma$ are unknown. The problem is to estimate $\theta = (\mu,\sigma)$. The likelihood function is
+	%
+	\[ L(\theta) = \frac{1}{\sigma^N (2 \pi)^{N/2}} \exp \left( - \frac{1}{2} \sum_{i = 1}^N \left( \frac{X_i - \mu}{\sigma} \right)^2 \right), \]
+	%
+	and thus the log likelihood is proportional to
+	%
+	\[ l(\theta) = -N \log(\sigma) - \frac{1}{2} \sum_{i = 1}^N \left( \frac{X_i - \mu}{\sigma} \right)^2. \]
+	%
+	Taking partial derivatives in $\sigma$ and $\mu$ gives that the maximum likelihood parameters $\mu^*$ and $\sigma^*$ satisfy
+	%
+	%
+	\[ \mu^* = \frac{X_1 + \dots + X_N}{N} \]
+	%
+	and
+	%
+	\[ \sigma^* = \left( \frac{(X_1 - \mu)^2 + \dots + (X_N - \mu)^2}{N} \right)^{1/2}, \]
+	%
+	which are the natural estimators we might choose given the observed data.
+\end{example}
+
+\begin{example}
+	Consider $X_1,\dots,X_N \sim \text{Uniform}([0,\theta])$, for some $\theta \in [0,\infty)$. What is the maximum likelihood estimator of $\theta$? The likelihood function is
+	%
+	\[ L(\theta) = \theta^{-N} \mathbf{I}(\max(X_1,\dots,X_N) \leq \theta). \]
+	%
+	This function is equal to zero for $\theta \in [0,\max(X_1,\dots,X_N))$, and decreases for values bigger than $\max(X_1,\dots,X_N)$. Thus we conclude that the maximum likelihood estimator for $\theta$ is
+	%
+	\[ \widehat{\theta}_N = \max(X_1,\dots,X_N). \]
+\end{example}
+
+\begin{example}
+	Consider a practical example. Let us suppose that there are $N$ fish in a lake, a quantity unknown to us, and which we would like to estimate. We capture $A$ fish, paint them with red spots, and then release them back into the wild. We then capture $B$ fish, and observe that $X$ of them are red. Let us use this information to compute the maximum likelihood estimate of $N$. The only random quantity here is $X$, the other quantities $A$ and $B$ determining the statistical model we use. Given $N$, the distribution of $X$ is a hypergeometric distribution, and so the likelihood function is
+	%
+	\[ L(N) = \frac{{A \choose X} { N-A \choose n-X }}{{N \choose B}}, \]
+	%
+	To determine the maximum quantity here, we compute there for $N > A$,
+	%
+	\[ \frac{L(N)}{L(N-1)} = \frac{N-A}{N-A-B+X} \frac{N-B}{N}. \]
+	%
+	This quantity is greater than one if $N < AB / X$, and smaller than one if $N > AB/X$. The maximum likelihood estimator for $N$ is therefore the greatest integer less than or equal to $AB/X$, i.e.
+	%
+	\[ \widehat{N} = \left\lfloor \frac{AB}{X} \right\rfloor. \]
+	%
+	As an example, if we capture 1000 fish and mark them with red spots, capture another set of 1000 fish, and observe that 100 have red spots, we should guess that there are 10000 fish in the lake.
+\end{example}
+
+\chapter{Regression}
+
+The most basic task of statistics is regression. Given a sequence of independent experiments $(X_1, Y_1), \dots, (X_N, Y_N)$ drawn from some distribution $(X,Y)$, we want to determine the a function $f$ such that $f(X)$ approximates $Y$. To measure the approximations success, for each value $(x,y)$, we consider a \emph{loss function} $L(y,f(x)) \geq 0$. The \emph{estimated prediction error} is then defined to be $\text{EPE}(f) = \EE(L(Y,f(X)))$. The goal of \emph{regression} is to find a function $f$ which minimizes the estimated prediction error. In parametric problems, the goal is to find the function $f$ lying in a given finite dimensional class of candidate functions minimized estimated prediction error. In non parametric problems, we must find the function $f$ from an infinite dimensional class of candidate functions.
+
+\begin{example}
+	In most cases, the most analytically convenient loss functions is the \emph{square error loss}
+	%
+	\[ L(y,f(x)) = (y - f(x))^2. \]
+	%
+	We then have
 	%
 	\[ \text{EPE}(f) = \EE(L(Y,f(X))) = \EE((Y - f(X))^2) = \EE(\EE(Y - f(X))^2 | X)). \]
 	%
-	In this case, the expected prediction error is known as the {\bf mean square error}, denoted $\text{MSE}(f)$. Thus regression reduces to minizing $(Y - f(X))^2$ pointwise, given $X$. The pointwise minimizer of $\EE((Y - f(X))^2|X)$ is given by $f(X) = \EE(Y|X)$. This is because if $f$ is any function, then $\EE(f(X)|X) = f(X)$, and so
+	In this case, the expected prediction error is known as the \emph{mean square error}, denoted $\text{MSE}(f)$. Thus regression reduces to minizing $(Y - f(X))^2$ pointwise, given $X$. The minimizer of this quantity is the conditional expectation
+	%
+	\[ f(X) = \EE(Y|X). \]
+	%
+	This is because if $f$ is any function, then $\EE(f(X)|X) = f(X)$, and so
 	%
 	\[ \EE((Y - \EE(Y|X))f(X)|X) = \EE(Y|X) f(X) - \EE(Y|X) f(X) = 0. \]
 	%
@@ -48,11 +215,19 @@ The most basic task of statistics is regression. Given a sequence of independent
 		&\geq \EE \left( (Y - \EE(Y|X))^2 \right) = \text{MSE}(\EE(Y|X)).
 	\end{align*}
 	%
-	Thus regression with respect to squared loss is equivalent to estimating the conditional expectation of one variable with respect to one another. The decomposition above using Pythagoras' theorem is very useful.
+	Thus regression with respect to squared loss is equivalent to estimating the conditional expectation of one variable with respect to one another. The decomposition above using Pythagoras' theorem is very useful, which is really what makes the square error loss most useful in a given situation.
 \end{example}
 
 \begin{example}
-	Another standard loss function is the $L^1$ loss function, given by $L(y,f(x)) = |y - f(x)|$. As with the squared loss it suffices to choose $f(X)$ which pointwise minimizes $\EE\left. \left( |Y - f(X)| \right| X \right)$. Fix $y$. We note that if $\varepsilon > 0$, then
+	Another standard loss function is the $L^1$ loss function, given by
+	%
+	\[ L(y,f(x)) = |y - f(x)|. \]
+	%
+	As with the squared loss it suffices to choose $f(X)$ which pointwise minimizes
+	%
+	\[ \EE\left. \Big( |Y - f(X)| \big| X \right). \]
+	%
+	Fix $y$. We note that if $\varepsilon > 0$, then
 	%
 	\[ |Y - y + \varepsilon| - |Y - y| = \begin{cases} \varepsilon &: Y \geq y\\ -\varepsilon &: Y \leq y - \varepsilon \\
 	2(Y - y) + \varepsilon &: y - \varepsilon < Y < y \end{cases} \]
@@ -72,32 +247,43 @@ The most basic task of statistics is regression. Given a sequence of independent
 	%
 	\[ \PP(Y \geq f(X) | X) = \PP(Y < f(X) | X) = 0.5 \]
 	%
-	then we say it is a {\bf conditional median}. We normally denote a conditional median by $\MM(Y | X)$. Unlike the conditional expectation, the conditional median need not be unique.
+	then we say it is a \emph{conditional median}, and it will be a pointwise minimizer of the expected loss. We normally denote a conditional median by $\MM(Y | X)$. Unlike the conditional expectation, the conditional median need not be unique if the underlying distribution of $X$ is not continuous.
 \end{example}
 
 \begin{example}
-	Suppose that the values of $Y$ lie in some discrete set of values. The problem of regression in this setting is normally called {\bf classification}. A natural loss function to use here is the 0-1 loss function $L(y,f(x)) = \mathbf{I}(y = f(x))$. As with the previous examples, the regression function in this setting can be easily proved to be
+	Suppose that the values of $Y$ lie in some discrete set of values. The problem of regression in this setting is normally called \emph{classification}. A natural loss function to use here is the 0-1 loss function
+	%
+	\[ L(y,f(x)) = \mathbf{I}(y \neq f(x)). \]
+	%
+	As with the previous examples, the regression function in this setting can be easily proved to be
 	%
 	\[ \mathbf{B}(Y|X) = \argmin \PP(Y = y | X). \]
 	%
-	This is known as the {\bf Bayes classifier}. The value $\text{EPE}(\mathbf{B}(Y|X))$ is known as the {\bf Bayes rate}.
+	This is known as the \emph{Bayes classifier}. The value $\text{EPE}(\mathbf{B}(Y|X))$ is known as the \emph{Bayes rate}.
 \end{example}
 
-Even in these examples, where we can calculate an explicit formula for the regression function, in practice we cannot compute the regression function from sample data. Thus we must come up with an approximation $\hat{f}$ of the regression function $f(x)$, where for each $x$, $\hat{f}(x)$ is a random variable determined by the data $(X_1,Y_1), \dots, (X_n,Y_n)$. Such a random variable is known as a {\bf statistic}.
+Even in these examples, where we can calculate an explicit formula for the regression function, in practice we cannot compute the regression function from sample data. Thus we must come up with an approximation $\widehat{f}$ of the regression function $f(x)$, where for each $x$, $\widehat{f}(x)$ is a random variable determined by the data $(X_1,Y_1), \dots, (X_N,Y_N)$. Such a random variable is known as a \emph{statistic}.
 
-There is a very useful decomposition result for the expected prediction error of $\hat{f}$, where $f(x) = \EE(Y|X=x)$. We can write $Y = f(X) + \varepsilon$, where $\varepsilon$ has mean zero and variance $\sigma^2$. If we define the {\bf bias}
+There is a very useful decomposition result for the expected prediction error of $\widehat{f}$, where $f(x) = \EE(Y|X=x)$. We can write $Y = f(X) + \varepsilon$, where $\varepsilon$ has mean zero and variance $\sigma^2$. If we define the \emph{bias}
 %
-\[ \text{Bias}(\hat{f}(x)) = \EE(\hat{f}(x)) - f(x). \]
+\[ \text{Bias} \left( x \right) = \EE \left( \widehat{f}(x) \right) - f(x). \]
 %
 then
 %
-\[ \text{MSE}(f) = \EE((Y - f(X))^2) + \EE((f(X) - \hat{f}(X))^2) = \sigma^2 + \mathbf{V}(\hat{f}) + \EE(\text{Bias}(\hat{f}(X))^2). \]
+\begin{align*}
+	\text{MSE}(f) &= \EE[(Y - f(X))^2] + \EE[(f(X) - \widehat{f}(X)]^2)\\
+	&= \sigma^2 + \mathbf{V} [\widehat{f}] + \EE \left[ \text{Bias}(X)^2 \right].
+\end{align*}
 %
-This is referred to as the {\it Bias-Variance decomposition}. The error $\sigma^2$ is unavoidable.
+This is referred to as the {\it Bias-Variance decomposition}. The error $\sigma^2$ is unavoidable for any function $\widehat{f}$, whereas to minimize the mean square error, we must make a tradeoff between making the variance of our estimator small, and the bias small.
+
+\section{Parametric Regression}
+
+In parametric statistics, we are given independent and identically distributed data $\{ (X_1,Y_1), \dots, (X_N,Y_N) \}$. We do not know the distribution they are drawn from, but we \emph{do} know the distribution lies in some
 
 \section{Linear Regression}
 
-In some case, we assume our regression functions take the form $\beta^* X$, where $\beta^* \in (\mathbf{R}^n)^*$. Given the data $(X_1, Y_1), \dots, (X_k, Y_k)$, we determine the best estimate $\hat{\beta}$ of $\beta^*$ by evaluating it against the loss function $\mathcal{L}(\beta) = \mathbf{E}[(Y - \beta X)^2]$. Of course, we cannot calculate $\mathcal{L}$ directly, but we may estimate it with our samples. Because the loss function is a differentiable function of $\beta$, we may take derivatives to determine $\beta$:
+In some case, we assume our regression functions take the form $\beta^* X$, where $\beta^* \in (\mathbf{R}^n)^*$. Given the data $(X_1, Y_1), \dots, (X_k, Y_k)$, we determine the best estimate $\widehat{\beta}$ of $\beta^*$ by evaluating it against the loss function $\mathcal{L}(\beta) = \mathbf{E}[(Y - \beta X)^2]$. Of course, we cannot calculate $\mathcal{L}$ directly, but we may estimate it with our samples. Because the loss function is a differentiable function of $\beta$, we may take derivatives to determine $\beta$:
 %
 \[ \nabla \mathcal{L} (\beta) = 2 \mathbf{E}[(Y - \beta X)X^T] = 2 \mathbf{E}(YX^T) - 2\beta \mathbf{E}(XX^T) \]
 %
@@ -109,11 +295,11 @@ Assuming $\mathbf{E}(XX^T)$ is invertible, we may invert, and determine that the
 %
 \[ \beta^* = \mathbf{E}(YX^T) \mathbf{E}(XX^T)^{-1} \]
 %
-Now if we only have the samples $(X_i, Y_i)$, we may approximate this value by forming the conglomerate matrices $\mathbf{X} = (X_1 | X_2 | \dots | X_n)$ and $\mathbf{Y} = (Y_1, \dots, Y_n)$, and calculating $\hat{\beta} = \mathbf{Y} \mathbf{X}^T (\mathbf{X} \mathbf{X}^T)^{-1}$. This minimizes the error over the training data set $\sum (Y_i - \beta X_i)^2 = \|\mathbf{y} - \beta \mathbf{X}\|^2$.
+Now if we only have the samples $(X_i, Y_i)$, we may approximate this value by forming the conglomerate matrices $\mathbf{X} = (X_1 | X_2 | \dots | X_n)$ and $\mathbf{Y} = (Y_1, \dots, Y_n)$, and calculating $\widehat{\beta} = \mathbf{Y} \mathbf{X}^T (\mathbf{X} \mathbf{X}^T)^{-1}$. This minimizes the error over the training data set $\sum (Y_i - \beta X_i)^2 = \|\mathbf{y} - \beta \mathbf{X}\|^2$.
 
 How do we estimate how accurate our prediction is. First, assume that each $Y_i$ is independant, with the same variance $\sigma^2$. Then
 %
-\[ \mathbf{V}(\hat{\beta}) = \mathbf{V}(\mathbf{Y} \mathbf{X}^T (\mathbf{X} \mathbf{X}^T)^{-1}) \]
+\[ \mathbf{V}(\widehat{\beta}) = \mathbf{V}(\mathbf{Y} \mathbf{X}^T (\mathbf{X} \mathbf{X}^T)^{-1}) \]
 
 INSERT THEORETICAL ESTIMATES, Gauss Markov theorem, etc.
 
@@ -202,13 +388,13 @@ For regression, we normally choose not to modify our outputs via an output funct
 
 \chapter{Bayesian Networks}
 
-Let $X,Y,Z$ be random variables. We say that $X$ and $Y$ are {\bf conditionally independent} given $Z$, if for any measurable $A,B \subset \mathbf{R}$,
+Let $X,Y,Z$ be random variables. We say that $X$ and $Y$ are \emph{conditionally independent} given $Z$, if for any measurable $A,B \subset \mathbf{R}$,
 %
 \[ \mathbf{P}(X \in A,Y \in B|Y,Z) = \mathbf{P}(X \in A|Z)\mathbf{P}(Y \in B|Z) \]
 %
 This just means that once you know $Z$, you can gain no information about $X$ from information about $Y$. Bayesian networks are a model of information which allow us to measure the conditional independence of random variables.
 
-Given a set $X_1, \dots, X_n$ of random variables, suppose we form a directed, acyclic graph whose certices are the random variables. We say the variables are {\bf Markov} with respect to the graph if for any random variable $X_i$,
+Given a set $X_1, \dots, X_n$ of random variables, suppose we form a directed, acyclic graph whose certices are the random variables. We say the variables are \emph{Markov} with respect to the graph if for any random variable $X_i$,
 %
 \[ \mathbf{P}(X_1 \in A_1, \dots, X_n \in A_n) = \prod_{i = 1}^n \mathbf{P}(X_i \in A_i | \text{parents}(X_i)) \]
 %
