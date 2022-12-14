@@ -11,9 +11,65 @@
 
 \newpage
 
+\chapter{Notation}
+
+\begin{itemize}
+    \item For a function $f$, we let $\text{Dil}_t f$ denote the function such that
+    %
+    \[ \text{Dil}_t f(x) = f(x/t). \]
+    %
+    Thus if $f$ has support on a set $A$, then $\text{Dil}_t f$ has support on $t A$. We let
+    %
+    \[ \text{Dil}_j f(x) = f(x/2^j) \]
+    %
+    denote the dyadic dilations.
+
+    \item It will often be helpful to consider a family of bump functions which we can use to localize problems. We begin by consider a function $\beta \in C_c^\infty(\RR^d)$ with the following properties:
+    %
+    \begin{itemize}
+        \item $\text{supp}(\beta) \subset \{ 0.5 \leq |x| \leq 2 \}$.
+
+        \item $\beta(x) = 1$ for $0.75 \leq |x| \leq 1.25$.
+
+        \item For any $x \neq 0$,
+        %
+        \[ \sum_{j \in \ZZ} \text{Dil}_j \beta(x) = 1. \]
+    \end{itemize}
+
+    \item We let
+    %
+    \[ \alpha = \sum_{j < 0} \text{Dil}_j \beta. \]
+    %
+    Then $\alpha \in C_c^\infty(\RR^d)$, and has the following properties:
+    %
+    \begin{itemize}
+        \item $\text{supp}(\alpha) \subset \{ |x| \leq 1 \}$.
+
+        \item $\alpha(x) = 1$ for $|x| \leq 0.625$.
+
+        \item For any $x \neq 0$,
+        %
+        \[ \alpha(x) + \sum_{j = 0}^\infty \text{Dil}_j \beta(x) = 1. \]
+    \end{itemize}
+
+    \item We let
+    %
+    \[ \tilde{\beta} = \sum_{j \in \{ -1, 0, +1 \}} \text{Dil}_j \beta. \]
+    %
+    Then:
+    %
+    \begin{itemize}
+        \item $\text{supp}(\tilde{\beta}) \subset \{ 0.25 \leq |x| \leq 4 \}$.
+        \item $\tilde{\beta}(x) = 1$ for $0.375 \leq |x| \leq 2.5$.
+        \item For any function $f$ with $\text{supp}(f) \subset \{ 1/2 \leq |x| \leq 2 \}$,
+        %
+        \[ f \tilde{\beta} = f. \]
+    \end{itemize}
+\end{itemize}
+
 \part{Review of Literature}
 
-\chapter{General Introduction}
+\chapter{Background on Fourier Multipliers}
 
 The question of the regularity of translation-invariant operators on $\RR^d$ has proved central to the development of modern harmonic analysis. For essentially any such operator, we can find a tempered distribution $m: \RR^d \to \CC$, the \emph{symbol} of $T$, such that for any Schwartz function $f \in \mathcal{S}(\RR^d)$,
 %
@@ -130,11 +186,7 @@ Thus $m_t$ describes the behaviour of the multiplier $m$ restricted to the annul
 %
 \[ m(D) = \sum\nolimits_j m_{2^j}(D / 2^j). \]
 %
-Littlewood-Paley theory tells us that this is an `almost orthogonal' decomposition as a family of operators from $L^p(\RR^d)$ to $L^q(\RR^d)$ for any $1 < p,q < \infty$, i.e. so that
-%
-\[ \| m \|_{M^{p,q}(\RR^d)} \sim_{p,q} \sup_{t > 0} t^{d(1/p - 1/q)} \| m_t \|_{M^{p,q}(\RR^d)}. \]
-%
-In the study of multipliers in the range $1 < p,q < \infty$, it is therefore completely natural to restrict to the study of multipliers with a symbol supported on the annulus $1/2 \leq |\xi| \leq 2$. In the sequel, we will call these \emph{unit scale multipliers}.
+Littlewood-Paley hints that, heuristically, that the operators $\{ m_{2^j}(D/2^j) \}$ are almost orthogonal, and do not interact with one another in a significant way. It is therefore natural to restrict to the study of multipliers supported on the annulus $\{ 1/2 \leq |\xi| \leq 2 \}$, which the hope that we can use some kind of dyadic decomposition technology to put such pieces together to yield a general result. In the sequel, we call multipliers supported on this annulus \emph{unit scale multipliers}.
 
 Some sufficient conditions guaranteeing boundedness have been obtained on the convolution kernel side. Young's convolution inequality, a very crude bound (not taking into account any oscillation in the convolution kernel) implies that if $p < q$ and $1/p - 1/q = 1 - 1/r$, then
 %
@@ -156,11 +208,11 @@ and if $p = q$, then
 %
 %\[ \| m \|_{M^p(\RR^d)} \lesssim_\varepsilon \| m \|_{L^2_{d/2 + \varepsilon}}. \]
 %
-One can get results taking into account the oscillation of $k$ by combining this result with a Littlewood-Paley decomposition. Namely, one form of the result of H\"{o}rmander-Mikhlin states that if $m$ is a unit scale multiplier, then for $1 < p < \infty$,
+One can get more sophisticated results by taking into account the oscillatory nature of $k$. Namely, one form of the result of H\"{o}rmander-Mikhlin states that for $1 < p < \infty$,
 %
-\[ \| m \|_{M^p(\RR^d)} \lesssim_\alpha \| m \|_{L^2_\alpha}  \]
+\[ \| m \|_{M^p(\RR^d)} \lesssim_{p,\alpha} \sup_t \| m_t \|_{L^2_\alpha}  \]
 %
-where $\alpha > d/2$.
+where $\alpha > d/2$. Notice that in this situation, we see that the parts of the Littlewood-Paley decompostion of the multiplier \emph{do not} interact with one another, i.e. the bound on the entire operator is obtained by controlling each element of the decomposition separately.
 
 %\begin{itemize}
 %    \item Sufficient conditions have also been obtained on the side of the Fourier multiplier:
@@ -231,9 +283,13 @@ Moreover, this condition give \emph{precisely the range} under which this charac
 %
 %\[ \| m \|_{M^{p,q}} \sim_{p,q,d} \| k \|_{\dot{B}_{-d/p^*}^{q,\infty}} \]
 %
-In the sequel, we call this the \emph{radial multiplier conjecture} in $\RR^d$. Before we move on, let us analyze the reason for the endpoints in this conjecture.
+In the sequel, we call this the \emph{radial multiplier conjecture} in $\RR^d$.
 
-For $p = 1$, the radial multiplier conjecture is true \emph{for compactly supported multipliers}, and one does not even need to assume that the multiplier is radial in this case. Nonetheless, Littlewood-Paley does not hold in this setting.
+\section{Range of Exponents in the Conjecture}
+
+Before we move on, let us analyze the reason for the endpoints in the radial multiplier conjecture.
+%
+%For $p = 1$, the radial multiplier conjecture is true \emph{for compactly supported multipliers}, and one does not even need to assume that the multiplier is radial in this case. %Nonetheless, Littlewood-Paley does not hold in this setting.
 %so an analogous result for radial multipliers which do not have compact support fails in some sense, i.e. we have
 %
 %\[ \| m \|_{M^{1,q}(\RR^d)} = \| k \|_{L^q(\RR^d)}, \]
@@ -272,19 +328,96 @@ For $p = 1$, the radial multiplier conjecture is true \emph{for compactly suppor
 % Suppose -d/q^* = -d/p^* - d/2
 % 1/p^* - 1/q^* + 1/2 = 0
 % Not quite matching up.
-To show why assuming $p \leq 2d/(d+1)$ is necessary, consider the multiplier
+%
+To show why $p < 2d/(d+1)$ is necessary, consider the multiplier
 %
 \[ m(\xi) = h(|\xi|) \mathbf{I}(|\xi| \leq 1), \]
 %
-where $h \in C_c^\infty(\RR)$ is supported on $1/4 \leq r \leq 4$, and is equal to one for $1/2 \leq r \leq 2$. Then $m$ is a variant of the `ball multiplier' of Fefferman. In particular, $m$ differs from the `ball multiplier' by a compactly supported, smooth symbol, and thus $m$ has all the $L^p$ mapping properties that the ball multiplier has. In particular, it is a result of Fefferman (TODO: Cite) that the ball multiplier does not lie in $M^{p,q}(\RR^d)$ when $d > 1$ for any values of $p$ and $q$ except when $p = q = 2$, so the same is true of the multiplier $m$ given above. Now if $k$ is the convolution kernel of $m$, then polar coordinates gives that
+where $h \in C_c^\infty(\RR)$ is supported on $1/4 \leq r \leq 4$, and is equal to one for $1/2 \leq r \leq 2$. Then $m$ is a variant of the `ball multiplier' of Fefferman. In particular, $m$ differs from the `ball multiplier' by a compactly supported, smooth symbol, and thus $m$ has all the $L^p$ mapping properties that the ball multiplier has. In particular, it is a result of Fefferman \cite{Fefferman} that the ball multiplier does not lie in $M^{p,q}(\RR^d)$ when $d > 1$ for any values of $p$ and $q$ except when $p = q = 2$, so the same is true of the multiplier $m$ given above. Now if $k$ is the convolution kernel of $m$, then polar coordinates gives that
 %
 \[ k(x) = \int m(\xi) e^{2 \pi i \xi \cdot x} = \frac{1}{|x|^{d/2 - 1}} \int_{1/4}^1 r^{d/2} h(r) J_{d/2-1}( r x ). \]
 %
-For $|x| \geq 1$, Bessel function asymptotics gives that there is some constant $a$, depending on $d$, such that
+For $|x| \geq 1$, Bessel function asymptotics gives that there is some constant $c$, depending on $d$, such that
 %
-\[ k(x) = |x|^{-\frac{d-1}{2}} \int_{1/4}^1 r^{\frac{d-1}{2}} h(r) \cos(r |x| + a)\; dr + O \left( |x|^{-\frac{d+1}{2}} \right). \]
+\[ k(x) = |x|^{-\frac{d-1}{2}} \int_{1/4}^1 r^{\frac{d-1}{2}} h(r) \cos(r |x| + c)\; dr + O \left( |x|^{-\frac{d+1}{2}} \right). \]
 %
-Integration by parts then gives that $|k(x)| \lesssim |x|^{- \frac{d+1}{2}}$. Since $k$ is bounded near the origin (i.e. by the Paley-Wiener theorem), we conclude that $k \in L^q(\RR^d)$ for $q > 2d/(d+1)$. In particular, we conclude that  the radial multiplier conjecture cannot hold for $q > 2d/(d+1)$. TODO: Is there a counterexample for the endpoint $q = 2d/(d+1)$?
+Integration by parts then gives that $|k(x)| \lesssim |x|^{- \frac{d+1}{2}}$. Since $k$ is bounded near the origin (i.e. by the Paley-Wiener theorem), we conclude that $k \in L^p(\RR^d)$ for $p > 2d/(d+1)$. In particular, we conclude that  the radial multiplier conjecture cannot hold for $2d/(d+1) < p < 2$.
+
+We can actually show that the radial multiplier conjecture cannot hold for $p = 2d/(d+1)$ by adjusting our argument somehow. Consider the multiplier 
+%
+\[ m_\delta(\xi) = h \left( \frac{|\xi| - 1}{\delta} \right), \]
+%
+where $h \in C_c^\infty(\RR)$ is supported on $|\lambda| \leq 1$. The $m_\delta$ is an example of a Bochner-Riesz bump. A stationary phase analysis tells us that if $k_\delta$ is the convolution kernel corresponding to the multiplier $m_\delta$, then
+%
+\begin{align*}
+    k_\delta(x) &= \int m_\delta(\xi) e^{-2 \pi i \xi \cdot x}\; d\xi\\
+    &= \frac{1}{|x|^{d/2 - 1}} \int r^{d/2} h \left( \frac{r - 1}{\delta} \right) J_{d/2 - 1}(r|x|)\; dr.\\
+    &= \frac{\delta}{|x|^{d/2 - 1}} \int (\delta r + 1)^{d/2} h(r) J_{d/2 - 1}((\delta r + 1) |x|)\; dr.
+\end{align*}
+%
+For $|x| \geq 1$ and $r \geq 1/2$, Bessel function asymptotics tell us that there exists constants $\{ a_k \}$ and $\{ b_k \}$, and constants $\{ c_k \}$ such that for any $N > 0$,
+%
+\[ J_{d/2-1}(s) = \sum_{k = 0}^{N-1} a_k s^{-k-1/2} \cos(s + c_k) + O_N ( s^{-N-1/2} ) \]
+%
+Thus we can write $k_\delta$, modulo an error of order $O_N(\delta |x|^{-N-\frac{d-1}{2}})$, as a finite linear combination of terms of the form
+%
+\[ \frac{\delta}{|x|^{\frac{d-1}{2} + k}} \int (\delta r + 1)^{\frac{d-1}{2}-k} h(r) e^{i (\delta r + 1) |x|}\; dr  \]
+%
+for $0 \leq k \leq N-1$. Integrating by parts gives that these terms are, for any $L > 0$,
+%
+\[ O_L( \delta^{1-L} |x|^{-\frac{d-1}{2} - k - L} ). \]
+%
+Taking $L$ arbitrarily large gives good bounds for $|x| \geq 1/\delta$, whereas we should take $L = 0$ for $1 \leq |x| \leq 1/\delta$, which yields
+%
+\[ |k_\delta(x)| \leq \delta |x|^{-\frac{d-1}{2}}. \]
+%
+Conversely, for $|x| \leq 1$, we use the trivial bound $|k_\delta(x)| \leq \| m_\delta \|_{L^1} \lesssim \delta$. Thus we have
+%
+\[ \left( \int_{|x| \leq 1} |k_\delta(x)|^p \right)^{1/p} \lesssim \delta. \]
+%
+Now we integrate over $|x| > 1$, first, we calculate that if $N$ is sufficiently large, then
+%
+\[ \left( \int_{|x| > 1} O_N[\delta |x|^{-N-\frac{d-1}{2}}]^p \right)^{1/p} \lesssim \delta. \]
+%
+What about the non error terms? For $1 \leq |x| \leq 1/\delta$, we have
+%
+\begin{align*}
+    &\left( \int_{1 \leq |x| \leq 1/\delta} (\delta |x|^{-\frac{d-1}{2}})^p \right)^{1/p}\\
+    &\quad\quad\lesssim \delta \left( \int_1^{1/\delta} r^{(1 - p/2)(d-1)}\; dr \right)^{1/p}\\
+    &\quad\quad\lesssim \delta^{- \frac{d}{p} + \frac{d+1}{2}}.
+%    &\quad\quad\lesssim \begin{cases} \delta^{- \frac{d}{p} + \frac{d+1}{2}} &: p < 2d/(d-1), \\ \delta \log(1/\delta)^{1/p} &: p = 2d/(d-1), \\ \delta &: p > 2d/(d-1). \end{cases}
+\end{align*}
+%
+Finally, for $|x| > 1/\delta$, we calculate that
+%
+\begin{align*}
+    & \left( \int_{|x| > 1/\delta} O_L( \delta^{1-L} |x|^{-\frac{d-1}{2} - k - L} )^p \right)^{1/p}\\
+    &\quad\quad \lesssim \delta^{- \frac{d}{p} + \frac{d+1}{2} + k}.
+\end{align*}
+%
+Putting all these together, for $p < 2d/(d-1)$, we conclude that
+%
+\[ \| k_\delta \|_{L^p} \lesssim \delta^{- \frac{d}{p} + \frac{d+1}{2}}. \]
+%
+If the radial multiplier conjecture held at this exponent, we would have
+%
+\[ \| k_\delta * f \|_{L^p}^p \lesssim \delta^{\left( - \frac{d}{p} + \frac{d+1}{2} \right) p} \| f \|_{L^p}^p. \]
+%
+But if we apply the ball multiplier counterexample of Fefferman (see harmonic analysis notes), we would conclude that
+%
+\[ A_+^{1-p/2} (\delta^{\frac{d+1}{2}})^p \lesssim \delta^{\left( - \frac{d}{p} + \frac{d+1}{2} \right) p} (\delta^{\frac{d+1}{2}})^p A^{1 - p/2}. \]
+%
+Thus
+%
+\[ A_+^{1-p/2} \delta^{ d - \frac{d+1}{2} p } \lesssim A^{1-p/2}. \]
+%
+If $2d/(d+1) \leq p < 2$, then we obtain that
+%
+\[ A \gtrsim A_+. \]
+%
+The existence of Kakeya sets shows this is impossible. TODO: Introduce the quantities $A$ as in the general harmonic analysis notes, and go over the calculation more carefully.
+
+\section{Bessel Transforms and Radial Multipliers}
 
 Given a function $h$ on $[0,\infty)$, we define the \emph{$d$-dimensional Fourier-Bessel transform} of $h$ as
 %
@@ -328,6 +461,8 @@ Thus for most values of $s$, we have $|\widehat{h}(s)| \lesssim \langle s \rangl
 %    \end{align*}
     %
 %    The weight inside the norm prevents us from easily converting this condition into a homogeneous Besov condition on the function $w$, but roughly speaking, we have $|\widehat{h}(s)| \lesssim s^{d(1/p-1/q)} \langle s \rangle^{-(d-1)(1-q/2)}$ for \emph{most} inputs $x$.
+
+\section{Summary of Prior Results}
 
 We now know, by the results of \cite{HeoandNazarovandSeeger} that the radial multiplier conjecture is true when $d \geq 4$ and when $1 < p < (2d-2)/(d+1)$. When $d = 4$, this was improved by \cite{Cladek}, who showed that the conjecture is true here when $1 < p < 36/29$, where $36/29 \approx (2d - 1.79)/(d+1)$. When $d = 3$, \cite{Cladek} also established a \emph{restricted weak type} bound
 % 
@@ -448,7 +583,7 @@ In conclusion, the results of \cite{HeoandNazarovandSeeger} and \cite{Cladek} in
 
 
 
-\chapter{Distributions on Manifolds}
+\chapter{Distributions on Riemannian Manifolds}
 
 How do we work with distributions on $\RR^d$? We first identify a vector space of test functions, say, the space $\DD(\RR^d)$ of smooth, compactly supported functions, the space $\EC(\RR^d)$ of all smooth functions, or the space $\SW(\RR^d)$ of Schwartz functions. The distributions are then formally defined as the dual space of this class of test functions. To actually work with these distributions, we find an explicit way to represent them, via a bilinear pairing; for $\DD(\RR^d)$, the bilinear pairing $\EC(\RR^d) \times \DD(\RR^d) \to \CC$ given by
 %
@@ -519,6 +654,7 @@ Thus
 %
 where we view the elements of the pairing on the right hand side as elements of $\Gamma(f^* (TN))$.
 
+The formulas we have found are very advantageous when studying distributions on Riemannian manifolds, especially in the next chapter, where we construct the Hadamard parametrix.
 
 
 
@@ -1473,13 +1609,13 @@ The function is the average of $\widehat{\phi}$ over a ball of radius $O(2^j)$ s
 % 
 Thus we see that $\psi^\delta_j$ has the majority of it's support on the ball of radius $2^j$. But we can do much better than this using the fact that $\widehat{\phi}$ is \emph{oscillatory}, since $\phi$ is supported away from the origin, and $m^\delta$ is \emph{mostly} smooth. More precisely, $\widehat{\phi}$ oscillates at frequencies $\sim 1$, so we should expect integration by parts to yield useful decay on a quantity $\widehat{\phi} * \text{Dil}_{2^j} f$ if we had a bound $|\nabla^N f| \ll 2^{Nj}$ for large $N > 0$. This is true of $m^\delta$ away from a thickness $O(2^{-j})$ annulus containing the unit ball. Thus we are motivated to define $m^\delta = a^\delta_j + b^\delta_j$, where
 %
-\[ a^\delta_j(\xi) = m^\delta(\xi) \eta( 2^j (1 - |\xi|)) \quad\text{and}\quad b^\delta_j(\xi) = m^\delta_j(\xi) ( 1 - \eta( 2^j (1 - |\xi|)) ) \]
+\[ a^\delta_j(\xi) = m^\delta(\xi) \chi( 2^j (1 - |\xi|)) \quad\text{and}\quad b^\delta_j(\xi) = m^\delta_j(\xi) ( 1 - \chi( 2^j (1 - |\xi|)) ) \]
 %
-where $\eta(t)$ is supported on $|t| \leq 1$ and equal to one for $|t| \leq 1/2$. The function $b^\delta_j$ is therefore supported on $|\xi| \leq 1 - 1/2^{j+1}$. For $N > 0$, we have
+where $\chi(t)$ is supported on $|t| \leq 1$ and equal to one for $|t| \leq 1/2$. The function $b^\delta_j$ is therefore supported on $|\xi| \leq 1 - 1/2^{j+1}$. For $N > 0$, we have
 % 
 \[ |\nabla^N m^\delta_j(\xi)| \lesssim_{N,\delta} (1 - |\xi|)^{\delta-N}. \]
 %
-By the product rule, $\nabla^N b^\delta_j$ is a sum of derivatives of $m^\delta_j$ and of derivatives of $1 - \eta(2^j (|\xi| - 1))$. The support of any derivative of the latter is supported on $|\xi| \geq 1 - 1/2^j$. Thus we have
+By the product rule, $\nabla^N b^\delta_j$ is a sum of derivatives of $m^\delta_j$ and of derivatives of $1 - \chi(2^j (|\xi| - 1))$. The support of any derivative of the latter is supported on $|\xi| \geq 1 - 1/2^j$. Thus we have
 %
 \[ |\nabla^N b^\delta_j(\xi)| \lesssim_N (1 - |\xi|)^{\delta - N} \mathbf{I}(|\xi| \leq 1 - 1/2^{j+1}) + 2^{j(N - \delta)} \mathbf{I}(1 - 1/2^j \leq |\xi| \leq 1). \]
 %
@@ -1568,7 +1704,7 @@ The analogue of the Tomas Stein theorem on a compact Riemannian manifold $X$ is 
 
     \item We now `spatially localize' as in the Euclidean case, though things look different here since we are dealing with the wave equation. We choose $\beta$ such that
     %
-    \[ 1 = \eta + \sum_{j = 1}^\infty \text{Dil}_{2^j} \beta. \]
+    \[ 1 = \chi + \sum_{j = 1}^\infty \text{Dil}_{2^j} \beta. \]
     %
     We then write
     %
@@ -1581,15 +1717,15 @@ The analogue of the Tomas Stein theorem on a compact Riemannian manifold $X$ is 
     and
     %
     \begin{align*}
-        R^\delta_{\rho,0} &= c_\delta \cdot \rho^{-\delta} \int_0^\infty \alpha(t) \eta(\rho t) e^{-2 \pi i \rho t} t^{-\delta - 1} e^{2 \pi i \sqrt{-\Delta}}\; dt\\
-        &= c_\delta \cdot \rho^{-\delta} \int_0^\infty \eta(\rho t) e^{-2 \pi i \rho t} t^{-\delta - 1} e^{2 \pi i \sqrt{-\Delta}}\; dt,
+        R^\delta_{\rho,0} &= c_\delta \cdot \rho^{-\delta} \int_0^\infty \alpha(t) \beta(\rho t) e^{-2 \pi i \rho t} t^{-\delta - 1} e^{2 \pi i \sqrt{-\Delta}}\; dt\\
+        &= c_\delta \cdot \rho^{-\delta} \int_0^\infty \beta(\rho t) e^{-2 \pi i \rho t} t^{-\delta - 1} e^{2 \pi i \sqrt{-\Delta}}\; dt,
     \end{align*}
     %
     where the last identity follows because the result the support of the integral is on $t \lesssim 1/\rho$, and we are assuming $\rho$ is large so that $\alpha$ may be assumed equal to one on the support of the integral. Thus $R^\delta_\rho$ is an integral over $t \sim 2^j / \rho$. This is analogous to the spatial decomposition we performed in the Euclidean setting, except now we have the wave equation involved, and the `pseudolocal' finite speed of propogation for the wave equation now must substitute for the explicit spatial localization we obtained in the Euclidean decomposition.
 
     \item Despite the singularity that occurs at the origin, the case $j = 0$ is simplest to deal with. If we define
     %
-    \[ m(\lambda) = c_\delta (\widehat{\eta} * r_\delta) \]
+    \[ m(\lambda) = c_\delta (\widehat{\beta} * r_\delta) \]
     %
     then $R^\delta_{\rho,0}$ is a multiplier operator with symbol
     %
@@ -1749,31 +1885,31 @@ The analogue of the Tomas Stein theorem on a compact Riemannian manifold $X$ is 
 
 \chapter{Heo, Nazarov, and Seeger: Initial Radial Conjecture Results}
 
-In this chapter we give a description of the techniques of Heo, Nazarov, and Seeger's 2011 paper \emph{Radial Fourier Multipliers in High Dimensions} \cite{HeoNazrovSeeger2011}. One of the main goals of this paper is to verify the radial multiplier conjecture in $\RR^d$ for $d \geq 4$, and $1 < p < p_d$, where $p_d = 2(d-1)/(d+!)$, i.e. that if $m \in L^\infty(\ZZ)$ is a radial function, $d \geq 4$, and $\eta \in \mathcal{S}(\RR^d)$ is nonzero, then
+In this chapter we give a description of the techniques of Heo, Nazarov, and Seeger's 2011 paper \emph{Radial Fourier Multipliers in High Dimensions} \cite{HeoNazrovSeeger2011}. One of the main goals of this paper is to verify the radial multiplier conjecture in $\RR^d$ for $d \geq 4$, and $1 < p < p_d$, where $p_d = 2(d-1)/(d+!)$, i.e. that if $m \in L^\infty(\ZZ)$ is a radial function, $d \geq 4$, and $\beta \in \mathcal{S}(\RR^d)$ is nonzero, then
 %
-\[ \| m \|_{M^p(\RR^d)} \sim \sup_{t > 0} t^{d/p} \| T_m(\text{Dil}_t \eta) \|_{L^p(\RR^d)} \quad \text{for}\ p \in \left(1, \frac{2(d-1)}{d+1} \right), \]
+\[ \| m \|_{M^p(\RR^d)} \sim \sup_{t > 0} t^{d/p} \| T_m(\text{Dil}_t \beta) \|_{L^p(\RR^d)} \quad \text{for}\ p \in \left(1, \frac{2(d-1)}{d+1} \right), \]
 %
-where the implicit constant depends on $p$ and $\eta$. We have
+where the implicit constant depends on $p$ and $\beta$. We have
 %
-\[ \sup_{t > 0} t^{d/p} \| T_m(\text{Dil}_t \eta) \|_{L^p(\RR^d)} \sim \sup_{t > 0} \frac{\| T_m(\text{Dil}_t \eta) \|_{L^p(\RR^d)}}{\| \text{Dil}_t \eta \|_{L^p(\RR^d)}}. \]
+\[ \sup_{t > 0} t^{d/p} \| T_m(\text{Dil}_t \beta) \|_{L^p(\RR^d)} \sim \sup_{t > 0} \frac{\| T_m(\text{Dil}_t \beta) \|_{L^p(\RR^d)}}{\| \text{Dil}_t \beta \|_{L^p(\RR^d)}}. \]
 %
-Thus we find that the boundedness of $T_m$ on $\mathcal{S}(\RR^d)$ is equivalent to it's boundedness on the family of inputs $\{ \text{Dil}_t \eta \}$. If we make the assumption that $m$ is compactly supported, then the assumption is equivalent to the fact that the convolution kernel $k$ associated with $m$ is in $L^p(\RR^n)$.
+Thus we find that the boundedness of $T_m$ on $\mathcal{S}(\RR^d)$ is equivalent to it's boundedness on the family of inputs $\{ \text{Dil}_t \beta \}$. If we make the assumption that $m$ is compactly supported, then the assumption is equivalent to the fact that the convolution kernel $k$ associated with $m$ is in $L^p(\RR^n)$.
 
 Another consequence of the techniques of this paper is that an `endpoint' result for local smoothing. Namely, the techniques of the paper imply that if $d \geq 4$, and $q > 2 + 4/(d-3)$, then
 %
 \[ \frac{1}{2L} \int_{-L}^L \| e^{it \sqrt{-\Delta}} f \|_{L^q(\RR^d)}^q\; dt \lesssim_{q,d} \| (I - L^2 \Delta)^{\alpha/2} f \|_{L^q(\RR^d)}^q, \]
 %
-where $\alpha = d(1/2 - 1/q) - 1/2$. TODO: Why is this an `endpoint result', i.e. is it because it works for an arbitrarily $L$, rather than a unit time interval like local smoothing normally deals with?
+where $\alpha = d(1/2 - 1/q) - 1/2$. This is an endpoint result because $\alpha$ can be set \emph{equal} to the tight local smoothing exponent, rather than just arbitrarily close as in results that use decoupling type techniques.
 
 \section{Discretized Reduction}
 
 It is obvious that
 %
-\[ \| m \|_{M^p(\RR^d)} \gtrsim_\eta \sup_{t > 0} t^{d/p} \| T_m(\text{Dil}_t \eta) \|_{L^p(\RR^d)}, \]
+\[ \| m \|_{M^p(\RR^d)} \gtrsim_\beta \sup_{t > 0} t^{d/p} \| T_m(\text{Dil}_t \beta) \|_{L^p(\RR^d)}, \]
 %
 so it suffices to show that
 %
-\[ \| m \|_{M^p(\RR^d)} \lesssim_\eta \sup_{t > 0} t^{d/p} \| T_m(\text{Dil}_t \eta) \|_{L^p(\RR^d)}, \]
+\[ \| m \|_{M^p(\RR^d)} \lesssim_\beta \sup_{t > 0} t^{d/p} \| T_m(\text{Dil}_t \beta) \|_{L^p(\RR^d)}, \]
 %
 We will show this via a discrete convolution inequality, which can also be used to prove local smoothing results for the wave equation.
 
@@ -2538,7 +2674,7 @@ where
 %
 for some family of functions $\{ \chi_i \}$ supported on a common compact subset of $Z \times Y \times \Xi$, and satisfy estimates of the form $|\nabla^N \chi_i| \lesssim_N 1$, for all $N \geq 0$, uniformly in $i$. We can set
 %
-\[ \chi_i(z,y,\eta) = 2^{-i \mu} a(z,y, 2^i \eta) \chi(\eta), \]
+\[ \chi_i(z,y,\eta) = 2^{-i \mu} a(z,y, 2^i \eta) \beta(\eta), \]
 %
 since then $\chi_i$ is supported on $|\eta| \sim 1$ and by virtue of the fact $a$ is a symbol, we have the required estimates. By performing another decomposition, we may assume $\Xi$ is an arbitrarily small neighborhood of $e_1$, such that for $z \in Z$ and $\eta \in \Xi$,
 %
@@ -2846,11 +2982,11 @@ Our goal is to show that, uniformly in $R$, we have
 %
 \[ \| T_R f \|_{L^p} \lesssim \| f \|_{L^p}. \]
 %
-Since $T_R$ is a multiplier with symbol supported on $R/2 \leq \lambda \leq 2R$, we may assume that $f$ is also supported on this frequency range, i.e. is in the span of eigenfunctions to $\sqrt{-\Delta}$ with eigenvalue $R/2 \leq \lambda \leq 2R$. In particular, this implies that for $R \geq 1$, we have derivative estimates of the form
+Since $T_R$ is a multiplier with symbol supported on $R/2 \leq \lambda \leq 2R$, we may assume that $f$ is also supported on this frequency range, i.e. it suffices to bound $T_R$ when restricted to the subpace $V_R \subset C^\infty(M)$ spanned by eigenfuntions of $\sqrt{-\Delta}$ with eigenvalue $R/4 \leq \lambda \leq R$, since, if we let $P_R: C^\infty(M) \to V_R$ be the multiplier operator $\tilde{\beta}( \sqrt{-\Delta} / R )$, then $P_R$ is bounded on all the spaces $L^p(M)$, uniformly in $R$, by virtue of the fact that $\tilde{\beta}$ is a symbol of order zero, and $T_R = T_R \circ P_R$. The advantage of restricting to $V_R$ is that, since $\sqrt{-\Delta}$ is an elliptic pseudodifferential operator on $M$, for $R \geq 1$, we have derivative estimates of the form
 %
-\[ \| f \|_{L^p_\alpha} \lesssim_\alpha R^\alpha \| f \|_{L^p}, \]
+\[ \| f \|_{L^p_s(M)} \lesssim_s R^s \| f \|_{L^p(M)}, \]
 %
-for any $\alpha \geq 0$. This is a manifold analogue of Bernstein's inequality.
+for any $s \geq 0$, an analogue of Bernstein's inequality on the manifold $M$.
 
 To exploit the fact that $C_p(h)$ is finite, we apply the Fourier transform to the sum defining $T_R$, writing $T_R f$ as the vector valued integral
 %
@@ -2860,24 +2996,26 @@ where $\big\{ e^{2 \pi i t \sqrt{-\Delta}} \big\}$ are the solution operators to
 %
 \[ \frac{\partial}{\partial t} = 2 \pi i \sqrt{-\Delta}. \]
 %
-Fix a smooth function $\eta(t)$ with $\eta(t) = 1$ for $|t| \leq 1$ and with support on $|t| \leq 10$. Choose a smooth function $\chi_R$ supported on $1/R \leq |t| \leq 1$ such that
+Choose a smooth function $\chi_R$ supported on $1/R \leq |t| \leq 1$ such that
 %
-\[ 1 = \eta(Rt) + \chi_R(t) + \eta((3/4) t^{-1}). \]
+\[ 1 = \alpha(Rt) + \chi_R(t) + \alpha((3/4) t^{-1}). \]
 %
 Then
 %
 \begin{align*}
-    T_R &= \int [\eta(Rt) + \chi_R(t) + \eta((3/4) t^{-1})] R \widehat{h}(Rt) e^{2 \pi i t \sqrt{-\Delta}}\; dt\\
+    T_R &= \int [\alpha(R |t| ) + \chi_R(t) + \alpha((3/4) |t|^{-1})] R \widehat{h}(Rt) e^{2 \pi i t \sqrt{-\Delta}}\; dt\\
     &= I_R + II_R + III_R.
 \end{align*}
 %
+The operators $I_R$, $II_R$, and $III_R$ are all self-adjoint, because they are obtained by integrating the wave propogators against even functions. Thus by duality, obtaining $L^p \to L^p$ bounds for these operators is equivalent to obtaining $L^{p^*} \to L^{p^*}$ bounds for these operators. We begin by exploiting this duality property to bound $III_R$.
+
 Using the periodicity of the wave equation, we can write
 %
 \[ III_R = \int_{-1/2}^{1/2} H_R(t) e^{2 \pi i t \sqrt{-\Delta}}\; dt, \]
 %
 where
 %
-\[ H_R(t) = \sum_{l \neq 0} \eta((3/4) t^{-1}) R \widehat{h}(R(t + l)) = \sum_{l \neq 0} H_{R,l}(t). \]
+\[ H_R(t) = \sum_{l \neq 0} \alpha((3/4) t^{-1}) R \widehat{h}(R(t + l)) = \sum_{l \neq 0} H_{R,l}(t). \]
 %
 Now
 %
@@ -2909,12 +3047,12 @@ Applying the endpoint local smoothing inequality, we conclude that
 %
 \begin{align*}
     \| III_R f \|_{L^{p^*}(M)} &\leq C_p(h) R^{1/p^* - (d-1)(1/p - 1/2)} \| e^{2 \pi i \sqrt{-\Delta}} f \|_{L^{p^*}_t L^{p^*}_x}\\
-    &\lesssim C_p(h) R^{1/p^* - (d-1)(1/p - 1/2)} \| f \|_{L^{p^*}_{\alpha_{p^*}}(M)},
+    &\lesssim C_p(h) R^{1/p^* - (d-1)(1/p - 1/2)} \| f \|_{L^{p^*}_{s_{p^*}}(M)},
 \end{align*}
 %
-where $\alpha_{p^*} = (d-1)(1/2 - 1/p^*) - 1/p^* = (d-1)(1/p - 1/2) - 1/p^*$. But since $f$ is a linear combination of eigenfunctions with eigenvalue $\sim R$, we have some estimates of the form
+where $s_{p^*} = (d-1)(1/2 - 1/p^*) - 1/p^* = (d-1)(1/p - 1/2) - 1/p^*$. But since we are assuming that $f$ lies in $V_R$, we have seen we have estimates of the form
 %
-\[ \| f \|_{L^{p^*}_{\alpha_{p^*}}(M)} \lesssim R^{\alpha_{p^*}}. \]
+\[ \| f \|_{L^{p^*}_{s_{p^*}}(M)} \lesssim R^{s_{p^*}}. \]
 %
 Thus we conclude that
 %
@@ -2922,27 +3060,31 @@ Thus we conclude that
 %
 We have therefore found a bound for $III_R$ which is uniform in $R$.
 
-On the other hand, the operators $I_R$ and $II_R$ are obtained by integrating against the wave operators over times $|t| \leq 1$, and so from the speed of propogation of the wave equation, we should expect them to be roughly pseudolocal. The operator $I_R$ is obtained by integrating over a much smaller set of times $|t| \leq 1/R$, and from this it will follow that $I_R$ is actually a pseudodifferential operator of order zero, with symbol uniformly bounded in $R$, and thus satisfies uniform estimates of the form
+On the other hand, the operators $I_R$ and $II_R$ are obtained by integrating against the wave operators over times $|t| \leq 1$, and so from the speed of propogation of the wave equation, we should expect them to be roughly pseudolocal. The operator $I_R$ is obtained by integrating over a much smaller set of times $|t| \leq 1/R$, and because of this it will follow that $I_R$ is actually a pseudodifferential operator of order zero, and thus satisfies uniform estimates of the form
 %
-\[ \| I_R f \|_{L^{p^*}(M)} \lesssim \left( \| h \|_{L^\infty(\RR)} + C_p(h) \right) \| f \|_{L^{p^*}(M)}. \]
+\[ \| I_R f \|_{L^p(M)} \lesssim \left( \| h \|_{L^\infty(\RR)} + C_p(h) \right) \| f \|_{L^p(M)}. \]
 %
 To see this, let us write
 %
-\[ I_R = \int \eta(Rt) R \widehat{h}(Rt) e^{2 \pi i t \sqrt{-\Delta}}\; dt. \]
+\[ I_R = \int \alpha(Rt) R \widehat{h}(Rt) e^{2 \pi i t \sqrt{-\Delta}}\; dt. \]
 %
-If $a$ is the inverse Fourier transform of $t \mapsto \eta(t) \widehat{h}(t)$, then
+If $a$ is the inverse Fourier transform of $t \mapsto \alpha(t) \widehat{h}(t)$, then
 %
 \[ I_R = a \left( \frac{\sqrt{-\Delta}}{R} \right). \]
 %
-If $\beta$ denotes the inverse Fourier transform of $\eta$, then we can write
+If $\psi$ denotes the inverse Fourier transform of $\alpha$, then we can write
 %
-\[ a(\lambda) = \int h(\alpha) \cdot \beta \left( \lambda - \alpha \right)\; d\alpha. \]
+\[ a(\lambda) = \int h(\alpha) \cdot \psi \left( \lambda - \alpha \right)\; d\alpha. \]
 %
-The fact that $h$ is compactly supported and that $\beta$ is Schwartz implies immediately that $a$ is a Schwartz function. Thus the functions $\{ a_R \}$ given by $a_R(\lambda) = a(\lambda/R)$ are uniformly bounded symbols of order zero, and thus
+The fact that $h$ is compactly supported and that $\psi$ is Schwartz implies immediately that $a$ is a Schwartz function, with
 %
-\[ I_R = a_R \Big( \sqrt{-\Delta} \Big) \]
+\[ |D^N a(\lambda)| \lesssim_{N,M} \| h \|_{L^\infty} \lambda^{-M} \]
 %
-are uniformly bounded from $L^p(M)$ to itself for all $1 < p < \infty$.
+But this means that $a$ is a symbol of order zero, and thus the operators
+%
+\[ I_R = a_R \Big( \sqrt{-\Delta} / R \Big) \]
+%
+are pseudodifferential operators of order zero, and uniformly bounded from $L^p(M)$ to itself for all $1 < p < \infty$.
 
 \begin{comment}
 %
@@ -3007,17 +3149,23 @@ It remains to analyze the operator $II_R$, i.e. the operator obtained by integra
 %
 where
 %
-\[ \tilde{b}_R(t) = \chi_R(t) R \widehat{h}(Rt) = [ 1 - \eta(Rt) - \eta((3/4) t^{-1}) ] R \widehat{h}(Rt). \]
+\[ \tilde{b}_R(t) = \chi_R(t) R \widehat{h}(Rt) = [ 1 - \alpha(R |t|) - \alpha((3/4) |t|^{-1}) ] R \widehat{h}(Rt). \]
 %
-Our assumptions on the multiplier $m$ now amount to the fact that
+Essentially we know the following facts about $\tilde{b}_R$:
 %
-\[ \| \tilde{b}_R \|_{L^p(\RR^d)} \leq R^{1/p^*} C_p(h), \]
+\begin{itemize}
+    \item If we define the weight function $w(t) = |t|^{(d-1)(1 - p/2)}$, then
+    %
+    \[ \| \tilde{b}_R \|_{L^p(\RR,w)} \leq R^{-s_{p^*}} C_p(h). \]
+    \item $\text{supp}(\tilde{b}_R) \subset \{ 1/R \leq |t| \leq 1 \}$.
+    \item Heuristically, $\tilde{b}_R$ is locally constant at a scale $1/R$.
+\end{itemize}
 %
-that $\tilde{b}_R$ is supported on $1/R \lesssim |t| \leq 1/2$, and the heuristic fact that $\tilde{b}_R$ is locally constant at a scale $1/R$. Our goal is now to obtain bounds of the form
+It is therefore natural to try and obtain bounds of the form
 %
-\[ \| II_R f \|_{L^{p^*}(M)} \leq R^{-1/p^*} \| \tilde{b}_R \|_{L^p(\RR)} \| f \|_{L^{p^*}(M)} \]
+\[ \| II_R f \|_{L^{p^*}(M)} \leq R^{s_{p^*}} \| \tilde{b}_R \|_{L^p(\RR,w)} \| f \|_{L^p(M)} \]
 %
-for all functions $f$ which are a linear combination of eigenfunctions for the Laplace-Beltrami operator on $M$ with eigenvalues $\sim R$. In particular, we can heuristically assume $f$ is also locally constant at a scale $1/R$.
+for all functions $f$ lying in $V_R$.
 
 Given the presence of the $L^p$ norm of $\tilde{b}_R$ and the $L^{p^*}$ norm of $f$, a natural first choice might be to apply H\"{o}lder's inequality, writing
 %
@@ -3038,7 +3186,7 @@ The first term is just a rescaled local smoothing term. If $f$ is badly behaved,
     &= R^{(d-1)(p^*/2 - 1) - 1} \| f \|_{L^{p^*}(M)}^{p^*}
 \end{align*}
 %
-whereas we should also expect by speed of propogation and local constancy of $f$ that
+whereas we should also expect by pseudolocal finite speed of propogation and local constancy of $f$ that
 %
 \begin{align*}
     R \int_{|t| \lesssim 1/R} |e^{2 \pi i t \sqrt{-\Delta}} f|^{p^*}\; dt &\approx \| f \|_{L^{p^*}(M)}^{p^*}.
@@ -3050,9 +3198,9 @@ Thus in the range of $p^*$ we are considering, the first term has much larger $L
 %
 We therefore \emph{cannot} H\"{o}lder out the function $\tilde{b}_R$, and we must use additional orthogonality between different times in the equation.
 
-One thing that will help us is introducing the Lax Parametrix for the wave equation, which is valid because we are analyzing the wave equation over a small set of times. To do this, we can find a finite family of coordinate systems covering $S^d$, such that, modulo a smoothing operator, we can write each operator $e^{2 \pi i t \sqrt{-\Delta}}$, for $|t| \leq 1$, as a finite sum of operators $\{ W \}$, each with an associated kernel $\{ K \}$ supported on a single coordinate system of the family, such that, in these coordinates, the kernel has the form
+One thing that will help us obtain more detailed information about the operator we are studying is the introduction of the Lax Parametrix for the wave equation, which is valid because we are analyzing the wave equation over a small set of times. To do this, we can find a finite family of coordinate systems covering $S^d$, such that, modulo a smoothing operator, we can write each operator $e^{2 \pi i t \sqrt{-\Delta}}$, for $|t| \leq 1$, as a finite sum of operators $\{ W \}$, each with an associated kernel $\{ K \}$ supported on a single coordinate system of the family whose image is a precompact subset $U$ of $\RR^d$, such that, in these coordinates, for $x,y \in U$, the kernel has the form
 %
-\[ K(x,y) = \int s(x,y,\xi,t) e^{2 \pi i \Phi(x,y,\xi,t)}\; d\xi, \]
+\[ K(x,y) = \int_{\RR^d} s(x,y,\xi,t) e^{2 \pi i \Phi(x,y,\xi,t)}\; d\xi\; dt, \]
 %
 where
 %
@@ -3076,11 +3224,13 @@ where
     on the support of $s$.
 \end{itemize}
 %
-Using the Lax parametrix, we can thus write the kernel of $I_R$ as
+Using the Lax parametrix, we can thus write the kernel of $II_R$ in the coordinate chart $U$ as
 %
-\[ \int \tilde{b}_R(t) s(x,t,y,\xi) e^{2 \pi i \Phi(t,x,y,\xi)}\; d\xi. \]
+\[ \int \int_{\RR^d} \tilde{b}_R(t) s(x,y,\xi,t) e^{2 \pi i \Phi(t,x,y,\xi)}\; d\xi\; dt. \]
 %
-We will attempt to use the method of Lee and Seeger, combined with the methods of Heo, Nazarov, and Seeger, to understand this kernel by discretizing at a scale $1/R$, and apply a variant of the Calderon-Zygmund decomposition.
+where $x$ and $y$ now lie in a common precompact open set $U$ of $\RR^d$, and both $\text{supp}_x(s)$ and $\text{supp}_y(s)$ are compact subsets of $U$.
+
+We will attempt to use the method of Lee and Seeger, combined with the methods of Heo, Nazarov, and Seeger, to analyze this kernel by discretizing at a scale $1/R$, and applying a variant of the Calderon-Zygmund type decomposition that Heo, Nazarov and Seeger use to show that we have an $l^p L^p$ decoupling type bound for these quantities.
 
 In Heo, Nazarov, and Seeger, it helped to introduce an additional oscillatory factor into the estimates, which is possible because the multiplier they are studying is supported at the unit scale (in particular, away from the origin). In our situation, since $m$ was compactly supported on the annulus $1/2 \leq |\xi| \leq 2$, we can do something similar. Let $\psi$ be an even, compactly supported smooth function on the real line, whose Fourier transform is non-negative, and vanishing to high order at the origin, but nonvanishing on the annulus $1/4 \leq |\xi| \leq 4$. It suffices to show the multiplier
 %
@@ -3088,13 +3238,69 @@ In Heo, Nazarov, and Seeger, it helped to introduce an additional oscillatory fa
 %
 is in $M_{\text{Dil}}^p(M)$. This is because the operator $\lambda \mapsto 1/\widehat{\psi}(\lambda)$ is smooth on $|\lambda| \sim 1$, and thus satisfies uniform $L^p$ estimates on it's dilations by $R$ provided the inputs are linear combinations of eigenfunctions with frequency $\sim R$. But this is sufficient to conclude that $m$ is in $M_{\text{Dil}}^p(M)$. In the sequel, set
 %
-\[ b_R(t) = \chi_R(t) \cdot R \cdot (\psi * \widehat{m})(Rt). \]
+\[ b_R(t) = \chi_R(t) \cdot R \cdot (\psi * \widehat{h})(Rt). \]
 %
-Since $m$ is compactly supported, it is heuristically locally constant, and since $\psi$ is compactly supported, $\psi * \widehat{m}$ should satisfy all the same estimates that $\widehat{m}$ does. Thus we may assume all the previous parts of our argument have been completely for $\psi * \widehat{m}$. Now consider the kernel
+The symbol $\tilde{m}$ satifies all the same estimates that $m$ satisfies, and so the previous part of the argument carries through for this multiplier, and it remains to analyze the times $1/R \lesssim |t| \lesssim 1$ more carefully. Now consider the kernel
 %
-\[ K_R(x,y) = \int b_R(t) s(x,y,\xi,t) e^{2 \pi i \Phi(t,x,y,\xi)}\; d\xi, \]
+\begin{align*}
+    K_R(x,y) &= \int \int b_R(t) s(x,y,\xi,t) e^{2 \pi i \Phi(t,x,y,\xi)}\; d\xi\; dt\\
+    &= \int \int \int \chi_R(t) [R \psi(R(t - u))] [R\widehat{h}(Ru)] s(x,y,\xi,t) e^{2 \pi i \Phi(t,x,y,\xi)}\; d\xi\; dt\; du\\
+    &= \int [R \widehat{h}(Ru)] \chi_{y,u}(x)\; du,
+\end{align*}
 %
-It suffices to obtain estimates on the operator corresponding to this kernel, uniformly in $R$.
+where
+%
+\begin{align*}
+    \chi_{y,u}(x) = \int \int \chi_R(t) [R \psi(R(u - t))] s(x,y,\xi,t) e^{2 \pi i \Phi(t,x,y,\xi)} \; d\xi\; dt.
+\end{align*}
+%
+We are `averaging' (by an oscillatory quantity) over a $O(1/R)$ neighborhood of $u$, and thus we should expect from the wavefront set analysis of $\chi_{y,u}$ that this function has mass concentrated on an annulus of thickness $O(1/R)$ and radius $u$, centered at $y$.
+
+Now our goal is to prove bounds of the form
+%
+\[ \left\| \int_{1/R \lesssim |u| \lesssim 1} \int_U f(y) [R \widehat{h}(Ru)] \chi_{y,u}(x)\; dy\; du \right\|_{L^p_x} \lesssim \| f \|_{L^p_y} \]
+%
+which are uniform in $R$. We know that
+%
+\begin{align*}
+    &\left( \int_{1/R \lesssim |u| \lesssim 1} |R \widehat{h}(Ru)|^p |u|^{(d-1)(1-p/2)} \; du \right)^{1/p} \lesssim R^{-s_{p^*}} C_p(h).
+\end{align*}
+%
+Thus our argument will follow if we can justify that for functions $a$ supported on $1/R \lesssim |u| \lesssim 1$,
+%
+\[ \left\| \int \int a(y,u) \chi_{y,u}\; dy\; du \right\|_{L^p_x} \lesssim R^{s_{p^*}} C_p(h) \left( \int \int |a(y,u)|^p |u|^{(d-1)(1 - p/2)}\; dy\; du \right)^{1/p}. \]
+%
+By applying the triangle inequality, and applying symmetry, we may assume that $a$ is actually supported on $1/R \lesssim u \lesssim 1$ (i.e. we only consider positive values of $u$). It's a little suspicious that the exponent of $|u|$ on the right hand side is different from the exponent that is seen in Heo-Nasarov-Seeger, but I'll ask Andreas about this later and we'll see if it's a problem.
+
+Discretizing as in that paper, it suffices to prove the following discretized version of this result at a scale $1/R$; if $\mathcal{E}$ is any $1/R$ discretized subset of $(y,u)$ pairs,
+%
+\[ \left\| \sum_{(y,u) \in \mathcal{E}} a(y,u) \chi_{y,u} \right\|_{L^p_x} \lesssim R^{s_{p^*}} \left( \sum_{(y,u) \in \mathcal{E}} |a(y,u)|^p |u|^{(d-1)(1 - p/2)} \right)^{1/p}. \]
+%
+Applying real interpolation, it actually suffices to show, if $\mathcal{E}_k$ is the set of all $(y,u)$ pairs with $2^k / R \leq u \leq 2^{k+1} / R$, then
+%
+\[ \left\| \sum_{(y,u) \in \mathcal{E}_k} \chi_{y,u} \right\|_{L^p_x} \lesssim R^{s_{p^*}} \left( \sum_k 2^{k(d-1)(1 - p/2)} \#(\mathcal{E}_k) \right)^{1/p}. \]
+%
+The values of $k$ for which $\mathcal{E}_k$ is nonempty occur for $1 \lesssim k \lesssim \log R$.
+
+We can further perform a frequency decomposition in $\xi$, i.e. writing for $j \gtrsim 1$,
+%
+\begin{align*}
+    \chi_{y,u,j}(x) &= \int \int \chi_R(t) [R \psi(R(u - t))] \beta(\xi / 2^j) s(x,y,\xi,t) e^{2 \pi i \Phi(t,x,y,\xi)}\\
+    &= 2^{jd} \int \int \chi_R(t) [R \psi(R(u - t))] \beta(\xi) s(x,y,2^j \xi,t) e^{2 \pi i 2^j \Phi(t,x,y,\xi)}\; d\xi\; dt.
+\end{align*}
+%
+If $|d_g(x,y) - u| \gtrsim 1/R$, then the principle of nonstationary phase yields that
+%
+\[ |\chi_{y,u,j}(x)| \lesssim_N 2^{j(d-N)} (|d_g(x,y) - u| - 1/R)^{-N}. \]
+%
+On the other hand, if $|d_g(x,y) - u| \lesssim 1/R$, then we must employ a stationary phase analysis. If $|d_g(x,y) - u| \lesssim 1/R$, the region upon which TODO. IDEA: Maybe the analysis will be more simple if we use the Hadamard parametrix since the phase simplifies.
+
+% int lambda^{-N} psi^(lambda / R) e^{2 pi i lambda (u - t)} d lambda
+% R^{-N} int (lambda/R)^{-N} psi^(lambda / R) e^{2 pi i lambda (u-t)} d lambda
+% R^{-N} R psi^{(N)}(R(u - t))
+
+
+
 
 Now perform a frequency decomposition, writing
 %
