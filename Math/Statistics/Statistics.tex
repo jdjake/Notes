@@ -400,4 +400,145 @@ Given a set $X_1, \dots, X_n$ of random variables, suppose we form a directed, a
 %
 In other words, this means exactly that $X_i$ is independent of all variables once we condition on the parents of $X_i$.
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\part{Computational Learning Theory}
+
+Computational Learning Theory is the study of Machine Learning, from the perspective of theoretical computing science. In the study of computational learning theory, we specify learning models, which limit the \emph{complexity} of the kinds of algorithms one can use to study data in machine learning. Since we can often obtain huge inputs in statistics, we often limit our study to data with low \emph{sample complexity}, i.e. the minimum number of samples required to solve an algorithm, up to a certain degree of error. We might also naturally limit algorithms in \emph{time complexity}, since, despite a problem having low sample complexity, there might not exist an efficient algorithm to analyze a given set of data. We might also limit the \emph{hypothesis complexity}.
+
+\begin{comment}
+
+Common Machine Learning Tasks:
+	- Classification / Clustering (e.g. in Text Categorization, Fraud Detection, Web Search)
+
+	- Prediction: (e.g. in Weather, Financial Market Prediction, Earthquake Prediction, Handwriting Recognition)
+
+Overview of CLT:
+
+		E.g. specifying the assumptions about the input data. We could consider randomly chosen input, or adversarial learning, or a teacher giving you the best answers, or a query based system.
+
+		- Learner makes queries (Active Learning)
+			- Learner chooses x, get f(x) (Membership Query)
+			- Learner poses hypotheses, and ges counterexamples
+
+		- Learner recieves data (passive Learning)
+
+
+		Is the data every noisy?
+
+	- Performance Criterion:
+		- Depends on whether we are doing Batch / Offline Learning, or Online Learning.
+		- How do we measure accuracy?
+
+	We will focus on:
+		- Online Mistake-Bound Model
+		- PAC Learning
+		- Query Models (SQ, MQ, EQ)
+
+	Analyze Specific Learning Algorithms:
+		- Necessary + Sufficient Conditions for Learning
+		- General theory on necessary conditions on sample complexity, ad hoc methods on time complexity of algoriths.
+		- Learning from Noisy Data
+		- Boosting (Repeating an algorithm with 51\% accuracy to get an algorithm with 99\% accuracy)
+		- Comparing Learning Models
+
+Let X be a set, and C a *concept class* of functions c: X -> {0,1}.
+
+Examples:
+	- Set of all monotone conjuctions c(x) = x_{i_1} ^ ... ^ x_{i_k}. Then C has cardinality 2^n. We assume the conjunction corresponding to the empty set is one everywhere.
+
+	- C is the set of all literals (a variable or it's negation). Then C has cardinality 3^n.
+
+	- C is the set of all DNF formulas with at most n^2 terms (replace n^2 with 2^n and you can model any function).
+
+	- C is the set of all k-DNF formulas (DNF where each term has at most k variables).
+
+	- C is the set of all linear threshold functions ( c(x) = 1 if and only if w * x >= theta for some fixed theta and w ).
+		E.g. Majority function Maj: { 0,1 }^n -> { 0,1}
+
+	- C is the set of all initial intervals of X = { 0, ..., 2^n - 1 }, i.e. indicators of all intervals [0,n].
+
+We describe the Online Mistake Bound Learning Model. This came about in the 80s, whereas the more modern and general *regret* bounded learning model was developed later.
+	- At each stage of the algorithm, a learning maintains a hypothesis function h: X -> {0,1} (which does not need to be in the concept class C).
+	- Learner is given x in X. If h(x) does not equal c(x), they lose a point.
+	- Learner can now update h given this information.
+The goal is to minimize the # of mistakes, *in the worst case*.
+
+
+
+For any finite set X, one can always choose a mistake bound of |X| (a much more sophisticated argument shows that at most log |X| mistakes can be made)
+Also we can always choose a strategy to make at most |C| - 1 mistakes.
+
+If C is the set of all initial intervals of { 0, ..., n }, then despite the fact that C has n elements, there is an algorithm that in the worst case incurs at most log n mistakes. Every time we observe a 1, we know there are 1s to the left, and if we observe a 0, there are 0s to the right. Whenever we observe x, we return the answer we know to be correct, or if we do not know the answer, we choose the answer that, if wrong, allows us to learn more 0s and 1s. That way, each time we are wrong, we half the amount of unknown values we do not know.
+
+If X = [0,1], then in the worst case, we make infinitely many mistakes. We have to change the model to discuss learning in here.
+
+
+
+
+Now let's talk about the *elimination* algorithm for the online learning of (monotone) disjunctions. We maintain a hypothesis of which variables are in the disjunction, starting with the hypothesis h that *all* variables are in the disjunction. For each observation x_0, we see the following result:
+
+	- If h(x) = 1 and c(x) = 0:
+		Remove from h all variables that are equal to one in x_0.
+
+	- If h(x) = c(x), don't change anything.
+
+	We will *never* see that h(x) = 0 and c(x) = 1.
+
+The mistake bound here is precisely n
+
+A similar algorithm works for all (not necessarily monotone) disjunctions. We start with the hypothesis
+
+x_1 v -x_1 v x_2 v -x_2 ... x_n v -x_n
+
+Then remove all variables we can when we make a mistake. The mistake bound for this algorithm is n+1, since after a single mistake, we can cross off n literals in the disjunction, and we essentially have the same problem as the monotone disjunctions.
+
+
+
+
+Decision List: Decision Tree which can only branch to the right (branches to the left always terminate)
+
+Algorithm to learn length r decision lists with mitsake bound O(nr). This is non-optimal: The most optimal is O(log n * r). But it is unknown whether an algorithm can do this in *polynomial time*.
+
+To determine the algorithm: we maintain a *generalized Decision List*. Each level can have multiple possible if / else statements, so that the list doesn't even define a Boolean function. We start with a generalized decision list that has only one level, and returns both zero and one for each variable observed. Each time we see an observation, we pick an arbitrary decision list that the generalized decision list contains. If we make a mistake, we take all possible variables that could be used to make the mistake, and shift then to the right. Since our generalized decision list always has n terms, After nr mistakes, we would observe that all possible mistakes have been shifted as far to the right as needed to see that the generalized decision list represents a unique decision list.
+
+
+
+
+
+
+
+
+
+
+
+Next Time: First Interesting Algorithm to Learn Conjunctions
+
+\end{comment}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 \end{document}

@@ -309,6 +309,8 @@ An ! before the title of a book is used to indicate a book I have only read a sm
 
 - ! Ambrosio / Gigli, A User's Guide to Optimal Transport
 
+- ! Zeidler, Nonlinear Functional Analysis and Its Applications (4 Volumes)
+
 
 ### Commutative Algebra
 
