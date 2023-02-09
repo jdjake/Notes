@@ -1,0 +1,66 @@
+# Chapter 1: The Capitalist Revolution
+
+Economics is the study of how people interact with each other and with their natural surroundings in producing their livelihoods:
+
+- Data shows that in most countries, at some point in history (varying based on the country), GDP started increasing exponentially. The fact that this exponential growth began at different times for different countries is one potential cause for the vast inequality between countries. A natural question of economics is to explain *why* this exponential growth in GDP occurred.
+- Accompanied with this exponential growth in GDP is a rise of income inequality between individuals in a particular society (the extent of which differs depending on the society, but is noticeable even in a country where this effect is not as strong, e.g. Norway, where the top 90% earn 5.4 times the income of the bottom 10%). Another question of economics is to explain *why* income inequality arises.
+- The speed of technological change has also increased drastically over the past 400 years. A fire takes about 1 hour of work for 17 lumen hour of light. Animal fat, about 20 lumen hours. 7000 years after the invention of fire, we had started using sesame oil to produce light, which produces about 24 lumen hours per hour of work. 3000 years later, in the early 1800s, candles provided about nine times more lumen hours per hour of work. Nowadays, Fluorescent bulbs are 45,000 times more efficient than candles. This the efficiency of producing light has also grown exponentially.
+The speed of transmitting information has also grown exponentially. In ancient Rome, information travelled at a rate of 1 mile per hour between cities. 1500 years later, the speed was roughly the same rate. But in 1857, news of a mutiny of Indian troops reached London in 46 days. Lincoln's assassination only took 13 days to reach England. One year after his assassination, a transatlantic cable cut the time to communicate between the US and the UK to minutes.
+A natural question of economics is how technological change impacts our production of goods and services.
+- In most countries, the amount of the labor force devoted to agriculture has drastically fallen (but not in all countries, e.g. in India, which still has around 50% of it’s labor force devoted to agriculture). Economics might provide theories as to how the change of labor distribution happens.
+- Accompanied with these exponential growths is the exponential growth in the average temperature on earth, i.e. global warming. Economics might address the reasons for such change as a result of our organization of the production of goods and services, and also determine how climate change will impact our economic system.
+
+Empirical data shows the adoption of capitalist institutions is correlated with exponential growth of technology and GDP. On the other hand, empirical data also indicates that the adoption of capitalist institutions cannot solely be the cause of this economic growth.
+
+- The Russian federation experienced slower economic growth than the Soviet Union after shock therapy introduced capitalist institutions into the country.
+- South Korea / China has had high economic growth. Governments in South Korea influenced high education / public investments (I.e. they had institutions which economics have described make the country into a *developmental state*, a country whose government heavily invests in economic development via public investment, subsidies, and education).
+- Despite the adoption of capitalist institutions, substantial increases in GDP did not occur in many countries until they gained independence from colonial rule / interference from European nations. In India, 50 years after independence from Britain, life expectancy had risen from 27 years to 65 years. On the other hand, even after independence from Spain, many Latin American countries did not experience exponential growth.
+- Black inventors in the early 1900s had a sharp drop off in patent creation despite having the same property rights / patent rights as white inventors, which is correlated with a rise in violence against black people. Thus the environment individuals live in, for instance, our feeling of security may be necessary for innovation.
+
+We should be skeptical when anyone claims that something complex (capitalism) ‘causes’ something else (increased living standards, technological improvement, a networked world, or environmental challenges). Capitalism is certainly correlated with the exponential growth of technology and GDP, but is it the cause of such a thing (correlation is noticing a pattern between two things, causation requires an explanatory mechanism that accounts for this pattern).
+
+- *Natural experiment*: An empirical study where natural conditions allow one to observe two phenomena with most features controlled for by nature, not by any decision on behalf of the observers.
+    - Example: The division of Germany into East and West. The west maintained it's market structure. The east switched to a more centrally planned economy. Before this change, both systems were fairly similar. This we can obtain some correlations related to the switch by observing historical data about each side. For instance, both sides GDP per Capita grew at an exponential rate, but the exponential growth rate in west Germany was higher than the exponential growth rate in East Germany. We cannot attribute capitalism as the cause for this growth rate purely from the evidence, but we can say from this that the separation of East and West Germany mattered for GDP growth, provided we accept both countries had similar systems before the split.
+    - Another example is a comparison between Botswana and Nigeria. Both are rich in natural resources, but Botswana succeeded in achieving sustained growth, whereas Nigeria failed to do this. The quality of institutions - corruption, allocation of funds, etc, or their relationship with advanced capitalist countries, differs in these countries. We cannot conclude from this study that the quality of institutions are a cause of the successes, but provided we agree the resources in these countries are similar, we can conclude that having natural resources is not the sole cause of economic growth.
+
+We will likely never agree on the causes of most economic phenomena, because we almost always cannot replicate the phenomena in question, and most economics effects are a result of the complicated interplay between many different niche causes not determined by a general theory. In economics, we try and look for general mechanisms that explain success or failure in that time, building an explanatory model. This is different from historians, who typically explain phenomena in terms of the time and place that phenomena exist. The advantage of economic models is that they allow an ability to test the models across time. The disadvantage is that they throw away much information about the particular that is actually very useful.
+
+*Aside on GDP (Gross Domestic Product)*
+
+GDP Statistics were pushed to prominence by Keynes in 1940s, who was trying to determine to what capacity the economy of the United Kingdom could be converted to help in the war effort.
+
+*Nominal GDP* - The total amount of money exchanged for *final goods and services* (to prevent double counting) in an economy over a given time period. If there are *N* goods in the economy, and for 1 ≤ *i* ≤ *N*, *p(i)* gives the price of that *i*th good, and *q(i)* the quantity exchanged, then the nominal GDP is *p(1)q(1) + … + p(N)q(N)*.
+
+*Real GDP*: GDP adjusted for inflation by fixing the prices of goods against a standard set of prices rather than the price they are currently sold at. Purely from a price index of an individual good, one can calculate the inflation of individual products, but the calculation of overall inflation in an economy requires us to fix a standard set of prices, and this requires some notion of value so that one can account for the introduction of new goods and service, or better quality goods and services. Thus real GDP is not impartial, we have to weight the production of different industries. This is difficult, since it is hard to separate inflation from price change. For instance, how much ‘more laptop' do you have nowadays for the same price that you did a decade ago, e.g. what is the standard price for a new laptop on the market, vs. the standard price of a laptop sold a year before.
+
+*Purchasing Power Parity GDP:* GDP adjusted by purchasing power to account for the differing values of money in different countries. Again, this requires an independent measure of value.
+
+*Disposable Income*: Amount of income available to a person after taxes have been accounted for. (money that can be used on goods and services).
+
+Key assumption: When we use GDP to determine how much 'value' exists in a society, we often equate value with price, since higher prices purchased more often raise the GDP more. But this discards a lot of things we do that are valued in society, but do not have an associated cost, e.g. social relations, public services (except second hand via the production cost of these services), housework, volunteer work (e.g. the number of articles written on wikipedia). Averages also completely discount the problem of inequality in society, and the self reported welfare of citizens is highly correlated to the existence of income disparity in society.
+
+“GDP measures everything, in short, except that which makes life worthwhile” - Robert Kennedy. 
+
+GDP is hard to relate to human welfare, because work is just a means, not an end in itself.
+
+“In a well-ordered society, the securing of one’s livelihood should be, and is found to be, the easiest thing in the world. Indeed, the test of orderliness in a country is not the number of millionaires it owns, but the absence of starvation among its masses… Ours will only then be a truly spiritual nation when we shall show more truth than gold, greater fearlessness than pomp of power and wealth, greater charity than love of self.” - Mahatma Gandhi.
+
+Accumulating more goods than absolute poverty does not yield to greater moral growth. Economists such as Mahbub ul Haq and Amarta Sen have developed the *HDI* (Human Development Index) to account for this, aiming to be a summary measure of average achievement in key dimensions of human development: a long and healthy life, being knowledgeable and have a decent standard of living.
+
+We return to a deeper discussion of GDP, and other measures of an entire economy in Unit 13.
+
+*Defining the Features of Capitalism*
+
+Definitions in the social sciences often cannot be as precise as they are in the natural sciences. Unlike water, we cannot identify a capitalist economic system using easy-to-measure physical characteristics. But we still need somewhat precise definitions in order to help us communicate.
+
+Capitalism: A Particular system of institutions that organize the production of goods in a society, in particular, the institutions of *private property*, *markets*, and *firms*.
+
+- *Economic System*: The laws and customs (collectively known as ‘institutions’) that organize the production and distribution of goods.
+    - Examples of institutions:
+        - *Private Property*: Things you are free to use in any way you see fit, including giving them to someone else. The extent of private property differs depending on a given society, e.g. whether housing was communal, or *Slavery, i.e.* whether humans could own other humans (of particular interest to economics, ownership of their labor power). A particularly important type of private property to capitalism is the private ownership of *Capital Goods*, private, non labor inputs used to produce goods and services.
+        - *Families* working together to produce goods. The predominance of the institution of families in an economic system has declined with the rise of capitalism, possibly because of the decline in the percentage of the labor force devoted to agricultural labor.
+        - *Firms*: Organizations for producing goods by purchasing labor from individuals. The inputs and outputs are private property. Firms form the *demand side* of the labor market, workers form the *supply side*. Firms combine the power that comes from centralization, i.e. labor power in the hands of an owner of a firm, together with the limitation of power that come from having to produce money in order to pay for that labor power. A boss is the almighty ruler of his company, until they have to sell their wares on the market, in which they just become like any other person. In this book it will be argued that this combination of centralization and decentralization is to account for the success of capitalism.
+        - Markets: A system of exchange that is symmetric and voluntary.
+            - One explanation for why markets make labor more productive is because they enable us to utilize our comparative advantage as much as possible, and can specialize in certain jobs.
+            - C*omparative Advantage*: an individual is more efficient at converting inputs into outputs.
+            - A*bsolute Advantage*: an individual has more access to relevant inputs than another individual.

@@ -1,0 +1,78 @@
+## Quotes:
+
+Les hommes ne s'entendent pas, parce qu'ils ne parlent pas la même langue et qu’il y a des langues qui ne s’apprennent pas. (Men do not get along because they do not speak the same language and there are languages that cannot be learned). - Henri Poincar\'{e}.
+
+
+
+
+
+
+
+
+## Essay Notes
+
+### Intuitionism and Formalism: By L. E. J. Brouwer (1913)
+
+*Science* is the systemic catologuing the laws of nature by which certain phenomena *cause* certain phenomena. The power that science leads to man is the ability to bring about certain primary phenomena, which may be difficult to achieve directly, by evoking other phenomena connected by science as a cause for this primary phenomena. Mankind can create order in the universe by isolating causal sequences of phenomena from other causes, as well as introducing other phenomena caused by it's own activity. Most important of this is the phenomena of *measuring* and *counting*.
+
+Often natural laws connected to measurement can only be understood to hold up to a certain degree of approximation or error, and it is often our ability to measure and count objects to a greater degree of accuracy which induces new theories of science. The exceptions to thes rules have been the laws of arithmetic and geometry, and of rigid bodies and celestial mechanics, which have resisted most improvements in accurate measurements. Though for the latter this is mostly viewed as a coincidence, it is viewed as a property of mathematics. The confidence in this statement is that mathematics is *the* exact science.
+
+There have been two primary schools of philosophical thought as to on what grounds we should believe in the exactness of mathematics, *intuitionism*, and *formalism*. These viewpoints are often diametrically opposed, but (as of 1912) they have come to the common agreement that the exact validity of mathematical laws are not laws of nature: the intuitionist says that the validity lies in the human intellect, the formalist says purely on the paper upon which the mathematics is written.
+
+Let us begin with the intuitionist approach. We can find an early example in Kant. For Kant, the axioms of arithmetic and geometry were *synthetic a priori judgements*, e.g. judgements independent of experience and not capable of analytic demonstration, which explained their unquestionable exactness in the world of experience, and in the world of abstract thought; disproving arithmetical and geometrical laws experimentally was, to Kant, unthinkable.
+
+The formalist instead argues that human reason cannot really picture the mathematical objects it studies, i.e. of exact straight lines, or numbers larger than 10, and therefore mathematical entities such as 'a straight line', or 'the number two thousand and forty five' do not exist in nature, nor even in our conception of nature. When humans derive statements from other axiomatic statements, we may believe we have derived *truth*, but to a formalist this notion is just a pure sensation of delight arising from the knowledge that such derivations can be projected into properties of the real world. Formalists do not care about truth, but merely deriving meaningless series of relations, which only have mathematical existence once a game of 'symbolic relations', or mathematical laws, has been fixed, thus forming a 'symbolic logic'. The desire for precise relationships means usual spoken languages lack the precision for formalists, who try to avoid the use of ordinary language in mathematics. Which symbolic relations one accepts is irrelevant to the formalist: it is the job of the philosopher to determine which laws can be projected onto nature, the job of the anthropologist or psychologist to determine which laws give us a 'sensation of delight'.
+
+Nineteenth century mathematics seemed to yield a victory for the formalists. For it was seen that various mathematical theories could be translated from one domain to another: statements of projective geometry remain true if one interchanges the notion of 'point' and 'line', and statements of arithmetic remained true over other number systems. Thus to the mathematician, considering only the logical form of arguments was relevent to mathematical content. An even greater blow was dealt by the discovery of non Euclidean geometry, under which standard geometrical facts can be projected. For instance, statements true in Euclidean geometry corresponded to projective geometry statements, and statements in projective geometry could be converted back to Euclidean form. Thus Kant's conception of the apriori nature of space began to fall apart.
+
+Nonetheless, a neo-intuitionism has begun to arise in recent years, obtained by abandoning Kant's apriori conception of space, but adhering even more resolution to Kant's apriori conception of *time*. We percieve the moments of life as occuring in time, qualitatively, at different moments, which are reunited by the fundamental phenomenon of the conception of time, which is the fundamental phenomenon of mathematical thinking. This intuition creates not only our intuition of discrete units (and thus all finite numbers), but also an intuition of 'between-ness', which gives us the linear continuum, and the idea of 'unity', which gives us the infinite ordinal number $\omega$. But we cannot necessarily discretize from the continuum, i.e. because we have no way of thinking of infinitely many things at once from the continuum. Mathematics is precisely this languageless intuition, and 'written mathematics' is only written mathematics in the sense that it assists the mathematical memory, or enables other individuals to share the mathematics going on in another's mind.
+
+While formalism regulates what is 'true mathematics' to the psychologists, for practical purposes it must relegate it's work to a certain few sets of axiom systems that it percieves will probably be seen as 'true', for instance, the axioms of set theory. From this axiom system the formalist will eventually prove a principle of induction, a fact intuitively true for the mathematics of the intuitionists. But this means the formalist will never be able to justify a choice of axioms by a proof of non-contradictoryness of their theory, for in order to conclude a contradiction will never arise, the formalist would have to justify an infinite number of statements, and thus implicitly assume the principle of induction.
+
+On finitary problems, the formalists and intuitionists differ only in their method, but on problems of the infinite the results differ. Intuitionists only deal with denumerable sequences of objects, and their unity cannot be decomposed into infinitely many discrete elements. For instance, the theory of cardinality of infinite objects breaks down. As an example, the continuum hypothesis, i.e. whether the cardinality of $\mathbb{R}$ is equal to the cardinality of $\aleph_1$, has no meaning whatsoever to an intuitionist, since intuition cannot break down the continuum $\mathbb{R}$ into a set of points in order to consider it's cardinality, and similarily, the construction of $\aleph_1$ as the collection of all denumerable ordinals cannot be broken down into it's original elements in order to consider it's cardinality. Nonetheless, it is possible to consider some results. We might ask whether it is possible to find a process which assigns a distinct countable ordinal to every sequence of digits (in the language of the formalist, to construct a function $f: [0,1] \to \aleph_1$). The intuitionist would answer in the negative; TODO I Don't Understand this argument.
+
+
+
+
+
+
+
+
+
+### The Three Crises in Mathematics: Logicism, Intuitionism, and Formalism, by Ernst Snapper (1979)
+
+The three schools in the title all tried to give a firm foundation in mathematics; the three crises are the fact that these schools failed.
+
+Let us start with *logicism*, a school of thought that started around 1884 with the German philosopher and mathematician Gottlob Frege (1848-1925), and rediscovered 18 years later by Bertrand Russell. Other prominant early logicists include Giuseppe Peano, and Alfred North Whithead, Russell's collaborater on the Principia Mathematica. The goal of logicism was to show mathematics was simply a consequence of logic, i.e. all propositions of mathematics followed from propositions of logic, which are completely general statements, true by virtue of their form rather than the particular content of the statement. This project lead to the Principia Mathematica, a book building a formal set theory to which Russell and Whitehead thought all mathematics could be reduced. What remained to be done after the book's publication, was to justify why the axioms of the Principia Mathematica belonged to logic. We can immediately see the problems of this by considering a more modern formulation: the axioms of ZFC. Neither the axiom of choice or axioms of infinity (that there exists an infinite set) could not reasonably be considered logical statements. Thus the early logicists failed to complete their project, but their work has great importance for the development of modern mathematical logic.
+
+One might connect logicism to *Platonic realism*, i.e. that abstract concepts have independent existence outside of the human mind. One advantage of this approach is that one can accept concepts without worrying how the mind can create these concepts. Realism believes the concept of a set lies in the real world, contrasting *intuitionism*, where concepts are only accepted if they can be constructed in the mind.
+
+The intuitionist school began in 1908, first discussed by the Dutch mathematician L.E.J. Brouwer (1881-1966). They approached the problem of mathematics from a completely different perspective. Whereas logicists believed there was no problem with contemporary mathematical techniques, and rather that they must be justified via logical statements, intuitionists felt there were many mathematical techniques that were invalid, which was the reason for the existence of the many mathematical paradoxes that began to emerge from Cantor's set theory in the late 19th century.
+
+Intuitionism connects to the philosophical school of *conceptualism*, that abstract concepts exist only as they are constructed in the human mind. The term intuitionism emerges from Kant's concept of *intuition*, i.e. the phenomena immediately available of thought. Using the intuition of *time*, Brouwer justified that humans have a primordial intuition which enables one to form mental constructs for any natural number. Mathematics is then the activity of carrying out mental constructions of various mathematical concepts. A consequence of this is that mathematics cannot be reduced to any other science: any logical law not consisting of the construction of various concepts must be rejected. And many non-constructive modern mathematical techniques (like the axiom of choice) must be rejected. But intuitionists would argue that their purpose is not to justify all mathematical techniques, but only to give the correct form of mathematics, and then to see what mathematics falls out of this form. The advantage is that intuitionism gives mathematics a firm foundation; there are able to philosophically justify why constructs can never give rise to contradictions (QUESTION: WHAT IS THIS JUSTIFICATION?). To summarize the techniques that intuitionists allow in a vulgar way, consider this quote by Herbrand:
+
+"By a intuitionistic argument we understand an argument satisfying the following conditions: In it we never consider anything but a given finite number of objects and of functions; these functions are well defined, their definition allowing the computation of their values in a univocal way; we never state that an object exists without giving the means of constructing it; we never consider the totality of all the objects x of an infinite collection; and when we say that an argument (or a theorem) is true for all these x, we mean that, for each x taken by itself, it is possible to repeat the general argument in question, which should be considered to be merely the prototype of these particular arguments."
+
+Any particular given field of mathematical research contains many *non constructive techniques*, which must be thrown out by the intuitionists. The mathematical community at large has thus largely rejected the intuitionistic approach. Often nonconstructive techniques are powerful, and result in simpler, more clean proofs than the intuitionistic approach. Intuitionism also has certain results which are false in classical mathematics, such as the fact that *all functions defined for all (constructible) real numbers are continuous* (Question: Why can't the Heaviside Step Function be constructed?). But we emphasize that the only problems with the intuitionistic approach are emotional, rather than practical or scientific reasons. The only crisis of the intuitionists is their failure to get the greater mathematical community to accept their techniques.
+
+Finally, we have the formalists, began in 1910 by the most famous modern formalist, David Hilbert (1862-1943). This is the school whose work is most used in modern studies of mathematical logic. The goal of formalists is to formalize mathematical theories; i.e. to obtain a formal language with which to precisely specify mathematical theories, as well as the valid formal rules of reasoning in this formal language. This is necessary to ask precise questions about the foundations of mathematical theories, such as 'is this mathematical theory free of contradictions', and to answer them *using mathematical techniques*. Logicists also used formality, but their goals were different. Logicists wanted to justify why mathematical techniques were logical, whereas formalists simply wanted to prove certain branches of mathematics could not prove contradictions.
+
+The main crises here was that of G\"{o}del, who showed that formalization cannot be used to prove sufficiently complex mathematical theories (anything in which one can do arithmetic) are free of contradictions. A consequence is that Hilbert's formalist program cannot be carried out.
+
+Let us reflect on the philosophical content of formalism. Once a language is formalized, we perform mathematical proofs using everyday, non precise, mathematical language. Hilbert's idea was that this would cause no problem as long as we used mathematical techniques which were absolutely safe (he called them 'finitary reasonings', though intuitionists might call them 'intuitionistic reasonings'). The closest philosophical school to formalism is *nominalism*. This philosophy states the abstract concepts do not exist in any way, neither in the mind, nor outside the mind. In nominalism, abstract concepts are simply names for particular things. Formalists avoid using abstract concepts by studying particular mathematical concepts, the first order theories, which are simply names used to refer to the particular, abstract mathematical concepts, and this is why formalism might be compared to nominalism.
+
+
+
+
+## Other Sources to Look at Sometime
+
+- Poincare, La Science et l'Hypothese.
+- Poincare, Scientia No. XXIV p. 6
+- Borel, Revue du Mois, No. 80, p. 221.
+- Russell, Introduction to Mathematical Philosophy.
+- Heyting, Intuitionism. An Introduciton.
+- Dummitt, Elements of Intuitionism
+- Troelstra, Choice Sequences
+- Quine, "On What There Is".
+- Benacerrag and Putnum, Philosophy of Mathematics
+- Heijenoort, From Frege to Godel.

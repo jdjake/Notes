@@ -69,7 +69,7 @@
 
 \maketitle
 
-Our goal is to improve the result of the last paper. Most of the work has been done in that setting in the precise range needed, so we can skip all but the final analysis of an expectation in this paper. Let us reintroduce notation:
+Our goal is to improve the result of the last paper. Let us reintroduce notation:
 %
 \begin{itemize}
     \item We consider a family of axis-aligned cubes $Q_1,\dots,Q_n \subset [0,1]^d$, each with common sidelength $s > 0$, such that $d(Q_i,Q_j) \geq 10s$ for $i \neq j$.
@@ -82,24 +82,38 @@ Our goal is to improve the result of the last paper. Most of the work has been d
 
     \item Let $r = M^{-1/\lambda}$, and consider the random set $I$ of all indices $k_n \in \{ 1, \dots, M \}$ such that there exists indices $k_1,\dots,k_{n-1} \in \{ 1, \dots, M \}$ such that
     %
-    \[ |X_n(k_n) - f(X_1(k_1),\dots,X_{n-1}(k_{n-1}))| \leq r. \]
-
-    \item Finally, define
+    \[ |f(X_1(k_1), \dots, X_n(k_n))| \leq r. \]
     %
-    \[ H(\xi) = \sum_{k \in I} e^{2 \pi i \xi \cdot X_n(k)}. \]
+    There are two situations of interest here:
+    %
+    \begin{itemize}
+        \item (Scenario A): $f: (\RR^d)^n \to \RR^k$ is smooth and has full rank everywhere, so that the zero set is a $dn - k$ dimensional manifold.
+
+        \item (Scenario B): $f: (\RR^d)^n \to \RR^d$ is of the form $f(x_1,\dots,x_n) = x_n - g(x_1,\dots,x_{n-1})$.
+    \end{itemize}
+
+    \item Finally, for $\xi \in \ZZ^d$
+    %
+    \[ H(\xi) = \frac{1}{M} \sum_{k \in I} e^{2 \pi i \xi \cdot X_n(k)}. \]
+    %
+    Our goal is to show that with high probability (so that we can take a union bound over all $|\xi| \lesssim M^{1/\lambda}$) we have $|H(\xi)| \lesssim M^{-1/2} + |\xi|^{-\lambda/2}$. In Scenario B, we already know that for the optimal range of $\lambda$, we have
+    %
+    \[ |H(\xi) - \mathbf{E}[H(\xi)]| \lesssim M^{-1/2} \]
+    %
+    with high probability, so we just need to bound $\EE[H(\xi)]$, which is a non-probabilistic quantity. In Scenario A, the novel situation occurs when $\lambda > k/(n-1/2)$, and in Scenario B, the novel situation occurs when $\lambda > d/(n-3/4)$ and $n > 2$.
 \end{itemize}
 %
-Our goal is to show that for any $\delta > 0$, there is $M_0 > 0$ such that for $M \geq M_0$, and any $\xi \in \ZZ^d$,
-%
-\[ \EE[H(\xi)] \leq \delta M |\xi|^{-\lambda/2} + O_\delta(M^{1/2}). \]
-%
-In the previous paper, we were able to establish this result with $\lambda = d/(n-3/4)$, but we expect that one can establish this result with $\lambda = d/(n-1)$. This was established in the case $n = 2$, where $\lambda = d$. So the case of interest is where $n \geq 3$.
+In these notes I'll develop loose ideas I have to prove the results above.
 
-\section{Review of Last Paper Proof}
+\section{Review of Concentration of Measure}
+
+s
+
+\section{Review of Expectation Bounds}
 
 We start by writing
 %
-\[ \EE[H(\xi)] = M \int \psi_n(x_n) p_M(x_n) e^{2 \pi i \xi \cdot x_n}\; dx_n, \]
+\[ \EE[H(\xi)] = \int \psi_n(x_n) p_M(x_n) e^{2 \pi i \xi \cdot x_n}\; dx_n, \]
 %
 where $p_M(x_n)$ denotes the probability that there exists $k_1,\dots,k_{n-1} \in \{ 1, \dots, M \}$ such that
 %
@@ -111,7 +125,7 @@ In that paper, it was shown using an inclusion exclusion argument that if $E_{x_
 %
 The error here is $O(M^{-1/2})$ provided that $\lambda \leq d / (n - 3/4)$. Thus in this situation if we write $\psi = \psi_1 \otimes \dots \otimes \psi_n$ then
 %
-\[ \EE[H(\xi)] = \left( M \int \int_{E_{x_n}} \psi(x) e^{2 \pi i \xi \cdot x_n} \right) + O(M^{1/2}). \]
+\[ \EE[H(\xi)] = \left( \int \int_{E_{x_n}} \psi(x) e^{2 \pi i \xi \cdot x_n} \right) + O(M^{-1/2}). \]
 %
 The integral here can be converted using the coarea formula into an oscillatory integral, which yields the $\delta |\xi|^{-\lambda/2}$ term required.
 
@@ -123,6 +137,8 @@ The function $\psi_n$ is smooth. Thus if we could show that
 %
 then the fact that $\EE[H(\xi)]$ is $M$ times the  Fourier transform of $\psi_n \cdot P_M$ would give the required result. But heuristically, it doesn't seem like the function should be that smooth, though I should redo the calculation just to be sure.
 
+
+
 \section{Counting Solutions}
 
 The reason the argument in the first section worked was that with high probability, the number of solutions to
@@ -132,6 +148,16 @@ The reason the argument in the first section worked was that with high probabili
 was equal to $M^{n-1}$ times the surface area of the hyperplane $E_{x_n}$. Could we do something more robust to get around the inclusion-exclusion argument?
 
 One potential idea, instead of drawing $X_1,\dots,X_{n-1}$ from a continuous distribution, is to draw the points from a discrete distribution, e.g. uniformly distributed on some rational points with a fixed denominator in the cube $Q_i$? If $f$ is an integer valued polynomial, then perhaps the circle method might then be of some use since then we might get much better bounds on the number of solutions to the equation? We could also use probabilistic decoupling to remove the cubes $\{ Q_i \}$ from the equation if needed, provided the concentration argument goes through.
+
+\section{Can One Connect To The Study of Random Matrices}
+
+If we form a $n \times N$ matrix $A$ consisting of the values $\{ X_i(k) \}$, is there a way to connect our problem to the study of this random matrix?
+
+We can form the tensor $T = \left( \sum_k X_1(k) \right) \otimes \dots \otimes \left( \sum_k X_n(k) \right)$. But I'm not sure this is too helpful, since our problem does not really work with linear phenomena that much.
+
+\section{Gaussian Chaos}
+
+Gaussian Chaos (at least the finite dimensional theory?) studies quantities of the form $\sum a_{ij} X_i X_j$, where $X = (X_1, \dots, X_n)$ is a random vector with indpeendent entries. Techniques from the study of these quantities might lead to results for the functions I'm studying, since this problem also involves a `tensor product' of entries.
 
 \begin{comment}
 
@@ -192,6 +218,60 @@ Thus at any $x_0$ where $x$ is smooth, we conclude
 \[ g'(x_0) = f'(x) \cdot x' + \frac{x' - 1}{f'(x)} - \frac{x - x_0}{f'(x)^2} f''(x) x'. \]
 
 \end{comment}
+
+
+
+\section{$L^2$ Trick}
+We note that the function $H$ is the Fourier transform of the measure
+%
+\[ \sum_{k \in I} \delta_{X_n(k)}, \]
+%
+but the goal, of course, is to thicken this measure on an $r$ neighborhood, i.e. considering the probability density
+%
+\[ \psi(x) = \#(I)^{-1} \sum_{k \in I} \phi \left( \frac{x - X_n(k)}{r} \right). \]
+%
+This is a sum of functions with disjoint support, and $\#(I) \approx M$ with high probability for the $\lambda$ we consider, and so the $L^2$ norm of $\psi$ is equal to
+% L^1 norm O(1), L^infty norm O(M^{-1}), L^2 norm O(M^{-1/2})
+\[ M^{-1} \left( M \cdot O(r^d) \right)^{1/2} \lesssim M^{-1/2} \cdot r^{d/2} = M^{-1/2} M^{-d/2 \lambda} = M^{-(1/2)(1 + d/\lambda)}. \]
+%
+Because $\psi$ is supported on $\TT^d$, we can take Fourier series, and we conclude that the $L^2$ norm of the Fourier series $\widehat{\psi}$ of $\psi$ is also equal to $M^{-(1/2)(1 + d/\lambda)}$,
+%
+\[ \sum_{\xi \in \ZZ^d} |\widehat{\psi}(\xi)|^2 \lesssim M^{-(1 + d/\lambda)} \]
+%
+Thus we get that
+%
+\[ \sum_{\xi \in \ZZ^d} \left| H(\xi) \widehat{\phi} \left( r x \right) \right|^2 \lesssim M^{d/\lambda-1} \]
+%
+In particular, we get that
+%
+\[ \sum_{|\xi| \lesssim M^{1/\lambda}} |H(\xi)|^2 \lesssim M^{1 + d/\lambda} \]
+%
+Thus $|H(\xi)|^2 \lesssim M^{1/2}$ for \emph{most $\xi$}, as we might expect from e.g. energy integral type relations between Hausdorff dimension and Fourier analysis. In particular, we get that $|H(\xi)| \lesssim (\log M)^{1/2} \cdot M^{1/2}$ for all but $M^{d/\lambda} / \log M$ indices. Maybe this will help with applying a union bound. In particular, we just need to show that for each $\xi \in \ZZ^d$
+%
+\[ \PP \left( |H(\xi)| \geq C \log M \cdot M^{-1/2} \right) \lessapprox M^{-d/\lambda}. \]
+%
+But this still seems to require a subexponential / subgaussian bound on $H(\xi)$, i.e. that $\| H(\xi) \|_{\psi_2} \lesssim M^{-1/2}$.
+
+
+\section{Invariance}
+
+Our distributions are a little weird. Can we replace them with something nicer (e.g. a normal distribution), using for instance, Lindeberg's replacement method (1922), or Stein's method (1970), or Tikhomirov's method (1980).
+
+\section{Decoupling Methods}
+
+Decoupling yields bounds of the form
+%
+\[ \| H(\xi) \|_{L^p_\xi} = \left\| \sum_{k \in I} e^{2 \pi i \xi \cdot x_k} \right\|_{L^p_\xi} \lesssim \#(I)^{1/2}. \]
+%
+If we could set $p = \infty$, then we would get precisely the bounds we need. The problem is that this bound is not really a bound that standard decoupling techniques obtain when $p = \infty$. Can we still use decoupling type techniques to get something useful here?
+
+
+
+
+
+
+
+
 
 \bibliographystyle{amsplain}
 \bibliography{FourierDimensionNonlinearPatterns}

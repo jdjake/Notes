@@ -1,0 +1,838 @@
+\documentclass[usenames,dvipsnames,12pt]{beamer}
+
+\usetheme{Copenhagen}
+
+\usepackage{tikz}
+\usepackage{tkz-berge}
+\usepackage{tkz-graph}
+\usepackage{subcaption}
+\usepackage{blkarray}
+\usepackage{aligned-overset}
+\usepackage{graphicx}
+\usepackage{calc}
+
+\setbeamertemplate{footline}[frame number]
+
+\usetikzlibrary{patterns,arrows,decorations.pathreplacing}
+
+\usepackage{xcolor}
+\definecolor{dblue}{RGB}{20,66,129}
+\definecolor{rose}{RGB}{255,101,122}
+\definecolor{crimsonred}{RGB}{132,22,23}
+\definecolor{darkblue}{RGB}{72,61,139}
+
+\definecolor{deepblue}{RGB}{36,123,160}
+\definecolor{deepred}{RGB}{255,22,84}
+\definecolor{deeporange}{RGB}{240,111,62}
+
+\definecolor{olive}{rgb}{0.3, 0.4, .1}
+\definecolor{fore}{RGB}{249,242,215}
+\definecolor{back}{RGB}{51,51,51}
+\definecolor{title}{RGB}{255,0,90}
+\definecolor{dgreen}{rgb}{0.,0.6,0.}
+\definecolor{gold}{rgb}{1.,0.84,0.}
+\definecolor{JungleGreen}{cmyk}{0.99,0,0.52,0}
+\definecolor{BlueGreen}{cmyk}{0.85,0,0.33,0}
+\definecolor{RawSienna}{cmyk}{0,0.72,1,0.45}
+\definecolor{Magenta}{cmyk}{0,1,0,0}
+
+\DeclareMathOperator{\QQ}{\mathbf{Q}}
+\DeclareMathOperator{\ZZ}{\mathbb{Z}}
+\DeclareMathOperator{\RR}{\mathbb{R}}
+\DeclareMathOperator{\HH}{\mathbf{H}}
+\DeclareMathOperator{\CC}{\mathbf{C}}
+\DeclareMathOperator{\AB}{\mathbf{A}}
+\DeclareMathOperator{\PP}{\mathbb{P}}
+\DeclareMathOperator{\MM}{\mathbf{M}}
+\DeclareMathOperator{\VV}{\mathbf{V}}
+\DeclareMathOperator{\TT}{\mathbf{T}}
+\DeclareMathOperator{\LL}{\mathcal{L}}
+\DeclareMathOperator{\EE}{\mathbb{E}}
+\DeclareMathOperator{\NN}{\mathbf{N}}
+\DeclareMathOperator{\DQ}{\mathcal{Q}}
+\DeclareMathOperator{\IA}{\mathfrak{a}}
+\DeclareMathOperator{\IB}{\mathfrak{b}}
+\DeclareMathOperator{\IC}{\mathfrak{c}}
+\DeclareMathOperator{\IP}{\mathfrak{p}}
+\DeclareMathOperator{\IQ}{\mathfrak{q}}
+\DeclareMathOperator{\IM}{\mathfrak{m}}
+\DeclareMathOperator{\IN}{\mathfrak{n}}
+\DeclareMathOperator{\IK}{\mathfrak{k}}
+\DeclareMathOperator{\ord}{\text{ord}}
+\DeclareMathOperator{\Ker}{\textsf{Ker}}
+\DeclareMathOperator{\Coker}{\textsf{Coker}}
+\DeclareMathOperator{\emphcoker}{\emph{coker}}
+\DeclareMathOperator{\pp}{\partial}
+\DeclareMathOperator{\tr}{\text{tr}}
+
+\newtheorem*{goal}{Goal}
+
+
+
+\title{Nodal Domains and Diffusion Processes}
+\author{Jacob Denson}
+
+\institute{University of Wisconsin Madison}
+
+\begin{document}
+
+\maketitle
+
+\begin{frame}
+
+\begin{itemize}
+    \item Georgiev, Mukherjee, \emph{Nodal Geometry, Heat Diffusion, and Brownian Motion}, Anal. PDE. {\bf 12} (2017), 133-148.
+
+    \item Steinerberger, \emph{Lower Bounds on Nodal Sets of Eigenfunctions via the Heat Flow}, Comm. Partial Differential Equations. {\bf 39} (2014), 2240-2261.
+
+    \item {\O}ksendal, \emph{Stochastic Differential Equations}, Springer, 2003.
+
+    \item Chung, \emph{Green, Brown, and Probability and Brownian Motion}, World Scientific Publishing Company, 2002.
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+    \frametitle{Nodal Domains}
+
+    % Write Notation on Board
+    \begin{goal}
+        Study `asymptotic geometry' of $D_\lambda$ as $\lambda \to \infty$.
+    \end{goal}
+
+%        \item Let $(M^d,g)$ be a compact Riemannian manifold.
+%        \item Let $e_\lambda \in C^\infty(M)$, $\Delta_g e_\lambda = - \lambda^2 e_\lambda$.
+%        \item \emph{Nodal Set} of $e_\lambda$: $Z_\lambda = \{ x \in M: e_\lambda(x) = 0 \}$.
+%        \item \emph{Nodal Domain} $D_\lambda$: a connected component of $M - Z_\lambda$.
+
+        % TODO: Add Pictures
+
+        % lambda = sqrt(l(l+1))
+        % Separation of Variables: e_lambda(theta,psi) = Theta(theta) Phi(phi)
+        
+        % Zonal Harmonic: P_l(cos theta). Zeroes are roughly spaced at a distance O(1/l) = O(1/lambda) apart.
+        % Roots of P_l are approximately (1 - 1/8n^2) cos(pi k/n)
+
+        % Also spaced a distance O(1/lambda) apart
+
+        % Tesseral: P^m_l(cos theta) cos(m phi)
+        % |m| <= lambda
+        % Again, observe O(1/lambda) thickness boxes.
+\end{frame}
+
+\begin{frame}
+    \frametitle{Main Result}
+
+    \begin{itemize}
+        \item {\bf Theorem}: There is $c_M > 0$ such that for any `good' $k$-dimensional submanifold $\Sigma$ of $M$, then
+        %
+        \[ N(\Sigma, c_M / \lambda) = \{ x \in M : d(x,\Sigma) < c_M / \lambda \} \]
+        %
+        \emph{doesn't contain} $D_\lambda$.
+
+        \item Consider the radius $1/\lambda$ tubular neighborhood
+        %
+        \[ T_{1/\lambda} \Sigma = \bigcup\nolimits_{x \in \Sigma} \{ v \in (T_x \Sigma)^\perp: |v|_g \leq 1/\lambda \}. \]
+        %
+        The submanifold $\Sigma$ is `good' if the geodesic map $T_{1/\lambda} \Sigma \to N(\Sigma, 1/\lambda)$ is an embedding.
+        % So we have `tubular coordinates' on $N(\Sigma, 1/\lambda)$.
+        % Take geodesic examples on torus
+
+        \begin{itemize}
+            \item Local condition: All principal curvatures of $\Sigma$ are $\lesssim \lambda$.
+
+            \item But no cheating globally!
+            % TODO: Think about this
+            % After Injectivity Radius, all bets are off 
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Main Result}
+
+    \begin{itemize}
+        \item {\bf Theorem}: There is $c_M > 0$ such that for any `good' $k$-dimensional submanifold $\Sigma$ of $M$, then
+        %
+        \[ N(\Sigma, c_M / \lambda) = \{ x \in M : d(x,\Sigma) < c_M / \lambda \} \]
+        %
+        \emph{doesn't contain} $D_\lambda$.
+
+        \item Can replace $\Sigma$ with a finite union of $\Omega(1/\lambda)$ separated `good' submanifolds. Or allow finite unions with `transverse enough' intersections.
+
+        \item There is $C_M > 0$ such that $D_\lambda \subset N(Z_\lambda, C_M/\lambda)$.
+
+        \item Heuristic: Elliptic methods work for $O(1/\lambda)$ localized results. We study stochastic diffusions, which provide cool tools to analyze eigenfunctions!
+        % TODO: Find citation
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Uncertainty Principle on Manifolds?}
+
+    \begin{itemize}
+        \item What would an analogous result look like on $\RR^d$?
+
+        \item {\bf Theorem}: Let $D_\lambda$ be a nodal domain in $\RR^d$. Then there is $c_d > 0$ such that if $\Sigma$ is a finite union of $O(1/\lambda)$-separated $k$ dimensional planes, then $D_\lambda$ is not contained in $N(\Sigma, c_d / \lambda)$.
+
+        \item Stronger Result: $D_\lambda$ contains a ball of radius $O(1/\lambda)$.
+
+        % ASK TOMORROW: DO WE HAVE BOUNDS ON THE MAXIMUM VALUE OF AN EIGENFUNCTION ON A NODAL DOMAIN?
+        % We have D^alpha f(x) <= lambda^{|alpha|} |f|_{L^infty}
+
+        \item Version on Manifolds: Paper proves for any $\varepsilon > 0$, there is $r_0 > 0$ such that if $x_0 \in D_\lambda$ maximizes $|e_\lambda(x_0)|$ in $D_\lambda$, then $D_\lambda$ contains $1 - \varepsilon_0$ percent of $B(x_0,r_0 \lambda^{-1/2})$.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Continuous Stochastic Processes}
+
+    \begin{itemize}
+        \item Here are three ways to define continuous stochastic processes:
+
+        \begin{itemize}
+            \item As a Borel-measurable function
+            %
+            \[ X: \Omega \to C([0,\infty), M). \]
+
+            \item As a family of correlated random variables
+            %
+            \[ \{ X_t: \Omega \to M : t \in [0,\infty) \}. \]
+
+            \item As a law predicting future behaviour from present behaviour, i.e. by defining quantities such as
+            %
+            \[ \EE^x(f(X)) = \EE[f(X) | X_0 = x] \]
+            %
+            \[ \PP^x(P(X)) = \PP(P(X) | X_0 = x). \]
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Brownian Motion on $\RR^d$}
+
+    \begin{itemize}
+        \item A stochastic process $\{ B_t \}$ such that:
+
+        \begin{itemize}
+            \item For any $I = [t,s]$, given $B_t = x$, the random variable $d_I B = B_s - B_t$ is normally distributed with mean $x$ and variance $s - t$.
+
+            \item For any family of disjoint intervals $I_1,\dots,I_N \subset [0,\infty)$, with $I_k = [t_k,s_k]$, the random variables $d_{I_k} B$ are independent from one another.
+        \end{itemize}
+    \end{itemize}
+
+    % TODO: Picture of Brownian Motion
+\end{frame}
+
+\begin{frame}
+    \frametitle{It\^{o} Diffusions}
+
+    \begin{itemize}
+        \item Brownian Motion where diffusion is not radially symmetric.
+
+        \item For each $x \in \RR^d$, let $A(x)$ be a $d \times d$ positive semidefinite matrix. Then we have an It\^{o} diffusion $\{ X_t \}$ given in law by the `Stochastic differential equation' $dX = A(X) dB$.
+
+        \item For practical purposes, we have
+        %
+        \[ X_{t + \delta} - X_t \approx A(X_t) [B_{t + \delta} - B_t] \]
+        % X_delta = A(x) B_delta
+        % Ball of radius delta^{1/2} stretched in direction
+
+        where the difference between the LHS and RHS is a random variable with mean $o(\delta)$, and variance $O(\delta)$. %L^3$ norm $O(\delta)$.
+
+        \item Diffuses faster in directions where $A$ has large eigenvalues.
+    \end{itemize}
+
+    % TODO: Picture of Ito diffusion
+\end{frame}
+
+
+\begin{frame}
+    \frametitle{It\^{o} Diffusions}
+
+    \begin{itemize}
+        \item Can define It\^{o} diffusions on compact Riemannian manifolds $M$ given a section $A: M \to \text{Hom}(TM)$ of positive definite matrices.
+
+        \item We can define Brownian motion on a Riemannian manifold such that Brownian motion locally diffuses along geodesics at unit speed.
+        % DO CALCULATION TO WORK OUT THE MATRICES DEFINING BROWNIAN MOTION.
+    \end{itemize}
+
+    % TODO: Picture of Ito diffusion
+\end{frame}
+
+
+
+
+
+\begin{frame}
+    \frametitle{Connection to Elliptic Operators}
+
+    \begin{itemize}
+        \item For any diffusion $X$, we can associate a semielliptic operator $L$, the \emph{generator} of $X$, such that for $f \in C^\infty(M)$,
+        %
+        \begin{align*}
+            Lf(x) &= \left. \partial_t \{ \EE^x[f(X_t)] \} \right|_{t = 0} = \lim_{t \to 0^+} \frac{\EE^x[f(X_t)] - f(x)}{t}.
+        \end{align*}
+
+        \item Second order because paths of $X$ are `half differentiable'.
+
+        \item For Brownian motion (on $\RR^d$ or a manifold $M$), $L = \Delta / 2$.
+
+        \item `Morally' apply the Fundamental Theorem of Calculus to get \emph{Dynkin's Formula}
+        %
+        \[ \EE^x[f(X_T)] = f(x) + \EE^x \left[ \int_0^T (Lf)(X_s)\; ds \right]. \]
+    \end{itemize}
+\end{frame}
+
+
+
+
+
+\begin{frame}
+    \frametitle{Application: Escape Times}
+
+    \begin{itemize}
+        \item In Dynkin's formula, $T$ can be a `stopping time', i.e. any $[0,\infty)$ valued function of $X$ which doesn't `predict the future', i.e. if $T$ stops at a time $t$, it must only stop because of the properties of $X$ on $[0,T]$, and not behaviour on $(T,\infty)$.
+
+        \item Given an open, bounded set $U$, let
+        %
+        \[ T_U = \inf \{ t : X_t \not \in U \} \]
+        %
+        be the \emph{escape time} of $U$.
+
+        \item If $B$ is Brownian motion on $\RR^d$, and $U$ is the escape time of a ball of radius $R^{1/2}$ centered at $x$, $\EE^x[T_U] = R / n$.
+
+        \item If $B$ is Brownian motion on $M$, escape time will be slower if volume expands (negative curvature) and faster if volume contracts (positive curvature). But irrelevant for the values $R$ we care about.
+        % (Delta / 2) f(y) = n + 2r partial_r det(d exp_p) / det(d exp_p)
+        % exp_p(q + tv) = q + tv + O(r^2)
+        % d exp_p(q) = I + O(r^2)
+        % det(d exp_p) = det(I + O(r^2)) = 1 + O(r^2)
+        % O(r^2)
+        % r^2 = E[ int_0^T [n + O(r^2)] ] = ( n + O(r^2) ) E^x[T]
+        % E^x[T] = r^2 / ( n + O(r^2) )
+        % Up to the times we care about, essentially flat.
+    \end{itemize}
+\end{frame}
+
+
+
+
+
+\begin{frame}
+    \frametitle{Feynman Kac Formula}
+
+    \begin{itemize}
+        \item Reverses Dynkin's Formula: Solves PDEs via Diffusions.
+
+        \item Physically Intuitive Situations:
+        \begin{itemize}
+            \item (1) If $\partial_t u = Lu$ on $M$ with $u_0 = f$, then
+            %
+            \[ u(x,t) = \EE^x[f(X_t)]. \]
+
+            \item (2) $\partial_t u = Lu$ on $D \subset M$ with $u_0 = f$ and $u = 0$ on $\partial M$,
+            %
+            \[ u(x,t) = \EE^x[f(X_t) \chi_t], \]
+            %
+            where $\chi_t = \mathbb{I}(T_D > t)$ \emph{kills} paths absorbed by $\partial D$.
+
+            \item (3) If $Lu = 0$ on $D \subset M$ with $u = \phi$ on $\partial D$, then
+            %
+            \[ u(x) = \EE^x \left[ \phi(X_{T_D}) \right]. \]
+
+            \item Can also solve $\partial_t u = Lu$ with $\partial u / \partial \eta = 0$ on $\partial D$ using `reflection on Brownian motion', but a little more technical with singularities.
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+
+
+
+
+\begin{frame}
+    \frametitle{The Proof}
+
+    \begin{itemize}
+        \item {\bf Theorem}: There is $c_M > 0$ such that for any `good' $k$-dimensional submanifold $\Sigma$ of $M$, then
+        %
+        \[ N(\Sigma, c_M / \lambda) = \{ x \in M : d(x,\Sigma) < c_M / \lambda \} \]
+        %
+        \emph{doesn't contain} $D_\lambda$.
+
+        \item Assume $e_\lambda \geq 0$ on $D_\lambda$. Let $x^* = \text{argmax} \{ e_\lambda(x) \}$.
+
+        \item Let $p(x,t)$ and $u(x,t)$ solve $\partial_t = \Delta$ with initial / boundary conditions:
+        %
+        \begin{itemize}
+            \item $p_0 = 0$ and $p = 1$ on $\partial D_\lambda$.
+            \item $u_0 = e_\lambda$, and $u = 0$ on $\partial D_\lambda$.
+        \end{itemize}
+
+        % Feynman-Kac,
+        % p(x,t) = 1 - \EE^x[ chi_T ] = P(Tau <= t).
+        % u(x,t) = E^x[ e_lambda(B_t) chi_T ] = e^{- lambda^2 t} e_lambda(x)
+
+        % Thus e^{-lambda^2 t} e_lambda(x) = u(x,t) = E^x[e_lambda(B_t) chi_T] <= e_lambda(x^*) E^x[chi_T] = e_lambda(x_0) (1 - p(x,t))
+        % Thus if x = x^*, p(x^*,t) <= 1 - e^{-lambda^2 t}
+        % Thus the probability of exiting D after time O(1/lambda^2) starting at x^* is small.
+        % Thus x^* must be O(1/lambda) from the boundary
+
+        % Have precise conditions on the probability of exiting D in *euclidean case*.
+        % Since time is small, Euclidean case is comparable to Riemannian case.
+    \end{itemize}
+\end{frame}
+
+
+
+
+\begin{frame}
+    \begin{itemize}
+        \item Given a non-negative matrix $A_0$, alternatively apply row and column normalization, obtaining a sequence
+        %
+        \[ A_0 \to A_1 \to A_2 \to \dots. \]
+
+        \pause
+        \item Claim: If $\text{Per}(A_0) > 0$, $d(A_i, \mathbf{S}) \to 0$, where $\mathbf{S}$ is the family of doubly stochastic matrices.
+
+        \pause
+        \item For even (odd) $i$, let $\gamma_{ij}$ be the $j$th row (column) sum of $A_i$, so that $\text{Per}(A_{i+1}) = (\gamma_{i1} \dots \gamma_{in})^{-1} \cdot \text{Per}(A_i)$.
+
+        \pause
+        \item {\bf Two Key Facts Ensuring Convergence}:
+        \begin{itemize}
+            \pause
+            \item[(1)] $\text{Per}(A) \leq 1$ if $A$ is partially normalized.
+            \pause
+            \item[(2)] If $\Delta_i = \sum_j (\gamma_{ij} - 1)^2$, $\text{Per}(A_{i+1}) \geq (1 + C \Delta_i) \cdot \text{Per}(A_i)$.
+        \end{itemize}
+
+        \pause
+        \item Thus $\text{Per}(A_i)$ is bounded, monotonic, converges to $P \leq 1$.
+
+        \pause
+        \item If $\text{Per}(A_i) \geq P - \varepsilon$ for $\varepsilon \ll 1$, then
+        %
+        \[ P \geq \text{Per}(A_{i+1}) \geq (1 + C \cdot \Delta_i) \cdot \text{Per}(A_i) \geq (1 + C \cdot \Delta_i)(P - \varepsilon). \]
+        % C (\varepsilon / P) \geq C_2 \delta_i
+        Thus $\Delta_i \lesssim \varepsilon$. Taking $\varepsilon \to 0$ shows $\Delta_i \to 0$.
+    \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+    \frametitle{Sinkhorn Iteration}
+
+    \begin{itemize}
+        \item {\bf Proof that $\text{Per}(A_i) \leq 1$:}
+        \begin{itemize}
+            \pause
+            \item Simple inductive argument: the hypothesis is that if each row of a matrix $B$ all sum up to less than one, then $\text{Per}(B) \leq 1$.
+        \end{itemize}
+
+        \pause
+        \item {\bf Proof that $\text{Per}(A_{i+1}) \geq (1 + C \Delta_i) \cdot \text{Per}(A_i)$:}
+        \begin{itemize}
+            \pause
+            \item Really just more robust form of AGM inequality.
+
+            \pause
+            \item If $\gamma_{ij}$ are the row sums, then because the column sums are all one,
+            %
+            \[ \frac{1}{n} \sum_j \gamma_{ij} = 1. \]
+
+            \pause
+            \item AGM implies $\gamma_{i1} \dots \gamma_{in} \geq 1$, and monotonicity follows from
+            %
+            \[ \text{Per}(A_{i+1}) = (\gamma_{i1} \dots \gamma_{in})^{-1} \text{Per}(A_i). \]
+
+%            \pause
+%            \item Write $\gamma_{ij} = 1 + \delta_j$.
+
+%            \begin{itemize}
+%                \pause
+%                \item Then $\sum \delta_j^2 = \Delta_j$, and $\sum \delta_j = 0$.
+%            \end{itemize}
+
+%            \pause
+%            \item Since $1 + t \leq \exp(t - t^2/2 + t^3/3)$,
+
+%            \vspace{-2em}
+%            \begin{align*}
+%                \text{Per}(A_i) / \text{Per}(A_{i+1}) &= \gamma_1 \dots \gamma_n \\
+%                &= (1 + \delta_1) \dots (1 + \delta_n)\\
+%                &\leq \exp \left(\sum \delta_j - \sum \delta_j^2/2 + \sum \delta_j^3/3 \right)\\
+%                &\leq \exp(0 - \Delta_j/2 + \Delta_j^{3/2}/3)\\
+%                &= 1 - \Delta_j / 2 + O(\Delta_j^{3/2}).
+%            \end{align*}
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+
+And now, back to our regularly scheduled programming
+
+\[ \text{BL}(B,p) = \sqrt{ \sup_{A_1,\dots,A_m \succ 0} \frac{\prod_i \det(A_i)^{p_i}}{\det(\sum p_i \cdot B_i^* A_i B_i)}}. \]
+
+\begin{itemize}
+    \pause
+    \item Goal: Rescale our inputs so that
+    %
+    \begin{itemize}
+        \pause
+        \item (Isotropy) $\sum p_i B_i^* B_i = I$.
+        
+        \pause
+        \item (Projection) $B_i B_i^* = I$ for each $i$.
+    \end{itemize}
+
+\end{itemize}
+
+\end{frame}
+
+
+\begin{frame}
+    \frametitle{Iteration of Operator Rescaling}
+
+    \begin{itemize}
+    \item Sinkhorn: Alternately apply the following two procedures:
+    \begin{itemize}
+        \pause
+        \item (Isotropy Normalization)
+        \begin{itemize}
+            \pause
+            \item Let $M = \sum_i p_i B_i^* B_i$.
+            \pause
+            \item Replace $B_i$ with $B_i' = B_i M^{-1/2}$.
+            \pause
+            \item Then $\sum p_i (B_i')^* B_i' = 1$, i.e. isotropy holds.
+        \end{itemize}
+
+        \pause
+        \item (Projection Normalization)
+        \begin{itemize}
+            \pause
+            \item Let $M_i = B_i B_i^*$.
+            
+            \pause
+            \item Replace $B_i$ with $B_i' = M_i^{-1/2} B_i$.
+            
+            \pause
+            \item Then $(B_i')^* B_i' = I$ for each $i$.
+        \end{itemize}
+
+        \pause
+        \item We obtain a sequence $B \to B_1 \to B_2 \to \dots$.
+    \end{itemize}
+\end{itemize}
+
+\end{frame}
+
+
+
+
+\begin{frame}
+    \frametitle{Iteration of Operator Rescaling}
+
+    \begin{itemize}
+        \item {\bf Two Key Facts Ensuring Convergence:}
+        \begin{itemize}
+            \pause
+            \item[(1)] $\text{BL}(B,p) \geq 1$ if $(B,p)$ is partially normalized.
+            \pause
+            \item[(2)] For some $r \leq \text{Poly}(\text{Bits}(B),d,n)$, if
+            %
+            \[ \text{BL}(B_i,p) \geq 1 + \varepsilon, \]
+            %
+            then
+            %
+            \[ \text{BL}(B_{i+1},p) \leq (1 - C \varepsilon^r) \text{BL}(B_i,p). \]
+        \end{itemize}
+
+        \pause
+        \item Thus convergence occurs as with Sinkhorn iteration provided that $\text{BL}(B,p) < \infty$.
+
+        \pause
+        \item (1) and (2) follow from techniques in the study of \emph{positive operators}.
+    \end{itemize}
+
+\end{frame}
+
+
+\begin{frame}
+    \frametitle{Positive Operators}
+
+    \begin{itemize}
+        \item A linear map $T: M_n \to M_n$ is \emph{completely positive} if there are $n \times n$ matrices $B_1,\dots,B_K$ and $p_i > 0$ such that
+        %
+        \[ T(A) = \sum p_i B_i A B_i^*. \]
+
+        \pause
+        \item $T: M_n \to M_n$ is \emph{positive} if $A \succeq 0$ implies $T(A) \succeq 0$.
+
+        \pause
+        \item Can reduce the study of non-negative matrices to positive operators: For a non-negative matrix $S$, $T(A)$ is the diagonal matrix whose entries are precisely the vector $Sa$, where $a$ is the vector formed from the diagonal entries of $A$.
+
+        \pause
+        \item Given $T$, we have $T^*(A) = \sum p_i B_i^* A B_i$.
+    \end{itemize}
+\end{frame}
+
+
+
+
+\begin{frame}
+    \frametitle{Further Connections}
+
+    \begin{itemize}
+        \item For simplicity, look at Brascamp Lieb where all spaces have the same dimension (all $B_i$ are square matrices). 
+
+        \pause
+        \item $\text{BL}(B,p) < \infty$ can only hold if $\sum p_i = 1$.
+
+        \pause
+        \item Consider optimizing the quantity
+        %
+        \[ \inf_{A \succ 0} \frac{\det(\sum p_i B_i^* A B_i)}{\det(A)}  \]
+        %
+        analogous to
+        %
+        \[ \text{BL}(B,p) = \sup_{A_1,\dots,A_m \succ 0} \sqrt{ \frac{\prod_i \det(A_i)^{p_i}}{\det(\sum p_i \cdot B_i^* A_i B_i)}}, \]
+        %
+        if all $A_i$ are equal.
+    \end{itemize}
+\end{frame}
+
+
+
+\begin{frame}
+    \frametitle{Capacity of Operators}
+
+    \[ \inf_{A \succ 0} \frac{\det(\sum p_i B_i^* A B_i)}{\det(A)}  \]
+
+    \begin{itemize}
+        \pause
+        \item (Gurvits, 2004) The \emph{capacity} of $T: M_n \to M_n$ is
+        %
+        \[ \text{Cap}(T) = \inf_{A \succ 0} \frac{\det(TA)}{\det(A)}. \]
+
+        \pause
+        \item For any Brascamp-Lieb data $(B,p)$, there exists a positive $T: M_n \to M_n$ and $k$ such that $\text{Cap}(T) = 1/\text{BL}(B,p)^{2k}$.
+
+        \pause
+        \item Positive operators are well studied in the quantum information theory literature, so reduction of BL to  this theory is useful.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Doubly Stochastic Positive Operators}
+
+    \begin{itemize}
+        \item (Isotropy) Let $T(A) = \sum p_i B_i^* A B_i$.
+        \begin{itemize}
+            \pause
+            \item $\sum p_i B_i^* B_i = I$ holds iff $T(I) = I$.
+        \end{itemize}
+
+        \pause
+        \item (Projection) Let $T(A) = B_i^* A B_i$.
+        \begin{itemize}
+            \pause
+            \item $B_i B_i^* = I$ if and only if $T^*(I) = I$.
+        \end{itemize}
+
+        \pause
+        \item If $(B,p)$ is a Brascamp-Lieb datum with associated operator $T: M_n \to M_n$, then $(B,p)$ is geometric if and only if $T$ is \emph{doubly stochastic}, i.e. $T(I) = I$ and $T^*(I) = I$.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Operator Rescaling for Positive Operators}
+
+    \begin{itemize}
+        \item If $T$ is doubly stochastic, $\text{Cap}(T) = 1$.
+
+        \pause
+        \item We can rescale. If
+        %
+        \[ T_{M_1M_2}(A) = M_2^* T(M_1^* A M_1) M_2, \]
+        %
+        then $\text{Cap}(T_{M_1,M_2}) = \det(M_1)^2 \det(M_2)^2 \cdot \text{Cap}(T)$.
+
+        \pause
+        \item Sinkhorn says to iterate
+        %
+        \[ T \mapsto T_{I,T(I)^{-1/2}} \quad\text{and}\quad T \mapsto T_{T^*(I)^{-1/2}, I}. \]
+
+        \pause
+        \item If $\text{Cap}(T) > 0$, iteration yields a rescaling arbirarily close to a doubly stochastic operator, in $\text{Poly}(\text{Bits}(B), 1/\varepsilon)$ time.
+    \end{itemize}
+\end{frame}
+
+
+
+
+\begin{frame}
+
+\frametitle{Upper Bounds For Capacity}
+
+\begin{itemize}
+    \pause
+    \item To guarantee efficiency, we need to show that for partially normalized $T$, $\text{Cap}(T) \geq 1/e^{\text{Poly}(\text{Bits}(B))}$.
+
+    \pause
+    \item (Gurvits, 2004) If $T(A) = \sum B_i A B_i^*$, and $\det(\sum B_i) \neq 0$, then $\text{Cap}(T) \gtrsim (\text{Bits}(B) \cdot n)^{- O(n)}$.
+
+    \pause
+    \item If $\text{Cap}(T) > 0$, there is $d > 0$ and $d \times d$ matrices $C_i$ s.t.
+    %
+    \[ \det(\sum C_i \otimes B_i) \neq 0 \quad\text{and}\quad \text{Bits}(C) \leq \text{Poly}(d,\text{Bits}(B)). \]
+
+    \pause
+    \item 'Fairly simple' to show that if $S(A) = \sum C_i A C_i^*$, and $(S \otimes T)(A) = \sum (C_i \otimes B_i) A (C_i \otimes B_i)^*$, then
+    %
+    \[ \text{Cap}(S \otimes T) \leq \text{Cap}(S)^n \text{Cap}(T)^d. \]
+
+    \pause
+    \item Since $\text{Cap}(L) \leq 1$, it follows that
+    %
+    \[ \text{Cap}(T) \geq \text{Cap}(S \otimes T)^{1/d} \gtrsim (\text{Poly}(d, Bits(B)) n)^{-O(n)}. \]
+
+    \pause
+    \item Invariant theory shows we can choose $d \leq n^4 [(n+1)!]^2$.
+\end{itemize}
+
+\end{frame}
+
+
+
+
+
+
+
+
+\begin{frame}
+
+\frametitle{The Invariant Theory}
+
+\begin{itemize}
+    \pause
+    \item We have a group action of $\text{SL}_n \times \text{SL}_n$ on tuples $B = (B_1,\dots,B_m)$, such that
+    %
+    \[ (M,N) \circ B = (MB_1N, \dots, MB_mN). \]
+
+    \pause
+    \item Invariant Theory: Find the ring $R$ of all `invariant polynomials' $f(B)$ such that
+    %
+    \[ f((M,N) \circ B) = f(B) \]
+    %
+    for all $(M,N) \in \text{SL}_n \times \text{SL}_n$ and all tuples $B$.
+
+    \pause
+    \item Note: $f_C(B) = \det(\sum C_i \otimes B_i)$ is an invariant homogeneous polynomial under this action for any $C_i$.
+\end{itemize}
+
+\end{frame}
+
+
+
+
+
+
+\begin{frame}
+
+\frametitle{The Invariant Theory}
+
+\begin{itemize}
+    \item (Nayak and Subrahmanyam, 2010) $R$ is a ring generated by the homogeneous polynomials $f_C(A) = \det(\sum C_i \circ A_i)$, for $d \times d$ matrices $C_i$, for all $d > 0$.
+    \begin{itemize}
+        \pause
+        \item (1890) Hilbert showed that for a fairly general family of group actions, $R$ is finitely generated, so we should expect there is some $d_0$ such that $R$ is generated by the polynomials above for $d \leq d_0$. Killed the field for 100 years.
+
+        \pause
+        \item (Ivanyos, Qiao, Subrahmanyam, 2015) $d_0 \lesssim n^4 [(n+1)!]^2$.
+
+        \pause
+        \item Suppose there are $d \times d$ matrices $C_i$ (with $d$ minimal) such that $f_C(B) \neq 0$.
+
+        \pause
+        \item Find families of matrices $C(1), \dots, C(n)$ of dimension at most $d_0$ such that
+        %
+        \[ f_C(B) = \sum c_\alpha f_{C(1)}(B)^{\alpha_1} \dots f_{C(n)}(B)^{\alpha_n}.  \]
+
+        \pause
+        \item Since $f_C(B) \neq 0$, there must exist $i$ with $f_{C(i)}(B) \neq 0$.
+
+        \pause
+        \item Thus $d \leq d_0$.
+    \end{itemize}
+\end{itemize}
+
+\end{frame}
+
+
+
+
+
+
+
+
+
+
+\begin{frame}
+    \frametitle{Rank Decreasing Operators}
+
+    \[ \int_{\RR^n} \prod_{i = 1}^m |f_i(B_i x)|^{p_i}\; dx \leq \text{BL}(B,p) \cdot \prod_{i=1}^m \| f_i \|_{L^1(\RR^{n_i})}^{p_i}.  \]
+
+    \begin{itemize}
+        \pause
+        \item (Bennett et al, 2008) implies that $\text{BL}(B,p) < \infty$ if and only if $\sum p_i n_i = n$, and for any subspace $V \subset \RR^n$,
+        %
+        \[ \dim(V) \leq \sum p_i \dim(B_i V). \]
+
+        \pause
+        \item An operator $T: M_n \to M_n$ is \emph{rank non-decreasing} if for any $A \succeq 0$, $\text{Rank}(TA) \geq \text{Rank}(A)$.
+
+        \pause
+        \item (Gurvits, 2004) $T: M_n \to M_n$ is rank non-decreasing if and only if $\text{Cap}(T) > 0$.
+    \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+    \frametitle{Proof Idea}
+
+    (Gurvits, 2004) $T: M_n \to M_n$ is rank non-decreasing if and only if $\text{Cap}(T) > 0$.
+
+    \begin{itemize}
+        \pause
+        \item Results from (Gurvits and Samorodnitsky, 2002) show the result is true if $T(X) = \sum X_{ii} A_i$, where $A_i \succeq 0$. The general case can be reduced to this case.
+
+        \pause
+        \item Given an orthonormal basis $U = \{ u_1, \dots, u_N \}$, we define the \emph{decoherence operator} $D_U(A) = \sum \langle Au_i, u_i \rangle \cdot u_i u_i^*$.
+
+        \pause
+        \item Define $T_U = D_U \circ T$.
+
+        \pause
+        \item Result follows from the following two facts:
+        \begin{itemize}
+            \pause
+            \item[(1)] $T$ is rank non-decreasing if and only if $T_U$ is rank non-decreasing for all $U$.
+            
+            \pause
+            \item[(2)] $\text{Cap}(T) = \inf_U \text{Cap}(T_U)$.
+        \end{itemize}
+
+        \pause
+        \item To prove (1) and (2), use a simple trick: Given $A \succeq 0$, find $U$ diagonalizing $T(A)$. Then $T(A) = T_U(A)$.
+    \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+    \frametitle{Thanks For Listening!}
+\end{frame}
+
+\end{document}
