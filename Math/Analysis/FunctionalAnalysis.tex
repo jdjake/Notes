@@ -10095,8 +10095,137 @@ In particular, we get the better operator norm bound
 %
 Thus, for a fixed $\lambda$, the operators $\| R(\lambda,A)^n \|$ are actually \emph{uniformly bounded} in $n$. This is another property that characterizes generators of semigroups. In fact, this is essentially a \emph{characterization} of those unbounded operators that induce semigroups of operators.
 
+To see this, we have to essentially remind ourselves of the different ways we can represent the exponential function, since each gives insight into the way we can generate a semigroup from it's generator:
+%
+\begin{itemize}
+    \item If $A$ is \emph{bounded}, we can define
+    %
+    \[ T_t = \sum_{n = 0}^\infty \frac{(tA)^n}{n!} \]
+
+    \item For any holomorphic function of an operator, a good strategy is often ot use the Cauchy integral formula, e.g. writing
+    %
+    \[ T_t = \frac{1}{2 \pi i} \int_{\gamma} e^{\lambda t} R(\lambda,A)\; d\lambda, \]
+    %
+    where $\gamma$ is a closed loop around $\sigma(A)$. The problem of this approach is that to apply this formula, we often need more information about the distribution of $\sigma(A)$.
+
+    \item The formula
+    %
+    \[ e^{tA} = \lim_{n \to \infty} \left( 1 + \frac{tA}{n} \right)^n \]
+    %
+    is pretty bad, because high powers of unbounded operators behave terribly. Hille's idea was to instead consider the slight modification
+    %
+    \[ e^{tA} = \lim_{n \to \infty} (1 - tA/n)^{-n} = \lim_{n \to \infty} (n/t)^n R(n/t, A)^n. \]
+    %
+    High powers of a resolvent are \emph{not} necessarily bad.
+
+    \item Yosida's method is to approximate $A$ by a family of bounded operators $\{ A_n \}$, in an appropriate sense. Then hopefully $e^{tA}$ can be approximated by $e^{tA_n}$.
+\end{itemize}
+%
+Applying either Hille or Yosida's method will yield the following theorem. The next lemma indicates a possible choice for the operators $\{ A_n \}$.
+
+\begin{lemma}
+    Let $A$ be a closed, densely defined operator on a Banach space $X$, and suppose there is $\omega \in \RR$ and $M > 0$ such that
+    %
+    \[ [\omega, \infty) \subset \rho(A) \]
+    %
+    and such that $\| R(\lambda,A) \| \leq M / \lambda$ for all $\lambda \geq \omega$. Then for all $x \in X$,
+    %
+    \[ \lim_{x \to \infty} \lambda R(\lambda, A) x = x. \]
+\end{lemma}
+\begin{proof}
+    We note that
+    %
+    \[ \lambda R(\lambda,A) = 1 + A R(\lambda,A), \]
+    %
+    and so it suffices to show that for any $x \in X$, as $\lambda \to \infty$, $A R(\lambda,A) x \to 0$. We have a uniform bound
+    %
+    \[ \| A R(\lambda,A) \| = \| \lambda R(\lambda,A) - 1 \| \leq 1 + M \]
+    %
+    by assumption, so it suffices to prove this result on a dense subclass of $X$. For $x \in \mathcal{D}(A)$, we have
+    %
+    \[ A R(\lambda,A) = R(\lambda,A) A, \]
+    %
+    and so it follows that
+    %
+    \[ \| A R(\lambda,A) x \| = \| R(\lambda, A) A x \| \leq \frac{M}{\lambda} \| A x \|, \]
+    %
+    which converges to zero as $\lambda \to \infty$.
+\end{proof}
+
+It follows that on $\mathcal{D}(A)$, the bounded operators $A_\lambda = \lambda A R(\lambda,A)$ converge to $A$ in the strong operator topology as $\lambda \to \infty$. Let us use Yosida's method to prove the Hille-Yosida theorem for contaction semigroups. Recall a semigroup $\{ T_t \}$ is a contraction semigroup if it satisfies bounds of the form $\| T_t \| \leq 1$ for all $t$.
+
+\begin{theorem}
+    Let $A$ be an unbounded, densely defined closed operator on a Banach space $X$. Then $A$ generates a strongly continuous contraction semigroup if and only if for all $\lambda > 0$, $\lambda \in \rho(A)$, and $\| \lambda R(\lambda,A) \| \leq 1$.
+\end{theorem}
+\begin{proof}
+    We have seen the necessity of the resolvent estimates already, which gives one side of the result. So assume the resolvent estimates. Define $A_\lambda = \lambda A R(\lambda,A)$. Then on $\mathcal{D}(A)$, $\{ A_\lambda \}$ converges to $A$ in the strong operator topology. Write
+    %
+    \[ A_\lambda = \lambda (A - \lambda) R(\lambda,A) + \lambda^2 R(\lambda,A) = \lambda^2 R(\lambda,A) - \lambda. \]
+    %
+    Set $T_t(\lambda) = e^{t A_\lambda}$. We claim that $T_t(\lambda)$ converges in the strong operator topology for each fixed $t$ to an operator $T_t$, and the operators $\{ T_t \}$ will be a contraction semigroup. To start with, we have the bound
+    %
+    \[ \| T_t(\lambda) \| = \| e^{t A_\lambda} \| = \| e^{-t \lambda} e^{t \lambda^2 R(\lambda,A)} \| \leq e^{-t \lambda} e^{t \lambda^2 \| R(\lambda,A) \|} \leq e^{-t \lambda} e^{t \lambda} \leq 1. \]
+    %
+    Thus the operators are a contraction semigroup. By uniform boundedness, to show $\{ T_t(\lambda) \}$ has a limit in $\lambda$, it suffices to work on a dense subspace. For $x \in \mathcal{D}(A)$,
+    %
+    \begin{align*}
+        T_t(\lambda)x - T_t(\lambda')x &= \int_0^t \frac{d}{ds} T_{t-s}(\lambda') T_s(\lambda) x\\
+        &= \int_0^t T_{t-s}(\lambda') T_s(\lambda) ( A_\lambda x - A_{\lambda'} x ).
+    \end{align*}
+    %
+    Thus we conclude that
+    %
+    \[ \| T_t(\lambda) x - T_t(\lambda') x \| \leq t \| A_\lambda x - A_{\lambda'} x \|. \]
+    %
+    We know the right hand side converges to zero, Thus the left hand side converges, and actually converges uniformly on compact subsets of $[0,\infty)$, \emph{for a fixed} $x$. But now we can define $T_t x$ as this limit. To prove the result is a semigroup, but this follows by taking uniform limits (and using the fact multiplication is continuous in the strong operator topology on \emph{bounded} families of operators). Finally, we must prove that $A$ is actually the generator of the semigroup $\{ T_t \}$. Let $B$ denote the generator of $\{ T_t \}$. Fi $x \in \mathcal{D}(A)$, and let
+    %
+    \[ \xi_\lambda(t) = T_t(\lambda) x. \]
+    %
+    Then $\xi_\lambda$ is differentiable, and $\xi_\lambda'(t) = T_t(\lambda) A_\lambda x$. The functions $\{ \xi_\lambda \}$ converge locally uniformly to the function
+    %
+    \[ \xi(t) = T_t x. \]
+    %
+    Th functions $\xi_n'$ converge locally uniformly to $\eta(t) = T_t A x$. But we also have
+    %
+    \[ \xi_n(t) = \int_0^t \xi_n'(s)\; ds \]
+    %
+    the right hand side converges locally uniformly to
+    %
+    \[ \int_0^t \eta(s)\; ds \]
+    %
+    Thus we find that
+    %
+    \[ \xi(t) = \int_0^t \eta(s)\; ds. \]
+    %
+    But this means $\xi$ is differentiable, and $\xi'(t) = \eta(t)$. Thus we find that $\mathcal{D}(A) \subset \mathcal{D}(B)$, and for $x \in \mathcal{D}(A)$, $Bx = Ax$. The bounds on $\{ T_t \}$ imply that $(0,\infty) \in \rho(B)$. But this means that $\lambda - A$ and $\lambda - B$ are surjections. But it is impossible for $\lambda - B$ to be surjective, \emph{except} if the domains of $A$ and $B$ are equal. Thus $A = B$.
+\end{proof}
+
+If $\{ T_t \}$ is a \emph{quasi-contractive} semigroup ,i.e. it satisfies bounds of the form
+%
+\[ \| T_t \| \leq e^{\omega t} \]
+%
+for some $\omega \in \RR$, then $e^{-\omega t} T_t$ is a contractive semigroup. Thus we can apply the result above to give an equivalence between these semigroups, and generators $A$ satisfying bounds of the form
+%
+\[ \| (\lambda - \omega) R(\lambda,A) \| \leq 1 \]
+%
+for all $\lambda > \omega$.
+
+A contractive group $\{ T_t \}$ is a group satisfying
+%
+\[ \| T_t \| \leq 1 \]
+%
+for all $t \in \RR$. All the operators involved must be isometries, since if $\| T_t x \| < \| x \|$ for some $x \in X$, then
+%
+\[ \| x \| = \| T_{-t} T_t x \| \leq \| T_t x \| < \| x \|, \]
+%
+which gives a contradiction. Following through the proof above, a closed, unbounded, densely defined operator $A$ generates a contractive group if and only if for all $\RR - \{ 0 \} \subset \rho(A)$, 
+%
+\[ \| \lambda R(\lambda,A) \| \leq 1. \]
+%
+Indeed, one just applies that result to $A$ and to $-A$ separately.
+
 \begin{theorem} [Hille-Yosida Theorem]
-    If $A$ is an unbounded, densely defined operator, such that there exists a number $\omega \in \RR$ such that
+    Let $A$ be an unbounded, densely defined operator, such that there exists a number $\omega \in \RR$ such that
     %
     \[ \sigma(A) \subset \{ \lambda : \text{Re}(\lambda) \leq \omega \}, \]
     %
