@@ -6672,6 +6672,11 @@ Thus our heuristics tell us that we should expect $I(\lambda)$ decays on the ord
   %
   \[ I(\lambda) \sim (2 \pi)^{1/2} e^{i \pi / 4} \lambda^{-1/2}. \]
 \end{theorem}
+
+\begin{remark}
+    In many problems in analysis, it causes no problem to work with smooth functions in $C^\infty(\RR)$, modulo the set $\SW(\RR)$ of Schwartz functions. One can then treat this asymptotic formula as uniquely identifying the oscillatory integral, since any two functions with the same asymptotics differ by a Schwartz function.
+\end{remark}
+
 %\begin{comment}
 %\begin{proof}
 %  Rescaling, it suffices to prove the theorem when $\psi(x) = 1$ whenever $|x| < 1$. Let $\alpha(x)$ be a smooth function with $\alpha(x) = 1$ for $|x| \geq 1/2$, and with $\alpha(x) = 0$ for $|x| < 1/4$. Then for each $k \geq 1$, define
@@ -6802,7 +6807,11 @@ It requires only a simple change of variables to extend this theorem to arbitrar
   %
   \[ c_0 = (2 \pi)^{1/2} \sqrt{ \frac{i}{\phi''(x_0)} } \cdot a(x_0). \]
   %
-  More generally, in this case there exists a sequence of linear differential operators $\{ L_n \}$ of order $2n$, with coefficients functions of the derivatives of $\phi$ at $x_0$ up to order $2n$, such that $c_n = (L_n a)(x_0)$.
+  More generally, there exists an order two differential operator $L$, with non-constant coefficients depending on the first two derivatives of the phase function $\phi$, such that for any $n > 0$,
+  %
+  \[ c_n = (2\pi)^{1/2} \sqrt{ \frac{i}{\phi''(x_0)} } \frac{(i/2)^n}{n!} L^n a(x_0). \]
+  %
+  The proof will show that the best way to obtain these coefficients is often to switch coordinates so that we can use the asymptotic expansion for an oscillatory integral with quadratic phase.
 \end{theorem}
 \begin{proof}
     Translating our integration variables if necessary, we may assume that the critical point $x_0$ lies at the origin. A coordinate change $x \mapsto -x$ means we may assume that $\phi''(0) > 0$. Partitioning the support of $a$, applying the principle of nonstationary phase away from the origin, we may assume without loss of generality that $\phi'(x) \neq 0$ for all $x$ on the support of $a$, and thus the function
@@ -7143,6 +7152,13 @@ Let us now consider some examples of the method of stationary phase in one dimen
   \end{align*}
   %
   One can carry out the analysis above in more detail to yield a complete asymptotic expansion for this function.
+  % y^2 = 1 - cos theta
+  % 2y dy = sin theta d theta
+  % cos theta = 1 - y^2
+  % theta = acos(1 - y^2)
+
+  % (2pi)^{-1} int_{-pi}^pi e^{im theta} e^{ir cos theta} dtheta
+  % (2pi)^{-1} e^{ir} [ int_{-pi}^pi [ 2y e^{i m acos(1 - y^2)} / sin theta ] e^{-ir y^2}
 \end{example}
 
 \begin{example}
@@ -8989,7 +9005,7 @@ TODO: This is really a question about convexity, i.e. we constructed a counterex
     %
     \[\text{span} \{ \partial^\alpha : |\alpha| \leq N \} = \text{span} \{ (\nu \cdot \nabla)^n : \nu \in S^{k-1}, 1 \leq n \leq N \}. \]
     %
-    The advantage of this is that for each $\omega \in S^{d-1}$ and $|x_0| \leq 1$, an operator in the basis of the left hand side is non-vanishing, which implies an operator in the basis on the other side must be nonvanishing, i.e. there must exist $\nu \in S^{k-1}$ and $1 \leq n \leq N$ such that $(\nu \cdot \nabla)^n \gamma(x_0) \neq 0$. We prove this in a lemma following this proof.
+    The advantage of this is that for each $\omega \in S^{d-1}$ and $|x_0| \leq 1$, an operator in the basis of the left hand side is non-vanishing, which implies an operator in the basis on the other side must be nonvanishing, i.e. there must exist $\nu \in S^{k-1}$ and $1 \leq n \leq N$ such that $(\nu \cdot \nabla)^n (\gamma \cdot \omega)(x_0) \neq 0$. We prove this in a lemma following this proof.
 
     By compactness of everything, there is $c > 0$ such that we can cover $S^{d-1}$ by balls $W_1 \cup \dots \cup W_M$, and cover the unit ball $B$ by balls $B_1 \cup \dots \cup B_L$, such that for all $m \leq M$, and $l \leq L$, there exists $n^m_l \leq N$ and $\nu^m_l$ such that for all $\omega \in W_m$, and $x \in B_l$,
     %
@@ -9127,7 +9143,7 @@ Consider the moment curve in $\RR^d$, i.e. given by the parameterization
 %
 \[ \gamma(t) = (t,t^2,\dots,t^d). \]
 %
-We claim that $T$ is bounded from $L^p$ to $L^q$
+We claim that $T$ is bounded from $L^p$ to $L^q$. The argument is taken from Christ's 1998 paper ``Convolution, Curvature, and Combinatorics: A Case Study''.
 
 \begin{theorem}[Christ (1998)]
     For any two sets $E,F \subset \RR^d$,
@@ -9174,6 +9190,294 @@ We claim that $T$ is bounded from $L^p$ to $L^q$
     %
     \[ \langle T \II_E, \II_{F^{\text{good}}} \rangle \geq (1/2) \langle T \II_E, \II_F \rangle \]
 \end{proof}
+
+TODO: Ask Kaiyi for notes from week of February 7th.
+
+\begin{theorem}
+    Let
+    %
+    \[ Tf(x) = \int_{-1}^{+1} f(x - \gamma(t)), \]
+    %
+    where $\gamma(t) = (t,\dots,t^d)$ is the moment curve. Then this operator, initially defined for continuous functions with compact support, satisfies a bound of the form
+    %
+    \[ \| Tf \|_{L^{\frac{d(d+1)}{2(d-1)}}(\RR^d)} \lesssim \| f \|_{L^{\frac{d+1}{2}}}. \]
+\end{theorem}
+
+\begin{remark}
+    A rescaling argument shows that this theorem implies that the operator
+    %
+    \[ Tf(x) = \int_{-\infty}^\infty f(x - \gamma(t)) \]
+    %
+    is bounded from $L^{\frac{d+1}{2}}(\RR^d)$ to $L^{\frac{d(d+1)}{2(d-1)}}(\RR^d)$. More generally, this same argument shows that establishing the result by averaging over the moment curve over times in $[-1,+1]$ implies the average over an infinite region provided one is proving estimates from $L^p(\RR^d)$ to $L^q(\RR^d)$, where $p$ and $q$ are exponents satisfying
+    %
+    \[ 1 + \frac{d(d+1)}{2q} - \frac{d(d+1)}{2p} = 0. \]
+\end{remark}
+
+\begin{proof}
+    We want to prove that the quantity
+    %
+    \[ A = \sum_{j,k} 2^{j+k} \langle T \II_{E_j}, \II_{F_k} \rangle \]
+    %
+    satisfies a bound $A \lesssim 1$ whenever
+    %
+    \[ \sum 2^{jp} |E_j| \lesssim 1 \quad\text{and}\quad \sum 2^{kr} |F_k| \lesssim 1. \]
+    %
+    Here $p = (d+1)/2$, and $r$ is the dual of the output bound we want to show, and $r$ is the conjugate dual of $2d(d+1)/2(d-1)$. For dyadic $\varepsilon$, $\eta_1$, and $\eta_2$, let
+    %
+    \[ L(\varepsilon, \eta_1, \eta_2) = \left\{ (j,k) : \langle T \II_{E_j}, \II_{F_k} \rangle \sim \varepsilon |E_j|^{1/p} |F_k|^{1/r}, 2^{jp} |E_j| \sim \eta_1, 2^{kr} |F_k| \sim \eta_2 \right\}. \]
+    %
+    We can then write
+    %
+    \[ A = \sum_{\varepsilon, \eta_1, \eta_2 \lesssim 1} \sum_{j,k \in L(\varepsilon,\eta_1,\eta_2)} 2^{j+k} \langle T \II_{E_j}, \II_{F_k} \rangle. \]
+    %
+    Let $A(\varepsilon,j,k)$ be the interior sum above. Then we can write
+    %
+    \begin{align*}
+        A(\varepsilon,j,k) &\sim \sum_{j,k \in L(\varepsilon,\eta_1,\eta_2)} 2^{j+k} \varepsilon |E_j|^{1/p} |F_k|^{1/r}\\
+        &= \varepsilon \#(L(\varepsilon,\eta_1,\eta_2)) \eta_1^{1/p} \eta_2^{1/r}.
+    \end{align*}
+    %
+    Now the assumptions on the choices of $|E_j|$ and $|F_k|$ imply that
+    %
+    \[ \#(L(\varepsilon,\eta_1,\eta_2)) \lesssim \eta^{-1} \eta_2^{-1}, \]
+    %
+    and so
+    %
+    \[ A(\varepsilon,j,k) \lesssim \varepsilon \eta_1^{-1/p^*} \eta_2^{-1/r^*}. \]
+    %
+    Our goal is now to control the size of the projections of $L(\varepsilon,\eta_1,\eta_2)$ onto the two index sets $j$ and $k$. We begin by stating the useful volume estimate, that
+    %
+    \[ \sum |G_n| \lesssim |\bigcup_n G_n| + |\bigcup_n G_n|^{1/2} ( \sum_{n \neq m} |G_n \cap G_m| )^{1/2}. \]
+    %
+    The result follows by applying Cauchy-Schwartz to the sum of the idnicator functions of $G_n$. Now set
+    %
+    \[ \alpha_{j,k} = \frac{\langle T\II_{E_j}, \II_{F_k} \rangle}{|F_k|} \quad\text{and}\quad \beta_{j,k} = \frac{\langle T \II_{E_j}, \II_{F_k} \rangle}{|E_j|}. \]
+    %
+    There there exists sets $E_j^k \subset E_j$ and $F_k^j \subset F_k$ such that $T \II_{E_j}(x) \gtrsim \alpha_{j,k}$ for $x \in F_k^j$, $T^* \II_{F_k}(y) \gtrsim \beta_{j,k}$ for $y \in E_j^k$, and
+    %
+    \[ \langle T \II_{E_j}, \II_{F_k} \rangle \sim \langle T \II_{E_j^k}, \II_{F^j_k} \rangle. \]
+    %
+    Let
+    %
+    \[ \mathcal{K}_j = \{ k : (j,k) \in L(\varepsilon,\eta_1,\eta_2) \}. \]
+    %
+    Then
+    %
+    \begin{align*}
+        \#(\mathcal{K}_j) \varepsilon^p |E_j| &\lesssim \sum_{k \in \mathcal{K}_j} |E_j^k|\\
+        &\lesssim |E_j| + |E_j|^{1/2} \left( \sum_{k \neq k'} |E_j^k \cap E_j^{k'}| \right)^{1/2}.
+    \end{align*}
+    %
+    Thus either
+    %
+    \[ \#(\mathcal{K}_j) \lesssim \varepsilon^{-p} + \sum_{k \in \mathcal{K}_j} |E_j^k| \lesssim |E_j|, \]
+    %
+    or there is $k \neq k'$ such that
+    %
+    \[ |E_j^k \cap E_j^{k'}| \gtrsim \varepsilon^{2p} |E_j|. \]
+    %
+    Similarily, either
+    %
+    \[ \#(\mathcal{J}_k) \lesssim \varepsilon^{-r} + \sum_{j \in \mathcal{J}_k} |F_k^j| \lesssim |F_k|, \]
+    %
+    or there exists $j \neq j'$ such that $|F_k^j \cap F_k^{j'}| \lesssim \varepsilon^{2r} |F_k|$. We will show that with both the cases $\mathcal{K}_j$ and $\mathcal{J}_k$, the second case \emph{cannot occur}. But this means we can apply H\"{o}lder's inequality to conclude that
+    %
+    \begin{align*}
+        &\sum_{(j,k) \in \mathcal{L}_i} \langle T \II_{E_j}, \II_{F_k} \rangle\\
+        &\quad =\sum_{(j,k) \in \mathcal{L}_i} 2^{j+k} \langle T \II_{E_j^k}, \II_{F^j_k} \rangle\\
+        &\lesssim \sum_{(j,k) \in \mathcal{L}_i} 2^{j+k} |E_j^k|^{1/p} |F_k^j|^{1/r}\\
+        &\lesssim \left( \sum_{(j,k) \in \mathcal{L}_i} \left( (2^j) |E_j^k|^{1/p} \right)^{p/\theta} \right)^{\theta/p}    
+    \end{align*}
+    %
+    Note
+    % TODO: WHAT IS THE SUM ON THE LHS HERE SUMMINGO VER
+    \[ \varepsilon |E_j|^{1/p} |F_k|^{1/r} \lesssim \langle T \II_{E_j^k}, \II_{F^j_k} \rangle \lesssim |E_j^k|^{1/p} |F_k|^{1/r} \lesssim |E_j|^{1/p} |F_k|^{1/p}. \]
+    %
+    To prove this, we may assume that $L$ is $O( \log (1/\varepsilon) )$ separated, where the implicit constant is allowed to depend on $d$. Now (TODO: Think about this) either
+    %
+    \[ \sum_k |E_j^k| \lesssim |E_j| \]
+    %
+    or there are $k$ and $k'$, not equal to one another, such that
+    %
+    \[ \sum |E_j^k \cap E_j^{k'}| \gtrsim \varepsilon^{2p} |E_j|. \]
+    %
+    Or similar statements for $\{ F_j^k \}$. We claim this cannot occur. Indeed,
+    %
+    \begin{align*}
+        \sum_{(j,k) \in L} 2^{j+k} \langle T \II_{E_j}, \II_{F_k} \rangle &\sim \sum_{(j,k)} 2^{j+k} \langle T \II_{E_j^k}, \II_{F^j_k}\\
+        &= \sum_{(j,k) \in L} 2^{j+k} |E_j^k|^{1/p} |F_k^j|^{1/r}\\
+        &\leq \left( \sum_{(j,k) \in L} (2^{jp} |E_j^k|)^{1/\theta} \right)^{\theta/p} \left( \sum_{(j,k) \in L} (2^{kr} |F_k^j|)^{1/\theta} \right)^{\theta/r}\\
+        &\leq \left( \sum_j 2^{jp/\theta} \left( \sum_j ( 2^{jp} |E_j| ) \right)^{1/\theta} \right)^{\theta / p} \times (ANALOGOUS)\\
+        &\leq (\eta_1^{1/\theta - 1})^{\theta/p} (\eta_2^{1/\theta - 1})^{\theta/r} \left( \sum_j 2^{jp} |E_j| \right)^{\theta/p} \left( \sum_k 2^{kr} |F_k| \right)^{\theta/r}
+    \end{align*}
+    %
+    (TODO: Think about this) THE IMPORTANT THING HERE IS THAT WE ARE IN AN $L^p$ improving setting, which allows us to pick $\theta < 1$, which gives us more room to play with.
+
+    Now set $\Omega_{j,k} = \{ (t,x) : x - \gamma(t) \in E_j \}$. Then
+    %
+    \[ |\Omega_{jk}| \sim \langle T \II_{E_j}, \II_{F_k} \rangle. \]
+    %
+    Set $\alpha_{j,k} = |\Omega_{j,k}| / |F_k|$ and $\beta_{j,k} = |\Omega_{j,k}| / |E_j|$. We setup an iterating scheme (TODO: What is this) like before. We get
+    %
+    \[ |E_j| \gtrsim \alpha_{jk}^{\frac{d(d-1)}{2} + 1} \beta_{jk}^{d-1} \left( \frac{\alpha_{j'k}}{\alpha_{jk}} \right)^2. \]
+    %
+    On the other hand, because $\langle T \II_{E_j}, \II_{F_k} \rangle \gtrsim \varepsilon |E_j|^{1/p} |F_k|^{1/r}$,
+    %
+    \[ |E_j| \lesssim \varepsilon^{- \frac{d(d+1)}{2}} \alpha_{jk}^{\frac{d(d-1)}{2} + 1} \beta^{d-1}. \]
+    %
+    Thus
+    %
+    \[ \alpha_{j'k} \lesssim \varepsilon^{- \frac{d(d+1)}{4}} \alpha_{jk}. \]
+    %
+    By symmetry, the reverse holds. But this means that
+    %
+    \[ \frac{\alpha_{jk}}{\alpha_{j'k}} = \frac{\langle T \II_{E_j}, \II_{F_k} \rangle}{\langle T \II_{E_j}, \II_{F_k} \rangle} \sim \frac{2^{-j}}{2^{-j'}} = 2^{j' - j}. \]
+    %
+    So
+    %
+    \[ \varepsilon^{\frac{d(d-1)}{4} \lesssim 2^{j' - j}} \lesssim \varepsilon^{- \frac{d(d+1)}{4}}. \]
+    %
+    This gives a contradiction for large values because
+    %
+    \[ |j - j'| \gtrsim \log (1/\varepsilon). \]
+\end{proof}
+
+Now we discuss higher dimensional averages.
+
+\begin{theorem}
+    Let
+    %
+    \[ Tf(x) = \int_{\RR^{d-1}} f(x - |t|^2, x' - t)\; dt \]
+    %
+    Then $T$ is bounded from $L^{(d+1)/2, 1}$ to $L^{d+1,\infty}$, i.e.
+    %
+    \[ \langle T \II_E, \II_F \rangle \lesssim |E|^{\frac{d}{d+1}} |F|^{\frac{d}{d+1}}. \]
+\end{theorem}
+\begin{proof}
+    Set
+    %
+    \[ \alpha = \frac{\langle T\II_E, \II_F \rangle}{|F|} \quad\text{and}\quad \beta = \frac{\langle \II_E, T^* \II_F \rangle}{|E|}. \]
+    %
+    We want to convert the bound involving $\langle \cdot, \cdot \rangle$ into more harmless things involving $\alpha$ and $\beta$, i.e. we want to prove the inequality
+    %
+    \[ \alpha^{\frac{d}{d+1}} \beta^{\frac{1}{d+1}} \lesssim |E|^{\frac{d-1}{d+1}} \]
+    %
+    and
+    %
+    \[ \alpha^d \beta \lesssim |E|^{d-1}. \]
+    %
+    We want to set up an iterated $TT^*$ argument as before to generate a map with a nice Jacobian determinant. The problem here is that we have a $d-1$ dimensional parameter set, and $d-1$ does not divide $d$. To solve this issue, the exponent on the right hand side of the inequality above, i.e. $E$ is $d$ dimensional, and we take it to an exponent $d-1$ to get $d(d-1)$. Define
+    %
+    \[ F^{\text{good}} = \{ x \in F: T \II_E(x) \geq \alpha/2 \} \]
+    %
+    As before, we have
+    %
+    \[ \langle T \II_E, \II_{F^{\text{good}}} \geq (1/2) \langle T \II_E, \II_F \rangle \]
+    %
+    so it is natural to define
+    %
+    \[ E^{\text{good}} = \{ y \in E: T^* \II_{F^{\text{good}}}(y) \geq \beta / 4 \}. \]
+    %
+    Then
+    %
+    \[ \langle T \II_{E^{\text{good}}}, \II_{F^{\text{good}}} \rangle \geq (1/4) \langle T \II_E, \II_F \rangle. \]
+    %
+    Let $y_0 \in E^{\text{good}}$ (assuming $E^{\text{good}}$ is nonempty). Let
+    %
+    \[ \mathcal{S}_{y_0} = \{ s \in \RR^{d-1}: y_0 + (|s|^2, s) \in F^{\text{good}} \}, \]
+    %
+    Then $|\mathcal{S}_{y_0}| \geq \beta / 4$. If $s \in \mathcal{S}_{y_0}$, then
+    %
+    \[ \mathcal{J}_{y_0} = \{ t \in \RR^{d-1}: x(s) - (|t|^2,t) \in E \}. \]
+    %
+    Then $|\mathcal{J}_{y_0}(s)| \geq \alpha/2$. Set
+    %
+    \[ \mathcal{U}_{y_0} = \{ (s_j, t_1,\dots,t_{d-1}) : s \in \mathcal{S}_{y_0}, t_j \in \mathcal{J}_{y_0}(s) \}. \]
+    %
+    Define $\Psi: (\RR^d)^d \to (\RR^d)^{d-1}$ by setting
+    %
+    \[ \Psi(s,t)_j = (y_0 + (|s|^2,s) - (|t_j|^2,t)). \]
+    %
+    The Jacobian of $\Psi_{y_0}$ is
+    %
+    \[ \det \begin{pmatrix} 2s^T & -2t_1^T & 0 \\ I_{d-1} & I_{d-1} & 0 \\ \cdots & \ddots & \cdots \\ 2s^T & 0 & -2t_{d-1}^T \\ I_{d-1} & \cdots & I_{d-1} \end{pmatrix}. \]
+    %
+    A cofactor expansion gives that, with a constant depending on $d$, this determinant is proportional to the determinant of the matrix with rows $s - t_i$. Now
+    %
+    \begin{align*}
+        |E|^{d-1} &\gtrsim |\Psi_{y_0}(U_{y_0})|\\
+        &\gtrsim \int_{U_{y_0}} |\det D \Psi_{y_0}(s,t)|\; ds\; dt\\
+        &\gtrsim \int_{\mathcal{S}_{y_0}} \int_{\mathcal{J}_{y_0}(s)^{d-1}} |\det(t_1-s, \dots, t_{d-1} - s)|\; dt\; ds\\
+        &= \int_{\mathcal{S}_{y_0}} \int_{(\mathcal{J}_{y_0}(s) - s)^{d-1}} |\det(u_1,\dots,u_{d-1})|\; du\; ds.
+    \end{align*}
+    %
+    Let us consider the special case where $\mathcal{J}_{y_0}(s) - s$ is a ball of volume roughly $\alpha$ centered at the origin. Then it is a ball with radius about $\alpha^{1/(d-1)}$. Then for most points, the determinant is at least $\alpha$, and so in this special case, we get that
+    %
+    \[ |E|^{d-1} \geq |\mathcal{S}_{y_0}| |\mathcal{J}_{y_0}(s)|^{d-1} \alpha \gtrsim \beta \alpha^d. \]
+    %
+    If $\mathcal{J}_{y_0}$ is more diffuse away from $s$, the determinant can, unfortunately, be be bigger. We want to be able to measure how eccentric this set is, i.e. to approximate this set by an ellipsoid.
+\end{proof}
+
+
+
+\section{Non Translation-Invariant Averaging Operators}
+
+Based on work by Christ-Nagel-Stein-Wainger, and Tao-Wright, and Gressman.
+
+Consider a function $a: \RR^{d+k} \to [0,\infty)$, which is smooth, and has compact support, and let
+%
+\[ \pi: \RR^d_x \times \RR^k_t \to \RR^d \]
+%
+be such that $D_x \pi$ is non-singular, and $D_t \pi$ has rank $k$. Then $\pi$ is a diffeomorphism in the $x$ variable, and for each fixed $x$, $t \mapsto \pi(x,t)$ traces out the image of a $k$-dimensional submananifold of $\RR^d$. We consider an operator of the form
+%
+\[ Tf(x) = \int_{\RR^k} a(x,t) f(\pi(x,t))\; dt. \]
+%
+We have been studying translation-invariant examples where $\pi(x,t) = x - \gamma(t)$. A basic example is given by letting $\pi$ trace out the solutions to the equation $x \cdot y = 1$.
+
+Any operator $T$ of the form above maps $L^p(\RR^d)$ to $L^p(\RR^d)$ for any $1 \leq p \leq \infty$ (just apply Schur's Lemma). The fact that we have introduced a compactly supported cutoff $a$ tells us that $L^p \to L^q$ estimates implies $L^{p'} \to L^{q'}$ estimates for any $p' \geq p$ and $q' \leq q$. Thus, even though it is now possible to have $L^p$ worsening estimates, we have essentially proved all such estimates from the fact that $T$ is bounded from $L^p$ to $L^p$. Thus we still are focusing on $L^p$ improving estimates.
+
+There is a simple formula for the adjoint of $T$. Namely, a change of variables $y = \pi(x,t)$ gives that
+%
+\begin{align*}
+    \langle Tf, g \rangle &= \int_{\RR^k} \int_{\RR^d} a(x,t) f(\pi(x,t)) \overline{g(x)}\\
+    &= \int_{\RR^k} \int_{\RR^d} f(y) \left( a^*(y,t) f(y) g(\pi_t^{-1}(y)) \right)^*.
+\end{align*}
+%
+Let us write $\pi^*(y,t) = \pi_t^{-1}(y)$. Then we conclude that
+%
+\[ T^* g(y) = \int_{\RR^k} a^*(y,t) g(\pi^*(y,t))\; dt. \]
+%
+Thus the adjoint of an averaging operator is also an averaging operator.
+
+We will now switch to studying the \emph{double fibration formulation} of the problem. We consider quantities of the form
+%
+\[ B(f_1,f_2) = \int a(z) f_1(\pi_1(z)) f_2(\pi_2(z))\; dz, \]
+%
+where $z = (y,t)$, and where $\pi_1$ and $\pi_2$ are submersions from $\RR^{d+k}$ to $\RR^d$, such that for each $x \in \RR^d$, $\pi_j$, restricted to the $k$ dimensional submanifold $\pi_{j'}^{-1}(x)$, is an immersion (i.e. the level sets of $\pi_1$ and $\pi_2$ are $k$-dimensional submanifolds that intersect transversally).
+
+\begin{theorem} (Baby version of CNSW / TW)
+    Suppose there is a smooth manifold $\Sigma$ of positive codimension such that for all $z \in \Sigma$, $\pi_j^{-1} \{ \pi_j(z) \} \subset \Sigma$. Then no $L^p$ improving estimates are possible.
+\end{theorem}
+\begin{proof}
+    Suppose $\Sigma$ is $n$ dimensional. If $\Sigma_j = \pi_j(\Sigma)$, then $\Sigma_j$ is a smooth manifold of dimension $n-k$. If $f_j$ is a characteristic function of a $\delta$ neighborhood of $\Sigma_j$, then
+    %
+    \[ \| f_j \|_{L^{p_j}(\RR^d)} \sim \delta^{\frac{d+k-n}{p_j}}. \]
+    %
+    Then $B(f_1,f_2) \gtrsim \delta^{d+k-n}$ (the defining integrand is $\gtrsim 1$ on a $\delta$ neighborhood of $\Sigma$). Thus we can only have
+    %
+    \[ B(f_1,f_2) \lesssim \| f_1 \|_{L^{p_1}(\RR^d)} \| f_2 \|_{L^{p_2}(\RR^d)} \]
+    %
+    if $d + k - n \geq (d+k-n)(1/p_1 + 1/p_2)$, i.e. if $1/p_1 + 1/p_2 \leq 1$. But this implies we can have no $L^p$ improving estimates.
+\end{proof}
+
+The same conclusion holds if the $\pi_1$ and $\pi_2$ fibres are both tangent to $\Sigma$ to infinite order at some point in $\Sigma$. The result of CNSW shows that we \emph{do} get some $L^p$ improvement if we have a quantitative guarantee of the rate of escape from every manifold.
+
+In the translation-invariant setting, where $\pi_1(x,t) = x - \gamma(t)$ and $\pi_2(x,t) = x$, where $\gamma(0) = 0$ and $\gamma$ is contained in a hyperplane $H_0$, then $\Sigma = H_0 \times \RR_t$ gives a result to which the theorem above applies.
+
+% METHOD OF REFINEMENTS.
+
+
+
 
 
 
