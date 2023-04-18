@@ -1,0 +1,696 @@
+\documentclass{article}
+
+%% for editing
+%\usepackage{changes}
+%\usepackage[final]{changes} %% comment above line and uncomment this line to see final copy without markup
+%\setremarkmarkup{~(#2)}
+\usepackage{color}
+
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{multicol}
+%\usepackage[margin=1in]{geometry}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usepackage{hyperref}
+\usepackage{mathabx}
+\usepackage{comment}
+
+\usepackage{tensor}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{prop}[theorem]{Proposition}
+
+\theoremstyle{remark}
+\newtheorem*{remark}{Remark}
+\newtheorem*{example}{Example}
+\newtheorem*{proof*}{Proof}
+
+\theoremstyle{definition}
+\newtheorem*{defi}{Definition}
+\newenvironment{definition}
+    {\begin{samepage}\begin{framed}\begin{defi}}
+    {\end{defi}\end{framed}\end{samepage}}
+
+
+\DeclareMathOperator{\diam}{\text{diam}}
+
+\DeclareMathOperator{\QQ}{\mathbb{Q}}
+\DeclareMathOperator{\ZZ}{\mathbb{Z}}
+\DeclareMathOperator{\RR}{\mathbb{R}}
+\DeclareMathOperator{\HH}{\mathbb{H}}
+\DeclareMathOperator{\BB}{\mathbb{B}}
+\DeclareMathOperator{\CC}{\mathbb{C}}
+\DeclareMathOperator{\AB}{\mathbb{A}}
+\DeclareMathOperator{\PP}{\mathbb{P}}
+\DeclareMathOperator{\MM}{\mathbb{M}}
+\DeclareMathOperator{\VV}{\mathbb{V}}
+\DeclareMathOperator{\TT}{\mathbb{T}}
+\DeclareMathOperator{\LL}{\mathcal{L}}
+\DeclareMathOperator{\DD}{\mathcal{D}}
+\DeclareMathOperator{\SW}{\mathcal{S}}
+\DeclareMathOperator{\EC}{\mathcal{E}}
+\DeclareMathOperator{\AC}{\mathcal{A}}
+
+\DeclareMathOperator{\EE}{\mathbb{E}}
+\DeclareMathOperator{\NN}{\mathbb{N}}
+
+\DeclareMathOperator{\II}{\mathbb{I}}
+
+\DeclareMathOperator{\DQ}{\mathcal{Q}}
+
+
+\DeclareMathOperator{\IA}{\mathfrak{a}}
+\DeclareMathOperator{\IB}{\mathfrak{b}}
+\DeclareMathOperator{\IC}{\mathfrak{c}}
+\DeclareMathOperator{\IP}{\mathfrak{p}}
+\DeclareMathOperator{\IQ}{\mathfrak{q}}
+\DeclareMathOperator{\IM}{\mathfrak{m}}
+\DeclareMathOperator{\IN}{\mathfrak{n}}
+\DeclareMathOperator{\IK}{\mathfrak{k}}
+\DeclareMathOperator{\ord}{\text{ord}}
+\DeclareMathOperator{\Ker}{\textsf{Ker}}
+\DeclareMathOperator{\Coker}{\textsf{Coker}}
+\DeclareMathOperator{\emphcoker}{\emph{coker}}
+\DeclareMathOperator{\pp}{\partial}
+\DeclareMathOperator{\tr}{\text{tr}}
+\DeclareMathOperator{\Ree}{\text{Re}}
+
+
+\DeclareMathOperator{\BL}{\text{BL}}
+
+\DeclareMathOperator{\dstrike}{//}
+
+\DeclareMathOperator{\supp}{\text{supp}}
+
+\DeclareMathOperator{\codim}{\text{codim}}
+
+\DeclareMathOperator{\minkdim}{\dim_{\mathbb{M}}}
+\DeclareMathOperator{\hausdim}{\dim_{\mathbb{H}}}
+\DeclareMathOperator{\sobdim}{\dim_{\mathbb{S}}}
+\DeclareMathOperator{\lowminkdim}{\underline{\dim}_{\mathbb{M}}}
+\DeclareMathOperator{\upminkdim}{\overline{\dim}_{\mathbb{M}}}
+\DeclareMathOperator{\lhdim}{\underline{\dim}_{\mathbb{M}}}
+\DeclareMathOperator{\lmbdim}{\underline{\dim}_{\mathbb{MB}}}
+\DeclareMathOperator{\packdim}{\text{dim}_{\mathbb{P}}}
+\DeclareMathOperator{\fordim}{\dim_{\mathbb{F}}}
+
+\DeclareMathOperator{\CT}{ {{\otimes}^\wedge} }
+
+\DeclareMathOperator{\msupp}{\text{$\mu$-supp}}
+\DeclareMathOperator{\singsupp}{\text{sing-supp}}
+\DeclareMathOperator{\Char}{\text{Char}}
+
+\DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator*{\argmin}{arg\,min}
+
+\DeclareMathOperator{\ssm}{\smallsetminus}
+
+\newcommand{\myphi}[1]{ \tensor[^{\phi}]{{#1}}{}}
+
+
+
+
+\title{The Lax Parametrix for the Half Wave Equation}
+\author{Jacob Denson}
+
+\begin{document}
+
+\maketitle
+
+In this talk, we consider a motivating example that gave rise to much of the general theory of Fourier integral operators: the study of variable-coefficient wave equations. This show a precise example of how Fourier integral operators can be used as a tool to generalize the tools of harmonic analysis we normally use to analyze constant coefficient differential operators like the wave equation, and apply them to variable coefficient analogues.
+
+\section{Prelude: Half-Wave Propogators on $\RR^d$}
+
+Consider a solution $u(x,t)$ to the wave equation
+%
+\[ (\partial_t^2 - \Delta) u = 0 \]
+%
+on $\RR^d$. The standard approach we Fourier analysts like to use to study this problem is to take the spatial Fourier transform on both sides; if $\widehat{u}(\xi,t)$ denotes the Fourier transform of $u$ in the $x$-variable, then we conclude that
+%
+\[ (\partial_t^2 + 4 \pi^2 |\xi|^2) \cdot \widehat{u}(\xi,t) = 0. \]
+%
+This is an ordinary differential equation in the $t$ variable for each fixed $\xi$, which we can solve, given that $u(x,0) = f(x)$, and $\partial_t u(x,0) = g(x)$, to write
+%
+\[ \widehat{u}(\xi,t) = \widehat{f}(\xi) \cos(2 \pi t |\xi|) + \widehat{g}(\xi) \frac{\sin(2 \pi t |\xi|)}{2 \pi |\xi|}. \]
+%
+It is often natural to write this as
+%
+\[ \left( \frac{\widehat{f}(\xi) + \widehat{g}(\xi)}{2} \right) e^{2 \pi i t |\xi|} + \left( \frac{\widehat{f}(\xi) - i |\xi|^{-1} \widehat{g}(\xi)}{2} \right) e^{-2 \pi i t |\xi|}. \]
+%
+If we write $u = v + w$, where
+%
+\[ \widehat{v}(\xi,t) = \left( \frac{\widehat{f}(\xi) + \widehat{g}(\xi)}{2} \right) e^{2 \pi i t |\xi|} \quad\text{and}\quad \widehat{w}(\xi,t) = \left( \frac{\widehat{f}(\xi) - i |\xi|^{-1} \widehat{g}(\xi)}{2} \right) e^{-2 \pi i t |\xi|}, \]
+%
+then we have decomposed $u$ into the sum of solutions to the \emph{half-wave equations}
+%
+\[ \Big( \partial_t - i \sqrt{-\Delta} \Big) v = 0 \quad\text{and}\quad \Big(\partial_t + i \sqrt{-\Delta} \Big) w = 0. \]
+%
+The two operators $\partial_t - i \sqrt{-\Delta}$ and $\partial_t + i \sqrt{-\Delta}$ are identical, up to a time-reversal symmetry, so we focus on solutions to the equation $\partial_t - \sqrt{-\Delta} = 0$. Solutions to the half-wave equation behave similarly to solutions to the wave equation, with one notable exception: the wave equation has a finite speed of propogation, whereas the half-wave equation does not.
+
+The fact that the half-wave equation $(\partial_t - i \sqrt{-\Delta}) u = 0$ is a first-order operator makes the Cauchy problem somewhat simpler to study, since we need less initial data than in the wave equation. We can therefore define operators $e^{it \sqrt{-\Delta}}$ such that
+%
+\[ v(x,t) = (e^{i t \sqrt{-\Delta}} v_0)(x). \]
+%
+We now look at these operators, and the solution operator
+%
+\[ Wf(x,t) = (e^{i t \sqrt{-\Delta}} f)(x) \]
+%
+to the half-wave equation, from the perspective of FIO theory.
+
+\begin{comment}
+
+Fourier transform of e^{-|x|} is
+
+	c_d (1 + |xi|^2)^{- (d+1) / 2}
+
+Fourier transform of e^{- lambda |x|} for lambda > 0 is
+
+	int e^{- lambda |x|} e^{-i xi * x} dx
+	= c_d lambda^{-d} (1 + |xi|^2 / lambda^2)^{-(d+1)/2}
+
+Can we now apply analytic continuation to conclude that
+the Fourier transform of e^{-it |x|} is equal to
+
+	c_d (it)^{-d} ( 1 + |xi|^2 / (it + 0)^2 )^{-(d+1)/2}
+
+where we take the branch of the square root that is the analytic extension
+away of the normal square root away, defined away from the imaginary axis.
+
+Then for |xi| > t this quantity is equal to
+
+	c_d i t^{-d} ( |xi|^2 / t^2 - 1 )^{-(d+1)/2}
+
+e^{-i pi / 2}
+
+sqrt( a e^{it} ) = sqrt(a) sqrt(e^{it/2})
+
+\end{comment}
+
+Let's start with the operators $\{ e^{it \sqrt{-\Delta}} \}$. We can write
+%
+\begin{align*}
+	e^{i t \sqrt{-\Delta}} f(x) &= \int e^{2 \pi i (t |\xi| + \xi \cdot x)} \widehat{f}(\xi)\; d\xi\\
+	&= \int e^{2 \pi i (t |\xi| + \xi \cdot (x - y))} f(y)\; dy\; d\xi\\
+	&= \int a(x,y,\xi) e^{2 \pi i \phi_t(x,y,\xi)} f(y)\; dy\; d\xi,
+\end{align*}
+%
+where $a(x,y,\xi) = 1$, and $\phi_t(x,y,\xi) = t |\xi| + \xi \cdot (x - y)$. The function $a$ is a symbol of order zero, and the function $\phi_t$ is a non-degenerate phase function with canonical relation defined by the equations
+%
+\[ \left\{ x = y + t \frac{\xi}{|\xi|}\ \text{and}\ \xi = \eta \right\}, \]
+%
+which, for a fixed $y$, we can think of as consisting of the sphere of radius $t$ at $y$, and all \emph{outward} pointing cotangent vectors on this sphere. Thus the operators $e^{it \sqrt{-\Delta}}$ are Fourier integrals of order $0$.
+
+The solution operator $W$ is very similar, since we have
+%
+\begin{align*}
+	Wf(x,t) &= e^{it \sqrt{-\Delta}} f(x)\\
+	&= \int e^{2 \pi i (t |\xi| + \xi \cdot (x - y))} f(y)\; dy\; d\xi\\
+	&= \int a(x,t,y,\xi) e^{2 \pi i \phi(x,t,y,\xi)} f(y)\; dy\; d\xi.
+\end{align*}
+%
+The function $a(x,t,y,\xi) = 1$ here is still a symbol of order zero, and the phase $\phi(x,t,y,\xi) = t |\xi| + \xi \cdot (x - y)$ is non-degenerate, so $W$ is a Fourier integral operator from $\RR^d$ to $\RR^d \times \RR$, of order $-1/4$, with canonical relation defined by the three equations
+%
+\[ \left\{ x = y + t \frac{\xi}{|\xi|}\ \text{and}\ \xi = \eta\ \text{and}\ \tau = |\xi| \right\}. \]
+%
+In this talk, we will construct approximate solutions (parametrices) for variable-coefficient analogues of the half-wave equation using Fourier integral operators.
+
+\section{Variable-Coefficient Half-Wave Equations}
+
+Our goal is to consider variable coefficient analogues of the half-wave operator $\partial_t - i \sqrt{-\Delta}$. A natural variable-coefficient generalization of such an operator would be
+%
+\[ L = \partial_t - i P \]
+%
+where $P$ is a first order \emph{pseudodifferential operator} with principal symbol $p$.
+
+As harmonic analysts, our goal is often not to prove the existence and uniqueness of solutions to partial differential equations above, but mostly to prove the regularity of certain solutions, i.e. the Sobolev mapping properties of the operators associated with solutions to the equation. For simplicity, let us work in a domain where the existence and uniqueness of solutions to this equation are relatively easy to obtain. We work with the equation on a compact manifold $M$, and with a pseudodifferential operator $P$ which is formally positive, and given by an elliptic symbol. For such an operator, we can find an orthogonal basis $\{ e_\lambda : \lambda \geq 0 \}$ of $L^2(M)$, each of which a smooth function on $M$, such that
+%
+\[ Pe_\lambda = \lambda e_\lambda. \]
+%
+We can then define a family of bounded operators $\{ e^{itP} \}$ on $L^2(M)$ by setting
+%
+\[ e^{it P} e_\lambda = e^{it \lambda} e_\lambda. \]
+%
+and then consider a solution operator
+%
+\[ Wf(x,t) = (e^{it \lambda} f)(x). \]
+%
+One can check using Sobolev bounds on the eigenfunctions $\{ e_\lambda \}$ that $W$ maps $C^\infty(M)$ into $C^\infty(M \times \RR)$, and that $W$ gives a solution operator to the half-wave equation, i.e. for $f \in C^\infty(M \times \RR)$, the function $u = Wf$ gives a smooth solution to the equation $\partial_t u = iPu$, with initial conditions $f$. One can also prove such a solution is unique, e.g. using energy estimates, but this takes us a little far afield of what we desire to talk about.
+
+Our goal is to construct a \emph{parametrix} for the solution operator $S$ to the Cauchy problem $Lu = 0$. That is, we wish to find an operator $A$ such that $R = A - S$ is a \emph{smoothing operator}, i.e. it's kernel is a smooth function. The mapping properties of the operator $S$ with respect to Sobolev norms then immediately reduces to the mapping properties of the operator $A$, because the operator $R$ has trivial mapping properties. For example, it maps $H^s$ to $H^t_{\text{loc}}$ for any $s < t$.
+
+The reason parametrices arise is that in many variable coefficient problems, it is often possible to find operators $A$ which can be expressed in a simple manner, whereas none may exist for $S$. This in particular arises in harmonic analysis based techniques, since it is often the case that the behaviour of solution operators can only be given analytical expressions asymptotically, i.e. via expressions that are never completely accurate, but become more accurate as we take input data which is oscillating more and more rapidly. Taking the difference between the actual solution, and this asymptotic expression, we obtain an expression which becomes minute as we plug in input data that is oscillating rapidly. Slowly oscillating functions are \emph{smooth}, and since slowly oscillating input data for the half-wave equation (a hyperbolic equation) produces slowly oscillating output data, we conclude the difference between the solution operator and the asymptotic expressino will be smoothing.
+
+We will later find that the techniques we give to construct a parametrix will assume that $P$ is a formally positive-semidefinite, classical elliptic pseudodifferential operator of order one, but we'll come to these assumptions one by one as they arise in our method of constructing the parametrix. The main example of equations that fit these assumptions are obtained by considering some Riemannian metric $g$, and consider the resulting half-wave equation
+%
+\[ \partial_t - i \sqrt{-\Delta_g} \]
+%
+where
+%
+\[ \sqrt{-\Delta_g} f = |g|^{-1/2} \sum_i \partial_i \{ |g|^{1/2} g^{ij} \partial_j f \} \]
+%
+is the Laplace-Beltrami operator. Similar equations are obtained in quantum mechanics, Schr\"{o}dinger-type equations of the form $\partial_t = i P(x,D)$, describing the behaviour of a classical mechanical system described by the \emph{Hamiltonian} $P(x,\xi)$, i.e. the system
+%
+\[ \frac{dx}{dt} = \frac{\partial P}{\partial \xi} \quad\text{and}\quad \frac{d\xi}{dt} = - \frac{\partial P}{\partial x} \]
+%
+at a quantum scale. However, the principal part of $P$ will generally be homogeneous of degree two in the $\xi$-variable, since kinetic energy is often a quadratic form in the momentum variables. One can use the methods described here to construct parametrices. But the resulting operators, given by oscillatory integrals, will not have phases that are homogeneous of degree one, a necessary part of the system of Fourier integral operator theory, and so the methods here do not directly apply. Nonetheless, the physical intuition behind the Schr\"{o}dinger equation will be helpful for the construction of the parametrices we construct here. Indeed, we will see that the `semiclassical' behaviour of the Schr\"{o}dinger equation at large scales is analogous to the analytical expressions we will obtain for the half-wave equation, associated with a suitable Hamiltonian equation. Indeed, the methods we used here, first applied to the half wave equation in the 1960s, really have their root in the methods of quantum physicists of the 1920s, with their WKB method for approximating solutions to the Schr\"{o}dinger equation applying approximations like we will give here. One could even argue that the roots of these methods emerged even earlier, in the methods of geometric optics discovered by Fresnel and Airy in the 1800s.
+
+% The parameterices constructed using the techniques here will therefore have a phase which is homogeneous of degree two in the $\xi$ variable, which doesn't quite fit the system considered here, because the Fourier Integral operators we study have phases that are homogeneous of degree one in the phase variable.
+
+% In physics, the use of such parametrices in the study of the Schr\"{o}dinger equation is called the \emph{WKB method}.
+
+\section{High-Frequency Asymptotic Solutions}
+
+Our method begins by trying to search for a general family of `high-frequency asymptotic solutions' to the half-wave equation in a neighborhood
+%
+\[ B = \{ x : |x - x_0| \leq \delta \} \]
+%
+of some point $x_0$, for small times $|t| \leq \varepsilon$. Since we're trying to construct such a family locally, despite working on a compact manifold, we can switch to studying the operator in coordinates, so we'll abuse notation, and assume we were working with a pseudodifferential operator on $\RR^d$ the whole time.
+
+Let us describe what we mean by this. Fix an expression of the form
+%
+\[ u_\lambda(x,t) = e^{2 \pi i \lambda \phi(x,t)} a(x,t,\lambda), \]
+%
+where $a \sim a_0 + a_{-1} + \dots$ is a `classical' symbol of order zero in the $\lambda$ variable, compactly supported in some neighborhood
+%
+\[ U = \{ x : |x - x_0| \leq R \}, \]
+%
+and $\phi$ is a smooth, real-valued function, such that $\nabla_x \phi(x,t) \neq 0$ on the support of $a$. This latter condition is necessary in order for us to interpret $u_\lambda$ as a function `oscillating at a magnitude $\lambda$'. Indeed, if the condition is true, we can use stationary phase to show that the Fourier transform of $u_\lambda$ rapidly decays outside of the annulus of frequencies $|\xi| \sim \lambda$.
+
+%
+%\begin{itemize}
+%	\item $a$ is a `classical' symbol of order zero in the $\lambda$-variable, i.e. we can write
+	%
+%	\[ a \sim \sum_{j = 0}^\infty a_{-j}, \]
+	%
+%	where $a_{-j}$ is a smooth function, homogeneous of order $-j$ in the $\lambda$ variable. Moreover, $a$ is compactly supported in the $x$-variable and the $t$-variable.
+
+%	\item The function $\phi$ is smooth, real-valued, and we assume $\nabla_x \phi(x,t) \neq 0$ on the support of $a$.
+%\end{itemize}
+%
+%The latter assumption is natural because we think of $u_\lambda$ as being localized in phase space about the family of points
+%
+%\[ \Big\{ (x, t, \lambda \nabla_x \phi(x,t), \lambda \partial_t \phi(x,t)) \Big\} \]
+%
+%and so we need $\nabla_x \phi(x,t)$ to be nonvanishing, in order for us to think of $u_\lambda$ as being localized near spatial frequencies that have magnitude approximately $\lambda$, and thus localized to large frequencies when $\lambda$ is large.
+
+In a lemma shortly following this discussion, we will show that for any choice of $a$ and $\phi$ as above, there exists a symbol $b$ of order $1$ such that
+%
+\[ L \{ u_\lambda \} = e^{2 \pi i \lambda \phi(x,t)} b(x,t,\lambda). \]
+%
+For \emph{some} choices of $a$ and $\phi$, it might be true that the higher order parts of $b$ are eliminated, i.e. so that $b$ is also of order much smaller than $1$. If $a$ and $\phi$ are chosen in a \emph{very} particular way, it might be true that all finite order parts of $b$ are eliminated, so that $b$ is a symbol of order $-\infty$ in a neighborhood of $x_0$ and for small times. In such a situation, we say $\{ u_\lambda \}$ is a `\emph{high-frequency asymptotic solution}' to the wave equation. We then conclude that
+%
+\[ |\partial_x^\alpha \partial_t^\beta \{ L u_\lambda \}| \lesssim_{\alpha,\beta,N} \lambda^{-N} \quad\text{for all $N > 0$}, \]
+% \quad\text{for all $N > 0$, $|t| \lesssim 1$, and $|x - x_0| \lesssim 1$}
+which justifies that $u_\lambda$ behaves like a solution to the half-wave equation when $\lambda$ is large. We will prove the following `Cauchy-type' initial value problem for high-frequency asymptotic solutions to the equation.
+
+\begin{theorem}
+	Suppose $\varphi(x,x_0,\xi)$ is a smooth, real-valued function solving the \emph{eikonal equation}
+	%
+	\[ p(x_0,\xi_0) = p(x, \nabla_x \varphi(x,x_0,\xi_0)). \]
+	%
+	for $|x - x_0| \leq R$, subject to the constraint that $\nabla_x \varphi(x_0,x_0,\xi_0) = \xi_0$. Set
+	%
+	\[ \phi(x,t,x_0,\xi_0) = \varphi(x,x_0,\xi_0) + t p(x_0,\xi_0). \]
+	%
+	Then there exists $\varepsilon > 0$ and $\delta > 0$ such that, for any classical symbol $a^0(x,x_0,\lambda)$ of order zero, supported on $|x - x_0| \leq R$ and such that $a^0(x_0,x_0,\lambda)$ is non-vanishing for large $\lambda$, there exists a unique classical symbol $a(x,t,\lambda)$ of order zero, defined for $|x - x_0| \leq \delta$ and $|t| \leq \varepsilon$, and agreeing with $a^0$ when $t = 0$ and $|x - x_0| \leq \delta$, such that the associated family of functions
+	%
+	\[ u_\lambda(x,t) = e^{2 \pi i \lambda \phi(x,t,x_0,\xi_0)} a(x,t,\lambda) \]
+	%
+	are high-frequency asymptotic solutions to the half-wave equation for $|x - x_0| \leq \delta$ and $|t| \leq \varepsilon$.
+\end{theorem}
+
+\begin{remark}
+	The constraints on $a^0$ allow us to think of $u_\lambda(x,0)$ as being localized in space near $x_0$, and oscillating at a frequency approximately $\xi_0$.
+\end{remark}
+
+In order to prove this result, we need to obtain some formulas that tell us what the symbol $b$ looks like whose existence was postulated above, in terms of the phase $\phi$, the operator $P$, and the symbol $a$. In order to prove the theorem above, we'll construct $a$ recursively by slowly fixing the contributions of the higher order parts of $a$. One then studies the lower order terms separately, so it is wise to make a study of the functions
+%
+\[ u_\lambda(x,t) = e^{2 \pi i \lambda \phi(x,t)} a(x,t,\lambda),\]
+%
+where $a$ is a classical symbol of some arbitrary order $\mu$, rather than just a symbol of order zero.
+ The proof of the following Lemma is a somewhat technical application of stationary phase, and can be relegated to a second reading of these notes.
+
+\begin{lemma}
+	Let $P$ be a pseudodifferential operator of order $1$ given by a classical symbol of order one, i.e.
+	%
+	\[ P \sim p + p_0 + p_-, \]
+	%
+	where $p$ is the principal symbol, homogeneous of order one, $p_0$ is homogeneous of order zero, and $p_-$ is a symbol of order $-1$. Consider
+	%
+	\[ u_\lambda(x,t) = e^{2 \pi i \lambda \phi(x,t)} a(x,t,\lambda), \]
+	%
+	where $a$ and $\phi$ are as above. Then $e^{-2 \pi i \lambda \phi(x)} L u_\lambda$ is a classical symbol of order $\mu+1$, with principal symbol
+	%
+	%Then
+	%
+	%\[ e^{-2 \pi i \lambda \phi(x)} P \{ u_\lambda \}(x) \]
+	%
+	%is a classical symbol of order $\mu+1$, with principal symbol
+	%
+	%\[ \lambda \cdot p(x,\nabla_x \phi) \cdot a_\mu, \]
+	%
+	%and with order $\mu$ part given by
+	%
+	%\begin{align*}
+	%	&(\nabla_\xi p)(x, \nabla_x \phi) \cdot (D_x a_\mu) + s(x) \cdot a_\mu + \lambda \cdot p(x,\nabla_x \phi) \cdot a_{\mu-1},
+	%\end{align*}
+	%
+	\[ 2\pi i \lambda \Bigg( \partial_t \phi - p \left( x, \frac{\nabla_x \phi}{2 \pi} \right) \Bigg) a_\mu, \]
+	%
+	and with order $\mu$ part given by
+	%
+	\begin{align*}
+		&2 \pi i \lambda \Bigg( \partial_t \phi - p \left( x, \frac{\nabla_x \phi}{2 \pi} \right) \Bigg) a_{\mu - 1}\\
+		&\quad + \partial_t a_\mu - (2\pi)^{-1} (\nabla_\xi p)(x, \nabla_x \phi) \cdot (\nabla_x a_\mu) - i s \cdot a_\mu,
+	\end{align*}
+	%
+	for a smooth, real-valued function $s(x)$ depending only on $\phi$, $p_1$, and $p_0$.
+\end{lemma}
+\begin{proof}
+	Let us temporarily write terms without the $t$ variable, since $P$ is a pseudodifferential operator only in the $x$ variables, and so the $t$ variable won't come into effect in the argument. We write
+	%
+	\[ P \{ u_\lambda \} (x) = \int a(y,\lambda) P(x, \xi) e^{2 \pi i [ \xi \cdot (x - y) + \lambda \phi(y) ]}\; dy\; d\xi. \]
+	%
+	This integral has a unique, non-degenerate stationary point when $y = x$, and when $\xi = \lambda \nabla_x \phi(x)$. Fix $C > 0$, and suppose
+	%
+	\[ (1/C) \leq |\nabla_x \phi(x)| \leq C \]
+	%
+	for all $x$ on the support of $a$. Consider a smooth function $\chi$ such that
+	%
+	\[ \chi(v) = 1 \quad\text{for}\ 1/2C \leq |v| \leq 2C, \]
+	%
+	and vanishing outside a neighborhood of this set. Write
+	%
+	\[ \phi(y) - \phi(x) = \nabla_x \phi(x) \cdot (y - x) + \phi_R(x,y). \]
+	%
+	Write
+	%
+	\[ P_\lambda(x,\xi) = \chi(\xi / \lambda) P(x,\xi). \]
+	%
+	The theory of non-stationary phase, i.e. integrating by parts sufficiently many times, can be used to show that
+	%
+	\begin{align*}
+		& e^{- 2 \pi i \lambda \phi(x) } (P - P_\lambda) \{ u_\lambda \} (x,\lambda)\\
+		& \quad\quad\quad = \lambda^d \int a(y,\lambda) (P - P_\lambda)(x,\lambda \xi) e^{2 \pi i \lambda [ \xi \cdot (x - y) + \phi_R(x,y) ]}\; dy\; d\xi
+	\end{align*}
+	%
+	is a symbol of order $-\infty$. Thus it suffices to analyze the quantities
+	%
+	\begin{align*}
+		e^{-2 \pi i \lambda \phi(x)} P_\lambda u_\lambda(x) &= \int P_\lambda(x, \xi) e^{2 \pi i [ (\xi - \lambda \nabla_x \phi(x)) \cdot (x - y) + \lambda \phi_R(x,y) ]} a(y, \lambda)\; dy\; d\xi\\
+		&= \int P_\lambda(x, \lambda \nabla_x \phi(x) + \xi) e^{2 \pi i [ \xi \cdot (x - y) + \lambda \phi_R(x,y) ]} a(y,\lambda)\; dy\; d\xi.
+	\end{align*}
+	%
+	Using a Taylor expansion, we can write
+	%
+	\[ P_\lambda(x, \lambda \nabla_x \phi(x) + \xi) = \sum_{|\alpha| < N} (\partial_\xi^\alpha P)(x, \lambda \nabla_x \phi(x)) \cdot \xi^\alpha + R_N(x,\xi,\lambda), \]
+	%
+	where $R_N$ vanishes of order $N$ as $\xi \to 0$, and, using the remainder formula for the Taylor expansion, and the support properties of $P_\lambda$, for all multi-indices $\alpha$ we have
+	%
+	\[ |(\partial_\xi^\alpha R_N)(x,\xi,\lambda)| \lesssim_\alpha \lambda^{1 - |\alpha|}, \]
+	%
+	where the implicit constant is uniform in $\xi$ and $\lambda$, and locally uniform in $x$.
+	%
+	% We can write R_N as a
+	% finite sum of terms of the form
+	%
+	% xi^a int_0^1 (1 - t)^{N-1} (partial_xi^a P_lambda)(x, lambda nabla_x phi(x) + t xi)
+	%
+	% where |a| = N.
+	%
+	% Denote the integral by I_a(x,lambda,xi). If v = lambda nabla_x phi(x), then
+	%
+	% (d_xi^b I_a) <<
+	% 			lambda^{c - b}
+	% 				int_0^1 (1 - t)^{N-1} t^b (partial_xi^{a + c} P_lambda)(x, v + t xi) dt
+	%
+	% where c <= b.
+	%
+	% For |xi| >> lambda, the integral vanishes for |t| >= 1/|xi|,
+	% and so this integral is bounded by
+	%
+	% lambda^{c - b} |xi|^{-b-1} lambda^{1 - a - c}
+	% 	= lambda^{1 - a - b} |xi|^{-b-1}
+	%
+	% For |xi| << lambda, the integral is
+	%
+	% lambda^{c - b} lambda^{1 - a - c}
+	% 	= lambda^{1 - a - b}
+	%
+	% In general, we conclude that
+	But then the stationary phase formula tells us that
+	%
+	\[ \int R_N(x,\xi,\lambda) e^{2 \pi i [ \xi \cdot (x - y) + \lambda \phi_R(x,y) ]} a(y,\lambda)\; dy\; d\xi \]
+	%
+	is a symbol of order $\mu + 1 - \lceil N/2 \rceil$ in the $\lambda$ variable. Conversely, if we let
+	%
+	\[ a_R(x,y,\lambda) = e^{2 \pi i \lambda \phi_R(x,y)} a(y,\lambda), \]
+	%
+	we calculate that
+	%
+	\begin{align*}
+		&\int (\partial_\xi^\alpha P)(x, \lambda \nabla_x \phi(x)) \cdot \xi^\alpha e^{2 \pi i [\xi \cdot (x - y) + \lambda \phi_R(x,y)]} a(y,\lambda)\; dy\; d\xi\\
+		&\quad\quad = (\partial_\xi^\alpha P)(x, \lambda \nabla_x \phi(x)) (D_y^\alpha a_R)(x,x,\lambda).
+	\end{align*}
+	%
+	Thus we conclude that, modulo order $\mu + 1 - \lceil N/2 \rceil$ symbols in the $\lambda$ variable,
+	%
+	\[ e^{-2 \pi i \lambda \phi(x)} Pu_\lambda(x) = \sum_{|\alpha| < N} (\partial_\xi^\alpha P)(x, \lambda \nabla_x \phi(x)) (D^\alpha_y a_R)(x,x,\lambda). \]
+	%
+	The formula is very simple for $N = 1$, which allows us to work modulo symbols of order $\mu$, but we must work with $N = 3$, which is slightly more complicated, because we wish to work modulo symbols of order $\mu - 1$. For $|\alpha| \leq 1$, we have
+	%
+	\[ (D^\alpha_y a_R)(x,x,\lambda) = (D^\alpha_x a)(x,\lambda). \]
+	% phi_R(x,y) = phi(y) - phi(x) - (nabla_x phi)(x) * (y - x)
+	% (D^alpha_x phi)(x)
+	% phi(y) - phi(x) = nabla_x \phi(x) \cdot (y - x) + \phi_R(x,y)
+	% 
+	For $|\alpha| = 2$, we have
+	% phi_R(x,y)
+	\begin{align*}
+		(D^\alpha_y a_R)(x,x,\lambda) &= \Big( (2 \pi i \lambda) (D^\alpha_x \phi)(x) \Big) a(x,\lambda) + (D^\alpha_x a)(x,\lambda)\\
+		&= \lambda (\partial^\alpha_x \phi)(x) a(x,\lambda) + (D^\alpha_x a)(x,\lambda).
+	\end{align*}
+	%
+	Thus summing up all the terms, modulo symbols of order $\mu - 1$, we find
+	%
+	\begin{align*}
+		e^{-2 \pi i \lambda \phi(x)} Pu_\lambda(x) &= \Bigg( \sum_{|\alpha| \leq 1} (\partial_\xi^\alpha P)(x,\lambda \nabla_x \phi(x)) (D^\alpha_x a)(x,\lambda) \Bigg)\\
+		&\quad + \sum_{|\alpha| = 2} \lambda (\partial^\alpha_x \phi)(x) (\partial_\xi^\alpha P)(x, \lambda \nabla_x \phi(x)) a(x,\lambda).
+	\end{align*}
+	%
+	The order $\mu + 1$ part of this sum is
+	%
+	\[ p(x, \lambda \nabla_x \phi(x)) \cdot a_\mu(x,\lambda). \]
+	%
+	The order $\mu$ part is
+	%
+	\begin{align*}
+		& \Bigg( p_0(x, \nabla_x \phi(x)) + \sum_{|\alpha| = 2} (\partial^\alpha_x \phi)(x) (\partial_\xi^\alpha p)(x, \nabla_x \phi(x)) \Bigg) \cdot a_\mu(x,\lambda)\\
+		&\quad + (\nabla_\xi p)(x,\lambda \nabla_x \phi(x)) \cdot (D_x a_\mu)(x,\lambda) \\
+		&\quad + p(x,\lambda \nabla_x \phi(x)) \cdot a_{\mu - 1}(x,\lambda).
+	\end{align*}
+	%
+	This completes the argument.
+\end{proof}
+
+We are now ready to prove Theorem 1.
+
+\begin{proof}[Proof of Theorem 1]
+
+Notice that the phase $\phi$ is chosen as in the Theorem above, i.e. in terms of a solution to the eikonal equation, regardless of the symbol $a$, the order $\mu + 1$ part of $b$ vanishes, because
+%
+\[ \partial_t \phi = p(x_0, \xi_0) \]
+%
+and
+%
+\[ p( x, \nabla_x \phi ) = p(x_0,\xi_0). \]
+%
+Let us see what conditions are required in order to conclude that $b$ is a symbol of order $\mu - 1$ for $|x - x_0| \leq \delta$. Looking at the terms guaranteed by the Lemma, we see that we must have
+%
+\[ \partial_t a_\mu - (2\pi)^{-1} (\nabla_\xi p)(x, \nabla_x \phi) \cdot (\nabla_x a_\mu) - i s \cdot a_\mu = 0. \]
+%
+We note that the contribution to the order $\mu$ part of the symbol from $a_{\mu-1}$ given in the Lemma above disappears because $\phi$ was chosen via the Eikonal equation. If we consider the \emph{real} vector field
+%
+\[ X(x,t) = \partial_t - (2\pi)^{-1} (\nabla_\xi p)(x,\nabla_x \phi) \cdot \nabla_x, \]
+%
+defined on $\RR^d \times \RR$, then the equation above becomes
+%
+\[ X \{ a_\mu \} = i s a_\mu. \]
+%
+This is a \emph{transport equation}. The vector field is always transverse to the hyperplane of $\RR^d \times \RR$ given by $t = 0$, and the finite speed of propogation properties of the transport equation thus imply that there exists $\delta > 0$ and $\varepsilon > 0$, depending only on $X$ and $R$, such that $a_\mu$ is uniquely determine for $|x - x_0| \leq \delta$ and $|t| \leq \varepsilon$ provided that the initial values of $a_\mu$ are fixed on $|x - x_0| \leq R$.
+
+Let us now assume that $a_\mu$ is chosen so that this is the case. We now apply a recursive procedure, to show that, by induction, $a_{\mu - k}$ is uniquely determined for $|x - x_0| \leq \delta$ and $|t| \leq \varepsilon$ for all $k > 0$, given it's initial values for $t = 0$. In order to do this, it is notationally convenient to define
+%
+\[ v_{\lambda, k} = e^{2 \pi i \lambda \phi(x,t)} \sum_{j \leq \mu - k} a_j. \]
+%
+Let
+%
+\[ b_k(x,t,\lambda) = e^{-2 \pi i \lambda \phi(x,t)} L \{ u_\lambda - v_{\lambda,k} \}. \]
+%
+Then $b$ is a symbol of order $-\infty$ if and only if $b_k$ is a symbol of order $\mu - k$ for all $k > 0$, since the Lemma above shows that $b - b_k$ is also a symbol of order $\mu - k$. We have already argued that $b_0$ is a symbol of order $\mu - 1$ if and only if $a_\mu$ is uniquely specified by it's initial conditions, and we'll now proceed by induction. So suppose that $b_{k-1}$ is a symbol of order $\mu - k + 1$, and let $c_{k-1}$ denote the part of $b_{k-1}$ which is homogeneous of order $\mu - k + 1$. Applying the Lemma above, the order $\mu - k + 1$ part of $b_k$ is equal to
+%
+\begin{align*}
+	\partial_t a_{\mu - k} &- (2\pi)^{-1} (\nabla_\xi p)(x, \nabla_x \phi) \cdot (\nabla_x a_{\mu - k}) - i s a_{\mu-k} + c_{k-1}\\
+	&= X \{ a_{\mu - k} \} + c_{k-1} - i s a_{\mu - k}.
+\end{align*}
+%
+We see the \emph{same} transport equation here, but with a different non-homogeneous part. Regardless of this, we still conclude that $a_{\mu - k}$ is uniquely specified for $|x - x_0| \leq \delta$ and $|t| \leq \varepsilon$, and that the higher order components of $a$ are already fixed. But now we see that the induction is sufficient to prove what was required. Fantastic! \qedhere
+
+\end{proof}
+
+\section{Construction of the Parametrix}
+
+By finding asymptotic solutions to the half-wave equation in the generality above, we've essentially constructed the parametrix in secret we've wanted -- the idea is to take a general input, break it up into the superposition of wave packets that are localized in space and frequency, and then apply the asymptotic solution constructed above for each of these wave packets, which behaves better as these wave packets are localized to higher and higher frequencies.
+
+It's best to break down our solution into a \emph{continuous} superposition of wave packets rather than the usual discrete decomposition that comes up in decoupling theory. Let's review a simple approach, due to \emph{Gabor}, which won't quite work for our purposes, but gives us intuition for what we want. Consider the \emph{Gabor transform}
+%
+\[ Gf(x_0,\xi_0) = \int f(x) \eta(x - x_0) e^{- 2 \pi i x \cdot \xi_0}\; dx, \]
+%
+defined with respect to some fixed, non-negative, function $\eta$ supported on $|x| \leq \delta$ in a neighborhood of the origin, equal to one in an even smaller neighborhood, and with
+%
+\[ \int \eta(x)^2\; dx = 1. \]
+%
+This is a unitary transformation, with adjoint given by
+%
+\[ (G^*h)(x) = \iint h(x_0,\xi_0) \eta(x - x_0) e^{2 \pi i x \cdot \xi_0}\; dx_0\; d\xi_0, \]
+%
+so we obtain a `localized Fourier inversion formula'
+%
+\[ f(x) = \int Gf(x_0,\xi_0) \eta(x - x_0) e^{2 \pi i x \cdot \xi_0}\; dx_0\; d\xi_0, \]
+%
+which expresses $f$ as a superposition of the wave packets
+%
+\[ x \mapsto \eta(x - x_0) e^{2 \pi i x \cdot \xi_0}. \]
+%
+This approach doesn't quite work for our purposes, since we wish to decompose our function into wave packets of the form
+%
+\[ x \mapsto a(x,x_0,\xi_0) e^{2 \pi i \varphi(x,x_0,\xi_0)}. \]
+%
+for \emph{some} symbol $a$. But the fact that $\varphi(x,x_0,\xi_0) \approx \xi_0 \cdot (x - x_0)$ implies a similar approach will work.
+
+The trick here is to consider an inversion formula of the form
+%
+\[ f(x) = \iiint a(x,x',\xi_0) e^{2 \pi i \varphi(x,x',\xi_0)} f(x')\; dx'. \]
+%
+The left hand side is the identity operator applied to $f$, which is a Fourier integral operator of order zero associated with the \emph{diagonal} canonical relation
+%
+\[ \Delta = \Big\{ x = x'\ \text{and}\ \xi = \xi' \Big\}. \]
+%
+For any symbol $a$, the right hand side is \emph{also} a Fourier integral operator of order zero associated with the diagonal canonical relation. But the equivalence of phase function theorem thus implies that we can \emph{always} find $a$ such that the inversion formula holds.
+
+Now that we've obtained an expression of $f$ as a superposition of wave packets, the construction of the parametrix is rather easy. We set
+%
+\[ a^0(x,\xi_0,\lambda) = a(x,x', \lambda \xi_0), \]
+%
+and consider  the associated symbols $a(x,t,\xi_0,\lambda)$ which give high-frequency asymptotic solutions to the wave equation. We then consider the parametrix
+%
+\[ Af(x,t) = \int a(x,t,\xi,\lambda) e^{2 \pi i \varphi(x,x',\xi_0)} f(x')\; dx'\; d\xi_0. \]
+%
+We have $Af(x,0) = f(x)$ by the inversion formula, and by the fact that $a$ gives high-frequency asymptotic solutions to the half-wave equation, the kernel of $L \circ A$ can be written as
+%
+\[ \int b(x,t,\xi,\lambda) e^{2 \pi i \varphi(x,x',\xi_0)}\; d\xi, \]
+%
+where $b$ is a symbol of order $-\infty$. But this means that $L \circ A$ is a smoothing operator.
+
+But now we find we've actually constructed a parametrix. Indeed, let $K(t)$ denote the kernel of $L \circ A$. Then using the TODO: Wave equation potential formula, we conclude that
+%
+\[ Af(x,t) = Wf(x,t) + \int_0^t e^{i t P} K(t), \]
+%
+and it is simple to see that the integral on the right hand side defines another smoothing operator. Thus $A$ differs from the solution operator to the half-wave equation by a smoothing operator, and thus $A$ is a parametrix.
+
+
+\section{Epilogue: Hamilton-Jacobi Theory}
+
+We have constructed a parametrix of the form
+%
+\[ Af(x,t) = \int a(x,x',t,\xi) e^{2 \pi i \phi(x,x',t,\xi)} f(x')\; dx'. \]
+%
+It is simple to see this is a Fourier integral operator of order $-1/4$. But what is the canonical relation of this operator? To determine this, we must look into the Hamilton-Jacobi theory that we used to guarantee the existence of the phase function $\phi$. TODO
+
+
+
+
+\section{Leftovers}
+
+
+
+
+The formula we have given above is now sufficient to obtain a family of asymptotic solutions to the wave equation which works for a large family of initial conditions localized in phase space. 
+%
+%Let us suppose that
+%
+%\[ \phi(x,0) = (x - x_0) \cdot \xi_0 \]
+%
+%for some fixed $x_0$ and $\xi_0$, and that
+%
+%\[ a(x,0,\lambda) = \chi(x - x_0) \]
+%
+%for some smooth, compactly supported function $\chi$.
+We have
+%
+\[ L \{ u_\lambda \} = e^{2 \pi i \lambda \phi(x,t)} b(x,t,\lambda). \]
+%
+If we assume that $a_\mu(x_0,0,\lambda) \neq 0$, then in order for $b$ to be a symbol of order $\mu$, the phase $\phi$ must solve the equation
+%
+\[ \partial_t \phi = p \left( x, \frac{\nabla_x \phi}{2 \pi} \right). \]
+%
+To guess how to solve this equation, let's separate variables, and suppose $\phi$ is of the form
+%
+\[ \phi(x,t) = \varphi(x) + a t, \]
+%
+for some constant $a$, and some function $\varphi$, then the equation above becomes the \emph{eikonal equation}
+%
+\[ a = p \left( x, \frac{\nabla_x \varphi}{2 \pi} \right). \]
+%
+Let us prescribe the initial conditions that $\nabla_x \varphi(x_0) = \xi_0$, and that $\varphi$ vanishes on the hyperplane passing through $x_0$, and orthogonal to $\xi_0$. Then we see that
+%
+\[ a = p \left( x_0, \frac{\xi_0}{2 \pi} \right), \]
+%
+and the equation becomes
+%
+\[ p \left( x_0, \xi_0 \right) = p \left( x, \nabla_x \varphi \right). \]
+%
+TODO: Verify derivative conditions. The theory of Hamilton-Jacobi equations shows that, given the initial conditions above, there is a \emph{unique} function $\varphi$ solving this equation in a small neighborhood of the point $x_0$. We'll take $\phi$ to be this unique function in what follows, i.e. we set
+%
+\[ \phi(x,t) = \varphi(x) + \frac{p( x_0, \xi_0)}{2 \pi} \cdot t \]
+%
+where $\varphi$ is specified as above. This is sufficient to conclude that $b$ is a symbol of order $\mu$ in a neighborhood of $x_0$ and for small times, regardless of the choice of symbol $a$.
+
+Stone's Theorem tells us that we should only expect a well-defined theory of operators of the form $e^{itP}$ if the operator $P$ is a self-adjoint operator. Conveniently, this condition also implies that the principal symbol $p$ is real-valued, which implies that the zeroes of the symbol of the operator $L$ in the variable $\tau$ are purely imaginary, so we can apply the theory of hyperbolic equations to such operators. In order to have a non-singular theory of characteristics for the hyperbolic equation, it is necessary to assume that $p$ is a non-vanishing symbol, i.e., that $P$ is an elliptic pseudodifferential operator. So these are our assumptions, we study an equation of the form $L$, where $P$ is a self-adjoint, elliptic pseudodifferential operator of order one. Here are some important examples to keep in mind:
+%
+\begin{itemize}
+	\item If $M$ is a Riemannian manifold, then we can define the Laplace-Beltrami operator
+	%
+	\[ \Delta_g f = |g|^{-1/2} \sum_i \partial_i ( |g|^{1/2} g^{ij} \partial_ j f ). \]
+	%
+	The operator $\sqrt{-\Delta_g}$ is a self-adjoint, elliptic pseudodifferential operator of order one with principal symbol $|\xi|_g$.
+
+	\item s 
+\end{itemize}
+
+\begin{thebibliography}{9}
+
+\end{thebibliography}
+
+\end{document}
+
+
+
+
+
+
+
+
+
+
+
+- Let X be be a compact Riemannian manifold
+	- Then -Delta is essentially self-adjoint and non-negative, so spectral calculus tells us that sqrt(-Delta)
+	- 
+
