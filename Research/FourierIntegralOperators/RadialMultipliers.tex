@@ -2074,17 +2074,17 @@ Furthermore, we have
 %
 i.e. $E_+$ has singular support on the \emph{forward light cone}. When $d$ is odd, one can see from the formula above that $E_+$ actually has \emph{support} on the forward light cone; this is \emph{Huygen's principle}. For $d = 2$, we have
 %
-\[ E_+(t,x) = \frac{H(t) H(t^2 - |x|^2)}{2 \pi (t^2 - |x|^2)^{1/2}}, \]
+\[ E_+(t,x) = H(t) \frac{H(t^2 - |x|^2)}{2 \pi (t^2 - |x|^2)^{1/2}}, \]
 %
 where the right hand side is locally integrable, and thus defines a distribution. For $d = 3$, we have
 %
-\[ E_+(t,x) = \frac{H(t) \delta(t^2 - |x|^2)}{2 \pi} = \frac{H(t) \delta(t - |x|)}{4 \pi t}. \]
+\[ E_+(t,x) = H(t) \frac{\delta(t^2 - |x|^2)}{2 \pi} = H(t) \frac{\delta(t - |x|)}{4 \pi t}. \]
 %
 When $d \geq 4$, the forward fundamental solution becomes a distribution of higher order, i.e. becoming more singular on the forward light cone. For $d = 2$ the equation above no longer applies, but we have the simpler formula
 %
 \[ E_+(t,x) = \frac{H(t) H(t^2 - |x|^2)}{2}. \]
 %
-It is interesting to note that $E_+$ is the \emph{unique} fundamental solution which follows the finite speed of propogation, i.e. it is supported on the interior of the forward light cone.
+It is interesting to note that $E_+$ is the \emph{unique} fundamental solution which has the finite speed of propogation property, i.e. it is supported on the interior of the forward light cone.
 
 \begin{lemma}
     If $v$ is a fundamental solution of the D'Alembertian, supported on the interior of the forward light cone, then $v = E_+$.
@@ -2113,7 +2113,7 @@ Modifying this formula gives Fourier expressions for the backward fundamental so
 %
 the \emph{Feynman fundamental solution}. This fundamental solution has the quirk that
 %
-\[ \text{Supp}(E_F) = \RR^d_x \times \RR_t, \]
+\[ \text{supp}(E_F) = \RR^d_x \times \RR_t, \]
 %
 which is counterintuitive given the finite propogation speed of the wave equation.
 
@@ -2162,7 +2162,8 @@ In order to construct fundamental solutions to the wave equation on a Riemannian
 %
 then $\Box E_\nu = \nu E_{\nu - 1}$, where $E_0 = E_+$. The precise quantities $\{ a_\nu \}$ are difficult to calculate; the most convenient precise description of the distribution is that given by the equation
 %
-\[ E_\nu(x,t) = \lim_{\varepsilon \to 0} \frac{\nu !}{(2 \pi)^{2 (\nu + 1)}} \int_{\RR^{d+1}} e^{2 \pi i (x \cdot \xi + t \tau)} (|\xi|^2 - (\tau - i \varepsilon)^2)^{-\nu - 1}\; d\xi\; d\tau, \]
+% TODO: Possibly multiples of 2pi in this formula
+\[ E_\nu(x,t) = \lim_{\varepsilon \to 0} \nu! \int_{\RR^{d+1}} e^{2 \pi i (x \cdot \xi + t \tau)} (|\xi|^2 - (\tau - i \varepsilon)^2)^{-\nu - 1}\; d\xi\; d\tau, \]
 %
 i.e. the spacetime Fourier transform of the function $(\xi,\tau) \mapsto (|\xi|^2 - (\tau - i 0)^2)^{-\nu - 1}$. This function is holomorphic on the upper half plane, so Paley-Wiener implies that $\text{supp}_t(E_\nu) \subset [0,\infty)$, and it is fairly simple to check that $E_0$, as we have defined it here, is a fundamental solution to the wave equation, so that the uniqueness result we proved above for the fundamental solution implies that $E_+ = E_0$. One then verifies that $\Box E_\nu = \nu E_{\nu - 1}$ quite simply. We note also the two formulas
 %
@@ -2242,17 +2243,26 @@ where $\Delta f$ is the Euclidean Laplacian of $h$.
 %
 %\[ \Box_g u = \Box v \circ T. \]
 %
-Now let $E$ denote the forward fundamental solution to $\Box$ on $\RR^{d+1}$. Let $F: \RR^{d+1} \to \RR^{d+1}$ given by $F(x,t) = F(Tx, t)$, viewed as a map between Riemannian manifolds, i.e. with the domain $\RR^{d+1}$ equipped with metric $g$, and with codomain equipped with the Euclidean metric. Then for $\phi \in \DD(\RR^{d+1})$, if $E_+ = F^* E$, then a change of variables tells us that
+Now let $E$ denote the forward fundamental solution to $\Box$ on $\RR^{d+1}$. Let $F: \RR^{d+1} \to \RR^{d+1}$ given by $F(x,t) = F(Tx, t)$. Noting that $\det(T) = \det(G)^{1/2}$, if we set
+%
+\[ E_0 = \det(G)^{1/2} F^* E, \]
+%
+i.e. so that
+%
+\[ E_0(x,t) = \det(G)^{1/2} E(Tx,t) = H(t) \frac{c_d \det(G)^{1/2}}{\text{Im}( |x|_g^2 - (t + i0)^2 )^{\frac{d-1}{2}}}, \]
+%
+then $\Box_g E_0 = \delta$. Indeed, for $\phi \in \DD(\RR^{d+1})$, a change of variables tells us that
 %
 \begin{align*}
-    ( \Box_g E_+, \phi ) &= \lim_{\varepsilon \to 0} \Big( \Box_g T^* E_\varepsilon, \phi \Big)\\
-    &= \lim_{\varepsilon \to 0} \iint \Box_g (T^* E_\varepsilon)(x,t)\; \phi(x,t)\; dV_g(x)\; dt\\
-    &= \lim_{\varepsilon \to 0} \iint (\Box E_\varepsilon)(Tx,t)\; \phi(x,t)\; dV_g(x)\; dt\\
-    &= \lim_{\varepsilon \to 0} \iint (\Box E_\varepsilon)(y,t)\; \phi(T^{-1} y, t)\; dy\; dt\\
-    &= \phi(T^{-1} 0, 0) = \phi(0,0).
+    ( \Box_g E_0, \phi ) &= \det(G)^{1/2} \lim_{\varepsilon \to 0} \Big( \Box_g F^* E_\varepsilon, \phi \Big)\\
+    &= \det(G)^{1/2} \lim_{\varepsilon \to 0} \iint \Box_g (F^* E_\varepsilon)(x,t)\; \phi(x,t)\; dx\; dt\\
+    &= \det(G)^{1/2} \lim_{\varepsilon \to 0} \iint (\Box E_\varepsilon)(Tx,t)\; \phi(x,t)\; dx\; dt\\
+    &= \det(G)^{1/2} \lim_{\varepsilon \to 0} \det(T)^{-1} \iint (\Box E_\varepsilon)(y,t)\; \phi(T^{-1} y, t)\; dy\; dt\\
+    &= \det(G)^{1/2} \det(T)^{-1} \phi(T^{-1} 0, 0)\\
+    &= \phi(0,0).
 \end{align*}
 %
-Thus we conclude that $\Box_g E_+ = \delta$, so $E_+$ is the forward fundamental solution to $\Box$ on $\RR^{d+1}$.
+Thus we've found a fundamental solution.
 
 %
 %To determine the behaviour of the Laplace-Beltrami operator, let's see how the metric changes under a \emph{linear change of coordinates}. Fix an invertible linear map $T: \RR^d \to \RR^d$. Then we can consider a new metric $T_* g$ given by
@@ -2290,25 +2300,20 @@ Analogous to the behaviour of the forward fundamental solution with respect to t
 %
 \[ \{ (x,t) \in \RR^{d+1}: t \geq 0\ \text{and}\ |x|_g \leq t \}. \]
 %
-We also have a Fourier transform representation of this fundamental solution; define
-%
-\[ E_R(x,t) = \frac{H(t)}{2 \pi} \int \chi( |\xi| / R) \frac{\sin(2 \pi t |\xi|)}{|\xi|} e^{2 \pi i T^t \xi \cdot x}\; d\xi \]
-%
-for some compactly supported, smooth function $\chi$. Then as $R \to \infty$, $E_R$ converges to $E$ in the weak topology. But this means that $T^* E_R$ converges to $E_+$. Thus we obtain via a change of variables that
-%
+We also have a Fourier transform representation of this fundamental solution, namely, $E_0$ is given by an oscillatory integral distribution of the form
+% T^t xi = xi'
+% dxi' = det(T) dxi
 \begin{align*}
-    \iint E_+(x,t) \phi(x,t)\; dt\; dV_g(x) &= \lim_{R \to \infty} \iint E_R(Tx,t) \phi(x,t)\; dt\; dV_g(x)\\
-    &= \lim_{R \to \infty} \iiint \chi \left( \frac{|\xi|}{R} \right) \frac{\sin(2 \pi t |\xi|)}{|\xi|} e^{2 \pi i T^t \xi \cdot x} \phi(x,t)\; d\xi\; dt\; dV_g(x)\\
-    &= \lim_{R \to \infty} \iiint \chi \left( \frac{|\xi|_g}{R} \right) \frac{\sin(2 \pi t |\xi|_g)}{|\xi|_g} \phi(x,t) e^{2 \pi i \xi \cdot x}\; dx\; d\xi\; dt,
+    E_0(x,t) &= H(t) \int \frac{\sin(2 \pi t |\xi|)}{2 \pi |\xi|} e^{2 \pi i T^t \xi \cdot x}\; d\xi\\
+    &= H(t) \int \det(G)^{-1/2} \frac{\sin(2 \pi t |\xi|_g)}{2 \pi |\xi|_g} e^{2 \pi i \xi \cdot x}\; d\xi.
 \end{align*}
 %
-where the quantity $|\xi|_g$ is given by the induced inner product on the \emph{cotangent} spaces $\RR^n_x \times \RR^n_x$, i.e.
+Thus in particular, for $\phi \in \DD(\RR^d \times \RR)$, we have
 %
-\[ |\xi|_g = |T^{-t} \xi| = \sqrt{\xi^T G^{-1} \xi}, \]
+\[ \int E_0(x,t) \phi(x,t)\; dV_g(x)\; dt = \int_0^\infty \iint \phi(x,t) \frac{\sin(2 \pi t |\xi|_g)}{2 \pi |\xi|_g} e^{2 \pi i \xi \cdot x}\; dx\; d\xi\; dt. \]
 %
-and where we can interpret $d\xi\; dx$ as the natural Louiville measure on $\RR^n_x \times \RR^n_\xi$, viewed as the cotangent bundle of $\RR^n_x$. Abusing notation, it is natural to write the right hand side without such a limit in $R$, i.e. as a formal quantity
-%
-\[ \iiint \frac{\sin(2 \pi t |\xi|_g)}{|\xi|_g} \phi(x,t) e^{2 \pi i \xi \cdot x}\; dx\; d\xi\; dt. \]
+This is somewhat `coordinate invariant', because the left hand side is given by integration with respect to the Riemannian volume measure, which changes nicely in coordinates, and the right hand side is given by integration against the natural Louiville volume measure $dx\; d\xi$ defined on $\RR^n_x \times \RR^n_\xi$.
+
 % xi' = T^{-t} xi
 % dxi' = det(T^{-t}) dxi
 %i.e. if $y = Mx$ for some invertible $d \times d$ matrix $M$. Then if
@@ -2345,19 +2350,19 @@ and where we can interpret $d\xi\; dx$ as the natural Louiville measure on $\RR^
 
 \section{General Riemannian Metric}
 
-Let us now address the wave equation on a general Riemannian manifold $M$. Because we have a non-constant coefficient equation, we cannot expect to obtain a fundamental solution, instead only a \emph{parametrix}, which gives a solution \emph{modulo smoothing terms}. More precisely, let $r_0$ be the \emph{injectivity radius} of $M$, defined in subsequent paragraphs. For any $\delta < r_0$, if $I_\delta = \{ t : |t| < \delta \}$ we will then construct a Schwartz operator $T_H$ from $M$ to $I_\delta \times M$ such that the operator $\Box_g \circ T_H$ has a kernel lying in $C^\infty(I_\delta \times M \times M)$. The operator $T_H$ is called the \emph{Hadamard parametrix}.
+Let us now address the wave equation on a general Riemannian manifold $M$. Because we have a non-constant coefficient equation, we cannot expect to obtain a fundamental solution, instead only a \emph{parametrix}, which gives a solution \emph{modulo smoothing terms}. More precisely, let $r_0$ be the \emph{injectivity radius} of $M$, defined in subsequent paragraphs. If $\delta$ and $t_0$ are positive numbers with $t_0 + \delta < r_0$, and if we set $I_0 = \{ t : |t| < t_0 \}$, then we will construct a Schwartz operator $T_H$ from $M$ to $I_0 \times M$ such that the operator $\Box_g \circ T_H$ has a kernel lying in $C^\infty(I_0 \times M \times M)$. The operator $T_H$ is called the \emph{Hadamard parametrix}.
 
-Let us start by introducing \emph{normal coordinates}, which is where the injectivity radius enters the picture. Given a point $q \in M$, then for suitably small $\varepsilon$ balls $B$ centered at the origin in $T_q M$, the geodesic map $\exp: B \to M$ is well-defined, and a diffeomorphism. The image will then be the metric ball
+Let us start by introducing \emph{normal coordinates}, which is where the injectivity radius enters the picture. Namely, $r_0$ is the largest quantity such that for all $r < r_0$, for a point $q \in M$, and if $B$ is the radius $r$ ball centered at the origin in $T_{q} M$ (defined with respect to the metric on $T_{q} M$ induced by $g$), the geodesic map $\exp_{q}: B \to M$ is well-defined and a diffeomorphism. The image is then the metric ball
 %
-\[ B_\varepsilon(q) = \{ r \in M: d_g(q,r) < \varepsilon \}. \]
+\[ B_r(q) = \{ p \in M: d_g(p,q) < r \}. \]
 %
-The injectivity radius $r_0$ is then equal to the largest quantity $\varepsilon$ such that for all $q \in M$, the exponential map on a radius $r_0$ ball gives such a diffeomorphism. For each $q \in M$, if we consider an arbitrary orthonormal basis on $T_q M$, which induces an isomorphism $T_q M \to \RR^d$, then the induced map $x: B_{r_0}(q) \to \RR^d$ given by composing the maps $B_{r_0}(q) \to T_q M$ and $T_q M \to \RR^d$, is the system of \emph{normal coordinates} at $q$. Let $B \subset \RR^d$ be the open subset of $\RR^d$ equal to $x(B_{r_0}(q))$.
+Let us fix $q \in M$. If we fix an arbitrary orthonormal basis on $T_{q} M$, then we obtain an isomorphism $T_p M \cong \RR^d$, and we call the induced diffeomorphism $x$ from $B_\delta(q)$ to the ball $B$ of radius $\delta$ in $\RR^d$ a system of \emph{normal coordinates} at $q$.
 
-Let $B \subset \RR^d$ be the image of the coordinate system. The diffeomorphism $B_{r_0}(q) \to B$ gives $B$ a Riemannian metric, which we also denote by $g$. We can consider the positive-definite matrices $\{ G(x) : x \in B \}$ such that for $v,w \in \RR^d$,
+Let's review some useful properties of this correspondence. In the coordinate system $x$, we can write the Riemannian metric as
 %
-\[ \langle v_x, w_x \rangle_g = v^T G(x) w. \]
+\[ \sum g_{ij}(x) dx^i dx^j \]
 %
-The entries of $G(x)$ are precisely the coefficients $\{ g_{ij} \}$ of the metric $g$. The fact that we are using geodesic normal coordinates means the matrices $\{ G(x) \}$ have several useful properties:
+for smooth functions $\{ g_{ij}(x) \}$ giving th coefficients of a symmetric matrix $G(x)$. The fact that we have used geodesic normal coordinates means the matrices $\{ G(x) \}$ have two useful properties:
 %
 %As the tangent space of a Riemannian manifold, $T_q M$ is naturally an inner product space, and we shall denote the inner product of two vectors $v,w \in T_q M$ by $\langle v, w \rangle$. On the other hand, the diffeomorphism $B \to B_\varepsilon(q)$ gives $B \subset T_q M$ a Riemannian metric, which we shall denote by $g$. The tangent space $TB$ is naturally identified with $B \times T_q M$, so for $a \in B$ it is natural to write an element of $T_a B$ by $v_a$, where $v$ is a vector in $T_q M$. The metric $g$ induces an inner product $\langle \cdot, \cdot \rangle_g$ on each of the tangent spaces $T_a B$, and this in turn induces a smooth family of positive-definite transformations $G(a): T_q M \to T_q M$ for $a \in B$ such that for $v,w \in T_q M$,
 %
@@ -2368,18 +2373,34 @@ The entries of $G(x)$ are precisely the coefficients $\{ g_{ij} \}$ of the metri
 \begin{itemize}
     \item $G(0)$ is the identity map.
 
-    \item (The Gauss Lemma) For each $x \in B$,
-    %
-    \[ G(x) x = G(0) x, \]
-    %
-    i.e. so that
-    %
-    \[ \langle v_x, w_x \rangle_g = v \cdot w \]
-    %
-    for $x \neq 0$, and $v,w \in \RR^d$, with $w$ a scalar multiple of $x$.
+    \item (The Gauss Lemma) For each $x \in B$, $G(x) x = G(0) x$.
 \end{itemize}
 %
 These equations are key to the construction of the Hadamard parametrix, which we might predict given that the wave equation on Euclidean space propogates radially, and the Gauss Lemma tells us that in normal coordinates, the Riemannian metric behaves like the Euclidean metric in the radial direction.
+
+In coordinates, if we write
+%
+\[ \nabla_g f = \sum_{i,j} g^{ij} (\partial_j f) \frac{\partial}{\partial x^j}, \]
+%
+then the Laplace-Beltrami operator can be written as
+%
+\[ \Delta_g f = |g|^{-1/2} \nabla \cdot (|g|^{1/2} \nabla_g f). \]
+%
+Using the product rule, we can write $\Delta_g f = L_g f + R_g f$, where
+%
+\[ L_g f = \text{Div}(\nabla_g f) \quad\text{and}\quad R_g f = X \cdot \nabla f, \]
+%
+and
+%
+\[ X = |g|^{-1/2} \sum\nolimits_{i,j} \partial_i \{ |g|^{1/2} g^{ij} \} \frac{\partial}{\partial x^j}. \]
+%
+We first claim that if we consider
+%
+\[ E_0(x,t) = H(t) \frac{c_d}{\text{Im}(|x|^2 - (t + i0)^2)^{\frac{d-1}{2}}}, \]
+%
+then, restricted to $B \times I_0$, $(\partial_t^2 - L_g) E_0 = \delta$.
+
+\begin{comment}
 
 For any $\phi \in \DD(B)$, define
 %
@@ -2425,6 +2446,62 @@ then we can apply the product rule to write
 \end{align*}
 %
 We will be able to deal with the second-order differential operator $L$ using the radial symmetry of the metric (i.e. via the Gauss Lemma), whereas we will be able to deal with the first-order differential operator $R$ using an asymptotic expansion.
+
+\end{comment}
+
+We begin with a computation involving smooth functions. If $E \in C^\infty(B)$ is smooth and \emph{radial}, with $E(x) = F(|x|^2)$, then we claim that
+%
+\[ (\nabla_g E)(x) = 2 x F'(|x|^2) = (\nabla E)(x). \]
+%
+The nontrivial part is proving the first inequality, which follows by the Gauss Lemma because
+%
+\begin{align*}
+    (\nabla_g E)(x) &= G(x)^{-1} \{ (\nabla E)(x) \}\\
+    &= G(x)^{-1} \left( 2x F'(|x|^2) \right)\\
+    &= 2 F'(|x|^2) G(x)^{-1} x\\
+    &= 2 F'(|x|^2) x.
+\end{align*}
+%
+By taking weak limits, we conclude that $\nabla_g E = \nabla E$ for any distribution $E$ that is a weak limit of radial functions. We thus obtain the following result.
+
+\begin{lemma}
+    Consider the distribution $E_{0,q}$ on $M \times I_0$, such that $\text{supp}(E_{0,q}) \subset B_\delta(q)$, and such that, with respect to the normal coordinate system $x: B_\delta(q) \to B$ constructed above, we have
+    %
+    \[ E_{0,q}(x,t) = H(t) \cdot \frac{c_d}{\text{Im} \left( |x|^2 - (t + i0)^2 \right)^{\frac{d-1}{2}}}. \]
+    %
+    Then $(\partial_t^2 - L_g) E_{0,q} = \delta_{q}$.
+\end{lemma}
+\begin{proof}
+    In the normal coordinate system $x$, for each fixed $t$, $E_{0,q}(\cdot,t)$ is a radial function. Thus
+    %
+    \begin{align*}
+        L_g E_{0,q} &= \text{Div}(\nabla_g E_{0,q}) = \text{Div}( \nabla E_{0,q} ) = \Delta E_{0,q} = \delta_{q}. \qedhere
+    \end{align*}
+\end{proof}
+
+We have constructed a fundamental solution for $L_g$, which gives the `second order terms' for the Laplace-Beltrami operator. We must thus adjust our solution so that the `lower order terms' $R_g$ are also negligible, which will give us our parametrix. We note that, as in the Euclidean case, we can use similar ideas to the Lemma above to define distributions $E_{\nu,q}$ for all $\nu > 0$, such that
+%
+\[ (\partial_t^2 - L_g) \{ E_{\nu,q} \} = \nu E_{\nu-1,q}. \]
+%
+These distributions are just the Euclidean distributions $E_\nu$ when studied in normal coordinates about $q$. Our goal is now to recursively find a sequence of smooth functions $\{ \beta_\nu : \nu \geq 0 \}$ such that, for any $N \geq 0$, if we define
+%
+\[ S_{q,N}(x,t) = \sum_{\nu = 0}^N \beta_\nu(x) E_{\nu,q}(x,t), \]
+%
+then
+%
+\[ (\Box_g S_{q,N})(x,t) = \delta_{q} - (\Delta_g \beta_N)(x) E_{N,q}(x,t). \]
+%
+The distributions $E_{N,q}$ becomes increasingly smooth as $N \to \infty$, so we therefore construct an arbitrarily smooth approximation to a fundamental solution to the wave equation at $q$.
+
+TODO: FIX THE COMMENTED OUT CALCULATIONS WHICH SHOW HOW TO FIND 
+
+\begin{comment}
+
+If we write
+%
+\[ F_\nu(x) = \frac{1}{\text{Im} ( |x|^2 - (t + i0)^2 )^{\frac{d-1}{2} + \nu}}, \]
+%
+then the Gauss Lemma argument given above shows that
 
 As the main term, let us try and find a forward fundamental solution to the operator $\partial_t^2 - L$, i.e. to try and find a distribution $E_+$ such that $(\partial_t^2 - L) E_+ = \delta_0$. The trick to doing this is to note that a simple calculation, together with the Gauss Lemma, we conclude that for a smooth, \emph{radial} function $E \in C^\infty(B)$, with $E(x) = F(x \cdot x)$, we have
 %
@@ -2603,7 +2680,6 @@ But then if we take $E$ as the weak limit $E_\varepsilon$ of smooth, radial func
 %
 Note that our calculations require us to work in a normal coordinate system, which makes the radial behaviour of the wave equation play nicely.
 
-\begin{comment}
 \begin{lemma}
     If we are working in a normal coordinate system, then
     %
@@ -2628,7 +2704,6 @@ Note that our calculations require us to work in a normal coordinate system, whi
     %
     Comparing calculations shows we have equality.
 \end{proof}
-\end{comment}
 
 More generally, our calculations imply that if we define
 %
@@ -2704,9 +2779,106 @@ For each $q$, we have defined a distribution $F_N(q)$ on $B \times \{ |t| < t_0 
 %
 \[ \Box_{g,p} K_{H,N} = \delta_q - \Delta_g \{ \beta_N \} E_{N+1} \] 
 
-Using the exponential map $\exp: B \to M$, 
+Using the exponential map $\exp: B \to M$,
 
-We thus see from our construction that for each $N$, we see that for each $q \in M$, we have constructed a distribution 
+\end{comment}
+
+If we choose a orthogonal frame on some open neighborhood of the closure of an open set $U \subset M$, then this induces a smooth family of normal coordinate systems $x_q$. Since the objects constructed above depend smoothly on the Riemannian metric and coordinate system given, we can therefore find a family of distributions $E_\nu$ such that for $d(p,q) < \delta$, and if $\omega = f\; dx_q$ is an order one scalar density, then
+%
+\begin{align*}
+    \int_M & E_\nu(p,q,t) \omega(p)\\
+    &= c_{d,\nu} H(t) \int_{\RR^d} \frac{f( x_q^{-1}(x) )}{\text{Im} \left( |x|^2 - (t + i0)^2 \right)^{\frac{d-1}{2} + \nu}}\; dx.
+\end{align*}
+%
+We can write this integral as a linear combination of terms of the form
+%
+\begin{align*}
+    & t^j H(t) \int_{\RR^d} \int_{\RR^d} \frac{f( x_q^{-1}(x) )}{|\xi|^{\nu + k + 1}} e^{2 \pi i x \cdot \xi \pm t |\xi|}\; dx\; d\xi\\
+    & \quad = t^j H(t) \int_0^\infty \int_{\RR^d} \rho^{d - \nu - k - 2} f( x_q^{-1}(x) ) B_d(\rho |x|) e^{\pm 2 \pi i \rho t}\; dx\; d\rho,
+\end{align*}
+%
+which can in term be written as a linear combination of terms of the form
+%
+\[ t^j H(t) \int_0^\infty \int_{\RR^d} a(\rho |x|) \rho^{d - \nu - k - 2} f( x_q^{-1}(x) ) e^{2 \pi i \rho (\pm |x| \pm t)}\; dx\; d\rho, \]
+%
+where $a$ is a symbol of order $-(d-1)/2$. We can write this integral in a coordinate independent way as
+%
+\[ t^j H(t) \int_M \left( \int_0^\infty a( \rho d_g(p,q) ) \rho^{d - \nu - k - 2} e^{2 \pi i \rho (\pm d_g(p,q) \pm t)}\; d\rho \right) \omega(p)\; dp. \]
+%
+Thus the distribution $E_\nu$ can be written as a sum of terms given by oscillatory integrals of the form
+%
+\[ t^j \int_0^\infty a( \rho d_g(p,q) ) \rho^s e^{2 \pi i \rho ( \pm d_g(p,q) \pm t )}\; d\rho. \]
+%
+Let us rescale this integral as $t^j d_g(p,q)^{s-1}$ times
+%
+\[ \int_0^\infty a(\rho) \rho^s e^{2 \pi i \rho ( \pm d_g(p,q) \pm t )}\; d\rho. \]
+%
+Let us consider the integral over $\rho \leq 1$, i.e. an integral of the form
+%
+\[ t^j d_g(p,q)^{s-1} \int_0^\infty \chi(\rho) \rho^s e^{2 \pi i \rho ( \pm d_g(p,q) \pm t )}\; d\rho. \]
+%
+If $s \geq 1$, this integral is automatically a smoothing kernel by virtue of the fact that $\chi(\rho) \rho^s$ is a symbol of order $-\infty$. If $\rho \leq 1$, 
+
+This is the Fourier transform of the function $\chi(\rho) \cdot \rho^s$, evaluated at the point $\mp d_g(p,q) \mp t$.
+
+
+
+Modulo a smooth kernel, we may assume $a(\rho) = 0$ for $|\rho| \leq 1$.
+
+Let us consider the composition of these integrals at two different times $t_0$ and $t_1$. This composition can be expressed as a sum of terms of the form
+%
+\[ t_0^{j_1} t_1^{j_2} \int_0^\infty a( \rho_1 d_g(p,a) ) a( \rho_2 d_g(a,q) ) \rho_1^{s_1} \rho_2^{s_2} e^{2 \pi i [\rho_1 ( \pm d_g(p,a) \pm t_1) + \rho_2 ( \pm d_g(a,q) \pm t_2 )]}\; da\; d\rho_0\; d\rho_1. \]
+%
+By finite speed of propogation, we need only integrate over values $a$ such that $d_g(p,a) \leq t_0$ and $d_g(a,q) \leq t_1$.
+
+
+
+
+
+\[ \chi(P / R) = \int R \widehat{\chi}(Rt) e^{2 \pi i t P} \]
+%
+the kernel of this operator is thus a linear combination of terms of the form
+%
+\[ R^{-j_0} \int \int_0^\infty \widehat{\chi}(t_0) t_0^{j_0} \beta(d_g(p,q)) a( \rho_0 d_g(p,q) ) \rho_0^{s_0} e^{2 \pi i \rho_0 ( \pm d_g(p,q) \pm t_0 / R )}\; dt_0\; d\rho_0 \]
+%
+Write
+%
+\[ \alpha_0(t_0,p,q,\rho_0) = \widehat{\chi}(t_0) t_0^{j_0} \beta(d_g(p,q)) a( \rho_0 d_g(p,q) ) \rho_0^{s_0} \]
+%
+and
+%
+\[ \alpha_1(t,p,q,\rho_1) = a(\rho_1 d_g(p,q)) \rho_1^s. \]
+%
+Then the composition of $\chi(P/R)$ with our parametrix at time $t$ is a linear combination of terms of the form
+%
+\[ \int \alpha_1(t,p,a,\rho_1) \alpha_0(t_0,a,q,\rho_0) e^{2 \pi i [ \rho_1 ( \pm d_g(p,a) \pm t ) + \rho_0 ( \pm d_g(a,q) \pm t_0 / R )}\; dt_0\; d\rho_0\; d\rho_1\; da. \]
+%
+Suppose we localize $\rho_1$ to values $|\rho_1| \lesssim R$, i.e. we multiply by some function $\eta( \rho_1 / R)$. This is equivalent to consider a kernel of the form
+%
+\[ R \int \chi(\rho_1) \alpha_1(t,p,a, R \rho_1) \alpha_0(t_0,a,q,\rho_0) e^{2 \pi i [ R \rho_1 ( \pm d_g(p,a) \pm t ) + \rho_0 ( \pm d_g(a,q) \pm t_0 / R )}\; dt_0\; d\rho_0\; d\rho_1\; da. \]
+
+
+If we now compose it with our parametrix, we find the kernel is a linear combination of terms of the form
+%
+\[ \int R \widehat{\chi}(Rt_0) t_0^{j'} H(t) \beta(d_g(a,q)) a(\rho_0 d_g(a,q)) \rho_0^{s'} e^{2 \pi i \rho_0 ( \pm d_g(a,q) \pm t_0 )} \; dt_0\; d\rho_0\; da \]
+
+
+we get terms of the form
+%
+\[ t^{j + j'} H(t) \int_0^\infty R \widehat{\chi}(Rt') a( \rho_1 d_g(p,q) ) a(\rho_0 d_g(p,q)) \rho_1^s \rho_0^{s'} e^{2 \pi i [\rho_1 ( \pm d_g(p,q) \pm t ) + \rho_0(\pm d_g(p,q) \pm t')]} d\rho_1 d\rho_0 dt'. \]
+%
+If we have $|\rho_1| \lesssim R$ on the support of this integral,
+
+If we assume that on the support of this integral, we either have $|\rho_1| \lesssim R$ or $|\rho_1| \gtrsim R$,
+
+We can then write $S_N$ as a sum of terms of the form
+%
+\[ t^j H(t) \beta( p, q ) \int_0^\infty a( \rho d_g(p,q) ) \rho^s e^{2 \pi i \rho ( \pm d_g(p,q) \pm t )}\; d\rho. \]
+%
+At least on the sphere, by rotational symmetry of the geodesic flow, $\beta$ is a function of $d_g(p,q)$.
+
+
+
 
 If we now define an operator $T_{H,N}$ on $\{ |t| < r_0 - r \} \times M$ to have Schwartz kernel $K_{H,N}$ on $M \times \{ |t| < r_0 - r \} \times M$, supported in
 %
