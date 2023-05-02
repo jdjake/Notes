@@ -125,59 +125,313 @@
 
 Consider a smooth family of curves $\gamma: \RR^2 \to \RR$, and consider the associated averaging operator
 %
-\[ Af(v,x) = \int f(x + \gamma_v(t)) \phi(v,t)\; dt, \]
+\[ Af(v,x) = \int f(x + \gamma(v,t)) \phi(v,t)\; dt, \]
 %
-where $\gamma_v''(t) = 0$, and $\phi$ is smooth with compact support. We can write this operator as
+where $\gamma''(v,t) \neq 0$, and $\phi$ is smooth with compact support. We can write this operator as
 %
 \[ Af(v,x) = (f * \mu_v)(x), \]
 %
-where $\mu_v$ is the Borel measure such that for any bounded, measurable function $g$,
+where $\mu_v$ is the Borel measure such that for any bounded, measurable $g$,
 %
-\[ \int g(x) d\mu_v(x) = \int g(\gamma_v(t)) \phi(t)\; dt. \]
+\[ \int g(x) d\mu_v(x) = \int g(\gamma_v(t)) \phi(v,t)\; dt. \]
 %
 We can then write
 %
 \[ \widehat{\mu}_v(\xi) = \int e^{-2 \pi i \xi \cdot x} d\mu_v(x) = \int e^{-2 \pi i \xi \cdot \gamma_v(t)} \phi(t)\; dt. \]
 %
-This is an oscillatory integral, which is stationary at points $t$ where $\xi \cdot \gamma_v'(t) = 0$. Under the assumption that $\gamma_v''$ is non-vanishing, these stationary points are non-degenerate, and so provided we choose $\phi$ to have small support, for each $\xi \in \RR^d$, there is at most one value of $t$ such that $\xi \cdot \gamma_v'(t) = 0$. Let us write this value by $t_0(\xi)$. We can then find a smooth function $\psi_v: \RR^d \to \RR$ such that on the domain of $t_0$,
+This is an oscillatory integral, which is stationary at points $t$ where $\xi \cdot \gamma'(v,t) = 0$. Under the assumption that $\gamma''(v,t)$ is non-vanishing, these stationary points are non-degenerate, and so provided we choose $\phi$ to have small support, for each $\xi \in \RR^d$, there is at most one value of $t$ such that $\xi \cdot \gamma'(v,t) = 0$. Let us write this value by $t_0(v,\xi)$. We can then find a smooth function $\psi: \RR \times \RR^d \to \RR$ such that on the domain of $t_0$,
 %
-\[ \psi_v(\xi) = \xi \cdot \gamma_v(t_0(\xi)). \]
+\[ \psi(v,\xi) = - \xi \cdot \gamma(v,t_0(v,\xi)). \]
 %
 Then the theory of stationary phase guarantees that
 %
-\[ \widehat{\mu}_v(\xi) = e^{2 \pi i \psi_v(\xi)} b(\xi), \]
+\[ \widehat{\mu}_v(\xi) = e^{2 \pi i \psi_v(\xi)} b(v,\xi), \]
 %
 where $b$ is a symbol of order $-1/2$, with microsupport on the domain of $t_0$. Using the multiplication formula for the Fourier transform, we can thus write
 %
-\[ Af(v,x) = \int \widehat{\mu}_v(\xi) \widehat{f}(\xi) e^{2 \pi i \xi \cdot x}\; d\xi = \int b(\xi) e^{2 \pi i [\psi_v(\xi) + \xi \cdot (x - y)]} f(y)\; d\xi\; dy. \]
+\[ Af(v,x) = \int \widehat{\mu}_v(\xi) \widehat{f}(\xi) e^{2 \pi i \xi \cdot x}\; d\xi = \int b(v,\xi) e^{2 \pi i [\psi(v,\xi) + \xi \cdot (x - y)]} f(y)\; d\xi\; dy. \]
 %
 This is a Fourier integral operator with phase
 %
-\[ \phi(v,x,y,\xi) = \psi_v(\xi) + \xi \cdot (x - y). \]
+\[ \phi(v,x,y,\xi) = \psi(v,\xi) + \xi \cdot (x - y). \]
 %
 Let's compute it's canonical relation.
 
-We have $(\nabla_\xi \phi)(v,x,y,\xi) = \nabla_\xi \psi_v(\xi) + (x - y)$. Since $\psi_v(\xi) = - \xi \cdot \gamma_v(t_0(\xi))$, the chain rule implies that
+We have $(\nabla_\xi \phi)(v,x,y,\xi) = \nabla_\xi \psi(v,\xi) + (x - y)$. Applying the chain rule to the definition of $\psi_v$, the chain rule implies that, on the microsupport of $b$,
 %
-\[ (\nabla_\xi \psi_v)(\xi) = - \gamma_v(t_0) - (\xi \cdot \gamma_v'(t_0)) (\nabla_\xi t_0) = - \gamma_v(t_0). \]
+\[ (\nabla_\xi \psi_v)(\xi) = - \gamma(v,t_0) - (\xi \cdot \gamma'(v,t_0)) (\nabla_\xi t_0) = - \gamma(v,t_0). \]
 %
-Thus the stationary points occur for values of $\xi$ such that $x - y = \gamma_v(t_0(\xi))$. We then have
+Thus the stationary points occur for values of $\xi$ such that $x - y = \gamma(v,t_0(v,\xi))$. We then have
 %
 \[ \nabla_x \phi(v,x,y,\xi) = \xi \quad\text{and}\quad \nabla_y \phi(v,x,y,\xi) = - \xi \]
 %
 and
-%
-\[ \nabla_v \phi(v,x,y,\xi) = \partial_v \psi_v(\xi). \]
+% - xi * gamma(v,t_0(v,xi))
+% -
+\begin{align*}
+	\nabla_v \phi(v,x,y,\xi) &= \partial_v \psi_v(\xi)\\
+	&= - \xi \cdot \left( \partial_v \gamma(v,t_0(v,\xi)) + \gamma'(v, t_0(v,\xi)) (\partial_v t_0)(v,\xi) \right)\\
+	&= - \xi \cdot \partial_v \gamma(v,t_0).
+\end{align*}
 %
 Thus the canonical relation of the Fourier integral operator is
 %
-\[ \mathcal{C} = \Big\{ (v,x,y,\nu,\xi,\eta) : \nu = \partial_v \gamma_v(t_0(\xi))\ \text{and}\ x = y + \gamma_v(t_0(\xi))\ \text{and}\ \xi = \eta \Big\}. \]
+\[ \mathcal{C} = \Big\{ (v,x,y,\nu,\xi,\eta) : \nu = - \xi \cdot \partial_v \gamma(v,t_0)\ \text{and}\ x = y + \gamma_v(t_0(\xi))\ \text{and}\ \xi = \eta \Big\}. \]
 %
 The projection of $\mathcal{C}$ onto the $(y,\eta)$ variables give a submersion, and the projection of $\mathcal{C}$ onto $(v,x)$ also form a submersion. For each fixed $z = (v,x)$, let
 %
-\[ \Gamma_z = \Big\{ (\nu,\xi) : \nu = \partial_v \gamma_v(t_0(\xi)) \Big\} \]
+\[ \Gamma_z = \Big\{ (\nu,\xi) \in \RR^3 - \{ 0 \} : \nu = - \xi \cdot \partial_v \gamma(v, t_0) \Big\} \]
 %
-be the projection of $\mathcal{C}$ onto the $(\nu,\xi)$ variables at $(v,x)$. The cinematic curvature condition amounts to saying that $\Gamma_z$ is a hypersurface of dimension $2$ in $\RR^3$, with one non-vanishing principal curvature. If we write $\Phi(v,\xi) = \partial_v \gamma_v(t_0(\xi))$, then this amounts to saying that the matrix $D_\xi \Phi$ has rank one. By the chain rule, this will hold if $\nabla_\xi t_0$ is non-zero at $\xi$, and $\partial^2_{v,t} \gamma_v$ is non-zero at $t_0(\xi)$. But  $\nabla_\xi t_0 \neq 0$ using the fact that $\gamma_v'' \neq 0$, so the cinematic curvature condition holds under the assumption that $\gamma_v'' \neq 0$, and $\partial^2_{v,t} \gamma \neq 0$. Thus the cinematic curvature condition is satisfied under the assumption that each of the curve you are averaging over has non-vanishing curvature, and if $\partial^2_{v,t} \gamma \neq 0$, i.e. the tangent vectors of $\gamma$ change as we vary $v$.
+be the projection of $\mathcal{C}$ onto the $(\nu,\xi)$ variables at $(v,x)$. The cinematic curvature condition amounts to saying that $\Gamma_z$ is a conic hypersurface of dimension $2$ in $\RR^3 - \{ 0 \}$, with one non-vanishing principal curvature.
+
+To begin with, write
+%
+\[ \varphi(\xi) = - \xi \cdot \partial_v \gamma(v,t_0). \]
+%
+Then the mean curvature of $\Gamma_z$ at a point $(\varphi(\xi),\xi)$ can be written as
+%
+\[ \frac{(1 + \varphi_{\xi_1}^2) \varphi_{\xi_2 \xi_2} - 2 \varphi_{\xi_1} \varphi_{\xi_2} \varphi_{\xi_1 \xi_2} + (1 + \varphi_{\xi_2}^2) \varphi_{\xi_1 \xi_1}}{(1 + \varphi_{\xi_1 \xi_1}^2 + \varphi_{\xi_2 \xi_2}^2)^{3/2}}. \]
+%
+We know one of the curvatures is zero because the surface is conic, and so one principal curvature is non-zero precisely when this quantity is nonzero.
+
+We calculate that
+%
+\begin{align*}
+	\nabla_\xi \varphi &= \partial_v \gamma + (\xi \cdot \partial_v \gamma') (\nabla_\xi t_0)\\
+	&= \partial_v \gamma - \frac{\xi \cdot \partial_v \gamma'}{\xi \cdot \gamma''} \gamma'.
+\end{align*}
+%
+using the fact that, because, differentiating the equation $\xi \cdot \gamma'(v,t_0) = 0$ int eh $\xi$ variable, we find that
+%
+\[ \nabla_\xi t_0 = - \frac{\gamma'(v,t_0)}{\xi \cdot \gamma''(v,t_0)}. \]
+%
+But this means that
+%
+\begin{align*}
+	D_\xi \nabla_\xi \varphi &= \left[ (\partial_v \gamma') - \frac{\xi \cdot \partial_v \gamma'}{\xi \cdot \gamma''} \gamma'' - \frac{\xi \cdot \partial_v \gamma''}{\xi \cdot \gamma''} \gamma' + \frac{(\xi \cdot \partial_v \gamma')(\xi \cdot \gamma''')}{(\xi \cdot \gamma'')^2} \gamma' \right] (\nabla_\xi t_0)^T\\
+	&\quad - \frac{1}{\xi \cdot \gamma''} \gamma' (\partial_v \gamma')^T + \frac{\xi \cdot \partial_v \gamma'}{(\xi \cdot \gamma'')^2} \gamma' (\gamma'')^T\\
+	&= - \frac{1}{\xi \cdot \gamma''} [(\partial_v \gamma') (\gamma')^T + (\gamma') (\partial_v \gamma')^T]\\
+	&\quad + \frac{\xi \cdot \partial_v \gamma'}{(\xi \cdot \gamma'')^2} [ \gamma' (\gamma'')^T + \gamma'' (\gamma')^T]\\
+	&\quad + \frac{ (\xi \cdot \gamma'') (\xi \cdot \partial_v \gamma'') + (\xi \cdot \partial_v \gamma')(\xi \cdot \gamma''')}{(\xi \cdot \gamma'')^3} [\gamma' (\gamma')^T].
+\end{align*}
+%
+TODO: Calculate quantity.
+
+
+
+
+To begin with, we assume that
+%
+\[ \nabla_\xi a(\xi) = - (\xi \cdot \partial^2_{vt} \gamma(v,t_0)) (\nabla_\xi t_0) - \partial_v \gamma(v,t_0). \]
+%
+Given that $\xi \cdot \gamma'(v,t_0) = 0$, we conclude that
+%
+
+%
+Thus
+%
+\[ \nabla_\xi a(\xi) = \frac{\xi \cdot \partial_v \gamma'}{\xi \cdot \gamma''} \gamma' - \partial_v \gamma. \]
+%
+Let us assume that $\gamma$ is parameterized by arclength. If $\kappa$ is the curvature, and then
+%
+\[ \nabla_\xi a = \frac{\delta}{\kappa} \gamma' - \partial_v \gamma \]
+
+ so that we always have
+%
+\[  \]
+
+
+
+
+This amounts to saying that the Hessian matrix
+%
+\[ H = H(v,\xi) = \text{Hess}_\xi \{ \xi \cdot \partial_v \gamma(v,t_0) \} \]
+%
+is non-zero. Using the product rule, we can write this Hessian as
+%
+\[ (\partial_v \gamma') (\nabla_\xi t_0)^T + (\xi \cdot \partial_v \gamma'') (\nabla_\xi t_0) (\nabla_\xi t_0)^T + (\xi \cdot \partial_v \gamma') (H_\xi t_0). \]
+%
+Thus
+%
+\begin{align*}
+	H_\xi t_0 &= - \frac{\gamma'' (\nabla_\xi t_0)^T}{\xi \cdot \gamma''} + \frac{\gamma' ( \gamma'' + (\xi \cdot \gamma''') \nabla_\xi t_0 )^T}{|\xi \cdot \gamma''|^2}\\
+	&= \frac{\gamma'' (\gamma')^T + \gamma' (\gamma'')^T}{|\xi \cdot \gamma''|^2} - \frac{\xi \cdot \gamma'''}{(\xi \cdot \gamma'')^3} \gamma' (\gamma')^T.
+\end{align*}
+%
+Let us assume for simplicity that $\gamma$ is given by an arclength parameterization. We therefore compute that
+%
+\[ (H_\xi t_0) \{ \xi \} = \frac{1}{\xi \cdot \gamma''} \gamma', \]
+%
+and so
+%
+\[ H \{ \xi \} = \frac{\xi \cdot \partial_v \gamma'}{\xi \cdot \gamma''} \gamma'. \]
+%
+We also calculate that
+%
+\[ (H_\xi t_0) \{ \gamma' \} = \frac{1}{|\xi \cdot \gamma''|^2} \gamma'' - \frac{\xi \cdot \gamma'''}{(\xi \cdot \gamma'')^3} \gamma' \]
+%
+and so
+%
+\[ H \{ \gamma' \} = \frac{-1}{\xi \cdot \gamma''} \partial_v \gamma' + \frac{(\xi \cdot \partial_v \gamma'')}{|\xi \cdot \gamma''|^2} \gamma' + \frac{\xi \cdot \partial_v \gamma'}{|\xi \cdot \gamma''|^2} \gamma'' - \frac{(\xi \cdot \gamma''')(\xi \cdot \partial_v \gamma')}{(\xi \cdot \gamma'')^3} \gamma'. \]
+%
+Thus $H$ has rank zero if and only if
+%
+\[ \xi \cdot \partial_v \gamma' = 0 \quad\text{and}\quad (\xi \cdot \partial_v \gamma'') \gamma' = (\xi \cdot \gamma'') \partial_v \gamma'. \]
+%
+Since $\xi$ is a multiple of $\partial_v \gamma'$ and of $\gamma''$ because of our arclength parameterization, this holds if and only if
+%
+\[ \partial_v \gamma' = 0 \quad\text{and}\quad \gamma'' \cdot \partial_v \gamma'' = 0. \]
+%
+If $c(v,t)$ is now an arbitrary curve parameterization, and we define
+%
+\[ L(v,t) = \int_0^t |c'(v,s)|\; ds \]
+%
+and then set $\gamma(v,t) = c(v, L^{-1}(v,t))$, then $\gamma$ is an arc length parameterization. We have
+%
+\[ \partial_v \gamma = \partial_v c + c' \int_0^t |c(v,s)| \]
+
+If $c(v,t)$ is now an arbitrary curve parameterization, and we define $\gamma(v,t) = c(v, L^{-1}(v,t))$
+
+\begin{example}
+Let
+%
+\[ \gamma(v,t) = v (\cos(t / v), \sin(t / v)). \]
+%
+be the arclength parameterization inducing the spherical averaging function. Then
+%
+\[ \gamma' = (-\sin(t/v), \cos(t/v)), \]
+%
+and
+%
+\[ \gamma'' = (-1/v) (\cos(t/v), \sin(t/v)). \]
+%
+We also have
+%
+\[ \partial_v \gamma' = (t/v^2) ( \cos(t/v), - \sin(t/v) ) \]
+%
+This is non-vanishing away from $t = 0$. But we also have
+%
+\[ \partial_v \gamma'' = (1/v^2) (\cos(t/v), - \sin(t/v)) - (t/v^3) ( \sin(t/v), \cos(t/v) ). \]
+%
+For $t = 0$, $\partial_v \gamma''$ is equal to $(1/v^2)(1, 0)$, whereas $\gamma''$ is equal to $(-1/v)(1,0)$. These vectors are not orthogonal to one another, i.e. their dot product is $-1/v^3$, so the cinematic curvature condition is satisfied.
+\end{example}
+
+
+
+%
+For simplicity, we assume $\gamma$ gives an arclength parameterization, i.e. so that $\gamma'$ and $\gamma''$ are orthogonal to one another. Since
+%
+\[ H_\xi t_0 = \frac{\gamma'(v,t_0) \left( \gamma''(v,t_0) + (\xi \cdot \gamma''(v,t_0)) \nabla_\xi t_0 \right)^T}{|\xi \cdot \gamma''(v,t_0)|^2} - \frac{\gamma''(v,t_0) (\nabla_\xi t_0)^T}{\xi \cdot \gamma''(v,t_0)} \]
+%
+we get that
+%
+\[ (H_\xi t_0) \{ \gamma'(v,t_0) \} = 0. \]
+%
+Thus we conclude that
+%
+\begin{align*}
+	H(v,\xi) \{ \gamma'(v,t_0) \} &= - \frac{(\partial_v \gamma') + (\xi \cdot \partial_v \gamma'') (\nabla_\xi t_0)}{\xi \cdot \gamma''(v,t_0)}\\
+	&= - \frac{( \xi \cdot \gamma'' ) (\partial_v \gamma') - (\xi \cdot \partial_v \gamma'') \gamma'}{|\xi \cdot \gamma''(v,t_0)|^2}.
+\end{align*}
+%
+Thus we conclude that cinematic curvature occurs if and only if
+%
+\[ (\xi \cdot \gamma'')( \partial_v \gamma' ) \neq (\xi \cdot \partial_v \gamma'') \gamma', \]
+%
+Since $\partial_v \gamma'$ is orthogonal to $\gamma'$ under the assumption that $\gamma$ is an arc-length parameterization, and the fact that $\gamma''$ points in the same direction as $\xi$, we conclude that cinematic curvature occurs if and only if $\gamma'' \neq 0$, or if 
+
+
+\[ \gamma'(v,t_0) + \xi \cdot \gamma''(v,t_0(v,\xi)) [\nabla_\xi t_0(v,\xi)] = 0 \]
+
+ $D_\xi \partial_v \psi_v$ is non-vanishing. By the chain rule, we calculate that this quantity vanishes precisely when
+%
+\[ \partial_v \gamma_v(t_0) = - [\xi \cdot \partial^2_{v,t} \gamma_v(t_0)] (\nabla_\xi t_0). \]
+%
+s
+
+% psi_v(xi) = - xi * gamma_v(t_0(xi))
+% partial_v psi_v(xi) = - xi * partial_v gamma_v(t_0(xi))
+% D_xi partial_v psi_v(xi) = - partial_v gamma_v(t_0(xi)) - xi * partial_{v,t} gamma_v(t_0(xi)) () nabla_xi t_0)(xi)
+
+ By the chain rule, this will hold if $\nabla_\xi t_0$ is non-zero at $\xi$, and $\partial^2_{v,t} \gamma_v$ is non-zero at $t_0(\xi)$. But  $\nabla_\xi t_0 \neq 0$ using the fact that $\gamma_v'' \neq 0$, so the cinematic curvature condition holds under the assumption that $\gamma_v'' \neq 0$, and $\partial^2_{v,t} \gamma \neq 0$. Thus the cinematic curvature condition is satisfied under the assumption that each of the curve you are averaging over has non-vanishing curvature, and if $\partial^2_{v,t} \gamma \neq 0$, i.e. the tangent vectors of $\gamma$ change as we vary $v$.
+
+
+
+\newpage
+
+Suppose we specify the curve as $\{ x : \Phi(v,x) = 0 \}$. Then the normal the curve at a point $x \in \RR^2$ is given by $(\nabla_x \Phi)(v,x)$. Then the canonical relation can be written as the five dimensional conic surface generated by the four dimensional manifold
+%
+\[ \Big\{ (v,x,y,\nu,\xi,\eta) : \Phi(v, x - y) = 0, \xi = \eta = (\nabla_x \Phi)(v,x-y), \nu = (\partial_v \Phi)(v,x - y) \Big\}. \]
+%
+For a fixed $(v,x)$, the conic surface $\Gamma_{(v,x)}$ is generated by the curve
+%
+\[ \Big\{ (\nu,\xi) : \xi = (\nabla_x \Phi)(v,x-y)\ \text{and}\ \nu = (\partial_v \Phi)(v, x - y)\ \text{for some $y$ with $\Phi(v,x-y) = 0$} \Big\}. \]
+%
+We can write $y = x - \gamma(t)$, and then the curve is precisely
+%
+\[ \Big\{ (\nu,\xi) : \xi = (\nabla_x \Phi)(v, \gamma(v,t) )\ \text{and}\ \nu = (\partial_v \Phi)(v, \gamma(v,t))\ \text{for some $t$} \Big\}. \]
+%
+Define
+%
+\[ c(t) = \left( \Phi_{x_1}(v,\gamma), \Phi_{x_2}(v,\gamma), \Phi_v(v, \gamma) \right). \]
+%
+Then
+%
+\[ c'(t) = \left( \Phi_{x_1 x_1} \gamma_1' + \Phi_{x_1 x_2} \gamma_2', \Phi_{x_1 x_2} \gamma_1' + \Phi_{x_2 x_2} \gamma_2', \Phi_{x_1 v} \gamma_1' + \Phi_{x_2 v} \gamma_2' \right). \]
+%
+and
+%
+
+\[ c'(t) = \left( (D_x \nabla_x \Phi) \{ \gamma' \}, \nabla_x \{ \partial_v \Phi \} \cdot \gamma' \right) \]
+%
+% sum Phi_{jk} gamma_j' e_k
+% sum Phi_{jk} gamma_j'' e_k + Phi_{jlk} gamma_j' gamma_l' e_k
+%
+% 
+
+% sum Phi / partial x^i partial x^j partial x^k gamma_k'(t) gamma_j'(t) e_j
+
+and
+%
+\[ c''(t) = ( (D_x \nabla_x \Phi) \{ \gamma'' \} + , s ) \]
+
+This curve has the required curvature if the function $t \mapsto ( \nabla_x \Phi(v,\gamma(t))  $
+
+
+%
+% Phi(v,gamma(v,t)) = 0
+%
+% If Phi(v,x - y) = 0
+% then xi = r (nabla_x Phi)(v,x - y) for some r > 0
+% then eta = r (nabla_x Phi)(v,x - y)
+%
+% Since Phi(v, gamma) = 0
+% (d_v Phi)(v, gamma) + (D_x Phi)(v,gamma) * (partial_v gamma) = 0
+%
+% nu = - xi * partial_v gamma
+% 	 = - ( r  (nabla_x Phi)(v,x - y) ) * ( partial_v gamma )
+% 	 = r (partial_v Phi)(v,gamma)
+%
+% So the canonical relation is
+%
+% ( v, x, y,   )
+
+
+% Then
+% 	nu = - xi * partial_v gamma
+% 	   = r (D_x Phi)(v,x-y) * (d_v Phi)(v,x-y) / (d_t Phi)(v,x)
+
+
+
+% (partial_v Phi)(v,gamma) + (\partial_t Phi)(v,gamma) partial_v gamma = 0
+%
+% partial_v gamma = - (partial_v Phi)(v,x) / (partial_t Phi)(v,x)
+% xi = lambda (nabla_x Phi)(v,gamma)
+% 
+\[ \mathcal{C} = \Big\{ (v,x,y,\nu,\xi,\eta) : \nu = - \xi \cdot  \Big\} \]
+
+are averaging over a smooth multiple of the surface measure on the curve in $\RR^2$ $\Phi(v,x) = 0$.
+
 
 \end{document}
 
