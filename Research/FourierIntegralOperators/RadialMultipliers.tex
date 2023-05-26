@@ -5112,7 +5112,7 @@ is the multiplier operator giving solutions to the half-wave equation
 %
 The three open sets
 %
-\[ \{ |t| < 10/R \}, \quad \{ 50/R < |t| < 2/5 \}, \quad\text{and}\quad \{ 1/3 < |t| < \infty \} \]
+\[ \{ |t| < 10/R \}, \quad \{ 50/R < |t| < 1/100 \}, \quad\text{and}\quad \{ 1/200 < |t| < \infty \} \]
 %
 cover $\RR$, and so we can find a smooth partition of unity $\chi_{I,R}$, $\chi_{II,R}$, and $\chi_{III,R}$ adapted to these sets. Without loss of generality, we may assume all three functions are even, that $\chi_{I,R}(t) = \chi_I(Rt)$, for some smooth, compactly supported function $\chi_I$ adapted to the open set $\{ |t| < 1 \}$, and also assume that $\chi_{III,R} = \chi_{III}$ is independent of $R$. Given this partition of unity, we now write
 %
@@ -5504,6 +5504,9 @@ We now show the uniform boundedness of the operators $\{ III_R \}$ on $L^p(S^d)$
 Corollary 1.2 of \cite{LeeSeeger} establishes that the sharp local smoothing inequality holds for $p < 2(d-1)/(d+1)$, which covers the range of parameters studied here.
 
 
+
+\begin{comment}
+
 \section{Notation For the Parametrix}
 
 We now recall the Lax parametrix construction, which we will make heavy use of in the sequel in the analysis of the operators $\{ II_R \}$. For $|t| \lesssim 1$, we can write
@@ -5546,7 +5549,26 @@ where $T_{A,t}$ has kernel $A(t,\cdot,\cdot)$, and $T_{W,t}$ has kernel $W(t,\cd
 %
 Thus, modulo smoothing operators, locally solutions to the half-wave equation have expressions as oscillatory integrals.
 
-\begin{comment}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -5703,13 +5725,14 @@ For $k > d-1$,
 
 
 
+
 \section{Analysis of the Operators $II_R$}
 
 It finally remains to analyze the operators
 %
 \[ II_R = \int b_R(t) e^{2 \pi i t P}\; dt, \]
 %
-obtained by integrating the wave propogators over times $50/R \leq |t| \leq 2/5$, with
+obtained by integrating the wave propogators over times $50/R \leq |t| \leq 1/100$, with
 %
 \[ b_R(t) = \chi_{II,R}(t) R \widehat{h}(Rt). \]
 %
@@ -5958,31 +5981,154 @@ Since this is a finite sum, it suffices to bound each of these operators separat
 
 \end{comment}
 
-Given the Lax Parametrix, which decomposes the half-wave operator into an expression of the form
+To help understand this orthogonality, we consider the Lax Parametrix $T_W$, an operator whose kernel is a finite sum of Fourier integrals, such that
 %
-\[ e^{2 \pi i t P} = T_{A,t} + \sum_W T_{W,t}, \]
+\[ e^{2 \pi i t P} = T_W + T_A, \]
 %
-we write $II = II_A + \sum_W II_W$, where
+where $T_A$ is a smoothing operator. Let us use this decomposition to write $II = II_A + II_W$,
 %
-\[ II_A = \int b(t) T_{A,t}\; dt \quad\text{and}\quad II_W = \int b(t) T_{W,t}\; dt. \]
+\[ II_A = \int b(t) T_A\; dt \quad\text{and}\quad II_W = \int b(t) T_W\; dt. \]
 %
-The sum in the decomposition of $II$ is finite, independent of $R$, and so it suffices to bound each term individually.
+We will bound each of these terms individually.
 
-Let's start by bounding $II_A$ uniformly in $R$. Let $K$ denote the kernel of $II_A$, i.e. so we have
+\begin{lemma}
+    We have
+    %
+    \[ \| II_A f \|_{L^{p^*}(M)} \lesssim C_p(h) \| f \|_{L^{p^*}(M)}, \]
+    %
+    where the implicit constant is uniform in $R$.
+\end{lemma}
+\begin{proof}
+    Let $K$ denote the kernel of $II_A$, i.e. so we have
+    %
+    \[ K(x,y) = \int b(t) A(t,x,y)\; dy. \]
+    %
+    Then H\"{o}lder's inequality, combined with the fact that $b$ is supported on the interval $I = \{ 50/R \leq |t| \leq 2/5 \}$ implies that
+    %   
+    \begin{align*}
+        \| K \|_{L^\infty_x L^\infty_y} &\lesssim \| b \cdot t^{s_p} \|_{L^p_t(I)} \| A \cdot t^{-s_p} \|_{L^{p^*}_t(I)}\\
+        &\lesssim \left[ (1/R)^{s_p - 1/p^*} C_p(h) \right] \left[ R^{s_p - 1/p^*} \right] \lesssim C_p(h).
+    \end{align*}
+    %
+    Applying Schur's Lemma, we conclude that $II_A$ is bounded from $L^1(M)$ to $L^\infty(M)$, and $L^\infty(M)$ to $L^1(M)$, with operator norm bounded by a constant multiple of $C_p(h)$, independent of $R$. Interpolation completes the proof.
+\end{proof}
+
+The tricky analysis is of the operator $II_W$. We will obtain some restricted bounds for this operator, so let us consider an analysis of functions of the form $S = II_W \{ E \}$, for some fixed measurable set $E \subset S^d$. We can cover $S^d$ by a finite family of coordinate charts $\{ \theta \}$, and break down $II_W$ into a finite sum $II_{W,\theta}$, where the kernel of $II_{W,\theta}$ has $x$ and $y$ support on a compact subset of $\theta$, and moreover, the pushforward operator $II_{W,\theta}^\theta$ on $\RR^d$ has a kernel $K_\theta$ which is defined by an oscillatory integral distribution
 %
-\[ K(x,y) = \int b(t) A(t,x,y)\; dy. \]
+\[ K_\theta(x,y) = \int a_\theta(x,y,\xi) e^{2 \pi i [ \varphi_\theta(x,y,\xi) + t |\xi_y|_{g(y)} ]}\; d\xi, \]
 %
-Then H\"{o}lder's inequality, combined with the fact that $b$ is supported on the interval $I = \{ 50/R \leq |t| \leq 2/5 \}$ implies that
+where the amplitude $a_\theta$ is a symbol of order zero, with compact $x$ and $y$ support, the phase $\varphi$ is smooth, and we have
+%
+\[ \varphi_\theta(x,y,\xi) \approx (x - y) \cdot \xi, \]
+%
+in the sense that
+%
+\[ |\partial_x^\alpha \partial_y^\beta \partial_\xi^\lambda \{ \varphi_\theta(x,y,\xi) - (x - y) \cdot \xi \}| \lesssim |x - y|^2 |\xi|^{2 - \lambda}, \]
+%
+and where $|\xi|_{g(y)} = (\sum g^{ij}(y) \xi_i \xi_j )^{1/2}$ gives the length of the covector $\xi$ with respect to the Riemannian metric $g$. Let us write $\phi_\theta$ for $\varphi_\theta + t |\xi|_g$. We will assume that $a_\theta$ is supported on $|\xi| \sim R$, and satisfies symbol derivative bounds independent of $R$ (TODO: Justify this).
+
+Let us now consider a maximal $1/2R$ separated subset $\mathcal{X}$ of $M$, and break $E$ down into a disjoint union of sets $\{ E_{x_0}: x_0 \in \mathcal{X} \}$, where for $x_0 \in \mathcal{X}$, the set $E_{x_0}$ is supported on the geodesic ball of radius $1/R$ about $x_0$. If we now define
+%
+\[ S_{x_0,t_0}(x) = \int b_{t_0}(t) T_W \{ E_{x_0} \}(x,t)\; dt, \]
+%
+then $S = \sum S_{x_0,t_0}$. We will begin by understanding the orthogonality properties of these functions in the decomposition of $S$.
+
+Because the half-wave propagators satisfy the equations
+%
+\[ e^{2 \pi i t P} \circ e^{2 \pi i t' P} = e^{2 \pi i (t + t') P} \quad\text{and}\quad (e^{2 \pi i t P})^* = e^{-2 \pi i t P}, \]
+%
+the same is true for the Lax parametrix $T_W$, \emph{modulo smoothing operators}. In other words, there are smooth functions $A_1(t,t',x,y)$ and $A_2(t,x,y)$ defining smoothing operators $T_{A_1}(t,t')$ and $T_{A_2}(t)$ such that
+%
+\[ T_W(t+t') - T_W(t) \circ T_W(t') = T_{A_1}(t,t') \quad\text{and}\quad T_W^*(t) - T_W(t) = T_{A_2}(t). \]
+%
+It thus follows that if we define $T_{A'}(t,t') = T_{A_2}(t') \circ T_W(t) + T_{A_1}(t,t')$, then
+%
+\[ T_W^*(t') \circ T_W(t) = T_W(-t') \circ T_W(t) + T_{A_2}(t,t') \circ T_W(t) = T_W(t-t') + T_{A'}, \]
+%
+and so
 %
 \begin{align*}
-    \| K \|_{L^\infty_x L^\infty_y} &\lesssim \| b \cdot t^{s_p} \|_{L^p_t(I)} \| A \cdot t^{-s_p} \|_{L^{p^*}_t(I)}\\
-    &\lesssim \left[ (1/R)^{s_p - 1/p^*} C_p(h) \right] \left[ R^{s_p - 1/p^*} \right]\\
-    &\lesssim C_p(h).
+    \langle f_{x_0,t_0}, f_{x_1,t_1} \rangle &= \int b_{t_0}(t) \langle T_W(t) \{ E_{x_0} \}, T_W(t') \{ E_{x_1} \} \rangle\; dt\; dt'\\
+    &= \int b_{t_0}(t) \overline{b_{t_1}(t')} \langle T_W^*(t') \circ T_W(t) \{ E_{x_0} \}, E_{x_1} \rangle\; dt\; dt'\\
+    &= \int b_{t_0}(t) \overline{b_{t_1}(t')} \left[ \langle T_W(t-t') E_{x_0}, E_{x_1} \rangle + \langle T_R E_{x_0}, E_{x_1} \rangle \right].
 \end{align*}
 %
-Applying Schur's Lemma, we conclude that $II_A$ is bounded from $L^1(M)$ to $L^\infty(M)$, and $L^\infty(M)$ to $L^1(M)$, with operator norm bounded by a constant multiple of $C_p(h)$, independent of $R$. Interpolating these bounds gives that $II_A$ is bounded from $L^r(M)$ to $L^s(M)$ for any $1 \leq r,s \leq \infty$, with operator norm bounded by a constant multiple of $C_p(h)$. In particular, it is bounded from $L^{p^*}(M)$ to $L^{p^*}(M)$.
+Smoothness should guarantee that the term corresponding to $\langle T_R E_{x_0}, E_{x_1} \rangle$ is negligible, so we conclude that
+%
+\begin{align*}
+    \langle f_{x_0,t_0}, f_{x_1,t_1} \rangle &\approx \int b_{t_0}(t) \overline{b_{t_1}(t')} \langle T_W(t-t') E_{x_0}, E_{x_1} \rangle\; dt\; dt'\\
+    &= \int (b_{t_0} * b_{t_1}^*)(s) \langle T_W(s) E_{x_0}, E_{x_1} \rangle\; ds.
+\end{align*}
+%
+an integral supported for $s$ in a $O(1/R)$ neighborhood of $t_0-t_1$. Let us write $c_{t_0,t_1} = b_{t_0} * b_{t_1}^*$. We have good control over the $L^p$ norms of $b_{t_0}$ and $b_{t_1}$, and so by Young's inequality, we have good control over the $L^q$ norm of $c_{t_0,t_1}$, where $q = p/(2-p)$; As we get close to the optimal range, $q$ increases until it gets arbitrarily close to $d$. However, since $c_{t_0,t_1}$ has compact support, we can decrease $q$ as a tradeoff for powers of $R$, and we can increase $q$ as a tradeoff against powers of $R$ since $c_{t_0,t_1}$ has Fourier transform supported on a ball of radius $R$.
 
-We next analyze the operators $II_W$, for $W \in \mathcal{W}$. Our analysis will again apply our simplifying assumption that our inputs $f$ lie in the space $V_R$. In particular, for such $f$, we have $II_W \{ f \} = (II_W \circ Q_R) \{ f \}$. One consequence of this is that we can localize the amplitude in the oscillatory integral representation of the operator $II_W$ to be supported near where the phase-variable has magnitude $\Theta(R)$. More precisely, let $\upsilon \in C_c^\infty(\RR^d)$ be supported on $\{ C^{-1} \leq |\eta| \leq C \}$, and equal to one on a slightly smaller neighborhood. Set $\upsilon_R(\eta) = \upsilon( \eta / R)$. Define the operators $T'_{W,t}$ to be the Schwartz operator with kernel $W'(t,\cdot,\cdot)$, where
+To further study this quantity, we have
+%
+\[ \langle T_W(t-t') E_{x_0}, E_{x_1} \rangle = \sum_\theta \langle T_{W,\theta}(t-t') E_{x_0}, E_{x_1} \rangle, \]
+%
+where $\theta$ ranges over all coordinate charts whose domains contain $E_{x_0}$ and $E_{x_1}$ (the other charts we may ignore, by the support properties of the operators making up the Lax parametrix).  If we let $E_{x_0}^\theta$ and $E_{x_0}^\theta$ denote the images of these two sets in the coordinate chart, then we can write
+%
+\[ \langle T_{W,\theta}(s) E_{x_0}, E_{x_1} \rangle = \int_{E_{x_0}^\theta} \int_{E_{x_1}^\theta} \int a_\theta(s,x,y,\xi) \chi(\xi / R) e^{2 \pi i \phi_\theta(s,x,y,\xi)}\; d\xi\; dx\; dy. \]
+%
+For each $y$, consider a smooth function $F_y$ defined on $\text{supp}_x a_\theta$, such that
+%
+\[ \exp_y(F_y^{-1}(x)) = x, \]
+%
+where $\exp_y$ is the geodesic flow emerging from $y$. If
+%
+\[ a'_\theta(s,z,y,\xi) = |\det(DF_y(z))| a_\theta(s,F_y(z),y,\xi), \]
+%
+then we can rewrite the oscillatory sum above as
+%
+\[ R^d \int_{E_{x_0}} \int_{F_y^{-1}(E_{x_0})} \int a'_\theta(s,z,y,R \xi) \chi(\xi) e^{2 \pi i R \phi_\theta(s,F_y(z),y,\xi)}\; d\xi\; dz\; dy. \]
+%
+Let us now perform a polar coordinate decomposition in $\xi$, i.e. writing $\xi = \rho \omega$, where $\rho = |\xi|_{g(y)}$ and $\omega$ ranges over $\Sigma_y$. Writing $\alpha(y,\omega) = \langle n(y,\omega), \omega \rangle$, then
+%
+\[ a''_\theta(s,z,y,\rho,\omega) = \alpha(y,\omega) a'_\theta(s,z,y,\rho \omega), \]
+%
+then we obtain that the sum is
+%
+\[ R^d \int_{E_{x_0}} \int_{F_y^{-1}(E_{x_0})} \int \int \rho^{d-1} a''_\theta(s,z,y,R \rho, \omega) \chi(\rho \omega) e^{2 \pi i R \rho \phi_\theta(s,F_y(z),y,\omega)}\; d\omega\; d\rho\; dz\; dy. \]
+%
+Applying the principle of nonstationary phase in the $\omega$ variable, which for any value of $y$, $z$, and $\rho$, is only stationary when $\omega = z / |z|$, we conclude that there is a symbol $\tilde{a}_\theta$ of order $-(d-1)/2$ such that the oscillatory integral is
+%
+\[ R^d \int_{E_{x_0}} \int_{F_y^{-1}(E_{x_0})} \int \rho^{d-1} \tilde{a}_\theta(s,z,y,R \rho) \chi(\rho) e^{2 \pi i R \rho (s + |z|)}\; ds\; dz\; dy. \]
+%
+Imagining that $\tilde{a}_\theta(s,z,y, R \rho) \approx \eta(s,z,y) (R \rho)^{-(d-1)/2}$, we conclude that the integral should behave like
+%
+\[ R^{\frac{d+1}{2}} \int_{E_{x_0}} \int_{F_y^{-1}(E_{x_0})} \eta(s,z,y) (\partial^{\frac{d-1}{2}} \widehat{\chi})(R(s + |z|))\; dz\; dy \]
+%
+TODO: Integrate by parts in $z$ now? IS THE FACT THAT WE ABSORBED THE SYMBOL INTO $\eta$ BAD, i.e. so that differentiating in $z$ orthogonally behaves differently? If we now reintroduce the integral in time, we have to now analyze
+%
+\[ R^{\frac{d+1}{2}} \int \int_{E_{x_0}} \int_{F_y^{-1}(E_{x_0})} c_{t_0,t_1}(s) \eta(s,y,z) (\partial^{\frac{d-1}{2}} \widehat{\chi} )(R(s + |z|))\; dz\; dy\; ds. \]
+%
+TODO: Does integrating by parts in the $t$ and $t'$ variable do anything for us? Is this where we need oscillation. If $|t_0 - t_1 + d_g(x_0,x_1)| \geq 10/R$, then we conclude this quantity is
+%
+\begin{align*}
+    & O_N \Big( R^{\frac{d+1}{2}-N} \int \int_{E_{x_0}} \int_{F_y^{-1}(E_{x_0})} |c_{t_0,t_1}(s)| |\eta(s,y,z)| (s + |z|)^{-N}\; dz\; dy\; ds \Big)\\
+    &\quad\quad O_N \Big( R^{\frac{d+1}{2} - N} |t_0 - t_1 + d_g(x_0,x_1)|^{-N} |E_{x_0}| |E_{x_1}| \| c_{t_0,t_1} \|_{L^1} \Big)
+\end{align*}
+%
+If $|E_{x_0}|$ and $|E_{x_1}|$ are both proportional to $1/R^d$, then this quantity is
+%
+\begin{align*}
+    & O_N \Big( R^{-\frac{3d-1}{2} - N} |t_0 - t_1 + d_g(x_0,x_1)|^{-N} \| c_{t_0,t_1} \|_{L^1} \Big)\\
+    &\quad = O_N \Big( R^{-\frac{3d-1}{2} - 1/p^* - N} (t_0 - t_1 + d_g(x_0,x_1))^{-N} \| b_{t_0} \|_{L^p} \| b_{t_1} \|_{L^p} \Big)\\
+    &\quad = O_N \Big( t_0^{s_p} t_1^{s_p} R^{-\frac{3d-1}{2} - 1/p^* - N} (t_0 - t_1 + d_g(E_{x_0}, E_{x_1}))^{-N} \Big)
+    % -3d/2 + 1/2 - N
+    % s_p = (d-1)(1/p - 1/2)
+    % 
+\end{align*}
+% << (3d/2 + N - d + 1) = ((d+1)/2) + N)
+% |c| << |c|_{L^q} R^{2(1/p-1)}
+
+
+
+
+
+
+
+Our analysis will again apply our simplifying assumption that our inputs $f$ lie in the space $V_R$. In particular, for such $f$, we have $II_W \{ f \} = (II_W \circ Q_R) \{ f \}$. One consequence of this is that we can localize the amplitude in the oscillatory integral representation of the operator $II_W$ to be supported near where the phase-variable has magnitude $\Theta(R)$. More precisely, let $\upsilon \in C_c^\infty(\RR^d)$ be supported on $\{ C^{-1} \leq |\eta| \leq C \}$, and equal to one on a slightly smaller neighborhood. Set $\upsilon_R(\eta) = \upsilon( \eta / R)$. Define the operators $T'_{W,t}$ to be the Schwartz operator with kernel $W'(t,\cdot,\cdot)$, where
 %
 \[ W'(t,x,y) = \int a(x,y,\eta,t) \upsilon_R(\eta) e^{2 \pi i [ \phi(x,y,t,\eta) ]}\; d\eta, \]
 %
@@ -6075,7 +6221,7 @@ It now suffices to study the boundedness of the operators $\{ II_W' \}$. We will
 %
 \[ II_W f(x) = \iint b(t) a(x,y,\eta,t) e^{2 \pi i [\phi(x,y,\eta) + t p(y,\eta)]} f(y)\; dy\; dt, \]
 %
-where $a$ is supported on $|\eta| \sim R$. There is no issue in this, since, these two operators have comparable operator norms. Similarily, by an element of $V_R$ we now mean the restriction of a linear combination of eigenfunctions to the coordinate system $\Omega$, rather than a linear combination of the eigenfunctions themselves.
+where $a$ is supported on $|\eta| \sim R$, satisfying the symbol bounds before.B
 
 We now proceed similarly to the analysis of \cite{HeoandNazarovandSeeger} and \cite{LeeSeeger}, proving restricted weak-type estimates for the adjoint operators $II_W^*$. Consider a set $E \subset \RR^d$. Using equivalence of phase, if $K_W$ is the kernel of $II_W$, it is actually more helpful to switch to an expression of the form
 %
