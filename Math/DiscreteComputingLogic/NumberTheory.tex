@@ -1,4 +1,4 @@
-\input{../style.tex}
+\input{../../style.tex}
 
 \DeclareMathOperator{\Dom}{Dom}
 
@@ -857,5 +857,104 @@ And
  %       &= \text{li}(n) \left( \sum_{\substack{d \geq 1}\\(d,n) = 1} \frac{\mu(d)}{d\phi(d)} + O \left( \sum_{d > y} \frac{1}{d\phi(d)} \right) \right) + O_A(n/\log^A n)
   %  \end{align*}
 \end{proof}
+
+
+
+
+
+\chapter{The Hardy-Littlewood Circle Method}
+
+The Hardy Littlewood circle method is a tool which allows us to understand problems in additive number theory. We will apply these techniques to the odd Goldbach conjecture, establishing the following result of Vinogradov: Every sufficiently large odd number $N$ is expressible as the sum of three primes. (Helfgott, 2015) has recently used more efficient `log-free' versions of the arguments we give here, together with careful optimization of constants, to reduce the statement to $N > 5$. To obtain this result, we obtain the quantive statement that, for any $A > 0$,
+%
+\[ \sum_{a + b + c = N} \Lambda(a) \Lambda(b) \Lambda(c) = (G_3(N) / 2) N^2 + O_A( N^2 (\log N)^{-A} ), \]
+%
+where
+%
+\[ G_3(N) = \prod_{p \divides N} \left( 1 - \frac{1}{(p - 1)^2} \right) \prod_{p \not \divides N} \left( 1 + \frac{1}{(p - 1)^3} \right). \]
+%
+We recall here that $\Lambda$ is the von-Mangoldt function, defined by setting $\Lambda(p^k) = \log p$ for a prime $p$ and $k \geq 1$, and $\Lambda(n) = 0$ otherwise. The sum on the left hand side of the identity thus gives a weighted sum of the number of ways to write $N$ as $p_1^{k_1} + p_2^{k_2} + p_3^{k_3}$. There are $O(N / \log N)$ primes in $[1,N]$ by the prime number thoerem. It follows that there are at most
+%
+\[ O \left( \sum_{k = 2}^{\log N} k N^{1/k} / \log N \right) \lesssim \sum_{k = 2}^{\log N} N^{1/k} \lesssim N^{1/2} \]
+% sum_{k = 2}^{log N} N^{(2 - k)/2k} = 1 + sum_{k = 1}^{log N} N^{-k / 2 (k + 3)} = 1 + sum_{k = 1}^{log N} N^{-1/2 + O(1/k)} = O(1)
+%
+choices of $a = p^k$ for a prime $p$ and $k \geq 2$. Thus
+%
+\[ \sum_{\substack{p^k + b + c = N\\k \geq 2}} \Lambda(p^k) \Lambda(b) \Lambda(c) \lesssim \left[ N^{1/2} \left( \frac{N}{\log N} \right) \right] (\log N)^3 \lessapprox N^{3/2}.  \]
+%
+By symmetry, it thus follows that we also have
+%
+\[ \sum_{p_1 + p_2 + p_3 = N} \Lambda(p_1) \Lambda(p_2) \Lambda(p_3) = (G_3(N) / 2) N^2 + O_A(N^2 (\log N)^{-A}), \]
+%
+and so Vinogradov's Theorem follows from the quantitative estimate above.
+
+To obtain this estimate, let us address ways we can estimate sums of the form
+%
+\[ \sum_{a + b + c = N} f(a) g(b) h(c). \]
+%
+To begin with, we will assume that $f$, $g$, and $h$ have $L^\infty$ norm $O(1)$. Then we have the trivial estimate
+%
+\[ \left| \sum_{a + b + c = N} f(a) g(b) h(c) \right| \lesssim N^2. \]
+%
+This bound is attained if $f$, $g$, and $h$ are all the same character, i.e. all equal $e^{2 \pi i \xi n}$ for some fixed $\xi \in \TT$. The circle method follows from the fact that this is the \emph{only} way such a result is attained, and being able to estimate how closely $f$, $g$, and $h$ correlate with any particular character, as indicated by the Fourier analytic identities
+%
+\[ \sum_{a + b + c = N} f(a) g(b) h(c) = \int_{\TT} \widehat{f}(\xi) \widehat{g}(\xi) \widehat{h}(\xi) e^{2 \pi i \xi N}\; d\xi, \]
+%
+which follows from the fact that the left hand side is a convolution, equal to $(f * g * h)(N)$. The key to the Hardy-Littlewood circle method follows by using this identity, and then splitting $\TT$ up (the `circle') into `major arcs', where $\widehat{f}$, $\widehat{g}$, and $\widehat{h}$ are all large, but precisely computable, giving the main term of a calculation, and `minor arcs', where $\widehat{f}$, $\widehat{g}$, and $\widehat{h}$ are all small. Number theoretic functions normally have Fourier support near rational numbers with small denominator, and the minor arcs therefore consist of the areas away from such numbers. Here we follow a different approach, as covered in Tao's notes on the subject.
+
+Applying H\"{o}lder's inequality to the Fourier inversion formula above, we can write
+%
+\begin{align*}
+    \left| \sum_{a + b + c = N} f(a) g(b) h(c) \right| &\leq \| \widehat{f} \|_{L^2(\TT)} \| \widehat{g} \|_{L^2(\TT)} \| \widehat{h} \|_{L^1(\TT)}\\
+    &\leq \| f \|_{L^2(\ZZ)} \| g \|_{L^2(\ZZ)} \| \widehat{h} \|_{L^\infty(\ZZ)}.
+\end{align*}
+%
+If $f$, $g$, and $h$ are supported on $[1,N]$, we obtain an estimate here which is $o(N^2)$ provided that $\| \widehat{h} \|_{L^\infty(\TT)} = o(N)$. Heuristically, this occurs in all circumstances except where $h$ is closely approximated by a single character.
+
+A corollary of this technique, is that we can replace functions $f$, $g$, and $h$ by good Fourier approximants. As an example of this, if $f_0$ and $f$ are both supported on $[1,N]$, with $L^\infty$ norm $O(1)$, and $\| \widehat{f}_0 - \widehat{f} \|_{L^\infty} = o(N)$, then
+%
+\[ \left| \sum_{a + b + c = N} f(a) f(b) f(c) - \sum_{a + b + c = N} f_0(a) f_0(b) f_0(c) \right| = o(N^2). \]
+%
+Here is an example of this technique.
+
+\begin{theorem}
+    Let $A$ be a random subset of $[1,N]$, obtained by including each integer independently with probability $1/2$. Then with probability $1 - o(1)$, the number of ways to write $N$ as $a_1 + a_2 + a_3$, for $a_1,a_2,a_3 \in A$, is equal to $N^2 / 16 + o(N^2)$.
+\end{theorem}
+\begin{proof}
+    Let $f(n) = \mathbf{I}(n \in A)$. For any integer $n$,
+    %
+    \[ \widehat{f}(\xi) = \sum_{n \in A} e^{-2 \pi i \xi \cdot n}. \]
+    %
+    We claim $\widehat{f}$ is close to $\widehat{g}$, where $g(n) = (1/2) \mathbf{I}(n \in [0,N])$. Indeed, $\widehat{g}(\xi) = \EE_A[\widehat{f}(\xi)]$, and so we might expect to bound the difference using concentration of measure techniques. For each $\xi$, $\widehat{f}(\xi)$ is the sum of $N$ random variables, which each have $L^\infty$ norm $1$, so Hoeffding's inequality, together with a union bound, implies that with probability $1 - O_A(N^{-A})$, we have for all $\xi$ given by integer multiples of $1/N^2$,
+    %
+    \[ |\widehat{f}(\xi) - \widehat{g}(\xi)| \lesssim N^{1/2} (\log N)^{1/2}. \]
+    %
+    But now we can apply the uncertainty principle, to conclude that $\widehat{f}$ and $\widehat{g}$ are constant at a scale $1/N$, i.e. using the bound that if $h$ is supported on $[1,N]$, then
+    %
+    \begin{align*}
+        |\widehat{h}(\xi)| &= \left| \sum_{n = 1}^N h(n) e^{-2 \pi i \xi n} \right|\\
+        &= \left| \sum_{n = 1}^N h(n) e^{-2 \pi i \xi_0 n} \right| + \sum_{n = 1}^N |h(n)| |\xi - \xi_0| n\\
+        &= |\widehat{h}(\xi_0)| + N \| h \|_{L^\infty[1,N]} |\xi - \xi_0|.
+    \end{align*}
+    %
+    In particular, we conclude that with probability $1 - O_A(N^{-A})$, we have
+    %
+    \[ \left\| \widehat{f} - \widehat{g} \right\|_{L^\infty(\TT)} \lesssim N^{1/2} (\log N)^{1/2} + 1/N \lesssim N^{1/2} (\log N)^{1/2}. \]
+    %
+    But this means that
+    %
+    \[ \left| \sum_{a + b + c = N} f(a) f(b) f(c) - \sum_{a + b + c = N} g(a) g(b) g(c) \right| \lesssim \| f - g \|_{L^2(\ZZ)} N^{1/2} \lesssim N. \]
+    %
+    Now
+    %
+    \begin{align*}
+        \sum_{a + b + c = N} g(a) g(b) g(c) &= \frac{1}{8} \sum_{a = 1}^{N-2} \sum_{b = 1}^{N -a-1} 1\\
+        &= \frac{1}{8} \sum_{a = 1}^{N-2} (N-a-1)\\
+        &= \frac{1}{8} \sum_{a = 1}^{N-2} a = \frac{(N-2)(N-1)}{16} = N^2/16 + O(N).
+    \end{align*}
+    %
+    Thus we conclude that with probability $1 - O_A(N^{-A})$, we can write $N$ as a sum of three elements of $A$ in $N^2/16 + O(N)$ ways.
+\end{proof}
+
+A similar analysis to the techniques above works for a function $f(n) = \Lambda(n) \mathbf{I}(n \leq N)$, except that, because we only have an $L^\infty$ bound $\| f \|_{L^\infty} \lesssim \log N$, we obtain some extra logarithmic factors in our analysis. There are ways to fix this (these are the `log free' methods discussed above)/
 
 \end{document}

@@ -2067,7 +2067,7 @@ There are many variants of the real interpolation method, but the general techni
 
 \chapter{Basic Integral Operator Estimates}
 
-We now consider a very general class of operators, which can be seen as the infinite dimensional analogue of matrix multiplication, replacing summation over coordinates by integration. We fix two measure spaces $X$ and $Y$, and consider a function (or, if $X$ and $Y$ are smooth manifolds, distributions) $K: X \times Y \to \CC$, which we call a \emph{kernel}. From this kernel, if $K$ is suitably regular, we obtain an induced operator $T_K$ taking functions on $X$ to functions on $Y$, given, heuristically at least, by the integral formula
+We now consider a very general class of operators, which can be seen as the infinite dimensional analogue of matrix multiplication, replacing summation over coordinates by integration. We fix two measure spaces $X$ and $Y$, and consider a function (or, more generally, if $X$ and $Y$ are smooth manifolds, distributions) $K: X \times Y \to \CC$, which we call a \emph{kernel}. From this kernel, if $K$ is suitably regular, we obtain an induced operator $T_K$ taking functions on $X$ to functions on $Y$, given, heuristically at least, by the integral formula
 %
 \[ (T_K f)(y) = \int_X K(x,y) f(x)\; dx. \]
 %
@@ -2078,36 +2078,46 @@ Our goal is to relate properties of the kernel $K$ to the behaviour of the opera
   %
   \[ (T_K f)(m) = \sum_{n = 1}^N f(n) K(n,m) = \sum_{n = 1}^N A_{mn} v_n = (Av)_m. \]
   %
-  Thus with respect to the standard basis, $T_K$ is just given by matrix multiplication by $A$.
+  Thus in the standard basis, $T_K$ is just matrix multiplication by $A$.
 \end{example}
 
 \begin{example}
-  Let $X = Y = \RR^d$, and let $K(x,y) = e^{2 \pi i x \cdot y}$, then using this function as a kernel we can obtain an integral operator
+  Let $X = Y = \RR^d$. Then the operator with the kernel $K(x,y) = e^{2 \pi i x \cdot y}$, i.e., the operator
   %
-  \[ (T f)(y) = \int f(x) e^{2 \pi i x \cdot y}\; dx. \]
+  \[ (T f)(y) = \int f(x) e^{2 \pi i x \cdot y}\; dx, \]
   %
-  This is just the Fourier transform in disguise. One can define $Tf$ directly by this integral (viewed as a Lebesgue integral) for any $f \in L^1(\RR^d)$, in which the integrand will be absolutely integrable. We also know that for any $f \in L^1(\RR^d)$,
-  %
-  \[ \| T f \|_{L^\infty(\RR^d)} \leq \| f \|_{L^1(\RR^d)}. \]
-  %
-  We also know from the classical Hausdorff-Young inequality that if $1 \leq p \leq 2$, then for any $f \in L^1(\RR^d) \cap L^p(\RR^d)$,
-  %
-  \[ \| T f \|_{L^{p^*}(\RR^d)} \leq \| f \|_{L^p(\RR^d)}. \]
-  %
-  In particular, this means that there exists a unique extension of $T$ to a bounded operator from $L^p(\RR^d)$ to $L^{p^*}(\RR^d)$; note, however, that for a general element $f \in L^p(\RR^d)$, the integral formula
-  %
-  \[ \int f(x) e^{2 \pi i \xi \cdot x}\; dx \]
-  %
-  is \emph{not well-defined} in the Lebesgue sense. Thus we can only heuristically view the integral formula as defining the integral operator. There are two approaches to defining an integral operator $T$ on more general classes of functions. The method above, is to work with a dense family of more regular functions for which the integral formula makes sense, and then to prove uniform estimates in this family of inputs. Another method is to replace the kernel in the integral formula $T$ with a family of kernels converging to our original kernel, and then to prove uniform estimates in this family. For instance, one might instead study the family of truncated Fourier integrals
-  %
-  \[ T_R f(y) = \int_{|x| \leq R} e^{2 \pi i x \cdot y} f(x)\; dx \]
-  %
-  which are well defined for any $f \in L^1_{\text{loc}}(\RR^d)$, and then prove that for $1 \leq p \leq 2$,
-  %
-  \[ \| T_R f \|_{L^{p^*}(\RR^d)} \leq \| f \|_{L^p(\RR^d)} \]
-  %
-  uniformly in $R$, which is sufficient justification to define $Tf$ as the $L^p(\RR^d)$ limit of $T_R f$ as $R \to \infty$, for $f \in L^p(\RR^d)$, since this limit can be easily justified to exist for $f \in L^1(\RR^d) \cap L^p(\RR^d)$.
+  This is just the Fourier transform in disguise.
 \end{example}
+
+In the case of the Fourier transform (and what will be true for most kernel operators defined on infinite measure spaces), the integral formula can only be interpreted in the sense of a Lebesgue integral if the input function $f$ lies in $L^1(\RR^d)$. There are several methods to define $T$ as an operator on more general families of functions, which require interpreting the formula in more general ways than is allowed by the Lebesgue integral:
+%
+\begin{itemize}
+    \item We can work with a dense subclass of functions, and then prove bounds which enable us to define the operator by taking limits of inputs. For instance, the classical Hausdorff-Young inequality shows that if $1 \leq p \leq 2$, then for any $f \in L^1(\RR^d) \cap L^p(\RR^d)$,
+    %
+    \[ \| Tf \|_{L^{p^*}(\RR^d)} \leq \| f \|_{L^p(\RR^d)}. \]
+    %
+    The Hahn-Banach theorem thus implies that for each $1 \leq p \leq 2$, $T$ extends uniquely to an operator from $L^p(\RR^d)$ to $L^{p^*}(\RR^d)$. To interpret $Tf$ for a general input $f \in L^p(\RR^d)$, we therefore consider a sequence $\{ f_n \}$ in $L^1(\RR^d) \cap L^p(\RR^d)$, and then
+    %
+    \[ Tf = \lim_{n \to \infty} Tf_n, \]
+    %
+    where the limit is taken in $L^{p^*}(\RR^d)$.
+
+    \item Another method is to replace the kernel $K$ by a more regular kernel, and then to prove uniform estimates on this family. For instance, one may study the truncated Fourier integrals
+    %
+    \[ T_R f(y) = \int_{|x| \leq R} e^{2 \pi i x \cdot y} f(x)\; dx, \]
+    %
+    which are well-defined in the Lebesgue sense for any $f \in L^1_{\text{loc}}(\RR^d)$. We will see in this chapter that, uniformly in $R$, for $1 \leq p \leq 2$,
+    %
+    \[ \| T_R f \|_{L^{p^*}(\RR^d)} \leq \| f \|_{L^p(\RR^d)}. \]    
+    %
+    It then follows by the uniform boundedness theorem that for $f \in L^p(\RR^d)$, $Tf = \lim_{R \to \infty} T_R f$, and the right hand side can be interpreted as a Lebesgue integral.
+
+    \item We can apply a duality argument to obtain a `distributional definition' of the operator $T$. The operator $T$ is continuous on the class $\SW(\RR^d)$ of Schwartz functions on $\RR^d$, and so the adjoint operator $T^*$ is continuous. A simple calculation shows that
+    %
+    \[ (T^* f)(x) = (Tf)(-x). \]
+    %
+    Thus we can define $T$ on the more general family of tempered distributions $\SW(\RR^d)^*$, such that for any tempered distribution $u$, $Tu$ is the tempered distribution which maps $\phi \in \SW(\RR^d)$ to $\langle u, T^* \phi \rangle$.
+\end{itemize}
 
 
 
@@ -2118,11 +2128,13 @@ Our goal is to relate properties of the kernel $K$ to the behaviour of the opera
 
 \section{Schur's Lemma}
 
-It is a useful heuristic that determining the boundedness of the operator $T$ mapping \emph{from} $L^1(X)$, or \emph{into} $L^\infty(Y)$ is almost always trivial. This is one motivation for introducing the intermediate $L^p$ norms, since these norms enable us to extract more features out of the kernel operator $K$. Before we discuss this, we must first reflect on the fact that without even qualitative knowledge of the kernel $K$ besides it's measurability, it is difficult to know how one might interpret the integral formula defining the operator. A natural trick to begin with is to introduce the sublinear analogue of the kernel operator, i.e. the operator $S_K$ defined by setting
+It is a useful heuristic that determining the boundedness of the operator $T$ mapping \emph{from} $L^1(X)$, or \emph{into} $L^\infty(Y)$ is almost always trivial. This is one motivation for introducing the intermediate $L^p$ norms, since these norms enable us to extract more features out of the kernel operator $K$, in particular, the \emph{oscillation}, or \emph{cancellation}, that occurs in the kernel.
+
+In this section, we introduce a method that completely characterizes mapping from $L^1(X)$, or into $L^\infty(Y)$, and also, if applied in a clever enough manner, is optimal for bounding the behaviour of any $L^p$ mapping properties \emph{if one is unwilling to take into account oscillation or cancellation}. In particular, we will reduce our analysis to non-negative kernels, i.e. considering the sublinear operator $S_K$ defined by setting
 %
-\[ (S_K f)(y) = \int_X |K(x,y)| |f(x)|\; dx \]
+\[ (S_K f)(y) = \int_X |K(x,y)| |f(x)|\; dx. \]
 %
-The flexibility of the theory of non-negative Lebesgue integrals means this operator is well defined for \emph{any} measurable $f$. Moreover, if we are to interpret the integral formula for $(T_K f)(y)$ in the Lebesgue sense, it is necessary and sufficient that $(S_K f)(y) < \infty$.
+The advantage of working in this setting is that we do not need to care about the regularity of our inputs: the flexibility of the theory of non-negative Lebesgue integrals ensures $S_K f$ is defined for \emph{any} measurable function $f$, though possibly takes infinite values at various points. Our first result gives a tight bound from $L^1(X)$.
 
 \begin{theorem}
   Fix $q \geq 1$. Then
@@ -2142,7 +2154,7 @@ The flexibility of the theory of non-negative Lebesgue integrals means this oper
 \end{proof}
 
 \begin{remark}
-  In many situations, this result is tight. For instance, suppose
+    For many operators, this result gives tight estimates for $L^1(X) \to L^p(Y)$ bounds. For instance, suppose
   %
   \[ K = \sum_{i = 1}^N \sum_{j = 1}^M a_{ij} \mathbf{I}_{E_i \times F_j} \]
   %
@@ -2242,7 +2254,7 @@ Though trivial, the two kernel bounds can often be applied together with an inte
     %
     \[ \| T_2 f \|_{L^q(\RR^d)} \lesssim_{d,s,p,q} \| f \|_{L^p(X)}. \]
     %
-    We will obtain a weak-type version of Schur's test which will enable us to bound $T_1$ later in this section.
+    We will obtain a weak-type version of Schur's test later on in this chapter, which will enable us to bound $T_1$.
 \end{example}
 
 For $1 < p < \infty$, we do not expect Schur's test to be sharp in general. But a good heuristic is that a variant of the inequality can be made to be sharp provided that two properties hold:
@@ -2306,18 +2318,18 @@ Using these estimates, a weighted variant of Schur's lemma, carried out in parti
 which shows that the two weighted identities above contain as much information as the original bound.
 
 \begin{example}
-    Let us consider an example where a weighted estimate can give better results about a particular operator.  Consider the operator
+    Let us use the Lagrange multiplier technique above to obtain a weighted estimate. Consider the operator
     %
-    \[ Tf(y) = \frac{1}{\pi} \int_0^\infty \frac{f(x)}{x + y}\; dx. \]
+    \[ Tf(y) = \int_0^\infty \frac{f(x)}{x + y}\; dx. \]
     %
-    The kernel of this operator is
+    We will prove that $T$ is bounded on $L^2$, a result which cannot be proven using Schur's Lemma. The kernel of this operator is
     %
-    \[ K(x,y) = \frac{1}{\pi} \frac{1}{x + y}. \]
+    \[ K(x,y) = \frac{1}{x + y}. \]
     %
-    Since $K$ is monotonically decreasing in $y$, maximizers for this inequality must be monotonically decreasing, with a singularity at the origin. The worst case singularity we can have near the origin while remaining close to being in $L^2$ is a singularity of the form $x^{-1/2}$. Thus we plug in $f(x) = x^{-1/2}$ into the operator $T$. Then we calculate that
+    Since $K$ is non-negative, and monotonically decreasing in $y$, maximizers for an $L^p$ to $L^q$ estimate must be monotonically decreasing, with a singularity at the origin. The worst case singularity we can have near the origin while remaining close to being in $L^2$ is a singularity of the form $x^{-1/2}$. Thus we plug in $f(x) = x^{-1/2}$ into the operator $T$. Then we calculate that
     %
     \begin{align*}
-        Tf(y) &= \frac{1}{\pi} \int_0^\infty \frac{1}{x^{1/2} (x + y)}\; dx\\
+        Tf(y) &= \int_0^\infty \frac{1}{x^{1/2} (x + y)}\; dx\\
         &\sim \int_0^y \frac{1}{x^{1/2} y} + \int_y^\infty \frac{1}{x^{3/2}}\; dx \sim y^{-1/2}.
     \end{align*}
     %
@@ -2333,7 +2345,7 @@ which shows that the two weighted identities above contain as much information a
     %
     \[ K_t(x,y) = K(x,y) w(x)^{2t - 1} v(y)^{1-2t}. \]
     %
-    Then $\{ K_t \}$ is an analytic family of kernels giving us an analytic family of operators $\{ T_t \}$, to which we can apply complex interpolation. The oscillation does not cause us a problem. For $t = 0$, we obtain that
+    Then $\{ K_t \}$ is an analytic family of kernels giving us an analytic family of operators $\{ T_t \}$, to which we can apply complex interpolation. For $t = 0$, we obtain that
     %
     \[ \| T_0 f \|_{L^1(\RR^+)} \lesssim \| f \|_{L^1(\RR^+)}. \]
     %
@@ -2347,15 +2359,15 @@ which shows that the two weighted identities above contain as much information a
     %
     But $T_{1/2} = T$, which means we have proved the required boundedness statement.
 
-    We can also get $L^p$ bounds for all $1 < p < \infty$ (the case $p = 1$ or $p = \infty$ is not possible). To do this, we obtain a weak type bound from $L^1(\RR^+)$ to $L^{1,\infty}(\RR^+)$ by proving that for $f \in L^1(\RR^+)$,
+    We can also get $L^p$ bounds for all $1 < p < \infty$, though the operator is not bounded on $L^1(\RR^d)$ or $L^\infty(\RR^d)$, as can be seen by plugging in indicator functions of intervals. To do this, we obtain a weak type bound from $L^1(\RR^+)$ to $L^{1,\infty}(\RR^+)$ by proving that for $f \in L^1(\RR^+)$,
     %
-    \[ Tf(y) \lesssim \| f \|_{L^1(\RR^+)} / y, \]
+    \[ Tf(y) \lesssim \frac{\| f \|_{L^1(\RR^+)}}{y}, \]
     %
     from which it follows that $\| Tf \|_{L^{1,\infty}(\RR^+)} \lesssim \| f \|_{L^1(\RR^+)}$. To prove this result, we note that for $f \geq 0$,
     %
-    \[ Tf(y) = \int \frac{f(x)}{x + y} \lesssim \int_0^y \frac{f(x)}{y}\; dx + \int_y^\infty \frac{f(x)}{x}\; dx \lesssim \| f \|_{L^1(\RR^+)} / y + \| f \|_{L^1(\RR^+)} / y. \]
+    \[ Tf(y) = \int \frac{f(x)}{x + y}\; dx \lesssim \int_0^y \frac{f(x)}{y}\; dx + \int_y^\infty \frac{f(x)}{x}\; dx \lesssim \frac{\| f \|_{L^1(\RR^+)}}{y} + \frac{\| f \|_{L^1(\RR^+)}}{y}. \]
     %
-    Real interpolation gives bounds from $L^p(\RR^+)$ to $L^p(\RR^+)$ for $1 < p \leq 2$, and then duality (and the fact $T$ is self-adjoint, apply boundedness for $2 \leq p < \infty$).
+    Real interpolation gives bounds from $L^p(\RR^+)$ to $L^p(\RR^+)$ for $1 < p \leq 2$. Applying the fact that $T$ is self-adjoint, duality implies boundedness for $2 \leq p < \infty$.
 \end{example}
 
 %    \begin{comment}
@@ -2457,9 +2469,17 @@ As another example of the trivial nature of the boundedness of kernel operators 
     \[ \| Tf \|_{L^q(\RR^d)} \lesssim_{d,s,p,q} \| f \|_{L^p(\RR^d)}. \]
     %
     This is the \emph{Hardy-Littlewood-Sobolev} inequality.
+
+    TODO: Discuss weighted variants (e.g. higher dimensional version of Q9 of Tao, Notes 2).
 \end{example}
 
-If $T$ has kernel $K: X \times Y \to \CC$ which is \emph{square integrable}, then we find via H\"{o}lder's inequality that
+
+
+
+
+\section{Hilbert-Schmidt Techniques}
+
+If $T$ has a kernel $K: X \times Y \to \CC$ which is \emph{square integrable}, then we find via H\"{o}lder's inequality that
 %
 \begin{align*}
     \| T f \|_{L^2(Y)}^2 &= \int_Y \left| \int_X K(x,y) f(x)\; dx \right|^2\; dy\\
@@ -2471,10 +2491,7 @@ Thus $\| T \|_{L^2 \to L^2} \leq \| K \|_{L^2(X \times Y)}$. The quantity $\| K 
 %
 \[ Tg(y) = a(y) \langle g, f \rangle \]
 %
-is a rank one operator. Heuristically, this means that employing the Hilbert-Schmidt / Frobenius norm will only yield good results when $T$ is a low rank operator. One of the main importances of the family of Hilbert-Schmidt integral operators is that they are \emph{compact}, since 
-
-
-
+is a rank one operator. Heuristically, this means that employing the Hilbert-Schmidt / Frobenius norm will only yield efficient bounds when $T$ is a low rank operator. In particular, $T$ must be qualitatively low-rank, because any Hilbert-Schmidt integral operator is \emph{compact}.
 
 \section{Change of Variables}
 
@@ -2501,7 +2518,7 @@ we only prove estimates of the form
 %
 \[ \| T_{\phi_1, \phi_2} f \|_{L^q(Y)} \lesssim \| f \|_{L^p(X)} \]
 %
-where $\phi_1$ and $\phi_2$ are supported on finite measure subsets of $X$ and $Y$, and $T_{\phi_1, \phi_2} f = \phi_1 T(\phi_2 f)$. Because of the localized nature of the problem, the difficulty of the bound increases as $q$ becomes larger, and as $p$ becomes smaller. If $T$ has a kernel $K \in L^\infty(\text{supp}(\phi_1) \times \text{supp}(\phi_2))$, then $T_{\phi_1, \phi_2}$ maps $L^1(\RR^d)$ to $L^\infty(\RR^d)$, which makes the study of the qualitative behaviour of $T_{\phi_1, \phi_2}$ with respect to the convex norms trivial. Working quantitatively, we should therefore expect studying localized estimates to depend on quantitative measures of the singular nature of $K$, e.g. most crudely, the $L^\infty$ norm. Because of the sensitivity to the singular nature of $K$, choosing $\phi_1$ and $\phi_2$ to be non-singular often makes the problem more amenable to analysis, e.g. if $X$ and $Y$ are smooth manifolds, it is often useful to assume $\phi_1 \in C_c^\infty(Y)$ and $\phi_2 \in C_c^\infty(X)$.
+where $\phi_1$ and $\phi_2$ are supported on finite measure subsets of $X$ and $Y$, and $T_{\phi_1, \phi_2} f = \phi_1 T(\phi_2 f)$. Because of the localized nature of the problem, the difficulty of the bound increases as $q$ becomes larger, and as $p$ becomes smaller. If $T$ has a kernel $K \in L^\infty(\text{supp}(\phi_1) \times \text{supp}(\phi_2))$, then $T_{\phi_1, \phi_2}$ maps $L^1(\RR^d)$ to $L^\infty(\RR^d)$, which makes the study of the qualitative behaviour of $T_{\phi_1, \phi_2}$ with respect to the convex norms trivial. Working quantitatively, we should therefore expect studying localized estimates to depend on quantitative measures of the singular nature of $K$, e.g. most crudely, the $L^\infty$ norm. Because of the sensitivity to the singular nature of $K$, choosing $\phi_1$ and $\phi_2$ to be non-singular often makes the problem more amenable to analysis.
 
 Intuitively, the smaller we make the kernel, the more well behaved the resulting operator will be. If $K$ is a non-negative kernel, then it is certainly true that the $L^p$ to $L^q$ boundedness of an operator $T$ with kernel $K$ implies the boundedness of an operator $T_\Omega$ with kernel $K \mathbf{I}_\Omega$ for any $\Omega \subset X \times Y$, since we will then have a pointwise bound $|T_\Omega(f)| \leq T(|f|)$. But if $K$ is not necessarily non-negative, then this is not necessarily true anymore, since $T$ may only be bounded because of more subtle cancellation properties.
 
@@ -2517,7 +2534,7 @@ Thus $\| T_\Omega \|_{L^p \to L^q} \leq \| T \|_{L^p \to L^q}$. Similarily, if $
 %
 \[ \| T_{K \phi} \|_{L^p \to L^q} \lesssim_{\Omega_1,\Omega_2} \| T_K \|_{L^p \to L^q}. \]
 %
-The trick here is to replace $\phi$ with a tensor product using a density argument / Fourier series which reduces our study to block diagonal type truncations.
+The trick here is to replace $\phi$ with a tensor product using a density argument / Fourier series which reduces our study to block diagonal type truncations. Similar results can be obtained if $X$ and $Y$ are smooth manifolds.
 
 More generally, if we have a family of disjoint sets $\{ E_n \}$ and $\{ F_n \}$, then we can truncate to the \emph{block diagonal} region $\Omega = \bigcup (E_n \times F_n) = \bigcup \Omega_n$. The norm of such an operator can be calculated exactly from the behaviour on each subregion, as the next lemma shows.
 
@@ -2573,8 +2590,6 @@ On the other hand, we certainly have
 \[ \frac{\sup_x \| T_{nm} x_n \|_{l^q_n}}{\| x_n \|_{l^p_n}} \geq \| T_{nm} \|_{l^\infty_{nm}}. \]
 %
 TODO: Do we have a $l^r$ lower bound as well, or not?
-
-\section{The Christ-Kiselev Lemma}
 
 We can also truncate to `upper triangular' diagonals rather than just block diagonals, provided that $q > p$. For $q = p$, we `lose a logarithm'.
 
@@ -2708,7 +2723,7 @@ for almost every $\xi \in \RR$.
     The result is also true for $p = 2$, but is a \emph{much harder theorem}, due to Carleson.
 \end{remark}
 
-The Christ-Kiselev Lemma and its `vector valued estimates' becomes very useful in the study of nonlinear dispersive partal differential equations.
+The Christ-Kiselev Lemma and its `vector valued variants' becomes very useful in the study of nonlinear dispersive partal differential equations.
 
 
 
@@ -3652,18 +3667,18 @@ As $\delta \to 0$, we may think of the $K_\delta$ as `tending to the unit mass' 
 
 \section{$H^p$ Spaces}
 
-We briefly describe how the Hardy-Littlewood maximal principle can be used to develop the theory of Hardy spaces. Recall that if $f: \DD \to \CC$ is a harmonic function on the interior of the unit disk, and we define $f_r: \TT \to \CC$ by setting $f_r(t) = f(r e^{2 \pi it})$, then for the \emph{Poisson kernel}
+We briefly describe how the Hardy-Littlewood maximal principle can be used to develop the theory of Hardy spaces. Recall that if $f: \mathbb{D} \to \CC$ is a harmonic function on the interior of the unit disk, and we define $f_r: \TT \to \CC$ by setting $f_r(t) = f(r e^{2 \pi it})$, then for the \emph{Poisson kernel}
 %
 \[ P_t(x) = \frac{1 - t^2}{1 + t^2 - 2t \cos(2 \pi x)} = \text{Re} \left( \frac{e^{2 \pi i x} + t}{e^{2 \pi i x} - t} \right), \]
 %
-we have for $0 \leq s < r < 1$, $f_s = f_r * P_{s/r}$. Applying Young's inequality with the fact $\{ P_t \}$ is positive and with unit mass, we thus conclude that $s \mapsto \| f_s \|_{L^p(\TT)}$ is a monotone increasing function of $s$. We define $H^p(\DD)$ to be the space of all \emph{holomorphic} (and thus harmonic) functions for which the norm
+we have for $0 \leq s < r < 1$, $f_s = f_r * P_{s/r}$. Applying Young's inequality with the fact $\{ P_t \}$ is positive and with unit mass, we thus conclude that $s \mapsto \| f_s \|_{L^p(\TT)}$ is a monotone increasing function of $s$. We define $H^p(\mathbb{D})$ to be the space of all \emph{holomorphic} (and thus harmonic) functions for which the norm
 %
-\[ \| f \|_{H^p(\DD)} = \lim_{t \to 1} \| f_t \|_{L^p(\TT)}. \]
+\[ \| f \|_{H^p(\mathbb{D})} = \lim_{t \to 1} \| f_t \|_{L^p(\TT)}. \]
 %
 We have seen that the Poisson kernel is an approximation to the identity, so that we have a pointwise estimate $|f * P_t| \lesssim Mf$.
 
 \begin{theorem}
-    If $f \in H^p(\DD)$, then for $1 < p \leq \infty$, the function
+    If $f \in H^p(\mathbb{D})$, then for $1 < p \leq \infty$, the function
     %
     \[ f_1 = \lim_{t \to 1} f_t \]
     %
@@ -3678,7 +3693,7 @@ We have seen that the Poisson kernel is an approximation to the identity, so tha
     %
     \[ \langle f_r, g * P_t \rangle \to A_t. \]
     %
-    We have $|A_t| \lesssim \| f \|_{H^p(\DD)} \| g \|_{L^{p^*}(\TT)}$, uniformly in $t$. As $t \to 1$, $g * P_t$ converges to $g$ in the $L^{p^*}(\TT)$ norm, and thus because $\{ f_r \}$ is bounded in $L^p(\TT)$, uniformly in $r$, we conclude that $\langle f_r, g * P_t \rangle$ converges to $\langle f_r, g \rangle$ uniformly in $r$. But this is enough to justify the convergence of $\langle f_r, g \rangle$. Thus we have justified that there exists $f_1 \in L^p(\TT)$ such that $f_r \to f_1$ weakly in $L^p(\TT)$. But this means that
+    We have $|A_t| \lesssim \| f \|_{H^p(\mathbb{D})} \| g \|_{L^{p^*}(\TT)}$, uniformly in $t$. As $t \to 1$, $g * P_t$ converges to $g$ in the $L^{p^*}(\TT)$ norm, and thus because $\{ f_r \}$ is bounded in $L^p(\TT)$, uniformly in $r$, we conclude that $\langle f_r, g * P_t \rangle$ converges to $\langle f_r, g \rangle$ uniformly in $r$. But this is enough to justify the convergence of $\langle f_r, g \rangle$. Thus we have justified that there exists $f_1 \in L^p(\TT)$ such that $f_r \to f_1$ weakly in $L^p(\TT)$. But this means that
     %
     \[ \langle f_t, g \rangle = \lim_{r \to 1} \langle f_t * P_r, g \rangle = \lim_{r \to 1} \langle f_r, g * P_t \rangle = \langle f_1, g * P_t \rangle = \langle f_1 * P_t, g \rangle. \]
     %
@@ -3695,7 +3710,7 @@ TODO
 
 \chapter{Differentiability of Measurable Functions}
 
-A simple consequence of the results above maximal functions is a kind of fundamental theorem of calculus. If $f \in L^1(\RR)$, then we can define $F \in C(\RR)$ by setting
+A simple consequence of the results of maximal functions considered in the last chapter is a kind of fundamental theorem of calculus. If $f \in L^1(\RR)$, then we can define $F \in C(\RR)$ by setting
 %
 \[ F(t) = \int_{-\infty}^t f(s)\; ds. \]
 %
@@ -4459,7 +4474,7 @@ exists.
 
 \chapter{Singular Integral Operators}
 
-Let us now consider some kernel operators
+We now return to the study of kernel operators
 %
 \[ Tf(x) = \int K(x,y) f(y)\; dy \]
 %
@@ -4507,7 +4522,7 @@ Since the Fourier transform of $u$ is a \emph{bounded function}, it follows from
 %
 \[ \| H f \|_{L^2} = \| u * f \|_{L^2} = \| \widehat{u} \widehat{f} \|_{L^2} \lesssim \| \widehat{f} \|_{L^2} = \| f \|_{L^2}. \]
 %
-Thus $H$ is a bounded operator on $L^2(\RR)$. The Calderon-Zygmund theory we will describe in this chapter uses this property to show that $H$ is also weakly bounded on $L^1(\RR)$, and thus bounded on $L^p(\RR)$ for all $1 < p \leq 2$. By duality, it actually follows that $H$ is bounded on $L^p(\RR)$ for all $1 < p < \infty$. This is a general characteristic of this method; the Calderon-Zygmund theory will give us weak boundedness in the $L^1$ norm, provided we already have some boundedness in the $L^p$ norm for some $p > 1$, and we must use other techniques to justify when we get this boundedness.
+Thus $H$ is a bounded operator on $L^2(\RR)$. The Calderon-Zygmund theory we will describe in this chapter uses this property to show that $H$ is also weakly bounded on $L^1(\RR)$, and thus bounded on $L^p(\RR)$ for all $1 < p \leq 2$. By duality, it actually follows that $H$ is bounded on $L^p(\RR)$ for all $1 < p < \infty$. This is a general characteristic of this method; the Calderon-Zygmund theory will give us weak boundedness in the $L^1$ norm, provided we already have some boundedness in the $L^p$ norm for some $p > 1$, and we must use other techniques, such as orthogonality, to justify this initial boundedness.
 
 Another example of a singular integral to which the Calderon-Zygmund theory will apply is the \emph{Riesz transforms} $\{ R_j \}$ on $\RR^d$, for $1 \leq j \leq d$, given by convolution against the \emph{Riesz Kernels}
 %
@@ -4534,7 +4549,7 @@ where $k$ is a distribution which is homogeneous of degree $-d$, smooth away fro
 %
 \[ \int_{|x| = 1} k(x)\; d\sigma(x) = 0. \]
 %
-Let us call such an operator a \emph{classical Calderon-Zygmund operator}. If $m$ is a bounded function on $\RR^d$ which is homogeneous of degree zero and smooth away from the origin, and if $k$ is the inverse Fourier transform of $m$, then $k$ will be a classical Calderon-Zygmund kernel. If $P(D)$ is a constant coefficient, homogeneous partial differential operator of order $k$, then $T = (-\Delta)^{-k/2} \circ P(D)$ will be an operator of this form, since it is given by convolution with the inverse Fourier transform of $m(\xi) = |\xi|^{-k} P(\xi)$. \emph{More interestingly}, if $P$ is \emph{elliptic}, i.e. if the equation $P(\xi) = 0$ has no non-zero real solutions, then the operator $T$ given by convolution with the inverse Fourier transform of $m(\xi) = |\xi|^k / P(\xi)$ will be of this form. Moreover, this operator has the property that if $f$ and $g$ are Schwartz, and $P(D) f = (-\Delta)^{k/2} g$, then $f = S g$, i.e. $S$ gives the inverse to $(-\Delta)^{-k/2} \circ P(D)$. The theory we give here will thus have the consequence that if $P(D) f = g$ and $g \in L^p(\RR^d)$, then $f \in L^p_k(\RR^d)$.
+Let us call such an operator a \emph{classical Calderon-Zygmund operator}. If $m$ is a bounded function on $\RR^d$ which is homogeneous of degree zero and smooth away from the origin, and if $k$ is the inverse Fourier transform of $m$, then $k$ will be a classical Calderon-Zygmund kernel. If $P(D)$ is a constant coefficient, homogeneous partial differential operator of order $k$, then $T = (-\Delta)^{-k/2} \circ P(D)$ will be an operator of this form, since it is given by convolution with the inverse Fourier transform of $m(\xi) = |\xi|^{-k} P(\xi)$. \emph{More interestingly}, if $P$ is \emph{elliptic}, i.e. if the equation $P(\xi) = 0$ has no non-zero real solutions, then the operator $T$ given by convolution with the inverse Fourier transform of $m(\xi) = |\xi|^k / P(\xi)$ will be of this form. Moreover, this operator has the property that if $f$ and $g$ are Schwartz, and $P(D) f = (-\Delta)^{k/2} g$, then $f = S g$, i.e. $S$ gives the inverse to $(-\Delta)^{-k/2} \circ P(D)$. The theory we give here will thus have the consequence that if $P(D) f = g$ and $g \in L^p(\RR^d)$, then $f \in L^p_k(\RR^d)$ -- a \emph{regularity estimate} for solutions to equations involving the partial differential equation $P(D)$.
 
 The same method that Calderon and Zygmund introduced applies to a much more general family of operators given by a convolution kernel $k$. In particular, the theory can be applied to any measurable function $k: \RR^d - \{ 0 \} \to \CC$ satisfying the following three conditions:
 %
@@ -4651,7 +4666,7 @@ where $0 < \sigma \leq 1$ is some fixed value. The first assumption ensures the 
 %
 for then the mean value theorem implies the H\"{o}lder continuity conditions with $\sigma = 1$. An operator associated with a kernel of this type is called a \emph{strong} singular kernel.
 
-We can perform this process in the more abstract setting of a quasi-distance space $X$ by introducing the function
+We can also obtain a pointwise condition in the more abstract setting of quasi-distance spaces by introducing the function
 %
 \[ V(x,y) = \inf \{ |B(y,\delta)| : x \in B(y,\delta) \}. \]
 %
@@ -4709,7 +4724,7 @@ Given an operator $T$ bounded on some $L^q(X)$, we say a singular $K$ is associa
 %
 where the integrability assumptions on $K$ ensure this is integrable. If $T$ is an operator bounded on $L^2(X)$, and associated with a singular kernel $K$ in the sense described above, then we call $T$ a \emph{Calderon-Zygmund operator}. Unlike in the case of convolution kernels, determining when an operator associated with a singular kernel is bounded in $L^2(X)$ is a much more technical question -- it does not automatically follow from the structure above. And to apply the theory described here, we \emph{must} have some a priori $L^q$ boundedness to begin with in order to apply the Calderon-Zygmund theory.
 
-If $T$ is an operator associated with a singular kernel $K$, then the behaviour of $T$ is determined \emph{away} from the diagonal, but the singular kernel $K$ does not determine the operator $T$. For instance, if $b \in L^\infty(\RR^d)$, then the pointwise multiplication operator $Tf = bf$ is a Calderon-Zygmund operator with a singular kernel vanishing away from the diagonal. This is the only thing that can happen for Calderon-Zygmund operators.
+If $T$ is an operator associated with a singular kernel $K$, then the behaviour of $T$ is determined \emph{away} from the diagonal, but the singular kernel $K$ does not determine the operator $T$. For instance, if $b \in L^\infty(\RR^d)$, then the pointwise multiplication operator $Tf = bf$ is a Calderon-Zygmund operator with a singular kernel vanishing away from the diagonal. This is the only degeneracy of the relation of a kernel to a Calderon-Zygmund operators.
 
 \begin{theorem}
     If $T$ is a Calderon-Zygmund operator associated with the singular kernel $K(x,y) = 0$. Then there exists $b \in L^\infty(\RR^d)$ such that
@@ -4978,7 +4993,7 @@ We now prove our main result using the Calderon-Zygmund decomposition; given an 
         \int_{(B_k^*)^c} |Tb_k(x)|\; dx &= \int_{(B_k^*)^c} \left| \int K(x,x') b_k(x')\; dx' \right|\; dx\\
         &= \int_{(B_k^*)^c} \left| \int [K(x,x') - K(x,x_0)] b_k(x')\; dx' \right|\; dx\\
         &\leq \int_{(B_k^*)^c} \int |K(x,x') - K(x,x_0)| |b_k(x')|\; dx'\; dx\\
-        &\leq \left( \sup_{x' \in B_k} \int_{(B_k^*)^c} |K(x,x') - K(x,x_0)|\; dx'\; dx \right) \| b_k \|_{L^1(X)}\\
+        &\leq \left( \sup_{x' \in B_k} \int_{(B_k^*)^c} |K(x,x') - K(x,x_0)|\; dx \right) \| b_k \|_{L^1(X)}\\
         &\lesssim A \alpha |B_k|.
     \end{align*}
     %
@@ -5167,13 +5182,87 @@ whenever $\rho(x',y) \gtrsim \rho(x,x')$.
     TODO: See Stein, End of Chapter 1.
 \end{proof}
 
-We note that under these assumptions, $T$ and $T_*$ are actually bounded on all $L^p$ spaces, by using duality and noting that the adjoint of $T$ is also a singular integral of the same type as $T$ itself.
+We note that under these assumptions, $T$ and $T_*$ are actually bounded on all $L^p$ spaces, by using duality and noting that the adjoint of $T$ is also a 
+singular integral of the same type as $T$ itself.
+
+
+\section{Calderon-Zygmund Operators on BMO}
+
+Let us review the main results we have obtained. We are given an operator $T$, with some a priori $L^q$ boundedness, and with a kernel satisfying suitable cancellation conditions. The $L^q$ boundedness does not automatically imply $L^1$ boundedness. This is because the mass of a given input could be spread out over a much larger region, in a way aligning with the $L^q$ bounds, but such that the $L^1$ norm of the output is much larger than the $L^1$ norm of the input.
+
+\begin{remark}
+    One can see heuristically why $L^1$ boundedness is equivalent to showing mass cannot be spread, by pretending general inputs are quasi-step functions, if a quasi-step function $f$ with height $H_0$ and width $W_0$ is mapped under $T$ to a quasi-step function $g$ with height $H_1$ and width $W_1$, then the only way for us to have $\| f \|_{L^1(X)} \gg \| g \|_{L^1(X)}$ but still have $\| f \|_{L^q(X)} \lesssim \| g \|_{L^q(X)}$ is if $H_1 W_1 \gg H_0W_0$ but $H_1W_1^{1/q} \lesssim H_0 W_0^{1/q}$ is if
+    %
+    \[ H_0W_0 \ll H_1 W_1 \lesssim W_1^{1 - 1/q} H_0 W_0^{1/q}, \]
+    %
+    which we can rearrange to read $W_0 \ll W_1$, i.e. the support of the quasi step function is vastly expanded.
+\end{remark}
+
+We were able to show that the support of a function is not vastly expanded by using the Calderon-Zygmund decomposition, since, using the cancellation properties of a given kernel, we saw that if $b$ is a function with mean zero, supported on a ball $B$, then we have bounds of the form
+%
+\[ \| Tb \|_{L^1(X - B^*)} \lesssim \| b \|_{L^1(X)}. \]
+%
+This is sufficient to show that the operator does not significantly expand the support of the operator $T$. We were therefore able to use this to obtain weak $L^1$ bounds for the operator.
+
+Now suppose we are given the `dual' Calderon-Zygmund conditions, i.e. we are given an operator $T$, bounded on $L^q(X)$, and a measurable function $K$ satisfying:
+%
+\begin{itemize}
+    \item (Integrability conditions): For each $f \in L^q(X)$ with compact support, and for almost every $x \not \in \text{supp}(f)$, we have
+    %
+    \[ Tf(x) = \int K(x,y) f(y)\; dy, \]
+    %
+    where the right hand side is assumed absolutely integrable in $y$, and thus can be interpreted in the Lebesgue sense.
+
+    \item (Cancellation Condition $*$): There exists constants $A > 0$ and $c > 1$ such that for any $\delta > 0$, any $x \in X$, and any $x' \in X$ with $\rho(x,x') < \delta$,
+    %
+    \[ \int_{B(y,c\delta)^c} |K(x,y) - K(x',y)|\; dy \leq A. \]
+\end{itemize}
+%
+We might expect that $T$ is then bounded on $L^p(X)$ for all $q < p < \infty$, and, assuming the usual integrability conditions one can just obtain this by duality, since the adjoint of $T$ will satisfy the usual conditions. We want to work instead by trying to obtain 'weak $L^\infty$ bounds' that we can interpolate. This is different from the usual weak norms; indeed, $L^{\infty,r} = L^\infty$ for all $0 < r \leq \infty$. A substitute is provided by the \emph{BMO Norm}, or \emph{Bounded mean oscillation norm}. One quirk is that it is only a seminorm: it is only defined modulo constants.
+
+For a locally-integrable function $f: X \to \CC$, we define
+%
+\[ \| f \|_{\text{BMO}(X)} = \sup_B \inf_c \fint_B | f(x) - c |\; dx. \]
+%
+For any ball $B$, one can remove the infinum over $c$ by choosing $c_B$ to be the average value of $f$ over $B$. We let $BMO(\RR^d)$ be the Banach space of equivalence classes of functions with finite BMO norm, where we identify two functions $f_0$ and $f_1$ if $f_0 - f_1$ agrees with a constant function almost everywhere. We have a bound $\| f \|_{\text{BMO}(X)} \leq \| f \|_{L^\infty(X)}$, so every function in $L^\infty(\RR^d)$ lies in $BMO(\RR^d)$, but $BMO(\RR^d)$ also contains unbounded functions, like $\log |x|$ (TODO Prove this).
+
+We can now extend the definition of $Tf$ to a general element of $L^\infty(\RR^d)$, such that the output is defined as an element of the space $V$, which is the space $L^1_{\text{loc}}(X)$ of locally integrable functions, where we have quotiented out the constant functions. By duality, it suffices to define how $Tf$ integrates against a general compactly supported, bounded function $g$ with mean zero. If $g$ is supported on the interior of a ball $B$, then we define
+%
+\[ \langle Tf, g \rangle = \int \int_B K(x,y) f(y)\; dy g(x)\; dx + \int_{(B^*)^c} [K(x,y) - K(c_x,y')] g(x) f(y). \]
+%
+The first quantity is well defined, and a continuous functional of $g$, since $f \mathbf{I}_B$ lies in $L^q(\RR^d)$, and so $T(f \mathbf{I}_B)$ lies in $L^q(\RR^d)$. The second quantity is well-defined and a continuous functional of $g$ because of the cancellation properties, i.e.
+%
+\[ \left| \int_{(B^*)^c} [K(x,y) - K(c_x,y')] g(x) f(y) \right| \leq A \| f \|_{L^\infty} \| g \|_{L^\infty}. \]
+%
+The fact that this is invariant of the choice of ball $B$ follows because $g$ has mean zero. Thus $Tf$ is well-defined as a locally integrable function. But actually, since our implicit constants are independent of $B$, we have actually shown that $T$ is a continuous map from $L^\infty(X)$ into $\text{BMO}(X)$.
+
+\begin{theorem}
+    We have $\| Tf \|_{\text{BMO}(X)} \lesssim \| f \|_{L^\infty(X)}$.
+\end{theorem}
+
+In order to exploit the $\text{BMO}$ norm, we must obtain tools which show such bounds are `almost' as good as $L^\infty$ bounds. One result comes from iterating Markov's inequality applied locally on balls at various scales, giving us the John-Nirenberg inequality.
+
+\begin{theorem}[(John-Nirenberg Inequality)]
+    For any $X$, there exists $c$ such that if $f \in \text{BMO}(X)$. Then for any ball $B$, if $c_B = \fint_B f$, then we have
+    %
+    \[ |\{ x \in B: \left| f(x) - c_B \right| \geq \lambda \| f \|_{\text{BMO}(X)} \}| \lesssim e^{-c \lambda} |B|. \]
+\end{theorem}
+\begin{proof}
+    Assume without loss of generality that $\| f \|_{\text{BMO}(X)} = 1$. Our goal is to iterate at various scales. Let $A(\lambda)$ be the best constant for which we have
+    %
+    \[ |\{ x \in B: f(x) \geq c_B + \lambda \}| \leq A(\lambda) |B|. \]
+    %
+    Markov's inequality, applied to the definition of the BMO norm, gives $A(\lambda) \leq 1/\lambda$, and a trivial estimate gives $A(\lambda) \leq 1$. We now use a variant of the Calderon-Zygmund decomposition.
+\end{proof}
+
+
+
 
 
 
 \section{Vector-Valued Singular Integrals}
 
-s
+We can generalize pretty much all of what we have said to functions which are not only \emph{real-valued}, but \emph{vector-valued}, i.e. valued in some Hilbert space $H$. TODO
 
 
 
@@ -6061,6 +6150,90 @@ Here are some other examples of transference.
 
 
 
+
+
+
+
+
+
+
+
+
+\chapter{Paraproducts}
+
+The \emph{paradifferential calculus} is a technique to study the Sobolev behaviour of a product $f_1 f_2$ by breaking up the product into a sum of \emph{paraproducts}, i.e. the part of a pointwise product where we have restricted the frequencies interacting in the product. A basic example occurs in the analysis of the derivatives
+%
+\[ \nabla(f g) = (\nabla f) g + f (\nabla g). \]
+%
+If we could `invert' the derivative operator, we could write
+%
+\[ f g = \nabla^{-1} \{ (\nabla f) g \} + \nabla^{-1} \{ f (\nabla g) \}. \]
+%
+A rigorous interpretation of the terms on the right hand side will be provided by \emph{paraproducts}. The behaviour of the function $\nabla^{-1} \{ (\nabla f) g \}$ will largely be determined by the interactions of the large frequency components of $f$ (which dominate when taking derivatives) with $g$, and the behaviour of the function $\nabla^{-1} \{ f (\nabla g) \}$ will be determined by the interactions of $f$ with the large frequency components of $g$. One utility of the theory will allow us to find rigorous heuristics that justify that the `highest order derivatives dominate' when determining the behaviour of some high order derivative $\nabla^k \{ fg \}$, i.e. justifying that $\nabla^k \{ fg \} \sim \nabla^k \{ f \} g + f \nabla^k \{ g \}$, as well as more general variants when $\nabla^k$ is replaced with a general pseudodifferential operator.
+
+To start our study, for simplicity we begin with the `constant coefficient case', i.e. we study translation-invariant multi-linear operators $T$. Such operators have a Fourier multiplier representation, i.e. there exists a multiplier $m$ such that
+%
+\[ T \{ f_1, \dots, f_k \}(x) = \int m(\xi) \widehat{f}_1(\xi_1) \dots \widehat{f}_k(\xi_k) e^{2 \pi i (\xi_1 + \dots + \xi_k) \cdot x}\; d\xi. \]
+%
+An analogue of the H\"{o}rmander-Mikhlin multiplier theorem holds, though is not always as applicable as desired. A \emph{Coifman-Mayer symbol} is a function $m: \RR^d \times \dots \times \RR^d$ such that
+%
+\[ |(\nabla^\alpha_\xi m)(\xi)| \lesssim |\xi|^{-|\alpha|} \]
+%
+for all $\alpha$.
+
+
+
+
+
+We begin with a basic argument which indicates the need for a general theory.
+
+\begin{theorem}
+    For functions $f$ and $g$,
+    %
+    \[ \| fg \|_{W^{1,1.5}(\RR^3)} \lesssim \| f \|_{W^{1,2}(\RR^3)} \| g \|_{W^{1,2}(\RR^2)}. \]
+\end{theorem}
+\begin{proof}
+    A density argument allows us to assume that $f$ and $g$ are both Schwartz functions. By homogeneity symmetry, we may assume $\| f \|_{W^{1,2}(\RR^3)} = \| g \|_{W^{1,2}(\RR^2)} = 1$. Then we know that
+    %
+    \[ \| f \|_{L^2(\RR^3)}, \| \nabla f \|_{L^2(\RR^3)}, \| g \|_{L^2(\RR^3)}, \| \nabla g \|_{L^2(\RR^3)} \lesssim 1. \]
+    %
+    Sobolev embeddings also imply that
+    %
+    \[ \| f \|_{L^6(\RR^3)}, \| g \|_{L^6(\RR^3)} \lesssim 1. \]
+    %
+    We begin by making the reduction
+    %
+    \begin{align*}
+        \| f g \|_{W^{1,1.5}(\RR^3)} &\lesssim \| f g \|_{L^{1.5}(\RR^3)} + \| \nabla \{ fg \} \|_{L^{1.5}(\RR^3)}\\
+        &\leq \| f g \|_{L^{1.5}(\RR^3)} + \| (\nabla f) g \|_{L^{1.5}(\RR^3)} + \| f (\nabla g) \|_{L^{1.5}(\RR^3)}.
+    \end{align*}
+    %
+    We now use H\"{o}lder's inequality in three separate ways:
+    %
+    \begin{itemize}
+        \item $\| f g \|_{L^{1.5}(\RR^3)} \lesssim 1$, since $f \in L^2(\RR^3)$, and $g \in L^6(\RR^3)$.
+
+        \item $\| (\nabla f) g \|_{L^{1.5}(\RR^3)}$, since $\nabla f \in L^2(\RR^3)$ and $g \in L^6(\RR^3)$.
+
+        \item $\| f (\nabla g) \|_{L^{1.5}(\RR^3)}$, since $f \in L^6(\RR^3)$ and $\nabla g \in L^2(\RR^3)$.
+    \end{itemize}
+    %
+    Combining these bounds completes the proof.
+\end{proof}
+
+As an example of this result, let $f$ and $g$ be bump functions adapted to balls of radius $1/N$ and $1/M$, for $N \geq M \geq 1$. Then the Fourier support of $f$ is concentrated on frequencies of magnitude $\sim N$, and the Fourier support of $g$ is concentrated on frequencies of magnitude $\sim M$. Then
+%
+\[ \| f \|_{L^2(\RR^3)} \sim N^{-3/2} \quad\text{and}\quad \| g \|_{L^2(\RR^3)} \sim M^{-3/2}, \]
+%
+and
+%
+\[ \| \nabla f \|_{L^2(\RR^3)} \sim N^{-1/2} \quad\text{and}\quad \| \nabla g \|_{L^2(\RR^3)} \sim M^{-1/2}. \]
+%
+This is consistent with the heuristic that $\nabla f$ behaves like $N f$, and $\nabla g$ behaves like $M g$, and, since $N,M \geq 1$, shows the derivatives dominate in the Sobolev norm. In the worst case, where the supports of $f$ and $g$ are nested, $fg$ is a bump function adapted to the ball of radius $1/N$, having Fourier support on frequencies $\sim N$, in which case $\| f g \|_{L^{1.5}(\RR^3)} \sim N^{-2}$, $\| \nabla (f g) \|_{L^{1.5}(\RR^3)} \sim N^{-1}$, and the inequality above to be proved is of the form
+%
+\[ N^{-1} \lesssim N^{-1/2} M^{-1/2}. \]
+%
+We thus see that the inequality is only tight when $N \sim M$.
 
 
 
