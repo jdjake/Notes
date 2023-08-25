@@ -1,6 +1,47 @@
-\input{../../style.tex}
+\documentclass[12pt]{article}
 
-\renewcommand\thesection{}
+\newcommand\hmmax{0}
+\newcommand\bmmax{0}
+ 
+\usepackage[margin=0.9in]{geometry} 
+\usepackage{amsmath,amsthm,amssymb,mathrsfs,bbm,titling,mathtools,hyperref,nameref,MnSymbol,framed,bm,enumitem}
+\usepackage{color}
+\usepackage[style=numeric,backend=bibtex]{biblatex}
+\usepackage{comment}
+
+ \let\oldref\ref
+\renewcommand{\ref}[1]{(\oldref{#1})}
+\DeclarePairedDelimiter\ceil{\lceil}{\rceil}
+\DeclarePairedDelimiter\floor{\lfloor}{\rfloor}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\D}{\mathbb{D}}
+\newcommand{\F}{\mathbb{F}}
+\newcommand{\K}{\mathbb{K}}
+\newcommand{\eps}{\varepsilon}
+
+\theoremstyle{definition}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{xca}[theorem]{Exercise}
+\newtheorem{proposition}[theorem]{Proposition}
+
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{example}[theorem]{Example}
+
+\setcounter{section}{-1}
+
+\numberwithin{equation}{section}
+
+\title{Study guide for stationary set estimates}
 
 \begin{document}
 
@@ -30,99 +71,74 @@ But for $q > q_k$, we conclude that
 
 \chapter*{Motivation Plus Comparison to Previous Techniques}
 
-	Now that we've proved Theorem 1.1, let's provide some motivation as to why this result is needed. In particular, we'll provide an explanation of the background of the convergence exponent of the `Tarry problem' the paper discusses, and review why this method might potentially work well for solving such a problem.
+\section{How to Use the Study Guide}
 
-	\section{Tarry's Problem}
+TODO (Idea: Have symbols to indicate whether a certain comment should be read before, during, or after a certain passage of the book.
 
-	To understand the Tarry problem, I mainly used (Wooley, 2017), as well as a discussion of Tarry's problem in (Arkhipov, Karatsuba, Chubarikov, 1980) and L. Schoenfeld's review of (Hua, 1952) as a reference, to understand what was meant by the following sentence in (BGZZ, 2021):
-	%
-	\begin{quote}
-		The quantity $\| E_{[0,1]}^{(1,k)} \|_{L^p(\RR^N)}$ appears in the leading coefficient of the asymptotic expansion of Vinogradov's Mean Value$\dots$
-	\end{quote}
-	%
-	Let's start by discussing how these quantities arise in number theory.
+\section{Section 1}
 
-	One very useful technique for estimating the number of solutions to certain integer equations in additive number theory, is to utilize orthogonality to reduce such estimates to the study of properties of certain exponential sums. A rudimentary example is obtained by trying to count the number $S(N)$ of solutions to the equation
-	%
-	\begin{equation} \label{simpleadditiveequation}
-		n_1^2 + n_2^2 = m_1^2 + m_2^2
-	\end{equation}
-	%
-	with $x_1,x_2,y_1,y_2 \in [1,N]$. For an integer $n$, let $e_n: [0,1] \to [0,1]$ be the function
-	%
-	\[ e_n(\xi) = e^{2 \pi i n \xi}. \]
-	%
-	The main reason such functions are useful in additive number theory is because of three useful properties:
-	%
-	\[ e_n e_m = e_{n+m}, \quad\quad \overline{e_n} = e_{-n}, \quad\text{and}\quad \int_0^1 e_n(\xi)\; d\xi = \mathbb{I}(n = 0). \]
-	%
-	Therefore, for any integers $n_1,n_2,m_1,m_2$,
-	%
-	\[ \int_0^1 e_{n_1^2}(\xi) e_{n_2^2}(\xi) \overline{e_{m_1^2}(\xi)} \overline{e_{m_2^2}(\xi)}\; d\xi = \int_0^1 e_{n_1^2 + n_2^2 - m_1^2 - m_2^2}(\xi)\; d\xi = \mathbb{I}(n_1^2 + n_2^2 = m_1^2 + m_2^2).  \]
-	%
-	But this means that
-	%
-	\begin{align*}
-		S(N) &= \sum_{n_1,n_2,m_1,m_2 = 1}^N \mathbb{I}(n_1^2 + n_2^2 = m_1^2 + m_2^2)\\
-		&= \sum_{n_1,n_2,m_1,m_2 = 1}^N \int_0^1 e_{n_1^2}(\xi) e_{n_2^2}(\xi) \overline{e_{m_1^2}(\xi) e_{m_2^2}(\xi)}\; d\xi\\
-		&= \int_0^1 \left( \sum_{n_1 = 1}^N e_{n_1^2}(\xi) \right) \left( \sum_{n_2 = 1}^N e_{n_2^2}(\xi) \right) \overline{\left( \sum_{m_1 = 1}^N e_{m_1^2}(\xi) \right) \left( \sum_{m_2 = 1}^N e_{m_2^2}(\xi) \right)}\; d\xi\\
-		&= \int_0^1 \left( \sum_{n = 1}^N e_{n^2}(\xi) \right) \left( \sum_n^N e_{n^2}(\xi) \right) \overline{\left( \sum_{n = 1}^N e_{n^2}(\xi) \right) \left( \sum_{n = 1}^N e_{n^2}(\xi) \right)}\; d\xi.
-	\end{align*}
-	%
-	We can then write this integral as
-	%
-	\[ \int_0^1 \left| f_N(\xi) \right|^4\; d\xi \quad\text{where}\ f_N = \sum_{n = 1}^N e_{n^2}. \]
-	%
-	Thus computing the number of solutions to the equation \eqref{simpleadditiveequation} reduces to the study of the $L^4$ norm of a certain exponential sum $f_N$.
+\subsection*{Section 1.1: Bounding Stationary Sets by Oscillatory Integrals}
 
-	\emph{Tarry's problem} involves studying a more complicated equation, namely the number $J_{s,k}(N)$ of integer tuples $(n_1,\dots,n_s,m_1,\dots,m_s)$ of solutions to the system of equations
-	%
-	\begin{align*}
-		n_1 + \dots + n_s &= m_1 + \dots + m_s\\
-		n_1^2 + \dots + n_s^2 &= m_1^2 + \dots + m_s^2\\
-		\cdots \cdots \cdots \cdots & \cdots \cdots \cdots \cdots \cdots\\
-		n_1^k + \dots + n_s^k &= m_1^k + \dots + m_s^k.
-	\end{align*}
-	%
-	Such equations can be dealt with similarily; Defining $f_N: [0,1]^k \to \CC$ by setting
-	%
-	\[ f_N(\xi) = \sum_{n = 1}^N e^{2 \pi i (n\xi_1 + n^2 \xi_2 + \dots + n^k \xi_k)}, \]
-	%
-	then we find that
-	%
-	\begin{equation} \label{discretJskEquation}
-		J_{s,k}(N) = \int_{[0,1]^k} |f_N(\xi)|^{2s}\; d\xi.
-	\end{equation}
-	%
-	Exponential sums are often harder to deal with than exponential integrals. Fortunately, using the Hardy-Littlewood circle method (e.g. performing a decomposition into major and minor arcs), one can asymptotically replace the exponential sum above with an oscillatory integral. These calculations can be found in the proof of Corollary 1.3 of (Wooley, 2017), though these calculations will be terse if you're unfamiliar with the circle method, and since the method doesn't really impact an understanding of (BGZZ, 2021), it's probably best for the purpose of this study guide to treat the method as a black box. The main consequence is that as $N \to \infty$, we have a formal identity
-	%
-	\[ J_{s,k}(N) = \mathfrak{J}_s(k) \mathfrak{S}_s(k) \cdot N^{2s - \frac{k(k+1)}{2}} + o \left( N^{2k - \frac{n(n+1)}{2}} \right), \]
-	%
-	where $\mathfrak{S}_s$ is a formal trigonometric series (hence the use of the Fraktur $S$), and $\mathfrak{J}_s$ is defined in terms of an $L^p$ norm of an oscillatory integral over the infinite region $\RR^s$. Thus neither function is defined for all values of $k$\footnote{TODO: What happens to the asymptotics in these circumstances}. We'll ignore $\mathfrak{S}_s$, since it requires different techniques to deal with than a study of oscillatory integrals\footnote{TODO: The convergence properties of $\mathfrak{S}_s$ are completely known, in Hua 1959, but what about the higher dimensional variants?}. Here we're interested in the convergence properties of $\mathfrak{J}_s$, because it is equal to
-	%
-	\begin{equation} \label{JsSingularEquation}
-		\int_{\RR^k} \left| \int_0^1 e^{2 \pi i (\xi_1 x + \xi_2 x^2 + \dots + \xi_k x^k)}\; dx \right|^{2s}\; d\xi,
-	\end{equation}
-	%
-	Notice that the cost of replacing the exponential sum in $n$ in \eqref{discretJskEquation} with an oscillatory integral in $x$ in \eqref{JsSingularEquation} is that instead of integrating $\xi$ over $[0,1]^k$, we must now integrate $\xi$ over $\RR^k$. Determining whether \eqref{JsSingularEquation} is finite thus requires us to obtain good bounds on the family of oscillatory integrals
-	%
-	\begin{equation} \label{oscillatoryEquation}
-		I(\xi) = \int_0^1 e^{2 \pi i (\xi_1 x + \dots + \xi_k x^k)}\; dx.
-	\end{equation}
-	%
-	Namely, this problem is equivalent to showing that $I \in L^p(\RR^k)$ for $p = 2s$. The problem is classical, and has been completely solved in (Arkhipov, Karatsuba, Chubarikov, 1980), so we're interested in a higher dimensional variant, namely, for a given $k$ and $d$, to determine which $L^p$ spaces the function
-	%
-	\begin{equation} \label{higherdimensionaloscillatoryequation}
-		I(\xi) = \int_{[0,1]^d} e^{2 \pi i \phi_\xi(x)}\; dx
-	\end{equation}
-	%
-	lies in, where $\xi = \{ \xi_\beta : |\beta| \leq k \}$ is a $D$-dimensional vector of values, which we take as coefficients to the polynomial phase function $\phi_\xi(x) = \sum \xi_\beta x^\beta$. This probably has consequences for determining the number of solutions to the system of equations
-	%
-	\[ \{ n_1^\alpha + \dots + n_s^\alpha = m_1^\alpha + \dots + m_s^\alpha : |\alpha| \leq k \}, \]
-	%
-	where $n_1,\dots,n_s,m_1,\dots,m_s$ are $d$-dimensional integer vectors, but I couldn't find a source on this, and I'm not sure how well the Hardy-Littlewood circle method generalizes to handling higher dimensional oscillatory sums.
+Section 1.1 is supplemental to the main techniques of the paper, and can be safely skimmed over on a first reading to see that the technique of Theorem 1.1 of \cite{BGZZ} is close to sharp. For those who want to understand Section 1.1, the remaining part of this section gives  context to the proof strategy not discussed in the paper. The arguments in this section are a variant of a classical result \cite{Esseen} proved by Ess\'{e}en in 1966, whose original context was to derive concentration bounds for sums of independent random variables, but we can applied in a much more general context. The intuitive idea is that, reversing the result of Theorem 1.1 of \cite{BGZZ}, we can bound stationary sets by oscillatory integral bounds. We state the Ess\'{e}en concentration inequality in the notation of \cite{BGZZ}, referring to \cite{TaoVu} for a proof, which follows a very similar strategy to that of the proof of equation (1.5) of \cite{BGZZ}, i.e. dominating an indicator by a Schwartz function and applying the multiplication formula for the Fourier transform.
 
-	The difficulty in understanding $I$ is that we must obtain bounds for oscillatory integrals with polynomial phases which are stable under an arbitrary pertubation of the coefficients of the polynomials. The methods and heuristics we normally use to study such oscillatory integrals do not often behave as nicely with respect to such a pertubation; our heuristics are normally developed on integrals of the form
+\begin{theorem}
+    For any function $\phi: [0,1]^d \to \R$, and any $\varepsilon > 0$,
+    %
+    \[ L_\phi \lesssim (c + 1/\varepsilon) \int_{-\varepsilon}^\varepsilon |I(\lambda \phi)|\; d\lambda. \]
+\end{theorem}
+
+This result can then be used to prove the upper bound of equation (1.4) of \cite{BGZZ} instead of proving everything from scratch. Indeed, by the Ess\'{e}en Theorem, taking $\varepsilon = 1$, we have
+%
+\[ \int_{|s| \sim 2^{-j}} L_{s \phi}\; ds \lesssim L_{\phi / 2^j} \lesssim \int_{-1}^1 |I(\lambda \phi / 2^j)| \leq \int_{-1}^1 |I(\lambda \phi)|\; d\lambda. \]
+%
+Summing over $1 \leq j \leq N$, and then applying a trivial bound $L_{s \phi} \leq 1$ to get
+%
+\[ \int_{|s| \leq 2^{-N}} L_{s \phi}\; ds \lesssim 2^{-N} \]
+%
+gives
+%
+\[ \int_{-1}^1 L_{s \phi}\; ds \lesssim N \int_{-1}^1 |I(\lambda \phi)\; d\lambda + 2^{-N}. \]
+% N A = 2^{-N}
+If we set $A = \int_{-1}^1 |I(\lambda \phi)|\; d\lambda$, then optimizing $N$, i.e. choosing $N = \ln(1/A)$, gives the required.
+
+We end this section by remarking that strategies to bound stationary sets by oscillatory integrals have been known for some time. As we will see in our discussion of Section 1.2 of \cite{BGZZ}, it is only comparatively recently that results for reversing this philosophy have been known, and even then, we still only know such results for a very limited range of functions.
+
+\subsection*{Section 1.2: Comparison to Other Methods}
+
+In this section, we provide an expanded discussion of the methods used to study oscillatory integrals discussed in the paper, and compare them to the stationary set method of \cite{BGZZ}.
+
+The main advantage of Theorem 1.1 of \cite{BGZZ} is that it enables us to reduce oscillatory integral estimates with subalgebraic phases to the computation of stationary sets. We have thus reduced our problem about cancellation of oscillatory integrals to the geometric problem of determining the largest measure of a stationary set. But reversing this method can be inefficient. 
+
+There is really only one other class of functions for which a successful theory of stationary sets bounds for associated oscillatory integrals have been obtained, and even then only under certain finite type assumptions, the class of convex functions. The main result of (Bruna, Nagel, Wainger, 1988) shows that given a convex function $\phi: U \to \R$ of finite type, where $U$ is some open convex set, attaining it's minimum at a point $x_0$. Given a smooth compactly supported amplitude $a: U \to \R$, we have
+%
+\[ \left| \int a(x) e^{\pm 2 \pi i \lambda \phi(x)}\; dx \right| \lesssim |\{ x \in U : |\phi(x) - \phi(x_0)| \leq 1 / \lambda \}| + O_R(\lambda^{-R}) \quad\quad\text{for all $R > 0$}. \]
+%
+The main advantage that this result has over the result of \cite{BGZZ} is that we only need look at a \emph{single} level set to determine decay, i.e. the level set with $\mu = 0$. This often gives much better bounds than can be obtained using Theorem 1.1 of \cite{BGZZ}, especially in high dimension. For instance, if $\phi: (0,1)^d \to \R$ is given by $\phi(x) = |x|^2$, then (BNW) is able to recover the tight decay of the form
+%
+\[ \left| \int a(x) e^{2\pi i \lambda \phi(x)}\; dx \right| \lesssim \lambda^{-d/2}, \]
+%
+whereas Theorem 1.1 of \cite{BGZZ}, applied directly, is only able to show that
+%
+\[ \left| \int a(x) e^{2 \pi i \lambda \phi(x)}\; dx \right| \lesssim \lambda^{-1}. \]
+%
+Using the fact that $e^{2 \pi i \lambda |x|^2} = \prod_j e^{2 \pi i \lambda x_j^2}$, and thus breaking down the higher dimensional oscillatory integrals into a product of one dimensional oscillatory integrals, and applying Theorem 1.1 of \cite{BGZZ} to each one can be used to recover the right decay, but this trick fails when $\phi$ is replaced by something less tensorizable, like a general convex polynomial with non-vanishing curvature.
+
+An important limitation of the stationary set method emerges from the last paragraph: one can only get a limited amount of decay. By pigeonholing, one always has
+%
+\[ \sup_\mu |\{ x \in [0,1]^d : \mu \leq \phi(x) \leq \mu + 1/\lambda \}| \geq 1/\lambda, \]
+%
+and, for any fixed $\mu$, if $\phi$ is smooth,
+%
+\[ |\{ x \in [0,1]^d : \mu \leq \phi(x) \leq \mu + 1/\lambda \}| \gtrsim \lambda^{-d}. \]
+%
+Thus stationary set methods for oscillatory integrals giving bounds with respect to suprema of stationary set estimates for all values of $\mu$ cannot get decay better than $1/\lambda$, and stationary set methods which give bounds in terms of a fixed value of $\mu$ cannot get better decay than $1/\lambda^d$. We only expect stationary set asymptotics to be sharp for oscillatory integrals with low decay.
+
+	\subsection{Pertubations of Oscillatory Integrals}
+
+ 
+
+
+The difficulty in understanding $I$ is that we must obtain bounds for oscillatory integrals with polynomial phases which are stable under an arbitrary pertubation of the coefficients of the polynomials. The methods and heuristics we normally use to study such oscillatory integrals do not often behave as nicely with respect to such a pertubation; our heuristics are normally developed on integrals of the form
 	%
 	\[ J(\lambda) = \int_{[0,1]^d} e^{2 \pi i \lambda \phi(x)}\; dx \]
 	%
@@ -132,7 +148,22 @@ But for $q > q_k$, we conclude that
 	%
 	Thus, if for each $|\xi_0| = 1$, we can obtain a good understanding of the asymptotic behaviour of $I(\lambda \xi)$ as $\lambda \to \infty$ for $|\xi| = 1$ in a small neighborhood of $\xi_0$, we can use the compactness of the sphere $\{ |\xi| = 1 \}$ to get good control over the overall integral above.
 
-	\section{Pertubations of Oscillatory Integrals}
+     {\color{red} I think it's incorrect to say that the difficulty in understanding $I$ is in understanding oscillatory integrals with a perturbation from an isolated critical point. In the case $d=k=2$, the integral for Tarry's problem is
+    \begin{equation*}
+        \int_{[0,1]^2}e^{2\pi i(x_1\xi_1+x_2\xi_2+x_3\xi_1^2+x_4\xi_2^2+x_5\xi_1\xi_2}d\xi_1d\xi_2
+    \end{equation*}
+    For given $(x_1,\ldots,x_5)$ with $x_1=x_2=0$ for simplicity, the preceding integral has a stationary phase when $(\xi_1,\xi_2)$ satisfies
+    \begin{equation*}
+        \begin{bmatrix}
+        2x_3 & x_5\\x_5 & 2x_4
+        \end{bmatrix}\begin{bmatrix}
+            \xi_1\\\xi_2
+        \end{bmatrix}=0
+    \end{equation*}
+    If $4x_3x_4-x_5^2=0$, then the preceding square matrix has kernel, so there is an entire line of $(\xi_1,\xi_2)$ through $0$ for which the latter display holds. In particular, for such an $x$, the oscillatory integral has a stationary phase along an entire line, which is not close to being an isolated point.
+
+    Incidentally, along $x_1=x_2=4x_3x_4-x_5^2=0$, the integral has decay $|x|^{-1/2}$, so we automatically get $p_{2,2}\leq 10$; Theorem 1.2 gives $p_{2,2}=6$. If you change $(x_1,x_2)$ but keep the rest, then there's a line of critical $\xi$ but not through the origin (the RHS of the last display gets replaced by $-(x_1,x_2)$)
+    }
 
 	Notice that the difficulty in understanding the behaviour of $I$ is that we are understanding a family of oscillatory integrals parameterized by $\xi$, whose phase ranges over \emph{all degree $k$ polynomials}. We must obtain certain uniform bounds over $\xi$, and thus our oscillatory integral bounds \emph{can only rely on properties of polynomials remaining stable under a pertubation of the coefficients}.
 
@@ -188,9 +219,9 @@ But for $q > q_k$, we conclude that
 
 		A more stable approach is obtained by decompoing the region of integration, and applying the Van der Corput Lemma in various different ways on different regions. This approach is rather useful in one dimension, as we saw about for the phase $rx + x^3$ above, and yields the optimal range of $L^p$ estimates for $I$ when $d = 1$ (Arkhipov, Karatsuba, Chubarikov, 1980). But in higher dimension the Van der Corput Lemma gives suboptimal decay rates in general; (Arkhipov, Karatsuba, Chubarikov, 1980) uses variants of these techniques to study the case $d > 1$, but does not obtain optimal bounds using these methods.
 
-		%For this problem, an analysis of the $L^p$ properties of $I$ is classical; the calculations can be found in the section of (Arkhipov, Karatsuba, Chubarikov, 1980) entitled ``Exponent of convergence of singular integrals in the Tarry problem''. They show that $I$ lies in $L^p(\RR^k)$ for $p \in (\frac{k(k+1)}{2} + 1, \infty]$, and does not lie in $L^p(\RR^k)$ for $p \in [1, \frac{k(k+1)}{2}]$. At a first glance, it seems there methods are essentially more robust versions of the Van der Corput Lemma (though there's some polynomial interpolation trickery I don't understand). My heuristic here is that Van der Corput works here because derivative bounds \emph{are stable under pertubation}.
+		%For this problem, an analysis of the $L^p$ properties of $I$ is classical; the calculations can be found in the section of (Arkhipov, Karatsuba, Chubarikov, 1980) entitled ``Exponent of convergence of singular integrals in the Tarry problem''. They show that $I$ lies in $L^p(\R^k)$ for $p \in (\frac{k(k+1)}{2} + 1, \infty]$, and does not lie in $L^p(\R^k)$ for $p \in [1, \frac{k(k+1)}{2}]$. At a first glance, it seems there methods are essentially more robust versions of the Van der Corput Lemma (though there's some polynomial interpolation trickery I don't understand). My heuristic here is that Van der Corput works here because derivative bounds \emph{are stable under pertubation}.
 
-		\item For any real analytic phase $\phi$ defined in a neighborhood of the origin, one can find the order of growth of the oscillatory integral by performing a `resolution of singularities'. Consider the \emph{Newton polyhedron} of $\phi(x)$, obtained by performing a Taylor expansion $\phi(x) = \sum c_\alpha x^\alpha$ about the origin (this will only be a finite sum in the polynomial case), and defining the Newton polyhedron $N$ to be the convex hull of the union of the sets $Q_\alpha = [\alpha_1, \infty) \times \dots \times [\alpha_,d \infty)$ for each $\alpha$ with $c_\alpha \neq 0$. If $\beta$ is the smallest value such that $(\beta,\dots,\beta)$ lies in $N$, then we have, as $\lambda \to \infty$,
+		\item For any real analytic phase $\phi$ defined in a neighborhood of the origin, one can find the order of growth of the oscillatory integral by performing a `resolution of singularities'. Consider the \emph{Newton polyhedron} of $\phi(x)$, obtained by performing a Taylor expansion $\phi(x) = \sum c_\alpha x^\alpha$ about the origin (this will only be a finite sum in the polynomial case), and defining the Newton polyhedron $N$ to be the convex hull of the union of the sets $Q_\alpha = [\alpha_1, \infty) \times \dots \times [\alpha_d, \infty)$ for each $\alpha$ with $c_\alpha \neq 0$. If $\beta$ is the smallest value such that $(\beta,\dots,\beta)$ lies in $N$, then we have, as $\lambda \to \infty$,
 		%
 		\[ \left| \int \chi(x) e^{2 \pi i \lambda \phi(x)}\; dx \right| \lessapprox \lambda^{-1/\beta}. \]
 		%
@@ -201,174 +232,614 @@ But for $q > q_k$, we conclude that
 	%
 	\[ \int e^{2 \pi i \lambda \phi(x)}\; dx \lesssim \max_{\mu} \Big| \{ x : \mu \leq \phi(x) \leq \mu + 1/\lambda \} \Big|, \]
 	%
-	where the implicit constant is stable under pertubation of $\phi$. In general, obtaining good control on the right hand side can be tricky (I tried using a bound like this to obtain estimates on a phase $\phi(x) = rx + x^3$, and it got very calculation heavy). But the results obtained seem robust, and there are various results, like the Esseen concentration theorem (see Section 7.3 of Tao, Additive Combinatorics for a further discussion), which says that for each $\xi$,
+	where the implicit constant is stable under pertubation of $\phi$. In general, obtaining good control on the right hand side can be tricky (I tried using a bound like this to obtain estimates on a phase $\phi(x) = rx + x^3$, and it got very calculation heavy). {\color{red} [The RHS gives $\min(\frac{1}{r\lambda},\frac{1}{\lambda^{1/3}})$, as before -Ben]}\,But the results obtained seem robust, and there are various results, like the Esseen concentration theorem (see Section 7.3 of Tao, Additive Combinatorics for a further discussion {\color{red} Exer. 2.2.11 of Tao's RMT book might be a better reference? Not sure. If referring to Additive Combinatorics, should include Vu as a co-author}), which says that for each $\xi$,
 	%
 	\[ \max_\mu \Big| \{ x : \mu \leq \phi(x) \leq \mu + 1/\lambda \} \Big| \lesssim_d \int_0^{\lambda} |I(\tau \xi)|\; d\tau, \]
 	%
-	where the implicit constant is uniform in the phase. The result proved in Section 1.1 of (BGZZ, 2021) seems to be a form of this equation. Thus we might expect that stationary set estimates are sharp, \emph{especially when dealing with means of oscillatory integrals}, like on the right hand side of the equation above. A major advantage is that the right hand side is not `committed' to any decay of the form $\lambda^{-t}$ for any fixed $t$, unlike the Newton polyhedron method discussed above, which can help in the analysis of pertubations of phases that cause different decay exponents to show up, like in the analysis of $rx + x^3$ we did above.
+	where the implicit constant is uniform in the phase. The result proved in Section 1.1 of (BGZZ) seems to be a form of this equation. Thus we might expect that stationary set estimates are sharp, \emph{especially when dealing with means of oscillatory integrals}, like on the right hand side of the equation above. A major advantage is that the right hand side is not `committed' to any decay of the form $\lambda^{-t}$ for any fixed $t$, unlike the Newton polyhedron method discussed above, which can help in the analysis of pertubations of phases that cause different decay exponents to show up, like in the analysis of $rx + x^3$ we did above.
 
-	In it's discussion of stationary set estimates, (BGZZ,2021) lists one other example of a stationary set method, the result of (Bruna, Nagel, and Wainger, 1988) which we'll now discuss. In this paper, Bruna, Nagel, and Wainger prove Fourier-decay estimates for the surface measure $\sigma$ of a $d$-dimensional, smooth, compact hypersurface $S$ of finite type, under the assumption that $S$ is the boundary of an open convex subset of $\RR^{d+1}$. Under the convexity and finite type assumptions, for each $\xi \in \RR^{d+1}$, there are exactly two points $x_-$ and $x_+$ on $S$ such that $\xi$ is normal to the tangent planes of $S$ at $x_-$ and $x_+$, which can be obtained by taking the maximum and minimum values of the function $x \mapsto \xi \cdot x$ on $S$. Fix a smooth, compactly supported function $\chi$ equal to one on a neighborhood of the origin, and use this function to generate a family of bump functions $\{ \chi_{x_0} \}$, where $\chi_{x_0}(x) = \chi(x - x_0)$ is a bump function at $x_0$. Define
-	%
-	\[ H(x_0, \lambda) = \widehat{\chi_{x_0} \sigma}(\lambda n_{x_0}), \]
-	%
-	where $n_{x_0}$ is the outward pointing unit vector of $S$ at $x_0$. Using a partition of unity type argument, one can show that
-	%
-	\[ \widehat{\sigma}(\xi) = H(x_+, \lambda) + H(x_-, - \lambda) + R(\xi), \]
-	%
-	where $R$ is a Schwartz function, which is treated as neglible for determining the behaviour of the Fourier transform for large $\xi$. The main focus of this paper is proving that
-	%
-	\[ H(x_0, \lambda) = a(x_0,\lambda) e^{2 \pi i \lambda n_{x_0} \cdot x_0}, \]
-	%
-	where $a$ satisfies `symbol estimates'\footnote{Can BGZZ obtain symbol estimates, or only decay estimates?} of the form
-	%
-	\[ \left| (\partial^\alpha_x \partial^\beta_\lambda a)(x_0, \pm \lambda)\right| \lesssim_{\alpha,\beta} \lambda^{-\beta} \sigma\left( B \left(x_0, 1/\lambda \right) \right). \]
-	%
-	The right hand side is a form of a stationary set estimate in disguise; if we can write $S$ as $\{ x_n = \psi(x') \}$ for some convex function $\psi$ with $(\nabla \psi)(0) = 0$, where $x' = (x_1,\dots,x_{d-1})$ (which is always locally possible after a rotation and translation of the coordinate system), we can write
-	%
-	\[ H(x_0,\lambda) = \int \tilde{\chi}(x') e^{-2 \pi i \lambda \psi_{x_0}(x')}\; dx', \]
-	%
-	where $\tilde{\chi}$ is some smooth bump function, and the fact that $(\nabla \psi)(0) = 0$ implies that the maximum measure of the stationary set $\{ x : \mu \leq \psi(x') \leq \mu + 1/\lambda \}$ will be proportional to $\sigma \left( B(x_0,1/\lambda) \right)$. As we vary $x_0$, $\psi_{x_0}$ is perturbed do a different convex function, but the results here are stable under such pertubations, depending only on the convexity of the phase, uniform upper bounds on the derivatives of $\psi$, and lower bounds on $|\sum_{|\alpha| \leq m} (\partial^\alpha \psi)(0)|$ for a fixed $m$.
+\subsection*{Section 1.3: How does Tarry's Problem relate to Number Theory}
 
-	%This bound uniformly incorporates a number of different results; if $x_0$ is a point of order $k$ on $S$, then $\sigma(B(x_0,1/\lambda)) \lesssim \lambda^{-d/k}$, and so we conclude that $a$ is a symbol of order $-d/k$. But $x_0$ might only be a point of order $k$ because of a single line on which the surface vanishes, and in this case we might still have $B(x_0,1/\lambda) \lesssim \lambda^{-1/k - (d-1)}$, in which case we can conclude that $a$ is a symbol of order $-1/k - (d-1)$. This is a good example of why stationary set estimates are useful over standard stationary phase results, i.e. because they can more robustly exploit the geometry of phase functions which may qualitatively change as we vary a given parameter (this mainly occurs in the presence of singularities).	
-
-	%How is the result proved. We first fix $m > 0$, and a small $\delta > 0$, and we study convex one-dimensional functions $\varphi: \RR \to \RR$ which have the property that their Taylor series at the origin has the form
+The goal of this section is to understand what was meant by the following sentence in (BGZZ):
 	%
-	%\[ \varphi(x) = \sum_{n = 2} a_n x^n + O(x^{n+1}). \]
+	\begin{quote}
+		The quantity $\| E_{[0,1]}^{(1,k)} \|_{L^p(\R^N)}$ appears in the leading coefficient of the asymptotic expansion of Vinogradov's Mean Value$\dots$
+	\end{quote}
 	%
-	%where the remainder term is bounded uniformly by 
+    This section is intended for those harmonic analysts who are interested in why studying $\| E_{[0,1]^d}^{(d,k)} \|_{L^p(\R^N)}$ is interesting to number theorists, but do not have the relevant background to read the literature mentioned in the paper. To obtain this explanation, I mainly used (Wooley, 2017), as well as a discussion of Tarry's problem in (Arkhipov, Karatsuba, Chubarikov, 1980) and L. Schoenfeld's review of (Hua, 1952) on MathSciNet.
 
-	How is the result proved? We first reduce the study of the $n$-dimensional oscillatory integral to a one dimensional oscillatory integral by focusing on the radial oscillation first (i.e. integrating in polar coordinates in the radial direction). To control this radial oscillation, we apply an approximation argument to reduce the study to general convex functions of finite type $m$ to the study of convex polynomials of order at most $m$, and then apply a compactness argument (this space of polynomials is finite dimensional) to show that various quantities associated with these polynomials, like the sum of absolute values of the coefficients, and the size of the ball $B(x_0,1/\lambda)$, are all equivalent norms on this finite dimensional space \footnote{TODO: I wonder how the exploitation of this compactness compares to the exploitation of o-minimality, i.e. which gives finitely monotonic intervals}.
-
-
-	%To present this argument, we can perhaps first focus on convex functions. I'm also interested in what kinds of functions are well approximated by definable functions (e.g. to generalize the argument which approximates a general convex function of finite type with a convex polynomial).	
-
-	\begin{comment}
-
-
-	\chapter{AKC - Trigonometric Integrals (1980)}
-
-	Let's list the results of AKC, which give some Van der Corput type estimates for one dimensional integrals:
+	One very useful technique for estimating the number of solutions to integer equations in additive number theory is to utilize orthogonality to reduce such estimates to the study of properties of exponential sums and oscillatory integrals. As a rudimentary example, let's count the number $S(N)$ of solutions to the equation
 	%
-	\begin{itemize}
-		\item If $n > 1$ and $|\partial^n \phi| \geq A$, then
-		%
-		\[ J(1,\phi) \leq \min(|I|, 6nA^{-1/n}). \]
-		%
-		If $a$ is piecewise monotonic and continuous (on at most $p$ pieces), with $L^\infty$ norm at most $H$< then
-		%
-		\[ J(a,\phi) \leq H \min(1, 24pn A^{-1/n}). \]
+	\begin{equation} \label{simpleadditiveequation}
+		n_1^2 + n_2^2 = m_1^2 + m_2^2
+	\end{equation}
+	%
+	for integers $n_1,n_2,m_1,m_2 \in [1,N]$. Given an integer $n$, let $e_n: [0,1] \to \C$ be the function
+	%
+	\[ e_n(\xi) = e^{2 \pi i n \xi}. \]
+	%
+	Three basic properties make exponentials useful in additive number theory:
+	%
+	\[ e_n e_m = e_{n+m}, \quad\quad \overline{e_n} = e_{-n}, \quad\text{and}\quad \int_0^1 e_n(\xi)\; d\xi = \mathbb{I}(n = 0). \]
+	%
+	Therefore, for any integers $n_1,n_2,m_1,m_2$,
+	%
+	\[ \int_0^1 e_{n_1^2}(\xi) e_{n_2^2}(\xi) \overline{e_{m_1^2}(\xi)} \overline{e_{m_2^2}(\xi)}\; d\xi = \int_0^1 e_{n_1^2 + n_2^2 - m_1^2 - m_2^2}(\xi)\; d\xi = \mathbb{I}(n_1^2 + n_2^2 = m_1^2 + m_2^2).  \]
+	%
+	But this means that
+	%
+	\begin{align*}
+		S(N) &= \sum_{n_1,n_2,m_1,m_2 = 1}^N \mathbb{I}(n_1^2 + n_2^2 = m_1^2 + m_2^2)\\
+		&= \sum_{n_1,n_2,m_1,m_2 = 1}^N \int_0^1 e_{n_1^2}(\xi) e_{n_2^2}(\xi) \overline{e_{m_1^2}(\xi) e_{m_2^2}(\xi)}\; d\xi\\
+		&= \int_0^1 \left( \sum_{n_1 = 1}^N e_{n_1^2}(\xi) \right) \left( \sum_{n_2 = 1}^N e_{n_2^2}(\xi) \right) \overline{\left( \sum_{m_1 = 1}^N e_{m_1^2}(\xi) \right) \left( \sum_{m_2 = 1}^N e_{m_2^2}(\xi) \right)}\; d\xi\\
+		&= \int_0^1 \left( \sum_{n = 1}^N e_{n^2}(\xi) \right) \left( \sum_n^N e_{n^2}(\xi) \right) \overline{\left( \sum_{n = 1}^N e_{n^2}(\xi) \right) \left( \sum_{n = 1}^N e_{n^2}(\xi) \right)}\; d\xi.
+	\end{align*}
+	%
+	We can then write this integral as
+	%
+	\[ \int_0^1 \left| f_N(\xi) \right|^4\; d\xi \quad\text{where}\ f_N = \sum_{n = 1}^N e_{n^2}. \]
+	%
+    Thus computing the number of solutions to the equation \eqref{simpleadditiveequation} reduces to the study of the $L^4$ norm of a certain exponential sum $f_N$, and in general, we can use $L^{2k}$ estimates of exponential sums to encode the numbers of solutions to certain additive equations.
 
-		\item If $n \geq 1$, and $\phi(x) = \alpha_n x^n + \dots + \alpha_1 x$, and
-		%
-		\[ H = \min_{x \in I} \sum_r \frac{|(\partial^r \phi)(x)|}{r!}, \]
-		%
-		then
-		%
-		\[ J(1,\phi) \leq \min(|I|,6en^3H^{-1}). \]
-	\end{itemize}
+	\emph{Tarry's problem} involves studying a more complicated equation. Let us begin with the $d = 1$ case, which asks the estimate the number $J_{s,k}(N)$ of tuples of integers $(n_1,\dots,n_s,m_1,\dots,m_s)$, with each integer lying in $[1,N]$, such that
+	%
+	\begin{align*}
+		n_1 + \dots + n_s &= m_1 + \dots + m_s\\
+		n_1^2 + \dots + n_s^2 &= m_1^2 + \dots + m_s^2\\
+		\cdots \cdots \cdots \cdots & \cdots \cdots \cdots \cdots \cdots\\
+		n_1^k + \dots + n_s^k &= m_1^k + \dots + m_s^k.
+	\end{align*}
+    %
+    This system of equations is known as the \emph{Vinogradov system}. As with equation \eqref{simpleadditiveequation}, we can use the orthogonality exponentials to rewrite $J_{s,d,k}(N)$ as a norm of an appropriate oscillatory integral. Namely, if we define, for $\xi \in \R^k$,
+  	%
+  	\[ f_N(\xi) = \sum_{n = 1}^N e^{2 \pi i \sum \xi_j n^j}, \]
+  	%
+   then
+  	%
+  	\[ J_{s,d,k}(N) = \| f_N \|_{L^{2s}(\R^N)}. \]
+  	%
+  	Exponential sums are often harder to deal with than oscillatory integrals. Fortunately, using the Hardy-Littlewood circle method (e.g. performing a decomposition into major and minor arcs), one can, at least in the $d = 1$ case, asymptotically replace the exponential sum above with an oscillatory integral. These calculations can be found in the proof of Corollary 1.3 of (Wooley, 2017), though these calculations will be terse if you're unfamiliar with the circle method, and since the method doesn't really impact an understanding of (BGZZ), it's probably best for the purpose of this study guide to treat the method as a black box. The main consequence is that as $N \to \infty$, for $s > k(k+1)/2$, we have a formal identity
+	%
+	\[ J_{s,k}(N) = \mathfrak{J}_s(k) \mathfrak{S}_s(k) \cdot N^{2s - \frac{k(k+1)}{2}} + o \left( N^{2k - \frac{n(n+1)}{2}} \right), \]
+	%
+	where $\mathfrak{S}_s$ is a formal trigonometric series (hence the use of the Fraktur $S$), and $\mathfrak{J}_s$ is defined in terms of an $L^p$ norm of an oscillatory integral over the infinite region $\R^s$. Thus neither function is defined for all values of $k$\footnote{TODO: What happens to the asymptotics in these circumstances}. We'll ignore $\mathfrak{S}_s$, since it requires different techniques to deal with than a study of oscillatory integrals\footnote{TODO: The convergence properties of $\mathfrak{S}_s$ are completely known, in Hua 1959, but what about the higher dimensional variants?}. Here we're interested in the convergence properties of $\mathfrak{J}_s$, because it is equal to
+	%
+	\begin{equation} \label{JsSingularEquation}
+		\int_{\R^k} \left| \int_0^1 e^{2 \pi i (\xi_1 x + \xi_2 x^2 + \dots + \xi_k x^k)}\; dx \right|^{2s}\; d\xi,
+	\end{equation}
+	%
+	Notice that the cost of replacing the exponential sum in $n$ in \eqref{discretJskEquation} with an oscillatory integral in $x$ in \eqref{JsSingularEquation} is that instead of integrating $\xi$ over $[0,1]^k$, we must now integrate $\xi$ over $\R^k$. Determining whether \eqref{JsSingularEquation} is finite thus requires us to obtain good bounds on the family of oscillatory integrals
+	%
+	\begin{equation} \label{oscillatoryEquation}
+		E_k 1(\xi) = \int_0^1 e^{2 \pi i (\xi_1 x + \dots + \xi_k x^k)}\; dx.
+	\end{equation}
+	%
+	Namely, this problem is equivalent to showing that $I \in L^p(\R^k)$ for $p = 2s$. The problem is classical, and has been completely solved in (Arkhipov, Karatsuba, Chubarikov, 1980), lying in $p$ precisely for $p > k(k+1)/4 + 1/2$.
 
-	\end{comment}
+    It is natural to study a higher dimensional variant of the oscillatory integrals above, namely, for a given $k$ and $d$, to determine which $L^p$ spaces the function
+	%
+	\begin{equation} \label{higherdimensionaloscillatoryequation}
+		E_{d,k} 1(\xi) = \int_{[0,1]^d} e^{2 \pi i \phi_\xi(x)}\; dx
+	\end{equation}
+	%
+	lies in, where $\xi = \{ \xi_\beta : |\beta| \leq k \}$ is a $D$-dimensional vector indexed by multi-indices, which we take as coefficients to the polynomial phase function $\phi_\xi(x) = \sum \xi_\beta x^\beta$. This likely has consequences for the study of bounds on solutions to the \emph{Parsell-Vinogradov} system
+ %
+\[ n_1^\alpha + \dots + n_s^\alpha = m_1^\alpha + \dots + m_s^\alpha \quad\text{$|\alpha| \leq k$}, \]
+%
+where $n_1,\dots,n_s,m_1,\dots,m_s$ are integer vectors lying in $[1,N]^d$ and $\alpha$ ranges over multi-indices over $\{ 1, \dots, d \}$, though I could not yet find a paper which exploits this fact to get asymptotics.
+
+\section{Stationary set estimates via o-minimality}\label{ominsection}
+
+In this section, we discuss the needed o-minimality ingredients to prove [stationary set theorem]. In the first subsection \ref{blackboxsubsection}, we will present the ``black box of o-minimality'' which will suffice for a reader only interested in what the tools are to be used. We will then indicate how this black box may be used to prove Theorem [stationary set theorem]. In the second subsection \ref{ominintrosubsection}, we will present some intuition for o-minimality and the reasons behind the black box Theorem \ref{blackbox}, and in particular what we term the ``Monotonicity Theorem'' \ref{monotonethm}. In the third subsection \ref{quantelimsubsection} we present the Tarski-Seidenberg theorem \ref{tarsei} and discuss its connection to quantifier elimination, as a way of justifying that the semi-algebraic functions fit the bill for Theorem \ref{monotonethm}. In the fourth subsection \ref{expsubsection} we discuss the expansion of the semi-algebraic structure to include the exponential function and the restricted analytic functions. In the terminal subsection \ref{blackboxproofsubsection} we use the preceding subsections to prove the black box theorem \ref{blackbox}.
+
+The discussion throughout this section will take us far afield of oscillatory integrals. It is worth keeping in mind that the ultimate goal of the section is to establish the following.
+
+    \begin{framed}
+
+    \underline{Claim}: If $Q:[0,1]^d\to\R$ is semi-algebraic and $c>0$, then there is a decomposition $\R=\bigcup_{j=1}^{N}I_j=\R$ of $\R$ into disjoint intervals such that the function
+    \begin{equation*}
+        f(t)=|\{\xi\in[0,1]^d:t\leq Q(\xi)\leq t+c\}|
+    \end{equation*}
+    is monotone along each of the intervals $I_j$, and such that $N=O_{k,d}(1)$.
+
+    \end{framed}
+
+We reiterate that a reader only interested in \textit{using} the tools provided by o-minimality may be satisfied with only reading subsection \ref{blackboxsubsection}.
+
+\subsection{The black box of o-minimality and the proof of Theorem 1.1}\label{blackboxsubsection}
+
+The central result which we will make use of in proving the stationary set estimate is the following.
+
+\begin{theorem}[Black box of o-minimality]\label{blackbox} There exists a sequence of families of sets, $\mathcal{T}=\{T_n\}_{n=1}^\infty$, with $T_n\subseteq\mathcal{P}(\R^n)$, satisfying the following criteria.
+\begin{itemize}
+    \item[(a)] Each $T_n$ is a Boolean algebra, i.e. is closed under complements and finite unions.
+    \item[(b)] $T$ is closed under Cartesean products.
+    \item[(c)] $T$ contains all semialgebraic sets.
+    \item[(d)] $T$ is closed under coordinate projections. For example, if $\pi_n(x_1,\ldots,x_{n+1})=(x_1,\ldots,x_n)$, and if $A\in T_{n+1}$, then $\pi_n[A]\in T_n$.
+    \item[(e)] Each $T_n$ is closed under coordinate rearrangements, e.g. the map $(x_1,x_2,\ldots,x_n)\mapsto(x_2,x_1,\ldots,x_n)$.
+    \item[(f)] $T_1$ is exactly the set of finite unions of open intervals and points.
+    \item[(g)] If $g:\R^{n+m}\to\R$ is a semi-algebraic function, then the function $f:\R^n\to\R$ defined by
+    \begin{equation*}
+        f(x)=\begin{cases}
+            \int_{\R^m}g(x,y)dy & \text{if}\quad\int_{\R^m}|g(x,y)|dy<\infty\\
+            0 &\text{otherwise}
+        \end{cases}
+    \end{equation*}
+    has $\operatorname{graph}(f)\in T_{n+1}$.
+    \item[(h)] If $f:\R\to\R$ has $\operatorname{graph}(f)\in T_2$, then $f$ is piecewise monotone.
+\end{itemize}
+
+\end{theorem}
+
+The proof of this theorem is by combining several other major results in the subject of o-minimality. We will not be able to convincingly survey the techniques used, but in the following section we will describe some of the basics.
+
+We conclude this section by indicating why Theorem \ref{blackbox} may be used to conclude that the function
+\begin{equation}\label{levelmeasure}
+    f:\R\to\R,\quad t\mapsto|\{\xi\in[0,1]^d:t\leq Q(\xi)\leq t+c\}|
+\end{equation}
+is piecewise monotone. First, observe that the auxiliary function $1_A(\xi,t)$ is semi-algebraic, where
+\begin{equation*}
+    A=\{(\xi,t)\in\R^{d+1}:\xi\in[0,1]^d,t\leq Q(\xi)\leq t+c\}
+\end{equation*}
+From this, we see that $\operatorname{graph}(1_A)\in T_{n+2}$ by part (f) of Theorem \ref{blackbox}. We then notice that
+\begin{equation*}
+    f(t)=\int_{\R^d}1_A(\xi,t)d\xi
+\end{equation*}
+which, by part (g) of Theorem \ref{blackbox}, implies that $\operatorname{graph}(f)\in T_2$. Finally, by part (h) of Theorem \ref{blackbox}, we see that $f$ is piecewise monotone.
+
+\subsection{Elements of the theory of o-minimality}\label{ominintrosubsection}
+
+\iffalse
+
+We will present an alternate narrative to complement the one in [the paper]. We will in particular de-emphasize the model theoretic aspects (e.g. quantifier elimination) and choose to focus on o-minimal structures as a family of ``nice'' sets which are closed under projections. We will indicate how this presentation fits into the one in [paper] in the latter parts of this section.
+
+We begin by recalling the first decomposition of the oscillatory integral in question: for $0<c\ll 1$, write
+\begin{equation*}
+    f(t)=|\{\xi\in[0,1]^d: t-c\leq Q(\xi)\leq t+c\}|.
+\end{equation*}
+Then we have the following oscillatory-integral version of a distribution function integral:
+\begin{equation*}
+    \begin{split}
+    \left(\int_{-c}^ce(t)dt\right)\int_{[0,1]^d}e(Q(\xi))d\xi&=\int_{[0,1]^d}\int_{-c}^ce(Q(\xi)+t)dtd\xi\\
+    &=\int_{[0,1]^d}\int_{Q(\xi)-c}^{Q(\xi)+c}e(\beta)d\beta d\xi\\
+    &=\int_{\R}e(\beta)f(\beta)d\beta
+    \end{split}
+\end{equation*}
+Since $c$ is small, the prefactor $\int_{-c}^ce(t)dt$ is very close to $2c$. Consequently, we may estimate
+\begin{equation*}
+    \int_{[0,1]^d}e(Q(\xi))d\xi\sim\frac{1}{2c}\int_\R e(\beta)f(\beta)d\beta
+\end{equation*}
+and the right-hand side is a \textit{one-variable} oscillatory integral.
+
+Critical to analysis of the latter is the fact that $f$ is piecewise monotone. We postpone justifying this statement for now, and instead consider how we may leverage it. Suppose that we may decompose $\R=\bigcup_{j=1}^N I_j$ into a union of intervals $I_j$, such that $f$ is monotone on each $I_j$. If we write the endpoints of $I_j$ as $a_j,b_j\in\R\cup\{\pm\infty\}$, then integration-by-parts supplies
+\begin{equation*}
+    \int_{I_j}e(t)f(t)dt=\left.f(t)\frac{e^{2\pi it}}{2\pi i}\right|_{t=a_j}^{t=b_j}-\int_{a_j}^{b_j}f'(t)\frac{e^{2\pi it}}{2\pi i}dt.
+\end{equation*}
+Recall that $Q$ is bounded, so that $f$ has finite support and consequently there is no issue with $a_j,b_j\in\{\pm \infty\}$. The previous display is bounded by
+\begin{equation*}
+    C\|f\|_\infty+\int_{a_j}^{b_j}|f'(t)|dt
+\end{equation*}
+for a suitable absolute constant $C>0$. Since $f$ is monotone on $I_j$, it follows that $|f'(t)|=\epsilon_j f'(t)$ on all of $I_j$ for suitable $\epsilon_j\in\{\pm 1\}$. It follows that
+\begin{equation*}
+    \int_{a_j}^{b_j}|f'(t)|dt=\left|\int_{a_j}^{b_j}f'(t)dt\right|=|f(b_j)-f(a_j)|\lesssim \|f\|_\infty
+\end{equation*}
+and we conclude that
+\begin{equation*}
+    \left|\int_{I_j}e(t)f(t)dt\right|\lesssim\|f\|_\infty.
+\end{equation*}
+Importantly, the latter makes no reference to the length of $I_j$. By summing and applying the triangle inequality, we conclude that
+\begin{equation*}
+    \left|\int_\R e(t)f(t)dt\right|\lesssim N\|f\|_\infty
+\end{equation*}
+and we have obtained that
+\begin{equation*}
+    \left|\int_{[0,1]^d}e(Q(\xi))d\xi\right|\lesssim\frac{N}{c}\|f\|_\infty
+\end{equation*}
+Observe that, up to the prefactor of $\frac{N}{c}$, the upper bound here is the quantity we hoped to obtain. Choosing $c$ to be small enough to lower-bound $\left|\int_{-c}^ce(t)dt\right|$ by a constant times $\frac{1}{c}$ and summing, we may eliminate one of the prefactors to obtain
+\begin{equation*}
+    \left|\int_{[0,1]^d}e(Q(\xi))d\xi\right|\lesssim N\sup_{\mu\in\R}|\{\xi\in[0,1]^d:\mu\leq Q(\xi)\leq\mu+1\}|
+\end{equation*}
+\fi
+
+Recall that we are interested in justifying why the level-set-measure function $f$ defined by \ref{levelmeasure} is piecewise monotone. This will be a structural result, to the effect of ``$Q$ belongs to a rigidly-structured family $\mathcal{F}$, therefore $f$ belongs to a rigidly-structured family $\mathcal{G}$.''
+
+We would like to have a broad class of functions $g:\R\to\R$ which are (a) piecewise monotone, and (b) the number $N$ of monotone regions is bounded in terms of the ``complexity'' of $f$. A reasonable starting place is with polynomials. Indeed, if $g=P$ is a (one-variable, nonconstant) polynomial of degree $\deg(P)$, then the critical set $\{P'=0\}$ divides the real line into $\leq\deg(P)$ intervals along which $P$ is monotone.
+
+More generally, \textit{semi-algebraic} functions $f$ are piecewise monotone with $N$ controlled by a suitably-defined complexity quantity. For instance, the function $f(x)=\sqrt{x^4+1}$ has graph given by the intersection $\{(x,y):y^2=x^4+1\}\cap\{(x,y):y>0\}$, hence is semi-algebraic; one may quickly note that $f$ is piecewise monotone with $N=2$.
+
+There will be two objections at this point. First, we have only \textit{asserted} that semi-algebraic functions have the monotonicity property described above, not justified it. Second, and more concerning, the function $f$ used in our estimate has no reason to be semi-algebraic! To illustrate the second point, if we set $d=2$ and $Q(\xi)=\xi_1\xi_2$, then (with $c=1$) we compute
+\begin{equation*}
+    f(t)=\begin{cases}
+        0 & t\leq -1\\
+        (t+1)-(t+1)\log(t+1) & -1<t\leq 0\\
+        (1-t)+t\log t & 0<t\leq 1\\
+        1 & t>1
+    \end{cases}
+\end{equation*}
+which is certainly not semi-algebraic.
+
+As a consequence, we need a broader notion of ``functions which are sufficiently tame so as to be piecewise monotone'' that we can slot our $f$ into. It happens that o-minimal theory supplies a broader framework under which we may guarantee piecewise monotonicity. We record the following fact, which we will refer to as the ``monotonicity theorem.''
+
+\begin{theorem}[Monotonicity theorem]\label{monotonethm} Let $\mathcal{T}=\{T_n\}_{n=1}^\infty$ be a sequence of sets with $T_n\subseteq\mathcal{P}(\R^n)$ for all $n$. Suppose that $\mathcal{T}$ satisfies the following:
+\begin{itemize}
+    \item[(a)] Each $T_n$ is a Boolean algebra on $\R^n$.
+    \item[(b)] If $A\in T_n$, then $\R\times A,A\times\R\in T_{n+1}$.
+    \item[(c)] If $1\leq i,j\leq n$, then the set $\{(x_1,\ldots,x_n)\in\R^n:x_i=x_j\}$ is an element of $T_n$.
+    \item[(d)] If $A\in T_{n+1}$, then $\pi_n[A]\in S_n$, where $\pi_n(x_1,\ldots,x_{n+1})=(x_1,\ldots,x_n)$ is the projection onto the first $n$ coordinates.
+    \item[(e)] $<\in T_2$, where we understand $<$ to be the subset of $\R^2$ given by $\{(x,y)\in\R^2:x<y\}$.
+    \item[(f)] $T_1$ is exactly the set of finite unions of open intervals and points.
+\end{itemize}
+
+Suppose $f:(a,b)\to\R$ is such that $\operatorname{graph}(f)\in S_2$. Then there are $a=a_0<a_1<\ldots<a_N=b$ such that $\left.f\right|_{(a_i,a_{i+1})}$ is continuous and monotone, for each $0\leq i<N$.
+    
+\end{theorem}
+\begin{remark}
+
+    \begin{enumerate}
+        \item[(i)] Conditions (a)-(d) amount to the statement ``$\mathcal{T}$ is a structure.'' Conditions (e), (f) then state ``$\mathcal{T}$ is o-minimal.''
+        \item[(ii)] One must be careful to distinguish the word ``structure'' here from the model-theoretic structure, which is distinct.
+        \item[(iii)] We will not be concerned here with discussing estimates on $N$ in this study guide.
+        \item[(iv)] Notice that conditions (a)-(f) of Theorem \ref{blackbox} in particular validate the hypotheses of Theorem \ref{monotonethm}. Thus, condition (h) of Theorem \ref{blackbox} follows from (a)-(f), using Theorem \ref{monotonethm}.
+    \end{enumerate}
+\end{remark}
+
+Note carefully the following features which distinguish $\mathcal{T}$ from some of the usual families of sets we study in analysis, e.g. the Borels and the Lebesgue measurables. For one, condition (f) fails dramatically in most measure-theoretic contexts. For another, Borel sets and Lebesgue-measurable sets are not closed under projections, so (d) fails.
+
+We will not be able to discuss a proof of Theorem \ref{monotonethm}. The reader may find an illuminating discussion in \cite{vdD}, pp. 43-46. Instead, we focus on its applicability to our setting, which leads us to the next subsection.
+
+\subsection{The Tarski-Seidenberg theorem and quantifier elimination}\label{quantelimsubsection}
+
+The result which builds the first connecting cable between Theorem \ref{monotonethm} and Theorem \ref{blackbox} is the Tarski-Seidenberg theorem below.
+
+\begin{theorem}[Tarski-Seidenberg]\label{tarsei} For each $n\geq 1$, let $T_n$ denote the family of semi-algebraic sets in $\R^n$. Then $\{T_n\}_{n=1}^\infty$ is an o-minimal structure, i.e. it satisfies (a)-(f) of Theorem \ref{monotonethm} above.
+\end{theorem}
+
+Observe that conditions (a), (b), (c), (e), and (f) are essentially immediate, so the content of the preceding theorem is that semi-algebraic sets are closed under projections.
+
+It is convenient to discuss Theorem \ref{tarsei} via \textit{quantifier elimination}, which we have otherwise omitted. By quantifier elimination, we mean the fact that for any formula $P$ in the language of ordered fields, there is a formula $P'$ without quantifiers, such that $P$ and $P'$ are equivalent when interpreted over $\R$. Quantifier elimination for the real numbers was proven via the Tarski-Seidenberg theorem, and we will describe the two results as being morally equivalent.
+
+Rather than precisely setting out all the definitions to make sense of quantifier elimination, we choose to show a few small examples. In the following two examples, $a,b,c$ are free variables, and we may understand the formulas as making statements about those variables.
+
+\begin{itemize}
+    \item[(i)] The formula ``$\exists x(ax^2+bx+c=0)$''
+    is equivalent to
+    \begin{equation*}
+        ``(a=b=c=0)\text{ OR }(a=0\text{ AND }b\neq 0)\text{ OR }(b^2-4ac\geq 0)\text{''}
+    \end{equation*}
+    \item[(ii)] The formula ``$\forall x(ax^2+bx+c>0)$'' is equivalent to
+    \begin{equation*}
+        ``(a>0\text{ AND }b^2-4ac<0)\text{ OR }(a=b=0\text{ AND }c>0)\text{''}
+    \end{equation*}
+    \item[(iii)] The formula ``$\exists x\forall y(ay^2+bxy+cx^2>0)$'' is equivalent to
+    \begin{equation*}
+        ``\exists x\left([a>0\text{ AND }x^2b^2-4acx^2<0]\text{ OR }[a=bx=0\text{ AND }cx^2>0]\right)\text{''}
+    \end{equation*}
+    which is in turn equivalent to
+    \begin{equation*}
+        ``(a>0\text{ AND }b^2-4ac<0)\text{ OR }(a=b=0\text{ AND }c>0)\text{''}
+    \end{equation*}
+    \item[(iv)] As a trivial example of quantifier elimination, the formula ``$\exists x(x^2-2=0)$'' is equivalent to ``$\top$'' (true), when both sides are interpreted in the real numbers.
+    \item[(v)] A \underline{\textit{non-example}} of quantifier elimination for real closed fields is the equivalence between the two statements
+    \begin{equation*}
+        \forall x((x^2+1)\cdot(y^2-2)>0)\quad\iff\quad y<-\sqrt{2}\text{ OR }y>\sqrt{2}
+    \end{equation*}
+    because the second statement is not a formula in the language of ordered fields, which does not possess a symbol for the constant $\sqrt{2}$. However, this example can be ``fixed'' if we instead phrase the equivalence as
+    \begin{equation*}
+        ``\forall x((x^2+1)\cdot(y^2-2)>0)\text{''}\quad\iff\quad ``y^2>2\text{''}
+    \end{equation*}
+\end{itemize}
+
+We have already claimed that quantifier elimination (for the theory of the real numbers, in the language of ordered fields) is proven using the Tarki-Seidenberg theorem. To illustrate the connection between these two results, let use consider the projection of a semi-algebraic set.
+
+Let $p,q$ be two polynomials $\R^{n+1}\to\R$, and consider the semi-algebraic set $A=\{(x,y)\in\R^{n}\times\R:p(x,y)=0\text{ and }q(x,y)>0\}$. Recall that we write $\pi_n$ for the map $\R^{n+1}\to\R^n$ given by forgetting the last coordinate. Then we may compute:
+\begin{equation*}
+    \begin{split}
+    \pi_n(A)&=\{x\in\R^n:\exists y\in\R\text{ s.t. }(x,y)\in A\}\\
+    &=\{x\in\R^n:\exists y\in\R\text{ s.t. }p(x,y)=0\text{ AND }q(x,y)>0\}
+    \end{split}
+\end{equation*}
+If the Tarski-Seidenberg theorem holds, then $\pi_n(A)$ is a semi-algebraic set, which is to say that $\pi_n(A)$ is a finite union of sets $B_1,\ldots, B_k$ with each $B_j$ defined by 
+\begin{equation}\label{qe}
+    B_j=\{x\in\R^n:p_{1,j}(x)=\cdots=p_{n_j,j}(x)=0,q_{1,j}(x),\ldots,q_{m_j,j}(x)>0\}
+\end{equation}
+for a suitable family of polynomials $p_{\cdot,\cdot},q_{\cdot,\cdot}$. Thus $x\in\pi_n(A)$ holds if and only if for some $j$ it holds that the set of simultaneous polynomial conditions in \ref{qe} are satisfied. Thus
+\begin{equation*}
+    ``\exists y\in\R(p(x,y)=0\text{ AND }q(x,y)>0)\text{''}\iff``\bigvee_{j=1}^k\left(\bigwedge_{r=1}^{n_j}p_{r,j}(x)=0\text{ AND }\bigwedge_{r=1}^{m_j}q_{r,j}(x)>0\right)\text{''}
+\end{equation*}
+where we have adopted the standard shorthand $\vee$ for ``OR'' and $\wedge$ for ``AND.''
+
+Thus Tarski-Seidenberg implies that the formula ``$\exists y\in\R(p(x,y)=0\text{ AND }q(x,y)>0)$'' is equivalent to a formula not involving quantifiers. We note that, even if $p,q$ have integer-coefficients (hence, in the language of real closed fields), it may not hold that the $p_{r,j},q_{r,j}$ have integer coefficients. {\color{red} still need to fix -Ben}
+
+On the other hand, assume that quantifier elimination holds. Recal the set $A=\{(x,y)\in\R^n\times\R:p(x,y)=0\text{ AND }q(x,y)>0\}$. Then again
+\begin{equation*}
+    \pi_n[A]=\{x\in\R^n:\exists y\in\R\text{ s.t.}\quad p(x,y)=0\text{ AND }q(x,y)>0\}
+\end{equation*}
+The polynomials $p,q$ may have real non-integer coefficients $c_1,\ldots,c_s,d_1,\ldots,d_t$ which pose an obstruction to directly using quantifier elimination. Instead, we write
+\begin{equation}
+    \tilde{p}(x,y,c_1,\ldots,c_s)=p(x,y),\quad \tilde{q}(x,y,d_1,\ldots,d_t)=q(x,y)
+\end{equation}
+with $\tilde{p},\tilde{q}$ having integer coefficients. Then, by quantifier elimination, the formula
+\begin{equation*}
+    ``\exists y\in\R\text{ s.t. }\quad \tilde{p}(x,y,c_1,\ldots,c_s)=0\text{ AND }\tilde{q}(x,y,d_1,\ldots,d_s)>0''
+\end{equation*}
+may be replaced by a quantifier-free expression of the form
+\begin{equation*}
+    ``\bigvee_{j=1}^k\left(\bigwedge_{r=1}^{n_j}p_{r,j}(x,c_1,\ldots,c_s)\text{ AND }\bigwedge_{r=1}^{m_j}q_{r,j}(x,d_1,\ldots,d_t)>0\right)
+\end{equation*}
+which immediately implies that $\pi_n[A]$ is semi-algebraic.
+
+\subsection{Expansions by the constructible and exponential functions}\label{expsubsection}
+
+We have now offered reasons to believe that semi-algebraic functions satisfy the hypotheses of Theorem \ref{monotonethm}, and hence (if we accept that result) the conclusion that semi-algebraic functions of one variable are piecewise monotone (with, as it turns out, effective estimates on $N$ in terms of the complexity of $f$). We are not yet done, however; as observed before, $Q$ being semi-algebraic does not imply that $f$ is semi-algebraic, as the integral of a semi-algebraic function can introduce logarithmic terms. We will aim instead to guarantee that $\operatorname{graph}(f)$ belongs to some ``o-minimal expansion $\mathcal{T}'$ of the semi-algebraic structure $\mathcal{T}^{\mathrm{alg}}$,'' for which we may apply Theorem \ref{monotonethm}.
+
+We set out some terminology. Given structures $\mathcal{T}=\{T_n\}_n,\mathcal{T}'=\{T_n'\}_n$ (in the sense of (a)-(d) of Theorem \ref{monotonethm}), we say that \textit{$\mathcal{T}'$ is an expansion of $\mathcal{T}$} if $T_n'\supseteq T_n$ for all $n$. Since the arbitrary intersection of structures is a structure, we may meaningfully speak of \textit{expanding $\mathcal{T}$ by adjoining a set $A\subseteq\R^n$}, or just \textit{expanding $\mathcal{T}$ by $A$}, by setting $\mathcal{T}'$ to be the smallest structure that is an expansion of $\mathcal{T}$ which also contains $A$.
+
+We will write $\mathcal{T}^{\mathrm{alg}}$ for the o-minimal structure of semi-algebraic sets.
+
+\begin{example}\label{badexpansion} Let $\mathcal{T}$ be the o-minimal structure composed of the semi-algebraic sets. Let $\mathcal{T}'$ be the expansion of $\mathcal{T}$ by adjoining the graph $\Gamma$ of $x\mapsto\sin(x)$. Then $\pi\Z=\pi_1(\Gamma\cap\{(x,y)\in\R^2:y=0\})\in T_1'$, but is not a finite union of open intervals and singletons. It follows that $\mathcal{T}'$ is not o-minimal.
+\end{example}
+
+As the preceding example shows, we need to be careful when adding new sets to our structure for fear of losing o-minimality, and hence Theorem \ref{monotonethm}. More precisely, we have to be careful to not add anything that generates subsets of $\R$ that violates o-minimality. As it turns out, there are a couple of approaches that work.
+
+\begin{example}\label{goodexpansions}
+
+The following expansions give o-minimal expansions of $\mathcal{T}^{\mathrm{alg}}$.
+
+\begin{itemize}
+    \item[(a)] If $U\supseteq[0,1]^d$ is open and $F:U\to\R$ is real-analytic, then the set $\operatorname{graph}(x\mapsto1_{[0,1]^d}(x)F(x))$ may be added to $\mathcal{T}^{\mathrm{alg}}$ without breaking o-minimality. In fact, we can add all such sets simultaneously, to get an o-minimal expansion $\mathcal{T}^{\mathrm{an}}$ of $\mathcal{T}^{\mathrm{alg}}$.
+    \item[(b)] The set $\operatorname{graph}(x\mapsto e^x)$ defines another o-minimal expansion $\mathcal{T}^{\mathrm{exp}}$ of $\mathcal{T}^{\mathrm{alg}}$.
+    \item[(c)] More generally, the two expansions $\mathcal{T}^{\mathrm{an}},\mathcal{T}^{\mathrm{exp}}$ may be combined to a single expansion $\mathcal{T}^{\mathrm{an,exp}}$ of $\mathcal{T}^{\mathrm{alg}}$, which remains o-minimal.
+\end{itemize}
+    
+\end{example}
+
+Notice that each of the examples in Example \ref{goodexpansions} avoid the problem in Example \ref{badexpansion}. Considering (a) in the former, a nontrivial real-analytic function defined on some neighborhood $U$ of $[0,1]$ will necessarily vanish only finitely many times on $[0,1]$. Similarly, the exponential function eventually outstrips any given polynomial $P$ in finite time $C$, so the number of zeroes of $x\mapsto e^x-P(x)$ is truncated to a half-finite interval $(-\infty,C]$. For $x\sim-\infty$, the value $e^{-x}$ is essentially $0$, so $e^x-P(x)$ may only vanish here if $P$ is almost vanishing, which only happens $O(\operatorname{deg}(P))$-many times. Thus the total number of zeroes of $x\mapsto e^x-P(x)$ will be something like $O(\operatorname{deg}(P))$.
+
+A more precise exposition of statements (a)-(c) may be found in \cite{vdDMM}.
+
+\subsection{A proof of the black box}
+
+In Subsection \ref{blackboxsubsection}, we showed that the main boxed claim at the start of Section \ref{ominsection} follows from Theorem \ref{blackbox}. We now discuss the proof of the latter theorem. We will freely use the citations discussed earlier and Theorem \ref{monotonethm} in the proof of Theorem \ref{blackbox}.
+
+\begin{proof}[Proof of Theorem \ref{blackbox}]\label{blackboxproofsubsection}
+
+We define $\mathcal{T}$ to be the structure $\mathcal{T}^{\mathrm{an},\mathrm{exp}}$. We need to verify properties (a)-(h). Since $\mathcal{T}$ is defined to be the intersection of a nonempty family of structures containing $\mathcal{T}^{\mathrm{alg}}$, it follows that $\mathcal{T}$ is a structure containing $\mathcal{T}^{\mathrm{alg}}$, so (a)-(e) are immediately satisfied. It is shown in \cite{vdDMM} that $\mathcal{T}$ is o-minimal, so (f) holds. By Theorem \ref{monotonethm}, (h) holds as well.
+
+Lastly, as is discussed in \cite{BGZZ}, \cite{CM} proved that (I) semi-algebraic functions are ``constructible,'' (II) constructible functions are preserved under the parametric integrals considered in (g), and (III) constructible functions have graph contained in $\mathcal{T}$. It follows that $\mathcal{T}$ satisfies all the criteria (a)-(h) in Theorem \ref{blackbox}, as was to be shown.
+    
+\end{proof}
+
+\section{Theorem 1.2: Reduction to a spread out case}
+
+In this section, we supplement the proof of Theorem 1.2 as presented in Section 3 of \textit{A Stationary Set Method for Estimating Oscillatory Integrals}. %%% add reference?
+
+
+At the beginning of this section, pages 12-13, the authors rephrase Theorem 1.2: %%% how should we reference passages?
+    %
+    \begin{quote}
+        Our goal is to show that 
+        \begin{equation*} %% Equation (3.2) in paper
+            |\{ x\in\mathbb{R}^N\colon |E_k1|(x)\in[\delta,2\delta] \}| \lesssim_k |\log_+\delta|^{k-1}\delta^{-q_k} %% find way to include equation label (3.2)?
+        \end{equation*}
+        for every $\delta \leq 1$, where
+        \begin{equation*}
+            \log_+\delta \colon = \log(1+\frac{1}{\delta}). 
+        \end{equation*}
+        This will imply the upper bound of $p_k$ that $p_k \leq q_k$. 
+    \end{quote}
+    %
+This statement follows from a layer-cake decomposition. 
+First, we assume equation (3.2): $$|\{ x\in\mathbb{R}^N\colon |E_k1|(x)\in[\delta,2\delta] \}| \lesssim_k |\log_+\delta|^{k-1}\delta^{-q_k}.$$
+Take $q\geq q_k$ and observe that $0\leq |E_k1(x)| =\left| \int_{[0,1]^2} e^{2\pi i P(\xi,x)}\,d\xi \right| \leq 1$, so it is equivalent to partition our integral on the sets $2^{-j} \leq |E_k1(x)| \leq  2^{-j+1}$. 
+Thus, 
+\begin{align*}
+    \| E_k1 \|_{L^q(\mathbb{R}^N)}^q &=  \int_{\mathbb{R}^N} |E_k1(x)|^q \,dx \\
+    &= \sum_{j=1}^\infty \int_{2^{-j} \leq |E_k1(x)| \leq  2^{-j+1}} |E_k1(x)|^q\,dx \\
+    &\leq \sum_{j=1}^\infty \int_{2^{-j} \leq |E_k1(x)| \leq  2^{-j+1}} 2^{(-j+1)q}\,dx  \\ 
+    &= \sum_{j=1}^\infty 2^{(-j+1)q} \cdot \left| \{ x\in \mathbb{R}^N \colon |E_k1(x)| \in [2^{-j}, 2^{-j+1}] \} \right| \\
+    &\lesssim_k \sum_{j=1}^\infty 2^{(-j+1)q}\cdot |\log(1+2^j)|^{k-1} 2^{jq_k} \quad\textrm{by assumption} \\
+    &\leq 2^q \sum_{j=1}^\infty (j+1)\log(2) 2^{j(q_k-q)} \\
+    &< \infty \quad \textrm{because $q>q_k$.}
+\end{align*}
+Recalling that $p_k \colon = \inf\{ p\colon \|E_k1\|_{L^p(\mathbb{R}^N)} < \infty\}$, we have $p_k\leq q_k$. 
+
+Thus the problem of showing $p_k\leq q_k$ has been reduced to proving equation (3.2).
+We then rephrase the problem again in the middle of page 13, equation (3.7):
+%% Insert comments about $Z_x$? 
+    %
+    \begin{quote}
+        From Theorem 1.1, we immediately obtain that there exists $C_k>0$ such that for every $\delta \leq 1$, it holds that
+        \begin{equation*}
+            \{x\in \mathbb{R}^N \colon |E_k1|(x)\in [\delta,2\delta]\} \subseteq L_{\delta/C_k}.
+        \end{equation*}
+    \end{quote}
+    %
+Before jumping into this, let us deconstruct the notation of $Z_x$ and $L_\delta$ sets. 
+Observe that 
+\begin{align*}
+    |Z_x| &= |Z_1\left(P(\cdot\,;x),\mu_x\right)| \\
+    &= \sup_{\mu\in\mathbb{R}}| \{Z_1\left(P(\cdot\,;x),\mu\right)\}| \\
+    &= \sup_{\mu\in\mathbb{R}} | \{\xi\in[0,1]^2\colon \mu\leq P(\xi;x)\leq\mu+1\} |.
+\end{align*}
+As a consequence of this, if we take any $x\in \{x\in\mathbb{R}^N\colon \delta\leq |E_k1|(x)\leq 2\delta\}$, then 
+\begin{align*}
+    \delta &\leq |E_k1|(x) \\
+    &= \int_{[0,1]^2} e^{2\pi i P(\xi,x)}\,d\xi \\
+    &\lesssim_k \sup_{\mu\in\mathbb{R}} | \{\xi \in [0,1]^2\colon \mu \leq P(\xi;x)\leq \mu+1\} | \quad \textrm{by Theorem 1.1} \\
+    &=_k |Z_x| \\
+    &< C_k |Z_x| \quad\textrm{for some appropriately chosen $C_k>0$}
+\end{align*}
+Thus, $|Z_x| > \delta/C_k$ and we conclude that equation (3.7) $\{x\in\mathbb{R}^N\colon |E_k1|(x) \in [\delta,2\delta]\} \subseteq L_{\delta/C_k}$ holds. 
+
+
+Combining equations (3.2) and (3.7), proving Theorem 1.2 is now equivalent to proving equation (3.8): 
+$$|L_\delta| \leq C_k |\log_+\delta|^{k-1}\delta^{-q_k}.$$
+This is done via an induction on scales in the following four steps:
+
+%\begin{enumerate}[label=(\alph*)]
+%    \item Rewrite $L_\delta$ as $L_{\delta,\textrm{con}} \cup L_{\delta,\textrm{sprd}}$
+%    \item Bounding $L_{\delta,\textrm{con}}$
+%    \item Bounding $L_{\delta,\textrm{sprd}}$
+%    \item Induction on scales to obtain equation (3.8)
+%\end{enumerate}
+
+(a) The authors decompose $L_\delta$ into equation (3.10): $L_\delta = L_{\delta,\textrm{con}}\cup L_{\delta,\textrm{sprd}}$. 
+While the definition of the sets are (comparatively) straight forward, the motivation is unclear. 
+The technique they are using is broad-narrow analysis as introduced in Bourgain and Guth's \textit{Bounds on oscillatory integral operators based on multilinear estimates}. 
+Another good reference for broad-narrow analysis is \textit{Restriction estimates using polynomial partitioning II} by Guth.
+
+Using this decomposition, the authors then find bounds for the concentrated and spread- out cases. 
+It will turn out that the concentrated case contributes a finite amount which we can essentially ignore after inducting on scale, and the spread-out case contributes the logarithmic growth. 
+
+(b) The bound for $L_{\delta,\textrm{con}}$ is equation (3.16):
+$$|L_{\delta,\textrm{con}}| \leq K\cdot K^{(k(k+1)(k+2)/6}|L_{K\delta/C_{k,1}}|,$$
+and this proof is at the end of Section 3 of the original paper. 
+%% add commentary/explanations? Is it needed?
+
+(c) The bound for $L_{\delta,\textrm{sprd}}$ is 
+$$L_{\delta,\textrm{sprd}} \lesssim_{k,K} |\log_+\delta|^{k-1}\delta^{-k(k+1)(k+2)/6-2},$$
+and the proof of this is Section 4 of the original paper, Section \ref{spreadOutCase} in this study guide.
+
+(d) Lastly, we combine (a), (b), and (c) to bound $L_\delta$.
+From Lemma 4.7 we get $C_{k,1}>0$ large enough such that 
+$$|L_{\delta,\textrm{con}}| \leq K\cdot K^{(k(k+1)(k+2)/6}|L_{K\delta/C_{k,1}}|,$$
+and we can then choose $K$ sufficiently large such that $$K^{k(k+1)(k+2)/6+1} < (K/C_{k,1})^{k(k+1)(k+2)/6+2},$$
+which lastly allows us to (via Lemma 4.9) choose a large enough $C_{k,K}>0$ such that 
+$$|L_{\delta,\textrm{sprd}}| \leq C_{k,K}|\log_+\delta|^{k-1}\delta^{-q_k}.$$
+Combining the above yields equation (3.9):
+\begin{align*}
+    |L_\delta| &= |L_{\delta,\textrm{con}}| + |L_{\delta,\textrm{sprd}}| \\
+    &\leq K\cdot K^{(k(k+1)(k+2)/6}|L_{K\delta/C_{k,1}}| +C_{k,K}|\log_+\delta|^{k-1}\delta^{-q_k}.
+\end{align*}
+
+As the base case, notice that $L_1=\emptyset$ and the above result holds trivially. If we now induct on scales, we get 
+\begin{align*}
+    |L_\delta| &\leq K\cdot K^{k(k+1)(k+2)/6}|L_{K\delta/C_{k,1}}| +C_{k,K}|\log_+\delta|^{k-1}\delta^{-q_k} \\
+    &< \left(\frac{K}{C_{k,1}}\right)^{q_k} |L_{\delta K/C_{k,1}}| + C_{k,K}|\log_+\delta|^{k-1}\delta^{-q_k} \\
+    &< \left(\frac{K}{C_{k,1}}\right)^{q_k} |\log(1+\frac{C_{k,1}}{\delta K})|^{k-1} \left(\frac{\delta K}{C_{k,1}}\right)^{-q_k} +C_{k,K}|\log_+\delta|^{k-1}\delta^{-q_k} \\
+    &< |\log (1+K^\frac{k(k+1)(k+2)+6}{k(k+1)(k+2)+12})|^{k-1}\delta^{-q_k}+C_{k,K}|\log_+\delta|^{k-1}\delta^{-q_k} \\ 
+    &\leq O(1) +C_{k,K}|\log_+\delta|^{k-1}\delta^{-q_k}.
+\end{align*}
+Consequently, the contribution of the left summand is negligible and we conclude that equation (3.8) 
+$$|L_\delta| \leq C_k |\log_+\delta|^{k-1}\delta^{-q_k}$$
+is in fact satisfied. 
+
+\section{The spread out case}\label{spreadOutCase}
+\subsection{Setting up the stage}
+
+Recall that our goal is to show that there is $C_{k,K}>0$ such that for all $\delta\in (0,1]$
+\begin{equation}\label{eq_sprd_out}
+|L_{\delta,\mathrm{sprd}}| \leq C_{k,K} |\log_+ \delta|^{k-1} \delta^{-k(k+1)(k+2)/6-2}.
+\end{equation}
+
+Here $L_{\delta,\mathrm{sprd}}$ is the set of points $x\in\mathbb{R}^N$ such that $|Z_x|>\delta$ and $|Z_x\cap S_K|\leq\delta/C_{k,1}$ for all vertial rectangles $S_K \in \mathcal{S}_K$ and $C_{k,1}>1$ is a constant to be determined. 
+
+Roughly, if $x\in L_{\delta,\mathrm{sprd}}$, then there are many rectangles $S_K$ for which $Z_x\cap S_K$ is nonempty. Moreover, if the constant $C_{k,1} > 1$ is large enough, then the projection of $Z_x$ onto the first variable contains a dyadic interval of length $1/K$. Thus we can find a subset $\widetilde{L}_{\delta,\mathrm{sprd}}\subset L_{\delta,\mathrm{sprd}}$ and a dyadic interval $I\subset [0,1]$ of length $1/K$ such that
+\begin{equation*}
+|\widetilde{L}_{\delta,\mathrm{sprd}}|\geq |L_{\delta,\mathrm{sprd}}|/K,
+\end{equation*}
+and for all $x\in \widetilde{L}_{\delta,\mathrm{sprd}}$ we have $I\subset \pi_1 Z_x$. 
+Then for each $x\in\widetilde{L}_{\delta,\mathrm{sprd}}$, approximate $Z_x$ by a union of certain lattice dyadic $\delta$-squares such that the the polynomial $x\cdot p_k(\xi)$ is around $\mu_x$ by at most a constant depending on $k$ and $K$. Thus if a collection of $\delta$-squares are essentially contained in $Z_x$, then $x$ has to be in a certain rectangular box. Adding up the volumes of these rectangular boxes gives us the desired upper bound on $|L_{\delta,\mathrm{sprd}}|$.
+
+Let us be more precise how tools from algebraic geometry are used to provide the necessary technical results to obtain \eqref{eq_sprd_out}.
+
+Subsection 4.1 uses elementary algebraic geometry to show that every semialgebraic subset $\Gamma\subset\mathbb{R}$ with bounded complexity $\leq\kappa$ has at most $B_\kappa$ boundary points, where $B_\kappa<\infty$ is a constant depending only on $\kappa$. This is the content of Lemma 4.2. This is used to prove that if $\Gamma\subset\mathbb{R}^2$ is a semialgebraic set with complexity $\leq\kappa$ and measure $|\Gamma|>\delta$, then we may take (finite) intersections of $\Gamma$ with appropriate translations of itself and obtain a set with measure at least $\delta/2$ (Lemma 4.4). Note that such set will also be semialgebraic.
+
+In subsection 4.2 we apply the results from subsection 4.1 to the set $Z_x$. The subset $\widetilde{Z}_x$ obtained after taking the intersection of $Z_x$ with translations of itself is a semialgebraic subset of $\mathbb{R}^2$ with bounded complexity and measure at least $\delta/2$. For $x\in L_{\delta,\mathrm{sprd}}$, Lemma 4.6 serves as a quantitative version of the statement "there are many rectangles $S_K$ for which $\widetilde{Z}_x \cap S_K$ is nonempty". 
+
+Recall from Theorem \ref{tarsei} that semialgebraic sets are closed under projections. Therefore $\pi_1 \widetilde{Z}_x\subset\mathbb{R}$ is a semialgebraic set having bounded complexity, so it is the union of, say, $\tilde{C}_k$ many disjoint bounded intervals. In Lemma 4.7 this is used in conjunction with Lemma 4.6 to show that if $x\in L_{\delta,\mathrm{sprd}}$ and $C_{k,1}>4\tilde{C}_k$, then 
+\begin{equation}\label{intersec_strips}
+    |\{S_K\in\mathcal{S}_K : \widetilde{Z}_x\cap S_K\neq\varnothing\}|\geq 2\tilde{C}_k +1,
+\end{equation}
+hence at least one of the intervals from $\pi_1 \widetilde{Z}_x$ intersects three dyadic intervals of length $1/K$, which implies it must contain one full dyadic interval.
+
+Let $\mathcal{I}_K$ denote the collection of dyadic intervals $I_K$ of length $1/K$ on the $\xi_1$-variable and write
+\begin{equation*}
+L_{\delta,\mathrm{sprd}}(I_K):=\{x\in L_{\delta,\mathrm{sprd}} : \pi_1 \widetilde{Z}_x \supset I_K\}.
+\end{equation*}
+Then 
+\begin{equation*}
+    L_{\delta,\mathrm{sprd}} = \bigcup_{I_K\in\mathcal{I}_K}L_{\delta,\mathrm{sprd}}(I_K).
+\end{equation*}
+As a consequence of \eqref{intersec_strips} there is a subset $\widetilde{L}_{\delta,\mathrm{sprd}}\subset L_{\delta,\mathrm{sprd}}$ and a dyadic interval $I\subset [0,1]$ of length $1/K$ such that
+\begin{equation}
+|\widetilde{L}_{\delta,\mathrm{sprd}}|\geq |L_{\delta,\mathrm{sprd}}|/K,
+\end{equation}
+and for all $x\in \widetilde{L}_{\delta,\mathrm{sprd}}$ we have $I\subset \pi_1 \widetilde{Z}_x$. Thus to obtain \eqref{eq_sprd_out} it is sufficient to get a good bound for the Lebesgue measure of the set $\widetilde{L}_{\delta,\mathrm{sprd}}$.
+
+The aforementioned approximation of $\widetilde{Z}_x$ by $\delta$-squares is then guaranteed by Lemma 4.9 at the end of subsection 4.2, which we will discuss briefly here.
+
+Let $\mathcal{P}(\delta)$ be the partition of $[0,1]^2$ into dyadic squares $\Delta$ of side length $\delta$. For each $x\in L_{\delta,\mathrm{sprd}}$, consider the collection $\mathcal{P}_x (\delta):=\{\Delta\in\mathcal{P}(\delta) \,|\, \Delta\cap\tilde{Z}_x\neq\varnothing\}$. Note that $\widetilde{Z}_x \subset\bigcup_{\Delta\in\mathcal{P}_x(\delta)}\Delta$.
+
+Lemma 4.9 ensures that for each $\Delta\in\mathcal{P}_x (\delta)$ and $\xi\in\Delta$ we have
+\begin{equation}\label{thick_stat}
+|P(\xi;x)-\mu_x|\lesssim_{k,K} 1.
+\end{equation}
+we refer the reader to \cite{BGZZ} pp. 16-17 for the proof of this lemma where it becomes clear why one works with $\widetilde{Z}_x$ instead of $Z_x$. 
+
+The set $\bigcup_{\Delta\in\mathcal{P}_x(\delta)}\Delta$ has the following two properties: First, since there is a dyadic interval $I$ such that $I\subset\pi_1 \widetilde{Z}_x$ for all $x\in\tilde{L}_{\delta,\mathrm{sprd}}$, it follows that for every $x\in\tilde{L}_{\delta,\mathrm{sprd}}$ and for every $t\in I$, there is a $\delta$-square contained in $\bigcup_{\Delta\in\mathcal{P}_x(\delta)}\Delta$ whose projection onto $\xi_1$ contains $t$. Second, this is a slightly thickened stationary set thanks to \eqref{thick_stat}.
+
+In the next section we will use this properties to obtain an upper bound to $|\widetilde{L}_{\delta,\mathrm{sprd}}|$.
+
+\subsection{Estimating the size of $\widetilde{L}_{\delta,\mathrm{sprd}}$}
+
+Let $\phi_k : \R^2\to\R^N$ be the mapping $\xi\mapsto (\xi^\alpha)_{|\alpha|\leq k}$, so that we may write our phase function as $P(\xi;x)= x\cdot \phi_k(\xi) =\sum_{|\alpha|\leq k} x_\alpha \xi^\alpha$.
+
+We now proceed to the problem of estimating $|\widetilde{L}_{\delta,\mathrm{sprd}}|$. We emphasize that the goal of the calculation here is to verify that the previous analysis sufficed to solve the problem; that is to say, while the remaining calculation will be rather complicated in some ways, it will also be essentially straightforward and will not require any special ideas. 
+We briefly summarize the structure of the argument:
+\begin{enumerate}
+    \item If $x\in\widetilde{L}_{\delta,\mathrm{sprd}}$, then $\xi\mapsto x\cdot \phi_k(\xi)$ is slowly varying on a ``wide'' subset of $[0,1]^2$;
+    \item For every ``wide'' subset $A$ of $[0,1]^2$, the set $\{x\in\R^N:\xi\mapsto x\cdot\phi_k(\xi)\text{ varies slowly on $A$}\}$ is dual to $\operatorname{ConvexHull}(\phi_k(A))$ and we have
+    \begin{equation*}
+        |\{x\in\R^N:\xi\mapsto x\cdot\phi_k(\xi)\text{ varies slowly on $A$}\}|\lesssim |\operatorname{ConvexHull}(\phi_k(A))|^{-1} ,
+    \end{equation*}
+    so we look for a lower bound on the measure of $\operatorname{ConvexHull}(\phi_k(A))$;
+    \item If $C\subseteq\R^N$ is convex, and if $v_1,\ldots,v_N\in C-C:=\{y-x:x,y\in C\}$, then $C$ contains a dilate of the parallelepiped spanned by $v_1,\ldots,v_N$, with dilation constant $\gtrsim_N 1$; consequently, $|C|\gtrsim_N|\det[v_1,\ldots,v_N]|$;
+    \item If $\xi_0,\ldots,\xi_k$ are horizontally-spaced points in $[0,1]^2$, then we chose $v_1,\ldots,v_N$ as
+    \begin{itemize}
+        \item $v_j=\phi_k(\xi_j)-\phi_k(\xi_0)$, for $1\leq j\leq k$,
+        \item $v_j=\delta\partial_s\phi_k(\xi_{j-k-1})$, for $k+1\leq j\leq 2k+1$,
+        \item $v_j=\delta^2(\partial_s\phi_k(\xi_{j-2k-2})-\partial_s\phi_k(\xi_0))$, for $2k+2\leq j\leq 3k$,
+        \\
+        \vdots
+        \item $v_j=\delta^{k-1}(\partial_s^{k-1}\phi_k(\xi_{j-k-k(k+1)/2-2})-\partial_s^{k-1}\phi_k(\xi_0))$, for $k+k(k+1)/2-1\leq j\leq k+k(k+1)/2$;
+        \item The previous choice of vectors gives us \begin{equation*}
+        |\operatorname{ConvexHull}(\phi_k(A))|\gtrsim_N \delta^{k(k+1)(k+2)/6-k+1} |\det{[\alpha_1,\dots,\alpha_N]}|.
+        \end{equation*}
+    \end{itemize}
+\end{enumerate}
 
 
 
 
+\begin{thebibliography}{20}
 
+\bibitem{BGZZ}
+    Saugata Basu, Shaoming Guo, Ruixiang Zhang, Pavel Zorin-Kranich,
+    \emph{A stationary set method for estimating oscillatory integrals},
+    arXiv preprint 2103.08844. 2021.
 
+\bibitem{Esseen}
+    Carl-Gustav Ess\'{e}en, \emph{On the {K}olmogorov–{R}ogozin inequality for the concentration function}, Z. Wahrsch. Verw. Gebiete 5 (1966), 210–216.
 
+\bibitem{TaoVu}
+    Terence Tao and Van H. Vu,
+    \emph{Additive Combinatorics},
+    Cambridge University Press. 2010.
 
-	\end{document}
+\bibitem{vdD}
+    Lou van den Dries,
+    \emph{Tame topology and o-minimal structures},
+    Cambridge University Press. 1998.
 
-	% 
+\bibitem{vdDMM}
+    Lou van den Dries, Angus Macintyre, and David Marker, \emph{The elementary theory of restricted analytic fields with exponentiation}, Annals of Mathematics, JSTOR. 1994.
 
-	In harmonic analysis, we often wish to show that a `rapidly oscillating integral' of the form
-	%
-	\[ J(a,\phi) = \int a(x) e^{2 \pi i \lambda \phi(x)}\; dx. \]
-	%
-	is small\footnote{Often, we also want to find \emph{asymptotic expansions} for some parameterized family of these integrals, but here we mainly focus on tight upper bounds for the time being}. An often useful intuition to analyze such oscillatory integrals is to utilize the smoothness of $\phi$ in combination with it's \emph{nonstationarity}. This is often exploited by some form of integration by parts, which works over the region where $\phi'$ is non-vanishing. It is then often the case that the magnitude of the oscillatory integral is dominated by the behaviour of the integral near points where the integral is stationary, and a decomposition method is then often employed, analyzing the behaviour of the integral on regions away from these `stationary points' and analyzing the behaviour of the integral in a small neighborhood of the stationary points. This is the \emph{principle of stationary phase}.
+\bibitem{CM}
+    Raf Cluckers and Daniel J Miller,
+    \emph{Stability under integration of sums of products of real globally subanalytic functions and their logarithms},
+    Duke Mathematical Journal. 2011.
 
+\end{thebibliography}
 
-
-	Such a method is often sufficient to obtain tight bounds for a large range of oscillatory integrals. But the bounds obtained often depend heavily on the behaviour of the oscillatory integral near the stationary points, and thus give rise to various qualitatively different types of bounds depending on the point analyzed. For instance, consider the family of integrals
-	%
-	\[ I(r,\lambda) = \int_{-\infty}^\infty a(t) e^{2 \pi i \lambda (rt + t^3)}\; dt, \]
-	%
-	where $a$ is smooth and compactly supported. A variation of the method of stationary phase (the Van der Corput Lemma) tells us that
-	%
-	\[ I(0,\lambda) \sim \lambda^{-1/3} \quad\text{as $\lambda \to \infty$}. \]
-	%
-	For a fixed $r < 0$, a similar analysis shows that
-	%
-	\[ I(r,\lambda) \sim \lambda^{-1/2} \quad\text{as $\lambda \to \infty$}. \]
-	%
-	For a fixed $r > 0$, we have that for any $N > 0$,
-	%
-	\[ I(r,\lambda) \lesssim_N \lambda^{-N} \quad\text{as $\lambda \to \infty$}. \]
-	%
-	Thus we see three qualitatively different decay behaviours as $\lambda \to \infty$ depending on the value of $r$. As a result, these three different bounds \emph{must depend on $r$}. In other words, as $r \to 0$ from above and below, the implicit constants in the inequalities must blow up when $\lambda$ is large. However, if we can prove a stationary phase estimate
-	%
-	\[ I(r,\lambda) \lesssim \sup_{x_0} |\{ t \in I : |(rt + t^3) - x_0| \leq 1/\lambda \}|, \]
-	%
-	which is uniform in $r$, then we can combine these three estimates into a uniform estimate. 
-
-	% { mu - 1 / lambda <= tr + t^3 <= mu + 1/ lambda }
-	%
-	% For r > 0, tr + t^3 is monotonically increasing, and
-	% the magnitude of the derivative is increasing away
-	% from the origin. Thus the value of mu which gives the
-	% largest such interval is mu = 0.
-	%
-	% By symmetry, this is twice the value of s such that
-	% 	rs + s^3 == lambda^{-1}
-	% so
-	%
-	\[ I(r,\lambda) \lesssim \frac{(9 / \lambda + \sqrt{3} \sqrt{27/\lambda^2 + 4r^3})^{2/3} - 2^{2/3} 3^{1/3} r}{(9/\lambda + \sqrt{3} \sqrt{27/\lambda^2 + 4r^3})^{1/3}} \]
-	%
-	For $\lambda \gtrsim r^{-3/2}$,
-	%
-	\[ I(r,\lambda) \lesssim \frac{1}{\lambda r}, \]
-	%
-	and for $\lambda \lesssim r^{-3/2}$ (TODO: IMPROVE THIS),
-	%
-	\[ I(r,\lambda) \lesssim \lambda^{-1/3}. \]
-	%
-	The bounds here are uniform in $r$ and $\lambda$. Thus we get a uniform bound that varies between the various bounds obtained above.
-
-	% TODO: Is the Esseen Concentration Inequality True for Smooth Amplitudes?
-
-	% For r > 0, tr + t^3 is increasing
-	% If [r(t + s) + (t + s)^3] - [rt + t^3]  1/lambda
-	% 	Then
-	% 		s = -t - 2^{1/3}r/A + A/3*2^{1/3}(
-	% 	where A = (27/L + 27rt + 27t^3 + sqrt(108r^3 + (27/L + 27rt + 27t^3)^2))^{1/3}
-	%
-	% 	When t = 0, s = - r/(27/L + sqrt(108r^3 + (27/L)^2))^{1/3}
-	%	For r >> L^{-2/3}, s = -1
-
-
-	%		27/L >= 27rt when t <= 1/Lr
-	% 		27/L >= 27t^3 when t <= 1/L^{1/3}
-	% 		27rt >= 27t^3 when t <= r^{1/2}
-	%
-	% When t <= min(1/Lr, 1/L^{1/3})
-
-
-	% When t is close to zero, tr dominates for t <= r^{1/2}
-	% Then t^3 starts to dominate past this range.
-
-	Such a method is often sufficient to obtain tight bounds for a large range of oscillatory integrals. For instance, in one dimension, the Van der Corput Lemmas often gives tight estimates. A tight version of this Lemma is as follows: (Arhipov, Karacupa, Cubarikov, 1980) show that if $n > 1$, and $|\partial^n \phi| \geq A > 0$ then
-	%
-	\[ |J(\phi)| \leq \min(|I|, 6n A^{-1/n}), \]
-	%
-	and if $n = 1$, and in addition, $\phi$ is \emph{piecewise monotonic} and continuous 
-
-
-
-	i.e. integrating by parts on regions of the integral where $\phi'$ is non-vanishing. But nonstationarity in this sense cannot be the ultimate method for analyzing general oscillatory integral. Indeed, we can always rearrange integrals; given any measure preserving transform $F: I \to I$, we have
-	%
-	\[ \int_I a(x) e^{2 \pi i \phi(x)}\; dx = \int_I a(F(x)) e^{2 \pi i \phi(F(x))}\; dx. \]
-	%
-	Smoothness is \emph{not} preserved under measure preserving transformations. What is always preserved are the measures of the sets
-	%
-	\[ E(y_0,\varepsilon) = \{ x \in I: |\phi(x) - y_0| \leq \varepsilon \}, \]
-	%
-	which measure the ability for the oscillatory integral to concentrate about $x_0$.	
+\end{document}
