@@ -73,6 +73,8 @@ An ! before the title of a book is used to indicate a book I have only read a sm
 
 - ! Abbott, Understanding Analysis
 
+- ! Peter D. Lax and Maria Shea Terrell, Multivariate Calculus With Applications.
+
 ### Basic Probability Theory
 
 - Larry Wasserman, All of Statistics: A Concise Course in Statistical Inference
