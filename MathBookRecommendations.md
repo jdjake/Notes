@@ -413,6 +413,8 @@ An ! before the title of a book is used to indicate a book I have only read a sm
 
 - ! Davies, Spectral Theory and Differential Operators
 
+- ! Milivoje Lukic. A First Course in Spectral Theory.
+
 - ! McIntosh, Operator Theory - Spectra and Functional Calculi
 
 - ! Hytonen, Neervan, Veraar, Weis - Analysis in Banach Spaces: Probabilistic Methods
