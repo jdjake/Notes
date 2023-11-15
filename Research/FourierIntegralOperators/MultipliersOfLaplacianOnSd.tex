@@ -1435,23 +1435,27 @@ This argument is made comparatively easier by the fact that the functions $\{ T_
 %
 %This is too weak to obtain the required boundedness statement. To prove the required bound, we complement the inequality above with an `atomic decomposition' for the functions $\{ u_j \}$.
 
-\begin{lemma}
-    Consider the coordinate charts $\{ U_\alpha \}$ and $\{ V_\alpha \}$ introduces in Section \ref{estimatesforwavepackets}. Then we can write
+\begin{lemma} \label{atomicdecompositionlemma}
+    Consider the coordinate charts $\{ U_\alpha \}$ and $\{ V_\alpha \}$ introduced in Section \ref{estimatesforwavepackets}. Then we can write
     %
     \[ u_j = \sum_\alpha \sum_s \sum_{W \in \mathcal{W}_{\alpha,s}} a_{\alpha,j,s,W}. \]
     %
-    For each $s$, $\mathcal{W}_{\alpha,s}$ is a union of almost disjoint dyadic cubes in the coordinate system $U_\alpha$, and the following properties hold:
+    For each $s$, $\mathcal{W}_{\alpha,s}$ is a union of almost disjoint dyadic cubes in the coordinate system $U_\alpha$ whose union is a set $\Omega_{\alpha,s}$, and the following properties hold:
     %
     \begin{itemize}
-        \item If $W$ has sidelength $2^l$, then $a_{\alpha,j,s,W}$ is only nonzero if $l \geq -s$.
+        \item If $W$ has sidelength $2^l$, then $a_{\alpha,j,s,W} = 0$ for $l < -j$.
 
         \item For each such dyadic cube $W$, $a_{\alpha,j,s,W}$ is supported on the inverse image of $W$. We have
         %
-        \[ \left( \sum_j \sum_\alpha \sum_{W \in \mathcal{W}_{\alpha,s}} \| a_{\alpha,j,s,W} \|_{L^2(M)} \right)^{1/2} \lesssim 2^s |\Omega_s|, \]
+        \[ \left( \sum_j \sum_\alpha \sum_{W \in \mathcal{W}_{\alpha,s}} \| a_{\alpha,j,s,W} \|_{L^2(M)}^2 \right)^{1/2} \lesssim 2^s |\Omega_{\alpha,s}|, \]
 
-        \item For any assignment $\{ j(\alpha,W) \}$ for each $W \in \mathcal{W}_{\alpha,s}$, and any $0 \leq r \leq 2$, we have
+        \item For any assignment of indices $j(\alpha,W)$, we have
         %
-        \[ \left( \sum_\alpha \sum_{W \in \mathcal{W}_{\alpha,s}} |W| \| a_{\alpha,j(\alpha,W),W,s} \|_{L^\infty(M)}^p \right)^{1/p} \lesssim 2^s |\Omega_s|. \]
+        \[ \left( \sum_\alpha \sum_{W \in \mathcal{W}_{\alpha,s}} |W| \| a_{\alpha,j(\alpha,W),W,s} \|_{L^\infty(M)}^p \right)^{1/p} \lesssim 2^s |\Omega_{\alpha,s}|. \]
+
+        \item We have
+        %
+        \[ \left(\sum_j 2^{jp} |\Omega_{\alpha,s}| \right)^{1/p} \lesssim \| f \|_{L^p(M)}. \]
     \end{itemize}
 \end{lemma}
 
@@ -1522,7 +1526,11 @@ We will find it convenient to reorder this sum as
 %
 \[ m(P) = \sum_{\alpha,j,s,l} \sum_{W \in \mathcal{W}_{\alpha,s,l}} T_j a_{\alpha,j,s,W}, \]
 %
-where $\mathcal{W}_{\alpha,s,l}$ are the cubes in $\mathcal{W}_{\alpha,s}$ with sidelength $2^{l-j}$. We then write $T_j = T_{j,l}^{\text{Short}} + T_{j,l}^{\text{Long}}$, where
+where $\mathcal{W}_{\alpha,s,l}$ are the cubes in $\mathcal{W}_{\alpha,s}$ with sidelength $2^{l-j}$. We then write
+%
+\[ T_j = T_{j,l}^{\text{Short}} + T_{j,l}^{\text{Long}}, \]
+%
+where
 %
 \[ T_{j,l}^{\text{Short}} = \int b_j(t) \psi(2^{j-l} t) (Q_j \circ e^{2 \pi i t P} \circ Q_j)\; dt \]
 %
@@ -1535,7 +1543,7 @@ We bound the short and long range interactions separately.
 The function $T_{j,l}^{\text{Short}} \{ a_{\alpha,j,s,W} \}$ is then concentrated on $W^*$. Since the sets $\{ W^* \}$ have bounded overlap, for each fixed $s$, we have a square root cancellation bound
 % l >= 0, and the long range interactions become irrelevant for l >= j
 \begin{align*}
-    &\| \sum_{\alpha,j,l} T_{j,l}^{\text{Short}} \{ a_{\alpha,j,s,W} \} \|_{L^2(M)} \lesssim \left( \sum_{\alpha,j,s,l} \| T_{j,l}^{\text{Short}} \{ a_{\alpha,j,s,W} \} \|_{L^2(M)}^2 \right)^{1/2}.
+    &\left\| \sum_{\alpha,j,l} T_{j,l}^{\text{Short}} \{ a_{\alpha,j,s,W} \} \right\|_{L^2(M)} \lesssim \left( \sum_{\alpha,j,s,l} \| T_{j,l}^{\text{Short}} \{ a_{\alpha,j,s,W} \} \|_{L^2(M)}^2 \right)^{1/2}.
 \end{align*}
 %
 But our calculations in previous sections should already have shown (via interpolation between $L^p(M)$ and $L^{p'}(M)$) that
@@ -1544,33 +1552,38 @@ But our calculations in previous sections should already have shown (via interpo
 %
 and so we have
 %
-\[ \| \sum_{\alpha,j,l} T_{j,l}^{\text{Short}} \{ a_{\alpha,j,s,W} \} \|_{L^2(M)} \lesssim C_p(m) \left( \sum_{\alpha,j,s,l} \| a_{\alpha,j,s,W} \|_{L^2(M)}^2 \right)^{1/2} \lesssim C_p(m) 2^s |\Omega_s|^{1/2}. \]
+\begin{align*}
+    \left\| \sum_{\alpha,j,l} T_{j,l}^{\text{Short}} \{ a_{\alpha,j,s,W} \} \right\|_{L^2(M)} &\lesssim C_p(m) \left( \sum_{\alpha,j,s,l} \| a_{\alpha,j,s,W} \|_{L^2(M)}^2 \right)^{1/2}\\
+&\lesssim C_p(m) 2^s |\Omega_s|^{1/2}.
+\end{align*}
 %
 Applying H\"{o}lder's inequality, since our inputs are supported on $\Omega_s$, we have
 %
-\[ \| \sum_{\alpha,j,l} T_{j,l}^{\text{Short}} \{ a_{\alpha,j,s,W} \} \|_{L^p(M)} \lesssim C_p(m) 2^s |\Omega_s|^{1/p}. \]
+\[ \left\| \sum_{\alpha,j,l} T_{j,l}^{\text{Short}} \{ a_{\alpha,j,s,W} \} \right\|_{L^p(M)} \lesssim C_p(m) 2^s |\Omega_s|^{1/p}. \]
 %
 Summing in $s$, we have
 %
-\[ \| \sum_{\alpha,j,s,l} T_{j,l}^{\text{Short}} \{ a_{\alpha,j,s,W} \} \|_{L^p(M)} \lesssim C_p(m) \sum_s 2^s |\Omega_s|^{1/p} \lesssim C_p(m) \| Su \|_{L^p(M)} \lesssim C_p(m) \| u \|_{L^p(M)}. \]
+\begin{align*}
+    \left\| \sum_{\alpha,j,s,l} T_{j,l}^{\text{Short}} \{ a_{\alpha,j,s,W} \} \right\|_{L^p(M)} &\lesssim C_p(m) \sum_s 2^s |\Omega_s|^{1/p} \lesssim C_p(m) \| u \|_{L^p(M)}.
+\end{align*}
 %
 Thus we've obtained bounds for the short range interactions.
 
 Next, we consider the long range interactions. Applying Minkowski's inequality, we can write
 %
-\[ \| \sum_{\alpha,j,l} T_{j,l}^{\text{Long}} \{ a_{\alpha,j,s,W} \} \|_{L^p(M)} \lesssim \sum_{l \geq 0} \left( \sum_j \| \sum_{l(W) = l - j} T_{j,l}^{\text{Long}} \{ A_{j,W} \} \|_{L^p(M)}^p \right)^{1/p}. \]
+\[ \left\| \sum_{\alpha,j,l} T_{j,l}^{\text{Long}} \{ a_{\alpha,j,s,W} \} \right\|_{L^p(M)} \lesssim \sum_{l \geq 0} \left( \sum_j \| \sum_{l(W) = l - j} T_{j,l}^{\text{Long}} \{ A_{j,W} \} \|_{L^p(M)}^p \right)^{1/p}. \]
 %
 Suppose we can prove that there exists $\varepsilon > 0$ such that
 %
-\[ \| \sum_{l(W) = l - j} T_{j,l}^{\text{Long}} \{ A_{j,W} \} \|_{L^p(M)} \lesssim C_p(m) 2^{-l \varepsilon} \left( \sum_{l(W) = l - j} |W| \| A_{j,W} \|_{L^\infty(M)}^p \right)^{1/p}. \]
+\[ \left\| \sum_{l(W) = l - j} T_{j,l}^{\text{Long}} \{ A_{j,W} \} \right\|_{L^p(M)} \lesssim C_p(m) 2^{-l \varepsilon} \left( \sum_{l(W) = l - j} |W| \| A_{j,W} \|_{L^\infty(M)}^p \right)^{1/p}. \]
 %
-Lemma BLAH then implies that this quantity is bounded by $C_p(m) 2^{-l \varepsilon} 2^s |\Omega_s|$, and summing in $j$ gives that
+Then Lemma \ref{atomicdecompositionlemma} implies that this quantity is bounded by $C_p(m) 2^{-l \varepsilon} 2^s |\Omega_s|$, and summing in $j$ gives that
 %
-\[ \| \sum_{\alpha,j,l} T_{j,l}^{\text{Long}} \{ a_{\alpha,j,s,W} \} \|_{L^p(M)} \lesssim C_p(m) 2^{-l \varepsilon} 2^s |\Omega_s|. \]
+\[ \left\| \sum_{\alpha,j,l} T_{j,l}^{\text{Long}} \{ a_{\alpha,j,s,W} \} \right\|_{L^p(M)} \lesssim C_p(m) 2^{-l \varepsilon} 2^s |\Omega_s|. \]
 %
 Summing in $s$ then gives
 %
-\[ \| \sum_{\alpha,j,l} T_{j,l}^{\text{Long}} \{ a_{\alpha,j,s,W} \} \|_{L^p(M)} \lesssim C_p(m) \| Su \|_{L^p(M)} \lesssim C_p(m) \| u \|_{L^p(M)}, \]
+\[ \left\| \sum_{\alpha,j,l} T_{j,l}^{\text{Long}} \{ a_{\alpha,j,s,W} \} \right\|_{L^p(M)} \lesssim C_p(m) \| u \|_{L^p(M)}, \]
 %
 Putting these two bounds together gives $\| m(P) u \|_{L^p(M)} \lesssim C_p(m) \| u \|_{L^p(M)}$, which completes the proof.
 
