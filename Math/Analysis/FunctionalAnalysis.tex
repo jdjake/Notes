@@ -10264,4 +10264,202 @@ Let $\{ T_t \}$ be the semigroup on $L^p(\RR)$
 
 And indeed, we will see that the operator $Af = f'$ is then an unbounded operator on $L^p(\RR)$ (TODO: What is the domain), and $T_t = e^{tA}$, in a suitable sense.
 
+
+
+
+
+
+
+
+
+
+\chapter{Fredholm Theory}
+
+\section{Pseudoinverses}
+
+We begin with a purely algebraic theory, and mainly follow the development in Peter Lax's \emph{Functional Analysis}, Chapter 1. For two vector space $V$ and $W$, define the class $\text{Deg}(V,W)$ of \emph{degenerate maps} to be all linear maps $T: V \to W$ with finite dimensional range. Then this family forms a `two-sided ideal', in the sense that if $S: W \to B$ and $U: A \to V$ are linear maps, then $S \circ T$ and $T \circ U$ are degenerate. In particular, $\text{Deg}(V)$ is a genuine two-sided ideal of $\text{End}(V)$. A \emph{pseudoinverse} for a linear map $T \in \text{End}(V,W)$ is a map $S \in \text{End}(W,V)$ such that $T \circ S$ and $S \circ T$ differ from the identity on $V$ and $W$ by a degenerate map. A linear map has a pseudoinverse if and only if it has finite dimensional kernel and cokernel.
+
+\begin{example}
+    The right and left shift operators on a sequence space are pseudoinverses for one another.
+\end{example}
+
+If $T: V \to W$ has a pseudoinverse $T^\dagger: W \to V$ and $S: W \to U$ has a pseudoinverse $S^\dagger: U \to W$, then $T^\dagger \circ S^\dagger$ is a pseudo-inverse to $S \circ T$.
+
+Given a pseudo-invertible linear map $T: V \to W$, we define it's \emph{index} to be
+%
+\[ \text{Ind}(T) = \dim(\text{Ker}(T)) - \dim(\text{Coker}(T)). \]
+%
+If $V$ and $W$ are finite dimensional, then $\text{Ind}(T) = \dim(V) - \dim(W)$ is independent of the pseudo-invertible operator $T$. But the definition can still be applied in the infinite dimensional case, and we will see it still has some stability properties. Consider a short exact sequence of finite-dimensional vector spaces
+%
+\[ 0 \to V \to W \to U \to 0. \]
+%
+Then $\dim(V) + \dim(U) = \dim(W)$. This is essentially just the rank nullity theorem in diguise. Extending this gives that for a short exact sequence
+%
+\[ 0 \to V_1 \to \dots \to V_n \to 0, \]
+%
+then the Euler characteristic of the sequence is zero, i.e.
+%
+\[ \sum (-1)^j \dim(V_j) = 0. \]
+%
+If $T: V \to W$ and $S: W \to U$ are pseudo-invertible, then
+%
+\[ \text{Ind}(S \circ T) = \text{Ind}(S) + \text{Ind}(T). \]
+%
+To prove this, we consider the exact sequence
+%
+\[ 0 \to \text{Ker}(T) \to \text{Ker}(S \circ T) \to \text{Ker}(S) \to \text{Coker}(T) \to \text{Coker}(S \circ T) \to \text{Coker}(S) \to 0. \]
+%
+The Euler characteristic of this sequence is then precisely $\text{Ind}(S) - \text{Ind}(S \circ T) + \text{Ind}(T)$.
+
+The importance of the index is that it is remarkable stable under pertubations.
+
+\begin{lemma}
+    Let $T: V \to W$ be a pseudo-invertible linear map. If $V_0 \subset V$ has finite codimension, then the restriction $T_0: V_0 \to W$ is pseudo-invertible, and
+    %
+    \[ \text{Ind}(T_0) = \text{Ind}(T) - \text{Codim}(X_0). \]
+\end{lemma}
+\begin{proof}
+    The inclusion map $A: V_0 \to V$ is pseudo-invertible, and $T_0 = T \circ A_0$, so
+    %
+    \[ \text{Ind}(T_0) = \text{Ind}(T) + \text{Ind}(A_0). \]
+    %
+    But $\text{Ind}(A_0) = - \text{Codim}(X_0)$, which yields the result required.
+\end{proof}
+
+\begin{theorem}
+    Let $T: V \to W$ be a pseudo-invertible linear map. If $\varepsilon: V \to W$ is degenerate, then
+    %
+    \[ \text{Ind}(T + \varepsilon) = \text{Ind}(T). \]
+\end{theorem}
+\begin{proof}
+    Let us first prove the theorem for the identity map $I: V \to V$, i.e. that for any degenerate $\varepsilon: V \to V$,
+    %
+    \[ \text{Ind}(I + \varepsilon) = 0. \]
+    %
+    Let $S = I + \varepsilon$. Let $V_0 \subset V$ be the kernel of $\varepsilon$. Then $S_0: V_0 \to V$ is just the composition of the identity map $V_0 \to V_0$ with the inclusion map $V_0 \to V$, so
+    %
+    \[ \text{Ind}(S_0) = - \text{Codim}(S_0). \]
+    %
+    But the last lemma also implies that
+    %
+    \[ \text{Ind}(S_0) = \text{Ind}(S) - \text{Codim}(S_0) \]
+    %
+    and thus $\text{Ind}(S) = 0$.
+
+    Now if $T: V \to W$ is an arbitrary pseudo-invertible map, and $\varepsilon: V \to W$ is degenerate, and $S$ is a pseudo-inverse for $T$, then $S \circ T = I + \delta$ for a degenerate map $\delta$, and $S \circ (T + \varepsilon) = I + \delta + S \circ \varepsilon$. Since $S \circ \varepsilon$ is degnerate, we conclude that
+    %
+    \[ \text{Ind}(S \circ (T + \varepsilon)) = \text{Ind}(S \circ T), \]
+    %
+    and by the product formula, this can only be true if $\text{Ind}(T + \varepsilon) = \text{Ind}(T)$.
+\end{proof}
+
+\section{Noether Index Theory}
+
+We now present an analytic variant of the index theory of the last section, following Chapter 27 of Lax's \emph{Functional Analysis}. We work with bounded linear maps $T: X \to Y$ between two Banach spaces $X$ and $Y$. In this context, we say $S$ is a pseudoinverse of $T$ if there exist compact operators $K_X: X \to X$ and $K_Y: Y \to Y$ such that $S \circ T = I + K_X$ and $T \circ S = I + K_Y$. Then $T$ is called pseudoinvertible, or a \emph{Fredholm operator}. It turns out that $T$ is Fredholm if and only if it has finite dimensional kernel and cokernel. Applying the following lemma shows that we can write $T: \text{Ker}(T) \oplus X_0 \to \text{Coker}(T) \oplus Y_0$, where $T$ restricts to an isomorphism from $X_0$ to $Y_0$. But the inverse map from $Y_0$ to $X_0$ then extends to a pseudoinverse for $T$.
+
+\begin{lemma}
+    If $T: X \to Y$ is a bounded map between Banach spaces with finite dimensional cokernel, then $T$ has closed range.
+\end{lemma}
+\begin{proof}
+    Define a bounded operator
+    %
+    \[ T': X \oplus \text{Coker}(T) \to Y \]
+    %
+    by setting $T'(x + y) = Tx + y$. Then $T'$ is bijective, and thus an isomorphism by the open mapping theorem. But this means that the range of $T$ is closed in $Y$.
+\end{proof}
+
+Since a map between Banach spaces is Fredholm if and only if it has a pseudoinverse, we can define the index and apply the theorems of the last section. But here we can get even more results, by following much of the same proof.
+
+\begin{lemma}
+    If $\varepsilon: X \to X$ is compact, and $T$ is Fredholm, then $T + \varepsilon$ is Fredholm and $\text{Ind}(T + \varepsilon) = \text{Ind}(T)$
+\end{lemma}
+\begin{proof}
+    For $T = I$, this is a result of the spectral theory of compact operators, and one can find this result in that section of these notes. In the general case, if $S$ is a pseudoinverse to $T$, then
+    %
+    \[ S \circ (T + \varepsilon) = I + \delta, \]
+    %
+    where $\delta: X \to X$ is degenerate, and thus compact, and so
+    %
+    \[ \text{Ind}(S) + \text{Ind}(T + \varepsilon) = \text{Ind}(I + \delta) = 0. \]
+    %
+    Since $\text{Ind}(S) = - \text{Ind}(T)$, the result follows.
+\end{proof}
+
+Every linear map $T: X \to Y$ between Banach spaces has an adjoint $T^*: Y^* \to X^*$. If $T$ is Fredholm, then it's kernel and cokernel are finite dimensional, and the image of $T$ is closed, which implies that $T^*$ also has finite dimensional kernel and cokernel, and thus is also Fredholm. Using the fact that
+%
+\[ \dim(\text{Ker}(T^*)) = \dim(\text{Coker}(T)) \quad\text{and}\quad \dim(\text{Coker}(T^*)) = \dim(\text{Ker}(T)), \]
+%
+we conclude that $\text{Ind}(T^*) = - \text{Ind}(T)$.
+
+The next result, due to Dieudonn\'{e} shows that the index is a continuous function.
+
+\begin{theorem}
+    If $T: X \to Y$ has a pseudoinverse, then there is $\varepsilon > 0$ such that if $\delta: X \to Y$ is bounded and $\| \delta \| < \varepsilon$, then $T + \delta$ has a pseudoinverse and
+    %
+    \[ \text{Ind}(T + \delta) = \text{Ind}(T). \]
+    %
+    Thus if $\{ T_n \}$ is a sequence of bounded operators converging in operator norm to a pseudo-invertible map $T$, then $T_n$ is pseudoinvertible for large enough $n$, and $\text{Ind}(T_n) = \text{Ind}(T)$.
+\end{theorem}
+\begin{proof}
+    Let $S \circ T = I + K$, where $K$ is compact. Then
+    %
+    \[ S \circ (T + \delta) = I + K + S \circ \delta. \]
+    %
+    If $\varepsilon$ is suitably small, $I + S \circ \delta$ is invertible. If $R$ is an inverse, then
+    %
+    \[ R \circ S \circ (T + \delta) = 1 + R \circ K, \]
+    %
+    and $R \circ K$ is compact, so $T + \delta$ has a pseudoinverse $R \circ S$. Now the product formula implies that
+    %
+    \[ \text{Ind}(R) + \text{Ind}(S) + \text{Ind}(T + \delta) = 0. \]
+    %
+    Since $\text{Ind}(S) = - \text{Ind}(T)$, and since $R$ is invertible, so $\text{Ind}(R) = 0$, we conclude that $\text{Ind}(T + \delta) = \text{Ind}(T)$.
+\end{proof}
+
+Another consequence of the above result is the \emph{homotopy invariance} of the index, i.e. if $\{ T(t) : t \in [0,1] \}$ is a continuous family of operators, and each operator has finite index, then
+%
+\[ \text{Ind}(T(1)) = \text{Ind}(T(0)). \]
+%
+On the other hand, the index is not continuous in the strong operator topology, e.g. define $T_n: l^2 \to l^2$ by setting $T_n x = \{ x_1,x_2,\dots,x_n,0,x_{n+1},\dots \}$. Then $\text{Ind}(T_n) = -1$, but the strong operator limit of $T_n$ is the identity, which has index $0$. On the other hand, it is a result of H\"{o}rmander that if $T_n: X \to Y$ are sequences of pseudoinvertible maps, and we can find pseudo-inverses $S_n: Y \to X$ such that $S_n \circ T_n = I + K_n$ and $T_n \circ S_n = I + H_n$ for a uniformly compact sequence of operators $\{ K_n \}$ and $\{ H_n \}$, in the sense that the union of $K_n(B)$ and $H_n(B)$ is compact, where $B$ is the unit ball in $X$, then the strong operator limit of $\{ T_n \}$, if it exists, has index equal to the limit of the indexes of the operators $\{ T_n \}$ (see H\"{o}rmander, Volume 3, Theorem 19.1.10).
+
+Using these results, let us compute some indices of a family of operators. Let $H_+$ be the subspace of functions in $L^2(\TT)$ with Fourier support on $\{ 0, 1, 2, \dots \}$, and let $H_-$ be the subspace of functions in $L^2(\TT)$ with Fourier support on $\{ 0, -1, -2, \dots \}$. Let $P_+: L^2(\TT) \to H_+$ be the projection of $L^2(\TT)$ onto $H_+$. For any continuous function $s: \TT \to \CC$, we define a bounded operator $T_s: H_+ \to H_+$ given by $T_s f = P_+(s u)$. Then $T_{s_1 + s_2} = T_{s_1} + T_{s_2}$. In Fourier analysis terms, we can write
+%
+\[ T_s f(t) = \sum_{n = 0}^\infty \sum_{m \in \ZZ} \widehat{f}(m) \widehat{s}(n - m) (\widehat{f} * \widehat{s})(n) e^{2 \pi i t n}. \]
+%
+We can then calculate the index of these operators.
+
+\begin{theorem}
+    If $s$ is nowhere vanishing on $\TT$, then $T_s$ is pseudoinvertible, and then $\text{Ind}(T_s)$ is the \emph{winding number} of $T_s$ about the origin.
+\end{theorem}
+\begin{proof}
+    If $s$ is nowhere vanishing on $\TT$, and we let $a = 1/s$, then we claim $T_a$ is a pseudoinverse for $T_s$. First, we note that if $s$ is continuous, then
+    %
+    \[ Kf = P_+[sf] - sf \]
+    %
+    is a compact map of $H_+$ into $L^2(\TT)$. This is because if $s$ is a trigonometric polynomial, then $K$ is a finite rank operator on $H_+$, and all continuous functions $s$ are the limit of trigonometric polynomials in $L^\infty(\TT)$. But
+    %
+    \[ (T_a \circ T_s) f = P_+(a P_+ (sf)) = P_+(a [sf + [ P_+ (sf) - sf ] ) = f + P_+[ P_+(sf) - sf ]. \]
+    %
+    The second term is compact, which shows $T_a \circ T_s - 1$ is compact.
+
+    Now to calculate the index of $T_s$. But this is simple. By applying a homotopy map as above, if $k$ is the winding number of $s$, we can deform $T_s$ continuously into $T_k$, where
+    %
+    \[ T_k f = P_+[ e^{2 \pi i k t} f ]. \]
+    %
+    Since $T_k$ is injective, and has cokernel which we can identify with trigonometric polynomials with degree at most $N-1$, it follows that the index of $T_k$ is $-N$, and thus the index of $T_s$ is $-N$.
+\end{proof}
+
+See Lax for more results and references about Toeplitz operators.
+
+
+
+
+
+
+
+
+
+
+
+
 \end{document}

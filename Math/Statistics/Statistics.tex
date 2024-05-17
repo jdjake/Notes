@@ -52,6 +52,103 @@ The interval $C$ is then called an $\alpha$-\emph{confidence interval}. More gen
 
 Another problem is \emph{hypothesis testing}. Here we have a particular fact about a distribution, called the \emph{null hypothesis}. Given some data, the goal of hypothesis testing is to determine whether we should reject the null hypothesis, or if we have grounds to still believe in the null hypothesis.
 
+\chapter{Hypothesis Testing}
+
+Let us suppose we consider a range of probability distributions on some space $\mathcal{X}$, parameterized by some set $\Theta$. Our goal is to test whether a given set of data observed in an experiment should lead us to have greater or less belief in a given hypothesis, in which case we say the data is \emph{statistically significant}.
+
+It is important for scientists to follow a methodology in order to determine whether data is statistically significant or not. Otherwise they may be subject to cognitive bias when deciding whether the result of an experiment is statistically significant purely on a whim. There is evidence that banning the use of p-values (a standard method of hypothesis testing) in studies increases the frequency that scientists make erroneous claims (see Fricket et. al 2019 for evidence of this as it relates to the null hypothesis significance ban in the journal Basic and Applied Social Psychology).
+
+\section{Rejecting the Null Hypothesis}
+
+Let us begin with the first approach to hypothesis testing, first advocated by British polymath Ronald Fischer. In this approach, one does not use data to provide evidence \emph{for} a given hypothesis. Perhaps unintuitively, one instead takes data and uses it to provide evidence \emph{against} a given hypothesis (called the \emph{null hypothesis}).
+
+Suppose an experiment will give us some random outcome $X$ valued in a set $\mathcal{X}$. To perform a hypothesis test, we specify in advance a set $\mathcal{R} \subset \mathcal{X}$, called the \emph{rejection region}. If $X$ takes some value $x \in \mathcal{R}$, we reject the null hypothesis. If $X$ takes some value $x \not \in \mathcal{R}$, we do not reject the null hypothesis. If the null hypothesis were true, then this would limit the outcome of $X$ to be drawn from a given family of probability distributions, which we denote by $\Theta$. Usually, we define $\mathcal{R} = \{ x \in \mathcal{X} : T(x) > T_0 \}$ for a \emph{test statistic} $T: \mathcal{X} \to \RR$ and a \emph{critical value $T_0 \in \RR$}.
+
+Note that if a hypothesis does not reject the null hypothesis, then in Fischerian approach we do not view this as evidence that the hypothesis is true. Our goal in this approach is thus only to minimize the number of \emph{Type $I$ errors} we make, where we reject the null hypothesis, despite it being true. If we are able to minimize these errors, then when a given data leads us to reject the null hypothesis, we should treat that as significant evidence that the null hypothesis is false.
+
+This leads us to define the \emph{size} of a test. First, define the \emph{power function} $\beta$ of the test, given by $\beta(\theta) = \PP_\theta(X \in \mathcal{R})$. The \emph{size} of a test is $\alpha = \sup_{\theta \in \Theta_0} \beta(\theta)$, which is precisely the least upper bound on the probability of the test making a Type $I$ error. We say a test has \emph{significance level} $\alpha$ if it has size at most $\alpha$.
+
+Suppose that for a given null hypothesis, we have an increasing family of rejection regions $\mathcal{R}_\alpha$ for each $\alpha \in (0,1)$, which is increasing in $\alpha$, and for each $\alpha$, $\mathcal{R}_\alpha$ corresponds to a hypothesis test of significance level $\alpha$. Given this setup, we define the \emph{$p$-value} to be the random quantity $p = \inf \left\{ \alpha: X \in \mathcal{R}_\alpha \right\}$. For each $\alpha \in [0,1]$, $\alpha = \sup\nolimits_{\theta \in \Theta_0} \PP_\theta( X \in \mathcal{R}_\alpha )$, so in particular,
+%
+\[ p = \sup\nolimits_{\theta \in \Theta_0} \PP_\theta( T(X) \geq \mathcal{R}_p ). \]
+%
+Thus the $p$-value can be thought of as the least upper bound on the probability of observing something equal to or more extreme than the data observed, from distributions in the null hypothesis.
+
+The use of $p$-values as a methodology of checking data for statistical significance was popularized by Ronald Fischer in his 1925 book \emph{Statistical Methods for Research Workers}. Fischer interpreted the p-value of a hypothesis test as a continuous measure of how compatible data observed was with a null hypothesis. Fischer's approach interprets $p$-values not as probabilistic statement about the world, but as a continuous measure of how reluctant we should be to believe a null hypothesis - the lower the $p$-value, the more reluctant we should be to believe a null hypothesis.
+
+Neyman and Pearson (1933) expanded upon Fischer's philosophy of hypothesis testing. Rather than simply testing whether to reject the null hypothesis, in the Neyman Pearson approach one instead sets a fixed level at which evidence from an experiment is statistically significant to provide evidence against the null hypothesis: The orthodox approach in 20th century science was to reject the null hypothesis when $p \leq 0.05$, and to accept the null hypothesis when $p > 0.05$. Unlike the Fischerian approach, in the Neyman Pearson approach the particular value of $p$ does not indicate that the null hypothesis is more or less believable.
+
+\begin{example}
+	Let $X = (X_1,\dots,X_n)$ be a vector with components being i.i.d. normally distributed random variables with some unknown mean $\mu$ and a known variance $\sigma$. Suppose we wish to test the null hypothesis that the mean of these variables is negative. We can parameterize the possible probability distributions that fit this null hypothesis by the mean of these distributions. Thus we can set $\Theta_0 = (-\infty,0]$. Consider the test where we reject the null hypothesis if $T(\overline{X}) > T_0$, for some  $T_0 \in \RR$. Then one can calculate that
+	%
+	\[ \beta(\mu) = 1 - \Phi \left( \frac{n^{1/2}(T_0 - \mu)}{\sigma} \right), \]
+	%
+	and thus the size of the test is
+	%
+	\[ 1 - \Phi \left( \frac{n^{1/2} T_0}{\sigma} \right) \sim \left( \frac{\sigma}{n^{1/2} T_0} \right) e^{- ( n^{1/2} T_0/\sigma)^2}. \]
+	%
+	For a given $\alpha$, we get a test of size $\alpha$ by taking
+	%
+	\[ T_0 = \sigma n^{-1/2} \Phi^{-1}(1 - \alpha) \sim \sigma n^{-1/2} \ln \left( 1/\alpha \right) . \]
+	%
+	For a given observation $X$, the $p$-value associated with this family of hypothesis tests is thus precisely obtained by the equation
+	%
+	\[ X = \sigma n^{-1/2} \Phi^{-1}(1 - \alpha), \]
+	%
+	i.e. we have
+	%
+	\[ p = 1 - \Phi(n^{1/2} X / \sigma). \]
+	%
+	The larger $X$ is, the closer the $p$-value is to $0$. For a given mean $\mu$, the CDF of the p-value $p$ is thus
+	% 1 - Phi(n^{1/2} X / sigma) <= t
+	% Phi(n^{1/2} X / sigma) >= 1 - t
+	% n^{1/2} X / sigma >= Phi^{-1}(1 - t)
+	% X >= n^{-1/2} sigma Phi^{-1}(1 - t)
+	% 1 - Phi
+	\[ t \mapsto 1 - \Phi( \sigma n^{-1/2} \Phi^{-1}(1 - t) - \mu ). \]
+	%
+	For $\mu \ll 0$, the distribution of the $p$-value is concentrated near large values of $p$, but as $\mu \to 0$, the distribution of the $p$-value becomes uniformly distributed on $[0,1]$.
+\end{example}
+
+The last example should cause us to treat a particular $p$-value with some skepticism. It is a random quantity, highly dependent on the data we observe, and thus will vary as we replicate a given experiment. The only guarantee we have on the distributions of the $p$-values is that, if the null hypothesis is true, then a $p$-value less than $\alpha$ will only be observed at most a fraction $\alpha$ of the time. Thus observing the $p$-value of one experiment will not necessarily lead to good predictions of $p$-values of replications. This contrasts with something with more descriptive power, like a confidence interval: Given a $95\%$ confidence interval, 19 out of 20 replications will have confidence intervals overlapping with the confidence interval computed on the first experiment (see Geoff Cumming's \href{https://www.youtube.com/watch?v=5OL1RqHrZQ8&ab_channel=GeoffCumming}{Dance of the $p$-values} for more detail).
+
+This behaviour also leads to \emph{Lindlay's Paradox} (Lindsay, 1957). For $\mu \gg 0$ the $p$-values we will observe from the above experiment will be very low, guaranteed with very high probability to have $p$-values smaller than $0.01$. For $\mu = 0$, the $p$-values will be approximately normally distributed. It thus follows that, if we observe a $p$-value of $0.04$, then from a Bayesian maximum likelihood perspective (we should favor hypothesis that are more likely to producea given data), we are more likely to be in the situation $\mu = 0$ than in the situation $\mu \gg 0$, despite having a $p$-value less than $0.05$ (and thus favoring a rejection of the null hypothesis from the approach of Fischer). Thus different approaches to statistical inference lead to different interpretations of a given data set. One approach which prevents this paradox is decreasing the $p$-value required for a test to be statistically significant as the sample size increases (see Good, 1992; Leamer, 1978; Maier \& Lakens, 2022).
+
+%Fischer tried to develop his philosophy into an approach he called ‘fiducial inference’, but this was not as well adopted as other philosophies of thought, such as decision theory and Bayesian inference. Zabell 1992 writes that fiducial inference was ‘Fischer’s one great failure’, though others believe a consistence theory may soon be developed (Schweder and Hjort, 2016).
+
+Even if you are using the Neyman-Pearson method for using $p$-values to refute a null hypothesis, in a paper you should always report the precise $p$-values obtained from your experiment. This is because these $p$-values are useful for secondary analysis, and allows researchers to compare $p$-values if they wish to use another $p$-value as a baseline.
+
+On the other hand, defined purely in terms of levels, unless we have some information about the power of the tests we are using, the $p$-value says \emph{nothing} about probabilities associated with the hypothesis. Small $p$-values indicate that it is unlikely that we could have observed given data if we are observing data from distributions given by the null hypothesis, but \emph{large $p$-values do not imply that we should reject a given hypothesis}. Large $p$-values just indicate that, if the null hypothesis is true, it is not unlikely that we have observed data at least as extreme as what was observed. One should perform an \emph{equivalence test} or \emph{minimum effect test} to obtain more information outside of the null hypothesis.
+
+
+
+
+\newpage
+
+
+
+
+
+ A \emph{hypothesis} is then a statement as to whether a distribution is in some subset $\Theta_1$ of $\Theta$. We call the complement of $\Theta_1$ in $\Theta$ the \emph{null hypothesis}, and denote it by $\Theta_0$. Our goal is to find a method which distinguishes between the two situations. The orthodox philosophy of scientists, in order to obtain greater evidence as to whether a given hypothesis is true, is to instead perform experiments that cause us to believe that the \emph{null hypothesis}, the statement that the hypothesis fails, is highly improbable. The goal of hypothesis testing is to come up with a methodology that allows us to take data, and determine whether this allows us to make a statistically significant statement providing evidence against a given null hypothesis. We want to minimize the number of errors we make: either Type $I$ errors, where we reject the null hypothesis, despite it being true, or Type $II$ errors, where we retain the null hypothesis when the null hypothesis is false.
+
+For each $\theta \in \Theta$, the hypothesis $\{ \theta \}$ is called a \emph{simple hypothesis}. If $\Theta$ is a subset of $\RR$, then we call the hypotheses $\{ \theta > \theta_0 \}$ and $\{ \theta < \theta_0 \}$ \emph{composite hypotheses}. A \emph{two-sided} test is a test where the null hypothesis is a simple hypothesis, and a \emph{one-sided} test is a test where the null hypothesis is a composite hypothesis.
+
+Mathematically, how does hypothesis testing work? We consider a family of probability distributions over some set $\mathcal{X}$, indexed by some set $\Theta$, and consider an $\mathcal{X}$ valued random variable $X$ which can be assigned probabilities that fit each distribution in a family parameterized by $\Theta$. A test of the null hypothesis can be given by considering a region $\mathcal{R} \subset \mathcal{X}$, the \emph{rejection region}. If $X$ takes some value $x \in \mathcal{R}$, we reject the null hypothesis, and if $X$ takes some value $x \not \in \mathcal{R}$, we do not reject the null hypothesis. 
+
+Given a hypothesis test, we define the \emph{power function} of the test is $\beta(\theta) = \PP_\theta(X \in \mathcal{R})$. The \emph{size} of the test is $\alpha = \sup_{\theta \in \Theta_0} \beta(\theta)$, and the \emph{power} of the test is $\inf_{\theta \in \Theta_1} \beta(\theta)$. A test has \emph{level $\alpha$} if it's size is less than or equal to $\alpha$. A test with low size is unlikely to commit Type $I$ errors, but the size of a test does not tell us anything about the probability of committing Type $II$ errors. Similarily, a test with high power is unlikely to commit Type $II$ errors, but the power of a test does not tell us anything about the probability of committing Type $I$ errors.
+
+
+
+In 1933, Neyman and Pearson, inspired by insights into p-values due to Gosset and Fischer, developed an approach called \emph{statistical hypothesis testing}. In this framework, the goal of statistical tests is to guide researchers with respect to two different hypothesis, a null hypothesis, and an alternate hypothesis. Given a particular value $\alpha$, classically equal to $0.05$, one computes the p-value of a null hypothesis. If the value is smaller than $\alpha$, one should be more prone to believing in the alternate hypothesis of the null hypothesis. Thus the exact quantitative p-value is not viewed as a measure of how reluctant we should be to accept the null hypothesis.
+
+
+
+
+
+
+
+
+
 \chapter{Point Estimation}
 
 Let us consider point estimation. We consider a statistical functional $\theta$ of some distribution $\mu$, from which we observe data $X_1,\dots,X_N$. We must now find a statistic $\widehat{\theta}_N$, called the \emph{estimator}, which is our best guess of $\theta$. We say the estimator $\widehat{\theta}$ is \emph{unbiased} if $\EE_\mu[\widehat{\theta} - \theta_N] = 0$ for any distribution $\mu$ in our statistical model. It is consistant if $\widehat{\theta}_N$ converges to $\theta$ in probaibility as $N \to \infty$, for any $\mu$.

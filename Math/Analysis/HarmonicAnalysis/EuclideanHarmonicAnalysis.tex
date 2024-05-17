@@ -1512,7 +1512,6 @@ For $\alpha > 1$, this norm is finite if and only if $D^s f$ is constant, which 
     which implies $f$ is Lipschitz.
 \end{proof}
 
-
 \section{Sobolev Spaces}
 
 We now consider the `classical' Sobolev spaces $W^{s,p}(\RR^d)$, also denoted $L^p_s(\RR^d)$. A function $f$ lies in $W^{s,p}(\RR^d)$ if it's weak derivatives $D^\alpha f$, for $|\alpha| \leq s$, lie in $L^p(\RR^d)$. We then define the norm
@@ -1713,10 +1712,13 @@ Thinking in terms of the characterization of Fourier multipliers bounded on $L^p
 %
 and
 %
-\[ \| J_\alpha f \|_{L^p(\RR^d)} \]
-
-
-Then for $\alpha > 0$, $G_\alpha \in L^1(\RR^d)$, There is also a Bessel function representation (TODO), hence the name.
+\[ \| J_\alpha f \|_{L^p(\RR^d)} \lesssim \| f \|_{L^p(\RR^d)} + \| I_\alpha f \|_{L^p(\RR^d)} \]
+%
+We use this operator to define the spaces $L^p_s$ when $s$ is non-integral. More precisely, we define
+%
+\[ \| f \|_{L^p_s(\RR^d)} = \| J_s f \|_{L^p(\RR^d)}. \]
+%
+We obtain equivalent norms between the usual definition of $L^p_s(\RR^d)$ when $s$ is an integer. The operator $J_\alpha$ is then an isometry from $L^p_s(\RR^d)$ to $L^p_{s-\alpha}(\RR^d)$ for any $s$, $\alpha$, and $p$.
 
 The cases $L^p_s(\RR^d) = W^{s,2}(\RR^d)$ are also denoted by $H^s(\RR^d)$, and are of special importance because they are \emph{Hilbert spaces}, i.e. if we define
 %
@@ -1728,7 +1730,7 @@ then this inner product induces the norm on $H^s(\RR^d)$.
 
 
 
-\section{lipschitz}
+\section{Lipschitz Spaces}
 
 We can obtain some alternate results using \emph{Lipschitz spaces}. Given a function $f$, define the \emph{difference operator}
 %
@@ -1800,6 +1802,30 @@ The value $k$ is irrelevant; as long as we take $k > \alpha$ we obtain equivalen
     %
     The infinite sum is finite for $k > \alpha - 1/p$.
 \end{proof}
+
+The spaces $L^p_s(\RR^d)$ are Lipschitz spaces when $s$ is an integer, or when $p = 2$.
+
+\begin{theorem}
+    For any function $f$, let $\omega_p(t) = \| \Delta_h f \|_{L^p(\RR^d)}$ be the modulus of continuity for $f$ in $L^p(\RR^d)$. Then
+    %
+    \[ \| f \|_{L^p_1(\RR^d)} \sim \| f \|_{L^p(\RR^d)} + \sup_{0 < |x| < 1} \omega_p(f,x) |x| \]
+\end{theorem}
+\begin{proof}
+    One uses the fundamental theorem of calculus to justify the right hand side is bounded by the left hand side. Conversely, we take weak derivatives to conclude that $f'$ is in $L^p$ if the condition is satisfied.
+\end{proof}
+
+\begin{theorem}
+    For $0 < s < 1$,
+    %
+    \[ \| f \|_{L^2_s(\RR^d)} \sim \| f \|_{L^2(\RR^d)} + \int \frac{\omega_2(f,x)^2}{|x|^{d + 2 s}}. \]
+\end{theorem}
+\begin{proof}
+    We can prove the result using Plancherel, since
+    %
+    \[ \omega_2(f,x)^2 = \int |\widehat{f}(\xi)|^2 | e^{-2 \pi i xi \cdot x} - 1 |^2\; d\xi. \]
+\end{proof}
+
+
 
 
 \chapter{Sobolev Spaces}
@@ -5664,27 +5690,46 @@ By interpolation, we obtain a corollary of this result.
     \[ \left\| \left( \sum\nolimits_j |Tf_j|^r \right)^{1/r} \right\|_{L^q(Y)} \lesssim \left\| \left( \sum\nolimits_j |f_j|^r \right)^{1/r} \right\|_{L^p(X)}. \]
 \end{corollary}
 
-One important application of these results is to \emph{square functions}. For instance, we can use singular integrals to prove the Littlewood-Paley square function bounds.
+\section{Littlewood-Paley Theory}
 
-\begin{example}
-    Consider a function $\Phi$ with $\int \Phi = 0$. Set $\Phi_t = t^{-n} \text{Dil}_t \Phi$, and define
+One important application of these results is to \emph{square functions}. For instance, we can use singular integrals to prove bounds for the Littlewood-Paley square function, both in discrete and continuous form.
+
+\begin{theorem}
+    Suppose $\Phi$ is a Schwartz function with $\int \Phi = 0$. Set
     %
-    \[ (s_\Phi f)(x) = \left( \int_0^\infty |(f * \Phi_t)(x)|^2 \frac{dt}{t} \right)^{1/2}, \]
+    \[ \Phi_t = t^{-n} \text{Dil}_t \Phi, \]
     %
-    If we now consider the \emph{vector-valued} operator $T$ taking scalar-valued functions $f$ to vector-valued functions over the Banach space $L^2(\RR_+, x^{-1} dx)$ given by
+    and define
     %
-    \[ Tf(x,t) = (f * \Phi_t)(x), \]
+    \[ (S_\Phi f)(x) = \left( \int_0^\infty |(f * \Phi_t)(x)|^2 t^{-1} dt \right)^{1/2}. \]
     %
-    then $T$ is a Calderon-Zygmund operator over $L^2(\RR_+, t^{-1} dt)$. It's kernel is
+    Then
     %
-    \[ K(x,y)(t) = \Phi_t(x-y), \]
+    \[ \| S_\Phi f \|_{L^{1,\infty}(\RR^d)} \lesssim \| f \|_{L^1(\RR^d)}, \]
     %
-    and we have the estimates
+    and for $1 < p < \infty$, we have
+    %
+    \[ \| S_\Phi f \|_{L^p(\RR^d)} \lesssim \| f \|_{L^p(\RR^d)}. \]
+\end{theorem}
+\begin{proof}
+    If we consider the \emph{vector-valued} operator $T$ taking scalar-valued functions $f$ to vector-valued functions over the Banach space $L^2(\RR_+, x^{-1} dx)$ given by
+    %
+    \[ Tf(x,t) = (f * \Phi_t)(x). \]
+    %
+    Our goal is then to prove that
+    %
+    \[ \| Tf \|_{L^p(L^2(\RR_+, x^{-1} dx))} \lesssim \| f \|_{L^p(\RR^d)}. \]
+    %
+    First, we check that $T$ is a vector-valued Calderon-Zygmund operator. It has a convolution kernel
+    %
+    \[ K(x,t) = \Phi_t(x), \]
+    %
+    and for $y \in \RR^d$, if we let $\widehat{y} = |y|^{-1} y$, we have the estimates
     %
     \begin{align*}
-        \| \Phi_t(y) \|_{L^2(\RR_+, t^{-1} dt)} &= \left( \int |K(y)(t)|^2\; t^{-1}\; dt \right)^{1/2}\\
-        &= \left( \int t^{-2n} |\Phi \left( \frac{y}{t} \right)|^2\; t^{-1}\; dt \right)^{1/2}\\
-        &= | y |^{-n} \left( \int t^{2n} | \Phi(t) |^2\; t^{-1}\; dt \right)\\
+        \| \Phi_t(y) \|_{L^2(\RR_+, t^{-1} dt)} &= \left( \int |K(y,t)|^2\; t^{-1}\; dt \right)^{1/2}\\
+        &= \left( \int t^{-2n} |\Phi \left( t^{-1} y \right)|^2\; t^{-1}\; dt \right)^{1/2}\\
+        &= | y |^{-n} \left( \int t^{2n} | \Phi( t \widehat{y} ) |^2\; t^{-1}\; dt \right)\\
         &\lesssim |y|^{-n},
     \end{align*}
     %
@@ -5692,28 +5737,45 @@ One important application of these results is to \emph{square functions}. For in
     % t^{-n} Phi( y / t )
     \begin{align*}
         \| \nabla K(y) \|_{L^2(\RR_+, t^{-1} dt)} &= \left( \int |\nabla K(y)(t)|^2\; t^{-1}\; dt \right)^{1/2}\\
-        &= \left( \int t^{-2n-2} |\nabla \Phi \left( \frac{x - y}{t} \right)|^2\; t^{-1}\; dt \right)^{1/2}\\
+        &= \left( \int t^{-2n-2} |\nabla \Phi \left( t^{-1} y \right)|^2\; t^{-1}\; dt \right)^{1/2}\\
         &= |y|^{-n-1} \left( \int t^{2n} | \nabla \Phi(t) |^2\; t^{-1}\; dt \right)\\
         &\lesssim |y|^{-n-1}.
     \end{align*}
     %
-    Thus we see $T$ is a Calderon-Zygmund operator of convolution type. Since $T$ is bounded on $L^2(\RR^n, L^2(\RR_+, t^{-1} dt))$, we immediately obtain that
+    Thus we see $T$ is a Calderon-Zygmund operator of convolution type. Since $T$ is bounded on $L^2(\RR^n, L^2(\RR_+, t^{-1} dt))$, given that by Parseval's inequality,
     %
-    \[ \left\| \left( \int_0^\infty |(\Phi_t * f)(x)| \right)^{1/2} \right\|_{L^{1,\infty}(\RR^n)} \lesssim \| f \|_{L^1(\RR^n)}, \]
+    \begin{align*}
+        \| Sf \|_{L^2(\RR^d)} &= \left( \int_{\RR^d} \int_0^\infty |\widehat{\Phi}(t \xi)|^2 \widehat{f}(\xi)| t^{-1}\; dt \right)^{1/2}\\
+        &\lesssim \left( \int_{\RR^d} |\widehat{f}(\xi)|^2\; d\xi \right)^{1/2}\\
+        &= \| f \|_{L^2(\RR^d)}.
+    \end{align*}
+    %
+    Here we used the fact that
+    %
+    \[ \int_0^\infty |\widehat{\Phi}(t \xi)^2|\; t^{-1}\; dt \lesssim 1 \]
+    %
+    by virtue of the fact that $\widehat{\Phi}(0) = 0$, and $\widehat{\Phi}$ has rapid decay away from the origin. But now we immediately obtain from this bound and Calderon-Zygmund theory that
+    %
+    \[ \left\| Sf \right\|_{L^{1,\infty}(\RR^n)} \lesssim \| f \|_{L^1(\RR^n)}, \]
     %
     and for $1 < p < \infty$,
     %
-    \[ \left\| \left( \int_0^\infty |(\Phi_t * f)(x)| \right)^{1/2} \right\|_{L^p(\RR^n)} \lesssim \| f \|_{L^p(\RR^n)}. \]
-\end{example}
+    \[ \left\| Sf \right\|_{L^p(\RR^n)} \lesssim \| f \|_{L^p(\RR^n)}. \]
+\end{proof}
 
-Similar results apply to discrete analogues.
+Similar results apply to the discrete version of the Littlewood-Paley square function.
 
-\begin{example}
-    Consider bounds of the form
+\begin{theorem}
+    Suppose $\Phi$ is $C^1$, and
+    %
+    \[ |\Phi(x)| + |\nabla \Phi(x)| \lesssim \frac{1}{|x|^{n+1}}. \]
+    %
+    Then, if we define $\Phi_t = t^{-d} \text{Dil}_t \Phi$, then
     %
     \[ \left\| \left( \sum_{k \in \ZZ} |(\Phi_{2^k} * f)(x)|^2 \right)^{1/2} \right\|_{L^p(\RR^n)} \lesssim \| f \|_{L^p(\RR^n)}. \]
-    %
-    The kernel of this operator, mapping scalars to elements of $l^2(\ZZ)$, is given by
+\end{theorem}
+\begin{proof}
+    We can consider this estimate as a bound for a vector-valued operator, mapping scalar valued functions to functions valued in $l^2(\ZZ)$, with a convolution kernel given by
     %
     \[ K(x) = \{ \Phi_{2^k}(x - y) \}, \]
     %
@@ -5759,7 +5821,7 @@ Similar results apply to discrete analogues.
     \end{align*}
     %
     Calderon-Zygmund theory thus gives $L^1(\RR^d) \to L^{1,\infty}(\RR^d,l^2(\ZZ))$ bounds and $L^p(\RR^d) \to L^p(\RR^d,l^2(\ZZ))$ bounds for $1 < p < \infty$. Thus we've proved an \emph{upper} bound on the Littlewood-Paley Square Function.
-\end{example}
+\end{proof}
 
 Provided that $\sum\nolimits_{k \in \ZZ} |\Phi_{2^k}(x)|^2 = 1$, we can prove a converse to this bound. To simplify notation, define $\Delta_j f = \Psi_{2^j} * f$.
 
@@ -5771,7 +5833,7 @@ Provided that $\sum\nolimits_{k \in \ZZ} |\Phi_{2^k}(x)|^2 = 1$, we can prove a 
     Applying Cauchy-Schwartz and H\"{o}lder's inequality gives that
     %
     \begin{align*}
-        \left\langle \sum_j \Delta_j^* \Delta_j f, g \right\rangle &= \sum\nolimits_j \langle \Delta_j f, \Delta_j g \rangle\\
+        \left\langle \sum\nolimits_j \Delta_j^* \Delta_j f, g \right\rangle &= \sum\nolimits_j \langle \Delta_j f, \Delta_j g \rangle\\
         &= \int_{\RR^d} \sum\nolimits_j ( \Delta_j f)(x) (\Delta_j g)(x)\\
         &\leq \int_{\RR^d} \left( \sum\nolimits_j |(\Delta_j f)(x)|^2 \right)^{1/2} \left( \sum\nolimits_j |(\Delta_j g)(x)|^2 \right)^{1/2}\\
         &\leq \left\| \left( \sum\nolimits_j |\Delta_j f|^2 \right)^{1/2} \right\|_{L^p(\RR^d)} \left\| \left(\sum\nolimits_j |\Delta_j g|^2 \right)^{1/2} \right\|_{L^{p'}(\RR^d)}\\
@@ -5784,14 +5846,82 @@ Provided that $\sum\nolimits_{k \in \ZZ} |\Phi_{2^k}(x)|^2 = 1$, we can prove a 
 \end{proof}
 
 \begin{remark}
-    A similar analysis works if $\sum \Phi_{2^k}(x) = 1$ for $x \neq 0$, since then we have $f = \sum_j \Delta_j f$, and we can apply H\"{o}lder's inequality twice instead of applying Cauchy-Schwartz.
+    A similar analysis works if $\sum \Phi_{2^k}(x) = 1$ for $x \neq 0$, since then we have $f = \sum_j \Delta_j f$, and we can apply H\"{o}lder's inequality twice instead of applying Cauchy-Schwartz. A similar calculation gives a result for the continuous Littlewood-Paley decomposition if we have
+    %
+    \[ \int \Phi_t(x) t^{-1}\; dt = 1 \quad\text{or}\quad \int |\Phi_t(x)|^2 t^{-1}\; dt = 1. \]
 \end{remark}
 
-A similar argument gives results for \emph{vector-valued Littlewood Paley}, i.e. bounding quantities of the form
+\begin{remark}
+    A similar argument gives results for \emph{vector-valued Littlewood Paley}, i.e. bounding quantities of the form
+    %
+    \[ \left\| \left( \sum\nolimits_j \left( \sum\nolimits_k |\Delta_k f_j|^2 \right)^{r/2} \right)^{1/r} \right\|_{L^p(\RR^d)} \lesssim \left\| \left( \sum_j |f_j|^r \right)^{1/r} \right\|_{L^p(\RR^d)} \]
+    %
+    for $1 < r < \infty$ and $1 < p < \infty$. The proof is a simple generalization from the vector valued theory.
+\end{remark}
+
+Littlewood-Paley theory has immediate consequences for the study of many operators in analysis, for instance, the theory of Fourier multipliers. If we have a function $m: \RR^d \to \RR^d$, and we write
 %
-\[ \| \Delta_k(f_j) \|_{L^p_x l^r_j l^2_k} \lesssim \| f_j \|_{L^p_x l^r_j} \]
+\[ m_t(x) = \widehat{\Phi}(tx) m(x) \]
 %
-for $1 < r < \infty$ and $1 < p < \infty$. The proof is a simple generalization.
+and for a function $f$, we define $f_t = \Phi_t * f$, then for $1 < p < \infty$, we have a bound of the form
+%
+\[ \| m(D) f \|_{L^p(\RR^d)} \lesssim \| f \|_{L^p(\RR^d)} \]
+%
+if and only if we have a bound of the form
+%
+\[ \left\| \left( \int_0^\infty |m_t(D) f|^2 t^{-1}\; dt \right)^{1/2} \right\|_{L^p(\RR^d)} \lesssim \left\| \left( \int_0^\infty |f_t|^2 t^{-1}\; dt \right)^{1/2} \right\|_{L^p(\RR^d)} \]
+%
+or, equivalently, if we have bounds of the form
+%
+\[ \left\| \left( \sum_k |m_{2^k}(D) f|^2 \right)^{1/2} \right\|_{L^p(\RR^d)} \lesssim \left\| \left( \sum_k |f_{2^k}|^2 t^{-1}\; dt \right)^{1/2} \right\|_{L^p(\RR^d)}. \]
+%
+See the Marcinkiewicz multiplier theorem later on for an application of this result.
+
+\begin{theorem}
+    Suppose $m$ is bounded, $C^1$ in a neighborhood of the origin, and $|m(\xi)| \lesssim |\xi|^{-\varepsilon}$ for some $\varepsilon > 0$. If we define $T_k = m(D / 2^k) f$, then
+    %
+    \[ \| \sup_k |T_k f| \|_{L^2(\RR^d)} \lesssim \| f \|_{L^2(\RR^d)}. \]
+\end{theorem}
+\begin{proof}
+    Without loss of generality, assume $m(0) = 1$. Pick a Schwartz function $\phi$ with $\widehat{\phi}(0) = 1$. Then
+    %
+    \[ |m(\xi) - \widehat{\phi}(\xi)| \lesssim \min( |\xi|, |\xi|^{-\varepsilon}). \]
+    %
+    Thus
+    %
+    \[ \sum_k |m(\xi / 2^k) - \widehat{\phi}(\xi / 2^k)|^2 \lesssim 1, \]
+    %
+    and so we conclude that
+    %
+    \[ \left\| \sup_k |T_kf - f * \phi_{2^{-k}}| \right\|_{L^2(\RR^d)} \lesssim \left\| \left( \sum\nolimits_k |T_kf - f * \phi_{2^{-k}}|^2 \right)^{1/2} \right\|_{L^2(\RR^d)} \lesssim \| f \|_{L^2(\RR^d)}. \]
+    %
+    The bound
+    %
+    \[ \left\| \sup_k |f * \phi_{2^{-k}}| \right\|_{L^2(\RR^d)} \lesssim \| f \|_{L^2(\RR^d)} \]
+    %
+    follows from the theory of Hardy-Littlewood maximal functions.
+\end{proof}
+
+A consequence of this is a lacunary version of the Carlson-Hunt theorem, that for $f \in L^2(\RR^d)$, and any open set $\Omega \subset \RR^d$, for almost every $x \in \RR^d$ we have
+%
+\[ \lim_{k \to \infty} \int_{2^k \Omega} \widehat{f}(\xi) e^{2 \pi i \xi \cdot x} = f(x). \]
+%
+One can obtain a similar maximal function result if $m$ is the characteristic function of the interval in $\RR^d$ in the theorem above, by an analogous method, and this yields a dyadic Carlson-Hunt theorem for rectangles.
+
+\begin{theorem}
+    Suppose $\{ T_j \}$ are Fourier multipliers, where the symbol of $T_j$ is supported on $|\xi| \sim 2^j$, and let $1 < p \leq 2 < q < \infty$. Then
+    %
+    \[ \left\| \sum\nolimits_j T_j \right\|_{L^p(\RR^d) \to L^q(\RR^d)} \lesssim \sup_j \| T_j \|_{L^p(\RR^d) \to L^q(\RR^d)}. \]
+\end{theorem}
+\begin{proof}
+    For appropriately chosen Littlewood-Paley cutoffs $\{ \Delta_j \}$, we have $T_j = \Delta_j T_j \Delta_j$. The vector valued Littlewood-Paley theorem implies that
+    %
+    \[ \left\| \sum\nolimits_j \Delta_j T_j \Delta_j f \right\|_{L^q(\RR^d)} \lesssim \left\| \left( \sum\nolimits_j |T_j \Delta_j f|^2 \right)^{1/2} \right\|_{L^q(\RR^d)} \lesssim \left( \sum\nolimits_j \| T_j \Delta_j f \|_{L^q(\RR^d)}^2 \right)^{1/2}. \]
+    %
+    Let $A = \sup_j \| T_j \|_{L^p(\RR^d) \to L^q(\RR^d)}$. Then we obtain that
+    %
+    \[ \| Tf \|_{L^q(\RR^d)} \lesssim A \left( \sum\nolimits_j \| \Delta_j f \|_{L^p(\RR^d)}^2 \right)^{1/2} \lesssim \| ( \sum\nolimits_j |\Delta_j f|^2 )^{1/2} \|_{L^p(\RR^d)} \lesssim \| f \|_{L^p(\RR^d)}. \qedhere \]
+\end{proof}
 
 
 
@@ -6235,7 +6365,66 @@ is finite. Then $m$ has countably many discontinuities, and the variation upper 
   Taking $n \to \infty$ gives $\| m \|_{M^p(\RR)} \lesssim_p \| m \|_{L^\infty(\RR)} + V(m)$.
 \end{proof}
 
-The theorem of H\"{o}rmander-Mikhlin is a more sophisticated instance of the smoothness-regularity phenomenon, giving $L^p$ to $L^p$ bounds to Fourier multipliers which decay smoothly away from the origin. There are several formulations of the phenomenon, of greater and greater generality. Without loss of generality, we will assume that $m \in L^\infty(\RR^d)$, since otherwise $m$ cannot lie in any of the spaces $M^p$. Let us state them in increasing order of generality, the former being most easily seen as relating to the smoothness of the multipliers:
+This result has a generalization, the Marcinkiewicz multiplier theorem, which only requires bounded variation on dyadic intervals.
+
+\begin{theorem}
+    If $m: \RR \to \CC$, then for $1 < p < \infty$,
+    %
+    \[ \| m \|_{M^p(\RR)} \lesssim \| m \|_{L^\infty(\RR)} + \sup_{j \in \ZZ} V(m,j), \]
+    %
+    where $V(m,j)$ denotes the total variation of $m$ on the region $\{ |\xi| \sim 2^j \}$. In particular,
+    %
+    \[ \| m \|_{M^p(\RR)} \lesssim \| m \|_{L^\infty(\RR)} + \sup_{j \in \ZZ} \int_{|\xi| \sim 2^j} |m'(t)|\; dt. \]
+\end{theorem}
+\begin{proof}
+    Let
+    %
+    \[ A = \sup_j V(m,j). \]
+    %
+    Without loss of generality, let us assume that $m$ is supported on $\xi \geq 0$. Suppose that we define the Littlewood-Paley cuttoffs $\{ \Delta_j \}$ as the Fourier multipliers with symbol $\text{Dil}_j \Phi$, where $\Phi$ is supported on $\{ -1/2 \leq |\xi| \leq 2 \}$ and $\sum_j \text{Dil}_j \Phi = 1$. Without loss of generality, let's assume that $m$ is supported on $\xi \geq 0$ and is smooth (smooth functions are dense in the space of functions with finite variation, so an approximation argument gives the general case). Then for $\xi \sim 2^j$, we can write
+    %
+    \[ m(\xi) \Phi( \xi / 2^j ) \widehat{f}(\xi) = m(2^j) \Phi( \xi / 2^j ) \widehat{f}(\xi) + \int_{t \sim 2^j} \widehat{f}(\xi) \mathbb{I}(\xi \geq t) \Phi( \xi / 2^j ) m'(t)\; dt. \]
+    %
+    Thus if we define $\Delta_{[t,\infty]}$ to be the Fourier multiplier with symbol $\mathbb{I}_{[t,\infty]}$, then
+    %
+    \[ \Delta_j m(D) f = m(2^j) \Delta_j f + \int_{t \sim 2^j} m'(t) \Delta_{[t,\infty]} \Delta_j f\; dt, \]
+    %
+    and so by Cauchy Schwartz and the assumption,
+    %
+    \[ |\Delta_j m(D) f| \leq \| m \|_{L^\infty(\RR)} |\Delta_j f| + A^{1/2} \left( \int_{t \sim 2^j} |m'(t)| |\Delta_{[t,\infty]} \Delta_j f|^2\; dt \right)^{1/2}. \]
+    %
+    Taking $l^2$ norms gives that
+    %
+    \[ \left( \sum\nolimits_j |\Delta_j m(D) f|^2 \right)^{1/2} \lesssim \| m \|_{L^\infty(\RR)} \left( \sum\nolimits_j |\Delta_j f|^2 \right)^{1/2} + A^{1/2} \int_0^\infty |m'(t)| |\Delta_{[t,\infty]} \Delta_{\lceil \log t \rceil} f|^2\; dt. \]
+    %
+    $L^p$ bounds for the first $l^2$ sum follow immediately from Littlewood-Paley theory. To bound the second $l^2$ sum, we apply the estimate
+    %
+    \[ \left\| \left( \int_0^\infty |m'(t)| |\Delta_{[t,\infty]} \Delta_j f|^2\; dt \right)^{1/2} \right\|_{L^p(\RR^d)} \lesssim \left\| \left( \int_0^\infty |m'(t)| |\Delta_{\lceil \log t \rceil} f|^2\; dt \right)^{1/2} \right\|_{L^p(\RR^d)}, \]
+    %
+    which follows from the vector valued theory of singular integrals. But the right hand side is the $L^p$ norm of
+    %
+    \[ \left( \sum_j |\Delta_j f|^2 \int_{|t| \sim 2^j} |m'(t)| \right)^{1/2} \lesssim A^{1/2} \left( \sum_j |\Delta_j f|^2 \right)^{1/2}, \]
+    %
+    and Littlewood-Paley then implies the required result.
+\end{proof}
+
+\begin{remark}
+    A version of the Marcinkiewicz multiplier theorem generalizes to higher dimensions, but is slightly more technical to state. Let us identify $\RR^d$ with $\RR^{[d]}$, i.e. the space of functions from $[d] = \{ 1, \dots, d \}$ to $\RR$. If $[d]$ is the disjoint union of $T_1$ and $T_2$, for $\xi_1 \in \RR^{T_1}$ and $\xi_2 \in \RR^{T_2}$, let $\xi_1 \otimes \xi_2 \in \RR^{[d]}$ denote the concatenation of the two vectors. Suppose that for any $S = \{ i_1, \dots, i_k \}$, any $\xi \in [d] - S$, and any rectangle $R$ in $\RR^S$ formed by dyadic intervals,
+    %
+    \[ \int_R | \partial_{\xi_{i_1}} \dots \partial_{\xi_{i_k}} m(\xi \otimes \xi')|\; d\xi' \leq A, \]
+    %
+    then for $1 < p < \infty$, $\| m \|_{M^p(\RR^d)} \lesssim A$. The argument involves an iterated application of fundamental theorem of calculus generalizing the argument above. The assumption holds in particular if for any $S = \{ i_1, \dots, i_k \}$,
+    %
+    \[ | \partial_{\xi_{i_1}} \dots \partial_{\xi_{i_k}} m(\xi) | \leq A |\xi_{i_1}|^{-1} \cdots |\xi_{i_k}|^{-1}. \]
+    %
+    This is satisfied in particular if $m$ is smooth and homogeneous in the sense that
+    %
+    \[ m(\lambda^{k_1} \xi_1, \dots, \lambda^{k_d} \xi_d) = \lambda^{is} m(\xi) \]
+    %
+    for some $s \in \RR$.
+\end{remark}
+
+The theorem of H\"{o}rmander-Mikhlin is another instance of the smoothness-regularity phenomenon, giving $L^p$ to $L^p$ bounds to Fourier multipliers which decay smoothly away from the origin. There are several formulations of the phenomenon, of greater and greater generality. Without loss of generality, we will assume that $m \in L^\infty(\RR^d)$, since otherwise $m$ cannot lie in any of the spaces $M^p$. Let us state them in increasing order of generality, the former being most easily seen as relating to the smoothness of the multipliers:
 %
 \begin{itemize}
     \item The multiplier $m$ lies in $C^\infty_{\text{loc}}(\RR^d - \{ 0 \})$, and satisfies
@@ -8236,8 +8425,6 @@ where $\sigma$ is the surface measure induced by the metric on $M$. If $\phi$ an
   %
   where $\mu_1, \dots, \mu_d$ are the eigenvalues of the Hessian $H\phi$ at $x_0$.
 \end{theorem}
-
-
 
 The theorem is proved by a simple partition of unity approach which reduces to the Euclidean case. It has the following important corollary.
 
