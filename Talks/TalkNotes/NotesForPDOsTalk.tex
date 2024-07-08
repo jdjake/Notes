@@ -1,0 +1,666 @@
+\documentclass{article}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{comment}
+
+\DeclareMathOperator{\RR}{\mathbb{R}}
+\DeclareMathOperator{\CC}{\mathbb{C}}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{prop}[theorem]{Proposition}
+
+%\theoremstyle{remark}
+\newtheorem*{example}{Example}
+\newtheorem*{proof*}{Proof}
+
+\theoremstyle{definition}
+\newtheorem*{defi}{Definition}
+\newenvironment{definition}
+    {\begin{samepage}\begin{framed}\begin{defi}}
+    {\end{defi}\end{framed}\end{samepage}}
+
+\newtheorem*{remark}{Remark}
+
+\title{Pseudodifferential Operators}
+\author{Jacob Denson}
+\date{February 13th, 2024}
+
+\begin{document}
+
+\maketitle
+
+In last week's talk, we saw how the kernel for $e^{-tL}$, where $L = \Delta - x^2$, has an explicit closed formula due to Mehler. In Riemannian geometry, when dealing with differential operators defined in terms of the geometry of a Riemannian manifold, we can rarely reduce our analysis to the study of constant coefficient differentiable operators. It is therefore unlikely that we can get explicit formulas for the kernels of the operators that we study. Fortunately, there is a technology that allows us to get explicit asymptotic formulas for the kernel of the operator integrated against \emph{high-frequency inputs}. These formulas are provided by the theory of pseudodifferential operators. We'll start by discussing the theory of scalar-valued pseudodifferential operators on $\RR^d$, and then extend the theory both to vector-valued pseudodifferential operators, and then to pseudodifferential operators on an arbitrary compact manifold $M$, including those mapping sections of one vector bundle to sections of another bundle over $M$.
+
+\section{Quick Review of Fourier Analysis}
+
+Let's quickly summarize all the Fourier analysis we'll need in this talk. For a function $f$, we define the Fourier transform
+%
+\[ \widehat{u}(\xi) = \int u(x) e^{-2 \pi i \xi \cdot x}\; dx. \]
+%
+For suitably nice functions $u$, the inversion formula
+%
+\[ u(x) = \int \widehat{u}(\xi) e^{2 \pi i \xi \cdot x}\; d\xi \]
+%
+then holds. For $u \in L^2(\RR^d)$, we have Parseval's formula
+%
+\[ \| \widehat{u} \|_{L^2(\RR^d)} = \| u \|_{L^2(\RR^d)}, \]
+%
+and if $D^\alpha = (2 \pi i)^{-|\alpha|} \partial^\alpha$, then
+%
+\[ \widehat{D^\alpha u}(\xi) = \xi^\alpha \widehat{u}(\xi). \]
+%
+In particular, $\widehat{\Delta u}(\xi) = - |\xi|^2 \widehat{u}(\xi)$. We then define $(1 - \Delta)^{t/2} u$ to be the function whose Fourier transform is $(1 + |\xi|^2)^{t/2} \widehat{u}(\xi)$. For a function $m$, we define the Fourier multiplier $m(D)$ such that $m(D) u$ has Fourier transform equal to $m(\xi) \widehat{u}(\xi)$. Parseval's inequality then implies that we have the inequality
+%
+\[ \| m(D) u \|_{L^2(\RR^d)} \leq \| m \|_{L^\infty(\RR^d)} \| u \|_{L^2(\RR^d)}. \]
+%
+The Fourier transform of a convolution
+%
+\[ (a * b)(x) = \int a(y) b(x - y)\; dy \]
+%
+is equal to the pointwise product of the Fourier transforms of $a$ and $b$.
+
+\section{Pseudodifferential Operators}
+
+A pseudodifferential operator $T$ on $\RR^d$ is given by a formula of the form
+%
+\[ Tf(x) = \int_{\RR^d} \int_{\RR^d} \sigma(x,\xi) e^{2 \pi i \xi \cdot (x - y)} f(y)\; d \xi\; dy \]
+%
+for a function $\sigma$. The operator $T$ is also denoted by $\sigma(x,D)$, because, if we consider a differential operator of the form
+%
+\[ L = \sum_\alpha c_\alpha(x) D^\alpha, \]
+%
+where $D^\alpha = (2 \pi i)^{-|\alpha|} \partial^\alpha$, then $L = \sigma(x,D)$ for $\sigma(x,\xi) = \sum c_\alpha(x) \xi^\alpha$, so we have ``substituted $D$ for $\xi$''. We restrict our study to the class of operators given by functions $\sigma$ which are \emph{symbols of a given order $t$}, which, for a positive integer $t$, generalizes the family of polynomials of order $t$ in $\alpha$.
+
+A \emph{symbol of order $t$} is a smooth function $\sigma: \RR^d \times \RR^d \to \CC$ such that for any multi-indices $\alpha$ and $\beta$,
+%
+\[ |\partial_x^\alpha \partial_\xi^\beta \sigma(x,\xi)| \lesssim_{\alpha,\beta} |\xi|^{t - \beta}. \]
+%
+We denote the class of symbols of order $t$ on $\RR^d \times \RR^d$ by $\mathcal{S}^t(\RR^d \times \RR^d)$, and the class of operators formed from symbols of order $m$ by $\Psi^t(\RR^d)$.
+
+We will need to discuss \emph{asymptotic representations} of a symbol. Given a sequence of symbols $\{ \sigma_{t-k} \}$, where $\sigma_{t-k}$ is a symbol of order $t - k$, for a function $\sigma$, we write
+%
+\[ \sigma \sim \sum_{k = 0}^\infty \sigma_{t-k} \]
+%
+if, for each $N$, $\sigma$ and $\sum_{k < N} \sigma_k$ differ by a symbol of order $t - N$.
+
+\begin{theorem}
+    For any sequence $\{ \sigma_{t-k} \}$, there exists a function $\sigma$ such that
+    %
+    \[ \sigma \sim \sum_{k = 0}^\infty \sigma_{t-k}. \]
+    %
+    Moreover, $\sigma$ is unique \emph{modulo symbols of order $-\infty$}.
+\end{theorem}
+\begin{proof}
+    To prove uniqueness, if
+    %
+    \[ \sigma' \sim \sum_{k = 0}^\infty \sigma_{t-k}, \]
+    %
+    then $\sigma - \sigma'$ is a \emph{symbol of order $-\infty$}, i.e. a symbol of order $-R$ for all $R > 0$. To construct $\sigma$, we fix a smooth function $\chi$ supported on $\{ |\xi| \geq 1 \}$, and for an appropriate, rapidly increasing series of constants $\{ R_k \}$, define
+    %
+    \[ \sigma(x,\xi) = \sum_{k = 0}^\infty \chi(\xi / R_k) \sigma_{t-k}(x,\xi) \]
+    %
+    Then $\sigma$ and $\sum_{k < N} \sigma_{t - k}$ differ by a function supported on $|\xi| \geq R_N$, and if the constants $\{ R_k \}$ are chosen rapidly increasing relative to the behaviour of the functions $\{ \sigma_{t - k} \}$, then this function will be a symbol of order $t - N$.
+\end{proof}
+
+If $\sigma$ is a symbol of order $-\infty$, then the kernel $K$ of $\sigma(x,D)$ is smooth, and satisfies estimates of the form
+%
+\[ |\partial_x^\alpha \partial_y^\beta K(x,y)| \lesssim_N \langle x - y \rangle^{-N}. \]
+%
+Thus $T$ is a \emph{smoothing operator}, i.e. if $u$ is a tempered distribution, then $Tu$ is a Schwartz function.
+
+\section{Composition Calculus}
+
+Our first goal will be to show that the pseudodifferential operators are robust under various operations that occur in spectral analysis and the study of differential geometry.
+
+\begin{theorem}
+    If $T \in \Psi^t(\RR^d)$, then $T^* \in \Psi^t(\RR^d)$. Moreover, if, for $a \in \mathcal{S}^t(\RR^d \times \RR^d)$, we let $a^* \in \mathcal{S}^t(\RR^d \times \RR^d)$ denote the symbol of $a(x,D)^*$, then
+    %
+    \[ a^* = e^{2 \pi i D_x \cdot D_\xi} \overline{a}, \]
+    %
+    and so in particular,
+    %
+    \[ a^* \sim \sum_{k = 0}^\infty \frac{1}{k!} (2 \pi i)^{|\alpha|} (D_x^\alpha D_\xi^\alpha \overline{a}). \]
+\end{theorem}
+\begin{proof}
+    If $T^*$ was a pseudodifferential operator, it's symbol $a^*$ would be
+    %
+    \begin{align*}
+        a^*(x,\xi) &= e^{-2 \pi i \xi \cdot x} T^* \{ e^{2 \pi i \xi \cdot y} \}\\
+        &= \int \int \overline{a(y,\eta)} e^{-2 \pi i (y - x) \cdot \eta} e^{2 \pi i \xi \cdot (y - x)}\; dy\; d\eta\\
+        &= \int \int \overline{a(y,\eta)} e^{- 2 \pi i [( y - x ) \cdot (\eta - \xi)}.
+    \end{align*}
+    %
+    If we define $c(x,\xi) = e^{-2 \pi i \xi \cdot x}$, then $a^*$ is the convolution of $\overline{a}$ with $c$. But $c$ is a Gaussian in the $(x,\xi)$ variables, with Fourier transform given by
+    %
+    \[ \widehat{c}(\xi',x') = e^{2 \pi i \xi' \cdot x'}. \]
+    %
+    Thus the formula follows immediately.
+\end{proof}
+
+A similar analysis gives a composition formula.
+
+\begin{theorem}
+    If $T \in \Psi^t(\RR^d)$ and $S \in \Psi^s(\RR^d)$, then $T \circ S \in \Psi^{t + s}(\RR^d)$. If, for $a \in \mathcal{S}^t(\RR^d \times \RR^d)$ and $b \in \mathcal{S}^t(\RR^d \times \RR^d)$, we let $a \circ b \in \mathcal{S}^{t + s}$ be the symbol of $a(x,D) \circ b(x,D)$, then
+    %
+    \[ (a \circ b) = e^{2 \pi i D_\xi \cdot D_y} \{ a(x,\xi) b(y,\eta) \} |_{y = x, \eta = \xi}. \]
+    %
+    In particular, we have
+    %
+    \[ (a \circ b) \sim \sum_\alpha \frac{1}{\alpha!} \frac{1}{(2 \pi i)^{|\alpha|}} \partial_x^\alpha a(x,\xi) \partial_\xi^\beta b(x,\xi). \]
+\end{theorem}
+
+The proof is a similar Fourier analytic calculation as above.
+
+\begin{remark}
+    Here we pay the price that differentiation and multiplication don't commute on $\RR^d$, which means we have to pay derivatives when moving the `$\xi$ part of $a$ to the right', and when moving the '$x$ part of $b$ to the left' when interpreting $a(x,D) \circ b(x,D)$ as a pseudodifferential operator.
+\end{remark}
+
+Here are some consequences of this theorem. Firstly, $a \circ b - a \cdot b$ is a symbol of order $t + s -1$, so pseudodifferential operators commute up to lower order terms. In particular, the operator $[T,S] = T \circ S - S \circ T$ lies in $\Psi^{t + s - 1}(\RR^d)$. Let $[a,b]$ be the symbol of $[T,S]$. If we define the Poisson bracket
+%
+\[ \{ a, b \} = \sum \frac{\partial a}{\partial \xi^j} \frac{\partial b}{\partial x^j} - \frac{\partial a}{\partial x^j} \frac{\partial b}{\partial \xi^j}, \]
+%
+then $[a,b] - (4 \pi i)^{-1} \{ a, b \}$ is a symbol of order $t + s - 2$.
+
+\section{Regularity Theory}
+
+For $s \in \RR$, let $H^s(\RR^d)$ be the space of all $f$ such that the norm
+%
+\[ \| f \|_{H^s(\RR^d)} = \left( \int | \langle \xi \rangle^s \widehat{f}(\xi)|^2 \right)^{1/2} = \| (1 - \Delta)^{s/2} f \|_{L^2(\RR^d)} \]
+%
+is finite. If $s$ is a non-negative integer, then $H^s(\RR^d)$ is equal to the set of all tempered distributions $f$ such that $D^\alpha f \in L^2(\RR^d)$ for $|\alpha| \leq s$. For $s < t$, we have an inclusion $H^t(\RR^d) \to H^s(\RR^d)$, and is a compact inclusion into $H^s_c(\RR^d)$, i.e. for any bounded, open set $\Omega$, any bounded subset of $H^t(\RR^d) \cap \{ f : \text{supp}(f) \subset \Omega \}$ contains a sequence converging in $H^s(\RR^d)$.
+
+Since the operator $D^\alpha$ acts by multiplication by $\xi^\alpha$ from the perspective of the Fourier transform, if $|\alpha| \leq t$ then $D^\alpha$ maps $H^s(\RR^d)$ to $H^{s - t}(\RR^d)$ for all $s \in \RR$. By linearity, this remains true for any differential operator $\sum_{|\alpha| \leq t} c_\alpha(x) D^\alpha$ with Schwartz coefficients $\{ c_\alpha \}$. We will see the same statement is true for pseudodifferential operators, with the interesting fact that pseudodifferential operators of negative order \emph{improve differentiability}.
+
+\begin{theorem}
+    If $T \in \Psi^t(\RR^d)$, then $\| Tf \|_{H^{s-t}(\RR^d)} \lesssim \| f \|_{H^s(\RR^d)}$ for all $s \in \RR$.
+\end{theorem}
+\begin{proof}
+    Assume first that $s = t = 0$. Define
+    %
+    \[ A(\theta,\xi) = \int a(x,\xi) e^{-2 \pi i \theta \cdot x}\; dx \]
+    %
+    Then the Fourier inversion formula implies that if we set
+    %
+    \[ T^\theta \phi(x) = \int A(\theta,\xi) \widehat{\phi}(\xi) e^{2 \pi i (\theta + \xi) \cdot x}. \]
+    %
+    then
+    %
+    \[ T \phi(x) = \int T^\theta \phi(x)\; d\theta. \]
+    %
+    The operator $T^\theta$ is a Fourier multiplier operator with symbol $m_\theta(\xi) = A(\theta,\xi) e^{2 \pi i \theta \cdot x}$. Because $a$ is a symbol of order zero, we find that
+    %
+    \[ \| m_\theta \|_{L^\infty(\RR^d)} \lesssim_N \langle \theta \rangle^{-N}, \]
+    %
+    and thus we conclude that $\| T^\theta \phi \|_{L^2(\RR^d)} \lesssim \langle \theta \rangle^{-N} \| \phi \|_{L^2(\RR^d)}$, and then integration in $\theta$ gives that $\| T \phi \|_{L^2(\RR^d)} \lesssim \| \phi \|_{L^2(\RR^d)}$. The result for a general $t$ and $s$ follows by the composition calculus, because if we set
+    %
+    \[ b(x,D) = (1 - \Delta)^{s/2 - t/2} a(x,D) (1 - \Delta)^{-s/2} \]
+    %
+    then the composition calculus implies $b(x,D)$ is a pseudodifferential operator of order 0, and
+    %
+    \begin{align*}
+        \| a(x,D) f \|_{H^{s-t}(\RR^d)} &= \| b(x,D) (1 - \Delta)^{s/2} f \|_{L^2(\RR^d)}\\
+        &\lesssim \| (1 - \Delta)^{s/2} f \|_{L^2(\RR^d)}\\
+        &= \| f \|_{H^s(\RR^d)}. \qedhere
+    \end{align*}
+\end{proof}
+
+Using the Calderon-Zygmund theory of singular integrals, we can also show that $a(x,D)$ maps $L^p_s(\RR^d)$ to $L^p_{s-t}(\RR^d)$ for all $1 < p < \infty$ and $s \in \RR$, but this is beyond the scope of this talk.
+
+\section{Ellipticity}
+
+A symbol $a \in \mathcal{S}^t(\RR^d \times \RR^d)$ will be called \emph{elliptic of order $t$} if there exists $R \geq 0$ such that for $|\xi| \geq R$, $|a(x,\xi)| \gtrsim |\xi|^t$. We can find a symbol $b \in \mathcal{S}^{-t}(\RR^d \times \RR^d)$ such that $a \circ b$ differs from $1$ by a symbol of order $-\infty$. This implies that $b(x,D)$ is a \emph{parametrix} for $a(x,D)$, i.e. $a(x,D) \circ b(x,D)$ differs from the identity operator by a smoothing operator. Thus elliptic operators are invertible, \emph{modulo smoothing operators}.
+
+\begin{example}
+    If $g$ is a Riemannian metric on $\RR^d$, then
+    %
+    \[ \sum g^{ij}(x) D^i D^j \]
+    %
+    is an elliptic operator on $\RR^d$, whose symbol is $\sum g^{ij}(x) \xi_i \xi_j$. The Laplace-Beltrami operator on $\RR^d$ given by this metric differs from this operator by a differential operator of order one, and thus is also elliptic (ellipticity is only determined by the highest order terms of the symbol).
+\end{example}
+
+\begin{theorem}
+    If $a \in \mathcal{S}^t(\RR^d \times \RR^d)$, then there exists $b \in \mathcal{S}^{-t}(\RR^d \times \RR^d)$ such that
+    %
+    \[ a \circ b - 1 \in \mathcal{S}^{-\infty}(\RR^d). \]
+\end{theorem}
+\begin{proof}
+    Define $b_{-t} \in \mathcal{S}^{-t}(\RR^d \times \RR^d)$ to be equal to $1 / a(x,\xi)$ for $|\xi| \geq R$. Then the composition calculus implies that the function $r_1 = a \circ b_{-t} - 1$ is a symbol of order $t - 1$. We now proceed inductively, defining $b_{-t-k} \in \mathcal{S}^{-t-k}$ for $k > 0$ equal to $r_k / a$ for $|\xi| \geq R$, and $r_{k+1} = a \circ ( \sum_{k' < k} b_{-t-k'} ) - 1$. The composition calculus thus implies that $r_k \in \mathcal{S}^{t-k}(\RR^d \times \RR^d)$, and thus $b_k \in \mathcal{S}^{-k}(\RR^d \times \RR^d)$. But now choose $b \in \mathcal{S}^{-t}(\RR^d \times \RR^d)$ such that
+    %
+    \[ b \sim \sum\nolimits_k b_{-t-k}, \]
+    %
+    and then $a \circ b$ and $b \circ a$ lie in $\mathcal{S}^{-\infty}(\RR^d \times \RR^d)$.
+\end{proof}
+
+Applying the regularity theory of the last section gives the following result.
+
+\begin{theorem}
+    If $T \in \Psi^t(\RR^d)$ is an elliptic pseudodifferential operator, $f$ is a tempered distribution, and $Tf$ lies in $H^s(\RR^d)$, then $f$ lies in $H^{s-t}(\RR^d)$.
+\end{theorem}
+\begin{proof}
+    Let $S$ be a parametrix for $T$. Thus there exists a smoothing operator $A$ such that
+    %
+    \[ I = S \circ T + A. \]
+    %
+    Thus $f = S(Tf) + Af$. Now
+    %
+    \[ \| S(Tf) \|_{H^{s-t}(\RR^d)} \lesssim \| Tf \|_{H^s(\RR^d)} < \infty \]
+    %
+    and, since $A$ is smoothing, $Af$ is a Schwartz function, so in particular,
+    %
+    \[ \| Af \|_{H^{s-t}(\RR^d)} < \infty. \]
+    %
+    Thus
+    %
+    \[ \| f \|_{H^{s-t}(\RR^d)} \leq \| S(Tf) \|_{H^{s-t}(\RR^d)} + \| Af \|_{H^{s-t}(\RR^d)} < \infty. \qedhere \]
+\end{proof}
+
+\begin{remark}
+    The last result is non-quantitative. But if $V$ is any subspace of the space of tempered distributions, equipped with a norm which makes the inclusion into the space of tempered distributions continuous, then
+    %
+    \[ \| Af \|_{H^{s-t}(\RR^d)} \lesssim \| f \|_V, \]
+    %
+    and so we obtain the result that
+    %
+    \[ \| f \|_{H^{s-t}(\RR^d)} \lesssim \| S(Tf) \|_{H^{s-t}(\RR^d)} + \| f \|_V. \]
+    %
+    Thus we obtain a quantitative bound given \emph{essentially any} quantitative control on $f$. In particular, for any $n > 0$,
+    %
+    \[ \| f \|_{H^{s-t}(\RR^d)} \lesssim \| S(Tf) \|_{H^{s-t}(\RR^d)} + \| f \|_{H^{-n}(\RR^d)}. \]
+\end{remark}
+
+\section{Changes of Variables}
+
+Pseudodifferential operators are also stable under changes of coordinates, which is what enables us to define pseudodifferential operators on manifolds. Consider a pseudodifferential operator $T$ on $\RR^d$, whose kernel is contained within $C \times C$ for some compact set $C$ contained in $V$. Consider a diffeomorphism $\kappa: U \to V$ between two open subsets $U$ and $V$ of $\RR^d$. Given $\psi_U, \psi_V \in C_c^\infty(\RR^d)$ supported on $U$ and $V$ respectively, and equal to one on $C$ and $\kappa(C)$ respectively, we can define a new operator $S$ on $U$ by setting, for $f \Subset U$,
+%
+\[ Sf = [ T \{ (f \psi_U) \circ \kappa^{-1} \} \circ \kappa ], \]
+%
+i.e. `pushing forward $T$ to a new coordinate system'. Then $S$ is a pseudodifferential operator, of the same order as $T$, and we can compute it's symbol exactly. We avoid discussing the proof due to time constraints.
+
+\begin{theorem}
+    If $a_\kappa$ is the symbol of $S$, then
+    %
+    \[ a_\kappa(\kappa(x), \eta) \sim \sum \frac{1}{(2 \pi i)^{|\alpha|}} \frac{1}{\alpha!} (\partial_\xi^\alpha a)(x, D\kappa(x)^T \eta) \{ \partial_y^\alpha e^{2 \pi i \eta \cdot r_x(y)} \} |_{y = x}, \]
+    %
+    where $r_x(y) = \kappa(y) - \kappa(x) - D\kappa(x)(y - x)$. In particular,
+    %
+    \[ a_\kappa(\kappa(x), \eta) - a(x, D\kappa(x)^T \eta). \]
+    %
+    is a symbol of order $t - 1$.
+\end{theorem}
+
+\begin{remark}
+    For brevity, we do not discuss the full proof, but rather discuss the ideas, and why $D\kappa(x)^T$ arises in the proof. If we unravel the definition of the operator $S$, and apply a coordinate change, we are lead to consider quantities of the form
+    %
+    \[ \int a(x,\xi) e^{2 \pi i \xi \cdot (\kappa^{-1}(x) - \kappa^{-1}(y))} f(y)\; d\xi\; dy. \]
+    %
+    We apply the linearization $\kappa^{-1}(x) - \kappa^{-1}(y) \approx D\kappa^{-1}(x) \cdot (x - y)$, which leads to the integral
+    %
+    \[ \int a(x, \xi) e^{2 \pi i \xi \cdot (D\kappa^{-1}(x) (x - y))}\; d\xi = \int a(x, \xi) e^{2 \pi i (D\kappa^{-1}(x)^T \xi) \cdot (x - y)}\; d \xi \]
+    %
+    A coordinate change in $\eta = D\kappa(x)^{-T} \xi$ leads to the integral
+    %
+    \[ \int a(x, D\kappa(x)^T \eta) e^{2 \pi i \eta \cdot (x - y)}\; d\xi. \]
+    %
+    This integral describes a pseudodifferential operator with symbol
+    %
+    \[ (x,\eta) \mapsto a(x, D\kappa(x)^T \eta). \]
+    %
+    This discussion is not precise, and only gives us the \emph{leading term} of $a_\kappa$, but perhaps indicates why the behaviour of $a$ near $(x, D\kappa(x)^T \eta)$ should tell us the behaviour of $a(\kappa(x),\xi)$.
+\end{remark}
+
+Given that pseudodifferential operators are invariant under changes of coordinates, it is natural to discuss pseudodifferential operators of order $t$ on any compact manifold $M$, to be an operator $T$ such that, when restricted to any coordinate system, $T$ is a pseudodifferential operator of order $t$ in $\RR^d$.
+
+For geometric convenience, it is often useful to restrict to pseudodifferential operators given by \emph{classical} symbols of order $t$, i.e. symbols $\sigma$ which have an expansion
+%
+\[ \sigma \sim \sum_{k \geq 0} \sigma_{t - k}, \]
+%
+where $\sigma_{t - k}$ is a homogeneous of order $t - k$. The homogeneous function $\sigma_t$ is called the \emph{principal symbol} of $t$. Note that in the coordinate change formula above, if $a$ has principal symbol $p$, and $a_\kappa$ has principal symbol $p_\kappa$, then
+%
+\[ p_\kappa(\kappa(x), \xi) = p(x, D\kappa(x)^T \eta). \]
+%
+If we view $p \in C^\infty(\RR^d_x \times \RR^d_\xi)$ as a function $C^\infty(T^* \RR^d_x)$, identifying $(x,\xi)$ with the \emph{covector} $\xi$ at $x$, then this formula says precisely that
+%
+\[ p_\kappa( \kappa^* \omega) = p( \omega ) \]
+%
+for all $\omega \in T^* \RR^d$. In particular, $p_\kappa$ is \emph{invariant under coordinate changes when viewed as a function on $T^* M$}. This has the consequence that if $T$ is a classical pseudodifferential operator on a manifold (given by a classical symbol in all coordinate systems), then it's principal symbol is a well defined smooth function on $T^* M - 0$.
+
+\section{Vector Valued Pseudodifferential Operators}
+
+Let $V$ and $W$ be finite dimensional vector spaces. Given $\sigma: \RR^d \times \RR^d \to L(V,W)$, we can define an operator $T = \sigma(x,D)$ from $V$ valued functions to $W$ valued functions by setting
+%
+\[ Tf(x) = \int \sigma(x,\xi) \{ f(y) \} e^{2 \pi i \xi \cdot (x - y)}. \]
+%
+The theory above extends pretty much without change, though one should be careful by the fact that matrices need not commute in the composition calculus. If, under some norm on $V$ and $W$, we have
+%
+\[ |a(x,\xi) \{ v - w \}| \gtrsim t^j |v - w| \]
+%
+for sufficiently large $\xi$, then $T$ will have a left parametrix, and if
+%
+\[ |a^t(x,\xi) \{ v - w \}| \gtrsim t^j |v - w| \]
+%
+for sufficiently large $\xi$, then $T$ will have a right parametrix. In the former case, we say $T$ is elliptic.
+
+By working with trivializations, this theory can then be extended in a coordinate independent way to defined pseudodifferential operators on a compact manifold $M$, mapping sections of one vector bundle $E$ onto another vector bundle $F$. The principal symbols of classical pseudodifferential operators are then valued in the vector bundle obtained from lifting the vector bundle $\text{Hom}(E,F)$ on $M$ to a vector bundle on $T^* M$.
+
+\begin{example}
+    If $M$ is a compact manifold of dimension $d$, and $n \in \{ 0, \dots, m-1 \}$, then the exterior derivative mapping $n$ forms on $M$ to $n+1$ forms is a pseudodifferential operator of order one from the. It's principal symbol $a$ is the linear map which takes an alternating $n$ tensor $\omega$ to the $n+1$ tensor $2 \pi i \xi \wedge \omega$. This operator is thus \emph{elliptic} when $n = 0$, but for $n > 0$ is not elliptic, e.g. because $a(x,\xi)$ is never injective, the kernel containing all tensors of the form $\xi \wedge \omega$, for $\omega$ an $n-1$ alternating tensor.
+\end{example}
+
+\begin{comment}
+
+
+The fact that $|\det(D \Phi(y))|^{-1} a(x,\xi) \psi_U(y)$ is smooth makes this easy to deal with, i.e. because multiplication by a smooth function is a pseudodifferential operator of order zero, so that there exists a symbol $b \in \mathcal{S}^t(\RR^d \times \RR^d)$ such that
+%
+\[ Sf(x) = \int b(x,\xi) \psi_U(y) e^{2 \pi i \xi \cdot ( \Phi(x) - \Phi(y) )} f(y)\; dy. \]
+%
+Now define
+%
+\begin{align*}
+    a_\Phi(x,\xi) &= e^{-2 \pi i \xi \cdot x} S \{ e^{2 \pi i \xi \cdot y} \}\\
+    &= \int b(x,\theta) \psi_U(y) e^{2 \pi i [\xi \cdot (y - x) - \theta \cdot ( \Phi(y) - \Phi(x) )]} \; d\theta\; dy.
+\end{align*}
+%
+We may write
+%
+\[ a_\Phi(x,\xi) = \sum_j 2^{j(d+t)} K_j(x,\xi), \]
+%
+where
+%
+\[ K_j(x,\xi) = \int \chi_j(x,\theta) \psi_U(y) e^{2 \pi i [ \xi \cdot (y - x) - 2^j \theta \cdot (\Phi(y) - \Phi(x)) ]}\; d\theta\; dy, \]
+%
+where $\chi_j(x,\theta) = 2^{-jt} b(x,2^j \theta) \chi(\theta)$ for some $\chi \in C_c^\infty(\RR^d)$ with support on $|\xi| \sim 1$, and with $\sum_{j > 0} \chi(\theta / 2^j) = 1$, and so
+%
+\[ |\partial_x^\alpha \partial_\theta^\beta \chi_j| \lesssim_{\alpha,\beta} 1. \]
+%
+If $|\xi| \sim 2^{j_0}$, and $|j - j_0| \gtrsim 1$,  then integration by parts in the $y$-variable yields
+%
+\[ \sum_{|j - j_0| \gtrsim 1} 2^{j(d+t)} K_j \in \mathcal{S}^{-\infty}(\RR^d \times \RR^d). \]
+%
+Similarily, for $|j - j_0| \lesssim 1$, integration by parts in $\theta$ allows us to conclude that
+%
+\[ \int \left( 1 - \chi \left( |\xi|^{0.9} |x-y| \right) \right) \chi_j(x,\theta) \psi_U(y) e^{2 \pi i [ \xi \cdot (y - x) - 2^j \theta \cdot ( \Phi(y) - \Phi(x) ) ]}\; d\theta\; dy \in \mathcal{S}^{-\infty}(\RR^d \times \RR^d). \]
+%
+%On the other hand, we can write $\Phi(y) - \Phi(x) = D \Phi(x) (y - x) + R(x,y)$, where $|R(x,y)| \lesssim |x - y|^2$. If $|x - y| \lesssim |\xi|^{-0.9$
+% xi - DPhi(x)^T theta << |xi|^{-0.1W}
+
+ Then the integral is
+%
+\[ \int \left(1 - \chi \left( \frac{x-y}{2^j} \right) \right) b(x,\theta) e^{2 \pi i [ (\xi - D\Phi(x)^T \theta) \cdot (y - x) - \theta \cdot R(x,y) ]} \]
+
+\[ 2^{j(t + d)} \int \chi(x,\theta) e^{2 \pi i 2^j [ (\xi / 2^j - D\Phi(x)^T \theta) \cdot (y - x) - \theta \cdot R(x,y) ]}\; d\theta\; dy. \]
+
+
+\[ 2^{j(t + d)} \int \chi(x,\theta) e^{2 \pi i [ 2^j \theta \cdot ( \Phi(x) - \Phi(y) ) + \xi \cdot (y - x) ]} \]
+% Derivative in theta is >> 2^j ( Phi(x) - Phi(y) )
+% Derivative in y is xi - 2^j DPhi(y)^T theta
+%
+% Good everywhere except where |Phi(x) - Phi(y)| << 2^{-j}
+% Then Derivative in y is xi - 2^j DPhi(x)^T theta + O(1)
+%   So xi ~~ 2^j DPhi(x)^T theta
+%
+% xi = 2^j DPhi(x)^T theta
+
+
+\[ \int e^{2 \pi i [ \xi \cdot y - \theta \cdot \Phi(y) ]}\; dy \]
+% Stationary point when xi = DPhi(y)^T theta
+
+
+% z = Phi^{-1}(y)
+% dz = 1/det(Phi)
+
+fix an open set $U$, and consider some $\psi_U \in C_c^\infty(\RR^d)$ supported on $U$. Then let $F: U \to V$ be a diffeomorphism. Given $\psi_V \in C_c^\infty(\RR^d)$, we can define an operator $S$ by setting
+%
+\[ Sf = T \{ F^{-1} \circ f \psi_V \} \]
+
+We can then define an operator $S$
+
+\end{comment}
+
+\section{Elliptic, Self-Adjoint, Positive Definite $\Psi$DOs}
+
+Suppose $T$ is elliptic, self adjoint, and formally positive-definite pseudodifferential operator of order $t > 0$ on a compact manifold $M$ with respect to some smooth measure $\mu$ on $M$, in the sense that for any Schwartz function $f$,
+%
+\[ \langle Tf, f \rangle = \int Tf(x) f(x)\; d\mu(x) \geq 0. \]
+%
+This can only be true if the principal symbol of $T$ is everywhere positive.
+
+\begin{theorem}
+    If $t > 0$, then there exists an orthogonal decomposition
+    %
+    \[ L^2(M) = \bigoplus_{\lambda \in \Lambda} V_\lambda, \]
+    %
+    where $\Lambda$ is a discrete subset of $[0,\infty)$, and for each $\lambda \in \Lambda$, $V_\lambda$ is a finite dimensional subspace of $C^\infty(M)$ for each $\lambda$ with
+    %
+    \[ Tf = \lambda f \quad\text{for}\quad f \in V_\lambda. \]
+    %
+    And for suitably large $\lambda$ exceeding the smallest element of $\Lambda$, the operator $T + \lambda$ is an isomorphism from $H^s(M)$ to $H^{s-t}(M)$ for each $s \in \RR$.
+    % In particular, if $t > 0$, then there exists an orthogonal decomposition $L^2(M) = \bigoplus_{\lambda \in \Lambda} V_\lambda$, where $\Lambda$ is a discrete subset of $[R,\infty)$, and 
+\end{theorem}
+\begin{proof}
+Like with the parametrix for elliptic operators, we can find an operator $S$ of order $t/2$ such that $T - S^* S$ is a smoothing operator $A$. Then
+%
+\[ \langle Tf, f \rangle = \langle Sf, Sf \rangle + \langle Af, f \rangle. \]
+%
+Because $A$ is smoothing, we can find a constant $C \geq 0$ such that
+%
+\[ \langle Af, f \rangle \geq - C \| f \|_{L^2(M)}^2. \]
+%
+But then, if $\lambda_0 > C$, there is $\varepsilon > 0$ such that
+%
+\[ \Big\langle (T + \lambda_0) f, f \Big\rangle \geq \| Sf \|_{L^2(M)}^2 + \lambda_0 \| f \|_{L^2(M)}^2 + \langle Af, f \rangle > \varepsilon \| f \|_{L^2(M)}^2. \]
+%
+Thus $T + \lambda_0$ is an injective, continuous operator from $H^t(M)$ to $L^2(M)$. By self-adjointness, it must have dense image $V \subset L^2(M)$, and so we can define an inverse $R = (T + \lambda_0)^{-1}$ from $V$ to $H^t(M)$. But by ellipticity, $R$ differs from a pseudodifferential operator of order $-t$ by a smoothing operator, and so we know that $\| Rf \|_{H_{-t}(M)} \lesssim \| f \|_{L^2(M)}$. But (again by ellipticity)
+%
+\[ \| Rf \|_{H^t(M)} \lesssim \| f \|_{L^2(M)} + \| Rf \|_{H^{-t}(M)} \lesssim \| f \|_{L^2(M)}. \]
+%
+Thus $R$ is bounded, which by Hahn-Banach can only be possible if $V = L^2(M)$. Thus $T + \lambda_0$ is an isomorphism from $H^t(M)$ to $L^2(M)$. The operator $R$, viewed as an operator from $L^2(M)$ to $L^2(M)$, must therefore necessarily be a compact, self-adjoint, positive-definite operator. Thus  we can find a subset $\Lambda$ of $(-\lambda_0,\infty)$ accumulating only at $\infty$, and write $L^2(M) = \bigoplus_{\lambda \in \Lambda} V_\lambda$, where for $f \in V_\lambda$,
+%
+\[ Rf = (\lambda + \lambda_0)^{-1} f. \]
+%
+But then $Tf = \lambda f$. Since $R$ is an isomorphism from $H^s(M)$ to $H^{s-t}(M)$ for each $s \in \RR$, any eigenvector of $R$ must lie in $H^s(M)$ for \emph{all $s \in \RR$}, and by the Sobolev embedding theorem, this implies that all eigenvectors lie in $C^\infty(M)$.
+\end{proof}
+
+\section{Complex Powers of an Elliptic Operator}
+
+Let $A$ be a classical, elliptic, self-adjoint, positive definite pseudodifferential operator of order $t$, as in the last section. Consider the associated eigenvector decomposition $L^2(M) = \bigoplus_{\lambda \in \Lambda} V_\lambda$, for $\Lambda \subset [0,\infty)$.
+%Then for any ray in the complex plane extending out from the origin, we have the estimates
+%
+%\[ \| ( A - \lambda )^{-1} f \|_{L^2(M)} \lesssim \lambda^{-1} \| f \|_{L^2(M)}. \]
+%
+If $\Gamma$ is a circle about the origin of suitably large radius, then we can define the complex powers $A^s$ of $A$, at least formally, by the formula
+%
+\[ A^s = \int_\Gamma z^s (A - z)^{-1}\; dz. \]
+%
+We will show that $A^s$ is a pseudodifferential operator of order $st$ for each $s \in \CC$.
+
+Indeed, define a pseudodifferential operator $B(z)$ which gives a parametrix for $(A - z)^{-1}$. We can choose $B$ to be a classical pseudodifferential operator with a symbol $b(x,\xi,z)$ given by an expansion
+%
+\[ b(x,\xi,z) \sim \sum_{k = 0}^\infty b_{-t-k}(x,\xi,z). \]
+%
+Then $b_{-t-k}(x,\xi,z)$ is homogeneous of order $-t-k$ \emph{in $\xi$ and $z^{1/m}$}. Moreover, carefully checking the formulas used to specify the functions $\{ b_{-t-k} \}$ (analogous to that of the parametrix in previous sections), we can verify that
+%
+\[ b_{-t-k}(x,\xi) = \sum_{j = 1}^{2k} \gamma_{k,j}(x,\xi) ( a_t(x,\xi) - z )^{-j-1}, \]
+%
+where $\gamma_{k,j}$ is a polynomial in the derivatives of $a_t, \dots, a_{m-t}$ of order $k$.
+%
+%    \item We have
+    %
+%    \[ |\partial_x^\alpha \partial_\xi^\beta b_{-t-k}(x,\xi,z)| \lesssim_{\alpha,\beta} \langle |\xi| + |z|^{1/t} \rangle^{-t} \langle \xi \rangle^{- |\alpha| - k}. \]
+%\end{itemize}
+%
+Modifying $A$ by a smoothing operator, and possibly rescaling, we may assume without loss of generality that all eigenvalues exceed $1$, and that for $|\xi| \geq 1$, $|a_t(x,\xi)| \geq 2$. Let $\Gamma$ be the unit circle, and define
+%
+\[ c_k(x,\xi) = \frac{1}{2\pi i} \int_\Gamma z^s b_{-t-k}(x,\xi,z)\; dz. \]
+%
+Then by the Cauchy integral formula,
+%
+\[ c_k(x,\xi) = \sum_{j = 1}^{2k} \frac{s (s - 1) \cdots (s - j+1)}{k!} a_t(x,\xi)^{s-j} \gamma_{k,j}(x,\xi). \]
+%
+Since $\sum \gamma_{k,j}(x,\xi) ( a_t(x,\xi) - z)^{-j-1}$ is homogeneous of order $-t-k$ in $\xi$ and $z^{1/m}$, the function $\gamma_{k,j}(x,\xi)$ is homogeneous of order $tj - k$, and so $c_k$ is homogeneous of order $ts - k$. If we define
+%
+\[ c \sim \sum_k c_k, \]
+%
+then $c$ is a symbol of order $ts$, and $c(x,D)$ can be used to define $A^s$, modulo a smoothing operator.
+
+\begin{comment}
+
+ and by carefully checking the formulas used to specify the functions $\{ b_{-t-k} \}$ in the construction 
+%
+
+%
+and that, for any compactly supported smooth $\phi$ and $\psi$, we have that for all $s \in \RR$, and $0 \leq s' \leq t$,
+%
+\[ \| ( \phi b_j )(x,D) f \|_{H^{s + s'}(\RR^d)} \lesssim |z|^{-1+s'/t} \| f \|_{H^s(\RR^d)}. \]
+%
+and for $N \geq 2t$,
+%
+\[ \| \phi f - \sum\nolimits_{j < N} (\phi b_{-m-j})(x,D) \psi (A - z) f \|_{H^{s+s'-N-2t}(\RR^d)} \lesssim |z|^{-1 + s'/t} \| f \|_{H^s(\RR^d)}. \]
+%
+It follows from this that for $0 \leq s' \leq t$
+%
+\[ \| (A - z)^{-1} f \|_{H^{s + s'}(\RR^d)} \lesssim |z|^{-1 + s'/t} \| f \|_{H^s(\RR^d)} \]
+
+%
+and that
+%
+\[ \| B(z)f - (A - z)^{-1} f \|_{H^{s + s' - N - 2t}(\RR^d)} \lesssim |\lambda|^{-2 + s'/t} \| f \|_{H^s(\RR^d)}. \]
+%
+If we define
+%
+\[ c_j(x,\xi) = \frac{1}{2\pi i} \int_\Gamma z^s b_j(x,\xi,z)\; d\lambda \]
+%
+then, using the 
+
+then the integrand is $O( |z|^{s + j + t} \langle \xi \rangle^{j + t} )$
+
+We can use this bound to define
+
+We can then define $A^s$ for any complex $s \in \CC$, by using a branch of the logarithm function and applying the spectral calculus of unbounded operators. We claim $A^s$ is then a pseudodifferential operator of order $ts$ (the composition calculus we have specified above proves this when $s$ is an integer). We can write
+%
+\[ A^s = \frac{1}{2 \pi i} \int_\Gamma z^s (A - z)^{-1}\; dz. \] 
+%
+For each $z$, we may construct a parametrix $B(z)$ for $(A - z)^{-1}$. We can do this in a natural way so that it's symbol $b(x,\xi,z)$ is a classical symbol of order $t$ in $(\xi,z^{1/m})$. The symbol of $A^s$ can then be constructed by computing the integrals
+%
+\[ \frac{1}{2\pi i} \int_\Gamma z^s b(x,\xi,z)\; dz \]
+
+%We now define
+
+%A^s = (i / 2pi) int_Gamma lambda^s (A - z)^{-1} dz
+
+%If we define B(z) to be a parametrix for (A - z)^{-1} then we can use this argument
+%to show that if A has order zero, then for any analytic function Phi, Phi(A) is a PDO of order zero
+
+%Can use this argument to get Weyl Formula, though better bound on error term is provided by the wave operator e^{2 pi i s A} rather than A^s.
+
+
+\end{comment}
+
+\begin{comment}
+
+
+Differential operators are \emph{local}, i.e. if $L$ is a differential operator, then $Lf(x)$ depends only on the local behaviour of $f$ around $L$. Pseudodifferential operators $T$ are \emph{pseudolocal}: the value $Tf(x)$ depends only on the local behaviour of $f$ around $L$, \emph{up to an error term negligible for `high-frequency' inputs}. To see this, fix a smooth compactly supported function $\chi$ with $\sum \chi(\xi / 2^k) = 1$, and if we define
+%
+\[ \sigma_j(x,\xi) = \chi(\xi) \sigma(x,2^j \xi), \]
+%
+then for all multi-indices $\alpha$ and $\beta$,
+%
+\[ |\partial_x^\alpha \partial_\xi^\beta \sigma_j(x,\xi)| \lesssim 2^{jt}. \]
+%
+Thus if we write $T = \sum T_j$, where $T_j$ has kernel
+%
+\[ K_j(x,y) = \int_{\RR^d} \sigma(x,\xi) \chi(\xi / 2^j) e^{2 \pi i \xi \cdot (x - y)}\; d\xi, \]
+%
+then integration by parts in $\xi$ tells us that
+%
+\[ |K_j(x,y)| = \left| 2^{jd} \int_{\RR^d} \sigma_j(x,\xi) e^{2 \pi i 2^j \xi \cdot (x - y)}\; d\xi \right| \lesssim_N 2^{j(d+t)} \langle 2^j |x - y| \rangle^{-N}. \]
+%
+Thus $K_j$ is sharply concentrated on a $O(2^{-j})$ neighborhood of the diagonal, with height $2^{j(d+t)}$ on the diagonal. If we consider a bump function $\eta_x$ supported in a neighborhood of a point $x$, then the above bounds imply that
+%
+\[ |T_j \{ (1 - \eta_x) f \}(x)| \lesssim_N 2^{-jN} \| f \|_{L^\infty(\RR)} \]
+%
+Thus if $f$ is a `high frequency input', with $\text{supp}(f) \subset \{ |\xi| \geq R \}$, then
+%
+\[ Tf = \sum_{j \geq \log(R)} T_j f, \]
+%
+and so
+%
+\[ |T\{ (1 - \eta_x) f \}(x)| \lesssim_N R^{-N} \| f \|_{L^\infty(\RR)}. \]
+%
+This is a manifestation of the \emph{pseudolocality} of the operator $T$.
+
+, and define $f = \eta f$
+
+If two functions $f_1$ and $f_2$ agree on a $O(2^{-j_0})$ neighborhood of a point $x$, then for $j > j_0$,
+%
+\[ \left| T_jf_1(x) - T_jf_2(x) \right| \lesssim_N 2^{-jN} \| f_1 - f_2 \|_{L^\infty(\RR)}. \]
+%
+Thus if $f_1$ and $f_2$ have Fourier transforms supported on $\{ |\xi| \geq R 2^{j_0} \}$ (so that $T_j f_\alpha = 0$ for $j \leq j_0 + \log(R) $), then
+%
+\[ |Tf_1(x) - Tf_2(x)| \lesssim_N R^{-N} \| f_1 - f_2 \|_{L^\infty(\RR)}. \]
+
+i.e. so that $Tf_j = \sum_{j \geq j_0}$
+
+then
+%
+\[ |Tf_1(x) - Tf_2(x)| \lesssim_N 2^{-jN} \| f_1 - f_2 \|_{L^\infty(\RR)} \]
+
+for $j \leq \log (1 / \varepsilon)$,
+% 2^j \leq 1/\varepsilon
+% varepsilon 2^j <= 1
+% Length 1/2^j
+% 2^{-jd}
+\[ \left| \int K_j(x,y) [ f_1(y) - f_2(y) ]\; dy \right| \lesssim 2^{jt} \| f_1 - f_2 \|_{L^\infty(\RR)} \]
+%
+and for $j > \log(1/\varepsilon)$,
+%
+
+% 2^{-jN} ^{d-N}
+
+% 2^{j(d+t)} \int_\varepsilon^\infty r^{d-1} \langle 2^j r \rangle^{-N}\; dr \]
+
+
+\[ Tf_1(x) - Tf_2(x) = \sum_{j_0 \leq j \leq \log(1/\varepsilon)} \int K_j(x,y) [ f_1(y) - f_2(y) ]\; dy + \sum_{j > \log(1/\varepsilon)} \int K_j(x,y) [ f_1(y) - f_2(y) ] \]
+% 2^j varepsilon >= 1
+% 2^j >= 1/varepsilon
+
+
+if two functions $f_1$ and $f_2$ agree on a neighborhood of $x$, and $\widehat{f}_1$ and $\widehat{f}_2$ are supported on $\{ |\xi| \geq R \}$, then $|Tf_1(x) - Tf_2(x)| \lesssim_N R^{-N}$.
+
+
+
+
+Notice that if $\widehat{f}$ is supported on $\{ \xi : R/2 \leq |\xi| \leq 2R \}$, then
+%
+\[ Tf(x) = R^d \int_{\RR^d} \sigma_R(x,\xi) \chi(\xi) \widehat{f}(R \xi) e^{2 \pi i R \xi \cdot x}\; d \xi. \]
+
+$\{ R^{-t} \sigma_R \}$ are a uniformly bounded family of 
+
+We have an asymptotic theory of 
+
+\end{comment}
+
+
+%\begin{thebibliography}{2}
+
+%\bibitem{Seeley}
+%    R. T. Seeley,
+%    \emph{Complex Powers of an Elliptic Operator},
+%    1967.
+
+%\bibitem{H\"{o}rmander}
+%    L. H\"{o}rmander,
+%    \emph{The Analysis of Linear Partial Differential Operators III},
+%    1983.
+
+%\end{thebibliography}
+
+\ \newline
+\noindent \textsc{Jacob Denson, UW Madison}\\
+\textit{email:} \texttt{jcdenson@wisc.edu}
+
+\end{document}

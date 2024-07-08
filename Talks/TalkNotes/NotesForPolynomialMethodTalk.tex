@@ -1,0 +1,257 @@
+\documentclass{article}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{comment}
+
+\DeclareMathOperator{\RR}{\mathbb{R}}
+\DeclareMathOperator{\CC}{\mathbb{C}}
+\DeclareMathOperator{\FF}{\mathbb{F}}
+\DeclareMathOperator{\EE}{\mathbb{E}}
+\DeclareMathOperator{\ZZ}{\mathbb{Z}}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{prop}[theorem]{Proposition}
+
+%\theoremstyle{remark}
+\newtheorem*{example}{Example}
+\newtheorem*{proof*}{Proof}
+
+\theoremstyle{definition}
+\newtheorem*{defi}{Definition}
+\newenvironment{definition}
+    {\begin{samepage}\begin{framed}\begin{defi}}
+    {\end{defi}\end{framed}\end{samepage}}
+
+\newtheorem*{remark}{Remark}
+
+\title{Polynomial Method Notes}
+\author{Jacob Denson}
+\date{February 13th, 2024}
+
+\begin{document}
+
+\maketitle
+
+\section{Finite Field Kakeya Without Polynomials}
+
+In order to see why the polynomial method might be necessary in order to understand the finite field conjecture, let us begin by discussing some techniques that were used to analyze the finite field conjecture without the polynomial method. We start with an elementary bound, which shows that a union of a small number of lines intersect in a negligible way.
+
+\begin{lemma}
+    If $X \subset \FF_q^n$ contains $s \leq q + 1$ distinct lines, then $\#(X) \geq sq/2$.
+\end{lemma}
+\begin{proof}
+    Order the lines $l_1, \dots, l_n$. Any two lines intersect in a single place. Thus
+    %
+    \[ \# \left( l_i - \bigcup\nolimits_{j < i} l_j \right) \geq \#(l_i) - (i-1) \geq q - (i-1). \]
+    %
+    Thus
+    %
+    \[ \#(X) \geq \sum_{i = 1}^s \# \left( l_i - \bigcup\nolimits_{j < i} l_j \right) \geq \sum_{i = 1}^s q - (i - 1) \geq sq/2 \qedhere. \]
+\end{proof}
+
+The bound is tight when we consider $s \leq q$, and proves Kakeya for $n = 2$, since Kakeya sets $X$ in $\FF_q^2$ contain $q+1$ lines, and so we can apply the result above with $s = q$ to conclude that $\#(X) \geq q^2/2$. For $s$ between $q$ and $q^2$, there is in general no possible improvement to apply the bound above with $s = q$, since a plane $X$ in $\FF_q^n$ contains $q(q+1)$ lines and $q^2$ points. However, for $s > q^2$, we can apply the \emph{bush method} to get a betweenter bound.
+
+\begin{lemma}
+    If $X \subset \FF_q^n$ contains $s$ distinct lines, then $\#(X) \gtrsim qs^{1/2}$.
+\end{lemma}
+\begin{proof}
+    Here's the idea. If $X$ is small, then by pidgeonholing $X$ contains a point $x_0$ lying on the intersection of many of the lines contained in $X$. Once we remove $x_0$ from these lines, each of these lines are disjoint, and so we obtain a contradiction.
+
+    Let's be more precise. For each point $x \in X$, let $B_x$ be the \emph{bush} corresponding to $x$, the union of the set $\mathcal{B}_x$ of lines passing through $x$. Now
+    %
+    \[ \EE_{x \in X} [ \mathcal{B}_x ] = \frac{1}{\# X} \sum_{p \in X} \# \mathcal{B}_p = \frac{sq}{\#(X)}.  \]
+    %
+    Thus there is $x_0 \in X$ with $\# \mathcal{B}_{x_0} \geq qs / \#(X)$. Let $\mathcal{B}_{x_0} = \{ l_1, \dots, l_r \}$. Since each pair of lines intersects uniquely at $x_0$, the sets $l_j - \{ x_0 \}$ are disjoint from one another. Thus
+    %
+    \[ \#(X) \geq \sum_{j = 1}^r \#( l_j - \{ x_0 \} ) = (\#X)(q - 1) \geq q(q-1) s \#(X)^{-1}. \]
+    %
+    Rearranging and taking square roots gives that $\#(X) \gtrsim q s^{1/2}$.
+\end{proof}
+
+Since a Kakeya set $X$ in $\FF_q^n$ contains $\gtrsim q^{n-1}$ distinct lines, we conclude that
+%
+\[ \#(X) \gtrsim q^{\frac{n+1}{2}}. \]
+%
+We aren't exploiting the hypothesis enough, because $X$ not only contains $q^{n-1}$ distinct lines, but these lines are also \emph{pointing in different directions}. In particular, at most $q + 1$ of these lines lie in a two dimensional plane, so we can apply the \emph{hairbrush method}.
+
+\begin{lemma}
+    If $X \subset \FF_q^d$ contains $s$ distinct lines $l_1, \dots, l_s$, such that at most $q + 1$ of these lines lie in any two dimensional plane, then $\#(X) \gtrsim q^{3/2} s^{1/2}$.
+\end{lemma}
+\begin{proof}
+    For each $j$, define the \emph{hairbrush} $H_j$ to be the union of the set $\mathcal{H}_j$ of lines $l_k$ with $k \neq j$ which intersect $l_j$. Now the average point intersects $qs / \#(X)$ of the lines $\{ l_j \}$, and since a line contains $q$ points, the average line intersects at least $\gtrsim q^2 s / \#(X)$ other lines. Thus we can fix $j_0$ such that $\# \mathcal{H}_{j_0} \gtrsim q^2 s / \#(X)$. Let $\Pi_1, \dots, \Pi_r$ be the set all planes generated from $l$ and some line in $\mathcal{H}_j$. If $\Pi_n$ contains $s_n$ lines in $\mathcal{H}_j$, then, since $s_n \leq q$, the union of the functions in $\Pi_n$ essentially behave as if they were disjoint, i.e. $\#(X \cap (\Pi_n - l)) \geq q (s_n / 2 - 1)$. The sets $\Pi_n - l$ are disjoint, so
+    %
+    \begin{align*}
+        \#(X \cap H_j) &\geq \sum_n \#(X \cap (\Pi_n - l))\\
+        &= \sum_n q(s_n / 2 - 1)\\
+        &\geq (q/2) (\# \mathcal{H}_{j_0}) - r\\
+        &\geq (q/2 - 1) \# \mathcal{H}_{j_0}\\
+        &\gtrsim q^3 s / \#(X).
+    \end{align*}
+    %
+    Thus $\#(X) \gtrsim q^{3/2} s^{1/2}$.
+
+
+
+    More precisely,
+    %
+    \begin{align*}
+        \EE_j[ \# \mathcal{H}_j ] &= \frac{1}{s} \sum_j \# \mathcal{H}_j = \frac{1}{s} \sum_j \sum_{p \in l_j} \left[ \# \mathcal{B}_p - 1 \right]\\
+        &= \frac{1}{s} \left[\sum_p \#( \mathcal{B}_p )^2 \right] - q = \frac{\#(X)}{s} \mathbb{E}_{p \in X} [ \# \mathcal{B}_p^2 ] - q\\
+        &\geq \frac{\#(X)}{s} \mathbb{E}_{p \in X} [ \# \mathcal{B}_p ]^2 - q\\
+        &= \frac{\#(X)}{s} \left[ \frac{qs}{\#(X)} \right]^2 - q\\
+        &= q^2 s \#(X)^{-1} - q.
+    \end{align*}
+    %
+    If $\#(X) \leq q^{3/2} s^{1/2}$ and $s \geq q$, this quantity is $\gtrsim q^2 s / \#(X)$.
+\end{proof}
+
+To show why the hypothesis above cannot be used to push past this bound over finite fields, we consider the \emph{Hermitian variety}. Let $q = p^2$, and consider the variety $H$ in $\FF_q^3$ given by
+%
+\[ H = \{ (x,y,z) \in \FF_q^3: x^{p+1} + y^{p+1} + z^{p+1} = 1 \}. \]
+%
+The map $x \mapsto x^p$ is a field isomorphism of $\FF_q$, and we let $\overline{x} = x^p$. Then
+%
+\[ H = \{ (x,y,z) \in \FF_q^3: x \overline{x} + y \overline{y} + z \overline{z} = 1 \}. \]
+%
+We note the following facts:
+%
+\begin{itemize}
+    \item The function $x \mapsto x^{p+1}$ is a group homomorphism of $\FF_q^*$ onto $\FF_p^*$ with a kernel of order $p + 1$.
+
+    \item $\#(H) \sim q^{5/2}$ since, for each $x, y \in \FF_q$, there are $p + 1 \sim q^{1/2}$ points $z \in \FF_q$ with $z^{p+1} = x^{p+1} + y^{p+1}$.
+
+    \item Define $(v,w) = \sum v_j \overline{w_j}$. If we let $U(\FF_q^n)$ be the group of all invertible matrices $M \in GL(\FF_q^3)$ such that
+    %
+    \[ (Mv,Mw) = (v,w) \]
+    %
+    for all $v,w \in \FF_q^3$, then $U(\FF_q^3)$ acts transitively on $H$. Indeed, any element $v$ of $\FF_q^3$ is the element of some `orthogonal' basis $v,w,u$, by applying a variant of Gram-Schmidt, and then the matrix $M$ with columns $v$, $w$, and $u$ is in $U(\FF_q^3)$, and maps $e_1$ to $v$.
+
+    \item The last point implies that if $s$ is the number of lines in $H$ passing through $e_1$, then $H$ contains $s \#(H) / q \sim s q^{3/2}$ lines. For $v = (m,n) \in \FF_q^2$, consider the line
+    %
+    \[ l_v = \{ ( 1 + t, tm, tn ) : t \in \FF_q \}, \]
+    %
+    which counts all but $O(q)$ lines passing through $e_1$. Then this line is contained in $H$ if and only if the polynomial
+    %
+    \[ (1 + t)^{p+1} + (tb)^{p+1} + (tc)^{p+1} - 1 \]
+    %
+    vanishes for all $t$. We can write this polynomial as
+    %
+    \[ (1 + t) ( 1 + t^p ) + t^{p+1} b^{p+1} + t^{p+1} c^{p+1} - 1 \]
+    %
+    expanded as
+    %
+    \[ (1 + b^{p+1} + c^{p+1}) t^{p+1}. \]
+    %
+    Since $p+1 < q$, This polynomial vanishes if and only if $1 + b^{p+1} + c^{p+1} = 0$, an equation with $\sim q^{3/2}$ solutions. Thus $H$ contains $\sim q^3$ lines.
+
+    \item The variety $H$ does not contain a $2$-plane. If $V \subset \FF_q^3$ is a $2$-dimensional subspace, then there is $v \in V$ with $v \cdot \overline{v} = 0$.
+
+    \item Now we show lines contained in $H$ do not concentrate in planes.
+
+    \item Consider some plane intersecting $H$. We claim this plane contains at most $q + 1$ points. By symmetry, we may assume this plane passes through $e_1$. We can thus write the plane as the solution set to the equation
+    %
+    \[ a' x + b' y + c' z = a. \]
+    %
+    A line in $H$ generated by some $a$, $b$, and $c$ is contained in this plane if and only if
+    %
+    \[ a^{p+1} + b^{p+1} + c^{p+1} = 0 \quad\text{and}\quad a' a + b' b + c' c = 0 \]
+\end{itemize}
+
+Ellenberg Hablicsek proved if $q$ is prime, then any set of lines in $\FF_q^3$ with at most $q$ lines in any 2-planemust have side $\gtrsim q^3$.
+
+\section{Intersection Points}
+
+Showing a set formed from a union of lines is large is roughly the same as showing that the number of intersection points of those lines is small.
+
+If we assume not many lines are contained in low degree surfaces, there are several ways we'll see we can control intersections.
+
+\begin{itemize}
+    \item There are many \emph{reguli} which contain many straight lines.
+
+    \item Polynomial partitioning will allow us to generate low degree polynomials whose zero set `evenly divides' our sets up. Then that low degree zero set cannot contain many lines.
+
+    \item There are many \emph{ruled surfaces} which contain many straight lines.
+
+    \item The Cayley-Salmon Theorem says any algebraic surface containing many lines must contain a \emph{ruled surface}. All ruled surfaces are either degree one or degree two. This will enable us to prove intersection bounds assuming only control over degree $\leq 2$ surfaces.
+\end{itemize}
+
+
+
+\section{Why Polynomials?}
+
+What helps with finite field Kakeya.
+%
+\begin{itemize}
+    \item $\dim(\text{Poly}_D) \sim D^n$ is large.
+
+    \item But for any line $l$, the vector space
+    %
+    \[ \{ f|_l : f \in \text{Poly}_D \} \]
+    %
+    is $D+1$ dimensional.
+\end{itemize}
+
+Most function spaces do not have this property, e.g. the space of trigonometric polynomials of degree at most $D$ has dimension $\sim D^n$, but for a generic line $l$, the set
+%
+\[ \{ f|_l : f \in \text{Poly}_D \} \]
+%
+has dimension $\sim D^n$. Indeed, a generic line $l$ is equal to $\{ x_0 + t v : t \in \RR \}$, for $v \in \RR^n$ such that $\xi \cdot v \neq 0$ for all $\xi \in \ZZ^n$. If
+%
+\[ f(t) = \sum_{|\xi| \leq D} a_\xi e^{2 \pi i \xi \cdot (x_0 + t v)}, \]
+%
+is equal to zero for all $t \in \RR$, then in particular, for all $k \geq 0$,
+%
+\[ 0 = \partial^k f(0) = \sum_{|\xi| \leq D} a_\xi (\xi \cdot v)^k. \]
+%
+The matrix with entries $\{ (\xi \cdot v)^k : |\xi| \leq D, k \leq D^n \}$ is then an invertible Van Der Monde matrix (the quantities $\{ \xi \cdot v: \xi \in \ZZ^d,  |\xi| \leq D \}$ are distinct) and so we conclude that $a_\xi = 0$ for all $\xi$.
+
+\begin{theorem}
+    If $\# \FF \geq D + 1$ and $V \subset \text{Func}(\FF^n, \FF)$ has the property that for any line $l$ and any $f \in V$, if $f$ vanishes on $D + 1$ points on $l$, then $f$ vanishes for all points on $l$. Then $\dim(W) \lesssim D^n$.
+\end{theorem}
+\begin{proof}
+    If $\dim(W) > (D+1)^n$, then pick a $D + 1 \times \dots \times D + 1$ grid in $\FF^n$. By rank nullity, there is a nonzero $f \in \text{Func}(\FF^n, \FF)$ vanishing on this grid. But this is impossible.
+\end{proof}
+
+
+
+\section{s}
+
+Encode Combinatorial Information in terms of `low complexity' polynomials, and then use the size of the set in combination with some robust properties of low complexity polynomials to derive some properties of the set. You have to be a little clever, or 'change your perspective' to make these arguments work (e.g. Mockenhaupt, Tao, 2004 showed that Kakeya sets in $k^n$ cannot be contained in low degree polynomials, but were unable to see why this implied Kakeya sets must contain $k^n$ points - The paper even ironically says 'this Theorem is far from a proof of the finite field Kakeya conjecture'). We will be able to obtain deeper results using polynomial methods by exploiting deeper properties about algebraic surfaces.
+
+
+
+
+\begin{comment}
+
+    So far, we have seen the technique of showing a small set is contained in the zero set of a low complexity polynomial.
+
+    In this proof, we took the combinatorial information about the distances of points and encoded it in a family of low complexity polynomials. We obtain *explicit polynomials* of low complexity and use it to obtain a contradiction. Similar arguments involve the 'combinatorial Nullstellensatz'.
+
+    In R^n, we will also consider more topological variants of the arguments, e.g. using the polynomial Ham Sandwich Theorem.
+
+\end{comment}
+
+%\begin{thebibliography}{2}
+
+%\bibitem{Seeley}
+%    R. T. Seeley,
+%    \emph{Complex Powers of an Elliptic Operator},
+%    1967.
+
+%\bibitem{H\"{o}rmander}
+%    L. H\"{o}rmander,
+%    \emph{The Analysis of Linear Partial Differential Operators III},
+%    1983.
+
+%\end{thebibliography}
+
+\ \newline
+\noindent \textsc{Jacob Denson, UW Madison}\\
+\textit{email:} \texttt{jcdenson@wisc.edu}
+
+\end{document}
