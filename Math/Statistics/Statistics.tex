@@ -12,7 +12,17 @@
 
 \chapter{Statistical Models}
 
-Statistics is the theory of inferring features of some probability distribution $\mu$ on a set $S$ (normally $S$ is discrete, or equal to $\RR^d$ for some $d$), given a number of independent samples drawn from this probability distribution. In general, it is very difficult to determine properties of $\mu$, so we often work with some assumptions on the distribution $\mu$, a \emph{statistical model}. More precisely, a statistic model $\mathcal{F}$ is a subset of the space of all distributions on a set $S$. We might write such a set as
+\emph{Statistic inference} is the theory of obtaining reasonably reliable information about a population in the prescence of uncertainty. That population can be a \emph{population of individuals}, or a \emph{population of outcomes}. We want to learn certain features of a probability distribution via various samples taken from that probability distribution, and to investigate causality between different random phenomena, the latter being the most difficult, but also the most essential to the use of statistics in the sciences. In general, the samples we observe vastly underdetermine the entire population, and so our methods are about inferring larger features of the population \emph{to a reasonable degree of precision}. On the other hand, we often have too much data for the human mind to comprehend individually, and so we wish to simplify the data to a few relevant features.
+
+The problem of statistics is threefold:
+%
+\begin{itemize}
+	\item \emph{Specification}: Forming a mathematical model for the population.
+	\item \emph{Estimation} Calculating, from a sample of a population, statistics of that population.
+	\item \emph{Misspecification Testing and Respecification}: Testing whether the assumptions made in the formation of our model fit the data that we observed, and suggesting an alternate model if the assumptions do not seem to fit such data.
+\end{itemize}
+
+In general, it is very difficult to determine properties of $\mu$, so we often work with some assumptions on the distribution $\mu$, a \emph{statistical model}. More precisely, a statistic model $\mathcal{F}$ is a subset of the space of all distributions on a set $S$. We might write such a set as
 %
 \[ \mathcal{F} = \{ \mu_\theta : \theta \in \Theta \}, \]
 %
@@ -54,27 +64,31 @@ Another problem is \emph{hypothesis testing}. Here we have a particular fact abo
 
 \chapter{Hypothesis Testing}
 
-Let us suppose we consider a range of probability distributions on some space $\mathcal{X}$, parameterized by some set $\Theta$. Our goal is to test whether a given set of data observed in an experiment should lead us to have greater or less belief in a given hypothesis, in which case we say the data is \emph{statistically significant}.
+Suppose we collect some data about some situation. The problem of \emph{hypothesis testing} is determining whether the data we generate provide evidence for or against some \emph{hypothesis}. When sufficient evidence is provided, we say the data is \emph{statistically significant}. Classically, such a situation arises in testing whether there is a difference between data generated with respect to two different conditions, and we want to determine if the conditions generate such data differently. Hypothesis testing helps us determine if this proposition is true or false, but \emph{does not quantify the size of the effects between the two conditions}.
 
-It is important for scientists to follow a methodology in order to determine whether data is statistically significant or not. Otherwise they may be subject to cognitive bias when deciding whether the result of an experiment is statistically significant purely on a whim. There is evidence that banning the use of p-values (a standard method of hypothesis testing) in studies increases the frequency that scientists make erroneous claims (see Fricket et. al 2019 for evidence of this as it relates to the null hypothesis significance ban in the journal Basic and Applied Social Psychology).
+It is important for scientists to follow a methodology in order to determine the statistical significance of data. It is fairly easy to become subject to cognitive bias otherwise. In 2015, in response to the replication crisis and the percieved misuse of $p$-values in psychological literature, the Journal \emph{Basic and Applied Social Psychology} banned the use of inferential statistics. In 2019, Fricker et. al published an article analyzing 31 articles published by the journal in 2016, and find multiple instances of scientists overstating claims relative to what could be claimed if statistical significance was considered.
 
 \section{Rejecting the Null Hypothesis}
 
-Let us begin with the first approach to hypothesis testing, first advocated by British polymath Ronald Fischer. In this approach, one does not use data to provide evidence \emph{for} a given hypothesis. Perhaps unintuitively, one instead takes data and uses it to provide evidence \emph{against} a given hypothesis (called the \emph{null hypothesis}).
+Let us begin with the first approach to hypothesis testing, first advocated by British statistician and geneticist Ronald Fischer. In this approach, one does not use data to provide evidence \emph{for} a given hypothesis. Instead, perhaps unintuitively, data is used to provide evidence \emph{against} a given hypothesis (called the \emph{null hypothesis}).
 
-Suppose an experiment will give us some random outcome $X$ valued in a set $\mathcal{X}$. To perform a hypothesis test, we specify in advance a set $\mathcal{R} \subset \mathcal{X}$, called the \emph{rejection region}. If $X$ takes some value $x \in \mathcal{R}$, we reject the null hypothesis. If $X$ takes some value $x \not \in \mathcal{R}$, we do not reject the null hypothesis. If the null hypothesis were true, then this would limit the outcome of $X$ to be drawn from a given family of probability distributions, which we denote by $\Theta$. Usually, we define $\mathcal{R} = \{ x \in \mathcal{X} : T(x) > T_0 \}$ for a \emph{test statistic} $T: \mathcal{X} \to \RR$ and a \emph{critical value $T_0 \in \RR$}.
+Mathematically, we model such hypothesis testing by considering a family of probability distributions on some space $\mathcal{X}$, parameterized by some set $\Theta$. In an experiment, we observe some $X \in \mathcal{X}$. A hypothesis corresponds to some assumption on what generated the data. Mathematically, we identify a hypothesis with a subset $\Theta_0 \subset \Theta$. To perform a hypothesis test, we specify in advance a set $\mathcal{R} \subset \mathcal{X}$, called the \emph{rejection region}. If $X$ takes some value in $\mathcal{R}$, we consider this evidence to reject the null hypothesis, and otherwise we do not reject the null hypothesis. Usually, we define $\mathcal{R} = \{ x \in \mathcal{X} : T(x) > T_0 \}$ for a \emph{test statistic} $T: \mathcal{X} \to \RR$ and a \emph{critical value $T_0 \in \RR$}.
 
 Note that if a hypothesis does not reject the null hypothesis, then in Fischerian approach we do not view this as evidence that the hypothesis is true. Our goal in this approach is thus only to minimize the number of \emph{Type $I$ errors} we make, where we reject the null hypothesis, despite it being true. If we are able to minimize these errors, then when a given data leads us to reject the null hypothesis, we should treat that as significant evidence that the null hypothesis is false.
 
 This leads us to define the \emph{size} of a test. First, define the \emph{power function} $\beta$ of the test, given by $\beta(\theta) = \PP_\theta(X \in \mathcal{R})$. The \emph{size} of a test is $\alpha = \sup_{\theta \in \Theta_0} \beta(\theta)$, which is precisely the least upper bound on the probability of the test making a Type $I$ error. We say a test has \emph{significance level} $\alpha$ if it has size at most $\alpha$.
 
-Suppose that for a given null hypothesis, we have an increasing family of rejection regions $\mathcal{R}_\alpha$ for each $\alpha \in (0,1)$, which is increasing in $\alpha$, and for each $\alpha$, $\mathcal{R}_\alpha$ corresponds to a hypothesis test of significance level $\alpha$. Given this setup, we define the \emph{$p$-value} to be the random quantity $p = \inf \left\{ \alpha: X \in \mathcal{R}_\alpha \right\}$. For each $\alpha \in [0,1]$, $\alpha = \sup\nolimits_{\theta \in \Theta_0} \PP_\theta( X \in \mathcal{R}_\alpha )$, so in particular,
+Suppose that for a given null hypothesis, we have an increasing family of rejection regions $\mathcal{R}_\alpha$ for each $\alpha \in (0,1)$, which is increasing in $\alpha$, and for each $\alpha$, $\mathcal{R}_\alpha$ corresponds to a hypothesis test of significance level $\alpha$. Given this setup, we define the \emph{$p$-value} to be the random quantity $p = \inf \left\{ \alpha: X \in \mathcal{R}_\alpha \right\}$. For each $\alpha \in [0,1]$, $\alpha = \sup\nolimits_{\theta \in \Theta_0} \PP_\theta( X \in \mathcal{R}_\alpha )$, so
 %
 \[ p = \sup\nolimits_{\theta \in \Theta_0} \PP_\theta( T(X) \geq \mathcal{R}_p ). \]
 %
-Thus the $p$-value can be thought of as the least upper bound on the probability of observing something equal to or more extreme than the data observed, from distributions in the null hypothesis.
+Thus the $p$-value can be thought of as the least upper bound of the probability of observing something at least as extreme as the data observed, from distributions in the null hypothesis.
 
-The use of $p$-values as a methodology of checking data for statistical significance was popularized by Ronald Fischer in his 1925 book \emph{Statistical Methods for Research Workers}. Fischer interpreted the p-value of a hypothesis test as a continuous measure of how compatible data observed was with a null hypothesis. Fischer's approach interprets $p$-values not as probabilistic statement about the world, but as a continuous measure of how reluctant we should be to believe a null hypothesis - the lower the $p$-value, the more reluctant we should be to believe a null hypothesis.
+The use of $p$-values as a methodology of checking data for statistical significance was popularized by Ronald Fischer in his 1925 book \emph{Statistical Methods for Research Workers}. Fischer interpreted the p-value of a hypothesis test as a continuous measure of how compatible data observed was with a null hypothesis. Fischer's approach interprets $p$-values not as probabilistic statement about the world, but as a continuous measure of how reluctant we should be to believe a null hypothesis. The lower the $p$-value, the more reluctant we should be to believe a null hypothesis; either a rare result occured, or the null hypothesis does not explain the data observed.
+
+The main problem with Fischer's approach is the lack of an explicit \emph{alternate hypothesis}. Neyman and Pearson expanded upon Fischer's philosophy to allow for such hypotheses, though the data is still only tested under the main hypothesis.
+
+ however, is not tested, but used as a measure of the expected effect size, a measure of how difficult .
 
 Neyman and Pearson (1933) expanded upon Fischer's philosophy of hypothesis testing. Rather than simply testing whether to reject the null hypothesis, in the Neyman Pearson approach one instead sets a fixed level at which evidence from an experiment is statistically significant to provide evidence against the null hypothesis: The orthodox approach in 20th century science was to reject the null hypothesis when $p \leq 0.05$, and to accept the null hypothesis when $p > 0.05$. Unlike the Fischerian approach, in the Neyman Pearson approach the particular value of $p$ does not indicate that the null hypothesis is more or less believable.
 
@@ -119,6 +133,13 @@ This behaviour also leads to \emph{Lindlay's Paradox} (Lindsay, 1957). For $\mu 
 Even if you are using the Neyman-Pearson method for using $p$-values to refute a null hypothesis, in a paper you should always report the precise $p$-values obtained from your experiment. This is because these $p$-values are useful for secondary analysis, and allows researchers to compare $p$-values if they wish to use another $p$-value as a baseline.
 
 On the other hand, defined purely in terms of levels, unless we have some information about the power of the tests we are using, the $p$-value says \emph{nothing} about probabilities associated with the hypothesis. Small $p$-values indicate that it is unlikely that we could have observed given data if we are observing data from distributions given by the null hypothesis, but \emph{large $p$-values do not imply that we should reject a given hypothesis}. Large $p$-values just indicate that, if the null hypothesis is true, it is not unlikely that we have observed data at least as extreme as what was observed. One should perform an \emph{equivalence test} or \emph{minimum effect test} to obtain more information outside of the null hypothesis.
+
+
+
+\section{Sources}
+
+https://www.frontiersin.org/journals/psychology/articles/10.3389/fpsyg.2015.00223/full
+
 
 
 
